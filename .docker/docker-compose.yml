@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  core-db:
+    image: postgres
+    hostname: postgres
+    container_name: 'core-db'
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata_core:/var/lib/postgresql/data
+      - pgconf_core:/etc/postgresql
+      - pglog_core:/var/log/postgresql
+    env_file:
+     - ../.env/core-db.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # api
+  api:
+    image: 'fg-core:latest'
+    container_name: 'fg-core'
+    depends_on:
+      - core-db
+    ports:
+     - '5000:5000'
+    env_file:
+      - ../.env/core.env
+    environment:
+      WAIT_HOSTS: core-db:5432
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # Frontend
+  client:
+    image: 'fg-client:latest'
+    container_name: 'fg-client'
+    depends_on:
+      - api
+    ports:
+      - '80:80'
+      - '443:443'
+    env_file:
+      - ../.env/client.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    volumes:
+      - /data/certs:/etc/nginx/certs
+
+volumes:
+  pgdata_api:
+    driver: local
+  pgconf_api:
+    driver: local
+  pglog_api:
+    driver: local
+  shared:
+    driver: local

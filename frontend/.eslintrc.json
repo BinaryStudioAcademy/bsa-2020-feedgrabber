@@ -1,0 +1,60 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "env": {
+      "browser": true,
+      "node": true,
+      "commonjs": true,
+      "es6": true
+    },
+    "rules": {
+      "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "comma-dangle": ["error", "never"],
+      "no-multiple-empty-lines": ["error", { "max": 1 }],
+      "max-len": ["error", { "code": 120 }],
+      "react/prop-types": "off",
+      "react/jsx-props-no-spreading": "off",
+      "no-useless-constructor": "off",
+      "import/prefer-default-export": "off",
+      "no-case-declarations": "off",
+      "react/destructuring-assignment": ["error", "always", { "ignoreClassFields": true }],
+      "spaced-comment": ["error", "always", { "markers": ["/"] }],
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ],
+      "object-curly-newline": "off",
+      "class-methods-use-this": "off",
+      "import/order": "off",
+      "arrow-parens": ["error", "as-needed"],
+      "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }]
+    },
+    "ignorePatterns": [
+      "setupProxy.js",
+      "config-overrides.js",
+      "node_modules/"
+    ],
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"],
+          "moduleDirectory": ["node_modules", "src/"]
+        }
+      }
+    }
+  }

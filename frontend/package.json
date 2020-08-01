@@ -1,0 +1,91 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/styled-components": "^4.4.2",
+    "classnames": "^2.2.6",
+    "debounce": "^1.2.0",
+    "dotenv": "^8.2.0",
+    "formik": "^2.1.1",
+    "history": "^4.10.1",
+    "http-proxy-middleware": "^0.20.0",
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.1",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "react-redux-toastr": "^7.6.4",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0",
+    "react-select": "^3.0.8",
+    "redux": "^4.0.5",
+    "redux-saga": "^1.1.3",
+    "redux-saga-routines": "^3.2.2",
+    "sass": "^1.24.4",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^4.4.1",
+    "yup": "^0.27.0"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-scripts build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "lint": "npm run eslint src -- --ext js,ts,tsx,jsx --fix",
+    "checkTs": "tsc --noEmit"
+  },
+  "lint-precommit": {
+    "*.{ts,tsx,js,jsx}": [
+      "npm run eslint -- --fix"
+    ]
+  },
+  "husky": {
+    "pre-commit": "npm run checkTs && lint-precommit"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.8.0",
+    "@types/http-proxy-middleware": "^0.19.3",
+    "@types/node": "^12.12.24",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.5",
+    "@types/react-select": "^3.0.9",
+    "@types/redux-saga-routines": "^3.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.15.0",
+    "@typescript-eslint/parser": "^2.15.0",
+    "customize-cra": "^0.9.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "husky": "^4.2.5",
+    "react-app-rewired": "^2.1.5",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.7.5"
+  }
+}
