@@ -9,13 +9,15 @@ export const createTokenProvider = () => {
   };
 
   const unsubscribe = (observer: (isLogged: boolean) => void) => {
-    observers = observers.filter(_observer => _observer !== observer);
+    observers = observers.filter((_observer) => _observer !== observer);
   };
 
   const notify = () => {
     const isLogged = isLoggedIn();
-    observers.forEach(observer => observer(isLogged));
+    observers.forEach((observer) => observer(isLogged));
   };
+
+  const getToken = async () => _token?.accessToken;
 
   const setToken = (token: typeof _token) => {
     if (token) localStorage.setItem("TOKEN_AUTH", JSON.stringify(token));
@@ -25,8 +27,6 @@ export const createTokenProvider = () => {
     notify();
   };
 
-  const getToken = async () => _token?.accessToken;
-
   const isLoggedIn = () => !!_token;
 
   return {
@@ -34,6 +34,6 @@ export const createTokenProvider = () => {
     isLoggedIn,
     setToken,
     subscribe,
-    unsubscribe
+    unsubscribe,
   };
 };

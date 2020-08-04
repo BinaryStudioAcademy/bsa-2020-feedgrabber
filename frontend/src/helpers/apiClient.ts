@@ -7,24 +7,25 @@ const apiClient = axios.create();
 const tokenService = createTokenProvider();
 
 const responseErrorHandler = e => {
-  const originalRequest = e.config;
+    const originalRequest = e.config
 
-  if (e.response.status === 401 && !originalRequest._retry) {
-    originalRequest._retry = true;
+    if (e.response.status === 401 && !originalRequest._retry) {
 
-    return axios.post('/api/auth/renovate', { token: tokenService.getToken() })
-      .then(res => {
-        if (res.status === 201) {
-          tokenService.setToken(res.data);
-          axios.defaults.headers.common.Authorization = `Bearer ${res.data}`;
-          return axios(originalRequest);
-        }
-        history.push('/login');
-        return Promise.reject(e);
-      });
-  }
-  return Promise.reject(e);
-};
+        originalRequest._retry = true
+
+        return axios.post('/api/auth/renovate', {token: tokenService.getToken()})
+            .then(res => {
+                if (res.status === 201) {
+                    tokenService.setToken(res.data)
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data}`
+                    return axios(originalRequest)
+                }
+                history.push('/login')
+                return Promise.reject(e)
+            })
+    }
+    return Promise.reject(e)
+}
 
 apiClient.interceptors.request.use(request => {
   request.headers.Authorization = `Bearer ${tokenService.getToken()}`;
