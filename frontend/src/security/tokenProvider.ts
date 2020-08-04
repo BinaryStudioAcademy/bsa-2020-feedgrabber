@@ -28,7 +28,7 @@ export const createTokenProvider = () => {
         notify();
     }
 
-    const getToken = async () => (_token && _token.accessToken) || null
+    const getToken = async () => _token?.accessToken
 
     const isLoggedIn = () => !!_token
 
