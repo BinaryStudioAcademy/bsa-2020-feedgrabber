@@ -7,7 +7,7 @@ const apiClient = axios.create()
 const tokenService = createTokenProvider()
 
 const responseErrorHandler = e => {
-    const originalRequest = e.config;
+    const originalRequest = e.config
 
     if (e.response.status === 401 && !originalRequest._retry) {
 
@@ -18,13 +18,13 @@ const responseErrorHandler = e => {
                 if (res.status === 201) {
                     tokenService.setToken(res.data)
                     axios.defaults.headers.common['Authorization'] = `Bearer ${res.data}`
-                    return axios(originalRequest);
+                    return axios(originalRequest)
                 }
-                history.push('/login');
-                return Promise.reject(e);
+                history.push('/login')
+                return Promise.reject(e)
             })
     }
-    return Promise.reject(e);
+    return Promise.reject(e)
 }
 
 apiClient.interceptors.request.use(request => {

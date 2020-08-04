@@ -20,12 +20,12 @@ export const createTokenProvider = () => {
 
     const setToken = (token: typeof _token) => {
         if (token)
-            localStorage.setItem('TOKEN_AUTH', JSON.stringify(token));
+            localStorage.setItem('TOKEN_AUTH', JSON.stringify(token))
         else
-            localStorage.removeItem('TOKEN_AUTH');
+            localStorage.removeItem('TOKEN_AUTH')
 
-        _token = token;
-        notify();
+        _token = token
+        notify()
     }
 
     const getToken = async () => _token?.accessToken
