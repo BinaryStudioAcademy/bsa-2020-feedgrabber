@@ -1,0 +1,27 @@
+.headerWrp {
+  background-color: white;
+  padding: 1em 0;
+}
+
+.logoutBtn,
+.logoutBtn:hover {
+  &:global(.ui.icon.button) {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.userImage {
+  background: transparent;
+}
+.userImage:hover {
+  background: #bfbfbf;
+}
+
+.menuBtn,
+.menuBtn:global(.ui.icon.button) {
+  color: gray;
+  &:hover {
+    color: black !important;
+  }
+}
