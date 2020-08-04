@@ -37,4 +37,17 @@ public class UserService {
                 .map(UserDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public Optional<UserDto> updateUser(UUID id, UserDto userDto){
+        var userToUpdate = userRepository.getOne(id);
+        userToUpdate.setEmail(userDto.getEmail());
+        userToUpdate.setPassword(userDto.getPassword());
+        userToUpdate.setUsername(userDto.getUsername());
+        userRepository.save(userToUpdate);
+        return Optional.of(UserDto.fromEntity(userToUpdate));
+    }
+
+    public void deleteUser(UUID id){
+        userRepository.deleteById(id);
+    }
 }
