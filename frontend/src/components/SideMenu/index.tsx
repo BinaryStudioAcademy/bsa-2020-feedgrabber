@@ -4,33 +4,21 @@ import { useHistory } from 'react-router-dom';
 
 const SideMenu = () => {
     const history = useHistory();
-    const handleCompanyDashboardClick = () => {
-        history.push('/company');
-    }
-    const handleFormEditorClick = () => {
-        history.push('/editor');
-    }
-    const handlePendingClick = () => {
-        history.push('/pending');
-    }
-    const handleAssignClick = () => {
-        history.push('/assign');
-    }
     return (
         <Menu vertical>
-            <Menu.Item onClick={handleCompanyDashboardClick}>
+            <Menu.Item onClick={() => history.push('/company')}>
                 <Icon name="th"/>
                 Company dashboard
             </Menu.Item>
-            <Menu.Item onClick={handleFormEditorClick}>
+            <Menu.Item onClick={() => history.push('/editor')}>
                 <Icon name="edit"/>
                 Form editor
             </Menu.Item>
-            <Menu.Item onClick={handlePendingClick}>
+            <Menu.Item onClick={() => history.push('/pending')}>
                 <Icon name="clock outline"/>
                 Pending feedbacks
             </Menu.Item>
-            <Menu.Item onClick={handleAssignClick}>
+            <Menu.Item onClick={() => history.push('/assign')}>
                 <Icon name="bookmark"/>
                 Assign feedbacks
             </Menu.Item>
