@@ -1,7 +1,7 @@
 package com.feed_grabber.core.auth;
 
-import com.feed_grabber.core.auth.dto.TokenRenovationRequestDTO;
-import com.feed_grabber.core.auth.dto.TokenRenovationResponseDTO;
+import com.feed_grabber.core.auth.dto.TokenRefreshRequestDTO;
+import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/renovate")
-    public TokenRenovationResponseDTO renovate(@RequestBody TokenRenovationRequestDTO token) throws Exception {
-        return authService.renovate(token.getToken());
+    public TokenRefreshResponseDTO renovate(@RequestBody TokenRefreshRequestDTO token) throws Exception {
+        return authService.refresh(token.getToken());
     }
 }
