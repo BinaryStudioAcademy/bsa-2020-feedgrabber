@@ -3,6 +3,7 @@ package com.feed_grabber.core.user.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -13,6 +14,6 @@ public class UserCreateDto {
     private final String email;
     private final String password;
     private final UUID role;
-    private final UUID company;
+    private final Set<UUID> team;
 }
 
