@@ -1,10 +1,9 @@
 import React from "react";
 import styles from './styles.module.sass';
 
-const SignUp = () => {
-  return (
-      <div className={styles.signUpPage}>
-        <div className={styles.form}>
+const RegistrationPage = () => {
+    return (
+        <div className={styles.registrationPage}>
             <form className={styles.registerForm}>
               <div>Email</div>
               <input type="text" />
@@ -18,8 +17,7 @@ const SignUp = () => {
               <p className={styles.message}>Already registered?  <a href="#">Sign In</a></p>
             </form>
         </div>
-      </div>
-  )
+    )
 };
 
-export default SignUp;
+export default RegistrationPage;
