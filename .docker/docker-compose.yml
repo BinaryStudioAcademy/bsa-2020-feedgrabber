@@ -57,11 +57,11 @@ services:
       - /data/certs:/etc/nginx/certs
 
 volumes:
-  pgdata_api:
+  pgdata_core:
     driver: local
-  pgconf_api:
+  pgconf_core:
     driver: local
-  pglog_api:
+  pglog_core:
     driver: local
   shared:
     driver: local
