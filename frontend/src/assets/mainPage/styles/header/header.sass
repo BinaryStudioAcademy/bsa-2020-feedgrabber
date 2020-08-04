@@ -14,7 +14,6 @@
 
 
 .header-item
-  border: 5px
   font-weight: bold
   text-align: center
   color: #F8F9FA
@@ -22,8 +21,11 @@
     background-color: $header-color-hover
     cursor: pointer
 
-.hover-border:hover
-  border-bottom: 5px solid $header-padding-hover
+
+.hover-border
+  transition: border-bottom 0.3s
+  &:hover
+    border-bottom: 5px solid $header-padding-hover
 
 .header-logo
   grid-area: logo
@@ -75,18 +77,23 @@
   top: 50px
 
   background: white
-  padding-left: 15px
-  padding-right: 15px
   border-radius: 5px
   box-shadow: 0 0 5px #d8d8d8
 
 .menu-list
+  font-size: 18px
+  color: #2c2c94
   .menu-header
     font-weight: bold
-    color: #2c2c94
   li
-    margin-top: 10px
-    margin-bottom: 10px
+    padding-left: 15px
+    padding-right: 15px
+    margin-top: 15px
+    margin-bottom: 15px
+    border-bottom: 2px solid white
+    transition: border-bottom 0.2s
   a
     text-decoration: none
+  .menu-option:hover
+    border-bottom: 2px solid $header-padding-hover
 
