@@ -27,6 +27,6 @@ public class Role {
     //TODO: Add this prop after company entity creation
 //    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "company_id")
-//    private String company;
+//    private Company company;
 
 }

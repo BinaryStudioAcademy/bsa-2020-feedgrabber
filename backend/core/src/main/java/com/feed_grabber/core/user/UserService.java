@@ -1,7 +1,5 @@
 package com.feed_grabber.core.user;
 
-import com.feed_grabber.core.role.RoleRepository;
-import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;
@@ -18,17 +16,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
-
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            var role = roleRepository.getOne(userDto.getRoleId());
-            var team = teamRepository.getOne(userDto.getTeamId());
-            var user = User.fromDto(userDto, role, team);
+            var user = User.fromDto(userDto);
             var result = userRepository.save(user);
             return Optional.of(result.getId());
         } catch (Exception e) {

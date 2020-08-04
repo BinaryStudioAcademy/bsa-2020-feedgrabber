@@ -8,7 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -17,8 +20,6 @@ public class UserDto {
     private final String email;
     private final String username;
     private final String password;
-    private final RoleDto role;
-    private final TeamDto team;
 
     public static UserDto fromEntity(User user) {
         return UserDto
@@ -27,8 +28,6 @@ public class UserDto {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .role(RoleDto.fromEntity(user.getRole()))
-                .team(TeamDto.fromEntity(user.getTeam()))
                 .build();
     }
 }

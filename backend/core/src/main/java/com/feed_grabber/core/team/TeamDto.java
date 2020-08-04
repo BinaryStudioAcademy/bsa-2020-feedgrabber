@@ -12,7 +12,7 @@ import java.util.UUID;
 public class TeamDto {
     private final UUID id;
     private final String name;
-    private final String company_id;
+    //private final Company company_id;
 
     public static TeamDto fromEntity(Team team) {
         return TeamDto

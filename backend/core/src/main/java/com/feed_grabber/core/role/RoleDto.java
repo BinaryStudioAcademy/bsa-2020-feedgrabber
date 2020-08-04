@@ -13,8 +13,7 @@ public class RoleDto {
     private final UUID id;
     private final String name;
     private final String description;
-
-    private final String company_id;
+   //private final CompanyDto company_id;
 
     public static RoleDto fromEntity(Role role) {
         return RoleDto
