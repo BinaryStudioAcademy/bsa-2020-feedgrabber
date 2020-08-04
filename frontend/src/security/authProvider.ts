@@ -1,29 +1,28 @@
-import {createTokenProvider} from "./tokenProvider";
-import {useEffect, useState} from "react";
+import { createTokenProvider } from './tokenProvider';
+import { useEffect, useState } from 'react';
 
 const createAuthProvider = () => {
+  const tokenProvider = createTokenProvider();
 
-    const tokenProvider = createTokenProvider()
+  const login = newTokens => tokenProvider.setToken(newTokens);
 
-    const login = newTokens => tokenProvider.setToken(newTokens)
+  const logout = () => tokenProvider.setToken(null);
 
-    const logout = () => tokenProvider.setToken(null)
+  const useAuth = () => {
+    const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn());
 
-    const useAuth = () => {
-        const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn())
+    useEffect(() => {
+      const listener = (newIsLogged: boolean) => setIsLogged(newIsLogged);
 
-        useEffect(() => {
-            const listener = (newIsLogged: boolean) => setIsLogged(newIsLogged)
+      tokenProvider.subscribe(listener);
 
-            tokenProvider.subscribe(listener)
+      return () => tokenProvider.unsubscribe(listener);
+    }, []);
 
-            return () => tokenProvider.unsubscribe(listener)
-        }, [])
+    return isLogged;
+  };
 
-        return isLogged
-    }
+  return { useAuth, login, logout };
+};
 
-    return {useAuth, login, logout}
-}
-
-export const {useAuth, login, logout} = createAuthProvider()
+export const { useAuth, login, logout } = createAuthProvider();
