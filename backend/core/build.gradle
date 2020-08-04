@@ -33,6 +33,9 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2'
+	implementation "io.jsonwebtoken:jjwt-api:0.10.5"
+	implementation "io.jsonwebtoken:jjwt-impl:0.10.5"
+	implementation "io.jsonwebtoken:jjwt-jackson:0.10.5"
 }
 
 test {
