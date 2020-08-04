@@ -13,7 +13,7 @@ public class UserCreateDto {
     private final String username;
     private final String email;
     private final String password;
-    private final UUID role;
-    private final Set<UUID> team;
+    private final UUID roleId;
+    private final UUID teamId;
 }
 
