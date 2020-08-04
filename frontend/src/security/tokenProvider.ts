@@ -9,12 +9,12 @@ export const createTokenProvider = () => {
   };
 
   const unsubscribe = (observer: (isLogged: boolean) => void) => {
-    observers = observers.filter((_observer) => _observer !== observer);
+    observers = observers.filter(_observer => _observer !== observer);
   };
 
   const notify = () => {
     const isLogged = isLoggedIn();
-    observers.forEach((observer) => observer(isLogged));
+    observers.forEach(observer => observer(isLogged));
   };
 
   const getToken = async () => _token?.accessToken;
@@ -34,6 +34,6 @@ export const createTokenProvider = () => {
     isLoggedIn,
     setToken,
     subscribe,
-    unsubscribe,
+    unsubscribe
   };
 };
