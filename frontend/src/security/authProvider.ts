@@ -1,24 +1,29 @@
-import {
-    isLoggedIn,
-    setAuthTokens,
-    clearAuthTokens, IAuthTokens
-} from "axios-jwt";
+import {createTokenProvider} from "./tokenProvider";
+import {useEffect, useState} from "react";
 
-import axios from "axios";
-import {ILoginRequest} from "../models/ILoginRequest";
-import {IRegisterRequest} from "../models/IRegisterRequest";
-import {IAuthResponse} from "../models/IAuthResponse";
+const createAuthProvider = () => {
 
-export const login = async (params: ILoginRequest) => authHelper(params, 'login')
+    const tokenProvider = createTokenProvider()
 
-export const register = async (params: IRegisterRequest) => authHelper(params, 'register')
+    const login = newTokens => tokenProvider.setToken(newTokens)
 
-export const logout = () => clearAuthTokens()
+    const logout = () => tokenProvider.setToken(null)
 
-export const hasAuth = isLoggedIn
+    const useAuth = () => {
+        const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn())
 
-const authHelper = async (params: IRegisterRequest | ILoginRequest, path: string) => {
-    const res: IAuthResponse = await axios.post(`/auth/${path}`, params)
+        useEffect(() => {
+            const listener = (newIsLogged: boolean) => setIsLogged(newIsLogged)
 
-    setAuthTokens(res as IAuthTokens)
+            tokenProvider.subscribe(listener)
+
+            return () => tokenProvider.unsubscribe(listener)
+        }, [])
+
+        return isLogged
+    }
+
+    return {useAuth, login, logout}
 }
+
+export const {useAuth, login, logout} = createAuthProvider()
