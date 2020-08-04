@@ -21,4 +21,12 @@ public class Team {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Column(name = "name")
+    private String name;
+
+    //TODO: Add this prop after company entity creation
+//    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "company_id")
+//    private String company;
+
 }

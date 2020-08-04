@@ -3,10 +3,7 @@ package com.feed_grabber.core.role;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Data
@@ -20,5 +17,16 @@ public class Role {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    //TODO: Add this prop after company entity creation
+//    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "company_id")
+//    private String company;
 
 }
