@@ -1,8 +1,9 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
-import com.feed_grabber.core.auth.model.AuthUser;
+import com.feed_grabber.core.exceptions.JwtTokenExpiredException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -46,29 +47,33 @@ public class TokenService {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateAccessToken(AuthUser userDetails) {
-        return generateToken(userDetails.getId(), TOKEN_EXPIRATION_TIME);
+    public String generateAccessToken(UUID id) {
+        return generateToken(id, TOKEN_EXPIRATION_TIME);
     }
 
-    public String generateRefreshToken(AuthUser userDetails) {
-        return generateToken(userDetails.getId(), REFRESH_TOKEN_EXPIRATION_TIME);
+    public String generateRefreshToken(UUID id) {
+        return generateToken(id, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     public TokenRefreshResponseDTO refreshTokens(String refreshToken) throws Exception {
-        if (refreshToken != null && !isTokenExpired(refreshToken)){
-            var userId = UUID.fromString(extractUserid(refreshToken));
-            String jwt =  generateToken(userId, TOKEN_EXPIRATION_TIME);
-            String refreshJwt = generateToken(userId, REFRESH_TOKEN_EXPIRATION_TIME);
-            return new TokenRefreshResponseDTO(jwt, refreshJwt);
+        try {
+            if (refreshToken != null && !isTokenExpired(refreshToken)) {
+                var userId = UUID.fromString(extractUserid(refreshToken));
+                String jwt = generateToken(userId, TOKEN_EXPIRATION_TIME);
+                String refreshJwt = generateToken(userId, REFRESH_TOKEN_EXPIRATION_TIME);
+                return new TokenRefreshResponseDTO(jwt, refreshJwt);
+            }
+            throw new IllegalArgumentException("No token passed");
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenExpiredException();
         }
-        throw new Exception();
     }
 
     private String generateToken(UUID subject, long expiration) {
         Map<String, Object> claims = new HashMap<>();
         Map<String, Object> headers = new HashMap<>();
-        headers.put("typ","JWT");
-        headers.put("alg","HS256");
+        headers.put("typ", "JWT");
+        headers.put("alg", "HS256");
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
         return Jwts.builder()
                 .setClaims(claims)

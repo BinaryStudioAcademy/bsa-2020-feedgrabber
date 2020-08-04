@@ -3,10 +3,8 @@ package com.feed_grabber.core.auth;
 import com.feed_grabber.core.auth.dto.TokenRefreshRequestDTO;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -20,6 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/renovate")
+    @ResponseStatus(HttpStatus.OK)
     public TokenRefreshResponseDTO renovate(@RequestBody TokenRefreshRequestDTO token) throws Exception {
         return authService.refresh(token.getToken());
     }
