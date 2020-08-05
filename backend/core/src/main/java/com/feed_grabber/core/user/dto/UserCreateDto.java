@@ -7,6 +7,7 @@ import lombok.Value;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Value
 @AllArgsConstructor
 public class UserCreateDto {
