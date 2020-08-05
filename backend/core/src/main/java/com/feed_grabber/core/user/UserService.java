@@ -6,6 +6,7 @@ import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +19,8 @@ public class UserService {
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            var user = User.fromDto(userDto);
+            //var user = User.fromDto(userDto);
+            var user = new User(userDto.getId(), userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), new ArrayList<>(), new ArrayList<>());
             var result = userRepository.save(user);
             return Optional.of(result.getId());
         } catch (Exception e) {
@@ -38,7 +40,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<UserDto> updateUser(UUID id, UserDto userDto){
+    public Optional<UserDto> updateUser(UUID id, UserDto userDto) {
         var userToUpdate = userRepository.getOne(id);
         userToUpdate.setEmail(userDto.getEmail());
         userToUpdate.setPassword(userDto.getPassword());
@@ -47,7 +49,7 @@ public class UserService {
         return Optional.of(UserDto.fromEntity(userToUpdate));
     }
 
-    public void deleteUser(UUID id){
+    public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
 }

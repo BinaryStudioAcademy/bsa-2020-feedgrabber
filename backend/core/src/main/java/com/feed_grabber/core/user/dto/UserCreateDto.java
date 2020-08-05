@@ -2,16 +2,17 @@ package com.feed_grabber.core.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Value;
 
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Value
 @AllArgsConstructor
 public class UserCreateDto {
-    private final UUID id;
-    private final String username;
-    private final String email;
-    private final String password;
+    UUID id;
+    String username;
+    String email;
+    String password;
 }
 

@@ -46,12 +46,4 @@ public class User {
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private List<Role> roles;
-
-    public static User fromDto(UserCreateDto user) {
-        return User.builder()
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .username(user.getUsername())
-                .build();
-    }
 }
