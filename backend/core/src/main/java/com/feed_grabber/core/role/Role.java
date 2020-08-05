@@ -1,6 +1,7 @@
 package com.feed_grabber.core.role;
 
 import com.feed_grabber.core.company.Company;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Builder
 @Table(name = "roles")
 public class Role {
     @Id
@@ -25,6 +27,9 @@ public class Role {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "system_role")
+    private String systemRole;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
