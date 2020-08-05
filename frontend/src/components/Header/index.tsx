@@ -1,11 +1,17 @@
 import React from "react";
 import { Menu, Icon, Image, Header as HeaderUI, Button, Dropdown } from "semantic-ui-react";
-import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useHistory } from "react-router-dom";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
-const Header = ({ user }) => {
+export interface IHeaderProps {
+    user: {
+        username: string;
+        avatar: string;
+    };
+}
+
+const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
     const history = useHistory();
     return (
         <Menu secondary>
@@ -59,10 +65,7 @@ const Header = ({ user }) => {
     );
 };
 
-Header.propTypes = {
-    user: PropTypes.objectOf(PropTypes.any)
-};
 Header.defaultProps = {
-    user: { username: "User", avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
+    user: { username: "UserName", avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
 };
 export default Header;
