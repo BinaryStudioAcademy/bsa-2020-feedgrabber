@@ -48,4 +48,7 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private UserProfile userProfile;
+
+    @OneToOne(mappedBy = "user")
+    private UserSettings userSettings;
 }
