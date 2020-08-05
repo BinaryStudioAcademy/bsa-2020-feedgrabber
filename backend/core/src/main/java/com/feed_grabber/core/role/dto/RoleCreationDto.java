@@ -1,8 +1,8 @@
 package com.feed_grabber.core.role.dto;
 
 import com.feed_grabber.core.role.SystemRole;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 import java.util.UUID;
 
@@ -14,7 +14,7 @@ public class RoleCreationDto {
 
     private String description;
 
-  private SystemRole systemRole;
+    private SystemRole systemRole;
 
     private UUID company;
 }
