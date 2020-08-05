@@ -1,4 +1,4 @@
-//import QuestionItem from "components/Question"; 
+// import QuestionItem from "components/Question"; 
 import React, { useState } from "react";
 import { Menu } from "semantic-ui-react";
 import "./style.sass";
@@ -15,7 +15,7 @@ export enum CategoriesMock {
 }
 
 export type Question = {
-  id: number
+  id: number;
   type: TypesMock;
   category: CategoriesMock;
   header: string;
@@ -29,7 +29,7 @@ const questionMockSingle = (id: number): Question => {
     type: TypesMock.INPUT,
     category: CategoriesMock.CATS,
     header: "New Task"
-  }
+  };
 };
 
 const questionsMock: Question[] = [
@@ -60,7 +60,7 @@ const questionsMock: Question[] = [
 const FormQuestionnaire = () => {
 
   const [questions, setQuestions] = useState([...questionsMock]);
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState(null);
 
   return (
     <>
