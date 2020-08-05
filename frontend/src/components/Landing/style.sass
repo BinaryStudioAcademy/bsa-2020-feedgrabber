@@ -1,0 +1,97 @@
+.landing_face
+    font-family: 'Quicksand-Regular', sans-serif
+    background-image: url('../../assets/images/bg-pattern.jpg')
+    height: 100vh
+
+    & .menu
+        background-color: transparent !important
+        backdrop-filter: blur(10px)
+        box-shadow: none
+        font-family: 'Quicksand-Bold', sans-serif
+        font-size: 1.5rem
+
+        & .item
+            padding-top: 10px !important
+            padding-bottom: 10px !important
+
+        & .logo
+            border-radius: 10px
+            padding-right: 10px
+
+    & .face
+        display: flex
+        justify-content: space-around
+        padding: 5.2em 10% 0 10%
+
+        &_card
+            border: 5px solid hsla(0,0%,80%,.58)
+            border-radius: 10px
+            padding: 20px
+            height: fit-content
+            margin-top: 10%
+            width: 30vw
+            backdrop-filter: blur(10px)
+            animation: bounce-left .8s both
+
+            &_header
+                font-family: 'Quicksand-Bold', sans-serif
+                font-size: 2.5vw
+
+            &_body
+                font-size: 1.5vw
+                letter-spacing: 3px
+                line-height: 1.9vw
+                padding-bottom: 20px
+
+            & .signin_btn
+                background-color: transparent
+                color: rgba(0,0,0,.9)
+                &:hover
+                    background-color: #cacbcd
+
+            & Button
+                color: white
+                background-color: rgb(0, 153, 255)
+                font-size: 1vw
+
+        &_main img
+            height: -webkit-fill-available
+
+@font-face
+    font-family: 'Quicksand-Regular'
+    src: url('../../assets/fonts/Quicksand-Regular.ttf')
+
+@font-face
+    font-family: 'Quicksand-Bold'
+    src: url('../../assets/fonts/Quicksand-Bold.ttf')
+
+@keyframes bounce-left
+    0%
+        transform: translateX(-48px)
+        animation-timing-function: ease-in
+        opacity: 1
+    24%
+        opacity: 1
+    40%
+        transform: translateX(-26px)
+        animation-timing-function: ease-in
+    65%
+        transform: translateX(-13px)
+        animation-timing-function: ease-in
+    82%
+        transform: translateX(-6.5px)
+        animation-timing-function: ease-in
+    93%
+        transform: translateX(-4px)
+        animation-timing-function: ease-in
+    25%,55%,75%,87%,98%
+        transform: translateX(0)
+        animation-timing-function: ease-out
+    100%
+        transform: translateX(0)
+        animation-timing-function: ease-out
+        opacity: 1
+
+@media screen and ( max-width: 1000px )
+    .face_logo
+        display: none
