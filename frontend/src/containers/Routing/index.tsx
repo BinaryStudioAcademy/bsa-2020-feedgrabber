@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import LoaderWrapper from "components/LoaderWrapper";
 import Data from "screens/Home/containers/Data";
+
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 
