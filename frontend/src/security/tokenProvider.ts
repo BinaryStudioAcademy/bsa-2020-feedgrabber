@@ -17,7 +17,7 @@ export const createTokenProvider = () => {
     observers.forEach(observer => observer(isLogged));
   };
 
-  const getToken = async () => _token?.accessToken;
+  const getToken = () => _token?.accessToken;
 
   const setToken = (token: typeof _token) => {
     if (token) localStorage.setItem("TOKEN_AUTH", JSON.stringify(token));

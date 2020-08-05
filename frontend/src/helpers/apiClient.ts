@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { createTokenProvider } from '../security/tokenProvider';
-import { history } from './history.helper';
+import {createTokenProvider} from '../security/tokenProvider';
+import {history} from './history.helper';
+
+//  axios instance for making network request with Auth header
 
 const apiClient = axios.create();
 
@@ -10,28 +12,29 @@ const responseErrorHandler = e => {
     const status = e.response.status;
     const originalRequest = e.config;
 
-    if ((status !== 403) || (status === 403 && !originalRequest._retry)) {
+    if ((status !== 403) || (status === 403 && originalRequest._retry)) {
         history.push('/login');
-        return Promise.reject();
+        return Promise.reject(e);
     }
 
     originalRequest._retry = true;
 
     return axios.post('/api/auth/renovate', {token: tokenService.getToken()})
         .then(res => {
-            if (res.status === 200) {
-                tokenService.setToken(res.data);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data}`;
-                return axios(originalRequest);
+            if (res.status !== 200 && res.status !== 201) {
+                history.push('/login');
+                return Promise.reject(e);
             }
-            history.push('/login');
-            return Promise.reject(e);
+
+            tokenService.setToken(res.data);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data}`;
+            return axios(originalRequest);
         });
 };
 
 apiClient.interceptors.request.use(request => {
-  request.headers.Authorization = `Bearer ${tokenService.getToken()}`;
-  return request;
+    request.headers.Authorization = `Bearer ${tokenService.getToken()}`;
+    return request;
 });
 
 axios.interceptors.response.use(undefined, responseErrorHandler);

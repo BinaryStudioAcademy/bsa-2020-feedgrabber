@@ -1,10 +1,3 @@
-import { callApi } from 'helpers/api.helper';
+import apiClient from "../../../helpers/apiClient";
 
-export const getData = async () => {
-  const response = await callApi({
-    endpoint: '/api/data/',
-    type: 'GET'
-  });
-
-  return response.json();
-};
+export const getData = async () => (await apiClient.get('/api/data')).data;
