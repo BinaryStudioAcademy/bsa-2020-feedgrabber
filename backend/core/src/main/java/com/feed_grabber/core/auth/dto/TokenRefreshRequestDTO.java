@@ -1,9 +1,8 @@
 package com.feed_grabber.core.auth.dto;
 
-import lombok.*;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
+@Value
 public class TokenRefreshRequestDTO {
     String token;
 }
