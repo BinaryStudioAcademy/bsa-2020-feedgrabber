@@ -1,12 +1,10 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.company.Company;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Data
@@ -24,9 +22,8 @@ public class Team {
     @Column(name = "name")
     private String name;
 
-    //TODO: Add this prop after company entity creation
-//    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "company_id")
-//    private Company company;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }
