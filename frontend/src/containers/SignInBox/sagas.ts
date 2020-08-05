@@ -1,8 +1,8 @@
 
 import { call, put, takeEvery, all } from 'redux-saga/effects';
-import { LOGIN, SET_VALIDATION_ERRORS } from './actionTypes';
+import { LOGIN } from './actionTypes';
 
-import { setIsLoading, setValidationErrorsSuccess, setUserAction } from './actions';
+import { setIsLoading, setUserAction } from './actions';
 
 import { callApi } from '../../helpers/api.helper'
 
@@ -27,17 +27,8 @@ function* watchLogin() {
   yield takeEvery(LOGIN, login)
 }
 
-function* setValidationErrors(action: any) {
-  yield put(setValidationErrorsSuccess(action.errors))
-}
-
-function* watchSetError() {
-  yield takeEvery(SET_VALIDATION_ERRORS, setValidationErrors)
-}
-
 export default function* loginSaga() {
   yield all([
-    watchLogin(),
-    watchSetError()
+    watchLogin()
   ])
 }

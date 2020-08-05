@@ -4,22 +4,17 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm';
 
-import { login, setValidationErrorsAction } from './actions';
-import { ISignInErrors } from "models/ISignInErrors";
+import { login } from './actions';
 import { IAuthData } from "models/IAuthData";
 // import Logo from 'src/components/Logo';
 
 interface ILoginProps {
   login(data: IAuthData): void;
-  setValidationErrors(errors: ISignInErrors): void;
-  validationErrors: ISignInErrors;
   isLoading: boolean;
 }
 
 const LoginPage: React.FC<ILoginProps> = ({
   login: signIn,
-  setValidationErrors: setErrors,
-  validationErrors,
   isLoading
 }) => {
   return (
@@ -29,12 +24,7 @@ const LoginPage: React.FC<ILoginProps> = ({
         <Header as="h2" color="teal" textAlign="center">
           Login to your account
         </Header>
-        <LoginForm 
-          login={signIn}
-          errors={validationErrors}
-          setValidationErrors={setErrors}
-          isLoading={isLoading}
-          />
+        <LoginForm login={signIn} isLoading={isLoading} />
         <Message>
           New to us?
           {' '}
@@ -48,16 +38,11 @@ const LoginPage: React.FC<ILoginProps> = ({
   );
 };
 
-LoginPage.defaultProps = {
-  validationErrors: {}
-};
-
 const mapStateToProps = rootState => ({
-  validationErrors: rootState.profile.validationErrors,
   isLoading: rootState.profile.isLoading
 });
 
-const actions = { login, setValidationErrors: setValidationErrorsAction };
+const actions = { login };
 
 export default connect(
   mapStateToProps,

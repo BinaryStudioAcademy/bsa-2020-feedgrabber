@@ -7,11 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author Aleksandr Karpachov
- * @version 1.0
- * @since 04.08.2020
- */
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {

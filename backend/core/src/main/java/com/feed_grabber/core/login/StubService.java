@@ -8,11 +8,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Aleksandr Karpachov
- * @version 1.0
- * @since 04.08.2020
- */
+
 @Service
 public class StubService {
     private List<TemporaryUser> users = new ArrayList<>();
