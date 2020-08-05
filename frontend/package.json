@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/styled-components": "^4.4.2",
+    "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "debounce": "^1.2.0",
     "dotenv": "^8.2.0",
@@ -38,16 +39,13 @@
     "build": "react-scripts build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "lint": "npm run eslint src -- --ext js,ts,tsx,jsx --fix",
+    "lint": "eslint src  --fix --ext .js,.ts,.tsx,.jsx",
     "checkTs": "tsc --noEmit"
   },
-  "lint-precommit": {
-    "*.{ts,tsx,js,jsx}": [
-      "npm run eslint -- --fix"
-    ]
-  },
   "husky": {
-    "pre-commit": "npm run checkTs && lint-precommit"
+    "hooks": {
+      "pre-commit": "npm run checkTs && npm run lint"
+    }
   },
   "eslintConfig": {
     "extends": "react-app"

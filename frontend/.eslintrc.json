@@ -21,6 +21,7 @@
       "comma-dangle": ["error", "never"],
       "no-multiple-empty-lines": ["error", { "max": 1 }],
       "max-len": ["error", { "code": 120 }],
+      "semi": "error",
       "react/prop-types": "off",
       "react/jsx-props-no-spreading": "off",
       "no-useless-constructor": "off",
