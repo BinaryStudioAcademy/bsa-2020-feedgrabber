@@ -3,7 +3,8 @@
   padding: 8% 0 0
   margin: auto
 
-.registerForm
+.registrationForm
+  font-family: "Roboto", sans-serif
   position: relative
   z-index: 1
   background: #FFFFFF
@@ -12,19 +13,25 @@
   padding: 45px
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
 
-.registerForm input
-  font-family: "Roboto", sans-serif
+.registrationForm .registrationField
+  margin: 0 0 15px
+
+.registrationForm input
   outline: 0
   width: 100%
-  margin: 0 0 15px
   padding: 10px
   box-sizing: border-box
   font-size: 14px
   border: 1px solid black
   border-radius: 3px
 
-.registerForm button
-  font-family: "Roboto", sans-serif
+.registrationForm .validationMessage
+  display: none
+  color: red
+  font-size: 10px
+
+
+.registrationForm button
   outline: 0
   background: #3E04DE
   width: 100%
@@ -34,17 +41,17 @@
   font-size: 14px
   cursor: pointer
 
-.registerForm button:hover,.registerForm button:active,.registerForm button:focus
+.registrationForm button:active
   background: #3300BF
 
-.registerForm .message
+.registrationForm .message
   margin: 15px 0 0
   color: #6E6E6E
   font-size: 12px
   display: flex
   justify-content: center
 
-.registerForm .message a
+.registrationForm .message a
   color: #3300BF
   text-decoration: none
   margin-left: 5px
