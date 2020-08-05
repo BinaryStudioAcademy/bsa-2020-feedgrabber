@@ -41,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        if (token != null) {
+        if (token == null) {
             return null;
         }
 
