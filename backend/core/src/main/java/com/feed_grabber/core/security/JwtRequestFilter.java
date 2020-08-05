@@ -29,7 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String header = request.getHeader(AUTH_HEADER_STRING);
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)){
+        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
@@ -42,13 +42,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
         if (token != null) {
-            var tokenString = token.replace(TOKEN_PREFIX, "");
-            String user = tokenService.extractUserid(tokenString);
-            if (user != null && !tokenService.isTokenExpired(tokenString)) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
-            }
             return null;
         }
+
+        var tokenString = token.replace(TOKEN_PREFIX, "");
+        String user = tokenService.extractUserid(tokenString);
+
+        if (user != null && !tokenService.isTokenExpired(tokenString)) {
+            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        }
+
         return null;
     }
 }
