@@ -16,5 +16,5 @@ public class RoleCreationDto {
 
     private SystemRole systemRole;
 
-    private UUID company;
+    private UUID companyId;
 }

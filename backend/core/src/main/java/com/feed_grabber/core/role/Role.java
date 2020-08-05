@@ -32,7 +32,8 @@ public class Role {
     private String description;
 
     @Column(name = "system_role")
-    private String systemRole;
+    @Enumerated(EnumType.STRING)
+    private SystemRole systemRole;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
