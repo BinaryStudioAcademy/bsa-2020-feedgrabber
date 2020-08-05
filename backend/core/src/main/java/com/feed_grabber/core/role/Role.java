@@ -1,5 +1,6 @@
 package com.feed_grabber.core.role;
 
+import com.feed_grabber.core.company.Company;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,9 +26,8 @@ public class Role {
     @Column(name = "description")
     private String description;
 
-    //TODO: Add this prop after company entity creation
-//    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "company_id")
-//    private Company company;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }
