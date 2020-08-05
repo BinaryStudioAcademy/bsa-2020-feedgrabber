@@ -1,6 +1,7 @@
-import React, {FunctionComponent} from "react";
+import React, {FunctionComponent} from 'react';
 
 import styles from './styles.module.sass'
+import MainPageHeader from "../MainPageHeader";
 
 interface IItem {
     id: string;
@@ -18,6 +19,7 @@ interface IMainPageProps {
 const MainPage: FunctionComponent<IMainPageProps> =
     ({questionnaireList, reportsList, newsList}) => (
         <>
+            <MainPageHeader/>
             <main className={styles.contentMain}>
                 <div className={styles.cardContainer}>
                     <div className={styles.card}>
@@ -71,7 +73,7 @@ const MainPage: FunctionComponent<IMainPageProps> =
                     </div>
                 </div>
             </main>
-            <footer className={styles.primaryFooter + styles.footerContainer}>
+            <footer className={[styles.primaryFooter, styles.centerContent].join(" ")}>
                 Binary Studio Academy
             </footer>
         </>
