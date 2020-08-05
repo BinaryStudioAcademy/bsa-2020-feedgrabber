@@ -1,16 +1,16 @@
 import {
-  SET_USER,
-  SET_IS_LOADING
-} from './actionTypes';
+  loginRoutine,
+  setLoadingRoutine
+} from './routines';
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case SET_USER:
+    case loginRoutine.SUCCESS:
       return {
         ...state,
         user: action.user
       };
-    case SET_IS_LOADING:
+    case setLoadingRoutine.TRIGGER:
       return {
         ...state,
         isLoading: action.isLoading

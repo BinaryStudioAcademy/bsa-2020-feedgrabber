@@ -1,82 +1,75 @@
-import React, { useState } from 'react';
-// import validator from 'validator';
+import React from 'react';
+import { Formik } from 'formik';
 import { Form, Button, Segment } from 'semantic-ui-react';
 import { IAuthData } from 'models/IAuthData';
+import * as yup from 'yup';
 
 interface ILoginFormProps {
   login(data: IAuthData): void;
   isLoading: boolean;
 }
 
-const LoginForm: React.FC<ILoginFormProps> = ({ login, isLoading }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState<string | undefined>(undefined);
-  const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
+const validationScema = yup.object().shape({
+  email: yup
+   .string()
+   .email()
+   .required(),
+  password: yup
+    .string()
+    .required()
+    .min(6, "min 6 characters")
+    .max(20, "max 20 characters.")
+})
   
-  const emailChanged = (value: string) => {
-    setEmail(value);
-    setEmailError(undefined);
-  };
-
-  const passwordChanged = (value: string) => {
-    setPassword(value);
-    setPasswordError(undefined);
-  };
-
-  const validateEmail = (): boolean => {
-    if (!email) {
-      setEmailError('Please enter a valid Email');
-      return false;
-    }
-    return true;
-  };
-
-  const validatePwd = () => {
-    if (!password) {
-      setPasswordError('this field is required');
-      return false;
-    }
-    return true;
-  };
-
-  const handleLoginClick = () => {
-    const isValid = validateEmail() && validatePwd();
-    if (!isValid || isLoading) {
-      return;
-    }
-    login({ email, password });
-  };
-
+const LoginForm: React.FC<ILoginFormProps> = ({ login, isLoading }) => {
+ 
   return (
-    <Form name="loginForm" size="large" onSubmit={handleLoginClick}>
-      <Segment>
-        <Form.Input
-          fluid
-          icon="at"
-          iconPosition="left"
-          placeholder="Email"
-          type="email"
-          error={emailError}
-          onChange={ev => emailChanged(ev.target.value)}
-          onBlur={validateEmail}
-        />
-        <Form.Input
-          fluid
-          icon="lock"
-          iconPosition="left"
-          placeholder="Password"
-          type="password"
-          error={passwordError}
-          onChange={ev => passwordChanged(ev.target.value)}
-          onBlur={validatePwd}
-        />
-        <Button type="submit" color="teal" fluid size="large" loading={isLoading} primary>
-          Login
-        </Button>
-      </Segment>
-    </Form>
-  );
+  <Formik
+    initialValues={{ email: '', password: '' }}
+    validationSchema={validationScema}
+    onSubmit={values =>
+      login({ email: values.email, password: values.password })
+    }
+  >
+    {({
+      errors,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      touched
+    }) => (
+        <Form name="loginForm" size="large" onSubmit={handleSubmit}>
+          <Segment>
+            <Form.Input
+              fluid
+              icon="at"
+              iconPosition="left"
+              placeholder="Email"
+              type="email"
+              name="email"
+              error={touched.email && errors.email ? errors.email : undefined}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <Form.Input
+              fluid
+              icon="lock"
+              iconPosition="left"
+              placeholder="Password"
+              type="password"
+              name="password"
+              error={touched.password && errors.password ? errors.password : undefined}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            <Button type="submit" color="teal" fluid size="large" primary
+                loading={isLoading} disabled={isLoading}>
+              Login
+            </Button>
+          </Segment>
+        </Form>
+      )}
+  </Formik>);
 };
 
 export default LoginForm;

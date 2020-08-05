@@ -1,22 +1,21 @@
 import {
-  LOGIN,
-  SET_IS_LOADING,
-  SET_USER
-} from './actionTypes';
+  loginRoutine,
+  setLoadingRoutine
+} from './routines';
 import { IAuthData } from "../../models/IAuthData";
 
 export const login = (authData: IAuthData) => ({
-  type: LOGIN,
+  type: loginRoutine.TRIGGER,
   authData
 });
 
 export const setIsLoading = (isLoading: boolean) => ({
-  type: SET_IS_LOADING,
+  type: setLoadingRoutine.TRIGGER,
   isLoading
 });
 
 // to do set type of user
 export const setUserAction =  (user: any) => ({
-  type: SET_USER,
+  type: loginRoutine.SUCCESS,
   user
 })

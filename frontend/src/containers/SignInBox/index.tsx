@@ -3,7 +3,6 @@ import { Grid, Header, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm';
-
 import { login } from './actions';
 import { IAuthData } from "models/IAuthData";
 // import Logo from 'src/components/Logo';
@@ -17,14 +16,15 @@ const LoginPage: React.FC<ILoginProps> = ({
   login: signIn,
   isLoading
 }) => {
+
   return (
     <Grid textAlign="center" verticalAlign="middle" className="fill">
       <Grid.Column style={{ maxWidth: 450 }}>
-        {/* <Logo /> */}
+        {/* // to do add <Logo /> */}
         <Header as="h2" color="teal" textAlign="center">
           Login to your account
         </Header>
-        <LoginForm login={signIn} isLoading={isLoading} />
+        <LoginForm login={ signIn } isLoading={ isLoading }  />
         <Message>
           New to us?
           {' '}
