@@ -19,7 +19,7 @@ const responseErrorHandler = e => {
 
     originalRequest._retry = true;
 
-    return axios.post('/api/auth/renovate', {token: tokenService.getToken()})
+    return apiClient.post('/api/auth/renovate', {token: tokenService.getToken()})
         .then(res => {
             if (res.status !== 200 && res.status !== 201) {
                 history.push('/login');
@@ -27,8 +27,8 @@ const responseErrorHandler = e => {
             }
 
             tokenService.setToken(res.data);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data}`;
-            return axios(originalRequest);
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${res.data}`;
+            return apiClient(originalRequest);
         });
 };
 

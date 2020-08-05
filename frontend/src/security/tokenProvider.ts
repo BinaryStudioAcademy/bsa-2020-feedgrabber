@@ -1,6 +1,6 @@
 export const createTokenProvider = () => {
-  let _token: { accessToken: string; refreshToken: string } =
-    JSON.parse(localStorage.getItem("TOKEN_AUTH") || "") || null;
+  let _token: { accessToken: string; refreshToken: string } | null =
+    JSON.parse(localStorage.getItem("TOKEN_AUTH"));
 
   let observers: Array<(isLogged: boolean) => void> = [];
 
