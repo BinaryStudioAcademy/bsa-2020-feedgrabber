@@ -45,4 +45,7 @@ public class User {
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private List<Role> roles;
+
+    @OneToOne(mappedBy = "user")
+    private UserProfile userProfile;
 }
