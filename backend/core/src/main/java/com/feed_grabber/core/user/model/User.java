@@ -43,6 +43,6 @@ public class User {
     private List<Team> teams;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "id")
     private List<Role> roles;
 }

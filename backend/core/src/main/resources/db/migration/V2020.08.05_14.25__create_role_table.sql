@@ -7,3 +7,6 @@ create table roles
     company_id  uuid,
     foreign key (company_id) REFERENCES companies (id)
 );
+
+alter table roles
+    add constraint role_name_company_unique unique (name, company_id);
