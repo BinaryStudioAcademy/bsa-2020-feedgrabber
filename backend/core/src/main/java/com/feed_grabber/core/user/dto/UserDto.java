@@ -7,6 +7,7 @@ import lombok.Value;
 
 import java.util.UUID;
 
+@Data
 @Value
 @Builder
 public class UserDto {
