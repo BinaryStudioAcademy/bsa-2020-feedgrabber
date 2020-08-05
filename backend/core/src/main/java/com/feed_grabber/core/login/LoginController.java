@@ -23,6 +23,7 @@ public class LoginController {
         // var token = tokenService.generateToken(userId)
         // var refreshedToken = tokenService.generateRenovationToken(userId)
         return new LoginResponseDto(user, "token", "refrToken");
+
     }
 
     @ExceptionHandler(WrongCredentialsException.class)
