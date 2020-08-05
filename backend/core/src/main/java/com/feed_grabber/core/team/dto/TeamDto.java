@@ -1,18 +1,19 @@
-package com.feed_grabber.core.team;
+package com.feed_grabber.core.team.dto;
 
+import com.feed_grabber.core.company.dto.CompanyDto;
+import com.feed_grabber.core.team.model.Team;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Value;
 
 import java.util.UUID;
 
-//TODO: edit company_id with CompanyDto and add it to builder
-
-@Data
+@Value
 @Builder
 public class TeamDto {
-    private final UUID id;
-    private final String name;
-    //private final Company company_id;
+    UUID id;
+    String name;
+    CompanyDto companyDto;
 
     public static TeamDto fromEntity(Team team) {
         return TeamDto
