@@ -42,7 +42,7 @@ public class User {
     @JoinColumn(name = "team_id")
     private List<Team> teams;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
     private Role role;
 }
