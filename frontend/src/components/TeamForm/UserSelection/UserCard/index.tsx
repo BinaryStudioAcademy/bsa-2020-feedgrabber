@@ -21,25 +21,22 @@ const UserCard: FC<UserCardProps> = props => {
     };
 
     return (
-        <div><Card fluid>
-            <Card.Content>
-                <Image
-                    floated="right"
-                    avatar
-                    size="huge"
-                    src={user.avatar}
-                />
-                <Card.Header>{user.firstname + " " + user.lastname}</Card.Header>
-                <Card.Meta>{user.username}</Card.Meta>
-            </Card.Content>
-            <Card.Content extra>
-                <div className='ui two buttons'>
-                    {!sel ?
-                        <Button onClick={clickHandler} basic color='green' content="Approve"/>
-                        : <Button onClick={clickHandler} basic color='red' content="Decline"/>}
-                </div>
-            </Card.Content>
-        </Card></div>
+        <div>
+            <Card fluid>
+                <Card.Content>
+                    <Image floated="right" avatar size="huge" src={user.avatar}/>
+                    <Card.Header>{user.firstname + " " + user.lastname}</Card.Header>
+                    <Card.Meta>{user.username}</Card.Meta>
+                </Card.Content>
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        {!sel ?
+                            <Button onClick={clickHandler} basic color='green' content="Approve"/>
+                            : <Button onClick={clickHandler} color='red' content="Decline"/>}
+                    </div>
+                </Card.Content>
+            </Card>
+        </div>
 
     );
 };

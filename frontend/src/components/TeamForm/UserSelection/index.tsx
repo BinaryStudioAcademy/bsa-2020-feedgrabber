@@ -16,7 +16,7 @@ export interface IUserSelectionProps {
 
 const styles = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     gridGap: "1rem",
     marginBottom: "1rem"
 };
@@ -47,6 +47,126 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
 
 UserSelection.defaultProps = {
     users: [
+        {
+            username: "Keep-Simple",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Nick",
+            lastname: "Crack"
+        },
+        {
+            username: "Vladikavkaz",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Vlad",
+            lastname: "Borshc"
+        },
+        {
+            username: "AmericanDream",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Peter",
+            lastname: "Sagan"
+        },
+        {
+            username: "TallTree",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Evan",
+            lastname: "Savage"
+        },
+        {
+            username: "Keep-Simple",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Nick",
+            lastname: "Crack"
+        },
+        {
+            username: "Vladikavkaz",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Vlad",
+            lastname: "Borshc"
+        },
+        {
+            username: "AmericanDream",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Peter",
+            lastname: "Sagan"
+        },
+        {
+            username: "TallTree",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Evan",
+            lastname: "Savage"
+        },
+        {
+            username: "Keep-Simple",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Nick",
+            lastname: "Crack"
+        },
+        {
+            username: "Vladikavkaz",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Vlad",
+            lastname: "Borshc"
+        },
+        {
+            username: "AmericanDream",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Peter",
+            lastname: "Sagan"
+        },
+        {
+            username: "TallTree",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Evan",
+            lastname: "Savage"
+        },
+        {
+            username: "Keep-Simple",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Nick",
+            lastname: "Crack"
+        },
+        {
+            username: "Vladikavkaz",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Vlad",
+            lastname: "Borshc"
+        },
+        {
+            username: "AmericanDream",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Peter",
+            lastname: "Sagan"
+        },
+        {
+            username: "TallTree",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Evan",
+            lastname: "Savage"
+        },
+        {
+            username: "Keep-Simple",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Nick",
+            lastname: "Crack"
+        },
+        {
+            username: "Vladikavkaz",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Vlad",
+            lastname: "Borshc"
+        },
+        {
+            username: "AmericanDream",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Peter",
+            lastname: "Sagan"
+        },
+        {
+            username: "TallTree",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Evan",
+            lastname: "Savage"
+        },
         {
             username: "Keep-Simple",
             avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",

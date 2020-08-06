@@ -16,7 +16,7 @@ const schema = yup.object().shape({
 });
 
 const TeamForm: React.FC = () => {
-
+    //  TODO pass users to UserSelection from store
     return (
         <Formik
             initialValues={{
