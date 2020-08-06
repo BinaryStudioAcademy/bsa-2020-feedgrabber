@@ -49,10 +49,10 @@ public class User {
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserProfile userProfile;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserSettings userSettings;
 
     public static User fromDto(UserCreateDto userCreateDto) {
