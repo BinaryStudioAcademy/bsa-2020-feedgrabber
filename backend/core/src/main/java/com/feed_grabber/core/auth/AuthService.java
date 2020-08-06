@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
     public AuthService(TokenService tokenService) {
         this.tokenService = tokenService;
     }

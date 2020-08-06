@@ -1,12 +1,18 @@
 package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.role.Role;
-import com.feed_grabber.core.team.Team;
-import lombok.*;
+import com.feed_grabber.core.team.model.Team;
+import com.feed_grabber.core.user.dto.UserCreateDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -33,19 +39,32 @@ public class User {
 
     @Column(name = "password")
     private String password;
+  
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
 
     @ManyToMany(
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name = "team_id")
-    private List<Team> teams;
+    @JoinTable(
+            name = "users_teams",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "team_id") }
+    )
+    @Builder.Default
+    private List<Team> teams = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    private List<Role> roles;
+    @Builder.Default
+    private Role role = new Role();
 
-    @Column(name = "is_enabled")
-    private Boolean isEnabled;
+    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
+    private UserProfile userProfile;
+
+    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
+    private UserSettings userSettings;
+    
 }

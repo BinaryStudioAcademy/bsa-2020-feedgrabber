@@ -3,6 +3,7 @@ package com.feed_grabber.core.company;
 import com.feed_grabber.core.company.dto.CompanyDto;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Builder
+@NoArgsConstructor
 @Table(name = "companies")
 public class Company {
     @Id
@@ -30,14 +31,4 @@ public class Company {
 
     @Column
     private String corporateEmail;
-
-    public static Company fromDto(CompanyDto companyDto) {
-        return Company.builder()
-                .id(companyDto.getId())
-                .name(companyDto.getName())
-                .address(companyDto.getAddress())
-                .phoneNumber(companyDto.getPhoneNumber())
-                .corporateEmail(companyDto.getEmail())
-                .build();
-    }
 }

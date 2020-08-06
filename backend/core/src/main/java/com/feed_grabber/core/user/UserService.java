@@ -19,8 +19,7 @@ public class UserService {
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            //var user = User.fromDto(userDto);
-            var user = new User(userDto.getId(), userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), new ArrayList<>(), new ArrayList<>(), false);
+            var user = UserMapper.MAPPER.userCreateDtoToModel(userDto);
             var result = userRepository.save(user);
             return Optional.of(result.getId());
         } catch (Exception e) {
@@ -29,14 +28,14 @@ public class UserService {
     }
 
     public Optional<UserDto> getUserById(UUID id) {
-        return userRepository.findById(id).map(UserDto::fromEntity);
+        return userRepository.findById(id).map(UserMapper.MAPPER::userToUserDto);
     }
 
     public List<UserDto> getUsers() {
         return userRepository
                 .findAll()
                 .stream()
-                .map(UserDto::fromEntity)
+                .map(UserMapper.MAPPER::userToUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +45,7 @@ public class UserService {
         userToUpdate.setPassword(userDto.getPassword());
         userToUpdate.setUsername(userDto.getUsername());
         userRepository.save(userToUpdate);
-        return Optional.of(UserDto.fromEntity(userToUpdate));
+        return Optional.of(UserMapper.MAPPER.userToUserDto(userToUpdate));
     }
 
     public void deleteUser(UUID id) {
