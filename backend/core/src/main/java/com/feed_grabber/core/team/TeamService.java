@@ -32,11 +32,13 @@ public class TeamService {
     }
 
     public Optional<TeamDto> update(CreateTeamDto teamDto) {
-        var team = teamRepository.getOne(teamDto.getId());
-
-        team.setName(teamDto.getName());
-        teamRepository.save(team);
-        return Optional.of(TeamDto.fromEntity(team));
+        return teamRepository.findById(teamDto.getId())
+                .map(team -> {
+                    team.setName(teamDto.getName());
+                    teamRepository.save(team);
+                    return team;
+                })
+                .map(TeamDto::fromEntity);
     }
 
     public void delete(UUID id) {

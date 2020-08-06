@@ -7,7 +7,6 @@ import lombok.Value;
 import java.util.UUID;
 
 @Data
-@Value
 @AllArgsConstructor
 public class CreateTeamDto {
     UUID id;
