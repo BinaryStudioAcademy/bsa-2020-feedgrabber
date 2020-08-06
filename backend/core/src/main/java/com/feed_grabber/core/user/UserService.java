@@ -1,5 +1,6 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;

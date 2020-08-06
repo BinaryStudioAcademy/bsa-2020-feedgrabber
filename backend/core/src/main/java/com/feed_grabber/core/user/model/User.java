@@ -44,10 +44,10 @@ public class User {
     @Builder.Default
     private List<Team> teams = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     @Builder.Default
-    private List<Role> roles = new ArrayList<>();
+    private Role role = new Role();
 
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserProfile userProfile;
