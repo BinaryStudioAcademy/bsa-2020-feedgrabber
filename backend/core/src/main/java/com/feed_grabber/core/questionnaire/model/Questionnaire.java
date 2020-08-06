@@ -1,6 +1,7 @@
 package com.feed_grabber.core.questionnaire.model;
 
 import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,4 +36,11 @@ public class Questionnaire {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
+    public static Questionnaire fromDto(QuestionnaireCreateDto createDto, Company company) {
+        return Questionnaire.builder()
+                .title(createDto.getTitle())
+                .company(company)
+                .build();
+    }
 }
