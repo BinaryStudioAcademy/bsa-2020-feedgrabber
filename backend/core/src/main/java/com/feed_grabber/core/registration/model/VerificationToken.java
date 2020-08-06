@@ -3,7 +3,9 @@ package com.feed_grabber.core.registration.model;
 import com.feed_grabber.core.user.model.User;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,7 +14,9 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "verification_token")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "verification_tokens")
 public class VerificationToken {
     private static long EXPIRATION_TIME_MILLIS = 86_400_000; // 24hours
 
@@ -28,7 +32,7 @@ public class VerificationToken {
     @Column(name = "expiration_date")
     private Date expirationDate;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
