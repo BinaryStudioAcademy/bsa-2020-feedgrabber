@@ -1,7 +1,7 @@
 package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.role.Role;
-import com.feed_grabber.core.team.Team;
+import com.feed_grabber.core.team.model.Team;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 

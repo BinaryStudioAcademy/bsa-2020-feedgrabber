@@ -20,6 +20,7 @@ public class TeamDto {
                 .builder()
                 .id(team.getId())
                 .name(team.getName())
+                .companyDto(CompanyDto.fromEntity(team.getCompany()))
                 .build();
     }
 }

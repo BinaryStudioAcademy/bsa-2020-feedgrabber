@@ -2,6 +2,7 @@ package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.dto.CompanyDto;
+import com.feed_grabber.core.team.dto.CreateTeamDto;
 import com.feed_grabber.core.team.dto.TeamDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,10 @@ public class TeamService {
         return teamRepository.findById(id).map(TeamDto::fromEntity);
     }
 
-    public Optional<TeamDto> update(UUID id, TeamDto teamDto, CompanyDto companyDto) {
-        var team = teamRepository.findById(id).get();
-        var company = companyRepository.findById(companyDto.getId()).get();
+    public Optional<TeamDto> update(CreateTeamDto teamDto) {
+        var team = teamRepository.getOne(teamDto.getId());
 
         team.setName(teamDto.getName());
-        team.setCompany(company);
         teamRepository.save(team);
         return Optional.of(TeamDto.fromEntity(team));
     }
