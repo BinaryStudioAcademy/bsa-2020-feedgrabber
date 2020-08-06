@@ -1,13 +1,18 @@
 package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.role.Role;
-import com.feed_grabber.core.team.Team;
+import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.dto.UserCreateDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -40,7 +45,11 @@ public class User {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name = "team_id")
+    @JoinTable(
+            name = "users_teams",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "team_id") }
+    )
     @Builder.Default
     private List<Team> teams = new ArrayList<>();
 
