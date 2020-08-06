@@ -34,6 +34,9 @@ public class CompanyService {
     }
 
     public Optional<CompanyDto> update(UUID id, CompanyDto companyDto) {
+        if (companyRepository.findById(id).isEmpty()) {
+            return Optional.empty();
+        }
         var updatedCompany = companyRepository.findById(id).get();
         updatedCompany.setName(companyDto.getName());
         updatedCompany.setAddress(companyDto.getAddress());
