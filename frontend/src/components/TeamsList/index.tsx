@@ -12,10 +12,10 @@ export interface IMember {
 export interface ITeam {
   id: string;
   name: string;
-  members: Array<IMember>;
+  members: IMember[];
 }
 export interface ITeamsListProps {
-  teams: Array<ITeam>;
+  teams: ITeam[];
   user: IUser;
 }
 
@@ -28,13 +28,12 @@ const TeamsList: React.FunctionComponent<ITeamsListProps> = ({ teams, user }) =>
           Teams
         </Title>
         <Card.Group>
-          {teams &&
-          teams.map(team => (
-            <Card link color="blue" fluid>
+          {teams.map(team => (
+            <Card link color="blue" fluid key={team.id}>
               <Card.Content header={team.name} />
               <Card.Content>
                 {team.members.slice(0, 7).map(user => (
-                  <Image avatar src={user.avatar} />
+                  <Image avatar src={user.avatar} key={user.id} />
                 ))}
                 {team.members.length > 2 &&
                 <Icon name="angle right" size="large" />}
