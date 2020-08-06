@@ -46,7 +46,7 @@ public class QuestionCategoryController {
     public ResponseEntity<Object> handleQuestionCategoryExistsException() {
         return new ResponseEntity<>(
                 "Question category with such company and title already exists",
-                HttpStatus.NOT_FOUND
+                HttpStatus.BAD_REQUEST
         );
     }
 

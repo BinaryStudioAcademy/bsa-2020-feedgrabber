@@ -46,7 +46,7 @@ public class QuestionnaireController {
     public ResponseEntity<Object> handleQuestionnaireExistsException() {
         return new ResponseEntity<>(
                 "Questionnaire with such company and title already exists",
-                HttpStatus.NOT_FOUND
+                HttpStatus.BAD_REQUEST
         );
     }
 

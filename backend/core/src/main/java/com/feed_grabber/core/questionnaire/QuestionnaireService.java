@@ -73,9 +73,9 @@ public class QuestionnaireService {
     }
 
     public void delete(UUID id) throws QuestionnaireNotFoundException {
-        var questionCategory = questionnaireRepository.findById(id)
+        var questionnaire = questionnaireRepository.findById(id)
                 .orElseThrow(QuestionnaireNotFoundException::new);
 
-        questionnaireRepository.delete(questionCategory);
+        questionnaireRepository.delete(questionnaire);
     }
 }
