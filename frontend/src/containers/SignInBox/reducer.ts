@@ -5,7 +5,8 @@ export default (state = {}, action) => {
         case loginRoutine.SUCCESS:
             return {
                 ...state,
-                user: action.payload
+                user: action.payload,
+                isLoading: false
             };
         case loginRoutine.TRIGGER:
             return {

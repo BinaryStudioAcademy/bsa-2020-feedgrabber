@@ -5,8 +5,6 @@ import {saveTokens} from '../../security/authProvider';
 
 function* login(action: any) {
     try {
-        yield put(loginRoutine.trigger());
-
         const res = yield call(apiClient.post, 'api/auth/login', action.authData);
         const { user, refreshToken, accessToken } = res.data;
 
