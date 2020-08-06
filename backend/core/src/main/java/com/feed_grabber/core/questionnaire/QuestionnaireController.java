@@ -55,6 +55,11 @@ public class QuestionnaireController {
         return questionnaireService.getAll();
     }
 
+    @GetMapping("/companies/{id}")
+    public List<QuestionnaireDto> getAllByCompany(@PathVariable UUID id) {
+        return questionnaireService.getAllByCompanyId(id);
+    }
+
     @GetMapping("/{id}")
     public QuestionnaireDto getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
         return questionnaireService.getOne(id)

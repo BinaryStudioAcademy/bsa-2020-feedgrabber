@@ -36,6 +36,13 @@ public class QuestionnaireService {
                 .collect(Collectors.toList());
     }
 
+    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId) {
+        return questionnaireRepository.findAllByCompanyId(companyId)
+                .stream()
+                .map(QuestionnaireDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     public Optional<QuestionnaireDto> getOne(UUID id) {
         return questionnaireRepository.findById(id)
                 .map(QuestionnaireDto::fromEntity);

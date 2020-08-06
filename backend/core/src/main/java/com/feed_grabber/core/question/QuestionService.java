@@ -41,6 +41,13 @@ public class QuestionService {
                 .collect(Collectors.toList());
     }
 
+    public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
+        return questionRepository.findAllByQuestionnaireId(questionnaireId)
+                .stream()
+                .map(QuestionDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     public Optional<QuestionDto> getOne(UUID id) {
         return questionRepository.findById(id)
                 .map(QuestionDto::fromEntity);

@@ -36,6 +36,13 @@ public class QuestionCategoryService {
                 .collect(Collectors.toList());
     }
 
+    public List<QuestionCategoryDto> getAllByCompanyId(UUID companyId) {
+        return questionCategoryRepository.findAllByCompanyId(companyId)
+                .stream()
+                .map(QuestionCategoryDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
     public Optional<QuestionCategoryDto> getOne(UUID id) {
         return questionCategoryRepository.findById(id)
                 .map(QuestionCategoryDto::fromEntity);

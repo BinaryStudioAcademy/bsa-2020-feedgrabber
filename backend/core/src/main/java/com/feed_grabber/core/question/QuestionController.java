@@ -64,6 +64,11 @@ public class QuestionController {
         return questionService.getAll();
     }
 
+    @GetMapping("/questionnaires/{id}")
+    public List<QuestionDto> getAllByQuestionnaire(@PathVariable UUID id) {
+        return questionService.getAllByQuestionnaireId(id);
+    }
+
     @GetMapping("/{id}")
     public QuestionDto getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
         return questionService.getOne(id)

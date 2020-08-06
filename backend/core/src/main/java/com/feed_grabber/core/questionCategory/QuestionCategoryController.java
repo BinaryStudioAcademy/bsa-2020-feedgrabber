@@ -55,6 +55,11 @@ public class QuestionCategoryController {
         return questionCategoryService.getAll();
     }
 
+    @GetMapping("/companies/{id}")
+    public List<QuestionCategoryDto> getAllByCompany(@PathVariable UUID id) {
+        return questionCategoryService.getAllByCompanyId(id);
+    }
+
     @GetMapping("/{id}")
     public QuestionCategoryDto getOne(@PathVariable UUID id) throws QuestionCategoryNotFoundException {
         return questionCategoryService.getOne(id)
