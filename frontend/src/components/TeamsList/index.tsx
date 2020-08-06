@@ -1,13 +1,28 @@
 import React from "react";
 import { Segment, Card, Icon, Image, Header as Title } from "semantic-ui-react";
-import Header from "../Header";
+import Header, { IUser } from "../Header";
 
 import styles from "./styles.module.sass";
 
-const TeamsList = ({ teams, curUser }) => {
+export interface IMember {
+  id: string;
+  avatar: string;
+  username: string;
+}
+export interface ITeam {
+  id: string;
+  name: string;
+  members: Array<IMember>;
+}
+export interface ITeamsListProps {
+  teams: Array<ITeam>;
+  user: IUser;
+}
+
+const TeamsList: React.FunctionComponent<ITeamsListProps> = ({ teams, user }) => {
   return (
     <div className={styles.teams_page}>
-      <Header user={curUser} />
+      <Header user={user} />
       <Segment style={{width: "70%"}}>
         <Title>
           Teams
@@ -37,6 +52,7 @@ const TeamsList = ({ teams, curUser }) => {
 
 TeamsList.defaultProps = {
   teams: [{
+    id: '533b5230-1b9f-11a8-9629-c7eca82aa7bd',
     name: 'Bsa-2020',
     members: [{
       id: '533b5230-1b9f-11e8-9629-c7eca82aa7bd',

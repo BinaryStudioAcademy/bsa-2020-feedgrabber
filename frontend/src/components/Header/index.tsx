@@ -4,11 +4,13 @@ import { useHistory } from "react-router-dom";
 
 import styles from "./styles.module.scss";
 
+export interface IUser {
+    id: string;
+    username: string;
+    avatar: string;
+}
 export interface IHeaderProps {
-    user: {
-        username: string;
-        avatar: string;
-    };
+    user: IUser;
 }
 
 const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
@@ -66,6 +68,9 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
 };
 
 Header.defaultProps = {
-    user: { username: "UserName", avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
+    user: {
+        id: '',
+        username: "UserName",
+        avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
 };
 export default Header;
