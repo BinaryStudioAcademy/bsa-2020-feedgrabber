@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "verification_tokens")
 public class VerificationToken {
-    private static long EXPIRATION_TIME_MILLIS = 86_400_000; // 24hours
+    private static final long EXPIRATION_TIME_MILLIS = 86_400_000; // 24hours
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -40,5 +40,9 @@ public class VerificationToken {
         this.token = token;
         this.user = user;
         expirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS);
+    }
+
+    public boolean isExpired() {
+        return this.expirationDate.before(new Date());
     }
 }

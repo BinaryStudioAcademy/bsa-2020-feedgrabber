@@ -35,13 +35,15 @@ public class VerificationTokenService {
         VerificationToken verificationToken = verificationTokenRepository
                 .findByToken(token)
                 .orElseThrow(() -> new VerificationTokenNotFoundException(token));
-        if (verificationToken.getExpirationDate().after(new Date())) {
-            User user = verificationToken.getUser();
-            user.setIsEnabled(true);
-            userRepository.save(user);
-        } else {
+        if (verificationToken.isExpired()) {
             throw new VerificationTokenExpiredException(token);
         }
+
+        User user = verificationToken.getUser();
+        user.setIsEnabled(true);
+
+        userRepository.save(user);
+        verificationTokenRepository.delete(verificationToken);
     }
 
 }
