@@ -19,7 +19,7 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
         <Menu secondary borderless className={styles.main_header}>
             <Menu.Item onClick={() => history.push('/')}>
                 <HeaderUI>
-                    <Image circular src="https://img.icons8.com/cotton/64/000000/chat.png" />
+                    <Image src={require('../../assets/images/icon_bg.jpg')} />
                     {' '}
                     <span>Feedgrabber</span>
                 </HeaderUI>
