@@ -15,12 +15,9 @@ public class RegistrationController {
 
     @PutMapping("/confirm")
     public ConfirmRegistrationResponseDto confirmRegistration(
-            @RequestParam(name="token", required = true) String token) {
-        try {
+            @RequestParam(name="token", required = true) String token)
+            throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
             verificationTokenService.verifyUserByToken(token);
             return new ConfirmRegistrationResponseDto(true);
-        } catch (VerificationTokenNotFoundException | VerificationTokenExpiredException e) {
-            return new ConfirmRegistrationResponseDto(false);
-        }
     }
 }
