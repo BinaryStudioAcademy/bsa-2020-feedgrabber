@@ -21,11 +21,12 @@ const UserCard: FC<UserCardProps> = props => {
     };
 
     return (
-        <Card>
+        <div><Card fluid>
             <Card.Content>
                 <Image
                     floated="right"
-                    size="mini"
+                    avatar
+                    size="huge"
                     src={user.avatar}
                 />
                 <Card.Header>{user.firstname + " " + user.lastname}</Card.Header>
@@ -34,11 +35,12 @@ const UserCard: FC<UserCardProps> = props => {
             <Card.Content extra>
                 <div className='ui two buttons'>
                     {!sel ?
-                    <Button onClick={clickHandler} basic color='green' content="Approve"/>
-                    : <Button onClick={clickHandler} basic color='red' content="Decline" />}
+                        <Button onClick={clickHandler} basic color='green' content="Approve"/>
+                        : <Button onClick={clickHandler} basic color='red' content="Decline"/>}
                 </div>
             </Card.Content>
-        </Card>
+        </Card></div>
+
     );
 };
 

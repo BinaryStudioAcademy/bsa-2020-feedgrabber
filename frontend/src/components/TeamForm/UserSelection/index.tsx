@@ -14,6 +14,13 @@ export interface IUserSelectionProps {
     setSelected: Function;
 }
 
+const styles = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+    gridGap: "1rem",
+    marginBottom: "1rem"
+};
+
 const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUsers}) => {
 
     const addHandler = (user: IUser) => {
@@ -25,7 +32,7 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
     };
 
     return (
-        <>
+        <div style={styles}>
             {users.map((u, i) => (
                 <UserCard
                     key={i}
@@ -34,35 +41,35 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
                     remove={removeHandler}
                 />
             ))}
-        </>
+        </div>
     );
 };
 
 UserSelection.defaultProps = {
     users: [
         {
-            username: "nick",
-            avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
-            firstname: "boy",
-            lastname: "boi"
+            username: "Keep-Simple",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Nick",
+            lastname: "Crack"
         },
         {
-            username: "alskdf",
-            avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
-            firstname: "boy",
-            lastname: "boi"
+            username: "Vladikavkaz",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Vlad",
+            lastname: "Borshc"
         },
         {
-            username: "kakak",
-            avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
-            firstname: "boy",
-            lastname: "boi"
+            username: "AmericanDream",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Peter",
+            lastname: "Sagan"
         },
         {
-            username: "sicc",
-            avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
-            firstname: "man",
-            lastname: "tab"
+            username: "TallTree",
+            avatar: "https://api.adorable.io/avatars/159/abott@adorable.png",
+            firstname: "Evan",
+            lastname: "Savage"
         }
     ]
 };
