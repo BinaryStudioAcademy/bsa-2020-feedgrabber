@@ -1,34 +1,28 @@
-
-import { call, put, takeEvery, all } from 'redux-saga/effects';
-import { loginRoutine } from './routines';
-
-import { setIsLoading, setUserAction } from './actions';
-
-import { callApi } from '../../helpers/api.helper'
+import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {loginRoutine} from './routines';
+import apiClient from '../../helpers/apiClient';
+import {saveTokens} from '../../security/authProvider';
 
 function* login(action: any) {
-  try {
-    yield put(setIsLoading(true));
-    // ----------
-    // to do
-    // this part needs to update after mergin whith frontend auth
-      const data = yield call(callApi, { type: 'POST', endpoint: 'api/auth/login', requestData: action.authData });
-      yield put(setUserAction(data.user));
-    // yield call(login(data.token, data.refreshedtoken))
-    // -------
-  } catch (error) {
-    console.log('auth err ', error.message);
-  } finally{
-    yield put(setIsLoading(false));
-  }
+    try {
+        const res = yield call(apiClient.post, 'api/auth/login', action.authData);
+        const { user, refreshToken, accessToken } = res.data;
+
+        yield put(loginRoutine.success(user));
+        yield call(saveTokens, { refreshToken, accessToken });
+
+    } catch (error) {
+        console.log('auth err ', error.message);
+        yield put(loginRoutine.failure(error));
+    }
 }
 
 function* watchLogin() {
-  yield takeEvery(loginRoutine.TRIGGER, login)
+    yield takeEvery(loginRoutine.TRIGGER, login);
 }
 
 export default function* loginSaga() {
-  yield all([
-    watchLogin()
-  ])
+    yield all([
+        watchLogin()
+    ]);
 }

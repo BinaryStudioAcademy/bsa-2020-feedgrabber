@@ -19,7 +19,7 @@ const validationScema = yup.object().shape({
     .required()
     .min(6, "min 6 characters")
     .max(20, "max 20 characters.")
-})
+});
   
 const LoginForm: React.FC<ILoginFormProps> = ({ login, isLoading }) => {
  

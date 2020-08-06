@@ -46,6 +46,6 @@ const MainPageHeader: FunctionComponent = () => (
             </div>
         </div>
     </header>
-)
+);
 
 export default MainPageHeader;

@@ -1,21 +1,25 @@
-import {
-  loginRoutine,
-  setLoadingRoutine
-} from './routines';
+import {loginRoutine} from './routines';
 
 export default (state = {}, action) => {
-  switch (action.type) {
-    case loginRoutine.SUCCESS:
-      return {
-        ...state,
-        user: action.user
-      };
-    case setLoadingRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: action.isLoading
-      };
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case loginRoutine.SUCCESS:
+            return {
+                ...state,
+                user: action.payload,
+                isLoading: false
+            };
+        case loginRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case loginRoutine.FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                isLoading: false
+            };
+        default:
+            return state;
+    }
 };
