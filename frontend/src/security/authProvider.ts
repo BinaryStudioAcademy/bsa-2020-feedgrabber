@@ -25,4 +25,4 @@ const createAuthProvider = () => {
   return { useAuth, login, logout };
 };
 
-export const { useAuth, login, logout } = createAuthProvider();
+export const { useAuth, login: saveTokens, logout: deleteTokens } = createAuthProvider();

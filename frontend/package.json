@@ -8,7 +8,7 @@
     "classnames": "^2.2.6",
     "debounce": "^1.2.0",
     "dotenv": "^8.2.0",
-    "formik": "^2.1.1",
+    "formik": "^2.1.5",
     "history": "^4.10.1",
     "http-proxy-middleware": "^0.20.0",
     "moment": "^2.24.0",

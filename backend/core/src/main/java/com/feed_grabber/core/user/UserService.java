@@ -1,5 +1,6 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;
@@ -19,8 +20,7 @@ public class UserService {
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            //var user = User.fromDto(userDto);
-            var user = new User(userDto.getId(), userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), new ArrayList<>(), new ArrayList<>());
+            var user = User.fromDto(userDto);
             var result = userRepository.save(user);
             return Optional.of(result.getId());
         } catch (Exception e) {
