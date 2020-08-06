@@ -14,7 +14,7 @@ export interface IHeaderProps {
 const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
     const history = useHistory();
     return (
-        <Menu secondary>
+        <Menu secondary borderless className={styles.main_header}>
             <Menu.Item onClick={() => history.push('/')}>
                 <HeaderUI>
                     <Image circular src="https://img.icons8.com/cotton/64/000000/chat.png" />
