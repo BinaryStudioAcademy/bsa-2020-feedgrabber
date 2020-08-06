@@ -12,15 +12,20 @@ import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
@@ -33,6 +38,7 @@ public class UserService {
     @Autowired
     private RoleService roleService;
 
+    @Transactional
     public UserResponseOnlyNameDTO createDefault(UserRegisterDTO userRegisterDTO) {
         var company = companyRepository
                 .findById(
@@ -67,8 +73,8 @@ public class UserService {
                                         .role(role)
                                         .build()
                                 ).getId()
-                                ).orElseThrow()
-                        );
+                        ).orElseThrow()
+                );
     }
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
@@ -104,5 +110,15 @@ public class UserService {
 
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public org.springframework.security.core.userdetails.User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository
+                .findByUsername(username)
+                .map(u -> new org.springframework.security.core.userdetails.User(u.getUsername()
+                        , u.getPassword()
+                        , Collections.emptyList()))
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

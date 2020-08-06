@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.dto.AuthUserDTO;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
+import com.feed_grabber.core.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.UserService;
 import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;
@@ -44,41 +45,41 @@ public class AuthService {
         return tokenService.refreshTokens(refreshToken);
     }
 
-    public AuthUserDTO registerUser(UserRegisterDTO userRegisterDTO) throws Exception {
+    public AuthUserDTO registerUser(UserRegisterDTO userRegisterDTO)  {
         userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
-        return login(new UserLoginDTO(userRegisterDTO.getPassword(), userRegisterDTO.getUsername())
-                , Optional.of(userService.createDefault(userRegisterDTO)));
-
+        try {
+            return login(new UserLoginDTO(userRegisterDTO.getPassword(), userRegisterDTO.getUsername())
+                    , Optional.of(userService.createDefault(userRegisterDTO)));
+        }catch (Exception exception){
+            throw new UserAlreadyExistsException();
+        }
     }
 
-    public AuthUserDTO login(UserLoginDTO userLoginDto, Optional<UserResponseOnlyNameDTO> userResponseOnlyNameDTO)
-            throws Exception {
-//        Authentication auth;
-//        try {
-//            auth = authenticationManager
-//                    .authenticate(
-//                            new UsernamePasswordAuthenticationToken(
-//                                    userLoginDto.getUsername()
-//                                    , userLoginDto.getPassword()
-//                            )
-//                    );
-//        } catch (BadCredentialsException e) {
-//            throw new Exception("Incorrect username or password", e);
-//        }
-//
-//        var user = userResponseOnlyNameDTO
-//                .orElse(UserResponseOnlyNameDTO
-//                        .fromEntity(userRepository
-//                                .findByUsername(userLoginDto.getUsername())
-//                                .orElseThrow()
-//                        )
-//                );
-//        var authDTO = new AuthUserDTO(
-//                tokenService.generateAccessToken(user.getId())
-//                , tokenService.generateRefreshToken(user.getId())
-//                , user);
-//        return authDTO;
-        return null;
+    public AuthUserDTO login(UserLoginDTO userLoginDto, Optional<UserResponseOnlyNameDTO> userResponseOnlyNameDTO) {
+        Authentication auth;
+        try {
+            auth = authenticationManager
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    userLoginDto.getUsername()
+                                    , userLoginDto.getPassword()
+                            )
+                    );
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Incorrect username or password", e);
+        }
+
+        var user = userResponseOnlyNameDTO
+                .orElse(UserResponseOnlyNameDTO
+                        .fromEntity(userRepository
+                                .findByUsername(userLoginDto.getUsername())
+                                .orElseThrow()
+                        )
+                );
+        return new AuthUserDTO(
+                tokenService.generateAccessToken(user.getId())
+                , tokenService.generateRefreshToken(user.getId())
+                , user);
     }
 
 }

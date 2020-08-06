@@ -25,14 +25,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthUserDTO register(@RequestBody UserRegisterDTO userRegisterDTO) throws Exception {
+    public AuthUserDTO register(@RequestBody UserRegisterDTO userRegisterDTO) {
         return authService.registerUser(userRegisterDTO);
     }
 
-//    @PostMapping("/login")
-//    @ResponseStatus(HttpStatus.OK)
-//    public AuthUserDTO login(@RequestBody UserLoginDTO userLoginDTO) throws Exception {
-//        return authService.login(userLoginDTO, Optional.empty());
-//    }
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public AuthUserDTO login(@RequestBody UserLoginDTO userLoginDTO) {
+        return authService.login(userLoginDTO, Optional.empty());
+    }
 
 }

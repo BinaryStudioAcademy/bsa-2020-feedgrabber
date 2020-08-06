@@ -15,16 +15,16 @@ public class LoginController {
     @Autowired
     StubService authService;
     
-    @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginDto dto) {
-        var user = authService.auth(dto);
-        // to do
-        // import TokenService from Auth
-        // var token = tokenService.generateToken(userId)
-        // var refreshedToken = tokenService.generateRenovationToken(userId)
-        return new LoginResponseDto(user, "token", "refrToken");
-
-    }
+//    @PostMapping("/login")
+//    public LoginResponseDto login(@RequestBody LoginDto dto) {
+//        var user = authService.auth(dto);
+//        // to do
+//        // import TokenService from Auth
+//        // var token = tokenService.generateToken(userId)
+//        // var refreshedToken = tokenService.generateRenovationToken(userId)
+//        return new LoginResponseDto(user, "token", "refrToken");
+//
+//    } commented because created new method in auth folder
 
     @ExceptionHandler(WrongCredentialsException.class)
     public ResponseEntity<String> handleUserNotFoundException(WrongCredentialsException exception) {
