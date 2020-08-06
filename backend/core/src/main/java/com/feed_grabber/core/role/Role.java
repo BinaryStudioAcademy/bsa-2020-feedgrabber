@@ -1,6 +1,10 @@
 package com.feed_grabber.core.role;
 
+import com.feed_grabber.core.company.Company;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -8,6 +12,9 @@ import java.util.UUID;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,9 +31,12 @@ public class Role {
     @Column(name = "description")
     private String description;
 
-    //TODO: Add this prop after company entity creation
-//    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "company_id")
-//    private Company company;
+    @Column(name = "system_role")
+    @Enumerated(EnumType.STRING)
+    private SystemRole systemRole;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }
