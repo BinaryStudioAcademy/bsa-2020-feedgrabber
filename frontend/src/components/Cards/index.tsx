@@ -1,5 +1,4 @@
 import React from "react";
-import {SelectableGroup, SelectAll, DeselectAll} from "react-selectable-fast/lib";
 import User from "./user";
 
 export interface IUser {
@@ -22,29 +21,16 @@ const Cards: React.FunctionComponent<IHeaderProps> = ({users, setSelected, selec
     };
 
     const removeHandler = (user: IUser) => {
-          setSelected("selectedUsers", selectedUsers.filter(u => u !== user));
+        setSelected("selectedUsers", selectedUsers.filter(u => u !== user));
     };
-    // const removeHandler = (user: IUser) => users.f
+
+    const clearHandler = () => {
+        setSelected("selectedUsers", []);
+    };
 
     return (
-    <SelectableGroup
-        className="main"
-        clickClassName="tick"
-        enableDeselect
-        // globalMouse={this.state.isGlobal}
-        allowClickWithoutSelected={true}
-        // duringSelection={this.handleSelecting}
-        // onSelectionClear={this.handleSelectionClear}
-        // onSelectionFinish={this.handleSelectionFinish}
-        // onSelectedItemUnmount={this.handleSelectedItemUnmount}
-    >
-        <div>
-            <SelectAll className="selectable-button">
-                <button>Select all</button>
-            </SelectAll>
-            <DeselectAll className="selectable-button">
-                <button>Clear selection</button>
-            </DeselectAll>
+        <>
+            <button onClick={clearHandler}>Clear selection</button>
             {users.map((u, i) => (
                 <User
                     key={i}
@@ -53,9 +39,8 @@ const Cards: React.FunctionComponent<IHeaderProps> = ({users, setSelected, selec
                     remove={removeHandler}
                 />
             ))}
-        </div>
-    </SelectableGroup>
-);
+        </>
+    );
 };
 
 Cards.defaultProps = {
