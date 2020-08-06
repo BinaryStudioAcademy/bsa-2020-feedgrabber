@@ -1,5 +1,6 @@
 import React, {FC} from "react";
 import UserCard from "./UserCard";
+import styled from "styled-components";
 
 export interface IUser {
     username: string;
@@ -14,12 +15,12 @@ export interface IUserSelectionProps {
     setSelected: Function;
 }
 
-const styles = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gridGap: "1rem",
-    marginBottom: "1rem"
-};
+const Container = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 1rem;
+    margin-bottom: 1rem;
+`;
 
 const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUsers}) => {
 
@@ -32,7 +33,7 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
     };
 
     return (
-        <div style={styles}>
+        <Container>
             {users.map((u, i) => (
                 <UserCard
                     key={i}
@@ -41,7 +42,7 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
                     remove={removeHandler}
                 />
             ))}
-        </div>
+        </Container>
     );
 };
 

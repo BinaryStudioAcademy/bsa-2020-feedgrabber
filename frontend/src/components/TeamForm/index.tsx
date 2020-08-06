@@ -2,7 +2,7 @@ import React from 'react';
 import {Formik} from 'formik';
 import {Button, Form, Segment} from 'semantic-ui-react';
 import * as yup from 'yup';
-import UserSelection from "./UserSelection";
+import UserSelection from './UserSelection';
 
 const schema = yup.object().shape({
     teamName: yup

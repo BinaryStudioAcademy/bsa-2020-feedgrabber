@@ -3,13 +3,13 @@ import {IUser} from "../index";
 import {Card, Image} from "semantic-ui-react";
 import Button from "semantic-ui-react/dist/commonjs/elements/Button";
 
-type UserCardProps = {
+interface IUserCardProps {
     user: IUser;
     add: Function;
     remove: Function;
 }
 
-const UserCard: FC<UserCardProps> = props => {
+const UserCard: FC<IUserCardProps> = props => {
     const {user, add, remove} = props;
 
     const [sel, setSel] = useState(false);
