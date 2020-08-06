@@ -63,15 +63,4 @@ public class User {
 
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserSettings userSettings;
-
-    public static User fromDto(UserCreateDto userCreateDto) {
-        return User.builder()
-                .id(userCreateDto.getId())
-                .email(userCreateDto.getEmail())
-                .username(userCreateDto.getUsername())
-                .password(userCreateDto.getPassword())
-                .userProfile(new UserProfile())
-                .userSettings(new UserSettings())
-                .build();
-    }
 }
