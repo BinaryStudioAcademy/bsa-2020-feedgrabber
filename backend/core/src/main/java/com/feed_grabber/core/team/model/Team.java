@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Table(name = "teams")
 public class Team {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -32,8 +33,9 @@ public class Team {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-            })
-    @JoinColumn(name = "user_id")
+            },
+            mappedBy = "teams"
+    )
     private List<User> users;
 
 }
