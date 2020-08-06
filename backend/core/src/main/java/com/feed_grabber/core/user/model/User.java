@@ -45,4 +45,7 @@ public class User {
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private List<Role> roles;
+
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
 }
