@@ -19,7 +19,6 @@ public class UserService {
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            //var user = User.fromDto(userDto);
             var user = UserMapper.MAPPER.userCreateDtoToModel(userDto);
             var result = userRepository.save(user);
             return Optional.of(result.getId());
