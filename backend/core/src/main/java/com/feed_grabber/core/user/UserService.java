@@ -19,8 +19,7 @@ public class UserService {
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            //var user = User.fromDto(userDto);
-            var user = new User(userDto.getId(), userDto.getEmail(), userDto.getUsername(), userDto.getPassword(), new ArrayList<>(), new ArrayList<>(), null, null);
+            var user = User.fromDto(userDto);
             var result = userRepository.save(user);
             return Optional.of(result.getId());
         } catch (Exception e) {
