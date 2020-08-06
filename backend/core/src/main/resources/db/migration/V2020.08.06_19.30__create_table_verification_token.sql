@@ -6,5 +6,5 @@ create table verification_tokens
     user_id uuid not null,
     primary key(id),
     foreign key(user_id)
-        references users(user_id)
+        references users(id)
 );
