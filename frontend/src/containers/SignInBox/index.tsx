@@ -3,12 +3,12 @@ import { Grid, Header, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm';
-import { login } from './actions';
 import { IAuthData } from "models/IAuthData";
+import {loginRoutine} from "./routines";
 // import Logo from 'src/components/Logo';
 
 interface ILoginProps {
-  login(data: IAuthData): void;
+  login: (data: IAuthData) => void;
   isLoading: boolean;
 }
 
@@ -42,9 +42,8 @@ const mapStateToProps = rootState => ({
   isLoading: rootState.profile.isLoading
 });
 
-const actions = { login };
+const mapDispatchToProps = {
+    login: loginRoutine
+};
 
-export default connect(
-  mapStateToProps,
-  actions
-)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

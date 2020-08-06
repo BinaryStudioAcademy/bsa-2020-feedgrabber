@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
 
-import styles from './styles.module.sass'
+import styles from './styles.module.sass';
 import MainPageHeader from "../MainPageHeader";
 
 interface IItem {
@@ -77,5 +77,5 @@ const MainPage: FunctionComponent<IMainPageProps> =
                 Binary Studio Academy
             </footer>
         </>
-    )
+    );
 export default MainPage;
