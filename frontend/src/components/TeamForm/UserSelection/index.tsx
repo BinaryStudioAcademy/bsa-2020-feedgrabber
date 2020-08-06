@@ -1,6 +1,5 @@
 import React, {FC} from "react";
-import Index from "./UserCard";
-import {Button} from "semantic-ui-react";
+import UserCard from "./UserCard";
 
 export interface IUser {
     username: string;
@@ -25,15 +24,10 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
         setSelected("selectedUsers", selectedUsers.filter(u => u !== user));
     };
 
-    const clearHandler = () => {
-        setSelected("selectedUsers", []);
-    };
-
     return (
         <>
-            <Button onClick={clearHandler}>Clear selection</Button>
             {users.map((u, i) => (
-                <Index
+                <UserCard
                     key={i}
                     user={u}
                     add={addHandler}
