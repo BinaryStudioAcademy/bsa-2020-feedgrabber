@@ -1,6 +1,5 @@
-package com.feed_grabber.core.role;
+package com.feed_grabber.core.user.model;
 
-import com.feed_grabber.core.company.Company;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,12 +9,13 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "roles")
-public class Role {
+@Builder
+@Table(name = "user_settings")
+public class UserSettings {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -25,18 +25,13 @@ public class Role {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "enable_notifications", nullable = false)
+    private Boolean enableNotifications;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "language")
+    private String language;
 
-    @Column(name = "system_role")
-    @Enumerated(EnumType.STRING)
-    private SystemRole systemRole;
-
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

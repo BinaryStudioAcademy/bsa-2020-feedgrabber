@@ -21,13 +21,12 @@ const responseErrorHandler = e => {
 
     return apiClient.post('/api/auth/renovate', {token: tokenService.getToken()})
         .then(res => {
-            if (res.status !== 200 && res.status !== 201) {
+            if (res.status !== 201) {
                 history.push('/login');
                 return Promise.reject(e);
             }
 
             tokenService.setToken(res.data);
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${res.data}`;
             return apiClient(originalRequest);
         });
 };
