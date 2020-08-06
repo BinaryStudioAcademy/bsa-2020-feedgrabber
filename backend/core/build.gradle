@@ -38,6 +38,8 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2'
+	compile 'org.springframework.boot:spring-boot-starter-mail:2.3.2.RELEASE'
+	compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.3.2.RELEASE'
 }
 
 test {
