@@ -16,7 +16,9 @@ const TeamForm: React.FC = () => {
 
     return (
         <Formik
-            initialValues={{teamName: '', selectedUsers: []}}
+            initialValues={{
+                teamName: '', selectedUsers: []
+            }}
             validationSchema={schema}
             onSubmit={values => console.log(values)}
         >
@@ -26,6 +28,7 @@ const TeamForm: React.FC = () => {
                   handleChange,
                   handleBlur,
                   handleSubmit,
+                  setFieldValue,
                   touched
               }) => (
                 <Form name="loginForm" size="large" onSubmit={handleSubmit}>
@@ -40,7 +43,7 @@ const TeamForm: React.FC = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
-                        <Cards onAdd={handleChange} users={undefined}/>
+                        <Cards setSelected={setFieldValue} selectedUsers={values.selectedUsers}/>
                         <Button type="submit"
                                 color="teal"
                                 fluid size="large"

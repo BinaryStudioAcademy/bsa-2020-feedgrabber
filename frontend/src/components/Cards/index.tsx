@@ -10,11 +10,23 @@ export interface IUser {
 }
 
 export interface IHeaderProps {
-    users: IUser[];
-    onAdd: Function;
+    users?: IUser[];
+    selectedUsers: IUser[];
+    setSelected: Function;
 }
 
-const Cards: React.FunctionComponent<IHeaderProps> = ({users, onAdd}) => (
+const Cards: React.FunctionComponent<IHeaderProps> = ({users, setSelected, selectedUsers}) => {
+
+    const addHandler = (user: IUser) => {
+        setSelected("selectedUsers", [...selectedUsers, user]);
+    };
+
+    const removeHandler = (user: IUser) => {
+          setSelected("selectedUsers", selectedUsers.filter(u => u !== user));
+    };
+    // const removeHandler = (user: IUser) => users.f
+
+    return (
     <SelectableGroup
         className="main"
         clickClassName="tick"
@@ -34,16 +46,34 @@ const Cards: React.FunctionComponent<IHeaderProps> = ({users, onAdd}) => (
                 <button>Clear selection</button>
             </DeselectAll>
             {users.map((u, i) => (
-                <User key={i} username={u.username} firstname={u.firstname} avatar={u.avatar} lastname={u.lastname}/>
+                <User
+                    key={i}
+                    user={u}
+                    add={addHandler}
+                    remove={removeHandler}
+                />
             ))}
         </div>
     </SelectableGroup>
 );
+};
 
 Cards.defaultProps = {
     users: [
         {
             username: "nick",
+            avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
+            firstname: "boy",
+            lastname: "boi"
+        },
+        {
+            username: "alskdf",
+            avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
+            firstname: "boy",
+            lastname: "boi"
+        },
+        {
+            username: "kakak",
             avatar: "https://img.icons8.com/cotton/64/000000/chat.png",
             firstname: "boy",
             lastname: "boi"

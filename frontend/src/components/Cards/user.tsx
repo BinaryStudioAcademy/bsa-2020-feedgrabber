@@ -1,15 +1,25 @@
-import React, {FC} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {createSelectable, TSelectableItemProps} from 'react-selectable-fast';
 import {IUser} from "./index";
 
-const User: FC<TSelectableItemProps & IUser> = props => {
-    const {selectableRef, isSelected, isSelecting, username} = props;
+type UserCardProps = TSelectableItemProps & {user: IUser} & {add: Function} & {remove: Function};
 
-    console.log(isSelected);
+const User: FC<UserCardProps> = props => {
+    const {selectableRef, isSelected, isSelecting, user, add, remove} = props;
+
+    const [sel, setSel] = useState(false);
+    const [selecting, setSelecting] = useState(isSelected);
+
+    useEffect(() => {
+        if (sel !== isSelected) {
+            isSelected ? add(user) : remove(user);
+            setSel(!sel);
+        }
+    }, [isSelected, sel, remove, add, user]);
 
     return (
         <div ref={selectableRef}>
-            {username}
+            {user.username}
         </div>
     );
 };
