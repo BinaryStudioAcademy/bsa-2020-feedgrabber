@@ -3,6 +3,7 @@ import { Menu, Icon, Image, Header as HeaderUI, Button, Dropdown } from "semanti
 import { useHistory } from "react-router-dom";
 
 import styles from "./styles.module.scss";
+import icon from "../../assets/images/icon_bg.jpg";
 
 export interface IUser {
     id: string;
@@ -19,7 +20,7 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
         <Menu secondary borderless className={styles.main_header}>
             <Menu.Item onClick={() => history.push('/')}>
                 <HeaderUI>
-                    <Image src={require('../../assets/images/icon_bg.jpg')} />
+                    <Image src={icon} />
                     {' '}
                     <span>Feedgrabber</span>
                 </HeaderUI>
