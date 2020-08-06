@@ -2,14 +2,17 @@ import React from 'react';
 import {Formik} from 'formik';
 import {Button, Form, Segment} from 'semantic-ui-react';
 import * as yup from 'yup';
-import Cards from "../Cards";
+import UserSelection from "./UserSelection";
 
 const schema = yup.object().shape({
     teamName: yup
         .string()
         .required("Required")
         .min(3, "Too Short!")
-        .max(50, "Too Long!")
+        .max(50, "Too Long!"),
+    selectedUsers: yup
+        .array()
+        .min(1)
 });
 
 const TeamForm: React.FC = () => {
@@ -35,19 +38,19 @@ const TeamForm: React.FC = () => {
                     <Segment>
                         <Form.Input
                             fluid
-                            icon="at"
+                            icon="group"
                             iconPosition="left"
-                            placeholder="name"
+                            placeholder="Team Name"
                             name="teamName"
                             error={touched.teamName && errors.teamName ? errors.teamName : null}
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
-                        <Cards setSelected={setFieldValue} selectedUsers={values.selectedUsers}/>
+                        <UserSelection setSelected={setFieldValue} selectedUsers={values.selectedUsers}/>
                         <Button type="submit"
                                 color="teal"
-                                fluid size="large"
                                 primary
+                                fluid size="large"
                                 content="Create"
                         />
                     </Segment>

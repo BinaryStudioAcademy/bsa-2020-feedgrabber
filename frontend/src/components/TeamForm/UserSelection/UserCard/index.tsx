@@ -1,5 +1,5 @@
 import React, {FC, useState} from "react";
-import {IUser} from "./index";
+import {IUser} from "../index";
 
 type UserCardProps = {
     user: IUser;
@@ -7,7 +7,7 @@ type UserCardProps = {
     remove: Function;
 }
 
-const User: FC<UserCardProps> = props => {
+const Index: FC<UserCardProps> = props => {
     const {user, add, remove} = props;
 
     const [sel, setSel] = useState(false);
@@ -24,4 +24,4 @@ const User: FC<UserCardProps> = props => {
     );
 };
 
-export default User;
+export default Index;

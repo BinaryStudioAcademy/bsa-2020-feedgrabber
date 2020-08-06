@@ -1,5 +1,6 @@
-import React from "react";
-import User from "./user";
+import React, {FC} from "react";
+import Index from "./UserCard";
+import {Button} from "semantic-ui-react";
 
 export interface IUser {
     username: string;
@@ -8,13 +9,13 @@ export interface IUser {
     avatar: string;
 }
 
-export interface IHeaderProps {
+export interface IUserSelectionProps {
     users?: IUser[];
     selectedUsers: IUser[];
     setSelected: Function;
 }
 
-const Cards: React.FunctionComponent<IHeaderProps> = ({users, setSelected, selectedUsers}) => {
+const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUsers}) => {
 
     const addHandler = (user: IUser) => {
         setSelected("selectedUsers", [...selectedUsers, user]);
@@ -30,9 +31,9 @@ const Cards: React.FunctionComponent<IHeaderProps> = ({users, setSelected, selec
 
     return (
         <>
-            <button onClick={clearHandler}>Clear selection</button>
+            <Button onClick={clearHandler}>Clear selection</Button>
             {users.map((u, i) => (
-                <User
+                <Index
                     key={i}
                     user={u}
                     add={addHandler}
@@ -43,7 +44,7 @@ const Cards: React.FunctionComponent<IHeaderProps> = ({users, setSelected, selec
     );
 };
 
-Cards.defaultProps = {
+UserSelection.defaultProps = {
     users: [
         {
             username: "nick",
@@ -71,4 +72,4 @@ Cards.defaultProps = {
         }
     ]
 };
-export default Cards;
+export default UserSelection;
