@@ -1,32 +1,31 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { loginRoutine } from './routines';
+import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {loginRoutine, registerRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
-import { saveTokens } from '../../security/authProvider';
-import { ILoginResponse } from './common';
+import {saveTokens} from '../../security/authProvider';
+import {IAuthResponse} from './common';
 
-function* login(action: any) {
-    try {
-        const res: ILoginResponse = yield call(apiClient.post, 'api/auth/login', action.authData);
-        if (res.error) {
-            throw res.error;
-        }
-        const { user, refreshToken, accessToken } = res.data;
+function* auth(action) {
+        const isLogin = action.type === loginRoutine.TRIGGER;
+        const endpoint = isLogin ? 'login' : 'register';
+        const routine = isLogin ? loginRoutine : registerRoutine;
 
-        yield put(loginRoutine.success(user));
-        yield call(saveTokens, { refreshToken, accessToken });
+        const res: IAuthResponse = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
 
-    } catch (error) {
-        console.log('auth err ', error);
-        yield put(loginRoutine.failure(error));
-    }
+        res.data.error && (yield put(routine.failure(res.data.error)));
+
+        const {user, refreshToken, accessToken} = res.data.data;
+
+        yield put(routine.success(user));
+        yield call(saveTokens, {refreshToken, accessToken});
 }
 
-function* watchLogin() {
-    yield takeEvery(loginRoutine.TRIGGER, login);
-}
+// function* watchLogin() {
+//     yield takeEvery(loginRoutine.TRIGGER, login);
+// }
 
 export default function* loginSaga() {
     yield all([
-        watchLogin()
+        yield takeEvery(loginRoutine.TRIGGER, auth),
+        yield takeEvery(registerRoutine.TRIGGER, auth)
     ]);
 }
