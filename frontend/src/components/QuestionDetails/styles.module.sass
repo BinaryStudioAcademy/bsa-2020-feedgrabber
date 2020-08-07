@@ -1,0 +1,46 @@
+
+$background-color: #F8F9FA
+$background-card-color: #ffffff
+$aside-width: calc((100% - 800px) / 2)
+$text-color: #043845
+
+html, body
+  height: 100%
+  background-color: $background-color
+
+h1
+  font-size: 32px
+  font-weight: bold
+  text-align: center
+  margin-bottom: 20px
+  color: $text-color
+
+.content
+  margin-left: $aside-width
+  margin-right: $aside-width
+  padding-top: 50px
+  padding-bottom: 50px
+
+.centerContent
+  display: flex
+  justify-content: center
+  align-items: center
+
+.questionContainer
+  color: $text-color
+
+  button
+    border: none
+    border-radius: 5px
+    cursor: pointer
+    width: 50%
+    height: 30px
+    background-color: #a3d6ff
+    color: #2c2c94
+    font-weight: bold
+    transition: background-color 0.1s
+    display:
+    self-align: center
+
+    &:hover
+      background-color: #77c2ff
