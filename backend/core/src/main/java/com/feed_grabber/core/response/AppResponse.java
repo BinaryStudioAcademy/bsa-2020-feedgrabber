@@ -1,9 +1,11 @@
 package com.feed_grabber.core.response;
 
-import org.springframework.context.ApplicationListener;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class AppResponse<T> {
     public final T data;
+
+    @JsonIgnoreProperties({"cause", "stackTrace", "suppressed"})
     public final Exception error;
 
     public AppResponse(T data) {

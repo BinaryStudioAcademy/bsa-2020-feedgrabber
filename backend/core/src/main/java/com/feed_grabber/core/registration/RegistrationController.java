@@ -1,7 +1,7 @@
 package com.feed_grabber.core.registration;
 
-import com.feed_grabber.core.exceptions.VerificationTokenExpiredException;
-import com.feed_grabber.core.exceptions.VerificationTokenNotFoundException;
+import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
+import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.registration.dto.ConfirmRegistrationResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

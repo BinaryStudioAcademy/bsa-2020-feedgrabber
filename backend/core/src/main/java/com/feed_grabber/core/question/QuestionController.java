@@ -27,37 +27,6 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @ExceptionHandler({QuestionNotFoundException.class})
-    public ResponseEntity<Object> handleQuestionNotFoundException() {
-        return new ResponseEntity<>(
-                "Question not found",
-                HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler({QuestionnaireNotFoundException.class})
-    public ResponseEntity<Object> handleQuestionnaireNotFoundException() {
-        return new ResponseEntity<>(
-                "Questionnaire not found",
-                HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler({QuestionCategoryNotFoundException.class})
-    public ResponseEntity<Object> handleQuestionCategoryNotFoundException() {
-        return new ResponseEntity<>(
-                "Question category not found",
-                HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler({QuestionExistsException.class})
-    public ResponseEntity<Object> handleQuestionExistsException() {
-        return new ResponseEntity<>(
-                "Question with such text, questionnaire and category already exists",
-                HttpStatus.BAD_REQUEST
-        );
-    }
 
     @GetMapping()
     public List<QuestionDto> getAll() {

@@ -1,14 +1,13 @@
 package com.feed_grabber.core.registration;
 
-import com.feed_grabber.core.exceptions.VerificationTokenExpiredException;
-import com.feed_grabber.core.exceptions.VerificationTokenNotFoundException;
+import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
+import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.registration.model.VerificationToken;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Service

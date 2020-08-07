@@ -1,4 +1,9 @@
 package com.feed_grabber.core.question.exceptions;
 
-public class QuestionNotFoundException extends Exception {
+import com.feed_grabber.core.exceptions.NotFoundException;
+
+public class QuestionNotFoundException extends NotFoundException {
+    public QuestionNotFoundException() {
+        super("Question Not Found");
+    }
 }
