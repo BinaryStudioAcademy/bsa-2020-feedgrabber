@@ -2,6 +2,7 @@ package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
+import com.feed_grabber.core.user.dto.UserResponseDto;
 import com.feed_grabber.core.user.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,4 +19,6 @@ public interface UserMapper {
     @Mapping(target = "userProfile", ignore = true)
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
+
+    UserResponseDto userToUserResponseDto(User user);
 }
