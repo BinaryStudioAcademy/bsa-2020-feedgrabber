@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
                                 .build())
         );
 
-        if (roles.size() != 1) {
+        if (roles.size() != 3) {
             throw new InsertionException(roles.toString());
         }
 

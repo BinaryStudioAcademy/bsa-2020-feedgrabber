@@ -1,6 +1,5 @@
 package com.feed_grabber.core.register;
 
-import com.feed_grabber.core.auth.AuthService;
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.user.UserService;
@@ -14,7 +13,7 @@ public class RegisterService {
     private final UserService userService;
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    public RegisterService(UserService userService, PasswordEncoder bCryptPasswordEncoder, AuthService authService) {
+    public RegisterService(UserService userService, PasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
