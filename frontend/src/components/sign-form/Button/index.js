@@ -45,7 +45,7 @@ const Secondary = styled(Default)`
 const Transparent = styled(Default)`
   background-color: transparent;
   border-color: ${theme.color.white};
-	color: ${theme.color.white};
+  color: ${theme.color.white};
 `;
 
 class Button extends React.Component {
@@ -79,8 +79,6 @@ class Button extends React.Component {
       'transparent': Transparent,
       'default': Default
     };
-
-    console.log(this.props);
 
     return React.createElement(variants[this.props.variant], this.props);
   }

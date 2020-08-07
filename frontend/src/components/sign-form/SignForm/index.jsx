@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
 import { theme } from "../Theme";
@@ -157,7 +156,6 @@ class SignForm extends React.Component {
   }
 
   toggleSignPanel() {
-    console.log("swith");
     this.setState((prevState, props) => {
       return {
         signUpActive: !prevState.signUpActive

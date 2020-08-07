@@ -28,7 +28,6 @@ class Input extends React.Component {
   };
 
   static propTypes = {
-    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     value: PropTypes.string,
     type: PropTypes.oneOf(['text', 'email', 'password', 'number']),
@@ -53,7 +52,6 @@ class Input extends React.Component {
   render() {
     return (
       <StyledInput
-        id={this.props.id}
         type={this.props.type}
         name={this.props.name}
         defaultValue={this.state.value}
