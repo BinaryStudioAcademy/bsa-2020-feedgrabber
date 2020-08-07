@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm';
 import { IAuthData } from "models/IAuthData";
 import {loginRoutine} from "./routines";
+import SignForm from '../../components/sign-form/SignForm';
 // import Logo from 'src/components/Logo';
 
 interface ILoginProps {
@@ -18,23 +19,24 @@ const LoginPage: React.FC<ILoginProps> = ({
 }) => {
 
   return (
-    <Grid textAlign="center" verticalAlign="middle" className="fill">
-      <Grid.Column style={{ maxWidth: 450 }}>
-        {/* // to do add <Logo /> */}
-        <Header as="h2" color="teal" textAlign="center">
-          Login to your account
-        </Header>
-        <LoginForm login={ signIn } isLoading={ isLoading }  />
-        <Message>
-          New to us?
-          {' '}
-          <NavLink exact to="/registration">Sign Up</NavLink>
-        </Message>
-        <Message>
-          <NavLink exact to="/forgot_password">forgot password?</NavLink>
-        </Message>
-      </Grid.Column>
-    </Grid>
+    <SignForm></SignForm>
+    // <Grid textAlign="center" verticalAlign="middle" className="fill">
+    //   <Grid.Column style={{ maxWidth: 450 }}>
+    //     {/* // to do add <Logo /> */}
+    //     <Header as="h2" color="teal" textAlign="center">
+    //       Login to your account
+    //     </Header>
+    //     <LoginForm login={ signIn } isLoading={ isLoading }  />
+    //     <Message>
+    //       New to us?
+    //       {' '}
+    //       <NavLink exact to="/registration">Sign Up</NavLink>
+    //     </Message>
+    //     <Message>
+    //       <NavLink exact to="/forgot_password">forgot password?</NavLink>
+    //     </Message>
+    //   </Grid.Column>
+    // </Grid>
   );
 };
 
