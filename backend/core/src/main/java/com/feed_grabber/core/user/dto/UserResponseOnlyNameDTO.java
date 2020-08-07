@@ -4,10 +4,11 @@ import lombok.*;
 
 import java.util.UUID;
 
-@Value
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserResponseOnlyNameDTO {
-    UUID id;
-    String email;
-    String username;
+    private UUID id;
+    private String email;
+    private String username;
 }

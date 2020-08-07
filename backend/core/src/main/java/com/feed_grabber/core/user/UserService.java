@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponseOnlyNameDTO createDefault(UserRegisterDTO userRegisterDTO) {
+    public void createDefault(UserRegisterDTO userRegisterDTO) {
         var company = companyRepository.save(
                 Company.builder().name(userRegisterDTO.getCompanyName()).build());
 
@@ -63,25 +63,19 @@ public class UserService implements UserDetailsService {
                                 .description("My possibility is to work")
                                 .company(company)
                                 .build())
-        ).stream()
-                .filter(role -> role.getSystemRole().equals(SystemRole.company_owner))
-                .collect(Collectors.toList());
+        );
 
         if (roles.size() != 1) {
             throw new InsertionException(roles.toString());
         }
 
-        return UserResponseOnlyNameDTO
-                .fromEntity(
-                        userRepository.save(User
-                                .builder()
+        userRepository.save(User.builder()
                                 .email(userRegisterDTO.getEmail())
                                 .username(userRegisterDTO.getUsername())
                                 .password(userRegisterDTO.getPassword())
                                 .role(roles.get(0))
                                 .build()
-                        )
-                );
+                        );
     }
 
     public Optional<UUID> createUser(UserCreateDto userDto) {

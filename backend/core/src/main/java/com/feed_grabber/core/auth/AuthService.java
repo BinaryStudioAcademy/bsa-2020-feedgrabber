@@ -3,7 +3,7 @@ package com.feed_grabber.core.auth;
 import com.feed_grabber.core.auth.dto.AuthUserDTO;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
-import com.feed_grabber.core.login.WrongCredentialsException;
+import com.feed_grabber.core.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,17 +28,18 @@ public class AuthService {
         return tokenService.refreshTokens(refreshToken);
     }
 
-    public AuthUserDTO login(UserLoginDTO userLoginDto) {
+    public AuthUserDTO login(UserLoginDTO dto) {
         try {
-            authenticationManager
-                    .authenticate(UserMapper.MAPPER.authFromUserLoginDto(userLoginDto));
+            var auth = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+
+            authenticationManager.authenticate(auth);
 
         } catch (BadCredentialsException e) {
             throw new WrongCredentialsException("Incorrect username or password");
         }
 
         var user = userRepository
-                                .findByUsername(userLoginDto.getUsername())
+                                .findByUsername(dto.getUsername())
                                 .map(UserMapper.MAPPER::responseFromUser).get();
 
         return new AuthUserDTO(tokenService.generateAccessToken(user.getId()),
