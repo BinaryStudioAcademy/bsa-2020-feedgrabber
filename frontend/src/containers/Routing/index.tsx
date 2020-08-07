@@ -17,7 +17,7 @@ export interface IRoutingProps {
 const isAuthorized = true;
 
 const fakeUser = {
-  id: '',
+  id: "",
   username: "user",
   avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
 };
