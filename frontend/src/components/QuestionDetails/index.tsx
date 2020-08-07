@@ -8,6 +8,7 @@ interface IQuestion {
     header: string;
     descripion: string;
     author: string;
+    type: string;
   }
 
   interface IQuestionProps {
@@ -15,41 +16,64 @@ interface IQuestion {
   }
   
   const QuestionDetails: React.FC<IQuestionProps> = ({ id }) => {
-    const [q, setQ] = useState(undefined);
+    const [question, setQuestion] = useState(undefined);
     const history = useHistory();
+    const [type, setType] = useState(undefined);
 
     useEffect(() => {
       getQuestion(id);
     });
 
     const getQuestion = async(id: string) => {
-      const questions = await getData();  
-      setQ(questions.find(question => question.id === id));
+      const questions: IQuestion[] = await getData();  
+      const question = questions.find(question => question.id === id);
+      setQuestion(question);
+      setType(question.type);
       return 0;
     };
 
     const onClose = () => {
-      history.push('/questions/list');
+      history.push('/questions');
+    };
+
+    const handleChange = event => {
+        setType(event.target.value);
+    };
+
+    const getForm = () => {
+      switch (type) {
+        case "inner-field":
+          return (""); // <InnerField />;  
+        case "radio-button":
+          return (""); // <RadioButton />;
+        case "drop-down":
+          return (""); // <DropDown />;
+        default:
+          return ("");
+      }
     };
 
     return (
       <div className={styles.container}>
-        { q ? 
         <div className={styles.content}>
-          <h1>Question</h1>
-          <div className={styles.questionContainer}>
+          <h1>Question</h1> 
+          <div className={styles.questionContainer}> 
             <div>
-              {<h3>{q.header}</h3>}
-              {<p className={styles.description}>{q.descripion}</p>}
-              {<p className={styles.author}>{q.author}</p>}
+            <div className={styles.questionForm}>{ getForm() }</div>
+              <select value={type} onChange={e => handleChange(e)}>
+                <option value="inner-field">Inner fields</option>
+                <option value="radio-button">Radio button</option>
+                <option value="drop-down">Drop down list</option>
+              </select>
             </div>
             <div className={styles.centerContent}>
               <button className={styles.centerContent} onClick={() => onClose()}>Close</button>
             </div>
-          </div>
-        </div> : <span>Loading...</span>}
+          </div> 
+        </div> 
       </div>
     );
   };
 
   export default QuestionDetails;
+  
