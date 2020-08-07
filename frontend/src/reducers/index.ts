@@ -8,5 +8,5 @@ export default combineReducers({
   toastr,
   data,
   registration,
-  profile: signInReducer,
+  profile: signInReducer
 });
