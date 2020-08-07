@@ -8,6 +8,7 @@ import Header from "../../components/Header";
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
+import ProfilePage from "../../components/ProfilePage";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -36,8 +37,7 @@ const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
           <PublicRoute exact path="/login" component={Login} />
           <PublicRoute exact path="/register" component={() => <span>Register page</span>} />
           <PrivateRoute exact path="/" component={MainPage} />
-          <PrivateRoute exact path="/profile" component={() => <span>Profile</span>} />
-          <PrivateRoute exact path="/profile/settings" component={() => <span>Profile Settings</span>} />
+          <PrivateRoute path="/profile" component={ProfilePage} />
           <PrivateRoute exact path="/requests" component={() => <span>Requests</span>} />
           <PrivateRoute exact path="/help" component={() => <span>Help Center</span>} />
           <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>} />
