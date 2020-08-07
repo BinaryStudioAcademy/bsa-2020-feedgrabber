@@ -36,6 +36,7 @@ const SignInForm: FC<ILoginProps> = props => {
 			}
 		>
 			{({
+                values,
 				errors,
 				handleChange,
 				handleBlur,
@@ -45,12 +46,12 @@ const SignInForm: FC<ILoginProps> = props => {
 					<form className={className} onSubmit={handleSubmit}>
 						<Typography fontWeight="bold" variant="h4">Sign In</Typography>
 						<Typography variant="body2">or use your account</Typography>
-						<Input name="username" type="text" placeholder="Username"
+						<Input name="username" placeholder="Username" value={values.username}
 							error={touched.username && (errors.username ?? null)}
 							onChange={handleChange}
 							onBlur={handleBlur}
 						/>
-						<Input name="password" type="password" placeholder="Password"
+						<Input name="password" type="password" placeholder="Password" value={values.password}
 							error={touched.password && (errors.password ?? null)}
 							onChange={handleChange} onBlur={handleBlur}
 						/>

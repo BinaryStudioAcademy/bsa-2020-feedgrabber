@@ -56,6 +56,7 @@ const SignUpForm: FC<IRegisterProps> = props => {
         >
             {({
                   errors,
+                  values,
                   handleChange,
                   handleBlur,
                   handleSubmit,
@@ -64,20 +65,20 @@ const SignUpForm: FC<IRegisterProps> = props => {
                 <form className={className} onSubmit={handleSubmit}>
                     <Typography fontWeight="bold" variant="h4">Create Account</Typography>
                     <Typography variant="body2">or use your email for registration</Typography>
-                    <Input name="username" type="text" placeholder="Username"
+                    <Input name="username" placeholder="Username" value={values.username}
                            error={touched.username && (errors.username ?? null)}
                            onChange={handleChange}
                            onBlur={handleBlur}
                     />
-                    <Input name="email" type="email" placeholder="Email"
+                    <Input name="email" type="email" placeholder="Email" value={values.email}
                            error={touched.email && (errors.email ?? null)}
                            onChange={handleChange} onBlur={handleBlur}
                     />
-                    <Input name="companyName" type="text" placeholder="Company"
+                    <Input name="companyName" placeholder="Company" value={values.companyName}
                            error={touched.companyName && (errors.companyName ?? null)}
                            onChange={handleChange} onBlur={handleBlur}
                     />
-                    <Input name="password" type="password" placeholder="Password"
+                    <Input name="password" type="password" placeholder="Password" value={values.password}
                            error={touched.password && (errors.password ?? null)}
                            onChange={handleChange} onBlur={handleBlur}
                     />
