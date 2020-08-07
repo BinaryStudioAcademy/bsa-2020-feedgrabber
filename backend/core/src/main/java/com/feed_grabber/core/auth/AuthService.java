@@ -45,16 +45,6 @@ public class AuthService {
         return tokenService.refreshTokens(refreshToken);
     }
 
-    public AuthUserDTO registerUser(UserRegisterDTO userRegisterDTO)  {
-        userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
-        try {
-            return login(new UserLoginDTO(userRegisterDTO.getPassword(), userRegisterDTO.getUsername())
-                    , Optional.of(userService.createDefault(userRegisterDTO)));
-        }catch (Exception exception){
-            throw new UserAlreadyExistsException();
-        }
-    }
-
     public AuthUserDTO login(UserLoginDTO userLoginDto, Optional<UserResponseOnlyNameDTO> userResponseOnlyNameDTO) {
         Authentication auth;
         try {

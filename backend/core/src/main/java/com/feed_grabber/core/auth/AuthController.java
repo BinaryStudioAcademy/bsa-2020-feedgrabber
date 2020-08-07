@@ -1,6 +1,7 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
+import com.feed_grabber.core.register.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,13 @@ import java.util.Optional;
 public class AuthController {
 
     private final AuthService authService;
+    private final RegisterService registerService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, RegisterService registerService) {
         this.authService = authService;
+        this.registerService = registerService;
     }
+
 
     @PostMapping("/renovate")
     @ResponseStatus(HttpStatus.CREATED)
@@ -26,7 +30,7 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthUserDTO register(@RequestBody UserRegisterDTO userRegisterDTO) {
-        return authService.registerUser(userRegisterDTO);
+        return registerService.registerUser(userRegisterDTO);
     }
 
     @PostMapping("/login")
