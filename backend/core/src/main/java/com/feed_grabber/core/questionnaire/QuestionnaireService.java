@@ -7,7 +7,6 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,20 +31,20 @@ public class QuestionnaireService {
     public List<QuestionnaireDto> getAll() {
         return questionnaireRepository.findAll()
                 .stream()
-                .map(QuestionnaireDto::fromEntity)
+                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
     public List<QuestionnaireDto> getAllByCompanyId(UUID companyId) {
         return questionnaireRepository.findAllByCompanyId(companyId)
                 .stream()
-                .map(QuestionnaireDto::fromEntity)
+                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<QuestionnaireDto> getOne(UUID id) {
         return questionnaireRepository.findById(id)
-                .map(QuestionnaireDto::fromEntity);
+                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto);
     }
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto)
@@ -57,9 +56,9 @@ public class QuestionnaireService {
             throw new QuestionnaireExistsException();
         }
 
-        var questionnaire = Questionnaire.fromDto(createDto, company);
+        var questionnaire = QuestionnaireMapper.MAPPER.questionnaireCreateDtoToModel(createDto, company);
         questionnaire = questionnaireRepository.save(questionnaire);
-        return QuestionnaireDto.fromEntity(questionnaire);
+        return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
 
     public QuestionnaireDto update(QuestionnaireUpdateDto updateDto)
@@ -76,7 +75,7 @@ public class QuestionnaireService {
         questionnaire.setCompany(company);
         questionnaire.setTitle(updateDto.getTitle());
         questionnaire = questionnaireRepository.save(questionnaire);
-        return QuestionnaireDto.fromEntity(questionnaire);
+        return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
 
     public void delete(UUID id) throws QuestionnaireNotFoundException {
