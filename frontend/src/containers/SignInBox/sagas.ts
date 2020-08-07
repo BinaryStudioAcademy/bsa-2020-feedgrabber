@@ -19,10 +19,6 @@ function* auth(action) {
         yield call(saveTokens, {refreshToken, accessToken});
 }
 
-// function* watchLogin() {
-//     yield takeEvery(loginRoutine.TRIGGER, login);
-// }
-
 export default function* loginSaga() {
     yield all([
         yield takeEvery(loginRoutine.TRIGGER, auth),

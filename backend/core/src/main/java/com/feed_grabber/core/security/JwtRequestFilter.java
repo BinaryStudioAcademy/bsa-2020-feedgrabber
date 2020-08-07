@@ -29,7 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String header = request.getHeader(AUTH_HEADER_STRING);
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(TOKEN_PREFIX) || header.contains("undefined")) {
             chain.doFilter(request, response);
             return;
         }
