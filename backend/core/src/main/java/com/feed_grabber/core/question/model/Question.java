@@ -1,6 +1,5 @@
 package com.feed_grabber.core.question.model;
 
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import lombok.AllArgsConstructor;
@@ -41,12 +40,4 @@ public class Question {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private QuestionCategory category;
-
-    public static Question fromDto(QuestionCreateDto createDto, Questionnaire questionnaire, QuestionCategory category) {
-        return Question.builder()
-                .text(createDto.getText())
-                .questionnaire(questionnaire)
-                .category(category)
-                .build();
-    }
 }

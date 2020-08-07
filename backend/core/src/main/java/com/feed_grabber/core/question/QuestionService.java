@@ -5,7 +5,6 @@ import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionExistsException;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
@@ -37,20 +36,20 @@ public class QuestionService {
     public List<QuestionDto> getAll() {
         return questionRepository.findAll()
                 .stream()
-                .map(QuestionDto::fromEntity)
+                .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
         return questionRepository.findAllByQuestionnaireId(questionnaireId)
                 .stream()
-                .map(QuestionDto::fromEntity)
+                .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<QuestionDto> getOne(UUID id) {
         return questionRepository.findById(id)
-                .map(QuestionDto::fromEntity);
+                .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
 
     public QuestionDto create(QuestionCreateDto createDto)
@@ -65,9 +64,9 @@ public class QuestionService {
             throw new QuestionExistsException();
         }
 
-        var question = Question.fromDto(createDto, questionnaire, category);
+        var question = QuestionMapper.MAPPER.questionCreateDtoToModel(createDto, questionnaire, category);
         question = questionRepository.save(question);
-        return QuestionDto.fromEntity(question);
+        return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
     public QuestionDto update(QuestionUpdateDto updateDto)
@@ -89,7 +88,7 @@ public class QuestionService {
         question.setQuestionnaire(questionnaire);
         question.setText(updateDto.getText());
         question = questionRepository.save(question);
-        return QuestionDto.fromEntity(question);
+        return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
     public void delete(UUID id) throws QuestionNotFoundException {
