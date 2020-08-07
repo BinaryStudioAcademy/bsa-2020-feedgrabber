@@ -131,7 +131,7 @@ const OverlayPanel = styled.div`
   text-align: center;
   top: 0;
   height: 100%;
-  width: 40%;
+  width: 50%;
   transform: "translateX(0)";
   transition: ${theme.transition.base({ el: "transform", speed: "0.6" })};
 `;

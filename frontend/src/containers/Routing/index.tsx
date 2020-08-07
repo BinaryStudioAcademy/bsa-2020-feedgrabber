@@ -8,6 +8,7 @@ import Header from "../../components/Header";
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
+import SignForm from "../../components/sign-form/SignForm";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -32,6 +33,7 @@ const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
     <main>
       <LoaderWrapper loading={isLoading}>
         <Switch>
+            <Route exact path="/" component={SignForm}/>
           <Route exact path="/layout" component={Landing} />
           <PublicRoute exact path="/login" component={Login} />
           <PublicRoute exact path="/register" component={() => <span>Register page</span>} />

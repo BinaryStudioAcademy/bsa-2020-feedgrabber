@@ -86,5 +86,10 @@
     "react-app-rewired": "^2.1.5",
     "source-map-loader": "^0.2.4",
     "typescript": "^3.7.5"
+  },
+  "bit": {
+    "env": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
   }
 }
