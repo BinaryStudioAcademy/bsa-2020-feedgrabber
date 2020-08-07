@@ -2,20 +2,23 @@ package com.feed_grabber.core.role.dto;
 
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.role.SystemRole;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.util.UUID;
 
-@Value
+@Data
+@NoArgsConstructor
 public class RoleDetailsDto {
 
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    SystemRole systemRole;
+    private SystemRole systemRole;
 
-    Company company;
+    private Company company;
 }

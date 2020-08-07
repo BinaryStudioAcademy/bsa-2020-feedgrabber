@@ -23,12 +23,13 @@ public class TeamService {
         return teamRepository
                 .findAll()
                 .stream()
-                .map(TeamDto::fromEntity)
+                .map(TeamMapper.MAPPER::teamToTeamDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<TeamDto> getById(UUID id) {
-        return teamRepository.findById(id).map(TeamDto::fromEntity);
+        return teamRepository.findById(id)
+                .map(TeamMapper.MAPPER::teamToTeamDto);
     }
 
     public Optional<TeamDto> update(CreateTeamDto teamDto) {
@@ -38,7 +39,7 @@ public class TeamService {
                     teamRepository.save(team);
                     return team;
                 })
-                .map(TeamDto::fromEntity);
+                .map(TeamMapper.MAPPER::teamToTeamDto);
     }
 
     public void delete(UUID id) {

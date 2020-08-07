@@ -18,28 +18,32 @@ public class CompanyService {
         return companyRepository
                 .findAll()
                 .stream()
-                .map(CompanyDto::fromEntity)
+                .map(CompanyMapper.MAPPER::companyToCompanyDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<CompanyDto> getById(UUID id) {
-        return companyRepository.findById(id).map(CompanyDto::fromEntity);
+        return companyRepository.findById(id)
+                .map(CompanyMapper.MAPPER::companyToCompanyDto);
     }
 
     public Optional<UUID> create(CompanyDto companyDto) {
-        var company = Company.fromDto(companyDto);
+        var company = CompanyMapper.MAPPER.companyDtoToModel(companyDto);
         var result = companyRepository.save(company);
         return Optional.of(result.getId());
     }
 
     public Optional<CompanyDto> update(UUID id, CompanyDto companyDto) {
+        if (companyRepository.findById(id).isEmpty()) {
+            return Optional.empty();
+        }
         var updatedCompany = companyRepository.findById(id).get();
         updatedCompany.setName(companyDto.getName());
         updatedCompany.setAddress(companyDto.getAddress());
         updatedCompany.setPhoneNumber(companyDto.getPhoneNumber());
         updatedCompany.setCorporateEmail(companyDto.getEmail());
         companyRepository.save(updatedCompany);
-        return Optional.of(CompanyDto.fromEntity(updatedCompany));
+        return Optional.of(CompanyMapper.MAPPER.companyToCompanyDto(updatedCompany));
     }
 
     public void delete(UUID id) {
