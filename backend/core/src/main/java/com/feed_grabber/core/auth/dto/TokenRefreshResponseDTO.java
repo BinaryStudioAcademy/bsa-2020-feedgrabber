@@ -1,6 +1,7 @@
 package com.feed_grabber.core.auth.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 
 @Value
 @AllArgsConstructor

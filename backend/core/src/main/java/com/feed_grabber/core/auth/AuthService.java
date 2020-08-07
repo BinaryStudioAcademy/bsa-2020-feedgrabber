@@ -30,17 +30,18 @@ public class AuthService {
 
     public AuthUserDTO login(UserLoginDTO dto) {
         try {
-            var auth = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+            var upa = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
 
-            authenticationManager.authenticate(auth);
+            authenticationManager.authenticate(upa);
 
         } catch (BadCredentialsException e) {
             throw new WrongCredentialsException("Incorrect username or password");
         }
 
         var user = userRepository
-                                .findByUsername(dto.getUsername())
-                                .map(UserMapper.MAPPER::responseFromUser).get();
+                .findByUsername(dto.getUsername())
+                .map(UserMapper.MAPPER::responseFromUser).get();
+
 
         return new AuthUserDTO(tokenService.generateAccessToken(user.getId()),
                 tokenService.generateRefreshToken(user.getId()), user);

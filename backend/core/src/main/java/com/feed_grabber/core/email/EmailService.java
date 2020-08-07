@@ -11,13 +11,11 @@ import javax.mail.MessagingException;
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender emailSender;
-
+    private static final String NOREPLY_ADDRESS = "noreply@feedgrubber.com";
     @Autowired
     MailContentBuilder mailContentBuilder;
-
-    private static final String NOREPLY_ADDRESS = "noreply@feedgrubber.com";
+    @Autowired
+    private JavaMailSender emailSender;
 
     public void sendInviteLink(String to, String link) {
         var htmlMessage = mailContentBuilder.buildInviteHtmlForm(link);

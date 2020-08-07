@@ -25,9 +25,10 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthUserDTO register(@RequestBody UserRegisterDTO dto) {
+        var pass = dto.getPassword();
         registerService.registerUser(dto);
 
-        var loginDto = new UserLoginDTO(dto.getPassword(), dto.getUsername());
+        var loginDto = new UserLoginDTO(pass, dto.getUsername());
         return login(loginDto);
     }
 

@@ -18,11 +18,11 @@ public class RegisterService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public void registerUser(UserRegisterDTO userRegisterDTO)  {
+    public void registerUser(UserRegisterDTO userRegisterDTO) {
         userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
 
         try {
-           userService.createDefault(userRegisterDTO);
+            userService.createDefault(userRegisterDTO);
         } catch (Exception exception) {
             throw new UserAlreadyExistsException();
         }
