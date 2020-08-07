@@ -1,0 +1,73 @@
+
+import React, { FC } from 'react';
+import Typography from '../Typography';
+import Input from '../Input';
+import Button from '../Button';
+import { ILoginData } from 'models/ILoginData';
+import * as yup from "yup";
+import { Formik } from 'formik';
+import { loginRoutine } from 'containers/SignInBox/routines';
+import { connect } from 'react-redux';
+
+interface ILoginProps {
+	signIn: (data: ILoginData) => void;
+	isLoading: boolean;
+	className: string;
+}
+
+const schema = yup.object().shape({
+	//
+});
+
+const SignInForm: FC<ILoginProps> = props => {
+	const { signIn: login, className } = props;
+
+	return (
+		<Formik
+			initialValues={{ password: '', username: '' }}
+			validationSchema={schema}
+			onSubmit={values => {
+				console.log(values);
+				login({
+					password: values.password,
+					username: values.username
+				});
+			}
+			}
+		>
+			{({
+				errors,
+				handleChange,
+				handleBlur,
+				handleSubmit,
+				touched
+			}) => (
+					<form className={className} onSubmit={handleSubmit}>
+						<Typography fontWeight="bold" variant="h4">Sign In</Typography>
+						<Typography variant="body2">or use your account</Typography>
+						<Input name="username" type="text" placeholder="Username"
+							error={touched.username && (errors.username ?? null)}
+							onChange={handleChange}
+							onBlur={handleBlur}
+						/>
+						<Input name="password" type="password" placeholder="Password"
+							error={touched.password && (errors.password ?? null)}
+							onChange={handleChange} onBlur={handleBlur}
+						/>
+						<Button variant="secondary" type="submit" marginTop="1.17rem">
+							Sign In
+				</Button>
+					</form>)}
+		</Formik>
+	);
+};
+
+const mapStateToProps = rootState => ({
+	isLoading: rootState.profile.isLoading
+});
+
+const mapDispatchToProps = {
+	signIn: loginRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignInForm);
