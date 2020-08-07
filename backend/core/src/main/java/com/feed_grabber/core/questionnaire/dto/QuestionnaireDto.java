@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class QuestionnaireDto {
-    UUID id;
-    String title;
-    String companyName;
+    private UUID id;
+    private String title;
+    private String companyName;
 }

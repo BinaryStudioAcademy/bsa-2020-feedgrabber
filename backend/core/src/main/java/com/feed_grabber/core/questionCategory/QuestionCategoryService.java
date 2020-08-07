@@ -7,7 +7,6 @@ import com.feed_grabber.core.questionCategory.dto.QuestionCategoryUpdateDto;
 import com.feed_grabber.core.questionCategory.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryExistsException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
-import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,20 +31,20 @@ public class QuestionCategoryService {
     public List<QuestionCategoryDto> getAll() {
         return questionCategoryRepository.findAll()
                 .stream()
-                .map(QuestionCategoryDto::fromEntity)
+                .map(QuestionCategoryMapper.MAPPER::questionCategoryToQuestionCategoryDto)
                 .collect(Collectors.toList());
     }
 
     public List<QuestionCategoryDto> getAllByCompanyId(UUID companyId) {
         return questionCategoryRepository.findAllByCompanyId(companyId)
                 .stream()
-                .map(QuestionCategoryDto::fromEntity)
+                .map(QuestionCategoryMapper.MAPPER::questionCategoryToQuestionCategoryDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<QuestionCategoryDto> getOne(UUID id) {
         return questionCategoryRepository.findById(id)
-                .map(QuestionCategoryDto::fromEntity);
+                .map(QuestionCategoryMapper.MAPPER::questionCategoryToQuestionCategoryDto);
     }
 
     public QuestionCategoryDto create(QuestionCategoryCreateDto createDto)
@@ -57,9 +56,9 @@ public class QuestionCategoryService {
             throw new QuestionCategoryExistsException();
         }
 
-        var questionCategory = QuestionCategory.fromDto(createDto, company);
+        var questionCategory = QuestionCategoryMapper.MAPPER.questionCategoryCreateDtoToModel(createDto, company);
         questionCategory = questionCategoryRepository.save(questionCategory);
-        return QuestionCategoryDto.fromEntity(questionCategory);
+        return QuestionCategoryMapper.MAPPER.questionCategoryToQuestionCategoryDto(questionCategory);
     }
 
     public QuestionCategoryDto update(QuestionCategoryUpdateDto updateDto)
@@ -76,7 +75,7 @@ public class QuestionCategoryService {
         questionCategory.setCompany(company);
         questionCategory.setTitle(updateDto.getTitle());
         questionCategory = questionCategoryRepository.save(questionCategory);
-        return QuestionCategoryDto.fromEntity(questionCategory);
+        return QuestionCategoryMapper.MAPPER.questionCategoryToQuestionCategoryDto(questionCategory);
     }
 
     public void delete(UUID id) throws QuestionCategoryNotFoundException {
