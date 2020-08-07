@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { call, put, takeEvery } from 'redux-saga/effects';
 import {USER_REGISTRATION, SET_USER} from "./actionTypes";
 import { registration } from "./authService";
 

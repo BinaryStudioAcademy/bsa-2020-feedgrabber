@@ -7,7 +7,7 @@ export function register(registrationRequest: IRegistrationRequest): any {
         payload: {
             registrationRequest
         }
-    }
+    };
 }
 
 export function setUserAction(user: object) {
@@ -16,5 +16,5 @@ export function setUserAction(user: object) {
         payload: {
             user
         }
-    }
+    };
 }
