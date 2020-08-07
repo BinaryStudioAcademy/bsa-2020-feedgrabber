@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
 import Login from "../../containers/SignInBox";
-import Header from "../../components/MainPageHeader";
+import Header from "../../components/Header";
 
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
@@ -13,14 +13,19 @@ export interface IRoutingProps {
   isLoading: boolean;
 }
 
-// temporary value
+// temporary fake value
 const isAuthorized = true;
+
+const fakeUser = {
+  username: "user",
+  avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
+};
 
 const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
   <div>
     {isAuthorized && (
       <header>
-        <Header />
+        <Header user={fakeUser}/>
       </header>
     )}
     <main>
