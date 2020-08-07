@@ -3,7 +3,7 @@ package com.feed_grabber.core.auth;
 import com.feed_grabber.core.auth.dto.AuthUserDTO;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
-import com.feed_grabber.core.login.WrongCredentialsException;
+import com.feed_grabber.core.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
