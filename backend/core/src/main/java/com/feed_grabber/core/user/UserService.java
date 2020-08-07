@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.exceptions.InsertionException;
+import com.feed_grabber.core.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
@@ -36,6 +37,12 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void createDefault(UserRegisterDTO userRegisterDTO) {
+
+        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
+                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+
         var company = companyRepository.save(
                 Company.builder().name(userRegisterDTO.getCompanyName()).build());
 
