@@ -1,11 +1,17 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.auth.dto.UserRegisterDTO;
+import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.exceptions.InsertionException;
+import com.feed_grabber.core.role.Role;
+import com.feed_grabber.core.role.RoleRepository;
+import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,54 +25,62 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final CompanyRepository companyRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private CompanyRepository companyRepository;
-    @Autowired
-    private CompanyService companyService;
-    @Autowired
-    private RoleService roleService;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, CompanyRepository companyRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.companyRepository = companyRepository;
+    }
 
     @Transactional
     public UserResponseOnlyNameDTO createDefault(UserRegisterDTO userRegisterDTO) {
-        var company = companyRepository
-                .findById(
-                        companyService
-                                .create(CompanyDto
-                                        .builder()
-                                        .name(userRegisterDTO.getCompanyName())
-                                        .build()
-                                ).orElseThrow())
-                .orElseThrow();
+        var company = companyRepository.save(
+                Company.builder().name(userRegisterDTO.getCompanyName()).build());
 
-        var roles = roleService
-                .initDefaultCompanyRoles(company)
-                .stream()
-                .filter(roleD -> roleD.getSystemRole().equals(SystemRole.company_owner))
+        var roles = roleRepository.saveAll(
+                List.of(Role
+                                .builder()
+                                .name("Company owner")
+                                .systemRole(SystemRole.company_owner)
+                                .description("Know your Company Owner")
+                                .company(company)
+                                .build()
+                        , Role
+                                .builder()
+                                .name("HR")
+                                .systemRole(SystemRole.hr)
+                                .description("My possibility is to hire employees")
+                                .company(company)
+                                .build()
+                        , Role
+                                .builder()
+                                .name("Employee")
+                                .systemRole(SystemRole.employee)
+                                .description("My possibility is to work")
+                                .company(company)
+                                .build())
+        ).stream()
+                .filter(role -> role.getSystemRole().equals(SystemRole.company_owner))
                 .collect(Collectors.toList());
 
         if (roles.size() != 1) {
-            throw new RuntimeException();
+            throw new InsertionException(roles.toString());
         }
 
-        var role = roleRepository.findById(roles.get(0).getId()).orElseThrow();
-
         return UserResponseOnlyNameDTO
-                .fromEntity(userRepository
-                        .findById(
-                                userRepository.save(User
-                                        .builder()
-                                        .email(userRegisterDTO.getEmail())
-                                        .username(userRegisterDTO.getUsername())
-                                        .password(userRegisterDTO.getPassword())
-                                        .role(role)
-                                        .build()
-                                ).getId()
-                        ).orElseThrow()
+                .fromEntity(
+                        userRepository.save(User
+                                .builder()
+                                .email(userRegisterDTO.getEmail())
+                                .username(userRegisterDTO.getUsername())
+                                .password(userRegisterDTO.getPassword())
+                                .role(roles.get(0))
+                                .build()
+                        )
                 );
     }
 
