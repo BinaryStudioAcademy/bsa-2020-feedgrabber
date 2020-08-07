@@ -5,9 +5,8 @@ import { useHistory } from 'react-router-dom';
 
 interface IQuestion {
     id: string;
-    header: string;
-    descripion: string;
-    author: string;
+    text: string;
+    category: string;
     type: string;
   }
 
@@ -42,12 +41,14 @@ interface IQuestion {
 
     const getForm = () => {
       switch (type) {
-        case "inner-field":
-          return (""); // <InnerField />;  
+        case "input-field":
+          return (""); // <InputField />;  
         case "radio-button":
           return (""); // <RadioButton />;
         case "drop-down":
           return (""); // <DropDown />;
+        case "checkbox":
+          return (""); // <CheckBox />;
         default:
           return ("");
       }
@@ -59,7 +60,7 @@ interface IQuestion {
           <h1>Question</h1> 
           <div className={styles.questionContainer}> 
             <div>
-            <div className={styles.questionForm}>{ getForm() }</div>
+              <div className={styles.questionForm}>{ getForm() }</div>
               <select value={type} onChange={e => handleChange(e)}>
                 <option value="inner-field">Inner fields</option>
                 <option value="radio-button">Radio button</option>
