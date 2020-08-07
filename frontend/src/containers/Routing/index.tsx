@@ -9,7 +9,7 @@ import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import ProfilePage from "../../components/ProfilePage";
-import TeamsPage from "../../containers/TeamsPage"
+import TeamsPage from "../../containers/TeamsPage";
 
 export interface IRoutingProps {
   isLoading: boolean;
