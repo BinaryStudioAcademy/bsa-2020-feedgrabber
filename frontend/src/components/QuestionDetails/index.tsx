@@ -1,80 +1,81 @@
-import React, { useState, useEffect } from 'react'; 
-import styles from './styles.module.sass';
+import React, { useState, useEffect } from "react";
+import styles from "./styles.module.sass";
 import { getData } from "../../screens/Home/services/home.service";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 interface IQuestion {
-    id: string;
-    text: string;
-    category: string;
-    type: string;
-  }
+  id: string;
+  text: string;
+  category: string;
+  type: string;
+}
 
-  interface IQuestionProps {
-    id: string;
-  }
-  
-  const QuestionDetails: React.FC<IQuestionProps> = ({ id }) => {
-    const [question, setQuestion] = useState(undefined);
-    const history = useHistory();
-    const [type, setType] = useState(undefined);
+interface IQuestionProps {
+  id: string;
+}
 
-    useEffect(() => {
-      getQuestion(id);
-    });
+const QuestionDetails: React.FC<IQuestionProps> = ({ id }) => {
+  const [question, setQuestion] = useState(undefined);
+  const history = useHistory();
+  const [type, setType] = useState(undefined);
 
-    const getQuestion = async(id: string) => {
-      const questions: IQuestion[] = await getData();  
-      const question = questions.find(question => question.id === id);
-      setQuestion(question);
-      setType(question.type);
-      return 0;
-    };
+  useEffect(() => {
+    getQuestion(id);
+  });
 
-    const onClose = () => {
-      history.push('/questions');
-    };
-
-    const handleChange = event => {
-        setType(event.target.value);
-    };
-
-    const getForm = () => {
-      switch (type) {
-        case "input-field":
-          return (""); // <InputField />;  
-        case "radio-button":
-          return (""); // <RadioButton />;
-        case "drop-down":
-          return (""); // <DropDown />;
-        case "checkbox":
-          return (""); // <CheckBox />;
-        default:
-          return ("");
-      }
-    };
-
-    return (
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <h1>Question</h1> 
-          <div className={styles.questionContainer}> 
-            <div>
-              <div className={styles.questionForm}>{ getForm() }</div>
-              <select value={type} onChange={e => handleChange(e)}>
-                <option value="inner-field">Inner fields</option>
-                <option value="radio-button">Radio button</option>
-                <option value="drop-down">Drop down list</option>
-              </select>
-            </div>
-            <div className={styles.centerContent}>
-              <button className={styles.centerContent} onClick={() => onClose()}>Close</button>
-            </div>
-          </div> 
-        </div> 
-      </div>
-    );
+  const getQuestion = async (id: string) => {
+    const questions: IQuestion[] = await getData();
+    const question = questions.find((question) => question.id === id);
+    setQuestion(question);
+    setType(question.type);
+    return 0;
   };
 
-  export default QuestionDetails;
-  
+  const onClose = () => {
+    history.push("/questions");
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setType(event.target.value);
+  };
+
+  const getForm = () => {
+    switch (type) {
+      case "input-field":
+        return ""; // <InputField />;
+      case "radio-button":
+        return ""; // <RadioButton />;
+      case "drop-down":
+        return ""; // <DropDown />;
+      case "checkbox":
+        return ""; // <CheckBox />;
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <h1>Question</h1>
+        <div className={styles.questionContainer}>
+          <div>
+            <div className={styles.questionForm}>{getForm()}</div>
+            <select value={type} onChange={handleChange}>
+              <option value="inner-field">Inner fields</option>
+              <option value="radio-button">Radio button</option>
+              <option value="drop-down">Drop down list</option>
+            </select>
+          </div>
+          <div className={styles.centerContent}>
+            <button className={styles.centerContent} onClick={() => onClose()}>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default QuestionDetails;
