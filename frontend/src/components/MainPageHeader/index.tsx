@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {FunctionComponent} from 'react';
 import {Icon} from 'semantic-ui-react';
 import styles from './styles.module.sass';
