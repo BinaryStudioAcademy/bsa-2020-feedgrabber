@@ -1,5 +1,12 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.auth.dto.UserRegisterDTO;
+import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.company.CompanyService;
+import com.feed_grabber.core.company.dto.CompanyDto;
+import com.feed_grabber.core.role.RoleRepository;
+import com.feed_grabber.core.role.RoleService;
+import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;

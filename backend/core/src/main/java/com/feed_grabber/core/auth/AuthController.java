@@ -36,7 +36,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AuthUserDTO login(@RequestBody UserLoginDTO userLoginDTO) {
-        return authService.login(userLoginDTO, Optional.empty());
+        return authService.login(userLoginDTO);
     }
 
 }

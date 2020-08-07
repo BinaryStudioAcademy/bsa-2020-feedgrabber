@@ -25,9 +25,10 @@ public class RegisterService {
     }
 
     public AuthUserDTO registerUser(UserRegisterDTO userRegisterDTO)  {
-        userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
+        var pass = bCryptPasswordEncoder.encode(userRegisterDTO.getPassword());
+
         try {
-            return authService.login(new UserLoginDTO(userRegisterDTO.getPassword(), userRegisterDTO.getUsername())
+            return authService.login(new UserLoginDTO(pass, userRegisterDTO.getUsername())
                     , Optional.of(userService.createDefault(userRegisterDTO)));
         }catch (Exception exception){
             throw new UserAlreadyExistsException();
