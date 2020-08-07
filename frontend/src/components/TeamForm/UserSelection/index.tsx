@@ -24,6 +24,8 @@ const Container = styled.div`
 
 const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUsers}) => {
 
+    users = mockUsers.users;
+
     const addHandler = (user: IUser) => {
         setSelected("selectedUsers", [...selectedUsers, user]);
     };
@@ -34,19 +36,28 @@ const UserSelection: FC<IUserSelectionProps> = ({users, setSelected, selectedUse
 
     return (
         <Container>
-            {users.map((u, i) => (
-                <UserCard
-                    key={i}
-                    user={u}
-                    add={addHandler}
-                    remove={removeHandler}
-                />
-            ))}
+            {users.map((u, i) => {
+                const isSelected = Boolean(selectedUsers.find(us => u === us));
+                const handler = isSelected ? removeHandler : addHandler;
+
+                return (
+                    <UserCard
+                        key={i}
+                        user={u}
+                        clickHandler={e => {
+                            e.preventDefault();
+                            handler(u);
+                        }}
+                        isSelected={isSelected}
+                    />
+                );
+            })}
         </Container>
     );
 };
 
-UserSelection.defaultProps = {
+// UserSelection.defaultProps = {
+const mockUsers = {
     users: [
         {
             username: "Keep-Simple",

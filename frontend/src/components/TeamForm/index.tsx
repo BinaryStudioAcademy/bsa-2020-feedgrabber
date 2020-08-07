@@ -46,7 +46,7 @@ const TeamForm: React.FC = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
-                        <UserSelection setSelected={setFieldValue} selectedUsers={values.selectedUsers}/>
+                        <UserSelection users={null} setSelected={setFieldValue} selectedUsers={values.selectedUsers}/>
                         <Button type="submit"
                                 color="teal"
                                 primary
