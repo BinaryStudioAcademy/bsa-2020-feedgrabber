@@ -4,7 +4,7 @@ import { Route, Redirect } from "react-router-dom";
 const PublicRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => {
         // get token
-        const token = 'exist';
+        const token = false;
         // if token exist then user already logged into account
         if (token) {
             return (

@@ -1,18 +1,18 @@
 import React from 'react';
 import './style.sass';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, Menu } from 'semantic-ui-react';
 
 export type LandingProps = {
   loggedIn: boolean;
 };
 
-const LandingPage: React.FunctionComponent<LandingProps> = ({ loggedIn }) => {
-  return !loggedIn ? (
+const LandingPage: React.FunctionComponent<LandingProps> = () => {
+  return (
     <>
       <section className='landing_face'>
         <Menu fixed='top'>
-          <Menu.Item as={Link} to='/' header>
+          <Menu.Item as={Link} to='/layout' header>
             <img
               className='logo'
               src={require('../../assets/images/icon_bg.jpg')}
@@ -20,7 +20,7 @@ const LandingPage: React.FunctionComponent<LandingProps> = ({ loggedIn }) => {
             />
             FeedGrabber
           </Menu.Item>
-          <Menu.Item position='right' as={Link} to='/signin'>
+          <Menu.Item position='right' as={Link} to='/login'>
             Sign In
           </Menu.Item>
         </Menu>
@@ -34,10 +34,10 @@ const LandingPage: React.FunctionComponent<LandingProps> = ({ loggedIn }) => {
               now.
             </div>
             <div className='face_card_actions'>
-              <Link to='/signup'>
+              <Link to='/register'>
                 <Button>Make some fire!</Button>
               </Link>
-              <Link to='/signin'>
+              <Link to='/login'>
                 <Button className='signin_btn'>Sign in</Button>
               </Link>
             </div>
@@ -51,8 +51,6 @@ const LandingPage: React.FunctionComponent<LandingProps> = ({ loggedIn }) => {
         </div>
       </section>
     </>
-  ) : (
-    <Redirect to='/main'></Redirect>
   );
 };
 // add some more info

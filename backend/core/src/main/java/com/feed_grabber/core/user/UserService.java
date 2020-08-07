@@ -1,12 +1,5 @@
 package com.feed_grabber.core.user;
 
-import com.feed_grabber.core.auth.dto.UserRegisterDTO;
-import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.company.CompanyService;
-import com.feed_grabber.core.company.dto.CompanyDto;
-import com.feed_grabber.core.role.RoleRepository;
-import com.feed_grabber.core.role.RoleService;
-import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;
@@ -79,7 +72,7 @@ public class UserService implements UserDetailsService {
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
         try {
-            var user = User.fromDto(userDto);
+            var user = UserMapper.MAPPER.userCreateDtoToModel(userDto);
             var result = userRepository.save(user);
             return Optional.of(result.getId());
         } catch (Exception e) {
@@ -88,14 +81,14 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<UserDto> getUserById(UUID id) {
-        return userRepository.findById(id).map(UserDto::fromEntity);
+        return userRepository.findById(id).map(UserMapper.MAPPER::userToUserDto);
     }
 
     public List<UserDto> getUsers() {
         return userRepository
                 .findAll()
                 .stream()
-                .map(UserDto::fromEntity)
+                .map(UserMapper.MAPPER::userToUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -105,7 +98,7 @@ public class UserService implements UserDetailsService {
         userToUpdate.setPassword(userDto.getPassword());
         userToUpdate.setUsername(userDto.getUsername());
         userRepository.save(userToUpdate);
-        return Optional.of(UserDto.fromEntity(userToUpdate));
+        return Optional.of(UserMapper.MAPPER.userToUserDto(userToUpdate));
     }
 
     public void deleteUser(UUID id) {
