@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import { useHistory } from "react-router";
-import {Button, Card, Sticky} from 'semantic-ui-react';
+import {Card} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
 interface IQuestion {
