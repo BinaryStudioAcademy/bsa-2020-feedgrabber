@@ -5,4 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT, reason = "User with such identifiers already exists")
 public class UserAlreadyExistsException extends RuntimeException {
+    public UserAlreadyExistsException(){
+        super("User with such username or email already exists");
+    }
 }

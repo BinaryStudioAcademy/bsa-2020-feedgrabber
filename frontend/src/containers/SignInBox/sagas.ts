@@ -1,18 +1,22 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {loginRoutine} from './routines';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { loginRoutine } from './routines';
 import apiClient from '../../helpers/apiClient';
-import {saveTokens} from '../../security/authProvider';
+import { saveTokens } from '../../security/authProvider';
+import { ILoginResponse } from './common';
 
 function* login(action: any) {
     try {
-        const res = yield call(apiClient.post, 'api/auth/login', action.authData);
+        const res: ILoginResponse = yield call(apiClient.post, 'api/auth/login', action.authData);
+        if (res.error) {
+            throw res.error;
+        }
         const { user, refreshToken, accessToken } = res.data;
 
         yield put(loginRoutine.success(user));
         yield call(saveTokens, { refreshToken, accessToken });
 
     } catch (error) {
-        console.log('auth err ', error.message);
+        console.log('auth err ', error);
         yield put(loginRoutine.failure(error));
     }
 }

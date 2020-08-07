@@ -1,10 +1,8 @@
 package com.feed_grabber.core.response;
 
-import org.springframework.context.ApplicationListener;
-
 public class AppResponse<T> {
     public final T data;
-    public final Exception error;
+    public final String error;
 
     public AppResponse(T data) {
         this.data = data;
@@ -13,12 +11,12 @@ public class AppResponse<T> {
 
     public AppResponse(Exception error) {
         this.data = null;
-        this.error = error;
+        this.error = error.getMessage();
     }
 
     public AppResponse(T data, Exception error) {
         this.data = data;
-        this.error = error;
+        this.error = error.getMessage();
     }
 
 }
