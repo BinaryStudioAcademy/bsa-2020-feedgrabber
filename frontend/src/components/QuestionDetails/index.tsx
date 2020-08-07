@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles.module.sass";
-import { getData } from "../../screens/Home/services/home.service";
 import { useHistory } from "react-router-dom";
 
 interface IQuestion {
@@ -11,21 +10,25 @@ interface IQuestion {
 }
 
 interface IQuestionProps {
-  id: string;
+  match: {
+    param: {
+      id: string;
+    };
+  };
 }
 
-const QuestionDetails: React.FC<IQuestionProps> = ({ id }) => {
+const QuestionDetails: React.FC<IQuestionProps> = ({ match }) => {
   const [question, setQuestion] = useState(undefined);
-  const history = useHistory();
   const [type, setType] = useState(undefined);
+  const history = useHistory();
 
   useEffect(() => {
-    getQuestion(id);
+    getQuestion(match.param.id);
   });
 
   const getQuestion = async (id: string) => {
-    const questions: IQuestion[] = await getData();
-    const question = questions.find((question) => question.id === id);
+    const questions: IQuestion[] = getQuestions();
+    const question = questions.find(question => question.id === id);
     setQuestion(question);
     setType(question.type);
     return 0;
@@ -37,6 +40,24 @@ const QuestionDetails: React.FC<IQuestionProps> = ({ id }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setType(event.target.value);
+  };
+
+  const getQuestions = () => {
+    return [
+      {
+        id: "1",
+        category: "Soft skills",
+        text:
+          "Can you tell me about a time when you successfully led a team through a sticky situation?",
+        type: "input-field"
+      },
+      {
+        id: "2",
+        category: "Leadership",
+        text: "Are you able to delegate responsibilities efficiently?",
+        type: "input-field"
+      }
+    ];
   };
 
   const getForm = () => {
@@ -57,7 +78,6 @@ const QuestionDetails: React.FC<IQuestionProps> = ({ id }) => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1>Question</h1>
         <div className={styles.questionContainer}>
           <div>
             <div className={styles.questionForm}>{getForm()}</div>
