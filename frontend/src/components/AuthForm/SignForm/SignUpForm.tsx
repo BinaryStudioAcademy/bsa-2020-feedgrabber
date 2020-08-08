@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import Typography from './Typography';
 import Input from './Input';
 import Button from './Button';
-import {Form, Formik} from "formik";
+import {Formik} from "formik";
 import * as yup from "yup";
 import {registerRoutine} from "../routines";
 import {connect} from "react-redux";

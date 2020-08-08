@@ -1,6 +1,7 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {loginRoutine, registerRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
+import {history} from "../../helpers/history.helper";
 import {saveTokens} from '../../security/authProvider';
 import {IAuthResponse} from "../../models/auth/types";
 
@@ -20,6 +21,7 @@ function* auth(action) {
 
         yield put(routine.success(user));
         yield call(saveTokens, {refreshToken, accessToken});
+        yield call(history.push, "/");
 }
 
 export default function* authSaga() {

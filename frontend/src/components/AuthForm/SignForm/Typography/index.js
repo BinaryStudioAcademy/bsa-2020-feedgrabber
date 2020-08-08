@@ -48,7 +48,7 @@ class Typography extends React.Component {
     marginLeft: PropTypes.string,
     marginRight: PropTypes.string,
     color: PropTypes.string,
-    fontWeight: PropTypes.number,
+    fontWeight: PropTypes.string,
     align: PropTypes.oneOf(['right', 'left', 'center', 'inherit'])
   };
 
