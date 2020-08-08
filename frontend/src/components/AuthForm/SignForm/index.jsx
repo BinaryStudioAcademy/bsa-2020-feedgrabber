@@ -1,27 +1,28 @@
 /* eslint-disable */
 import React from "react";
-import styled, { css, keyframes } from "styled-components";
-import { theme } from "./Theme";
-
+import styled, {css, keyframes} from "styled-components";
+import {theme} from "./Theme";
 import SignUpForm from "./SignUpForm";
 import SignInForm from "./SignInForm";
 import Typography from "./Typography";
 import Button from "./Button";
+import img from "./../../../assets/images/bg-pattern.jpg";
+import {Menu} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 const Root = styled.div`
-  background: ${theme.color.greyLight};
+  background-image: url(${img});
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-family: "Montserrat", sans-serif;
   height: 100vh;
-  margin: -20px 0 50px;
 `;
 
 const Container = styled.div`
-  background-color: ${theme.color.white};
   border-radius: 10px;
+  background-color: ${theme.color.white};
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
@@ -35,7 +36,7 @@ const FormContainer = styled.div`
   position: absolute;
   top: 0;
   height: 100%;
-  transition: ${theme.transition.base({ el: "all", speed: "0.6" })};
+  transition: ${theme.transition.base({el: "all", speed: "0.6"})};
 `;
 
 const ShowSignUpContainer = keyframes`
@@ -55,14 +56,14 @@ const SignUpContainer = styled(FormContainer)`
   width: 50%;
   z-index: ${props => (props.signUpActive ? 5 : 1)};
   transform: ${props =>
-    props.signUpActive ? "translateX(100%)" : "translateX(0)"};
+  props.signUpActive ? "translateX(100%)" : "translateX(0)"};
   opacity: ${props => (props.signUpActive ? 1 : 0)};
   animation: ${props =>
-    props.signUpActive
-      ? css`
+  props.signUpActive
+    ? css`
           ${ShowSignUpContainer} 0.6
         `
-      : "none"};
+    : "none"};
 `;
 
 const SignInContainer = styled(FormContainer)`
@@ -70,7 +71,7 @@ const SignInContainer = styled(FormContainer)`
   width: 50%;
   z-index: 2;
   transform: ${props =>
-    props.signUpActive ? "translateX(100%)" : "translateX(0)"};
+  props.signUpActive ? "translateX(100%)" : "translateX(0)"};
 `;
 
 const StyledForm = css`
@@ -98,10 +99,10 @@ const OverlayContainer = styled.div`
   width: 50%;
   height: 100%;
   overflow: hidden;
-  transition: ${theme.transition.base({ el: "transform", speed: "0.6" })};
+  transition: ${theme.transition.base({el: "transform", speed: "0.6"})};
   z-index: 100;
   transform: ${props =>
-    props.signUpActive ? "translateX(-100%)" : "translateX(0)"};
+  props.signUpActive ? "translateX(-100%)" : "translateX(0)"};
 `;
 
 const Overlay = styled.div`
@@ -116,8 +117,8 @@ const Overlay = styled.div`
   height: 100%;
   width: 200%;
   transform: ${props =>
-    props.signUpActive ? "translateX(50%)" : "translateX(0)"};
-  transition: ${theme.transition.base({ el: "transform", speed: "0.6" })};
+  props.signUpActive ? "translateX(50%)" : "translateX(0)"};
+  transition: ${theme.transition.base({el: "transform", speed: "0.6"})};
 `;
 
 const OverlayPanel = styled.div`
@@ -132,17 +133,25 @@ const OverlayPanel = styled.div`
   height: 100%;
   width: 50%;
   transform: "translateX(0)";
-  transition: ${theme.transition.base({ el: "transform", speed: "0.6" })};
+  transition: ${theme.transition.base({el: "transform", speed: "0.6"})};
 `;
 
 const OverlayPanelLeft = styled(OverlayPanel)`
   transform: ${props =>
-    props.signUpActive ? "translateX(-0)" : "translateX(-20%)"};
+  props.signUpActive ? "translateX(-0)" : "translateX(-20%)"};
 `;
 const OverlayPanelRight = styled(OverlayPanel)`
   right: 0;
   transform: ${props =>
-    props.signUpActive ? "translateX(20%)" : "translateX(0)"};
+  props.signUpActive ? "translateX(20%)" : "translateX(0)"};
+`;
+
+const StyledMenu = styled(Menu)`
+  background-color: transparent !important;
+  backdrop-filter: blur(10px);
+  box-shadow: none;
+  font-family: 'Quicksand-Bold', sans-serif !important;
+  font-size: 1.5rem !important;
 `;
 
 class SignForm extends React.Component {
@@ -165,53 +174,65 @@ class SignForm extends React.Component {
 
   render() {
     return (
-      <Root>
-        <Container>
-          <SignUpContainer signUpActive={this.state.signUpActive}>
-            <SignUpFormStyled />
-          </SignUpContainer>
+      <>
+        <StyledMenu fixed='top'>
+          <Menu.Item as={Link} to='/layout' header style={{padding: '10px 27px 10px 27px'}}>
+            <img
+              style={{borderRadius: 10, paddingRight: 10}}
+              src={require('../../../assets/images/icon_bg.jpg')}
+              alt='Logo'
+            />
+            FeedGrabber
+          </Menu.Item>
+        </StyledMenu>
+        <Root>
+          <Container>
+            <SignUpContainer signUpActive={this.state.signUpActive}>
+              <SignUpFormStyled/>
+            </SignUpContainer>
 
-          <SignInContainer signUpActive={this.state.signUpActive}>
-            <SignInFormStyled />
-          </SignInContainer>
+            <SignInContainer signUpActive={this.state.signUpActive}>
+              <SignInFormStyled/>
+            </SignInContainer>
 
-          <OverlayContainer signUpActive={this.state.signUpActive}>
-            <Overlay signUpActive={this.state.signUpActive}>
-              <OverlayPanelRight signUpActive={this.state.signUpActive}>
-                <Typography fontWeight="bold" variant="h4" color="white">
-                  Welcome Back!
-                </Typography>
-                <Typography variant="body" color="white">
-                  To keep connected with us please login with your personal info
-                </Typography>
-                <Button
-                  onClick={this.toggleSignPanel}
-                  variant="transparent"
-                  marginTop="1.17rem"
-                >
-                  Sign Up
-                </Button>
-              </OverlayPanelRight>
+            <OverlayContainer signUpActive={this.state.signUpActive}>
+              <Overlay signUpActive={this.state.signUpActive}>
+                <OverlayPanelRight signUpActive={this.state.signUpActive}>
+                  <Typography fontWeight="bold" variant="h4" color="white">
+                    Welcome Back!
+                  </Typography>
+                  <Typography variant="body" color="white">
+                    To keep connected with us please login with your personal info
+                  </Typography>
+                  <Button
+                    onClick={this.toggleSignPanel}
+                    variant="transparent"
+                    marginTop="1.17rem"
+                  >
+                    Sign Up
+                  </Button>
+                </OverlayPanelRight>
 
-              <OverlayPanelLeft signUpActive={this.state.signUpActive}>
-                <Typography fontWeight="bold" variant="h4" color="white">
-                  Hello, Friend!
-                </Typography>
-                <Typography variant="body" color="white">
-                  Enter your personal details and start journey with us
-                </Typography>
-                <Button
-                  onClick={this.toggleSignPanel}
-                  variant="transparent"
-                  marginTop="1.17rem"
-                >
-                  Sign In
-                </Button>
-              </OverlayPanelLeft>
-            </Overlay>
-          </OverlayContainer>
-        </Container>
-      </Root>
+                <OverlayPanelLeft signUpActive={this.state.signUpActive}>
+                  <Typography fontWeight="bold" variant="h4" color="white">
+                    Hello, Friend!
+                  </Typography>
+                  <Typography variant="body" color="white">
+                    Enter your personal details and start journey with us
+                  </Typography>
+                  <Button
+                    onClick={this.toggleSignPanel}
+                    variant="transparent"
+                    marginTop="1.17rem"
+                  >
+                    Sign In
+                  </Button>
+                </OverlayPanelLeft>
+              </Overlay>
+            </OverlayContainer>
+          </Container>
+        </Root>
+      </>
     );
   }
 }

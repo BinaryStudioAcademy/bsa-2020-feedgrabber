@@ -20,7 +20,7 @@ const LandingPage: React.FunctionComponent<LandingProps> = () => {
             />
             FeedGrabber
           </Menu.Item>
-          <Menu.Item position='right' as={Link} to='/login'>
+          <Menu.Item position='right' as={Link} to='/auth'>
             Sign In
           </Menu.Item>
         </Menu>
