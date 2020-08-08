@@ -4,7 +4,7 @@ import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
-import com.feed_grabber.core.questionnaire.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
