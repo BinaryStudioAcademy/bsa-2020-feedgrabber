@@ -24,7 +24,7 @@ const schema = yup.object().shape({
     email: yup
         .string()
         .email("Email must be valid")
-        .required(),
+        .required("Email must be valid"),
     password: yup
         .string()
         .required("Password required")
@@ -62,16 +62,13 @@ const SignUpForm: FC<IRegisterProps> = props => {
                   handleBlur,
                   handleSubmit
               }) => {
-                let errorText;
-                for (const key in values)
-                    if (errors[key])
-                        errorText = errors[key];
+                const errorText = errors.username || errors.email || errors.companyName || errors.password;
 
                 return (
-                    <Form className={className} onSubmit={handleSubmit} autoComplete="off">
+                    <form className={className} onSubmit={handleSubmit} autoComplete="off">
                         <Typography fontWeight="bold" variant="h4">Create Account</Typography>
                         <Typography variant="body2">or use your email for registration</Typography>
-                        <Input id="username" name="username" placeholder="Username" value={values.username}
+                        <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         <Input name="email" placeholder="Email" value={values.email}
@@ -92,9 +89,7 @@ const SignUpForm: FC<IRegisterProps> = props => {
                                 marginTop="1.17rem">
                             Sign Up
                         </Button>
-                    </Form>);
-            }
-            }
+                    </form>);}}
         </Formik>
     );
 };
