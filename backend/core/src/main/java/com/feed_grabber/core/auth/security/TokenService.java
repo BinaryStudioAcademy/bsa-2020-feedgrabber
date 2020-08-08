@@ -9,6 +9,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -86,5 +88,10 @@ public class TokenService {
 
     }
 
+    static public UUID getUserId(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var currentUserId = (String)auth.getPrincipal();
+        return  UUID.fromString(currentUserId);
+    }
 
 }

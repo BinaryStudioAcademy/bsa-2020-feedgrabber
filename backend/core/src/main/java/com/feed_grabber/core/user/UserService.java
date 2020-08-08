@@ -11,6 +11,7 @@ import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,10 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
+    }
+
+    public Optional<UserDetailsResponseDTO> getUserDetails(UUID id){
+        return userRepository.findById(id).map(UserMapper.MAPPER::detailedFromUser);
     }
 
     @Override
