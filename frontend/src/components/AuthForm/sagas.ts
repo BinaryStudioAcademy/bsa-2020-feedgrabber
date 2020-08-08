@@ -2,7 +2,7 @@ import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {loginRoutine, registerRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import {saveTokens} from '../../security/authProvider';
-import {IAuthResponse} from './common';
+import {IAuthResponse} from "../../models/auth/types";
 
 function* auth(action) {
         const isLogin = action.type === loginRoutine.TRIGGER;
@@ -11,7 +11,10 @@ function* auth(action) {
 
         const res: IAuthResponse = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
 
-        res.data.error && (yield put(routine.failure(res.data.error)));
+        if (res.data.error) {
+            yield put(routine.failure(res.data.error));
+            return;
+        }
 
         const {user, refreshToken, accessToken} = res.data.data;
 

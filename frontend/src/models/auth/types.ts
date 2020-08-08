@@ -12,3 +12,15 @@ export interface IAuthResponse {
         error: string;
     };
 }
+
+export interface IRegisterData {
+    email: string;
+    password: string;
+    username: string;
+    companyName: string;
+}
+
+export interface ILoginData {
+    password: string;
+    username: string;
+}

@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
-import Typography from '../Typography';
-import Input from '../Input';
-import Button from '../Button';
+import Typography from './Typography';
+import Input from './Input';
+import Button from './Button';
 import {Formik} from "formik";
 import * as yup from "yup";
-import {IRegisterData} from "../../../models/IRegisterData";
-import {registerRoutine} from "../../../containers/SignInBox/routines";
+import {registerRoutine} from "../routines";
 import {connect} from "react-redux";
+import {IRegisterData} from "../../../models/auth/types";
 
 interface IRegisterProps {
     signUp: (data: IRegisterData) => void;

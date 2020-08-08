@@ -2,13 +2,12 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
-import Login from "../../containers/SignInBox";
 import Header from "../../components/Header";
 
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
-import SignForm from "../../components/sign-form/SignForm";
+import SignForm from "../../components/AuthForm/SignForm";
 import ProfilePage from "../../components/ProfilePage";
 
 export interface IRoutingProps {
@@ -34,9 +33,8 @@ const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
     <main>
       <LoaderWrapper loading={isLoading}>
         <Switch>
-            <Route exact path="/" component={SignForm}/>
           <Route exact path="/layout" component={Landing} />
-          <PublicRoute exact path="/login" component={Login} />
+          <PublicRoute exact path="/login" component={SignForm} />
           <PublicRoute exact path="/register" component={() => <span>Register page</span>} />
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute path="/profile" component={ProfilePage} />

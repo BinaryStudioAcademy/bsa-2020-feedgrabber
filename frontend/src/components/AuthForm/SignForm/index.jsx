@@ -1,12 +1,12 @@
 /* eslint-disable */
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
-import { theme } from "../Theme";
+import { theme } from "./Theme";
 
 import SignUpForm from "./SignUpForm";
 import SignInForm from "./SignInForm";
-import Typography from "../Typography";
-import Button from "../Button";
+import Typography from "./Typography";
+import Button from "./Button";
 
 const Root = styled.div`
   background: ${theme.color.greyLight};

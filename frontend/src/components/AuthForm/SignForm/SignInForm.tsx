@@ -1,13 +1,13 @@
 
 import React, { FC } from 'react';
-import Typography from '../Typography';
-import Input from '../Input';
-import Button from '../Button';
-import { ILoginData } from 'models/ILoginData';
+import Typography from './Typography';
+import Input from './Input';
+import Button from './Button';
 import * as yup from "yup";
 import { Formik } from 'formik';
-import { loginRoutine } from 'containers/SignInBox/routines';
+import { loginRoutine } from 'components/AuthForm/routines';
 import { connect } from 'react-redux';
+import {ILoginData} from "../../../models/auth/types";
 
 interface ILoginProps {
 	signIn: (data: ILoginData) => void;
