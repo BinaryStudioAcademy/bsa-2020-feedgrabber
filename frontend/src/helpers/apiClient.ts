@@ -19,6 +19,8 @@ const responseErrorHandler = e => {
 
     originalRequest._retry = true;
 
+    console.log(tokenService.getRefreshToken());
+
     return apiClient.post('/api/auth/renovate', tokenService.getRefreshToken())
         .then(res => {
             if (res.status !== 201) {
@@ -27,7 +29,7 @@ const responseErrorHandler = e => {
             }
 
             tokenService.setToken(res.data.data);
-            return apiClient(originalRequest);
+            return apiClient.post('/api/user', tokenService.getToken());
         });
 };
 

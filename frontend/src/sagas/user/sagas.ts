@@ -3,9 +3,11 @@ import apiClient from '../../helpers/apiClient';
 import {IUserInfo} from "../../models/user/types";
 import {IGeneric} from "../../models/IGeneric";
 import {getUserRoutine} from "../../components/AuthForm/routines";
+import {createTokenProvider} from "../../security/tokenProvider";
 
 function* getUser() {
-    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `api/user`);
+    const token = createTokenProvider();
+    const res: IGeneric<IUserInfo> = yield call(apiClient.post, `api/user`, token.getToken());
 
     if (res.data.error) {
         yield put(getUserRoutine.failure({payload: res.data.error}));

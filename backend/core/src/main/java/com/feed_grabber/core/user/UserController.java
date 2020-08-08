@@ -1,26 +1,29 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.feed_grabber.core.auth.security.TokenService.getUserId;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
+    private final TokenService tokenService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TokenService tokenService) {
         this.userService = userService;
+        this.tokenService = tokenService;
     }
 
-    @GetMapping
-    public AppResponse<UserDetailsResponseDTO> getUserDetails() {
-        return new AppResponse<>(userService.getUserDetails(getUserId()).orElseThrow());
+    @PostMapping
+    public AppResponse<UserDetailsResponseDTO> getUserDetails(@RequestBody String token) {
+        var id = UUID.fromString(tokenService.extractUserid(token));
+        return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 }

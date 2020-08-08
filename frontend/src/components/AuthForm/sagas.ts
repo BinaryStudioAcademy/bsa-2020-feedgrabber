@@ -21,7 +21,7 @@ function* auth(action) {
     const {user, refreshToken, accessToken} = res.data.data;
 
     yield put(routine.success(user));
-    yield call(saveTokens, {refreshToken, accessToken});
+    yield call(saveTokens, {accessToken, refreshToken});
     yield call(history.push, "/");
 }
 

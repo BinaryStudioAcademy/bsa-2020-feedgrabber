@@ -72,14 +72,8 @@ public class TokenService {
     }
 
     private String generateToken(UUID subject, long expiration) {
-        Map<String, Object> claims = new HashMap<>();
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("typ", "JWT");
-        headers.put("alg", "HS256");
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
         return Jwts.builder()
-                .setClaims(claims)
-                .setHeader(headers)
                 .setSubject(subject.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -87,11 +81,4 @@ public class TokenService {
                 .compact();
 
     }
-
-    static public UUID getUserId(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        var currentUserId = (String)auth.getPrincipal();
-        return  UUID.fromString(currentUserId);
-    }
-
 }
