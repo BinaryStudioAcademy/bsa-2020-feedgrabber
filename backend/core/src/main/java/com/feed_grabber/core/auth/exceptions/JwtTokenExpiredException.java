@@ -1,4 +1,4 @@
-package com.feed_grabber.core.exceptions;
+package com.feed_grabber.core.auth.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

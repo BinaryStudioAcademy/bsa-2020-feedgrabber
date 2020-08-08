@@ -19,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/renovate")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<TokenRefreshResponseDTO> renovate(@RequestBody TokenRefreshRequestDTO token) throws Exception {
+    public AppResponse<TokenRefreshResponseDTO> renovate(@RequestBody TokenRefreshRequestDTO token) {
         try {
             return new AppResponse<>(authService.refresh(token.getToken()));
         } catch (Exception ex) {

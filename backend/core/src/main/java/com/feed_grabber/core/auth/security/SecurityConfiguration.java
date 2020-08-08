@@ -1,4 +1,4 @@
-package com.feed_grabber.core.security;
+package com.feed_grabber.core.auth.security;
 
 import com.feed_grabber.core.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.feed_grabber.core.security.SecurityConstants.ROUTES_WHITE_LIST;
+import static com.feed_grabber.core.auth.security.SecurityConstants.ROUTES_WHITE_LIST;
 
 @Configuration
 @EnableConfigurationProperties

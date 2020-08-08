@@ -1,6 +1,5 @@
-package com.feed_grabber.core.security;
+package com.feed_grabber.core.auth.security;
 
-import com.feed_grabber.core.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.feed_grabber.core.security.SecurityConstants.AUTH_HEADER_STRING;
-import static com.feed_grabber.core.security.SecurityConstants.TOKEN_PREFIX;
+import static com.feed_grabber.core.auth.security.SecurityConstants.AUTH_HEADER_STRING;
+import static com.feed_grabber.core.auth.security.SecurityConstants.TOKEN_PREFIX;
 
 
 @Component

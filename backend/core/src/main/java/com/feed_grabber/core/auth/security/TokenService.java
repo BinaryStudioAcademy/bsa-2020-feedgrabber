@@ -1,7 +1,7 @@
-package com.feed_grabber.core.auth;
+package com.feed_grabber.core.auth.security;
 
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
-import com.feed_grabber.core.exceptions.JwtTokenExpiredException;
+import com.feed_grabber.core.auth.exceptions.JwtTokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.feed_grabber.core.security.SecurityConstants.REFRESH_TOKEN_EXPIRATION_TIME;
-import static com.feed_grabber.core.security.SecurityConstants.TOKEN_EXPIRATION_TIME;
+import static com.feed_grabber.core.auth.security.SecurityConstants.REFRESH_TOKEN_EXPIRATION_TIME;
+import static com.feed_grabber.core.auth.security.SecurityConstants.TOKEN_EXPIRATION_TIME;
 
 @Service
 public class TokenService {
