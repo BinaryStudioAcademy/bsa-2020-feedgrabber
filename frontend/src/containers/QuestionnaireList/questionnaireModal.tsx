@@ -35,6 +35,7 @@ const QuestionnaireModal: React.FC<IQuestionnaireModalProps> = (
     hideModal
   }
 ) => {
+  // to do companies select field, now - hardcoded companyId from seed.sql
   const onSubmit = values => {
     modalQuestionnaire
       ? updateQuestionnaire({

@@ -13,7 +13,7 @@ import {IQuestionnaire} from "./reducer";
 function* loadQuestionnairesList(action: any) {
   try {
     const res = yield call(apiClient.get, 'http://localhost:5000/api/questionnaires');
-    const items = res.data;
+    const items = res.data.data;
 
     yield put(loadQuestionnairesRoutine.success(items));
   } catch (error) {
@@ -53,10 +53,13 @@ function* deleteQuestionnaire(action: any) {
     const id: string = action.payload;
     yield call(apiClient.delete, `http://localhost:5000/api/questionnaires/${id}`);
 
-    yield put(loadQuestionnairesRoutine.trigger());
+    yield put(deleteQuestionnaireRoutine.success());
     toastr.success("Deleted questionnaire");
+    yield put(loadQuestionnairesRoutine.trigger());
   } catch (errorResponse) {
+    yield put(deleteQuestionnaireRoutine.failure());
     toastr.error(errorResponse.response.data.error.localizedMessage);
+    yield put(loadQuestionnairesRoutine.trigger());
   }
 }
 

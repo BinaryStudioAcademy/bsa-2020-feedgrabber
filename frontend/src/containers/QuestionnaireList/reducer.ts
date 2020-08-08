@@ -1,5 +1,5 @@
 import {
-  addQuestionnaireRoutine,
+  addQuestionnaireRoutine, deleteQuestionnaireRoutine,
   hideModalQuestionnaireRoutine,
   loadQuestionnairesRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
@@ -34,11 +34,14 @@ interface IQuestionnairesListState {
 export default (state: IQuestionnairesListState = {}, action) => {
   switch (action.type) {
     case loadQuestionnairesRoutine.TRIGGER:
+    case deleteQuestionnaireRoutine.TRIGGER:
       return {
         ...state,
         isLoading: true
       };
     case loadQuestionnairesRoutine.FAILURE:
+    case deleteQuestionnaireRoutine.SUCCESS:
+    case deleteQuestionnaireRoutine.FAILURE:
       return {
         ...state,
         isLoading: false
