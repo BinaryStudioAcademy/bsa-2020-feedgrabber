@@ -7,7 +7,7 @@ function* loadTeams() {
     const res = yield call(apiClient.get, '/api/teams');
     const { data, error } = res.data;
     if (error) {
-      loadTeamsRoutine.failure(error);
+      yield loadTeamsRoutine.failure(error);
     } else {
       yield put(loadTeamsRoutine.success(data));
     }

@@ -1,53 +1,40 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import TeamsList from '../../components/TeamsList';
 import { loadTeamsRoutine } from './routines';
 import { ITeam } from 'models/ITeam';
+import {Dimmer, Loader} from "semantic-ui-react";
 
 interface ITeamListProps {
   teams: ITeam[];
   loadTeams(): void;
+  isLoading: boolean;
 }
 
-interface ILocalState {
-  teams: ITeam[];
-}
+const TeamList: React.FC<ITeamListProps> = ({ teams, loadTeams, isLoading }) => {
+  const [teamList, setTeamsList] = useState<ITeam[]>(teams);
 
-class TeamList extends React.Component<ITeamListProps, ILocalState> {
-  
-  constructor(props: ITeamListProps) {
-    super(props);
-    this.state = {
-      teams: []
-    };
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.teams.length !== prevState.teams.length) {
-      return {
-        teams: nextProps.teams
-      };
-    } else {
-      return null;
-    }
-  }
-
-  componentDidMount() {
-    const { loadTeams } = this.props;
+  useEffect(() => {
     loadTeams();
-  }
+  }, [loadTeams]);
 
-  render() {
-    const { teams } = this.state;
-    return (
-      <TeamsList teams={teams} />
-    );
-  }
-}
+  useEffect(() => {
+      setTeamsList(teams);
+  }, [teams]);
+
+  return (
+    isLoading
+      ? <Dimmer active>
+            <Loader content='Loading' />
+        </Dimmer>
+      : <TeamsList teams={teamList} />
+  );
+};
 
 const mapStateToProps = rootState => {
   return {
-    teams: rootState.teams.teams
+    teams: rootState.teams.teams,
+    isLoading: rootState.teams.isLoading
   };
 };
 
