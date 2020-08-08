@@ -2,10 +2,7 @@ package com.feed_grabber.core.login;
 
 import com.feed_grabber.core.login.dto.LoginDto;
 import com.feed_grabber.core.login.dto.LoginResponseDto;
-import com.feed_grabber.core.login.model.TemporaryUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,11 +22,5 @@ public class LoginController {
         return new LoginResponseDto(user, "token", "refrToken");
 
     }
-
-    @ExceptionHandler(WrongCredentialsException.class)
-    public ResponseEntity<String> handleUserNotFoundException(WrongCredentialsException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-    }
-
 
 }

@@ -3,12 +3,10 @@ package com.feed_grabber.core.questionCategory;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryCreateDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryUpdateDto;
-import com.feed_grabber.core.questionCategory.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryExistsException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,29 +24,6 @@ public class QuestionCategoryController {
         this.questionCategoryService = questionCategoryService;
     }
 
-    @ExceptionHandler({QuestionCategoryNotFoundException.class})
-    public ResponseEntity<Object> handleQuestionCategoryNotFoundException() {
-        return new ResponseEntity<>(
-                "Question category not found",
-                HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler({CompanyNotFoundException.class})
-    public ResponseEntity<Object> handleCompanyNotFoundException() {
-        return new ResponseEntity<>(
-                "Company not found",
-                HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler({QuestionCategoryExistsException.class})
-    public ResponseEntity<Object> handleQuestionCategoryExistsException() {
-        return new ResponseEntity<>(
-                "Question category with such company and title already exists",
-                HttpStatus.BAD_REQUEST
-        );
-    }
 
     @GetMapping()
     public List<QuestionCategoryDto> getAll() {
