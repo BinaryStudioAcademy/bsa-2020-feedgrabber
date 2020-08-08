@@ -1,6 +1,6 @@
 package com.feed_grabber.core.exceptions;
 
-import com.feed_grabber.core.login.WrongCredentialsException;
+import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.response.AppResponse;
 import org.springframework.http.HttpStatus;
@@ -15,21 +15,21 @@ public class Handler extends ResponseEntityExceptionHandler {
     public ResponseEntity<AppResponse<Object>> handleVerificationTokenException(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new AppResponse<Object>(ex));
+                .body(new AppResponse<>(ex));
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<AppResponse<Object>> handleNotFoundException(NotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new AppResponse<Object>(ex));
+                .body(new AppResponse<>(ex));
     }
 
     @ExceptionHandler({AlreadyExistsException.class})
     public ResponseEntity<AppResponse<Object>> handleAlreadyExistsException(AlreadyExistsException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new AppResponse<Object>(ex));
+                .body(new AppResponse<>(ex));
     }
 
     @ExceptionHandler(WrongCredentialsException.class)

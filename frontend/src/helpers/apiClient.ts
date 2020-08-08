@@ -19,8 +19,6 @@ const responseErrorHandler = e => {
 
     originalRequest._retry = true;
 
-    console.log(tokenService.getRefreshToken());
-
     return apiClient.post('/api/auth/renovate', tokenService.getRefreshToken())
         .then(res => {
             if (res.status !== 201) {
