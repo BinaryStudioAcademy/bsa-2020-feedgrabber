@@ -1,34 +1,34 @@
-interface IQuestionBase {
+export interface IQuestionBase {
   id: string;
   name: string;
   categoryId: string;
-  type: QuestionTypes;
+  type: QuestionType;
 }
 
-interface IRadioQuestion extends IQuestionBase {
-  type: "radio";
+export interface IRadioQuestion extends IQuestionBase {
+  type: QuestionType.radio;
   answerOption: string[];
 }
 
-interface IScaleQuestion extends IQuestionBase {
-  type: "scale";
+export interface IScaleQuestion extends IQuestionBase {
+  type: QuestionType.scale;
   min: number;
   minDescription: string;
   max: number;
   maxDescription: string;
 }
 
-interface ITextQuestion extends IQuestionBase {
-  type: "free_text";
+export interface ITextQuestion extends IQuestionBase {
+  type: QuestionType.freeText;
 }
 
-interface IDropDownQuestion extends IQuestionBase {
-  type: "drop_down";
+export interface IDropDownQuestion extends IQuestionBase {
+  type: QuestionType.dropDown;
   answerOption: string[];
 }
 
-interface ICheckboxQuestion extends IQuestionBase {
-  type: "checkbox";
+export interface ICheckboxQuestion extends IQuestionBase {
+  type: QuestionType.checkbox;
   answerOption: string[];
 }
 
@@ -39,5 +39,11 @@ export type IQuestion =
   | IRadioQuestion
   | ICheckboxQuestion;
 
-const types = ["radio", "checkbox", "scale", "free_text", "drop_down"] as const;
-type QuestionTypes = typeof types[number];
+enum QuestionType {
+  freeText = "free_text",
+  radio = "radio",
+  scale = "scale",
+  inputField = "input_field",
+  checkbox = "checkbox",
+  dropDown = "drop_down"
+}
