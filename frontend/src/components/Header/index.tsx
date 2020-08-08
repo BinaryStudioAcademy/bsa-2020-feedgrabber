@@ -50,6 +50,9 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
                             <Dropdown.Item onClick={() => history.push('/profile/settings')}>
                                 Your Settings
                             </Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push('/questionnaires')}>
+                                Questionnaires
+                            </Dropdown.Item>
                             <Dropdown.Item onClick={() => history.push('/help')}>
                                 Help Center
                             </Dropdown.Item>
