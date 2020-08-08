@@ -38,6 +38,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+  
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
 
     @ManyToMany(
             cascade = {
@@ -62,4 +65,5 @@ public class User {
 
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserSettings userSettings;
+    
 }

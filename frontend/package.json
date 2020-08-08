@@ -71,6 +71,7 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.5",
+    "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.0.9",
     "@types/redux-saga-routines": "^3.1.0",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
