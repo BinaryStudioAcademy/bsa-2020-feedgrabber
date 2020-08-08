@@ -23,6 +23,7 @@ public interface UserMapper {
 
     UserResponseOnlyNameDTO responseFromUser(User user);
 
+    @Mapping(target = "userName", source = "username")
     @Mapping(target = "firstName", source = "userProfile.firstName")
     @Mapping(target = "lastName", source = "userProfile.lastName")
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")

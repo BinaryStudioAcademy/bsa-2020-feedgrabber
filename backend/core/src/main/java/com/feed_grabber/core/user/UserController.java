@@ -20,7 +20,6 @@ public class UserController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.FOUND)
     public AppResponse<UserDetailsResponseDTO> getUserDetails() {
         return new AppResponse<>(userService.getUserDetails(getUserId()).orElseThrow());
     }
