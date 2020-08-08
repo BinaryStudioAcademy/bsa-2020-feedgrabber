@@ -1,30 +1,10 @@
-import {loginRoutine, logoutRoutine, registerRoutine} from './routines';
+import { combineReducers } from 'redux';
+import login from './login/reducer';
+import register from './register/reducer';
 
-export default (state = {}, action) => {
-    switch (action.type) {
-        case (loginRoutine.SUCCESS || registerRoutine.SUCCESS):
-            return {
-                ...state,
-                user: action.payload,
-                isLoading: false
-            };
-        case (loginRoutine.TRIGGER || registerRoutine.TRIGGER):
-            return {
-                ...state,
-                isLoading: true
-            };
-        case (loginRoutine.FAILURE || registerRoutine.FAILURE):
-            return {
-                ...state,
-                error: action.payload,
-                isLoading: false
-            };
-        case logoutRoutine.SUCCESS:
-            return {
-                ...state,
-                user: {}
-            };
-        default:
-            return state;
-    }
-};
+const authReducers = combineReducers({
+    login,
+    register
+});
+
+export default authReducers;
