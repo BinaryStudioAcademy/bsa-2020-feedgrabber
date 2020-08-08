@@ -45,7 +45,6 @@ const SignUpForm: FC<IRegisterProps> = props => {
             initialValues={{email: '', password: '', companyName: '', username: ''}}
             validationSchema={schema}
             onSubmit={values => {
-                console.log(values);
                 register({
                     email: values.email,
                     password: values.password,

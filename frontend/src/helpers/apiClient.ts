@@ -13,7 +13,7 @@ const responseErrorHandler = e => {
     const originalRequest = e.config;
 
     if ((status !== 403) || (status === 403 && originalRequest._retry)) {
-        history.push('/login');
+        history.push('/auth');
         return Promise.reject(e);
     }
 
@@ -22,7 +22,7 @@ const responseErrorHandler = e => {
     return apiClient.post('/api/auth/renovate', {token: tokenService.getToken()})
         .then(res => {
             if (res.status !== 201) {
-                history.push('/login');
+                history.push('/auth');
                 return Promise.reject(e);
             }
 

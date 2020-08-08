@@ -36,7 +36,6 @@ const SignInForm: FC<ILoginProps> = props => {
             initialValues={{password: '', username: ''}}
             validationSchema={schema}
             onSubmit={values => {
-                console.log(values);
                 login({
                     password: values.password,
                     username: values.username

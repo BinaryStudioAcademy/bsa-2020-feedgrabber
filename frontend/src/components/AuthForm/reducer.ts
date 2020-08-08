@@ -1,4 +1,4 @@
-import {loginRoutine, registerRoutine} from './routines';
+import {loginRoutine, logoutRoutine, registerRoutine} from './routines';
 
 export default (state = {}, action) => {
     switch (action.type) {
@@ -18,6 +18,11 @@ export default (state = {}, action) => {
                 ...state,
                 error: action.payload,
                 isLoading: false
+            };
+        case logoutRoutine.SUCCESS:
+            return {
+                ...state,
+                user: {}
             };
         default:
             return state;
