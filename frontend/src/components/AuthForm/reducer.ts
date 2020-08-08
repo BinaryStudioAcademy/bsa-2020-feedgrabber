@@ -1,27 +1,39 @@
-import {loginRoutine, registerRoutine} from "./routines";
+import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "./routines";
 
-const authReducers = (state = {}, {type, payload}) => {
-    if (type === loginRoutine.SUCCESS || type === registerRoutine.SUCCESS) {
+const authAndProfileReducer = (state = {}, {type, payload}) => {
+    if (type === loginRoutine.SUCCESS
+        || type === registerRoutine.SUCCESS
+        || type === getUserRoutine.SUCCESS) {
         return {
             ...state,
-            user: payload,
+            info: payload,
             isLoading: false
         };
     }
-    if (type === loginRoutine.FAILURE || type === registerRoutine.FAILURE) {
+    if (type === loginRoutine.FAILURE
+        || type === registerRoutine.FAILURE
+        || type === getUserRoutine.FAILURE) {
         return {
             ...state,
             error: payload,
             isLoading: false
         };
     }
-    if (type === loginRoutine.TRIGGER || type === registerRoutine.TRIGGER) {
+    if (type === loginRoutine.TRIGGER
+        || type === registerRoutine.TRIGGER
+        || type === getUserRoutine.TRIGGER) {
         return {
             ...state,
             isLoading: true
         };
     }
+    if (type === logoutRoutine.SUCCESS) {
+        return {
+            ...state,
+            info: {}
+        };
+    }
     return state;
 };
 
-export default authReducers;
+export default authAndProfileReducer;

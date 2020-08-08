@@ -2,8 +2,8 @@ import React, {FC} from 'react';
 import {Grid, Menu} from "semantic-ui-react";
 import './styles.sass';
 import {NavLink} from 'react-router-dom';
-import ProfileInfo from "../ProfileInfo";
-import ProfileSettings from "../ProfileSettings";
+import ProfileInfo from "./ProfileInfo";
+import ProfileSettings from "./ProfileSettings";
 
 type IProfileMode = { mode: 'profile' | 'settings' }
 
@@ -36,5 +36,3 @@ const ProfilePage: FC<IProfileMode> =
 export const Profile = () => <ProfilePage mode="profile"/>;
 
 export const ProfileX = () => <ProfilePage mode="settings"/>;
-
-export default ProfilePage;

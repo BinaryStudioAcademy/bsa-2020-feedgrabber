@@ -19,9 +19,9 @@ public class AuthController {
 
     @PostMapping("/renovate")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<TokenRefreshResponseDTO> renovate(@RequestBody TokenRefreshRequestDTO token) {
+    public AppResponse<TokenRefreshResponseDTO> renovate(@RequestBody String token) {
         try {
-            return new AppResponse<>(authService.refresh(token.getToken()));
+            return new AppResponse<>(authService.refresh(token));
         } catch (Exception ex) {
             return new AppResponse<>(ex);
         }
@@ -31,9 +31,9 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<AuthUserDTO> register(@RequestBody UserRegisterDTO dto) {
         try {
-
             var pass = dto.getPassword();
             registerService.registerUser(dto);
+
             var loginDto = new UserLoginDTO(pass, dto.getUsername());
             return login(loginDto);
 

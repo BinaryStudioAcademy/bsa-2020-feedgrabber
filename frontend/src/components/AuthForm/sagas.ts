@@ -4,13 +4,14 @@ import apiClient from '../../helpers/apiClient';
 import {history} from "../../helpers/history.helper";
 import {deleteTokens, saveTokens} from '../../security/authProvider';
 import {IAuthResponse} from "../../models/auth/types";
+import {IGeneric} from "../../models/IGeneric";
 
 function* auth(action) {
     const isLogin = action.type === loginRoutine.TRIGGER;
     const endpoint = isLogin ? 'login' : 'register';
     const routine = isLogin ? loginRoutine : registerRoutine;
 
-    const res: IAuthResponse = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
+    const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
 
     if (res.data.error) {
         yield put(routine.failure(res.data.error));

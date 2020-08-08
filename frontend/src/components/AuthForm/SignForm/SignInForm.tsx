@@ -8,6 +8,7 @@ import {loginRoutine} from 'components/AuthForm/routines';
 import {connect} from 'react-redux';
 import {ILoginData} from "../../../models/auth/types";
 import {Message} from "semantic-ui-react";
+import {IAppState} from "../../../models/IAppState";
 
 interface ILoginProps {
     signIn: (data: ILoginData) => void;
@@ -77,8 +78,8 @@ const SignInForm: FC<ILoginProps> = props => {
     );
 };
 
-const mapStateToProps = rootState => ({
-    isLoading: rootState.profile.isLoading
+const mapStateToProps = (state: IAppState) => ({
+    isLoading: state.user.isLoading
 });
 
 const mapDispatchToProps = {

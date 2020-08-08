@@ -8,6 +8,7 @@ import {registerRoutine} from "../routines";
 import {connect} from "react-redux";
 import {IRegisterData} from "../../../models/auth/types";
 import {Message} from "semantic-ui-react";
+import {IAppState} from "../../../models/IAppState";
 
 interface IRegisterProps {
     signUp: (data: IRegisterData) => void;
@@ -93,8 +94,8 @@ const SignUpForm: FC<IRegisterProps> = props => {
     );
 };
 
-const mapStateToProps = rootState => ({
-    isLoading: rootState.profile.isLoading
+const mapStateToProps = (state: IAppState) => ({
+    isLoading: state.user.isLoading
 });
 
 const mapDispatchToProps = {

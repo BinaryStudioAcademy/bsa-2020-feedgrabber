@@ -6,7 +6,7 @@ import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
-import {Profile, ProfileX} from "../../components/ProfilePage";
+import {Profile, ProfileX} from "../../components/Profile";
 
 export interface IRoutingProps {
   isLoading: boolean;

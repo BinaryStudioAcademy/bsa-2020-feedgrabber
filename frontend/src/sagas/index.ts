@@ -1,4 +1,4 @@
-import userSagas from 'components/ProfileInfo/sagas';
+import userSagas from 'sagas/user/sagas';
 import { all } from 'redux-saga/effects';
 import authSaga from "../components/AuthForm/sagas";
 

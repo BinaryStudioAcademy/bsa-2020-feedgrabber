@@ -19,14 +19,14 @@ const responseErrorHandler = e => {
 
     originalRequest._retry = true;
 
-    return apiClient.post('/api/auth/renovate', {token: tokenService.getToken()})
+    return apiClient.post('/api/auth/renovate', tokenService.getRefreshToken())
         .then(res => {
             if (res.status !== 201) {
                 history.push('/auth');
                 return Promise.reject(e);
             }
 
-            tokenService.setToken(res.data);
+            tokenService.setToken(res.data.data);
             return apiClient(originalRequest);
         });
 };
@@ -36,6 +36,6 @@ apiClient.interceptors.request.use(request => {
     return request;
 });
 
-axios.interceptors.response.use(undefined, responseErrorHandler);
+apiClient.interceptors.response.use(undefined, responseErrorHandler);
 
 export default apiClient;
