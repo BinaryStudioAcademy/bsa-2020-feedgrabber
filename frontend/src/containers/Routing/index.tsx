@@ -35,7 +35,7 @@ const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
         <Switch>
           <Route exact path="/layout" component={Landing} />
           <PublicRoute exact path="/login" component={SignForm} />
-          <PublicRoute exact path="/register" component={() => <span>Register page</span>} />
+          <PublicRoute exact path="/register" component={SignForm} />
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute path="/profile" component={ProfilePage} />
           <PrivateRoute exact path="/requests" component={() => <span>Requests</span>} />

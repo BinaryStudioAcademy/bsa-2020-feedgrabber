@@ -22,7 +22,7 @@ function* auth(action) {
         yield call(saveTokens, {refreshToken, accessToken});
 }
 
-export default function* loginSaga() {
+export default function* authSaga() {
     yield all([
         yield takeEvery(loginRoutine.TRIGGER, auth),
         yield takeEvery(registerRoutine.TRIGGER, auth)
