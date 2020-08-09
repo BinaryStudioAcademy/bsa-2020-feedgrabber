@@ -10,6 +10,7 @@ import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import ProfilePage from "../../components/ProfilePage";
 import QuestionDetails from 'containers/QuestionDetails';
+import QuestionsList from 'components/QuestionsList';
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -48,6 +49,7 @@ const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/teams" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questionnaires" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
           <Route path="/*">
             <Redirect to="/layout" />

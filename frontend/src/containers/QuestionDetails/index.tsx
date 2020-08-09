@@ -1,79 +1,94 @@
 import React, { ChangeEvent } from "react";
 import { History } from 'history';
-import { Button, Card, Input, Dropdown, Icon, Form, Segment } from "semantic-ui-react";
-import { IQuestion } from "../../models/IQuesion";
+import { Button, Form, Segment } from "semantic-ui-react";
+import { IQuestion, QuestionType } from "../../models/IQuesion";
 import { Formik, FormikProps } from "formik";
+import { multichoiceSchema } from "./schemas";
 import * as Yup from 'yup';
-import MultichoiceQuestion from "./Multich"
-
-import "./styles.module.sass";
+import "./styles.sass";
 
 const questions: IQuestion[] = [
-    {
-      id: "1",
-      categoryId: "Soft skills",
-      name:
-        "Can you tell me about a time when you successfully led a team through a sticky situation?",
-      type: "multichoice",
-      answerOptions: ["1", "2", "3"]
-    },
-    {
-      id: "2",
-      categoryId: "Leadership",
-      name: "Are you able to delegate responsibilities efficiently?",
-      type: "free_text"
-    }
-  ]
-
+  {
+    id: "1",
+    categoryId: "Soft skills",
+    name:
+      "Can you tell me about a time when you successfully led a team through a sticky situation?",
+    type: QuestionType.multichoice,
+    answerOptions: ["1", "2"]
+  },
+  {
+    id: "2",
+    categoryId: "Leadership",
+    name: "Are you able to delegate responsibilities efficiently?",
+    type: QuestionType.freeText
+  }
+];
 interface IQuestionProps {
   saveQuestion(question: IQuestion): void;
-  history: History;
   match: {
     params: {
       id?: string;
-    }
-  }
+    };
+  };
+  history: History;
 }
-
 interface IQuestionState {
   initialValues: any;
   validationSchema: any;
   question: IQuestion;
 }
-
 class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   constructor(props: IQuestionProps) {
     super(props);
     this.state = {
       validationSchema: Yup.object({}),
-      initialValues: {},
+      initialValues: { name: "", answers: [] },
       question: {
         id: "",
         name: "New question",
         categoryId: "",
-        type: "free_text"
+        type: QuestionType.freeText
       }
     };
-
     this.onClose = this.onClose.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getForm = this.getForm.bind(this);
-    // this.onTypeChange = this.onTypeChange.bind(this);
     this.onNameChange = this.onNameChange.bind(this);
+    this.setQuestionType = this.setQuestionType.bind(this);
+  }
+  componentDidMount() {
+    const { match } = this.props;
+    this.getQuestion(match.params.id);
   }
 
-  // TODO: change to the right location
+  getQuestion = async (id: string) => {
+    const question = questions.find(question => question.id === id);
+    if (question.type === QuestionType.multichoice) {
+      this.setState({
+        ...this.state,
+        question,
+        validationSchema: multichoiceSchema,
+        initialValues: { name: question.name, answers: question.answerOptions }
+      });
+    } else if (question.type === QuestionType.freeText) {
+      this.setState({
+        ...this.state,
+        question,
+        validationSchema: {},
+        initialValues: { name: question.name }
+      });
+    }
+  }
+
   onClose = () => {
     this.props.history.push("/questions");
   };
-
   onSubmit = () => {
     if (this.state.question) {
       this.props.saveQuestion(this.state.question);
       this.props.history.push("/questions");
     }
   };
-
   onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newName = event.target.value;
     if (newName.length > 0) {
@@ -83,112 +98,124 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       });
     }
   };
-
-  // onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   this.setState({
-  //     ...this.state,
-  //     question: {
-  //       ...this.state.question,
-  //       type: event.target.value
-  //     }
-  //   });
-  // };
-
+  questionTypeOptions = [
+    {
+      key: 'Radio',
+      text: 'Radio',
+      value: QuestionType.radio
+    }, {
+      key: 'CheckBoxes',
+      text: 'CheckBoxes',
+      value: QuestionType.checkbox
+    }, {
+      key: 'Multichoice',
+      text: 'Multichoice',
+      value: QuestionType.multichoice
+    }, {
+      key: 'TextArea',
+      text: 'TextArea',
+      value: QuestionType.freeText
+    }, {
+      key: 'Scaled',
+      text: 'Scaled',
+      value: QuestionType.scale
+    }, {
+      key: 'Short answer',
+      text: 'Short answer',
+      value: QuestionType.inputField
+    }
+  ];
   getForm = (question: IQuestion, initialValues: any, formik: FormikProps<any>) => {
     switch (question.type) {
-      case "radio":
-        return <span></span>; // <RadioButton />;
-      case "checkbox":
-        return <span></span>; // <CheckBox />;
-        case "multichoice":
-        this.setState({
-          validationSchema: Yup.object().shape({
-            answers: Yup.array()
-              .of(Yup
-                .string()
-                .required(`Answer can't be empty`)
-                .max(200, 'Answer must be shorter then 200 symbols')
-              )
-              .min(3, 'A multiple choice question must contain at least 3 answer choices')
-          }),
-          initialValues: { options: question.answerOptions }
-        })
-       return <MultichoiceQuestion options={initialValues.answers} formik={formik} />;
-      case "scale":
-        return <span></span>; // <Scale />
-      case "free_text":
-        return <span></span>; // <FreeText/>
+      case QuestionType.radio:
+        return <span>radio</span>; // <RadioButton />;
+      case QuestionType.checkbox:
+        return <span>checkbox</span>; // <CheckBox />;
+      case QuestionType.multichoice:
+        return <span>multichoice</span>; // <MultichoiceQuestion formik={formik}/>;
+      case QuestionType.scale:
+        return <span>scale</span>; // <Scale />
+      case QuestionType.freeText:
+        return <span>freeeeeeeeee</span>; // <FreeText/>
       default:
         return <span>Default choice</span>;
     }
   };
 
-  render() {
-    const state = this.state;
-    return (
-    //   <div className="questions_form_feed">
-    //     <Card style={{ width: "60%" }} color="blue">
-    //       <div className="question_form_content">
-    //         <div className="question_form_header">
-    //           <Input icon="question" placeholder="question example" />
-    //           <Dropdown selection
-    //                     options={questionTypeOptions}
-    //                     placeholder="Radio by default"
-    //                     onChange={
-    //                       (event, data) =>
-    //                         setQuestionType(data, question.id)
-    //                     }
-    //           />
-    //         </div>
-    //         <Formik
-    //             enableReinitialize
-    //             initialValues={initialValues}
-    //             validationSchema={validationSchema}
-    //             onSubmit={() => console.log('submitted')}
-    //           >
-    //             {
-    //               formik => (
-    //               <Form name="questionForm" size="large" onSubmit={formik.handleSubmit}>
-    //                 <Segment>
-    //                   <MultichoiceQuestion options={initialValues.answers} formik={formik} />
-    //                 </Segment>
-    //                 <Button type="submit" label={"sub"} />
-    //               </Form>
-    //             )}
-    //           </Formik>
-    //         <div className="form_question_actions">
-    //           <Button color="red" icon labelPosition="left" size="tiny"
-    //                   onClick={() => deleteQuestion(question.id)}>
-    //             <Icon name="close" />
-    //             Delete
-    //           </Button>
-    //         </div>
-    //       </div>
-    //     </Card>
-    //   <Button color="green" icon labelPosition="left" onClick={addQuestion}>
-    //     <Icon name="plus" />
-    //     Add new question
-    //   </Button>
-    // </div>
+  setQuestionType = (data: any) => {
+    const type: QuestionType = data.value;
+    const { question } = this.state;
+    if (type === QuestionType.multichoice || type === QuestionType.checkbox || type === QuestionType.radio) {
+      question.type === QuestionType.multichoice
+        || question.type === QuestionType.checkbox
+        || question.type === QuestionType.radio
+        ? this.setState({
+          ...this.state, question: {
+            ...this.state.question,
+            type,
+            answerOptions: question.answerOptions
+          }
+        })
+        : this.setState({
+          ...this.state, question: {
+            ...this.state.question,
+            type,
+            answerOptions: []
+          }
+        });
+    }
+  }
 
-    <Formik
-      enableReinitialize
-      initialValues={state.initialValues}
-      validationSchema={state.validationSchema}
-      onSubmit={() => console.log('submitted')}
-    >
-      {
-        formik => (
-        <Form name="questionForm" size="large" onSubmit={formik.handleSubmit}>
-          <Segment>
-            {this.getForm(state.question, state.initialValues, formik)}
-          </Segment>
-          <Button type="submit" label={"sub"} />
-        </Form>
-      )}
-    </Formik>
+  render() {
+    const { initialValues, validationSchema, question } = this.state;
+    return (
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={() => console.log('submitted')}
+      >
+        {
+          formik => (
+            <Segment className="question_container">
+              <Form className="question_form" onSubmit={formik.handleSubmit}>
+                <Segment className="question_header">
+                    <Form.Input
+                      className="question_name_input"
+                      fluid
+                      placeholder="Type your question"
+                      type="text"
+                      icon="question"
+                      value={formik.values.name}
+                      name="name"
+                      error={formik.touched.name && formik.errors.name ? formik.errors.name : undefined}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <Form.Dropdown
+                      selection
+                      options={this.questionTypeOptions}
+                      placeholder={'choose type'}
+                      onChange={(event, data) => this.setQuestionType(data)}
+                    />
+                </Segment>
+                <Segment className="question_form-answers">
+                  {this.getForm(question, initialValues, formik)}
+                </Segment>
+                <Segment className="question_actions">
+                  <Button color="red" size="tiny"
+                    onClick={this.onClose}>
+                    Cancel
+                </Button>
+                  <Button color="green" size="tiny" onClick={this.onSubmit}>
+                    Save
+                </Button>
+                </Segment>
+              </Form>
+            </Segment>
+          )}
+      </Formik>
     );
   }
 }
-
 export default QuestionDetails;
