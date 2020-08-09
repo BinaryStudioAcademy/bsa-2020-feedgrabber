@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from "react";
-import styles from "./styles.module.sass";
-import { useHistory } from "react-router-dom";
+import React, { ChangeEvent } from "react";
+import { History } from "react-router-dom";
+import { Modal, Button } from "semantic-ui-react";
+import { IQuestion } from "../../models/IQuesion";
+import { Formik } from "formik";
+import * as Yup from 'yup';
 
-// ------------Mock-----------------//
+import "./styles.module.sass";
+
+// ----------Mock-----------//
 enum QuestionType {
   freeText = "free_text",
   radio = "radio",
@@ -12,118 +17,123 @@ enum QuestionType {
   dropDown = "drop-down",
 }
 
-const getQuestions = (): IQuestion[] => {
-  return [
-    {
-      id: "1",
-      categoryId: "Soft skills",
-      name:
-        "Can you tell me about a time when you successfully led a team through a sticky situation?",
-      type: QuestionType.freeText
-    },
-    {
-      id: "2",
-      categoryId: "Leadership",
-      name: "Are you able to delegate responsibilities efficiently?",
-      type: QuestionType.freeText
-    }
-  ];
-};
-
-interface IQuestion {
-  id: string;
-  name: string;
-  categoryId: string;
-  type: QuestionType;
-}
+// ---------Mock end---------//
 
 interface IQuestionProps {
   saveQuestion(question: IQuestion): void;
-  match: {
-    param: {
-      id: string;
-    };
-  };
+  question: IQuestion;
+  history: History;
 }
 
-const QuestionDetails: React.FC<IQuestionProps> = ({ match, saveQuestion }) => {
-  const [question, setQuestion] = useState({
-    id: "",
-    name: "",
-    categoryId: "",
-    type: QuestionType.inputField
-  });
-  const history = useHistory();
+interface IQuestionState {
+  initialValues: any;
+  validationSchema: any;
+  question: IQuestion;
+  open: boolean;
+}
 
-  useEffect(() => {
-    getQuestion(match.param.id);
-  });
+class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
+  constructor(props: IQuestionProps) {
+    super(props);
+    this.state = {
+      // TODO: generate new id + create default state
+      validationSchema: Yup.object({}),
+      initialValues: {},
+      question: {
+        id: "",
+        name: "New question",
+        categoryId: "",
+        type: "free_text"
+      },
+      open: false
+    };
 
-  const getQuestion = async (id: string) => {
-    const questions: IQuestion[] = getQuestions();
-    const question = questions.find(question => question.id === id);
-    setQuestion(question);
-    return 0;
+    this.onClose = this.onClose.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.getForm = this.getForm.bind(this);
+    this.onTypeChange = this.onTypeChange.bind(this);
+    this.onNameChange = this.onNameChange.bind(this);
+  }
+
+  // TODO: change to the right location
+  onClose = () => {
+    this.setState({ ...this.state, open: false });
   };
 
-  const onClose = () => {
-    history.push("/questions");
-  };
-
-  const onSubmit = () => {
-    saveQuestion(question);
-    history.push("/questions");
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    question.type = QuestionType[event.target.value];
-    setQuestion(question);
-  };
-
-  const getForm = question => {
-    switch (question.type) {
-      case QuestionType.inputField:
-        return ""; // <InputField />;
-      case QuestionType.radio:
-        return ""; // <RadioButton />;
-      case QuestionType.dropDown:
-        return ""; // <DropDown />;
-      case QuestionType.checkbox:
-        return ""; // <CheckBox />;
-      case QuestionType.scale:
-        return ""; // <Scale />
-      case QuestionType.freeText:
-        return ""; // <FreeText/>
-      default:
-        return "";
+  onSubmit = () => {
+    if (this.state.question.id) {
+      this.props.saveQuestion(this.state.question);
+      this.setState({ ...this.state, open: false });
     }
   };
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.questionContainer}>
-          <div className={styles.questionForm}>{getForm(question)}</div>
-          <select value={question.type} onChange={handleChange}>
-            <option value={QuestionType.inputField}>Input field</option>
-            <option value={QuestionType.checkbox}>Checkbox</option>
-            <option value={QuestionType.freeText}>Free text</option>
-            <option value={QuestionType.dropDown}>Drop-down list</option>
-            <option value={QuestionType.scale}>Scale</option>
-            <option value={QuestionType.radio}>Radio buttons</option>
-          </select>
-          <div className={styles.centerContent}>
-            <button className={styles.closeButton} onClick={() => onClose()}>
-              Close
-            </button>
-            <button className={styles.submitButton} onClick={() => onSubmit()}>
-              Save
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+  onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newName = event.target.value;
+    if (newName.length > 0) {
+      this.setState({
+        ...this.state,
+        question: { ...this.state.question, name: newName }
+      });
+    }
+  };
+
+  onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    this.setState({
+      ...this.state,
+      question: {
+        ...this.state.question,
+        type: QuestionType[event.target.value]
+      }
+    });
+  };
+
+  // TODO: change span to the right element
+  getForm = (question: IQuestion) => {
+    switch (question.type) {
+      case "radio":
+        return <span></span>; // <RadioButton />;
+      case "checkbox":
+        return <span></span>; // <CheckBox />;
+      case "scale":
+        return <span></span>; // <Scale />
+      case "free_text":
+        return <span></span>; // <FreeText/>
+      default:
+        return <span>Default choice</span>;
+    }
+  };
+
+  render() {
+    const state = this.state;
+    return (
+      <Modal
+        onClose={() => this.setState({ ...this.state, open: false })}
+        onOpen={() => this.setState({ ...this.state, open: true })}
+        open={ state.open }
+        trigger={<Button>show Modal</Button>}
+      >
+        <Modal.Header>{state.question.name}</Modal.Header>
+        <Modal.Content>
+            <Formik
+              initialValues={state.initialValues}
+              validationSchema={state.validationSchema}
+              onSubmit={this.onSubmit}
+            >
+              {this.getForm(state.question)}
+            </Formik>
+            
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color="red" onClick={() => this.onClose()}>
+            Close
+          </Button>
+          <Button color="green" onClick={() => this.onSubmit()}>
+            Save
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    );
+  }
+}
 
 export default QuestionDetails;
