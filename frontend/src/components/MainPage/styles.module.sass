@@ -1,11 +1,12 @@
-html, body
-  height: 100%
-
 *
   font-family: Arial, serif
   box-sizing: border-box
+button
+  padding: 0
+  border: 0
+  outline: none
 
-// TODO delete this reset after adding global reset
+
 
 $aside-width: calc((100% - 800px) / 2)
 
@@ -24,7 +25,7 @@ $background-card-color: #ffffff
 .cardContainer
   margin-left: $aside-width
   margin-right: $aside-width
-  padding-top: 50px
+  padding-top: 20px
   padding-bottom: 50px
 
 .card
@@ -89,9 +90,14 @@ $background-card-color: #ffffff
   width: 100%
   min-height: 100px
   height: 100%
-  padding: 15px
+  padding: 15px 15px 30px
   border-radius: 5px
   border: 1px solid #41abff
+  position: relative
+  .author
+    position: absolute
+    bottom: 10px
+    left: 15px
 
 .primaryFooter
   color: #2c2c94
