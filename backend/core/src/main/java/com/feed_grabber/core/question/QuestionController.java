@@ -3,13 +3,9 @@ package com.feed_grabber.core.question;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
-import com.feed_grabber.core.question.exceptions.QuestionExistsException;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,19 +36,16 @@ public class QuestionController {
 
     @GetMapping("/{id}")
     public QuestionDto getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
-        return questionService.getOne(id)
-                .orElseThrow(QuestionnaireNotFoundException::new);
+        return questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new);
     }
 
     @PostMapping
-    public QuestionDto create(@RequestBody @Valid QuestionCreateDto createDto)
-            throws QuestionnaireNotFoundException, QuestionCategoryNotFoundException, QuestionExistsException {
+    public QuestionDto create(@RequestBody @Valid QuestionCreateDto createDto) throws QuestionnaireNotFoundException {
         return questionService.create(createDto);
     }
 
     @PutMapping
-    public QuestionDto update(@RequestBody @Valid QuestionUpdateDto updateDto)
-            throws QuestionnaireNotFoundException, QuestionNotFoundException, QuestionCategoryNotFoundException, QuestionExistsException {
+    public QuestionDto update(@RequestBody @Valid QuestionUpdateDto updateDto) throws QuestionNotFoundException {
         return questionService.update(updateDto);
     }
 

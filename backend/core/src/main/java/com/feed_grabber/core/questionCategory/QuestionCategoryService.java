@@ -78,10 +78,7 @@ public class QuestionCategoryService {
         return QuestionCategoryMapper.MAPPER.questionCategoryToQuestionCategoryDto(questionCategory);
     }
 
-    public void delete(UUID id) throws QuestionCategoryNotFoundException {
-        var questionCategory = questionCategoryRepository.findById(id)
-                .orElseThrow(QuestionCategoryNotFoundException::new);
-
-        questionCategoryRepository.delete(questionCategory);
+    public void delete(UUID id)  {
+        questionCategoryRepository.deleteById(id);
     }
 }

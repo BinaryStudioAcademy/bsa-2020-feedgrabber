@@ -54,7 +54,7 @@ public class QuestionCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) throws QuestionCategoryNotFoundException {
+    public void delete(@PathVariable UUID id) {
         questionCategoryService.delete(id);
     }
 }
