@@ -1,5 +1,6 @@
 package com.feed_grabber.core.question.model;
 
+import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
@@ -40,4 +41,7 @@ public class Question {
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private Company company;
 }

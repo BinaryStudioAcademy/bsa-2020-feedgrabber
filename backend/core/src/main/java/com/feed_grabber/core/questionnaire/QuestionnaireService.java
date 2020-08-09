@@ -1,5 +1,6 @@
 package com.feed_grabber.core.questionnaire;
 
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
@@ -50,8 +51,10 @@ public class QuestionnaireService {
     public QuestionnaireDto create(QuestionnaireCreateDto createDto)
             throws CompanyNotFoundException, QuestionnaireExistsException {
 
-//        var company = companyRepository.findById(createDto.getCompanyId())
-//                .orElseThrow(CompanyNotFoundException::new);
+        var companyId = UUID.randomUUID();
+
+        var company = companyRepository.findById(companyId)
+                .orElseThrow(CompanyNotFoundException::new);
 //        if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), createDto.getCompanyId())) {
 //            throw new QuestionnaireExistsException();
 //        }
