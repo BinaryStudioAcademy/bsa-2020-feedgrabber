@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,10 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(
-        name = "questions",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"text", "questionnaire_id", "category_id"})
-)
+@Table(name = "questions")
 public class Question {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -30,14 +28,12 @@ public class Question {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "text", nullable = false)
-    private String text;
+    @Column(name = "text", nullable = false, unique = true)
+    private String title;
+
+    @ManyToMany(mappedBy = "questions")
+    private List<Questionnaire> questionnaires;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "questionnaire_id", nullable = false)
-    private Questionnaire questionnaire;
-
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
     private QuestionCategory category;
 }

@@ -1,6 +1,7 @@
 package com.feed_grabber.core.questionnaire.model;
 
 import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.question.model.Question;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,10 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(
-        name = "questionnaires",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"title", "company_id"})
-)
+@Table(name = "questionnaires")
 public class Questionnaire {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -29,10 +28,16 @@ public class Questionnaire {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "question_questionnaire",
+            joinColumns = @JoinColumn(name = "questionnaire_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
+    private List<Question> questions;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 }
