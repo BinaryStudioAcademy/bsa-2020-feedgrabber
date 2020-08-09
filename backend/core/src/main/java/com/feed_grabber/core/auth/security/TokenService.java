@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -47,20 +48,22 @@ public class TokenService {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateAccessToken(UUID id) {
-        return generateToken(id, TOKEN_EXPIRATION_TIME);
+    public String generateAccessToken(UUID id, Map<String, Object> claims) {
+        return generateToken(id, claims, TOKEN_EXPIRATION_TIME);
     }
 
-    public String generateRefreshToken(UUID id) {
-        return generateToken(id, REFRESH_TOKEN_EXPIRATION_TIME);
+    public String generateRefreshToken(UUID id, Map<String, Object> claims) {
+        return generateToken(id, claims, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     public TokenRefreshResponseDTO refreshTokens(String refreshToken) {
         try {
             if (refreshToken != null && !isTokenExpired(refreshToken)) {
                 var userId = UUID.fromString(extractUserid(refreshToken));
-                String jwt = generateToken(userId, TOKEN_EXPIRATION_TIME);
-                String refreshJwt = generateToken(userId, REFRESH_TOKEN_EXPIRATION_TIME);
+                var companyId = UUID
+                        .fromString(extractClaim(refreshToken, claims -> (String) claims.get("companyId")));
+                String jwt = generateToken(userId, Map.of("companyId", companyId), TOKEN_EXPIRATION_TIME);
+                String refreshJwt = generateToken(userId, Map.of("companyId", companyId), REFRESH_TOKEN_EXPIRATION_TIME);
                 return new TokenRefreshResponseDTO(jwt, refreshJwt);
             }
             throw new JwtTokenException("No token passed");
@@ -69,10 +72,11 @@ public class TokenService {
         }
     }
 
-    private String generateToken(UUID subject, long expiration) {
+    private String generateToken(UUID subject, Map<String, Object> claims, long expiration) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
         return Jwts.builder()
                 .setSubject(subject.toString())
+                .addClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -80,10 +84,10 @@ public class TokenService {
 
     }
 
-    public static UUID getUserId(){
+    public static UUID getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        var currentUserId = (String)auth.getPrincipal();
-        return  UUID.fromString(currentUserId);
+        var currentUserId = (String) auth.getPrincipal();
+        return UUID.fromString(currentUserId);
     }
 
 }
