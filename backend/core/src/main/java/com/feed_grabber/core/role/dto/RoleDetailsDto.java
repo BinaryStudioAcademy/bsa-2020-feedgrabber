@@ -4,7 +4,6 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.role.SystemRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 import java.util.UUID;
 

@@ -16,6 +16,7 @@
     "prop-types": "^15.7.2",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.12.0",
     "react-fullpage": "^0.1.19",
     "react-redux": "^7.1.3",
@@ -87,5 +88,10 @@
     "react-app-rewired": "^2.1.5",
     "source-map-loader": "^0.2.4",
     "typescript": "^3.7.5"
+  },
+  "bit": {
+    "env": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
   }
 }
