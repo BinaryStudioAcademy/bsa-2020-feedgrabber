@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { toastr } from 'react-redux-toastr';
 
 import { loadQuestionsRoutine } from './routines';
@@ -12,8 +12,8 @@ function* loadQuestionsList(action: any) {
     yield put(loadQuestionsRoutine.success(questions));
   } catch (err) {
     // handle error
-    yield put(loadQuestionsRoutine.failure('Unable to load questions.'));
-    console.log(err);
+    yield put(loadQuestionsRoutine.failure('Unable to load questions :('));
+    toastr.error('Unable to load questions :(');
   }
 }
 

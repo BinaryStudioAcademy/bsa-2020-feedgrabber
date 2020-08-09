@@ -22,14 +22,14 @@ export default (state: IQuestionsListState = { questions: null, isLoading: true 
     case loadQuestionsRoutine.SUCCESS:
       return {
         ...state,
-        questions: action.questions,
+        questions: action.payload,
         isLoading: false
       };
     case loadQuestionsRoutine.FAILURE:
       return {
         ...state,
         isLoading: false,
-        error: action.message
+        error: action.payload
       };
     default:
       return state;
