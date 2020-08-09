@@ -7,7 +7,7 @@ interface IQuestionBase {
 
 interface IRadioQuestion extends IQuestionBase {
   type: "radio";
-  answerOption: string[];
+  answerOptions: string[];
 }
 
 interface IScaleQuestion extends IQuestionBase {
@@ -24,12 +24,17 @@ interface ITextQuestion extends IQuestionBase {
 
 interface IDropDownQuestion extends IQuestionBase {
   type: "drop_down";
-  answerOption: string[];
+  answerOptions: string[];
 }
 
 interface ICheckboxQuestion extends IQuestionBase {
   type: "checkbox";
-  answerOption: string[];
+  answerOptions: string[];
+}
+
+interface IMultichoiceQuestion extends IQuestionBase {
+  type: "multichoice";
+  answerOptions: string[];
 }
 
 export type IQuestion =
@@ -37,7 +42,8 @@ export type IQuestion =
   | ITextQuestion
   | IScaleQuestion
   | IRadioQuestion
-  | ICheckboxQuestion;
+  | ICheckboxQuestion
+  | IMultichoiceQuestion;
 
-const types = ["radio", "checkbox", "scale", "free_text", "drop_down"] as const;
+const types = ["radio", "checkbox", "scale", "free_text", "drop_down", "multichoice"] as const;
 type QuestionTypes = typeof types[number];
