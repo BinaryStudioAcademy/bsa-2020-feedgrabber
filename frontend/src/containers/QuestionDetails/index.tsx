@@ -185,7 +185,6 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                       fluid
                       placeholder="Type your question"
                       type="text"
-                      icon="question"
                       value={formik.values.name}
                       name="name"
                       error={formik.touched.name && formik.errors.name ? formik.errors.name : undefined}
