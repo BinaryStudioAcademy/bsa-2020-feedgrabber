@@ -1,5 +1,4 @@
 import {IRegistrationRequest} from "./IRegistrationRequest";
-import {IFetchArgsData} from "../../models/IFetchArgsData";
 
 export const registration = async (request: IRegistrationRequest) => {
     // TODO: it should send POST query to /api/auth/register using apiClient

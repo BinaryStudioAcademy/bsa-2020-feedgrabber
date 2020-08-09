@@ -1,8 +1,8 @@
 package com.feed_grabber.core.role.dto;
 
 import com.feed_grabber.core.role.SystemRole;
-import lombok.*;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 

@@ -2,7 +2,6 @@ package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.team.model.Team;
-import com.feed_grabber.core.user.dto.UserCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,8 +49,8 @@ public class User {
             })
     @JoinTable(
             name = "users_teams",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "team_id") }
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "team_id")}
     )
     @Builder.Default
     private List<Team> teams = new ArrayList<>();

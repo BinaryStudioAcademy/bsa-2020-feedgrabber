@@ -1,6 +1,9 @@
 package com.feed_grabber.core.exceptions;
 
-import com.feed_grabber.core.login.WrongCredentialsException;
+import com.feed_grabber.core.auth.exceptions.InsertionException;
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
+import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
+import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.response.AppResponse;
 import org.springframework.http.HttpStatus;
@@ -15,26 +18,49 @@ public class Handler extends ResponseEntityExceptionHandler {
     public ResponseEntity<AppResponse<Object>> handleVerificationTokenException(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new AppResponse<Object>(ex));
+                .body(new AppResponse<>(ex, HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<AppResponse<Object>> handleNotFoundException(NotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new AppResponse<Object>(ex));
+                .body(new AppResponse<>(ex, HttpStatus.NOT_FOUND));
     }
 
     @ExceptionHandler({AlreadyExistsException.class})
     public ResponseEntity<AppResponse<Object>> handleAlreadyExistsException(AlreadyExistsException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new AppResponse<Object>(ex));
+                .body(new AppResponse<>(ex, HttpStatus.BAD_REQUEST));
     }
 
-    @ExceptionHandler(WrongCredentialsException.class)
-    public ResponseEntity<String> handleUserNotFoundException(WrongCredentialsException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    @ExceptionHandler(value = WrongCredentialsException.class)
+    public ResponseEntity<AppResponse<Object>> handleUserNotFoundException(WrongCredentialsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AppResponse<>(exception, HttpStatus.NOT_FOUND));
+    }
+
+    @ExceptionHandler(value = UserAlreadyExistsException.class)
+    public ResponseEntity<AppResponse<Object>> handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AppResponse<>(exception, HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(value = JwtTokenException.class)
+    public ResponseEntity<AppResponse<Object>> handleJwtExpiredException(JwtTokenException exception) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AppResponse<>(exception, HttpStatus.FORBIDDEN));
+    }
+
+    @ExceptionHandler(value = InsertionException.class)
+    public ResponseEntity<AppResponse<Object>> handleInsertDefaultUserException(InsertionException exception) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AppResponse<>(exception, HttpStatus.BAD_REQUEST));
     }
 
 }

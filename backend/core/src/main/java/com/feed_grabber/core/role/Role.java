@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "roles")

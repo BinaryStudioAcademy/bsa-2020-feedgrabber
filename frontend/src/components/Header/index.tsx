@@ -1,9 +1,10 @@
-import React from "react";
+import React, {FC} from "react";
 import { Menu, Icon, Image, Header as HeaderUI, Button, Dropdown } from "semantic-ui-react";
 import { useHistory } from "react-router-dom";
-
 import styles from "./styles.module.scss";
 import icon from "../../assets/images/icon_bg.jpg";
+import {logoutRoutine} from "../AuthForm/routines";
+import {connect} from "react-redux";
 
 export interface IUser {
     id: string;
@@ -12,9 +13,10 @@ export interface IUser {
 }
 export interface IHeaderProps {
     user: IUser;
+    logout: () => void;
 }
 
-const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
+const Header: FC<IHeaderProps> = ({ user, logout }) => {
     const history = useHistory();
     return (
         <Menu secondary borderless className={styles.main_header}>
@@ -59,7 +61,7 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
                 <Menu.Item name="horizontally" fitted="horizontally">
                     <Button basic icon type="button"
                             className={`${styles.menuBtn} ${styles.logoutBtn}`}
-                            onClick={() => history.push('/login')}>
+                            onClick={logout}>
                         <Icon name="log out" size="large" />
                     </Button>
                 </Menu.Item>
@@ -74,4 +76,9 @@ Header.defaultProps = {
         username: "UserName",
         avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
 };
-export default Header;
+
+// const mapStateToProps = state => ({
+//     user: state.profile.user
+// });
+
+export default connect(null, {logout: logoutRoutine})(Header);
