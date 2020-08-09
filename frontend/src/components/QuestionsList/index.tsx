@@ -26,7 +26,7 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({questions}) => {
             <h3>Questions</h3>
             <div className={styles.addNewButton}>
                 <Button
-                onClick={() => handleClick(" ")}>Add new</Button>
+                onClick={() => handleClick("new")}>Add new</Button>
             </div>
             <div className={styles.questionsContainer}>  
             {questions.map(question => {
