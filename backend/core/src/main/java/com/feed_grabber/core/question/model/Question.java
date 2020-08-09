@@ -48,7 +48,4 @@ public class Question {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
-
-    @Column(name = "company_id")
-    private UUID companyId;
 }

@@ -1,5 +1,7 @@
 package com.feed_grabber.core.question;
 
+import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
@@ -20,35 +22,38 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionService {
 
-    private final QuestionRepository questionRepository;
-    private final QuestionnaireRepository questionnaireRepository;
-    private final QuestionCategoryRepository questionCategoryRepository;
+    private final QuestionRepository quesRep;
+    private final QuestionnaireRepository anketRep;
+    private final QuestionCategoryRepository quesCategRep;
+    private final CompanyRepository companyRep;
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository,
-                           QuestionnaireRepository questionnaireRepository,
-                           QuestionCategoryRepository questionCategoryRepository) {
-        this.questionRepository = questionRepository;
-        this.questionnaireRepository = questionnaireRepository;
-        this.questionCategoryRepository = questionCategoryRepository;
+    public QuestionService(QuestionRepository quesRep,
+                           QuestionnaireRepository anketRep,
+                           QuestionCategoryRepository quesCategRep, CompanyRepository companyRep) {
+        this.quesRep = quesRep;
+        this.anketRep = anketRep;
+        this.quesCategRep = quesCategRep;
+        this.companyRep = companyRep;
     }
 
     public List<QuestionDto> getAll() {
-        return questionRepository.findAll()
+        return quesRep.findAll()
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
-        return questionRepository.findAllByQuestionnaireId(questionnaireId)
-                .stream()
-                .map(QuestionMapper.MAPPER::questionToQuestionDto)
-                .collect(Collectors.toList());
+//        return quesRep.findAllByQuestionnaireId(questionnaireId)
+//                .stream()
+//                .map(QuestionMapper.MAPPER::questionToQuestionDto)
+//                .collect(Collectors.toList());
+        return null;
     }
 
     public Optional<QuestionDto> getOne(UUID id) {
-        return questionRepository
+        return quesRep
                 .findById(id)
                 .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
@@ -57,10 +62,12 @@ public class QuestionService {
         // TODO replace with jwt info
         var companyId = UUID.randomUUID();
 
-        var questionnaire = questionnaireRepository.findById(dto.getQuestionnaireId())
+        var company = companyRep.findById(companyId).get();
+
+        var questionnaire = anketRep.findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryName(), companyId);
+        var category = findOrCreateCategory(dto.getCategoryName(), company);
 
         var q = Question.builder()
                 .category(category)
@@ -68,36 +75,38 @@ public class QuestionService {
                 .questionnaires(List.of(questionnaire))
                 .text(dto.getText())
                 .type(dto.getType())
-                .companyId(companyId)
+                .company(company)
                 .build();
 
-        return QuestionMapper.MAPPER.questionToQuestionDto(questionRepository.save(q));
+        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(q));
     }
 
     public QuestionDto update(QuestionUpdateDto dto) throws QuestionNotFoundException {
         // TODO replace with jwt info
         var companyId = UUID.randomUUID();
 
-        var question = questionRepository.findById(dto.getId())
+        var company = companyRep.findById(companyId).get();
+
+        var question = quesRep.findById(dto.getId())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryName(), companyId);
+        var category = findOrCreateCategory(dto.getCategoryName(), company);
 
         question.setCategory(category);
         question.setText(dto.getText());
 
-        return QuestionMapper.MAPPER.questionToQuestionDto(questionRepository.save(question));
+        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
     }
 
     public void delete(UUID id) {
-        questionRepository.deleteById(id);
+        quesRep.deleteById(id);
     }
 
-    private QuestionCategory findOrCreateCategory(String name, UUID companyId) {
-        return questionCategoryRepository.findByTitle(name)
-                .orElseGet(() -> questionCategoryRepository.save(QuestionCategory.builder()
+    private QuestionCategory findOrCreateCategory(String name, Company company) {
+        return quesCategRep.findByTitle(name)
+                .orElseGet(() -> quesCategRep.save(QuestionCategory.builder()
                         .title(name)
-                        .companyId(companyId)
+                        .company(company)
                         .build()));
     }
 }

@@ -37,9 +37,6 @@ public class QuestionCategory {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @Column(name = "company_id")
-    private UUID companyId;
-
     @OneToMany(mappedBy = "category")
     private List<Question> questions = new LinkedList<>();
 }

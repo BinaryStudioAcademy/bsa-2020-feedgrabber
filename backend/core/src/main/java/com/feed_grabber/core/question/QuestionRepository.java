@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
-    List<Question> findAllByQuestionnaireId(UUID questionnaireId);
-
-    boolean existsByTextAndQuestionnaireIdAndCategoryId
-            (String text, UUID questionnaireId, UUID categoryId);
-
-    boolean existsByTextAndQuestionnaireIdAndCategoryIdAndIdIsNot
-            (String text, UUID questionnaireId, UUID categoryId, UUID id);
+//    boolean existsByTextAndQuestionnaireIdAndCategoryId
+//            (String text, UUID questionnaireId, UUID categoryId);
+//
+//    boolean existsByTextAndQuestionnaireIdAndCategoryIdAndIdIsNot
+//            (String text, UUID questionnaireId, UUID categoryId, UUID id);
 }
