@@ -6,5 +6,5 @@ public class SecurityConstants {
     public static final long REFRESH_TOKEN_EXPIRATION_TIME = 86_400_000; // 1 day
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String AUTH_HEADER_STRING = "Authorization";
-    public static final String[] ROUTES_WHITE_LIST = {"/api/auth/login", "/api/auth/register", "/api/auth/register/confirm", "/api/auth/renovate"};
+    public static final String[] ROUTES_WHITE_LIST = {"/api/auth/login", "/api/auth/register", "/api/auth/register/confirm", "/api/auth/renovate", "/api/questions"};
 }

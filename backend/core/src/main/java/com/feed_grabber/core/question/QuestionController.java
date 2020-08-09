@@ -1,5 +1,7 @@
 package com.feed_grabber.core.question;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
@@ -40,8 +42,10 @@ public class QuestionController {
     }
 
     @PostMapping
-    public QuestionDto create(@RequestBody @Valid QuestionCreateDto createDto) throws QuestionnaireNotFoundException {
-        return questionService.create(createDto);
+    public QuestionDto create(@RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
+        var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
+
+        return questionService.create(dto);
     }
 
     @PutMapping

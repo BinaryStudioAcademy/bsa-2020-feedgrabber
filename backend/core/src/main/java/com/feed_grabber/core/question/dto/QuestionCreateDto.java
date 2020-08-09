@@ -1,22 +1,29 @@
 package com.feed_grabber.core.question.dto;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.feed_grabber.core.question.CustomDes;
 import com.feed_grabber.core.question.QuestionType;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Value
-@NotBlank
+@Data
+@AllArgsConstructor
+@JsonDeserialize(using = CustomDes.class)
 public class QuestionCreateDto {
+    @NotBlank
     String text;
 
     String categoryName;
 
+    @NotNull
     QuestionType type;
 
+    @NotNull
     UUID questionnaireId;
 
-    @JsonRawValue
     String payload;
 }
