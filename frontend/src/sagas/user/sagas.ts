@@ -8,7 +8,7 @@ function* getUser() {
     const res: IGeneric<IUserInfo> = yield call(apiClient.get, `api/user`);
 
     if (res.data.error) {
-        yield put(getUserRoutine.failure({payload: res.data.error}));
+        yield put(getUserRoutine.failure(res.data.error));
         return;
     }
 

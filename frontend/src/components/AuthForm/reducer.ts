@@ -1,21 +1,20 @@
 import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "./routines";
+import {IAppState} from "../../models/IAppState";
+import {IUserErrors, IUserInfo} from "../../models/user/types";
 
-const authAndProfileReducer = (state = {}, {type, payload}) => {
+const initialState = {
+    isLoading: false,
+    info: {} as IUserInfo,
+    error: {} as IUserErrors
+};
+
+const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
     if (type === loginRoutine.SUCCESS
         || type === registerRoutine.SUCCESS
         || type === getUserRoutine.SUCCESS) {
         return {
             ...state,
             info: payload,
-            isLoading: false
-        };
-    }
-    if (type === loginRoutine.FAILURE
-        || type === registerRoutine.FAILURE
-        || type === getUserRoutine.FAILURE) {
-        return {
-            ...state,
-            error: payload,
             isLoading: false
         };
     }
@@ -31,6 +30,24 @@ const authAndProfileReducer = (state = {}, {type, payload}) => {
         return {
             ...state,
             info: {}
+        };
+    }
+    if (type === registerRoutine.FAILURE) {
+        return {
+            ...state,
+            error: {...state.error, register: payload}
+        };
+    }
+    if (type === loginRoutine.FAILURE) {
+        return {
+            ...state,
+            error: {...state.error, login: payload}
+        };
+    }
+    if (type === getUserRoutine.FAILURE) {
+        return {
+            ...state,
+            error: {...state.error, getUser: payload}
         };
     }
     return state;

@@ -1,10 +1,10 @@
-import {IUserInfo} from "./user/types";
+import {IUserErrors, IUserInfo} from "./user/types";
 
 export interface IAppState {
     toastr: any;
     user: {
         isLoading: boolean;
         info: IUserInfo;
-        error: string;
+        error: IUserErrors;
     };
 }

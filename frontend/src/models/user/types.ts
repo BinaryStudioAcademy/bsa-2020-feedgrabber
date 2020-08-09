@@ -7,3 +7,9 @@ export interface IUserInfo {
     avatar?: string;
 }
 
+export interface IUserErrors {
+    login: string;
+    register: string;
+    getUser: string;
+}
+

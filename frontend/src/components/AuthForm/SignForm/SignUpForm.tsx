@@ -5,16 +5,9 @@ import Button from './Button';
 import {Formik} from "formik";
 import * as yup from "yup";
 import {registerRoutine} from "../routines";
-import {connect} from "react-redux";
-import {IRegisterData} from "../../../models/auth/types";
+import {connect, ConnectedProps} from "react-redux";
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
-
-interface IRegisterProps {
-    signUp: (data: IRegisterData) => void;
-    isLoading: boolean;
-    className: string;
-}
 
 const schema = yup.object().shape({
     companyName: yup
@@ -38,15 +31,15 @@ const schema = yup.object().shape({
         .max(15, "Username too long!")
 });
 
-const SignUpForm: FC<IRegisterProps> = props => {
-    const {signUp: register, className} = props;
+const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
+    const {signUp, className, error} = props;
 
     return (
         <Formik
             initialValues={{email: '', password: '', companyName: '', username: ''}}
             validationSchema={schema}
             onSubmit={values => {
-                register({
+                signUp({
                     email: values.email,
                     password: values.password,
                     companyName: values.companyName,
@@ -62,7 +55,7 @@ const SignUpForm: FC<IRegisterProps> = props => {
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.email || errors.companyName || errors.password;
+                const errorText = errors.username || errors.email || errors.companyName || errors.password || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
@@ -83,7 +76,7 @@ const SignUpForm: FC<IRegisterProps> = props => {
                         {
                             errorText && <Message attached="top" error size="small" content={errorText}/>
                         }
-                        <Button disabled={!!errorText}
+                        <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">
@@ -94,12 +87,18 @@ const SignUpForm: FC<IRegisterProps> = props => {
     );
 };
 
-const mapStateToProps = (state: IAppState) => ({
-    isLoading: state.user.isLoading
+const mapState = (state: IAppState) => ({
+    isLoading: state.user.isLoading,
+    error: state.user.error.register
 });
 
-const mapDispatchToProps = {
+const mapDispatch = {
     signUp: registerRoutine
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUpForm);
+const connector = connect(mapState, mapDispatch);
+
+type SignUpFormProps = ConnectedProps<typeof connector>;
+
+export default connector(SignUpForm);
+

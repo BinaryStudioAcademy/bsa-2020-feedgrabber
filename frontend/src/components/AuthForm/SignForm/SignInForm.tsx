@@ -5,16 +5,9 @@ import Button from './Button';
 import * as yup from "yup";
 import {Formik} from 'formik';
 import {loginRoutine} from 'components/AuthForm/routines';
-import {connect} from 'react-redux';
-import {ILoginData} from "../../../models/auth/types";
+import {connect, ConnectedProps} from 'react-redux';
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
-
-interface ILoginProps {
-    signIn: (data: ILoginData) => void;
-    isLoading: boolean;
-    className: string;
-}
 
 const schema = yup.object().shape({
     password: yup
@@ -29,15 +22,15 @@ const schema = yup.object().shape({
         .max(15, "Username too long!")
 });
 
-const SignInForm: FC<ILoginProps> = props => {
-    const {signIn: login, className} = props;
+const SignInForm: FC<SignInFormProps & {className: string}> = props => {
+    const {signIn, className, error} = props;
 
     return (
         <Formik
             initialValues={{password: '', username: ''}}
             validationSchema={schema}
             onSubmit={values => {
-                login({
+                signIn({
                     password: values.password,
                     username: values.username
                 });
@@ -51,7 +44,7 @@ const SignInForm: FC<ILoginProps> = props => {
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.password;
+                const errorText = errors.username || errors.password || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
@@ -67,7 +60,7 @@ const SignInForm: FC<ILoginProps> = props => {
                         {
                             errorText && <Message attached="top" error size="small" content={errorText}/>
                         }
-                        <Button disabled={!!errorText}
+                        <Button disabled={!!errorText && errorText !== error}
                             variant="secondary"
                             type="submit"
                             marginTop="1.17rem">
@@ -78,12 +71,18 @@ const SignInForm: FC<ILoginProps> = props => {
     );
 };
 
-const mapStateToProps = (state: IAppState) => ({
-    isLoading: state.user.isLoading
+const mapState = (state: IAppState) => ({
+    isLoading: state.user.isLoading,
+    error: state.user.error.login
 });
 
-const mapDispatchToProps = {
+const mapDispatch = {
     signIn: loginRoutine
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInForm);
+const connector = connect(mapState, mapDispatch);
+
+type SignInFormProps = ConnectedProps<typeof connector>;
+
+export default connector(SignInForm);
+
