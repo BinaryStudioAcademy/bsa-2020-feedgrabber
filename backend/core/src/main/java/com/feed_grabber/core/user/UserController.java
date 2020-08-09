@@ -24,11 +24,7 @@ public class UserController {
 
     @GetMapping
     public AppResponse<UserDetailsResponseDTO> getUserDetails() {
-        try {
-            var id = TokenService.getUserId();
-            return new AppResponse<>(userService.getUserDetails(id).orElseThrow(), HttpStatus.OK);
-        } catch(Exception ex) {
-            return new AppResponse<>(new NotFoundException("User not found"), HttpStatus.NOT_FOUND);
-        }
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userService.getUserDetails(id).orElseThrow(), HttpStatus.OK);
     }
 }
