@@ -1,18 +1,21 @@
 import React, {FunctionComponent} from 'react';
-import { Formik } from 'formik';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Formik, FormikProps } from 'formik';
+import { Dropdown } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
 interface IQuestion {
     min: number;
-    minDescription?: string;
+    minDescription: string;
     max: number;
-    maxDescription?: string;
+    maxDescription: string;
 }
 
 interface IScaleQuestionProps {
-    id: string;
-    question: IQuestion;
+    formik: FormikProps<any>;
+}
+
+interface IFormValues {
+    answers: IQuestion[];
 }
 
 const optionsForMin = [
@@ -32,35 +35,47 @@ const optionsForMax = [
     { key: 9, text: '10', value: 10}
 ];
 
-const ScaleQuestion: FunctionComponent<IScaleQuestionProps> = ({id, question}) => {
+const ScaleQuestion: FunctionComponent<IScaleQuestionProps> = ({formik}) => {
+    const initialValues: IFormValues = {
+        answers: [{
+            min: 1,
+            minDescription: "",
+            max: 5,
+            maxDescription: ""
+        }]
+    };
     return (
+        <Formik
+            initialValues={formik.initialValues.length ? formik.initialValues: initialValues}
+            onSubmit={values => {console.log(values);}}> 
         <div className={styles.container}>
             <div className={[styles.dropdown, styles.container].join(' ')}>
+                <Dropdown compact selection className={styles.first}
+                    options={optionsForMin}  
+                    defaultValue={initialValues.answers[0].min} 
+                    onChange = {formik.handleChange}/>
                 <Dropdown compact selection 
-                options={optionsForMin}  defaultValue={question.min} className={styles.first}/>
-                <Dropdown compact selection 
-                options={optionsForMax}  defaultValue={question.max}/> 
+                    options={optionsForMax}  
+                    defaultValue={initialValues.answers[0].max}
+                    onChange = {formik.handleChange}/> 
             </div>
             <div className={styles.container}>
                 <div className={styles.description}>
                     <div className={styles.number}><span>1</span></div>
-                    <input type="text" placeholder="description (optional)"/>
+                    <input type="text" placeholder="description (optional)"
+                            defaultValue={initialValues.answers[0].minDescription}
+                            onChange = {formik.handleChange}/>
                 </div>
                 <div className={styles.description}>
                     <div className={styles.number}><span>2</span></div>
-                    <input type="text" placeholder="description (optional)"/>
+                    <input type="text" placeholder="description (optional)"
+                            defaultValue={initialValues.answers[0].maxDescription}
+                            onChange = {formik.handleChange}/>
                 </div>
             </div>
         </div>
+        </Formik>
     );
-};
-
-ScaleQuestion.defaultProps = {
-     id: "",
-     question: {
-         min: 1,
-         max: 5
-     }
 };
 
 export default ScaleQuestion;
