@@ -34,8 +34,11 @@ public class QuestionCategory {
     private String title;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id")
     private Company company;
+
+    @Column(name = "company_id")
+    private UUID companyId;
 
     @OneToMany(mappedBy = "category")
     private List<Question> questions = new LinkedList<>();

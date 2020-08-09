@@ -3,11 +3,9 @@ package com.feed_grabber.core.question;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
-import com.feed_grabber.core.question.exceptions.QuestionExistsException;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
-import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
@@ -50,55 +48,56 @@ public class QuestionService {
     }
 
     public Optional<QuestionDto> getOne(UUID id) {
-        return questionRepository.findById(id)
+        return questionRepository
+                .findById(id)
                 .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
 
-    public QuestionDto create(QuestionCreateDto dto)
-            throws QuestionnaireNotFoundException, QuestionCategoryNotFoundException, QuestionExistsException {
+    public QuestionDto create(QuestionCreateDto dto) throws QuestionnaireNotFoundException {
         // TODO replace with jwt info
         var companyId = UUID.randomUUID();
 
         var questionnaire = questionnaireRepository.findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
 
-        var category = questionCategoryRepository.findByName(dto.getCategoryName())
-                .orElseGet(() -> questionCategoryRepository.save(QuestionCategory.builder()
-                            .title(dto.getCategoryName())
-                            .companyId(companyId)
-                            .build()));
+        var category = findOrCreateCategory(dto.getCategoryName(), companyId);
 
         var q = Question.builder()
                 .category(category)
                 .payload(dto.getPayload())
                 .questionnaires(List.of(questionnaire))
+                .text(dto.getText())
+                .type(dto.getType())
+                .companyId(companyId)
+                .build();
+
+        return QuestionMapper.MAPPER.questionToQuestionDto(questionRepository.save(q));
+    }
+
+    public QuestionDto update(QuestionUpdateDto dto) throws QuestionNotFoundException {
+        // TODO replace with jwt info
+        var companyId = UUID.randomUUID();
+
+        var question = questionRepository.findById(dto.getId())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        var category = findOrCreateCategory(dto.getCategoryName(), companyId);
+
+        question.setCategory(category);
+        question.setText(dto.getText());
 
         return QuestionMapper.MAPPER.questionToQuestionDto(questionRepository.save(question));
     }
 
-    public QuestionDto update(QuestionUpdateDto updateDto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException, QuestionCategoryNotFoundException, QuestionExistsException {
-
-        var question = questionRepository.findById(updateDto.getId())
-                .orElseThrow(QuestionNotFoundException::new);
-
-        var questionnaire = questionnaireRepository.findById(updateDto.getQuestionnaireId())
-                .orElseThrow(QuestionnaireNotFoundException::new);
-        var category = questionCategoryRepository.findById(updateDto.getCategoryId())
-                .orElseThrow(QuestionCategoryNotFoundException::new);
-        if (questionRepository.existsByTextAndQuestionnaireIdAndCategoryIdAndIdIsNot
-                (updateDto.getText(), updateDto.getQuestionnaireId(), updateDto.getCategoryId(), updateDto.getId())) {
-            throw new QuestionExistsException();
-        }
-
-        question.setCategory(category);
-        question.setQuestionnaire(questionnaire);
-        question.setText(updateDto.getText());
-        question = questionRepository.save(question);
-        return QuestionMapper.MAPPER.questionToQuestionDto(question);
+    public void delete(UUID id) {
+        questionRepository.deleteById(id);
     }
 
-    public void delete(UUID id) {
-        questionRepository.delete(question);
+    private QuestionCategory findOrCreateCategory(String name, UUID companyId) {
+        return questionCategoryRepository.findByTitle(name)
+                .orElseGet(() -> questionCategoryRepository.save(QuestionCategory.builder()
+                        .title(name)
+                        .companyId(companyId)
+                        .build()));
     }
 }
