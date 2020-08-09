@@ -8,8 +8,4 @@ import java.util.UUID;
 
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UUID> {
     List<Questionnaire> findAllByCompanyId(UUID companyId);
-
-    boolean existsByTitleAndCompanyId(String title, UUID CompanyId);
-
-    boolean existsByTitleAndCompanyIdAndIdIsNot(String title, UUID CompanyId, UUID id);
 }

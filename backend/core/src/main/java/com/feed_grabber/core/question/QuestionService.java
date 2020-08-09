@@ -5,8 +5,10 @@ import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionExistsException;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
+import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,21 +54,26 @@ public class QuestionService {
                 .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
 
-    public QuestionDto create(QuestionCreateDto createDto)
+    public QuestionDto create(QuestionCreateDto dto)
             throws QuestionnaireNotFoundException, QuestionCategoryNotFoundException, QuestionExistsException {
+        // TODO replace with jwt info
+        var companyId = UUID.randomUUID();
 
-        var questionnaire = questionnaireRepository.findById(createDto.getQuestionnaireId())
+        var questionnaire = questionnaireRepository.findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
-        var category = questionCategoryRepository.findById(createDto.getCategoryId())
-                .orElseThrow(QuestionCategoryNotFoundException::new);
-        if (questionRepository.existsByTextAndQuestionnaireIdAndCategoryId
-                (createDto.getText(), createDto.getQuestionnaireId(), createDto.getCategoryId())) {
-            throw new QuestionExistsException();
-        }
 
-        var question = QuestionMapper.MAPPER.questionCreateDtoToModel(createDto, questionnaire, category);
-        question = questionRepository.save(question);
-        return QuestionMapper.MAPPER.questionToQuestionDto(question);
+        var category = questionCategoryRepository.findByName(dto.getCategoryName())
+                .orElseGet(() -> questionCategoryRepository.save(QuestionCategory.builder()
+                            .title(dto.getCategoryName())
+                            .companyId(companyId)
+                            .build()));
+
+        var q = Question.builder()
+                .category(category)
+                .payload(dto.getPayload())
+                .questionnaires(List.of(questionnaire))
+
+        return QuestionMapper.MAPPER.questionToQuestionDto(questionRepository.save(question));
     }
 
     public QuestionDto update(QuestionUpdateDto updateDto)
@@ -91,10 +98,7 @@ public class QuestionService {
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
-    public void delete(UUID id) throws QuestionNotFoundException {
-        var question = questionRepository.findById(id)
-                .orElseThrow(QuestionNotFoundException::new);
-
+    public void delete(UUID id) {
         questionRepository.delete(question);
     }
 }

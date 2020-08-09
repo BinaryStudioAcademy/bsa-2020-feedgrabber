@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,5 +38,5 @@ public class QuestionCategory {
     private Company company;
 
     @OneToMany(mappedBy = "category")
-    private List<Question> questions;
+    private List<Question> questions = new LinkedList<>();
 }
