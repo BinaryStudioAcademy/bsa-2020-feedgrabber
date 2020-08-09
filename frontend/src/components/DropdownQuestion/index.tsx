@@ -5,7 +5,7 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
 
 interface IDropdownQuestionProps {
-    options: string[];
+    answerOptions: string[];
     handleSubmit: any;
 }
 
@@ -14,7 +14,7 @@ const validationSchema = Yup.object({
        .required("Choose answer")
 });
 
-const DropdownQuestion: React.FC<IDropdownQuestionProps> = ({ options, handleSubmit}) => {
+const DropdownQuestion: React.FC<IDropdownQuestionProps> = ({ answerOptions, handleSubmit}) => {
     return (
         <Formik
             initialValues={{
@@ -23,13 +23,13 @@ const DropdownQuestion: React.FC<IDropdownQuestionProps> = ({ options, handleSub
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
-            <Form className={styles.questionForm} style={{width: "60%"}}>
+            <Form className={styles.questionForm}>
                 <Field as="select"
                        className={"ui selection dropdown"}
                        name="answer"
                 >
                     <option className={styles.defaultValue} value="">Select value</option>
-                    {options.map(option => {
+                    {answerOptions.map(option => {
                         return (
                             <option value={option}>{option}</option>
                         );
