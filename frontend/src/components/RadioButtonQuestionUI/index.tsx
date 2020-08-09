@@ -1,49 +1,31 @@
 import React from 'react';
-import {Form, Icon, Input, Segment} from 'semantic-ui-react';
+import { Form, Icon, Segment} from 'semantic-ui-react';
 import './styles.sass';
 import {FieldArray, Formik} from 'formik';
 import * as yup from 'yup';
 
-interface IRadioButtonAnswer {
-    id: string;
-    questionId: string;
-    text: string;
-}
-
-interface IQuestion {
-    id: string;
-    category: string;
-    text: string;
-    type: string;
-    answers: IRadioButtonAnswer[];
-}
-
 interface IRadioButtonQuestionUIProps {
-    question: IQuestion;
-
-    save(data: string): void;
+    answers: string[];
 }
 
 const RadioButtonQuestionUI: React.FC<IRadioButtonQuestionUIProps> =
-    ({question, save}) => {
+    ({answers}) => {
+
         const validationSchema = yup.object().shape({
-            question: yup
-                .string()
-                .required()
-                .min(10, "min 10 characters")
-                .max(200, "max 200 characters."),
             answers: yup.array()
-            .of(yup.object().shape({
-                text: yup.string().required()
-            }))
+                .of(yup
+                    .string()
+                    .required(`Answer can't be empty`)
+                    .max(200, 'Answer must be shorter then 200 symbols')
+                )
         });
 
         return (
             <Formik
                 enableReinitialize
-                initialValues={{question: question.text, answers: question.answers, includeOther: false}}
+                initialValues={{answers: answers, includeOther: false}}
                 validationSchema={validationSchema}
-                onSubmit={values => save(values.question)}
+                onSubmit={() => console.log('submitted')}
             >
                 {(
                     {
@@ -57,22 +39,10 @@ const RadioButtonQuestionUI: React.FC<IRadioButtonQuestionUIProps> =
                     }) => (
                     <Form name="questionForm" size="large" onSubmit={handleSubmit}>
                         <Segment>
-                            <Form.Input
-                                fluid
-                                icon="at"
-                                iconPosition="left"
-                                placeholder="This is might be you question here..."
-                                type="text"
-                                name="question"
-                                value={values.question}
-                                error={touched.question && errors.question ? errors.question : undefined}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            <FieldArray name="answers">{() => (
+                            <FieldArray name="answers">{({push, remove}) => (
                                 <div>
                                     {values.answers.map((answer, index) => (
-                                        <div className={"answer-container"} key={index}>
+                                        <div className={"option-container"} key={index}>
                                             <Form.Input
                                                 className={"answer-input"}
                                                 fluid
@@ -81,67 +51,50 @@ const RadioButtonQuestionUI: React.FC<IRadioButtonQuestionUIProps> =
                                                 iconPosition="left"
                                                 placeholder="Type answer here..."
                                                 type="text"
-                                                name={`answers[${index}].text`}
-                                                value={values.answers[index].text}
-                                                error={touched.answers && errors.answers ? errors.answers : undefined}
+                                                name={`answers.${index}`}
+                                                value={values.answers[index]}
+                                                error={touched.answers && errors.answers && touched.answers[index]
+                                                && errors.answers[index] ? errors.answers[index] : undefined}
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                             />
-                                            <Icon
-                                                className={"close-icon unselected"}
-                                                name={"x"}
-                                                size={"large"}
-                                                onClick={() =>
-                                                    setFieldValue("answers",
-                                                        [...values.answers.filter(a => a !== answer)])
-                                                }
-                                            />
+                                            {values.answers.length!==1 && (
+                                                <Icon className={"close-icon unselected"} name={"x"} onClick={() =>
+                                                    remove(index)
+                                                }/>
+                                            )}
                                         </div>
                                     ))}
+                                    {values.includeOther && (
+                                        <div className={"option-container unselected"}>
+                                            <div>
+                                                <Icon name={"circle outline"}/>
+                                                <span className="action">Other...</span>
+                                            </div>
+                                            <Icon className={"close-icon"} name={"x"} onClick={() =>
+                                                setFieldValue("includeOther", false)
+                                            }/>
+                                        </div>
+                                    )}
+                                    <div className={"option-container unselected left-grouped"}>
+                                        <Icon name={"circle outline"}/>
+                                        <span>
+                                            <span className="unselected action" onClick={() => {
+                                                push('');
+                                            }}>Add new answer</span>
+                                            {!values.includeOther && (
+                                                <span>
+                                                    <span> or </span>
+                                                    <span className="other" onClick={() =>
+                                                        setFieldValue("includeOther", true)
+                                                    }> add "Other"
+                                                    </span>
+                                                </span>
+                                            )}
+                                       </span>
+                                    </div>
                                 </div>
                             )}</FieldArray>
-                            {values.includeOther && (
-                                <div className={"answer-container"}>
-                                    <Input
-                                        className={"answer-input"}
-                                        icon="circle outline"
-                                        transparent
-                                        iconPosition="left"
-                                        value="Other..."
-                                    />
-                                    <Icon
-                                        className={"close-icon unselected"}
-                                        name={"x"}
-                                        size={"large"}
-                                        onClick={() =>
-                                            setFieldValue("includeOther", false)
-                                        }
-                                    />
-                                </div>
-                            )}
-                            <div className={"answer-container left-grouped"}>
-                                <Icon
-                                    className={"unselected"}
-                                    name={"circle outline"}
-                                />
-                                <span>
-                                     <span className="unselected add-answer" onClick={() => {
-                                         setFieldValue("answers", [...values.answers, {
-                                             id: '',
-                                             questionId: question.id,
-                                             text: ''
-                                         }]);
-                                     }}>Add new answer</span>
-                                    {!values.includeOther && (
-                                        <span>
-                                        <span className={"unselected"}> or </span>
-                                    <span className="other" onClick={() =>
-                                        setFieldValue("includeOther", true)
-                                    }> add "Other"</span>
-                                    </span>
-                                    )}
-                                </span>
-                            </div>
                         </Segment>
                     </Form>
                 )}
@@ -149,28 +102,7 @@ const RadioButtonQuestionUI: React.FC<IRadioButtonQuestionUIProps> =
         );
     };
 RadioButtonQuestionUI.defaultProps = {
-    question: {
-        id: '07944172-105f-4289-a7bf-3f23a374c15f',
-        category: 'safasfas',
-        text: 'Text Text Text Text Text',
-        type: 'RadioButton',
-        answers: [
-            {
-                id: '4a185810-2793-47ed-b5e5-b42401551604',
-                questionId: '07944172-105f-4289-a7bf-3f23a374c15f',
-                text: 'ANSWER_1'
-            },
-            {
-                id: 'f09a4b2a-fb61-45a2-82f6-b97e56ea3b72',
-                questionId: '07944172-105f-4289-a7bf-3f23a374c15f',
-                text: 'ANSWER_2'
-            },
-            {
-                id: '338dad06-485b-439e-a79b-41faba2c7da7',
-                questionId: '07944172-105f-4289-a7bf-3f23a374c15f',
-                text: 'ANSWER_3'
-            }]
-    }
+    answers: ['']
 };
 
 export default RadioButtonQuestionUI;
