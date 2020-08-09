@@ -1,12 +1,10 @@
 package com.feed_grabber.core.questionnaire;
 
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,43 +46,32 @@ public class QuestionnaireService {
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto);
     }
 
-    public QuestionnaireDto create(QuestionnaireCreateDto createDto)
-            throws CompanyNotFoundException, QuestionnaireExistsException {
-
+    public QuestionnaireDto create(QuestionnaireCreateDto createDto) throws CompanyNotFoundException {
+        //TODO replace by jwt info
         var companyId = UUID.randomUUID();
 
         var company = companyRepository.findById(companyId)
                 .orElseThrow(CompanyNotFoundException::new);
-//        if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), createDto.getCompanyId())) {
-//            throw new QuestionnaireExistsException();
-//        }
 
-        var questionnaire = QuestionnaireMapper.MAPPER.questionnaireCreateDtoToModel(createDto, company);
-        questionnaire = questionnaireRepository.save(questionnaire);
-        return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
+        var questionnaire = QuestionnaireMapper.MAPPER
+                .questionnaireCreateDtoToModel(createDto, company);
+
+        return QuestionnaireMapper.MAPPER
+                .questionnaireToQuestionnaireDto(questionnaireRepository.save(questionnaire));
     }
 
-    public QuestionnaireDto update(QuestionnaireUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
+    public QuestionnaireDto update(QuestionnaireUpdateDto updateDto) throws QuestionnaireNotFoundException {
 
         var questionnaire = questionnaireRepository.findById(updateDto.getId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
-        var company = companyRepository.findById(updateDto.getCompanyId())
-                .orElseThrow(CompanyNotFoundException::new);
-        if (questionnaireRepository.existsByTitleAndCompanyIdAndIdIsNot(updateDto.getTitle(), updateDto.getCompanyId(), updateDto.getId())) {
-            throw new QuestionnaireExistsException();
-        }
 
-        questionnaire.setCompany(company);
         questionnaire.setTitle(updateDto.getTitle());
-        questionnaire = questionnaireRepository.save(questionnaire);
-        return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
+
+        return QuestionnaireMapper.MAPPER
+                .questionnaireToQuestionnaireDto(questionnaireRepository.save(questionnaire));
     }
 
-    public void delete(UUID id) throws QuestionnaireNotFoundException {
-        var questionnaire = questionnaireRepository.findById(id)
-                .orElseThrow(QuestionnaireNotFoundException::new);
-
-        questionnaireRepository.delete(questionnaire);
+    public void delete(UUID id) {
+        questionnaireRepository.deleteById(id);
     }
 }
