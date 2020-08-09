@@ -43,18 +43,18 @@ public class QuestionnaireController {
 
     @PostMapping
     public QuestionnaireDto create(@RequestBody @Valid QuestionnaireCreateDto createDto)
-            throws CompanyNotFoundException, QuestionnaireExistsException {
+            throws CompanyNotFoundException {
         return questionnaireService.create(createDto);
     }
 
     @PutMapping
     public QuestionnaireDto update(@RequestBody @Valid QuestionnaireUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
+            throws QuestionnaireNotFoundException {
         return questionnaireService.update(updateDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) throws QuestionnaireNotFoundException {
+    public void delete(@PathVariable UUID id) {
         questionnaireService.delete(id);
     }
 }

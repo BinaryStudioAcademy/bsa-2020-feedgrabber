@@ -28,7 +28,7 @@ public class Questionnaire {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "title", nullable = false, unique = true)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)

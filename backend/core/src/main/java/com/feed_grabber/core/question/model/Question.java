@@ -36,6 +36,9 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
+    @Column
+    private String payload;
+
     @ManyToMany(mappedBy = "questions")
     private List<Questionnaire> questionnaires;
 
