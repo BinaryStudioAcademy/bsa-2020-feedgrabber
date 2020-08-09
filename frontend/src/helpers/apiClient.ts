@@ -25,7 +25,7 @@ const responseErrorHandler = e => {
             }
 
             tokenProvider.setToken(res.data.data);
-            return apiClient.post('/api/user', tokenProvider.getToken());
+            return apiClient(originalRequest);
         });
 };
 
