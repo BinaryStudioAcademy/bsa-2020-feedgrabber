@@ -1,41 +1,39 @@
 import axios from 'axios';
-import {createTokenProvider} from '../security/tokenProvider';
+import tokenProvider from '../security/tokenProvider';
 import {history} from './history.helper';
 
 //  axios instance for making network request with Auth header
 
 const apiClient = axios.create();
 
-const tokenService = createTokenProvider();
-
 const responseErrorHandler = e => {
     const status = e.response.status;
     const originalRequest = e.config;
 
     if ((status !== 403) || (status === 403 && originalRequest._retry)) {
-        history.push('/login');
+        history.push('/auth');
         return Promise.reject(e);
     }
 
     originalRequest._retry = true;
 
-    return apiClient.post('/api/auth/renovate', {token: tokenService.getToken()})
+    return apiClient.post('/api/auth/renovate', tokenProvider.getRefreshToken())
         .then(res => {
             if (res.status !== 201) {
-                history.push('/login');
+                history.push('/auth');
                 return Promise.reject(e);
             }
 
-            tokenService.setToken(res.data);
-            return apiClient(originalRequest);
+            tokenProvider.setToken(res.data.data);
+            return apiClient.post('/api/user', tokenProvider.getToken());
         });
 };
 
 apiClient.interceptors.request.use(request => {
-    request.headers.Authorization = `Bearer ${tokenService.getToken()}`;
+    request.headers.Authorization = `Bearer ${tokenProvider.getToken()}`;
     return request;
 });
 
-axios.interceptors.response.use(undefined, responseErrorHandler);
+apiClient.interceptors.response.use(undefined, responseErrorHandler);
 
 export default apiClient;
