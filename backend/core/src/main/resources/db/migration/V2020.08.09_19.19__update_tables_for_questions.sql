@@ -1,8 +1,8 @@
-create table questionnaire_question
+create table question_questionnaire
 (
     questionnaire_id uuid not null,
     question_id uuid not null,
-    primary key(questionnaire_id, question_id),
+    primary key(question_id, questionnaire_id),
     constraint fk_questionnaire2question foreign key(questionnaire_id) references questionnaires(id),
     constraint fk_question2questionnaire foreign key(question_id) references questions(id)
 );
