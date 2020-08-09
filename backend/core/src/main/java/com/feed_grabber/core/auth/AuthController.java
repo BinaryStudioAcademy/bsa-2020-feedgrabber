@@ -20,7 +20,7 @@ public class AuthController {
     @PostMapping("/renovate")
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<TokenRefreshResponseDTO> renovate(@RequestBody String token) {
-            return new AppResponse<>(authService.refresh(token));
+            return new AppResponse<>(authService.refresh(token), HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -36,7 +36,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<AuthUserDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-            return new AppResponse<>(authService.login(userLoginDTO));
+            return new AppResponse<>(authService.login(userLoginDTO), HttpStatus.OK);
 
     }
 
