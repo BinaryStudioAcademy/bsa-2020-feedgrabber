@@ -1,4 +1,4 @@
-export const createTokenProvider = () => {
+const createTokenProvider = () => {
   let _token: { accessToken: string; refreshToken: string } | null =
     JSON.parse(localStorage.getItem("BSA_AUTH"));
 
@@ -40,3 +40,5 @@ export const createTokenProvider = () => {
     unsubscribe
   };
 };
+
+export default createTokenProvider();

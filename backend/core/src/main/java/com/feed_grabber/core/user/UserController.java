@@ -14,16 +14,14 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final TokenService tokenService;
 
     public UserController(UserService userService, TokenService tokenService) {
         this.userService = userService;
-        this.tokenService = tokenService;
     }
 
-    @PostMapping
-    public AppResponse<UserDetailsResponseDTO> getUserDetails(@RequestBody String token) {
-        var id = UUID.fromString(tokenService.extractUserid(token));
+    @GetMapping
+    public AppResponse<UserDetailsResponseDTO> getUserDetails() {
+        var id = TokenService.getUserId();
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 }

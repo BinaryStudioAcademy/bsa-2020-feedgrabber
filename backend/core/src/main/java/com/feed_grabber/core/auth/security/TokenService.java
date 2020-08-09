@@ -81,4 +81,11 @@ public class TokenService {
                 .compact();
 
     }
+
+    public static UUID getUserId(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var currentUserId = (String)auth.getPrincipal();
+        return  UUID.fromString(currentUserId);
+    }
+
 }

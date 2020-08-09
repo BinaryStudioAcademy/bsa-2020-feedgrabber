@@ -1,9 +1,7 @@
-import { createTokenProvider } from "./tokenProvider";
+import tokenProvider from "./tokenProvider";
 import { useEffect, useState } from "react";
 
 const createAuthProvider = () => {
-  const tokenProvider = createTokenProvider();
-
   const login = newTokens => tokenProvider.setToken(newTokens);
 
   const logout = () => tokenProvider.setToken(null);
