@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import "./style.modules.scss";
 
-const InputField: React.FC<any> = () => {
+const InputField: React.FunctionComponent = () => {
   return (
     <div className="form_main-container">
       <Form className="form_container">
