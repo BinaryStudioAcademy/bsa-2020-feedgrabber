@@ -1,7 +1,8 @@
-import React, {FunctionComponent} from 'react';
+import React, { FunctionComponent } from 'react';
 import { useHistory } from "react-router";
-import {Card} from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import styles from './styles.module.sass';
+import { connect } from "react-redux";
 
 interface IQuestion {
     id: string;
@@ -13,7 +14,7 @@ interface IQuestionsListProps {
     questions: IQuestion[];
 }
 
-const QuestionsList: FunctionComponent<IQuestionsListProps> = ({questions}) => {
+const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions }) => {
     const history = useHistory();
     
     const handleClick = (id: string) => {
@@ -40,7 +41,7 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({questions}) => {
     );
 };
 
-const defaulProps: IQuestionsListProps= {
+const defaultProps: IQuestionsListProps= {
     questions: [
     {
         id: "1",
@@ -55,6 +56,17 @@ const defaulProps: IQuestionsListProps= {
     ]
 };
 
-QuestionsList.defaultProps = defaulProps;
+QuestionsList.defaultProps = defaultProps;
 
-export default QuestionsList;
+const mapStateToProps = rootState => ({
+    questions: rootState.questions
+});
+
+const mapDispatchToProps = {
+    loadQuestions: null
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(QuestionsList);
