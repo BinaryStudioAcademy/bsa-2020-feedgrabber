@@ -1,7 +1,7 @@
 package com.feed_grabber.core.auth.security;
 
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
-import com.feed_grabber.core.auth.exceptions.JwtTokenExpiredException;
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -57,7 +55,7 @@ public class TokenService {
         return generateToken(id, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
-    public TokenRefreshResponseDTO refreshTokens(String refreshToken) throws Exception {
+    public TokenRefreshResponseDTO refreshTokens(String refreshToken) {
         try {
             if (refreshToken != null && !isTokenExpired(refreshToken)) {
                 var userId = UUID.fromString(extractUserid(refreshToken));
@@ -65,9 +63,9 @@ public class TokenService {
                 String refreshJwt = generateToken(userId, REFRESH_TOKEN_EXPIRATION_TIME);
                 return new TokenRefreshResponseDTO(jwt, refreshJwt);
             }
-            throw new IllegalArgumentException("No token passed");
+            throw new JwtTokenException("No token passed");
         } catch (ExpiredJwtException e) {
-            throw new JwtTokenExpiredException();
+            throw new JwtTokenException("Token expired");
         }
     }
 

@@ -25,7 +25,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public TokenRefreshResponseDTO refresh(String refreshToken) throws Exception {
+    public TokenRefreshResponseDTO refresh(String refreshToken) {
         return tokenService.refreshTokens(refreshToken);
     }
 

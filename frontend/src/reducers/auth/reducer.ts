@@ -1,4 +1,4 @@
-import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "./routines";
+import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "../../components/AuthForm/routines";
 import {IAppState} from "../../models/IAppState";
 import {IUserErrors, IUserInfo} from "../../models/user/types";
 
@@ -15,7 +15,8 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
         return {
             ...state,
             info: payload,
-            isLoading: false
+            isLoading: false,
+            error: {}
         };
     }
     if (type === loginRoutine.TRIGGER
