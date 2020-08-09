@@ -1,49 +1,72 @@
 export interface IQuestionBase {
-  id: string;
-  name: string;
-  categoryId: string;
-  type: QuestionType;
+    id?: string;
+    text: string;
+    categoryName: string;
+    type: QuestionType;
 }
 
 export interface IRadioQuestion extends IQuestionBase {
-  type: QuestionType.radio;
-  answerOption: string[];
+    type: QuestionType.radio;
+    payload: {
+        answerOption: string[];
+    };
 }
 
 export interface IScaleQuestion extends IQuestionBase {
-  type: QuestionType.scale;
-  min: number;
-  minDescription: string;
-  max: number;
-  maxDescription: string;
+    type: QuestionType.scale;
+    payload: {
+        min: number;
+        minDescription: string;
+        max: number;
+        maxDescription: string;
+    };
 }
 
 export interface ITextQuestion extends IQuestionBase {
-  type: QuestionType.freeText;
+    type: QuestionType.freeText;
 }
 
 export interface IDropDownQuestion extends IQuestionBase {
-  type: QuestionType.dropDown;
-  answerOption: string[];
+    type: QuestionType.dropDown;
+    payload: {
+        answerOption: string[];
+    };
 }
 
 export interface ICheckboxQuestion extends IQuestionBase {
-  type: QuestionType.checkbox;
-  answerOption: string[];
+    type: QuestionType.checkbox;
+    payload: {
+        answerOption: string[];
+    };
+}
+
+export interface ICheckboxQuestion extends IQuestionBase {
+    type: QuestionType.checkbox;
+    payload: {
+        answerOption: string[];
+    };
+}
+
+export interface IMultiChoiceQuestion extends IQuestionBase {
+    type: QuestionType.multiChoice;
+    payload: {
+        answerOption: string[];
+    };
 }
 
 export type IQuestion =
-  | IDropDownQuestion
-  | ITextQuestion
-  | IScaleQuestion
-  | IRadioQuestion
-  | ICheckboxQuestion;
+    | IDropDownQuestion
+    | ITextQuestion
+    | IScaleQuestion
+    | IRadioQuestion
+    | ICheckboxQuestion
+    | IMultiChoiceQuestion;
 
 enum QuestionType {
-  freeText = "free_text",
-  radio = "radio",
-  scale = "scale",
-  inputField = "input_field",
-  checkbox = "checkbox",
-  dropDown = "drop_down"
+    freeText = "FREE_TEXT",
+    radio = "RADIO",
+    scale = "SCALE",
+    checkbox = "CHECKBOX",
+    dropDown = "DROP_DOWN",
+    multiChoice = "MULTI_CHOICE"
 }

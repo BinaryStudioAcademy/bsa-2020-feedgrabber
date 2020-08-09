@@ -1,5 +1,6 @@
 package com.feed_grabber.core.question.model;
 
+import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,10 @@ public class Question {
     private UUID id;
 
     @Column(name = "text", nullable = false, unique = true)
-    private String title;
+    private String text;
+
+    @Enumerated(EnumType.STRING)
+    private QuestionType type;
 
     @ManyToMany(mappedBy = "questions")
     private List<Questionnaire> questionnaires;
