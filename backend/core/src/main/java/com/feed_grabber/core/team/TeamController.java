@@ -3,7 +3,7 @@ package com.feed_grabber.core.team;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.team.dto.TeamDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +20,7 @@ public class TeamController {
     @GetMapping("/teams")
     public AppResponse<List<TeamDto>> getAll() {
         var teams = service.getAll();
-        return new AppResponse<>(teams);
+        return new AppResponse<>(teams, HttpStatus.OK);
     }
 
 }

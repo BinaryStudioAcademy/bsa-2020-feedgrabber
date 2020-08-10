@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {CompanyMapper.class} )
+@Mapper(uses = {CompanyMapper.class})
 public interface TeamMapper {
     TeamMapper MAPPER = Mappers.getMapper(TeamMapper.class);
 

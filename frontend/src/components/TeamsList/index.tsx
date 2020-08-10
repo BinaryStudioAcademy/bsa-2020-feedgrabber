@@ -1,9 +1,18 @@
 import React from "react";
 import { Segment, Card, Icon, Image, Header as Title } from "semantic-ui-react";
-import { ITeam } from "models/ITeam";
 
 import styles from "./styles.module.sass";
 
+export interface IMember {
+  id: string;
+  avatar: string;
+  username: string;
+}
+export interface ITeam {
+  id: string;
+  name: string;
+  members: IMember[];
+}
 export interface ITeamsListProps {
   teams: ITeam[];
 }
@@ -38,7 +47,18 @@ const TeamsList: React.FunctionComponent<ITeamsListProps> = ({ teams }) => {
 };
 
 TeamsList.defaultProps = {
-  teams: []
+  teams: [{
+    id: '533b5230-1b9f-11a8-9629-c7eca82aa7bd',
+    name: 'Bsa-2020',
+    members: [{
+      id: '533b5230-1b9f-11e8-9629-c7eca82aa7bd',
+      username: 'pasha',
+      avatar: 'https://i.imgur.com/hG4Th4U.jpg'}, {
+      id: '',
+      username: 'misa',
+      avatar: 'https://i.imgur.com/hIjmHms.jpg'}
+    ]
+  }]
 };
 
 export default TeamsList;
