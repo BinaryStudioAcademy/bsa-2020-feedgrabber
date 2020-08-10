@@ -8,6 +8,7 @@ import MainPage from "../../components/MainPage";
 import QuestionnaireList from "../QuestionnaireList";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
+import QuestionsList from "../../components/QuestionsList";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -31,6 +32,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/teams" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
+          <PublicRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={() => <span>Company Dashboard</span>} />
           <Route path="/*">
             <Redirect to="/layout" />
