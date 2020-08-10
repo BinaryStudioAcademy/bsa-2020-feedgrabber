@@ -8,6 +8,7 @@ import MainPage from "../../components/MainPage";
 import QuestionnaireList from "../QuestionnaireList";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
+import QuestionDetails from "../QuestionDetails";
 import QuestionsList from "../../components/QuestionsList";
 
 export interface IRoutingProps {
