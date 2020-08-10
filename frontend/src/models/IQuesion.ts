@@ -1,8 +1,10 @@
 export interface IQuestionBase {
     id?: string;
     text: string;
-    categoryName: string;
+    categoryName?: string;
     type: QuestionType;
+    questionnaireId: string;
+    payload?: {};
 }
 
 export interface IRadioQuestion extends IQuestionBase {
@@ -28,13 +30,6 @@ export interface ITextQuestion extends IQuestionBase {
 
 export interface IDropDownQuestion extends IQuestionBase {
     type: QuestionType.dropDown;
-    payload: {
-        answerOption: string[];
-    };
-}
-
-export interface ICheckboxQuestion extends IQuestionBase {
-    type: QuestionType.checkbox;
     payload: {
         answerOption: string[];
     };
