@@ -1,26 +1,25 @@
 import React from 'react';
-import { Menu, Icon } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
+import {Menu} from 'semantic-ui-react';
+import {NavLink} from 'react-router-dom';
+import "./styles.sass";
 
 const SideMenu = () => {
-    const history = useHistory();
     return (
-        <Menu vertical>
-            <Menu.Item onClick={() => history.push('/company')}>
-                <Icon name="th"/>
+        <Menu vertical pointing secondary>
+            <Menu.Item as={NavLink} exact  to="/">
+                Home
+            </Menu.Item>
+            <Menu.Item as={NavLink} to="/company">
                 Company dashboard
             </Menu.Item>
-            <Menu.Item onClick={() => history.push('/editor')}>
-                <Icon name="edit"/>
-                Form editor
+            <Menu.Item as={NavLink} to="/questionnaires">
+                Questionnaires
             </Menu.Item>
-            <Menu.Item onClick={() => history.push('/pending')}>
-                <Icon name="clock outline"/>
-                Pending feedbacks
+            <Menu.Item as={NavLink} to="/teams">
+                Teams
             </Menu.Item>
-            <Menu.Item onClick={() => history.push('/assign')}>
-                <Icon name="bookmark"/>
-                Assign feedbacks
+            <Menu.Item as={NavLink} to="/questionnaire/1">
+                Questions
             </Menu.Item>
         </Menu>
     );
