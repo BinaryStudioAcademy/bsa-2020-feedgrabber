@@ -7,10 +7,10 @@ import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
+import TeamsPage from "../TeamsPage";
 import QuestionDetails from "../QuestionDetails";
 import SideMenu from "../../components/SideMenu";
 import QuestionsList from "../../components/QuestionsList";
-import TeamsList from "../../components/TeamsList";
 import QuestionnaireList from "../QuestionnaireList";
 
 export interface IRoutingProps {
@@ -32,7 +32,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>} />
           <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
-          <PrivateRoute exact path="/teams" component={TeamsList} />
+          <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
