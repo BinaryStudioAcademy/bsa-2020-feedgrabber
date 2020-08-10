@@ -1,9 +1,9 @@
 package com.feed_grabber.core.questionCategory;
 
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryCreateDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryUpdateDto;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryExistsException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

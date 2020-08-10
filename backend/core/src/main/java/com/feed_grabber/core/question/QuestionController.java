@@ -2,6 +2,7 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
@@ -10,7 +11,6 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundExcep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,10 +19,12 @@ import java.util.UUID;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final TokenService tokenService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, TokenService tokenService) {
         this.questionService = questionService;
+        this.tokenService = tokenService;
     }
 
 
@@ -42,15 +44,18 @@ public class QuestionController {
     }
 
     @PostMapping
-    public QuestionDto create(@RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
+    public QuestionDto create(@RequestHeader("authorization") String token,
+                              @RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
-        return questionService.create(dto);
+        return questionService.create(dto, tokenService.extractCompanyId(token));
     }
 
     @PutMapping
-    public QuestionDto update(@RequestBody @Valid QuestionUpdateDto updateDto) throws QuestionNotFoundException {
-        return questionService.update(updateDto);
+    public QuestionDto update(@RequestHeader("authorization") String token,
+                              @RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
+
+        return questionService.update(updateDto, tokenService.extractCompanyId(token));
     }
 
     @DeleteMapping("/{id}")

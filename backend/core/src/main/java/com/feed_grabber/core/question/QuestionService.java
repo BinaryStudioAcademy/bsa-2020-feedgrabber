@@ -58,10 +58,7 @@ public class QuestionService {
                 .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
 
-    public QuestionDto create(QuestionCreateDto dto) throws QuestionnaireNotFoundException {
-        // TODO replace with jwt info
-        var companyId = UUID.randomUUID();
-
+    public QuestionDto create(QuestionCreateDto dto, UUID companyId) throws QuestionnaireNotFoundException {
         var company = companyRep.findById(companyId).get();
 
         var questionnaire = anketRep.findById(dto.getQuestionnaireId())
@@ -81,10 +78,7 @@ public class QuestionService {
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(q));
     }
 
-    public QuestionDto update(QuestionUpdateDto dto) throws QuestionNotFoundException {
-        // TODO replace with jwt info
-        var companyId = UUID.randomUUID();
-
+    public QuestionDto update(QuestionUpdateDto dto, UUID companyId) throws QuestionNotFoundException {
         var company = companyRep.findById(companyId).get();
 
         var question = quesRep.findById(dto.getId())

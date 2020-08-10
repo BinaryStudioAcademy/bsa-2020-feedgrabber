@@ -3,11 +3,9 @@ package com.feed_grabber.core.auth;
 import com.feed_grabber.core.auth.dto.AuthUserDTO;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
-import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,9 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class AuthService {

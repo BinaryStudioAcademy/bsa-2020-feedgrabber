@@ -1,10 +1,10 @@
 package com.feed_grabber.core.questionCategory;
 
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryCreateDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryUpdateDto;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryExistsException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ public class QuestionCategoryService {
         return QuestionCategoryMapper.MAPPER.questionCategoryToQuestionCategoryDto(questionCategory);
     }
 
-    public void delete(UUID id)  {
+    public void delete(UUID id) {
         questionCategoryRepository.deleteById(id);
     }
 }

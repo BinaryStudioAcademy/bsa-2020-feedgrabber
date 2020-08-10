@@ -46,10 +46,7 @@ public class QuestionnaireService {
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto);
     }
 
-    public QuestionnaireDto create(QuestionnaireCreateDto createDto) throws CompanyNotFoundException {
-        //TODO replace by jwt info
-        var companyId = UUID.randomUUID();
-
+    public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId) throws CompanyNotFoundException {
         var company = companyRepository.findById(companyId)
                 .orElseThrow(CompanyNotFoundException::new);
 
