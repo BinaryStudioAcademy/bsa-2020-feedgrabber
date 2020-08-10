@@ -45,9 +45,9 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       initialValues: { name: "", answers: [] },
       question: {
         id: "",
-        name: "New question",
+        name: "",
         categoryId: "",
-        type: QuestionType.freeText
+        type: undefined
       }
     };
     this.onClose = this.onClose.bind(this);
@@ -63,20 +63,22 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
 
   getQuestion = async (id: string) => {
     const question = questions.find(question => question.id === id);
-    if (question.type === QuestionType.multichoice) {
-      this.setState({
-        ...this.state,
-        question,
-        validationSchema: multichoiceSchema,
-        initialValues: { name: question.name, answers: question.answerOptions }
-      });
-    } else if (question.type === QuestionType.freeText) {
-      this.setState({
-        ...this.state,
-        question,
-        validationSchema: {},
-        initialValues: { name: question.name }
-      });
+    if (id !== "new") {
+      if (question.type === QuestionType.multichoice) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: multichoiceSchema,
+          initialValues: { name: question.name, answers: question.answerOptions }
+        });
+      } else if (question.type === QuestionType.freeText) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: {},
+          initialValues: { name: question.name }
+        });
+      }
     }
   }
 
@@ -164,6 +166,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           }
         });
     }
+
   }
 
   render() {
@@ -177,26 +180,26 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       >
         {
           formik => (
-            <Segment className="question_container">
+            <div className="question_container">
               <Form className="question_form" onSubmit={formik.handleSubmit}>
                 <Segment className="question_header">
-                    <Form.Input
-                      className="question_name_input"
-                      fluid
-                      placeholder="Type your question"
-                      type="text"
-                      value={formik.values.name}
-                      name="name"
-                      error={formik.touched.name && formik.errors.name ? formik.errors.name : undefined}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <Form.Dropdown
-                      selection
-                      options={this.questionTypeOptions}
-                      placeholder={'choose type'}
-                      onChange={(event, data) => this.setQuestionType(data)}
-                    />
+                  <Form.Input
+                    className="question_name_input"
+                    fluid
+                    placeholder="Type your question"
+                    type="text"
+                    value={formik.values.name}
+                    name="name"
+                    error={formik.touched.name && formik.errors.name ? formik.errors.name : undefined}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  <Form.Dropdown
+                    selection
+                    options={this.questionTypeOptions}
+                    placeholder={'choose type'}
+                    onChange={(event, data) => this.setQuestionType(data)}
+                  />
                 </Segment>
                 <Segment className="question_form-answers">
                   {this.getForm(question, initialValues, formik)}
@@ -211,7 +214,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                 </Button>
                 </Segment>
               </Form>
-            </Segment>
+            </div>
           )}
       </Formik>
     );
