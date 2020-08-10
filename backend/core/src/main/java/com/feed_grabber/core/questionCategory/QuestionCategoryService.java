@@ -52,30 +52,31 @@ public class QuestionCategoryService {
 
         var company = companyRepository.findById(createDto.getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
+
         if (questionCategoryRepository.existsByTitleAndCompanyId(createDto.getTitle(), createDto.getCompanyId())) {
             throw new QuestionCategoryExistsException();
         }
 
         var questionCategory = QuestionCategoryMapper.MAPPER.questionCategoryCreateDtoToModel(createDto, company);
-        questionCategory = questionCategoryRepository.save(questionCategory);
-        return QuestionCategoryMapper.MAPPER.questionCategoryToQuestionCategoryDto(questionCategory);
+
+        return QuestionCategoryMapper.MAPPER
+                .questionCategoryToQuestionCategoryDto(questionCategoryRepository.save(questionCategory));
     }
 
     public QuestionCategoryDto update(QuestionCategoryUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionCategoryExistsException, QuestionCategoryNotFoundException {
+            throws  QuestionCategoryExistsException, QuestionCategoryNotFoundException {
 
         var questionCategory = questionCategoryRepository.findById(updateDto.getId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
-        var company = companyRepository.findById(updateDto.getCompanyId())
-                .orElseThrow(CompanyNotFoundException::new);
+
         if (questionCategoryRepository.existsByTitleAndCompanyIdAndIdIsNot(updateDto.getTitle(), updateDto.getCompanyId(), updateDto.getId())) {
             throw new QuestionCategoryExistsException();
         }
 
-        questionCategory.setCompany(company);
         questionCategory.setTitle(updateDto.getTitle());
-        questionCategory = questionCategoryRepository.save(questionCategory);
-        return QuestionCategoryMapper.MAPPER.questionCategoryToQuestionCategoryDto(questionCategory);
+
+        return QuestionCategoryMapper.MAPPER
+                .questionCategoryToQuestionCategoryDto(questionCategoryRepository.save(questionCategory));
     }
 
     public void delete(UUID id) {
