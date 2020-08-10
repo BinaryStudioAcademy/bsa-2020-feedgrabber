@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { useHistory } from "react-router";
-import { Card, Dimmer, Loader } from 'semantic-ui-react';
+import { Card, Dimmer, Loader, Button } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import { connect } from "react-redux";
 import { IQuestion } from './reducer';
@@ -44,6 +44,9 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLo
                     </div>
                   );
               }))}
+              <div className={styles.addNewButton}>
+                <Button onClick={() => handleClick("new")}>Add new</Button>
+              </div>
             </div>
         </div>
     );
@@ -57,11 +60,13 @@ const defaultProps: IQuestionsListProps= {
             {
                 id: "1",
                 category: "Soft skills",
+                type: 'free text',
                 text: "Can you tell me about a time when you successfully led a team through a sticky situation?"
             },
             {
                 id: "2",
                 category: "Leadership",
+                type: 'scale',
                 text: "Are you able to delegate responsibilities efficiently?"
             }
         ];

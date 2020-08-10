@@ -12,6 +12,7 @@ function* loadQuestionsList(action: any) {
     yield put(loadQuestionsRoutine.success(questions));
   } catch (err) {
     // handle error
+    console.error('ERROR');
     yield put(loadQuestionsRoutine.failure('Unable to load questions :('));
     toastr.error('Unable to load questions :(');
   }

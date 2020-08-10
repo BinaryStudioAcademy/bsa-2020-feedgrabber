@@ -1,9 +1,10 @@
 import { loadQuestionsRoutine } from './routines';
 
 export interface IQuestion {
-  id: string;
-  category?: string;
-  text: string;
+    id: string;
+    category?: string;
+    type: 'checkboxes' | 'drop_down' | 'scale' | 'multichoice' | 'free text' | 'radiobutton'; 
+    text: string;
 }
 
 export interface IQuestionsListState {
@@ -28,6 +29,7 @@ export default (state: IQuestionsListState = { questions: null, isLoading: true 
     case loadQuestionsRoutine.FAILURE:
       return {
         ...state,
+        questions: [],
         isLoading: false,
         error: action.payload
       };
