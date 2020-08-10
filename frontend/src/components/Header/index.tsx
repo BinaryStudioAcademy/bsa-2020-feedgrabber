@@ -24,7 +24,7 @@ const Header: FC<IHeaderProps> = ({ user, logout }) => {
                 <HeaderUI>
                     <Image src={icon} />
                     {' '}
-                    <span>Feedgrabber</span>
+                    <span>FeedGrabber</span>
                 </HeaderUI>
             </Menu.Item>
             <Menu.Menu position="right">
@@ -45,6 +45,12 @@ const Header: FC<IHeaderProps> = ({ user, logout }) => {
                             <Dropdown.Header>{user.username}</Dropdown.Header>
                             <Dropdown.Item onClick={() => history.push('/profile')}>
                                 Your Profile
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push('/questions')}>
+                                All Questions
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => history.push('/questionnaires')}>
+                                All Questionnaires
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => history.push('/requests')}>
                                 Your Requests
@@ -68,13 +74,6 @@ const Header: FC<IHeaderProps> = ({ user, logout }) => {
             </Menu.Menu>
         </Menu>
     );
-};
-
-Header.defaultProps = {
-    user: {
-        id: '',
-        username: "UserName",
-        avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
 };
 
 // const mapStateToProps = state => ({

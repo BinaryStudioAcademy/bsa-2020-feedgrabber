@@ -5,7 +5,7 @@ import Header from "../Header";
 
 const fakeUser = {
     id: "",
-    username: "user",
+    username: "KeepSimple",
     avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
 };
 
