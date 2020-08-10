@@ -66,7 +66,7 @@ public class QuestionService {
 
         var question = QuestionMapper.MAPPER.questionCreateDtoToModel(createDto, questionnaire, category);
         question = questionRepository.save(question);
-        return QuestionMapper.MAPPER.questionToQuestionDto(question);
+        return QuestionMapper.MAPPER.questionToQuestionDto(question, questionnaire);
     }
 
     public QuestionDto update(QuestionUpdateDto updateDto)
@@ -85,10 +85,14 @@ public class QuestionService {
         }
 
         question.setCategory(category);
-        question.setQuestionnaire(questionnaire);
         question.setText(updateDto.getText());
         question = questionRepository.save(question);
-        return QuestionMapper.MAPPER.questionToQuestionDto(question);
+
+        if (!question.getQuestionnaires().contains(questionnaire)) {
+            question.getQuestionnaires().add(questionnaire);
+        }
+
+        return QuestionMapper.MAPPER.questionToQuestionDto(question, questionnaire);
     }
 
     public void delete(UUID id) throws QuestionNotFoundException {
