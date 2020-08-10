@@ -8,7 +8,9 @@ import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,33 +31,34 @@ public class QuestionController {
 
 
     @GetMapping()
-    public List<QuestionDto> getAll() {
-        return questionService.getAll();
+    public AppResponse<List<QuestionDto>> getAll() {
+        return new AppResponse<>(questionService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/questionnaires/{id}")
-    public List<QuestionDto> getAllByQuestionnaire(@PathVariable UUID id) {
-        return questionService.getAllByQuestionnaireId(id);
+    public AppResponse<List<QuestionDto>> getAllByQuestionnaire(@PathVariable UUID id) {
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public QuestionDto getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
-        return questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new);
+    public AppResponse<QuestionDto> getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
+        return new AppResponse<>(questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new)
+                , HttpStatus.OK);
     }
 
     @PostMapping
-    public QuestionDto create(@RequestHeader("authorization") String token,
+    public AppResponse<QuestionDto> create(@RequestHeader("authorization") String token,
                               @RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
-        return questionService.create(dto, tokenService.extractCompanyId(token));
+        return new AppResponse<>(questionService.create(dto, tokenService.extractCompanyId(token)), HttpStatus.OK);
     }
 
     @PutMapping
-    public QuestionDto update(@RequestHeader("authorization") String token,
+    public AppResponse<QuestionDto> update(@RequestHeader("authorization") String token,
                               @RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
 
-        return questionService.update(updateDto, tokenService.extractCompanyId(token));
+        return new AppResponse<>(questionService.update(updateDto, tokenService.extractCompanyId(token)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

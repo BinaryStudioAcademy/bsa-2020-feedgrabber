@@ -6,7 +6,7 @@ import {
     deleteQuestionnaireRoutine,
     getAllQuestionnaireRoutine,
     getAllQuestionnaireByCompanyRoutine
-} from '../../components/Questionnaire/routines';
+} from '../../components/QuestionnaireList/routines';
 import apiClient from 'helpers/apiClient';
 import { IQuestionnaire } from "models/IQuestionnaire";
 import { IGeneric } from 'models/IGeneric';

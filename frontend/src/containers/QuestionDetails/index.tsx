@@ -13,7 +13,7 @@ import {connect, ConnectedProps} from "react-redux";
 const questions: IQuestion[] = [
     {
         id: "1",
-        categoryName: "Soft skills",
+        categoryTitle: "Soft skills",
         text: "Can you tell me about a time when you successfully led a team through a sticky situation?",
         type: QuestionType.multiChoice,
         questionnaireId: "1",
@@ -23,7 +23,7 @@ const questions: IQuestion[] = [
     },
     {
         id: "2",
-        categoryName: "Leadership",
+        categoryTitle: "Leadership",
         text: "Are you able to delegate responsibilities efficiently?",
         questionnaireId: "1",
         type: QuestionType.freeText
@@ -58,7 +58,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                 id: "",
                 text: "",
                 questionnaireId: "",
-                categoryName: "",
+                categoryTitle: "",
                 type: undefined
             },
             type: undefined
