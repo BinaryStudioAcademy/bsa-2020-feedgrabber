@@ -1,45 +1,26 @@
-import React from 'react';
+import React, {FC} from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
-import Login from "../../containers/SignInBox";
-import Header from "../../components/Header";
-
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
-import ProfilePage from "../../components/ProfilePage";
-import QuestionDetails from 'containers/QuestionDetails';
-import QuestionsList from 'components/QuestionsList';
+import SignForm from "../../components/AuthForm/SignForm";
+import {Profile, ProfileX} from "../../components/Profile";
 
 export interface IRoutingProps {
   isLoading: boolean;
 }
 
-// temporary fake value
-const isAuthorized = true;
-
-const fakeUser = {
-  id: "",
-  username: "user",
-  avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
-};
-
-const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
-  <div>
-    {isAuthorized && (
-      <header>
-        <Header user={fakeUser}/>
-      </header>
-    )}
-    <main>
+const Routing: FC<IRoutingProps> = ({ isLoading }) => (
+  <>
       <LoaderWrapper loading={isLoading}>
         <Switch>
-          <Route exact path="/layout" component={Landing} />
-          <PublicRoute exact path="/login" component={Login} />
-          <PublicRoute exact path="/register" component={() => <span>Register page</span>} />
+          <PublicRoute exact path="/layout" component={Landing} />
+          <PublicRoute exact path="/auth" component={SignForm} />
           <PrivateRoute exact path="/" component={MainPage} />
-          <PrivateRoute path="/profile" component={ProfilePage} />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/profile/settings" component={ProfileX} />
           <PrivateRoute exact path="/requests" component={() => <span>Requests</span>} />
           <PrivateRoute exact path="/help" component={() => <span>Help Center</span>} />
           <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>} />
@@ -56,8 +37,7 @@ const Routing: React.FunctionComponent<IRoutingProps> = ({ isLoading }) => (
           </Route>
         </Switch>
       </LoaderWrapper>
-    </main>
-  </div>
+  </>
 );
 
 export default Routing;
