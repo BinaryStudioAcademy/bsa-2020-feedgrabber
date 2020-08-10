@@ -12,10 +12,6 @@ export interface IRadioQuestion extends IQuestionBase {
 
 export interface IScaleQuestion extends IQuestionBase {
   type: QuestionType.scale;
-  min: number;
-  minDescription: string;
-  max: number;
-  maxDescription: string;
 }
 
 export interface ITextQuestion extends IQuestionBase {
@@ -32,17 +28,23 @@ export interface ICheckboxQuestion extends IQuestionBase {
   answerOptions: string[];
 }
 
+export interface IDateQuestion extends IQuestionBase {
+  type: QuestionType.date;
+}
+
 export type IQuestion =
   | IMultichoiceQuestion
   | ITextQuestion
   | IScaleQuestion
   | IRadioQuestion
-  | ICheckboxQuestion;
+  | ICheckboxQuestion
+  | IDateQuestion;
 
 export enum QuestionType {
   freeText = "free_text",
   radio = "radio",
   scale = "scale",
   checkbox = "checkbox",
-  multichoice = "multichoice"
+  multichoice = "multichoice",
+  date = "date"
 }

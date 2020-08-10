@@ -3,9 +3,13 @@ import { History } from 'history';
 import { Button, Form, Segment } from "semantic-ui-react";
 import { IQuestion, QuestionType } from "../../models/IQuesion";
 import { Formik, FormikProps } from "formik";
-import { multichoiceSchema } from "./schemas";
+import { multichoiceSchema, radioSchema, checkboxSchema, nameSchema } from "./schemas";
 import * as Yup from 'yup';
+import * as initialValues from "./initialValues";
 import "./styles.sass";
+import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
+import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
+import InputField from "../../components/ComponentsQuestions/InputField";
 
 const questions: IQuestion[] = [
   {
@@ -21,6 +25,12 @@ const questions: IQuestion[] = [
     categoryId: "Leadership",
     name: "Are you able to delegate responsibilities efficiently?",
     type: QuestionType.freeText
+  },
+  {
+    id: "3",
+    categoryId: "Leadership",
+    name: "Are you able to delegate responsibilities efficiently?",
+    type: QuestionType.scale
   }
 ];
 interface IQuestionProps {
@@ -66,23 +76,53 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   getQuestion = async (id: string) => {
     const question = questions.find(question => question.id === id);
     if (id !== "new") {
-      if (question.type === QuestionType.multichoice
-        || question.type === QuestionType.checkbox
-        || question.type === QuestionType.radio) {
+      if (question.type === QuestionType.multichoice) {
         this.setState({
           ...this.state,
           question,
           validationSchema: multichoiceSchema,
-          initialValues: { name: question.name, answers: question.answerOptions },
+          initialValues: initialValues.Multichoice(question),
           type: question.type
         });
-      } else if (question.type === QuestionType.freeText
-        || question.type === QuestionType.scale) {
+      } else if (question.type === QuestionType.radio) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: radioSchema,
+          initialValues: initialValues.Radio(question),
+          type: question.type
+        });
+      } else if (question.type === QuestionType.checkbox) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: checkboxSchema,
+          initialValues: initialValues.Checkbox(question),
+          type: question.type
+        });
+      }
+      else if (question.type === QuestionType.freeText) {
         this.setState({
           ...this.state,
           question,
           validationSchema: {},
-          initialValues: { name: question.name },
+          initialValues: initialValues.FreeText(question),
+          type: question.type
+        });
+      } else if (question.type === QuestionType.scale) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: {},
+          initialValues: initialValues.Scale(question),
+          type: question.type
+        });
+      } else if (question.type === QuestionType.date) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: {},
+          initialValues: initialValues.Date(question),
           type: question.type
         });
       }
@@ -121,9 +161,13 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       key: 'Scaled',
       text: 'Scaled',
       value: QuestionType.scale
+    }, {
+      key: 'Date',
+      text: 'Date',
+      value: QuestionType.date
     }
   ];
-  getForm = (type: QuestionType, initialValues: any, formik: FormikProps<any>) => {
+  getForm = (type: QuestionType, formik: FormikProps<any>) => {
     switch (type) {
       case QuestionType.radio:
         return <span>radio</span>; // <RadioButton />;
@@ -132,9 +176,11 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.multichoice:
         return <span>multichoice</span>; // <MultichoiceQuestion formik={formik}/>;
       case QuestionType.scale:
-        return <span>scale</span>; // <Scale />
+        return <FreeTextQuestionUI />;
       case QuestionType.freeText:
-        return <span>freeeeeeeeee</span>; // <FreeText/>
+        return <InputField />;
+      case QuestionType.date:
+        return <DateSelectionQuestionUI />;
       default:
         return <span className="question_default">Default choice</span>;
     }
@@ -142,9 +188,62 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
 
   setQuestionType = (data: any) => {
     const type: QuestionType = data.value;
-    this.setState({
-      ...this.state, type
-    });
+    // if (type === QuestionType.multichoice) {
+    //   this.setState({
+    //     ...this.state,
+    //     validationSchema: multichoiceSchema,
+    //     initialValues: initialValues.Multichoice({
+    //        id: "", name: "", type: QuestionType.multichoice, categoryId: "", answerOptions: [] 
+    //       }),
+    //     type
+    //   });
+    // } else if (type === QuestionType.radio) {
+    //   this.setState({
+    //     ...this.state,
+    //     validationSchema: radioSchema,
+    //     initialValues: initialValues.Radio({
+    //        id: "", name: "", type: QuestionType.radio, categoryId: "", answerOptions: [] 
+    //       })
+    //   });
+    // } else if (type === QuestionType.checkbox) {
+    //   this.setState({
+    //     ...this.state,
+    //     validationSchema: checkboxSchema,
+    //     initialValues: initialValues.Checkbox({
+    //        id: "", name: "", type: QuestionType.checkbox, categoryId: "", answerOptions: [] 
+    //       }),
+    //     type
+    //   });
+    // }
+    // else if (type === QuestionType.freeText) {
+    //   this.setState({
+    //     ...this.state,
+    //     validationSchema: {},
+    //     initialValues: initialValues.FreeText({
+    //        id: "", name: "", type, categoryId: "" 
+    //       }),
+    //     type
+    //   });
+    // } else if (type === QuestionType.scale) {
+    //   this.setState({
+    //     ...this.state,
+    //     validationSchema: {},
+    //     initialValues: initialValues.Scale({
+    //        id: "", name: "", type: QuestionType.scale, categoryId: "" 
+    //       }),
+    //     type
+    //   });
+    // } else if (type === QuestionType.date) {
+    //   this.setState({
+    //     ...this.state,
+    //     validationSchema: {},
+    //     initialValues: initialValues.Date({
+    //        id: "", name: "", type: QuestionType.date, categoryId: "" 
+    //       }),
+    //     type
+    //   });
+    // }
+    this.setState({ ...this.state, type });
   }
 
   render() {
@@ -188,7 +287,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                     />}
                 </Segment>
                 <Segment className="question_form-answers">
-                  {this.getForm(type, initialValues, formik)}
+                  {this.getForm(type, formik)}
                 </Segment>
                 <Segment className="question_actions">
                   <Button color="red" size="tiny"
