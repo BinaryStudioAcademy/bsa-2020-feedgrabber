@@ -7,4 +7,8 @@ export interface IAppState {
         info: IUserInfo;
         error: IUserErrors;
     };
+    app: {
+        showMenu: boolean;
+    };
+
 }

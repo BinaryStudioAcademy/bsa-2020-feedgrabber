@@ -2,6 +2,9 @@ import React from 'react';
 import {Redirect, Route} from 'react-router-dom';
 import {useAuth} from '../../security/authProvider';
 import Header from "../Header";
+import SideMenu from "../SideMenu";
+import './styles.sass';
+import {connect} from "react-redux";
 
 const fakeUser = {
     id: "",
@@ -9,7 +12,7 @@ const fakeUser = {
     avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
 };
 
-const PrivateRoute = ({component: Component, roles = null, ...rest}) => {
+const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) => {
     const isLogged = useAuth();
 
     return (
@@ -23,7 +26,16 @@ const PrivateRoute = ({component: Component, roles = null, ...rest}) => {
                 return (
                     <>
                         <Header user={fakeUser}/>
-                        <Component {...props} />
+                        <div className="view-container">
+                            {showMenu && (
+                                <div className="side-bar">
+                                    <SideMenu/>
+                                </div>
+                            )}
+                            <div className="app-content">
+                                <Component {...props} />
+                            </div>
+                        </div>
                     </>
                 );
             }}
@@ -31,4 +43,8 @@ const PrivateRoute = ({component: Component, roles = null, ...rest}) => {
     );
 };
 
-export default PrivateRoute;
+const mapStateToProps = state => ({
+    showMenu: state.app.showMenu
+});
+
+export default connect(mapStateToProps, null)(PrivateRoute);
