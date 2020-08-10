@@ -1,12 +1,12 @@
 import { all } from 'redux-saga/effects';
-import registrationSaga from "components/RegistrationForm/sagas";
-import loginSagas from '../containers/SignInBox/sagas';
+import userSagas from 'sagas/user/sagas';
+import authSaga from "./auth/sagas";
 import questionnairesSagas from '../containers/QuestionnaireList/sagas';
 
 export default function* rootSaga() {
   yield all([
-    registrationSaga(),
-    loginSagas(),
+    authSaga(),
+    userSagas(),
     questionnairesSagas()
   ]);
 }
