@@ -6,7 +6,9 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,31 +28,46 @@ public class QuestionnaireController {
 
 
     @GetMapping()
-    public List<QuestionnaireDto> getAll() {
-        return questionnaireService.getAll();
+    public AppResponse<List<QuestionnaireDto>> getAll() {
+        return new AppResponse<>(
+                questionnaireService.getAll(),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/companies/{id}")
-    public List<QuestionnaireDto> getAllByCompany(@PathVariable UUID id) {
-        return questionnaireService.getAllByCompanyId(id);
+    public AppResponse<List<QuestionnaireDto>> getAllByCompany(@PathVariable UUID id) {
+        return new AppResponse<>(
+                questionnaireService.getAllByCompanyId(id),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/{id}")
-    public QuestionnaireDto getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
-        return questionnaireService.getOne(id)
-                .orElseThrow(QuestionnaireNotFoundException::new);
+    public AppResponse<QuestionnaireDto> getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
+        return new AppResponse<>(
+                questionnaireService.getOne(id)
+                        .orElseThrow(QuestionnaireNotFoundException::new),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping
-    public QuestionnaireDto create(@RequestBody @Valid QuestionnaireCreateDto createDto)
+    public AppResponse<QuestionnaireDto> create(@RequestBody @Valid QuestionnaireCreateDto createDto)
             throws CompanyNotFoundException, QuestionnaireExistsException {
-        return questionnaireService.create(createDto);
+        return new AppResponse<>(
+                questionnaireService.create(createDto),
+                HttpStatus.OK
+        );
     }
 
     @PutMapping
-    public QuestionnaireDto update(@RequestBody @Valid QuestionnaireUpdateDto updateDto)
+    public AppResponse<QuestionnaireDto> update(@RequestBody @Valid QuestionnaireUpdateDto updateDto)
             throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
-        return questionnaireService.update(updateDto);
+        return new AppResponse<>(
+                questionnaireService.update(updateDto),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/{id}")
