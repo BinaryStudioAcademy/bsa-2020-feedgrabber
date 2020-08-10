@@ -17,5 +17,6 @@ export interface IAppState {
             questions: IQuestion[];
         };
         currentQuestion: IQuestion;
+        isLoading: boolean;
     };
 }
