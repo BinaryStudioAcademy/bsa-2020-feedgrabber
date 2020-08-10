@@ -6,6 +6,9 @@ import {multichoiceSchema} from "./schemas";
 import * as Yup from 'yup';
 import "./styles.sass";
 import {IQuestion, QuestionType} from "../../models/IQuesion";
+import {IAppState} from "../../models/IAppState";
+import {loadQuestionsRoutine} from "../../components/QuestionsList/routines";
+import {connect, ConnectedProps} from "react-redux";
 
 const questions: IQuestion[] = [
     {
@@ -71,7 +74,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         this.getQuestion(match.params.id);
     }
 
-    getQuestion = async (id: string) => {
+    getQuestion = id => {
         const question = questions.find(question => question.id === id);
         if (id !== "new") {
             if (question.type === QuestionType.multiChoice
@@ -134,15 +137,15 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     getForm = (type: QuestionType, initialValues: any, formik: FormikProps<any>) => {
         switch (type) {
             case QuestionType.radio:
-                return <span>radio</span>; // <RadioButton />;
+                return <span>RadioButton</span>; // <RadioButton />;
             case QuestionType.checkbox:
-                return <span>checkbox</span>; // <CheckBox />;
+                return <span>CheckBox</span>; // <CheckBox />;
             case QuestionType.multiChoice:
-                return <span>multichoice</span>; // <MultichoiceQuestion formik={formik}/>;
+                return <span>MultiChoice</span>; // <MultichoiceQuestion formik={formik}/>;
             case QuestionType.scale:
-                return <span>scale</span>; // <Scale />
+                return <span>Scale</span>; // <Scale />
             case QuestionType.freeText:
-                return <span>freeeeeeeeee</span>; // <FreeText/>
+                return <span>FreeText</span>; // <FreeText/>
             default:
                 return <span className="question_default">Default choice</span>;
         }
@@ -176,19 +179,11 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                                         type="text"
                                         value={formik.values.name}
                                         name="name"
-                                        error={formik.touched.name &&
-                                        formik.errors.name ? formik.errors.name : undefined}
+                                        error={(formik.touched.name && formik.errors.name) ?? undefined}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                     />
-                                    {question.type ?
-                                        <Form.Dropdown
-                                            className="question_disabled"
-                                            selection
-                                            options={this.questionTypeOptions}
-                                            placeholder={type} disabled
-                                            onChange={(event, data) => this.setQuestionType(data)}
-                                        /> :
+                                    {!question.type &&
                                         <Form.Dropdown
                                             selection
                                             options={this.questionTypeOptions}
@@ -200,13 +195,8 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                                     {this.getForm(type, initialValues, formik)}
                                 </Segment>
                                 <Segment className="question_actions">
-                                    <Button color="red" size="tiny"
-                                            onClick={this.onClose}>
-                                        Cancel
-                                    </Button>
-                                    <Button color="green" size="tiny" onClick={this.onSubmit}>
-                                        Save
-                                    </Button>
+                                    <Button color="red" size="tiny" onClick={this.onClose} content="Cancel"/>
+                                    <Button color="green" size="tiny" onClick={this.onSubmit} content="Save"/>
                                 </Segment>
                             </Form>
                         </div>
@@ -215,5 +205,17 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         );
     }
 }
+const mapState = (state: IAppState) => ({
+    question: state.forms.currentQuestion,
+    isLoading: state.forms.isLoading
+});
 
-export default QuestionDetails;
+const mapDispatch = {
+    loadQuestions: loadQuestionsRoutine
+};
+
+const connector = connect(mapState, mapDispatch);
+
+type QuestionDetailsProps = ConnectedProps<typeof connector>;
+
+export default connector(QuestionDetails);
