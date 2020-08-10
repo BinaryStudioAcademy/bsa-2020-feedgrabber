@@ -66,7 +66,9 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   getQuestion = async (id: string) => {
     const question = questions.find(question => question.id === id);
     if (id !== "new") {
-      if (question.type === QuestionType.multichoice) {
+      if (question.type === QuestionType.multichoice
+        || question.type === QuestionType.checkbox
+        || question.type === QuestionType.radio) {
         this.setState({
           ...this.state,
           question,
@@ -74,7 +76,8 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           initialValues: { name: question.name, answers: question.answerOptions },
           type: question.type
         });
-      } else if (question.type === QuestionType.freeText) {
+      } else if (question.type === QuestionType.freeText
+        || question.type === QuestionType.scale) {
         this.setState({
           ...this.state,
           question,
@@ -137,7 +140,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.freeText:
         return <span>freeeeeeeeee</span>; // <FreeText/>
       default:
-        return <span>Default choice</span>;
+        return <span className="question_default">Default choice</span>;
     }
   };
 
@@ -173,12 +176,20 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  <Form.Dropdown
-                    selection
-                    options={this.questionTypeOptions}
-                    placeholder={'Choose type'}
-                    onChange={(event, data) => this.setQuestionType(data)}
-                  />
+                  {question.type ?
+                    <Form.Dropdown
+                      className="question_disabled"
+                      selection
+                      options={this.questionTypeOptions}
+                      placeholder={type} disabled
+                      onChange={(event, data) => this.setQuestionType(data)}
+                    /> :
+                    <Form.Dropdown
+                      selection
+                      options={this.questionTypeOptions}
+                      placeholder={'Choose type'}
+                      onChange={(event, data) => this.setQuestionType(data)}
+                    />}
                 </Segment>
                 <Segment className="question_form-answers">
                   {this.getForm(type, initialValues, formik)}
