@@ -128,7 +128,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.radio:
         return <span>radio</span>; // <RadioButton />;
       case QuestionType.checkbox:
-        return <span>checkbox</span>; // <CheckBox />;
+        return <span>checkbox</span>; // <CheckboxQuestion formik={formik}/>;;
       case QuestionType.multichoice:
         return <span>multichoice</span>; // <MultichoiceQuestion formik={formik}/>;
       case QuestionType.scale:
