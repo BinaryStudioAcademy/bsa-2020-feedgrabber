@@ -7,6 +7,10 @@ import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
+import SideMenu from "../../components/SideMenu";
+import QuestionnaireList from "../../components/QuestionnaireList";
+import QuestionsList from "../../components/QuestionsList";
+import TeamsList from "../../components/TeamsList";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -27,9 +31,9 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>} />
           <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
-          <PrivateRoute exact path="/teams" component={() => <span>Company Dashboard</span>} />
-          <PrivateRoute exact path="/questionnaires" component={() => <span>Company Dashboard</span>} />
-          <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/teams" component={TeamsList} />
+          <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
+          <PrivateRoute exact path="/questionnaire/:id" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={() => <span>Company Dashboard</span>} />
           <Route path="/*">
             <Redirect to="/layout" />
