@@ -7,7 +7,7 @@ export interface IQuestionBase {
 
 export interface IRadioQuestion extends IQuestionBase {
   type: QuestionType.radio;
-  answerOption: string[];
+  answerOptions: string[];
 }
 
 export interface IScaleQuestion extends IQuestionBase {
@@ -22,28 +22,27 @@ export interface ITextQuestion extends IQuestionBase {
   type: QuestionType.freeText;
 }
 
-export interface IDropDownQuestion extends IQuestionBase {
-  type: QuestionType.dropDown;
-  answerOption: string[];
+export interface IMultichoiceQuestion extends IQuestionBase {
+  type: QuestionType.multichoice;
+  answerOptions: string[];
 }
 
 export interface ICheckboxQuestion extends IQuestionBase {
   type: QuestionType.checkbox;
-  answerOption: string[];
+  answerOptions: string[];
 }
 
 export type IQuestion =
-  | IDropDownQuestion
+  | IMultichoiceQuestion
   | ITextQuestion
   | IScaleQuestion
   | IRadioQuestion
   | ICheckboxQuestion;
 
-enum QuestionType {
+export enum QuestionType {
   freeText = "free_text",
   radio = "radio",
   scale = "scale",
-  inputField = "input_field",
   checkbox = "checkbox",
-  dropDown = "drop_down"
+  multichoice = "multichoice"
 }
