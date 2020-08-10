@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { useHistory } from "react-router";
-import { Card, Dimmer, Loader, Button } from 'semantic-ui-react';
+import { Card, Dimmer, Loader, Button, Segment, Header, Icon} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import { connect } from "react-redux";
 import { IQuestion } from './reducer';
@@ -33,17 +33,31 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLo
             ? <Dimmer active inverted>
                   <Loader size="big" inverted />
               </Dimmer>
-            : (questions.map(question => {
+            : questions? (questions.map(question => {
                   return (
                     <div key = {question.id} className={styles.questionContainer}>
                         <Card className ={styles.question}
-                              link centered fluid
-                              description = {question.text}
-                              meta={question.category}
-                              onClick ={() => handleClick(question.id)}/>
+                                    link centered fluid
+                                    onClick ={() => handleClick(question.id)}>
+                                <Card.Content className={styles.content}>
+                                    <Card.Meta>{question.category}</Card.Meta>
+                                    <Card.Description>{question.text}</Card.Description>
+                                    <Card.Meta className={styles.right}><span>{question.type}</span></Card.Meta>
+                                </Card.Content>
+                        </Card>
                     </div>
                   );
-              }))}
+              })) : 
+                <div className={styles.emptyList}>
+                <Segment placeholder>
+                    <Header icon><Icon name='question' />
+                        There are no questions available
+                    </Header>
+                    <Segment.Inline>
+                        <Button primary onClick={() => handleClick("new")}>Add new</Button>
+                    </Segment.Inline>
+                </Segment>
+                </div>}
               <div className={styles.addNewButton}>
                 <Button onClick={() => handleClick("new")}>Add new</Button>
               </div>
