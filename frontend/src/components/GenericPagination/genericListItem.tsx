@@ -9,7 +9,6 @@ interface IGenericAction {
 }
 
 interface IGenericListItemProps {
-  id: string;
   title: string;
   description: string;
   actions: IGenericAction[];
@@ -17,20 +16,19 @@ interface IGenericListItemProps {
 
 const GenericListItem: FC<IGenericListItemProps> = (
   {
-    id,
     title,
     description,
     actions
   }
 ) => {
   return (
-    <div key={id} className={styles.paginationListItem}>
+    <div className={styles.paginationListItem}>
       <div>
         <h3 className={styles.paginationListItemHeader}>{title}</h3>
         <p className={styles.paginationListItemDescription}>{description}</p>
       </div>
       <div>
-        {actions.map(a => <Icon className={a.icon} onClick={a.callback}/>)}
+        {actions.map(a => <Icon className={a.icon} key={a.icon} onClick={a.callback}/>)}
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ function* addQuestionnaire(action: any) {
     yield put(loadQuestionnairesRoutine.trigger());
     toastr.success("Added questionnaire");
   } catch (errorResponse) {
-    yield put(addQuestionnaireRoutine.failure(errorResponse.response.data.error.localizedMessage));
+    yield put(addQuestionnaireRoutine.failure(errorResponse.response.data.error));
   }
 }
 
@@ -50,7 +50,7 @@ function* updateQuestionnaire(action: any) {
     yield put(loadQuestionnairesRoutine.trigger());
     toastr.success("Updated questionnaire");
   } catch (errorResponse) {
-    yield put(updateQuestionnaireRoutine.failure(errorResponse.response.data.error.localizedMessage));
+    yield put(updateQuestionnaireRoutine.failure(errorResponse.response.data.error));
   }
 }
 
@@ -64,7 +64,7 @@ function* deleteQuestionnaire(action: any) {
     yield put(loadQuestionnairesRoutine.trigger());
   } catch (errorResponse) {
     yield put(deleteQuestionnaireRoutine.failure());
-    toastr.error(errorResponse.response.data.error.localizedMessage);
+    toastr.error(errorResponse.response.data.error);
     yield put(loadQuestionnairesRoutine.trigger());
   }
 }

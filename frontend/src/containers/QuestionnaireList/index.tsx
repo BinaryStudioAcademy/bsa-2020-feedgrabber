@@ -49,7 +49,7 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
 ) => {
   const mapItemToJSX = (item: IQuestionnaire) => (
     <GenericListItem
-      id={item.id}
+      key={item.id}
       title={item.title}
       description={item.companyName}
       actions={[
@@ -80,8 +80,7 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
         buttons={[{text: "Add New", callback: () => showModal(undefined)}]}
       />
     </>
-  )
-    ;
+  );
 };
 
 const mapStateToProps = rootState => ({

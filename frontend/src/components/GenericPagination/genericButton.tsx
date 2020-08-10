@@ -14,7 +14,7 @@ const GenericButton: FC<IGenericButtonProps> = (
   }
 ) => {
   return (
-    <button className={styles.paginationButton} key={text} onClick={callback}>
+    <button className={styles.paginationButton} onClick={callback}>
       {text}
     </button>
   );
