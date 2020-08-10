@@ -57,7 +57,7 @@ TeamsList.defaultProps = {
       id: '',
       username: 'misa',
       avatar: 'https://i.imgur.com/hIjmHms.jpg'}
-      ]
+    ]
   }]
 };
 
