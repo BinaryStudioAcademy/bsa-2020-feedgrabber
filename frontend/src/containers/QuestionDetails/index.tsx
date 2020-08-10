@@ -82,9 +82,10 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   }
 
   getQuestion = async (id: string) => {
-    const question = questions.find(question => question.id === id);
     if (id !== "new") {
-      this.setState({ question, isQuestionDetailsValid: true });
+      const question = questions.find(question => question.id === id);
+      const initialValues = { name: question.name, answers: question.details };
+      this.setState({ ...this.state, question, isQuestionDetailsValid: true, initialValues });
     }
   }
 
@@ -162,7 +163,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.date:
         return <DateSelectionQuestionUI />;
       default:
-        return <span className="question_default">You should enter the type of the question :)</span>;
+        return <span className="question_default">You should choose the type of the question :)</span>;
     }
   }
 
@@ -181,13 +182,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={() => console.log("submitted")}
+        onSubmit={this.onSubmit}
       >
         {formik => (
           <div className="question_container">
             <Form className="question_form" onSubmit={formik.handleSubmit}>
               <Segment className="question_header">
-                {console.log(formik.values)}
                 <Form.Input
                   className="question_name_input"
                   fluid
@@ -219,8 +219,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                 <Button className="ui button" color="red" onClick={this.onClose}>
                   Cancel
                 </Button>
-                <Button className="ui button" color="green" onClick={this.onSubmit}
-                  disabled={!isQuestionDetailsValid}>
+                <Button className="ui button" color="green" disabled={!isQuestionDetailsValid}>
                   Save
                 </Button>
               </Segment>
