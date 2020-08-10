@@ -8,6 +8,7 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsExcepti
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,14 +30,16 @@ public class QuestionnaireController {
     @GetMapping()
     public AppResponse<List<QuestionnaireDto>> getAll() {
         return new AppResponse<>(
-                questionnaireService.getAll()
+                questionnaireService.getAll(),
+                HttpStatus.OK
         );
     }
 
     @GetMapping("/companies/{id}")
     public AppResponse<List<QuestionnaireDto>> getAllByCompany(@PathVariable UUID id) {
         return new AppResponse<>(
-                questionnaireService.getAllByCompanyId(id)
+                questionnaireService.getAllByCompanyId(id),
+                HttpStatus.OK
         );
     }
 
@@ -44,7 +47,8 @@ public class QuestionnaireController {
     public AppResponse<QuestionnaireDto> getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.getOne(id)
-                        .orElseThrow(QuestionnaireNotFoundException::new)
+                        .orElseThrow(QuestionnaireNotFoundException::new),
+                HttpStatus.OK
         );
     }
 
@@ -52,7 +56,8 @@ public class QuestionnaireController {
     public AppResponse<QuestionnaireDto> create(@RequestBody @Valid QuestionnaireCreateDto createDto)
             throws CompanyNotFoundException, QuestionnaireExistsException {
         return new AppResponse<>(
-                questionnaireService.create(createDto)
+                questionnaireService.create(createDto),
+                HttpStatus.OK
         );
     }
 
@@ -60,7 +65,8 @@ public class QuestionnaireController {
     public AppResponse<QuestionnaireDto> update(@RequestBody @Valid QuestionnaireUpdateDto updateDto)
             throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
         return new AppResponse<>(
-                questionnaireService.update(updateDto)
+                questionnaireService.update(updateDto),
+                HttpStatus.OK
         );
     }
 
