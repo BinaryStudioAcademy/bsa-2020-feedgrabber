@@ -1,15 +1,15 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { History } from "history";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { IQuestion, QuestionType } from "../../models/IQuesion";
-import { Formik, FormikProps } from "formik";
-import * as Yup from "yup";
+import { Formik } from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
+import { nameSchema } from "./schemas";
 
 const questions: IQuestion[] = [
   {
@@ -57,7 +57,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   constructor(props: IQuestionProps) {
     super(props);
     this.state = {
-      validationSchema: Yup.object({}),
+      validationSchema: nameSchema,
       initialValues: { name: "", answers: [] },
       question: {
         id: "",
@@ -71,6 +71,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     this.onClose = this.onClose.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.renderForm = this.renderForm.bind(this);
+    this.getQuestion = this.getQuestion.bind(this);
     this.setQuestionType = this.setQuestionType.bind(this);
     this.handleQuestionDetailsUpdate = this.handleQuestionDetailsUpdate.bind(this);
   }
@@ -85,14 +86,14 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     if (id !== "new") {
       this.setState({ question, isQuestionDetailsValid: true });
     }
-  };
+  }
 
   onClose = () => {
     this.props.history.push("/questions");
   };
 
   onSubmit = () => {
-    if (this.state.question) {
+    if (this.state.isQuestionDetailsValid) {
       this.props.saveQuestion(this.state.question);
       this.props.history.push("/questions");
     }
@@ -142,7 +143,6 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
 
   renderForm() {
     const { question } = this.state;
-
     switch (question.type) {
       case QuestionType.radio:
         return <span>radio</span>; // <RadioButton />;
@@ -162,7 +162,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.date:
         return <DateSelectionQuestionUI />;
       default:
-        return <span className="question_default">Default choice</span>;
+        return <span className="question_default">You should enter the type of the question :)</span>;
     }
   }
 
@@ -175,7 +175,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   };
 
   render() {
-    const { initialValues, validationSchema, question } = this.state;
+    const { initialValues, validationSchema, question, isQuestionDetailsValid } = this.state;
     return (
       <Formik
         enableReinitialize
@@ -187,6 +187,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           <div className="question_container">
             <Form className="question_form" onSubmit={formik.handleSubmit}>
               <Segment className="question_header">
+                {console.log(formik.values)}
                 <Form.Input
                   className="question_name_input"
                   fluid
@@ -202,32 +203,24 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-                {question.type ? (
-                  <Form.Dropdown
-                    className="question_disabled"
-                    selection
-                    options={this.questionTypeOptions}
-                    placeholder={question.type}
-                    disabled
-                    onChange={(event, data) => this.setQuestionType(data)}
-                  />
-                ) : (
+                {!question.type &&
                   <Form.Dropdown
                     selection
                     options={this.questionTypeOptions}
                     placeholder={"Choose type"}
                     onChange={(event, data) => this.setQuestionType(data)}
                   />
-                )}
+                }
               </Segment>
               <Segment className="question_form-answers">
                 {this.renderForm()}
               </Segment>
               <Segment className="question_actions">
-                <Button color="red" size="tiny" onClick={this.onClose}>
+                <Button className="ui button" color="red" onClick={this.onClose}>
                   Cancel
                 </Button>
-                <Button color="green" size="tiny" onClick={this.onSubmit}>
+                <Button className="ui button" color="green" onClick={this.onSubmit}
+                  disabled={!isQuestionDetailsValid}>
                   Save
                 </Button>
               </Segment>
