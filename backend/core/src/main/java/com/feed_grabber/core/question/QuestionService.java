@@ -45,11 +45,10 @@ public class QuestionService {
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
-//        return quesRep.findAllByQuestionnaireId(questionnaireId)
-//                .stream()
-//                .map(QuestionMapper.MAPPER::questionToQuestionDto)
-//                .collect(Collectors.toList());
-        return null;
+        return quesRep.findByQuestionnaires_Id(questionnaireId)
+                .stream()
+                .map(QuestionMapper.MAPPER::questionToQuestionDto)
+                .collect(Collectors.toList());
     }
 
     public Optional<QuestionDto> getOne(UUID id) {

@@ -38,5 +38,5 @@ public class QuestionCategory {
     private Company company;
 
     @OneToMany(mappedBy = "category")
-    private List<Question> questions = new LinkedList<>();
+    private List<Question> questions;
 }

@@ -13,5 +13,6 @@ public interface CompanyMapper {
     CompanyDto companyToCompanyDto(Company company);
 
     @Mapping(source = "email", target = "corporateEmail")
+    @Mapping(target = "questionnaires", ignore = true)
     Company companyDtoToModel(CompanyDto companyDto);
 }

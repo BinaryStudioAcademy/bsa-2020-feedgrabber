@@ -49,7 +49,7 @@ public class QuestionCategoryController {
 
     @PutMapping
     public QuestionCategoryDto update(@RequestBody @Valid QuestionCategoryUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionCategoryExistsException, QuestionCategoryNotFoundException {
+            throws  QuestionCategoryExistsException, QuestionCategoryNotFoundException {
         return questionCategoryService.update(updateDto);
     }
 

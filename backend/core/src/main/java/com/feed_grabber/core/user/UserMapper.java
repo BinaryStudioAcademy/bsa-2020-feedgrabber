@@ -17,6 +17,7 @@ public interface UserMapper {
 
     @Mapping(target = "teams", ignore = true)
     @Mapping(target = "role", ignore = true)
+    @Mapping(target = "isEnabled", ignore = true)
     @Mapping(target = "userProfile", ignore = true)
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
