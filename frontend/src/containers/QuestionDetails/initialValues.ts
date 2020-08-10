@@ -1,5 +1,5 @@
 import * as IQuestion from "../../models/IQuesion";
-
+/*
 export const Checkbox = (question: IQuestion.ICheckboxQuestion) => {
     return { name: question.name, answers: question.answerOptions };
 };
@@ -22,4 +22,4 @@ export const Radio = (question: IQuestion.IRadioQuestion) => {
 
 export const Multichoice = (question: IQuestion.IMultichoiceQuestion) => {
     return { name: question.name, answers: question.answerOptions };
-};
+};*/

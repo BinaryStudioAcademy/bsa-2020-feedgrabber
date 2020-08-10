@@ -36,7 +36,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
-          <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
+          <Route exact path="/question/:id" component={QuestionDetails} />
           <Route path="/*">
             <Redirect to="/layout" />
           </Route>
