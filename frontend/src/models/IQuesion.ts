@@ -1,7 +1,7 @@
 export interface IQuestionBase {
     id?: string;
     text: string;
-    categoryName?: string;
+    categoryTitle?: string;
     type: QuestionType;
     questionnaireId: string;
     payload?: {};

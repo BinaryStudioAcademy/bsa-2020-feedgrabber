@@ -31,7 +31,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
                                 <Card className={styles.question}
                                       link centered fluid
                                       description={question.text}
-                                      meta={question.categoryName}
+                                      meta={question.categoryTitle}
                                       onClick={() => handleClick(question.id)}/>
                             </div>
                         );

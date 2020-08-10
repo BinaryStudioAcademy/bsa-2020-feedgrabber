@@ -18,5 +18,6 @@ export interface IAppState {
         };
         currentQuestion: IQuestion;
         isLoading: boolean;
+        error: string;
     };
 }
