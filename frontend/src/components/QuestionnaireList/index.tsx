@@ -1,9 +1,7 @@
 import { IAppState } from 'models/IAppState';
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Grid, Header, Message } from 'semantic-ui-react';
 import styles from './styles.module.sass';
-import { IQuestionnaire } from '../../models/IQuestionnaire';
 import {
   createQuestionnaireRoutine,
   deleteQuestionnaireRoutine,

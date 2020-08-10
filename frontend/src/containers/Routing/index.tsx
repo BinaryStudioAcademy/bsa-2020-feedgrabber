@@ -5,11 +5,11 @@ import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
 import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
-import QuestionnaireList from "../QuestionnaireList";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
 import QuestionsList from "../../components/QuestionsList";
 import QuestionDetails from "../QuestionDetails";
+import QuestionnaireList from "../../components/QuestionnaireList";
 
 export interface IRoutingProps {
   isLoading: boolean;
