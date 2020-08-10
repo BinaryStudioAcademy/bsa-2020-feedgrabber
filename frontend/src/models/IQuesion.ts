@@ -43,7 +43,6 @@ export enum QuestionType {
   freeText = "free_text",
   radio = "radio",
   scale = "scale",
-  inputField = "input_field",
   checkbox = "checkbox",
   multichoice = "multichoice"
 }

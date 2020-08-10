@@ -121,10 +121,6 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       key: 'Scaled',
       text: 'Scaled',
       value: QuestionType.scale
-    }, {
-      key: 'Short answer',
-      text: 'Short answer',
-      value: QuestionType.inputField
     }
   ];
   getForm = (type: QuestionType, initialValues: any, formik: FormikProps<any>) => {
