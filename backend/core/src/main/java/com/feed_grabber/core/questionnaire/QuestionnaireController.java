@@ -7,6 +7,7 @@ import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.response.DataList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +29,17 @@ public class QuestionnaireController {
 
 
     @GetMapping()
-    public AppResponse<List<QuestionnaireDto>> getAll() {
-        return new AppResponse<>(
-                questionnaireService.getAll(),
-                HttpStatus.OK
+    public AppResponse<DataList<QuestionnaireDto>> getAll(
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        var dataList = new DataList<QuestionnaireDto>(
+                questionnaireService.getAll(page, size),
+                questionnaireService.getCountAll(),
+                page,
+                size
         );
+        return new AppResponse<>(dataList, HttpStatus.OK);
     }
 
     @GetMapping("/companies/{id}")

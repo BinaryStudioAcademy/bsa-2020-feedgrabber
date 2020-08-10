@@ -1,5 +1,6 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
+import {select} from 'redux-saga/effects';
 
 import {
   addQuestionnaireRoutine,
@@ -12,7 +13,12 @@ import {IQuestionnaire} from "./reducer";
 
 function* loadQuestionnairesList(action: any) {
   try {
-    const res = yield call(apiClient.get, 'http://localhost:5000/api/questionnaires');
+    const store = yield select();
+    const {page, size} = store.questionnaires.pagination;
+    const res = yield call(
+      apiClient.get,
+      `http://localhost:5000/api/questionnaires?page=${page}&size=${size}`
+    );
     const items = res.data.data;
 
     yield put(loadQuestionnairesRoutine.success(items));

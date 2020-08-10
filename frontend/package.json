@@ -19,6 +19,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.12.0",
     "react-fullpage": "^0.1.19",
+    "react-paginate": "^6.3.2",
     "react-redux": "^7.1.3",
     "react-redux-toastr": "^7.6.4",
     "react-router-dom": "^5.1.2",

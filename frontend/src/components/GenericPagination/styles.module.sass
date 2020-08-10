@@ -1,0 +1,89 @@
+.paginationWrapper
+  max-width: 800px
+  margin: 0 auto
+  padding-top: 50px
+  padding-bottom: 50px
+
+  .paginationTitle
+    font-size: 2em
+    text-align: center
+    margin-bottom: 1em
+
+  .paginationButtonsWrapper
+    display: flex
+    justify-content: center
+    margin-bottom: 2em
+
+    .paginationButton
+      cursor: pointer
+      display: block
+      border: none
+      padding: 0.5em 1.5em
+      border-radius: 10px
+      color: #fff
+      background-color: #2a89d4
+      transition: background-color 0.2s
+
+      &:hover
+        background-color: #0c3b5f
+
+  i
+    cursor: pointer
+    color: #2a89d4
+    transition: color 0.1s
+    font-size: 1.3em
+    margin: 0 0.5em
+
+    &:hover
+      color: #104c7b
+
+.paginationListItem
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 15px
+  min-height: 70px
+  border: 1px solid #41abff
+  margin: 12px
+  border-radius: 10px
+  background-color: #fff
+
+  .paginationListItemDescription
+    color: #777
+
+  .paginationListItemHeader
+    text-align: left
+    font-size: 1.5em
+    margin-bottom: 0.3em
+
+    &:hover
+      background-color: #fafeff
+
+.paginationPagesWrapper
+  display: flex
+  justify-content: center
+
+.paginationPagesContainer
+  display: flex
+  justify-content: center
+  flex-wrap: wrap
+  background-color: #fff
+  border: 1px #bbb solid
+  border-radius: 5px
+
+.pageLink
+  cursor: pointer
+  display: block
+  padding: 0.5em 1em
+  border-radius: 5px
+  color: #333
+  transition: background-color 0.2s
+
+.pageLink:hover
+  background-color: #eee
+  color: #111
+
+.pageActive .pageLink,
+.pageActive:hover .pageLink
+  color: #fff
+  background-color: #aaa

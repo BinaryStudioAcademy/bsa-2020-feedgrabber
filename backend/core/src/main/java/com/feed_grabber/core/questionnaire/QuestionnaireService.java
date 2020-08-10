@@ -8,6 +8,7 @@ import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +29,15 @@ public class QuestionnaireService {
         this.companyRepository = companyRepository;
     }
 
-    public List<QuestionnaireDto> getAll() {
-        return questionnaireRepository.findAll()
+    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
+        return questionnaireRepository.findAll(PageRequest.of(page, size))
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
+    }
+
+    public Long getCountAll() {
+        return questionnaireRepository.count();
     }
 
     public List<QuestionnaireDto> getAllByCompanyId(UUID companyId) {

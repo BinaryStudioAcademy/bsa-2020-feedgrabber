@@ -1,9 +1,10 @@
 import {
   addQuestionnaireRoutine, deleteQuestionnaireRoutine,
   hideModalQuestionnaireRoutine,
-  loadQuestionnairesRoutine,
+  loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
 } from './routines';
+import {IPaginationInfo} from "../../models/IPaginationInfo";
 
 export interface IQuestionnaire {
   id: string;
@@ -24,15 +25,20 @@ export interface IUpdateQuestionnaire {
 
 interface IQuestionnairesListState {
   isLoading?: boolean;
-  items?: IQuestionnaire[];
+  pagination?: IPaginationInfo<IQuestionnaire>;
   modalShown?: boolean;
   modalQuestionnaire?: IQuestionnaire;
   modalLoading?: boolean;
   modalError?: string;
 }
 
-export default (state: IQuestionnairesListState = {}, action) => {
+export default (state: IQuestionnairesListState = {}, action): IQuestionnairesListState => {
   switch (action.type) {
+    case setQuestionnairePaginationRoutine.TRIGGER:
+      return {
+        ...state,
+        pagination: action.payload
+      };
     case loadQuestionnairesRoutine.TRIGGER:
     case deleteQuestionnaireRoutine.TRIGGER:
       return {
@@ -49,7 +55,7 @@ export default (state: IQuestionnairesListState = {}, action) => {
     case loadQuestionnairesRoutine.SUCCESS:
       return {
         ...state,
-        items: action.payload,
+        pagination: action.payload,
         isLoading: false
       };
     case addQuestionnaireRoutine.TRIGGER:
