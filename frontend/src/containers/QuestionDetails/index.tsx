@@ -6,6 +6,7 @@ import { Formik, FormikProps } from "formik";
 import { multichoiceSchema } from "./schemas";
 import * as Yup from 'yup';
 import "./styles.sass";
+import ScaleQuestion from "components/ScaleQuestion";
 
 const questions: IQuestion[] = [
   {
@@ -21,6 +22,18 @@ const questions: IQuestion[] = [
     categoryId: "Leadership",
     name: "Are you able to delegate responsibilities efficiently?",
     type: QuestionType.freeText
+  },
+  {
+    id: "3",
+    categoryId: "Leadership",
+    name: "Are you able to delegate responsibilities efficiently?",
+    type: QuestionType.scale,
+    answerOptions: {
+      min: 0,
+      max: 9,
+      minDescription: "",
+      maxDescription: ""
+    }
   }
 ];
 interface IQuestionProps {
@@ -76,13 +89,25 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           initialValues: { name: question.name, answers: question.answerOptions },
           type: question.type
         });
-      } else if (question.type === QuestionType.freeText
-        || question.type === QuestionType.scale) {
+      } else if (question.type === QuestionType.freeText) {
         this.setState({
           ...this.state,
           question,
           validationSchema: {},
           initialValues: { name: question.name },
+          type: question.type
+        });
+      } else if(question.type === QuestionType.scale ) {
+        this.setState({
+          ...this.state,
+          question,
+          validationSchema: scaleSchema,
+          initialValues: { name: question.name, answers: {
+            min: question.answerOptions.min, 
+            minDescription: question.answerOptions.minDescription,
+            max: question.answerOptions.max, 
+            maxDescription: question.answerOptions.maxDescription
+          }},
           type: question.type
         });
       }
@@ -132,7 +157,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.multichoice:
         return <span>multichoice</span>; // <MultichoiceQuestion formik={formik}/>;
       case QuestionType.scale:
-        return <span>scale</span>; // <Scale />
+        return <ScaleQuestion formik={formik}/>;
       case QuestionType.freeText:
         return <span>freeeeeeeeee</span>; // <FreeText/>
       default:
