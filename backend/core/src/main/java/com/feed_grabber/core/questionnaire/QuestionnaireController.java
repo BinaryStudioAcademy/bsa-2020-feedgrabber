@@ -1,5 +1,6 @@
 package com.feed_grabber.core.questionnaire;
 
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
@@ -29,19 +30,20 @@ public class QuestionnaireController {
 
     @GetMapping()
     public AppResponse<List<QuestionnaireDto>> getAll() {
+        var companyId = TokenService.getCompanyId();
         return new AppResponse<>(
-                questionnaireService.getAll(),
+                questionnaireService.getAllByCompanyId(companyId),
                 HttpStatus.OK
         );
     }
 
-    @GetMapping("/companies/{id}")
-    public AppResponse<List<QuestionnaireDto>> getAllByCompany(@PathVariable UUID id) {
-        return new AppResponse<>(
-                questionnaireService.getAllByCompanyId(id),
-                HttpStatus.OK
-        );
-    }
+//    @GetMapping("/companies/{id}")
+//    public AppResponse<List<QuestionnaireDto>> getAllByCompany(@PathVariable UUID id) {
+//        return new AppResponse<>(
+//                questionnaireService.getAllByCompanyId(id),
+//                HttpStatus.OK
+//        );
+//    }
 
     @GetMapping("/{id}")
     public AppResponse<QuestionnaireDto> getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {

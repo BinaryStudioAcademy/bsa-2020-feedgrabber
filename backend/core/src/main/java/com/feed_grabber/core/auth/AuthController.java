@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserDTO> register(@RequestBody UserRegisterDTO dto) {
+    public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
             var pass = dto.getPassword();
             registerService.registerUser(dto);
 
@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<AuthUserDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
+    public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
             return new AppResponse<>(authService.login(userLoginDTO), HttpStatus.OK);
 
     }

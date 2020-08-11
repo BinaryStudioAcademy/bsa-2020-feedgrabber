@@ -80,6 +80,7 @@ public class UserService implements UserDetailsService {
                 .username(userRegisterDTO.getUsername())
                 .password(userRegisterDTO.getPassword())
                 .role(roles.get(0))
+                .company(company)
                 .build()
         );
     }

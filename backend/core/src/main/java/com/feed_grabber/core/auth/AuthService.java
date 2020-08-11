@@ -1,6 +1,7 @@
 package com.feed_grabber.core.auth;
 
-import com.feed_grabber.core.auth.dto.AuthUserDTO;
+import com.feed_grabber.core.auth.dto.AuthUserResponseDTO;
+import com.feed_grabber.core.auth.dto.TokenValuesDto;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
 import com.feed_grabber.core.auth.security.TokenService;
@@ -29,7 +30,7 @@ public class AuthService {
         return tokenService.refreshTokens(refreshToken);
     }
 
-    public AuthUserDTO login(UserLoginDTO dto) {
+    public AuthUserResponseDTO login(UserLoginDTO dto) {
         try {
             var upa = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
 
@@ -43,9 +44,10 @@ public class AuthService {
                 .findByUsername(dto.getUsername())
                 .map(UserMapper.MAPPER::responseFromUser).get();
 
+        var tokenDto = new TokenValuesDto(user.getId(), user.getCompany().getId(), user.getRole());
 
-        return new AuthUserDTO(tokenService.generateAccessToken(user.getId()),
-                tokenService.generateRefreshToken(user.getId()), user);
+        return new AuthUserResponseDTO(tokenService.generateAccessToken(tokenDto),
+                tokenService.generateRefreshToken(tokenDto), user);
     }
 
 }
