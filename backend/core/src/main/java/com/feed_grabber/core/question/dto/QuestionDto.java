@@ -10,8 +10,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class QuestionDto {
     UUID id;
-    String text;
+    String name;
     String categoryTitle;
-    String questionnaireTitle;
     QuestionType type;
+    String details;
 }
