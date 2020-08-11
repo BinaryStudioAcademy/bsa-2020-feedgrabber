@@ -3,7 +3,7 @@ import { History } from 'history';
 import { Button, Form, Segment } from "semantic-ui-react";
 import { IQuestion, QuestionType } from "../../models/IQuesion";
 import { Formik, FormikProps } from "formik";
-import { multichoiceSchema } from "./schemas";
+import { multichoiceSchema, scaleSchema } from "./schemas";
 import * as Yup from 'yup';
 import "./styles.sass";
 import ScaleQuestion from "components/ScaleQuestion";
@@ -22,18 +22,6 @@ const questions: IQuestion[] = [
     categoryId: "Leadership",
     name: "Are you able to delegate responsibilities efficiently?",
     type: QuestionType.freeText
-  },
-  {
-    id: "3",
-    categoryId: "Leadership",
-    name: "Are you able to delegate responsibilities efficiently?",
-    type: QuestionType.scale,
-    answerOptions: {
-      min: 0,
-      max: 9,
-      minDescription: "",
-      maxDescription: ""
-    }
   }
 ];
 interface IQuestionProps {
@@ -103,10 +91,10 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           question,
           validationSchema: scaleSchema,
           initialValues: { name: question.name, answers: {
-            min: question.answerOptions.min, 
-            minDescription: question.answerOptions.minDescription,
-            max: question.answerOptions.max, 
-            maxDescription: question.answerOptions.maxDescription
+            min: question.min, 
+            minDescription: question.minDescription,
+            max: question.max, 
+            maxDescription: question.maxDescription
           }},
           type: question.type
         });
@@ -179,7 +167,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={() => console.log('submitted')}
+        onSubmit={values => console.log(values)}
       >
         {
           formik => (
