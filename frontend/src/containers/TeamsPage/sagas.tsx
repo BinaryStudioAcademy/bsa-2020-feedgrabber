@@ -1,12 +1,11 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { loadTeamsRoutine } from './routines';
 import apiClient from '../../helpers/apiClient';
-import axios from 'axios';
 
 function* loadTeams() {
   try {
-    // const res = yield call(apiClient.get, '/api/teams');
-    const res = yield call(axios.get, 'http://localhost:5000/api/teams');
+    const res = yield call(apiClient.get, '/api/teams');
+
     const { data, error } = res.data;
     if (error) {
       yield loadTeamsRoutine.failure(error);
