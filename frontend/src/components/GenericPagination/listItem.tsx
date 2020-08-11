@@ -14,7 +14,7 @@ interface IGenericListItemProps {
   actions: IGenericAction[];
 }
 
-const GenericListItem: FC<IGenericListItemProps> = (
+const PaginationListItem: FC<IGenericListItemProps> = (
   {
     title,
     description,
@@ -34,4 +34,4 @@ const GenericListItem: FC<IGenericListItemProps> = (
   );
 };
 
-export default GenericListItem;
+export default PaginationListItem;

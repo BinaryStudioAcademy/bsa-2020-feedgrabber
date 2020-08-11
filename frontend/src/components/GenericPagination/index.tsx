@@ -5,7 +5,7 @@ import styles from './styles.module.sass';
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {IQuestionnaire} from "../../containers/QuestionnaireList/reducer";
 import LoaderWrapper from "../LoaderWrapper";
-import GenericButton, {IGenericButtonProps} from "./genericButton";
+import PaginationButton, {IGenericButtonProps} from "./button";
 
 interface IGenericPaginationProps {
   title: string;
@@ -17,6 +17,9 @@ interface IGenericPaginationProps {
   mapItemToJSX(item: any): JSX.Element;
   loadItems(): void;
 }
+
+const sizeOptions = [1, 5, 10];
+const defaultSize = 5;
 
 const GenericPagination: FC<IGenericPaginationProps> = (
   {
@@ -40,13 +43,19 @@ const GenericPagination: FC<IGenericPaginationProps> = (
     loadItems();
   };
 
+  const handleChangeAmountPerPage = (option: string): void => {
+    const amount = Number(option);
+    setPagination({...pagination, page: 0, size: amount});
+    loadItems();
+  };
+
   useEffect(() => {
     if (pagination) {
       if (pagination.page !== 0 && pagination.page >= getPageCount()) {
         handleChangePage(pagination.page - 1);
       }
     } else {
-      setPagination({total: 0, page: 0, size: 5, items: []});
+      setPagination({total: 0, page: 0, size: defaultSize, items: []});
       loadItems();
     }
   });
@@ -55,7 +64,16 @@ const GenericPagination: FC<IGenericPaginationProps> = (
     <div className={styles.paginationWrapper}>
       <h1 className={styles.paginationTitle}>{title}</h1>
       <div className={styles.paginationButtonsWrapper}>
-        {buttons.map(b => <GenericButton key={b.text} text={b.text} callback={b.callback}/>)}
+        {buttons.map(b => <PaginationButton key={b.text} text={b.text} callback={b.callback}/>)}
+      </div>
+      <div className={styles.paginationMetaWrapper}>
+        {pagination && <div>Total: {pagination.total}</div>}
+        <div>
+          <select onChange={e => handleChangeAmountPerPage(e.target.value)}>
+            {sizeOptions.map(o => <option key={o} selected={o === defaultSize}>{o}</option>)}
+          </select>
+          &nbsp;items per page
+        </div>
       </div>
       <LoaderWrapper loading={isLoading}>
         <div>

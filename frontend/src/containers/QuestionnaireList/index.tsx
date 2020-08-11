@@ -10,7 +10,7 @@ import {
 import {connect} from "react-redux";
 import QuestionnaireModal from "./questionnaireModal";
 import GenericPagination from "../../components/GenericPagination";
-import GenericListItem from "../../components/GenericPagination/genericListItem";
+import PaginationListItem from "../../components/GenericPagination/listItem";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 
 interface IQuestionnaireListProps {
@@ -48,7 +48,7 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
   }
 ) => {
   const mapItemToJSX = (item: IQuestionnaire) => (
-    <GenericListItem
+    <PaginationListItem
       key={item.id}
       title={item.title}
       description={item.companyName}

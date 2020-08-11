@@ -7,7 +7,7 @@ export interface IGenericButtonProps {
   callback: any;
 }
 
-const GenericButton: FC<IGenericButtonProps> = (
+const PaginationButton: FC<IGenericButtonProps> = (
   {
     text,
     callback
@@ -20,4 +20,4 @@ const GenericButton: FC<IGenericButtonProps> = (
   );
 };
 
-export default GenericButton;
+export default PaginationButton;
