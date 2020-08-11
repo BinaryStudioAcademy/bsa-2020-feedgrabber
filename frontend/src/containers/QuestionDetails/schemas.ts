@@ -32,3 +32,7 @@ export const checkboxSchema = Yup.object().shape({
     )
     .min(3, 'A multiple choice question must contain at least 3 answer choices')
 });
+
+export const scaleSchema = Yup.object().shape({
+  name: Yup.string().required('required')
+});
