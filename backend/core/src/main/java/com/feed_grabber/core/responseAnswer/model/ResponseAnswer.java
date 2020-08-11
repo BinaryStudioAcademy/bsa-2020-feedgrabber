@@ -1,6 +1,7 @@
-package com.feed_grabber.core.questionnaireResponse.model;
+package com.feed_grabber.core.responseAnswer.model;
 
 import com.feed_grabber.core.question.model.Question;
+import com.feed_grabber.core.questionnaireResponse.model.QuestionnaireResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

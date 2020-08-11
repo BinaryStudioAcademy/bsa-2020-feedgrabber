@@ -44,8 +44,13 @@ public class QuestionnaireResponseController {
         );
     }
 
-    // coming soon...
-//    @GetMapping("/respondent/{id}")
+    @GetMapping("/respondent/{id}")
+    public AppResponse<List<QuestionnaireResponseDto>> getByRespondent(@PathVariable UUID id) {
+        return new AppResponse<>(
+                responseService.getByRespondentId(id),
+                HttpStatus.OK
+        );
+    }
 
     @PostMapping
     public AppResponse<QuestionnaireResponseDto> create(@RequestHeader("authorization") String token,
