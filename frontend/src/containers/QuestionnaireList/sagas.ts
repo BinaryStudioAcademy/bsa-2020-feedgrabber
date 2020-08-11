@@ -31,7 +31,7 @@ function* addQuestionnaire(action: any) {
     yield put(loadQuestionnairesRoutine.trigger());
     toastr.success("Added questionnaire");
   } catch (errorResponse) {
-    yield put(addQuestionnaireRoutine.failure(errorResponse.response.data.error.localizedMessage));
+    yield put(addQuestionnaireRoutine.failure(errorResponse.response.data.error));
   }
 }
 
