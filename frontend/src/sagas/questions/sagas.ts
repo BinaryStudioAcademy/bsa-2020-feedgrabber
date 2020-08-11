@@ -16,8 +16,8 @@ function* getAll() {
   yield put(loadQuestionsRoutine.success(res.data.data));
 }
 
-function* save() {
-  const res: IGeneric<IQuestion> = yield call(apiClient.post, `api/questions`);
+function* save(action) {
+  const res: IGeneric<IQuestion> = yield call(apiClient.post, `api/questions`, action.payload);
 
   if (res.data.error) {
     yield put(saveQuestionRoutine.failure());

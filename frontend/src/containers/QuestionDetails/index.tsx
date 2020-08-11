@@ -86,7 +86,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     //     }
     // };
 
-  getQuestion = async (id: string) => {
+    getQuestion = async (id: string) => {
       if (id !== "new") {
           const question = questions.find(question => question.id === id);
           const initialValues = {name: question.name, answers: question.details};

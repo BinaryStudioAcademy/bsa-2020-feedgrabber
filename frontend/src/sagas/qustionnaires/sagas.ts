@@ -23,7 +23,6 @@ function* loadQuestionnairesList() {
 }
 
 function* addQuestionnaire(action) {
-    console.log(action);
     const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `api/questionnaires`, action.payload);
     if (res.data.error) {
         yield put(addQuestionnaireRoutine.failure());
