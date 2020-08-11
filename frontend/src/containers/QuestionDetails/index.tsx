@@ -8,6 +8,7 @@ import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSe
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
+import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import { nameSchema } from "./schemas";
 
@@ -153,7 +154,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       case QuestionType.radio:
         return <span>radio</span>; // <RadioButton />;
       case QuestionType.checkbox:
-        return <span>checkbox</span>; // <CheckboxQuestion formik={formik}/>;;
+        return (
+            <CheckboxQuestion
+                onValueChange={this.handleQuestionDetailsUpdate}
+                value={question.details}
+            />
+        );
       case QuestionType.multichoice:
         return (
           <MultichoiseQuestion

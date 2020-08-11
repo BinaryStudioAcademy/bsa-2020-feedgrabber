@@ -1,6 +1,10 @@
 export interface IMultiAnswerDetails{
   answerOptions: string[];
 }
+export interface ICheckboxAnswerDetails{
+    answerOptions: string[];
+    includeOther: boolean;
+}
 
 export interface IQuestionBase<TDetails>{
   id: string;
@@ -26,7 +30,7 @@ export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails>
   type: QuestionType.multichoice;
 }
 
-export interface ICheckboxQuestion extends IQuestionBase<IMultiAnswerDetails>{
+export interface ICheckboxQuestion extends IQuestionBase<ICheckboxAnswerDetails>{
   type: QuestionType.checkbox;
 }
 
