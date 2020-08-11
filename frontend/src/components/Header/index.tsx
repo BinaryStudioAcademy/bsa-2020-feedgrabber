@@ -1,34 +1,43 @@
-import React from "react";
-import { Menu, Icon, Image, Header as HeaderUI, Button, Dropdown } from "semantic-ui-react";
-import { useHistory } from "react-router-dom";
-
+import React, {FC} from "react";
+import {Menu, Icon, Image, Header as HeaderUI, Button, Dropdown} from "semantic-ui-react";
+import {useHistory} from "react-router-dom";
 import styles from "./styles.module.scss";
 import icon from "../../assets/images/icon_bg.jpg";
+import {logoutRoutine} from "../AuthForm/routines";
+import {connect, useDispatch} from "react-redux";
+import {AnyAction, bindActionCreators, Dispatch} from "redux";
 
 export interface IUser {
     id: string;
     username: string;
     avatar: string;
 }
+
 export interface IHeaderProps {
     user: IUser;
+    logout: () => void;
+    showMenu: boolean;
 }
 
-const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
+const Header: FC<IHeaderProps> = ({user, logout, showMenu}) => {
     const history = useHistory();
+    const dispatch = useDispatch();
     return (
         <Menu secondary borderless className={styles.main_header}>
             <Menu.Item onClick={() => history.push('/')}>
                 <HeaderUI>
-                    <Image src={icon} />
+                    <Image src={icon}/>
                     {' '}
                     <span>Feedgrabber</span>
                 </HeaderUI>
             </Menu.Item>
+            <Menu.Item onClick={() => dispatch({type: 'TOGGLE_MENU'})}>
+                <Icon name={showMenu ? "bars" : "options"}/>
+            </Menu.Item>
             <Menu.Menu position="right">
                 <Menu.Item name="horizontally" fitted="horizontally">
                     <Button basic icon type="button" className={`${styles.menuBtn} ${styles.logoutBtn}`}>
-                        <Icon name="bell" size="large" />
+                        <Icon name="bell" size="large"/>
                     </Button>
                 </Menu.Item>
                 <Menu.Item name="horizontally" fitted="horizontally">
@@ -38,7 +47,7 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
                         trigger={<Image avatar
                                         src={user.avatar}
                                         className={styles.headerUserDropDown}/>}
-                                        size="medium">
+                        size="medium">
                         <Dropdown.Menu>
                             <Dropdown.Header>{user.username}</Dropdown.Header>
                             <Dropdown.Item onClick={() => history.push('/profile')}>
@@ -59,8 +68,8 @@ const Header: React.FunctionComponent<IHeaderProps> = ({ user }) => {
                 <Menu.Item name="horizontally" fitted="horizontally">
                     <Button basic icon type="button"
                             className={`${styles.menuBtn} ${styles.logoutBtn}`}
-                            onClick={() => history.push('/login')}>
-                        <Icon name="log out" size="large" />
+                            onClick={logout}>
+                        <Icon name="log out" size="large"/>
                     </Button>
                 </Menu.Item>
             </Menu.Menu>
@@ -72,6 +81,21 @@ Header.defaultProps = {
     user: {
         id: '',
         username: "UserName",
-        avatar: "https://img.icons8.com/cotton/64/000000/chat.png"}
+        avatar: "https://img.icons8.com/cotton/64/000000/chat.png"
+    }
 };
-export default Header;
+
+const mapStateToProps = state => ({
+    // user: state.profile.user
+    showMenu: state.app.showMenu
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+    bindActionCreators(
+        {
+            logout: logoutRoutine
+        },
+        dispatch
+    );
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

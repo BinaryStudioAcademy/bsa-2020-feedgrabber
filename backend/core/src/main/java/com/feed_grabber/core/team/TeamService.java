@@ -1,7 +1,6 @@
 package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.company.dto.CompanyDto;
 import com.feed_grabber.core.team.dto.CreateTeamDto;
 import com.feed_grabber.core.team.dto.TeamDto;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,43 +1,52 @@
-interface IQuestionBase {
+export interface IMultiAnswerDetails{
+  answerOptions: string[];
+}
+
+export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
   categoryId: string;
-  type: QuestionTypes;
+  type: QuestionType;
+  details: TDetails;
 }
 
-interface IRadioQuestion extends IQuestionBase {
-  type: "radio";
-  answerOption: string[];
+export interface IRadioQuestion extends IQuestionBase<IMultiAnswerDetails> {
+  type: QuestionType.radio;
 }
 
-interface IScaleQuestion extends IQuestionBase {
-  type: "scale";
-  min: number;
-  minDescription: string;
-  max: number;
-  maxDescription: string;
+export interface IScaleQuestion extends IQuestionBase<{}> {
+  type: QuestionType.scale;
 }
 
-interface ITextQuestion extends IQuestionBase {
-  type: "free_text";
+export interface ITextQuestion extends IQuestionBase<{}>{
+  type: QuestionType.freeText;
 }
 
-interface IDropDownQuestion extends IQuestionBase {
-  type: "drop_down";
-  answerOption: string[];
+export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails>{
+  type: QuestionType.multichoice;
 }
 
-interface ICheckboxQuestion extends IQuestionBase {
-  type: "checkbox";
-  answerOption: string[];
+export interface ICheckboxQuestion extends IQuestionBase<IMultiAnswerDetails>{
+  type: QuestionType.checkbox;
+}
+
+export interface IDateQuestion extends IQuestionBase<{}> {
+  type: QuestionType.date;
 }
 
 export type IQuestion =
-  | IDropDownQuestion
+  | IMultichoiceQuestion
   | ITextQuestion
   | IScaleQuestion
   | IRadioQuestion
-  | ICheckboxQuestion;
+  | ICheckboxQuestion
+  | IDateQuestion;
 
-const types = ["radio", "checkbox", "scale", "free_text", "drop_down"] as const;
-type QuestionTypes = typeof types[number];
+export enum QuestionType {
+  freeText = "free_text",
+  radio = "radio",
+  scale = "scale",
+  checkbox = "checkbox",
+  multichoice = "multichoice",
+  date = "date"
+}

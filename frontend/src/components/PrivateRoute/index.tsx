@@ -1,23 +1,50 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import {Redirect, Route} from 'react-router-dom';
+import {useAuth} from '../../security/authProvider';
+import Header from "../Header";
+import SideMenu from "../SideMenu";
+import './styles.sass';
+import {connect} from "react-redux";
 
-const PrivateRoute = ({ component: Component, roles = null, ...rest }) => (
-  <Route
-    {...rest}
-    render={props => {
-      // get token
-      const token = 'fake';
-      if (!token) {
-        return (
-          <Redirect
-            to={{ pathname: '/login', state: { from: props.location } }}
-          />
-        );
-      }
+const fakeUser = {
+    id: "",
+    username: "user",
+    avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
+};
 
-      return <Component {...props} />;
-    }}
-  />
-);
+const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) => {
+    const isLogged = useAuth();
 
-export default PrivateRoute;
+    return (
+        <Route
+            {...rest}
+            render={props => {
+                if (!isLogged) {
+                    return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
+                }
+
+                return (
+                    <>
+                        <Header user={fakeUser}/>
+                        <div className="view-container">
+                            {showMenu && (
+                                <div className="side-bar">
+                                    <SideMenu/>
+                                </div>
+                            )}
+                            <div className="app-content">
+                                <Component {...props} />
+                            </div>
+                        </div>
+                    </>
+                );
+            }}
+        />
+    );
+};
+
+const mapStateToProps = state => ({
+    showMenu: state.app.showMenu
+});
+
+export default connect(mapStateToProps, null)(PrivateRoute);

@@ -1,6 +1,5 @@
 import React from "react";
 import { Segment, Card, Icon, Image, Header as Title } from "semantic-ui-react";
-import Header, { IUser } from "../Header";
 
 import styles from "./styles.module.sass";
 
@@ -16,13 +15,11 @@ export interface ITeam {
 }
 export interface ITeamsListProps {
   teams: ITeam[];
-  user: IUser;
 }
 
-const TeamsList: React.FunctionComponent<ITeamsListProps> = ({ teams, user }) => {
+const TeamsList: React.FunctionComponent<ITeamsListProps> = ({ teams }) => {
   return (
     <div className={styles.teams_page}>
-      <Header user={user} />
       <Segment style={{width: "70%"}}>
         <Title>
           Teams
@@ -60,7 +57,7 @@ TeamsList.defaultProps = {
       id: '',
       username: 'misa',
       avatar: 'https://i.imgur.com/hIjmHms.jpg'}
-      ]
+    ]
   }]
 };
 
