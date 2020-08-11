@@ -1,3 +1,9 @@
+export interface IUserState {
+    isLoading?: boolean;
+    info?: IUserInfo;
+    error?: IUserErrors;
+}
+
 export interface IUserInfo {
     id: string;
     userName: string;

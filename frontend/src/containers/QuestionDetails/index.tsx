@@ -5,7 +5,7 @@ import {Formik, FormikProps} from "formik";
 import {multichoiceSchema} from "./schemas";
 import * as Yup from 'yup';
 import "./styles.sass";
-import {IQuestion, QuestionType} from "../../models/IQuesion";
+import {IQuestion, QuestionType} from "../../models/forms/Questions/types";
 import {IAppState} from "../../models/IAppState";
 import {loadQuestionsRoutine} from "../../components/QuestionsList/routines";
 import {connect, ConnectedProps} from "react-redux";
@@ -206,8 +206,8 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     }
 }
 const mapState = (state: IAppState) => ({
-    question: state.forms.currentQuestion,
-    isLoading: state.forms.isLoading
+    question: state.questions.current,
+    isLoading: state.questions.isLoading
 });
 
 const mapDispatch = {

@@ -3,35 +3,10 @@ import {
   hideModalQuestionnaireRoutine,
   loadQuestionnairesRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
-} from './routines';
+} from '../../containers/QuestionnaireList/routines';
+import {IAppState} from "../../models/IAppState";
 
-export interface IQuestionnaire {
-  id: string;
-  title: string;
-  companyName: string;
-}
-
-export interface ICreateQuestionnaire {
-  title: string;
-  companyId: string;
-}
-
-export interface IUpdateQuestionnaire {
-  id: string;
-  title: string;
-  companyId: string;
-}
-
-interface IQuestionnairesListState {
-  isLoading?: boolean;
-  items?: IQuestionnaire[];
-  modalShown?: boolean;
-  modalQuestionnaire?: IQuestionnaire;
-  modalLoading?: boolean;
-  modalError?: string;
-}
-
-export default (state: IQuestionnairesListState = {}, action) => {
+const questionnairesReducer = (state: IAppState['questionnaires'] = {}, action) => {
   switch (action.type) {
     case loadQuestionnairesRoutine.TRIGGER:
     case deleteQuestionnaireRoutine.TRIGGER:
@@ -84,3 +59,5 @@ export default (state: IQuestionnairesListState = {}, action) => {
       return state;
   }
 };
+
+export default questionnairesReducer;

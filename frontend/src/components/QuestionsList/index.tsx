@@ -45,8 +45,8 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
 };
 
 const mapState = (state: IAppState) => ({
-    questions: state.forms.questions,
-    isLoading: state.forms.isLoading
+    questions: state.questions.list,
+    isLoading: state.questions.isLoading
 });
 
 const mapDispatch = {

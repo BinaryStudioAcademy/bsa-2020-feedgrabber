@@ -1,3 +1,9 @@
+export interface IQuestionsState {
+    list?: IQuestion[];
+    current?: IQuestion;
+    isLoading?: boolean;
+}
+
 export interface IQuestionBase {
     id?: string;
     text: string;

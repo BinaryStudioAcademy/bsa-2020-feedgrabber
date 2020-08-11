@@ -1,23 +1,10 @@
-import {IUserErrors, IUserInfo} from "./user/types";
-import {IQuestion} from "./IQuesion";
-import {IQuestionnaire} from "./IQuestionnaire";
+import {IUserState} from "./user/types";
+import {IQuestionsState} from "./forms/Questions/types";
+import {IQuestionnairesState} from "./forms/Questionnaires/types";
 
 export interface IAppState {
     toastr: any;
-    user: {
-        isLoading: boolean;
-        info: IUserInfo;
-        error: IUserErrors;
-    };
-    forms: {
-        questions: IQuestion[];
-        questionnaires: IQuestionnaire[];
-        currentQuestionnaire: {
-            questionnaire: IQuestionnaire;
-            questions: IQuestion[];
-        };
-        currentQuestion: IQuestion;
-        isLoading: boolean;
-        error: string;
-    };
+    user: IUserState;
+    questionnaires: IQuestionnairesState;
+    questions: IQuestionsState;
 }

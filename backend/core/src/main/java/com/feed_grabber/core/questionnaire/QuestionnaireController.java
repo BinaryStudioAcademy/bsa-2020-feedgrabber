@@ -56,7 +56,7 @@ public class QuestionnaireController {
     }
 
     @PostMapping
-    public AppResponse<QuestionnaireDto> createcreate(@RequestHeader("authorization") String token,
+    public AppResponse<QuestionnaireDto> create(@RequestHeader("authorization") String token,
                                                       @RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException {
         return new AppResponse<>(
                 questionnaireService.create(createDto, tokenService.extractCompanyId(token)),

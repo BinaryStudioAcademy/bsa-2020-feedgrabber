@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { loadQuestionsRoutine, saveQuestionRoutine } from '../../components/QuestionsList/routines';
 import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
-import { IQuestion } from 'models/IQuesion';
+import { IQuestion } from 'models/forms/Questions/types';
 
 function* getAll(action) {
 

@@ -9,7 +9,7 @@ import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
 import QuestionsList from "../../components/QuestionsList";
 import QuestionDetails from "../QuestionDetails";
-import QuestionnaireList from "../../components/QuestionnaireList";
+import QuestionnaireList from "../QuestionnaireList";
 
 export interface IRoutingProps {
   isLoading: boolean;
