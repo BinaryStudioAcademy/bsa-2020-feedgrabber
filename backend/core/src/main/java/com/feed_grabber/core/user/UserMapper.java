@@ -22,6 +22,8 @@ public interface UserMapper {
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
+    @Mapping(target = "companyId", source = "role.company.id")
+    @Mapping(target = "companyName", source = "role.company.name")
     UserResponseOnlyNameDTO responseFromUser(User user);
 
     @Mapping(target = "userName", source = "username")

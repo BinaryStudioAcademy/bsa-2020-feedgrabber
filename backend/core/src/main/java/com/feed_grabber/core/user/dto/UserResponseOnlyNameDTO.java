@@ -13,4 +13,7 @@ public class UserResponseOnlyNameDTO {
     private UUID id;
     private String email;
     private String username;
+    private UUID companyId;
+    private String companyName;
+
 }
