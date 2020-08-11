@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +20,7 @@ import java.util.UUID;
 @Builder
 @Table(
         name = "questions",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"text", "questionnaire_id", "category_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"text", "category_id"})
 )
 public class Question {
     @Id
@@ -33,9 +35,14 @@ public class Question {
     @Column(name = "text", nullable = false)
     private String text;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "questionnaire_id", nullable = false)
-    private Questionnaire questionnaire;
+    @Builder.Default
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "questionnaire_question",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "questionnaire_id")
+    )
+    private List<Questionnaire> questionnaires = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
