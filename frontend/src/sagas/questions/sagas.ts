@@ -11,7 +11,6 @@ function* getAll() {
     yield put(loadQuestionsRoutine.failure(res.data.error));
     return;
   }
-
   yield put(loadQuestionsRoutine.success(res.data.data));
 }
 

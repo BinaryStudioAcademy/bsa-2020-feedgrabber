@@ -1,10 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import TeamsList from '../../components/TeamsList';
-import { loadTeamsRoutine } from './routines';
 import { ITeam } from 'models/teams/ITeam';
 import {Dimmer, Loader} from "semantic-ui-react";
 import {IAppState} from "../../models/IAppState";
+import {loadTeamsRoutine} from "../../sagas/teams/routines";
 
 const TeamList: FC<ITeamListProps> = ({ teams, loadTeams, isLoading }) => {
   const [teamList, setTeamsList] = useState<ITeam[]>(teams);

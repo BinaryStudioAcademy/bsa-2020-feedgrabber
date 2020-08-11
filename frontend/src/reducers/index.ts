@@ -4,7 +4,7 @@ import authAndProfileReducer from './auth/reducer';
 import questionsReducer from "./questions/reducer";
 import questionnairesReducer from "./questionnaires/reducer";
 import appReducer from "./app/reducer";
-import teamsReducer from "../containers/TeamsPage/reducer";
+import teamsReducer from "./teams/reducer";
 
 export default combineReducers({
   toastr,

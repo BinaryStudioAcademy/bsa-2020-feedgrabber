@@ -19,7 +19,6 @@ function* loadQuestionnairesList() {
         toastr.error(res.data.error);
         return;
     }
-    toastr.success("Loaded questionnaires");
     yield put(loadQuestionnairesRoutine.success(res.data.data));
 }
 
