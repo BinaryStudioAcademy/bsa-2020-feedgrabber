@@ -1,4 +1,4 @@
-import {IQuestion} from "../Questions/types";
+import {IQuestion} from "../Questions/IQuesion";
 
 export interface IQuestionnairesState {
     list?: IQuestionnairesList;
