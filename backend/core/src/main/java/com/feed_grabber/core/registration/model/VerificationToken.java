@@ -1,8 +1,6 @@
 package com.feed_grabber.core.registration.model;
 
 import com.feed_grabber.core.user.model.User;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

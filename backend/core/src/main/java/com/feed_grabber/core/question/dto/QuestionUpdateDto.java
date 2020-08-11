@@ -10,10 +10,10 @@ import java.util.UUID;
 public class QuestionUpdateDto {
     @NotNull
     UUID id;
+
     @NotBlank
     String text;
+
     @NotNull
-    UUID questionnaireId;
-    @NotNull
-    UUID categoryId;
+    String categoryName;
 }

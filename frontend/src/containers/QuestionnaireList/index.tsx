@@ -1,34 +1,18 @@
-import React, {useEffect} from 'react';
+import React, {FC, useEffect} from 'react';
 import styles from './styles.module.sass';
-import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "./reducer";
 import {
   addQuestionnaireRoutine,
   deleteQuestionnaireRoutine,
   hideModalQuestionnaireRoutine,
   loadQuestionnairesRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
-} from "./routines";
-import {connect} from "react-redux";
+} from "../../sagas/qustionnaires/routines";
+import {connect, ConnectedProps} from "react-redux";
 import {Icon} from "semantic-ui-react";
 import QuestionnaireModal from "./questionnaireModal";
+import {IAppState} from "../../models/IAppState";
 
-interface IQuestionnaireListProps {
-  questionnaireList: IQuestionnaire[];
-  modalQuestionnaire?: IQuestionnaire;
-  isLoading: boolean;
-  modalLoading: boolean;
-  modalShown: boolean;
-  modalError: string;
-
-  loadQuestionnaires(): void;
-  deleteQuestionnaire(id: string): void;
-  addQuestionnaire(questionnaire: ICreateQuestionnaire): void;
-  updateQuestionnaire(questionnaire: IUpdateQuestionnaire): void;
-  showModal(questionnaire?: IQuestionnaire): void;
-  hideModal(): void;
-}
-
-const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
+const QuestionnaireList: FC<IQuestionnaireListProps> = (
   {
     questionnaireList,
     modalQuestionnaire,
@@ -45,10 +29,8 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
   }
 ) => {
   useEffect(() => {
-    if (!questionnaireList) {
       loadQuestionnaires();
-    }
-  }, [questionnaireList, loadQuestionnaires]);
+  }, [loadQuestionnaires]);
 
   return (
     <>
@@ -62,9 +44,6 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
         modalError={modalError}
       />
       <h1>Questionnaires</h1>
-      {isLoading
-        ? <div>Loading</div>
-        : (
           <div className={styles.container}>
             <div className={styles.content}>
               {questionnaireList && (
@@ -89,31 +68,30 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
               </div>
             </div>
           </div>
-        )
-      }
     </>
   );
 };
 
-const mapStateToProps = rootState => ({
-  questionnaireList: rootState.questionnaires.items,
-  modalShown: rootState.questionnaires.modalShown,
-  modalQuestionnaire: rootState.questionnaires.modalQuestionnaire,
-  isLoading: rootState.questionnaires.isLoading,
-  modalLoading: rootState.questionnaires.modalLoading,
-  modalError: rootState.questionnaires.modalError
+const mapState = (state: IAppState) => ({
+    questionnaireList: state.questionnaires.list.items,
+    modalShown: state.questionnaires.list.modalShown,
+    modalQuestionnaire: state.questionnaires.list.modalQuestionnaire,
+    isLoading: state.questionnaires.list.isLoading,
+    modalLoading: state.questionnaires.list.modalLoading,
+    modalError: state.questionnaires.list.modalError
 });
 
-const mapDispatchToProps = {
-  loadQuestionnaires: loadQuestionnairesRoutine,
-  deleteQuestionnaire: deleteQuestionnaireRoutine,
-  addQuestionnaire: addQuestionnaireRoutine,
-  updateQuestionnaire: updateQuestionnaireRoutine,
-  showModal: showModalQuestionnaireRoutine,
-  hideModal: hideModalQuestionnaireRoutine
+const mapDispatch = {
+    loadQuestionnaires: loadQuestionnairesRoutine,
+    deleteQuestionnaire: deleteQuestionnaireRoutine,
+    addQuestionnaire: addQuestionnaireRoutine,
+    updateQuestionnaire: updateQuestionnaireRoutine,
+    showModal: showModalQuestionnaireRoutine,
+    hideModal: hideModalQuestionnaireRoutine
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(QuestionnaireList);
+const connector = connect(mapState, mapDispatch);
+
+type IQuestionnaireListProps = ConnectedProps<typeof connector>;
+
+export default connector(QuestionnaireList);

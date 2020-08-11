@@ -39,20 +39,23 @@ const questions: IQuestion[] = [
 ];
 
 interface IQuestionProps {
-  saveQuestion(question: IQuestion): void;
-  match: {
-    params: {
-      id?: string;
+    saveQuestion(question: IQuestion): void;
+
+    match: {
+        params: {
+            id?: string;
+        };
     };
-  };
-  history: History;
+    history: History;
 }
+
 interface IQuestionState {
   initialValues: any;
   validationSchema: any;
   question: IQuestion;
   isQuestionDetailsValid: boolean;
 }
+
 class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   constructor(props: IQuestionProps) {
     super(props);
@@ -76,17 +79,19 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     this.handleQuestionDetailsUpdate = this.handleQuestionDetailsUpdate.bind(this);
   }
 
-  componentDidMount() {
-    const { match } = this.props;
-    this.getQuestion(match.params.id);
-  }
+    // onSubmit = () => {
+    //     if (this.state.question) {
+    //         this.props.saveQuestion(this.state.question);
+    //         this.props.history.push("/questions");
+    //     }
+    // };
 
   getQuestion = async (id: string) => {
-    if (id !== "new") {
-      const question = questions.find(question => question.id === id);
-      const initialValues = { name: question.name, answers: question.details };
-      this.setState({ ...this.state, question, isQuestionDetailsValid: true, initialValues });
-    }
+      if (id !== "new") {
+          const question = questions.find(question => question.id === id);
+          const initialValues = {name: question.name, answers: question.details};
+          this.setState({...this.state, question, isQuestionDetailsValid: true, initialValues});
+      }
   }
 
   onClose = () => {
@@ -98,7 +103,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       this.props.saveQuestion(this.state.question);
       this.props.history.push("/questions");
     }
-  };
+}
 
   readonly questionTypeOptions = [
     {
@@ -230,4 +235,5 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     );
   }
 }
+
 export default QuestionDetails;

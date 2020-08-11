@@ -12,5 +12,8 @@ import java.util.UUID;
 public class UserResponseOnlyNameDTO {
     private UUID id;
     private String email;
-    private String username;
+    private String userName;
+    private UUID companyId;
+    private String companyName;
+
 }
