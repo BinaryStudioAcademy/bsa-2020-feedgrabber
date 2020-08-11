@@ -17,11 +17,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class QuestionnaireResponseService {
-    @Autowired
+
     private QuestionnaireResponseRepository responseRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public QuestionnaireResponseService(QuestionnaireResponseRepository responseRepository,
+                                        UserRepository userRepository) {
+        this.responseRepository = responseRepository;
+        this.userRepository = userRepository;
+    }
 
     public List<QuestionnaireResponseDto> getAll() {
         return responseRepository.findAll().stream()
