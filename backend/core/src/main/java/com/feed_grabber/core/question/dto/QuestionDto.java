@@ -11,4 +11,5 @@ public class QuestionDto {
     UUID id;
     String text;
     String categoryTitle;
+    String questionnaireTitle;
 }
