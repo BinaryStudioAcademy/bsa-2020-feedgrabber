@@ -7,6 +7,8 @@ export interface IUserState {
 export interface IUserInfo {
     id: string;
     userName: string;
+    companyName: string;
+    companyId: string;
     firstName?: string;
     lastName?: string;
     phoneNumber?: string;

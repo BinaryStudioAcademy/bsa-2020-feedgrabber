@@ -1,4 +1,4 @@
-import {loadQuestionsRoutine} from "components/QuestionsList/routines";
+import {loadQuestionsRoutine} from "containers/QuestionsList/routines";
 import {IAppState} from "models/IAppState";
 import {IQuestion} from "models/forms/Questions/types";
 
@@ -9,25 +9,26 @@ const initialState: IAppState['questions'] = {
 };
 
 const questionsReducer = (state: IAppState['questions'] = initialState, {type, payload}) => {
-    if (type === loadQuestionsRoutine.SUCCESS) {
-        return {
-            ...state,
-            questions: payload,
-            isLoading: false
-        };
+    switch (type) {
+        case loadQuestionsRoutine.SUCCESS:
+            return {
+                ...state,
+                list: payload,
+                isLoading: false
+            };
+        case loadQuestionsRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case loadQuestionsRoutine.FAILURE:
+            return {
+                ...state,
+                isLoading: false
+            };
+        default:
+            return state;
     }
-    if (type === loadQuestionsRoutine.TRIGGER) {
-        return {
-            ...state,
-            isLoading: true
-        };
-    }
-    if (type === loadQuestionsRoutine.FAILURE) {
-        return {
-            ...state,
-            isLoading: false
-        };
-    }
-    return state;
 };
+
 export default questionsReducer;

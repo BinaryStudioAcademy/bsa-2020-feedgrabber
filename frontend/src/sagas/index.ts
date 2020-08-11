@@ -8,7 +8,7 @@ export default function* rootSaga() {
   yield all([
     authSaga(),
     userSagas(),
-    questionnaireSagas(),
+    // questionnaireSagas(),
     questionSagas()
   ]);
 }

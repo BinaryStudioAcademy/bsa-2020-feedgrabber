@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import "./styles.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/types";
 import {IAppState} from "../../models/IAppState";
-import {loadQuestionsRoutine} from "../../components/QuestionsList/routines";
+import {loadQuestionsRoutine} from "../QuestionsList/routines";
 import {connect, ConnectedProps} from "react-redux";
 
 const questions: IQuestion[] = [
