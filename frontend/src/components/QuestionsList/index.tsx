@@ -1,25 +1,17 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, {FC,  useEffect} from 'react';
 import { useHistory } from "react-router";
 import { Card, Dimmer, Loader, Button, Segment, Header, Icon} from 'semantic-ui-react';
 import styles from './styles.module.sass';
-import { connect } from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from "../../containers/QuestionsList/routines";
-import {IQuestion} from "../../models/forms/Questions/types";
+import {IAppState} from "../../models/IAppState";
 
-interface IQuestionsListProps {
-    questions: IQuestion[];
-    isLoading: boolean;
-    loadQuestions(): void;
-}
-
-const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLoading, loadQuestions }) => {
+const QuestionsList: FC<IQuestionsListProps> = ({ questions, isLoading, loadQuestions }) => {
     const history = useHistory();
 
     useEffect(() => {
-        if (!questions) {
-            loadQuestions();
-        }
-    }, [questions, loadQuestions]);
+        loadQuestions();
+    }, [loadQuestions]);
 
     const handleClick = (id: string) => {
         history.push(`question/${id}`);
@@ -66,16 +58,17 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLo
     );
 };
 
-const mapStateToProps = rootState => ({
-    questions: rootState.questions.questions,
-    isLoading: rootState.questions.isLoading
+const mapState = (state: IAppState) => ({
+    questions: state.questions.list,
+    isLoading: state.questions.isLoading
 });
 
-const mapDispatchToProps = {
+const mapDispatch = {
     loadQuestions: loadQuestionsRoutine
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(QuestionsList);
+const connector = connect(mapState, mapDispatch);
+
+type IQuestionsListProps = ConnectedProps<typeof connector>;
+
+export default connector(QuestionsList);

@@ -27,6 +27,7 @@ public interface UserMapper {
 
     @Mapping(target = "companyId", source = "role.company.id")
     @Mapping(target = "companyName", source = "role.company.name")
+    @Mapping(target = "userName", source = "username")
     UserResponseOnlyNameDTO responseFromUser(User user);
 
     @Mapping(target = "userName", source = "username")

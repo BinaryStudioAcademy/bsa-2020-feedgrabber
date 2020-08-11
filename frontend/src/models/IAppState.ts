@@ -12,4 +12,5 @@ export interface IAppState {
         showMenu: boolean;
     };
     teams: ITeamsState;
+    isLoading: boolean;
 }

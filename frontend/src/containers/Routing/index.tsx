@@ -11,6 +11,8 @@ import QuestionsList from "../QuestionsList";
 import QuestionDetails from "../QuestionDetails";
 import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
+import {IAppState} from "../../models/IAppState";
+import {connect} from "react-redux";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -44,4 +46,8 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
   </>
 );
 
-export default Routing;
+const mapState = (state: IAppState) => ({
+    isLoading: state.isLoading
+});
+
+export default connect(mapState)(Routing);

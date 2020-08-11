@@ -5,19 +5,17 @@ import styles from "./styles.module.scss";
 import icon from "../../assets/images/icon_bg.jpg";
 import {logoutRoutine} from "../AuthForm/routines";
 import {connect, useDispatch} from "react-redux";
-import {AnyAction, bindActionCreators, Dispatch} from "redux";
-
-export interface IUser {
-    id: string;
-    username: string;
-    avatar: string;
-}
+import {IAppState} from "../../models/IAppState";
+import {IUserInfo} from "../../models/user/types";
 
 export interface IHeaderProps {
-    user: IUser;
+    user: IUserInfo;
     logout: () => void;
     showMenu: boolean;
 }
+
+const defaultAvatar =
+    "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
 const Header: FC<IHeaderProps> = ({user, logout, showMenu}) => {
     const history = useHistory();
@@ -45,19 +43,13 @@ const Header: FC<IHeaderProps> = ({user, logout, showMenu}) => {
                         icon={null}
                         pointing='top right'
                         trigger={<Image avatar
-                                        src={user.avatar}
+                                        src={user.avatar ?? defaultAvatar}
                                         className={styles.headerUserDropDown}/>}
                         size="medium">
                         <Dropdown.Menu>
-                            <Dropdown.Header>{user.username}</Dropdown.Header>
+                            <Dropdown.Header>{user.userName}</Dropdown.Header>
                             <Dropdown.Item onClick={() => history.push('/profile')}>
                                 Your Profile
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => history.push('/questions')}>
-                                All Questions
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => history.push('/questionnaires')}>
-                                All Questionnaires
                             </Dropdown.Item>
                             <Dropdown.Item onClick={() => history.push('/requests')}>
                                 Your Requests
@@ -83,30 +75,13 @@ const Header: FC<IHeaderProps> = ({user, logout, showMenu}) => {
     );
 };
 
-// <<<<<<< HEAD
-// // const mapStateToProps = state => ({
-// //     user: state.profile.user
-// // });
-// =======
-Header.defaultProps = {
-    user: {
-        id: '',
-        username: "UserName",
-        avatar: "https://img.icons8.com/cotton/64/000000/chat.png"
-    }
-};
-
-const mapStateToProps = state => ({
-    // user: state.profile.user
+const mapStateToProps = (state: IAppState) => ({
+    user: state.user.info,
     showMenu: state.app.showMenu
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-    bindActionCreators(
-        {
-            logout: logoutRoutine
-        },
-        dispatch
-    );
+const mapDispatchToProps = {
+    logout: logoutRoutine
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
