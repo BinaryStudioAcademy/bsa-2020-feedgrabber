@@ -21,3 +21,9 @@ export interface IUserErrors {
     getUser: string;
 }
 
+export interface IUserShort {
+    id: string;
+    avatar: string;
+    username: string;
+}
+

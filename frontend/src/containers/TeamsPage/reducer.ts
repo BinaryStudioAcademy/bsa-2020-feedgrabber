@@ -1,6 +1,6 @@
 import { loadTeamsRoutine } from './routines';
 import { Routine } from 'redux-saga-routines';
-import { ITeam } from 'models/ITeam';
+import { ITeam } from 'models/teams/ITeam';
 
 export interface ITeamsState {
   teams: ITeam[];

@@ -1,17 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import { connect } from 'react-redux';
+import React, {FC, useEffect, useState} from 'react';
+import {connect, ConnectedProps} from 'react-redux';
 import TeamsList from '../../components/TeamsList';
 import { loadTeamsRoutine } from './routines';
-import { ITeam } from 'models/ITeam';
+import { ITeam } from 'models/teams/ITeam';
 import {Dimmer, Loader} from "semantic-ui-react";
+import {IAppState} from "../../models/IAppState";
 
-interface ITeamListProps {
-  teams: ITeam[];
-  loadTeams(): void;
-  isLoading: boolean;
-}
-
-const TeamList: React.FC<ITeamListProps> = ({ teams, loadTeams, isLoading }) => {
+const TeamList: FC<ITeamListProps> = ({ teams, loadTeams, isLoading }) => {
   const [teamList, setTeamsList] = useState<ITeam[]>(teams);
 
   useEffect(() => {
@@ -31,18 +26,19 @@ const TeamList: React.FC<ITeamListProps> = ({ teams, loadTeams, isLoading }) => 
   );
 };
 
-const mapStateToProps = rootState => {
+const mapState = (state: IAppState) => {
   return {
-    teams: rootState.teams.teams,
-    isLoading: rootState.teams.isLoading
+    teams: state.teams.teams,
+    isLoading: state.teams.isLoading
   };
 };
 
-const mapDispatchToProps = {
+const mapDispatch = {
   loadTeams: loadTeamsRoutine
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TeamList);
+const connector = connect(mapState, mapDispatch);
+
+type ITeamListProps = ConnectedProps<typeof connector>;
+
+export default connector(TeamList);
