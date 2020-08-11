@@ -3,6 +3,7 @@ package com.feed_grabber.core.user;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
+import com.feed_grabber.core.user.dto.UserResponseDto;
 import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;
 import com.feed_grabber.core.user.model.User;
 import org.mapstruct.Mapper;
@@ -22,6 +23,8 @@ public interface UserMapper {
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
+    UserResponseDto userToUserResponseDto(User user);
+
     @Mapping(target = "companyId", source = "role.company.id")
     @Mapping(target = "companyName", source = "role.company.name")
     UserResponseOnlyNameDTO responseFromUser(User user);
@@ -31,4 +34,5 @@ public interface UserMapper {
     @Mapping(target = "lastName", source = "userProfile.lastName")
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
     UserDetailsResponseDTO detailedFromUser(User user);
+
 }

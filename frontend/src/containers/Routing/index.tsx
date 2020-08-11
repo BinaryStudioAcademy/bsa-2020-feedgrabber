@@ -9,6 +9,7 @@ import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
 import QuestionsList from "../QuestionsList";
 import QuestionDetails from "../QuestionDetails";
+import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
 
 export interface IRoutingProps {
@@ -30,7 +31,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>} />
           <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
-          <PrivateRoute exact path="/teams" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />

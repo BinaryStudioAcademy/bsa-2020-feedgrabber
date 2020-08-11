@@ -1,6 +1,6 @@
 html, body
   height: 100%
-  background-image: url('../../assets/images/bg-pattern.jpg')
+  //background-image: url('../../assets/images/bg-pattern.jpg')
 
 .question_container
     display: flex
@@ -24,7 +24,7 @@ html, body
     align-items: center
 
 .question_form-answers
-    min-height: 200px
+    backdrop-filter: blur(10px)
 
 .question_actions
     width: 100%
@@ -35,3 +35,9 @@ html, body
     
     & Button
         width: 200px
+
+.question_default
+    vertical-align: top;
+    font-size: 1.5rem
+    letter-spacing: 3px
+    line-height: 2.3rem

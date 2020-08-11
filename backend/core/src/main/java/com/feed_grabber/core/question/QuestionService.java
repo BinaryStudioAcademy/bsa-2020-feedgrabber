@@ -45,7 +45,7 @@ public class QuestionService {
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
-        return quesRep.findByQuestionnaires_Id(questionnaireId)
+        return quesRep.findAllByQuestionnaireId(questionnaireId)
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
@@ -89,6 +89,14 @@ public class QuestionService {
         question.setText(dto.getText());
 
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
+        // question.setText(updateDto.getText());
+        // question = questionRepository.save(question);
+
+        // if (!question.getQuestionnaires().contains(questionnaire)) {
+        //     question.getQuestionnaires().add(questionnaire);
+        // }
+
+        // return QuestionMapper.MAPPER.questionToQuestionDto(question, questionnaire);
     }
 
     public void delete(UUID id) {
