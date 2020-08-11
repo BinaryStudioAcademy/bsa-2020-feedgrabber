@@ -7,7 +7,7 @@ import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
-import QuestionsList from "../../components/QuestionsList";
+import QuestionsList from "../QuestionsList";
 import QuestionDetails from "../QuestionDetails";
 import QuestionnaireList from "../QuestionnaireList";
 

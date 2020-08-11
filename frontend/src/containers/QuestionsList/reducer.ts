@@ -1,11 +1,5 @@
 import { loadQuestionsRoutine } from './routines';
-
-export interface IQuestion {
-    id: string;
-    category?: string;
-    type: 'checkboxes' | 'drop_down' | 'scale' | 'multichoice' | 'free text' | 'radiobutton'; 
-    text: string;
-}
+import {IQuestion} from "../../models/forms/Questions/types";
 
 export interface IQuestionsListState {
   questions: IQuestion[];
