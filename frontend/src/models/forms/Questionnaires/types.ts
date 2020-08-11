@@ -3,10 +3,9 @@ import {IQuestion} from "../Questions/types";
 export interface IQuestionnairesState {
     list?: IQuestionnairesList;
     current?: {
-        get: IQuestionnaire;
-        questions: IQuestion[];
+        get?: IQuestionnaire;
+        questions?: IQuestion[];
     };
-    isLoading?: boolean;
 }
 
 export interface IQuestionnaire {
