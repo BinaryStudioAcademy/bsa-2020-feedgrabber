@@ -39,7 +39,7 @@ public class User {
 
     @Column(name = "password")
     private String password;
-  
+
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
@@ -70,5 +70,5 @@ public class User {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id")
     private Company company;
-    
+
 }

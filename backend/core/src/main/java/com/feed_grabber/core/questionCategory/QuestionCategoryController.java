@@ -1,10 +1,10 @@
 package com.feed_grabber.core.questionCategory;
 
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryCreateDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryUpdateDto;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryExistsException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +51,12 @@ public class QuestionCategoryController {
 
     @PutMapping
     public QuestionCategoryDto update(@RequestBody @Valid QuestionCategoryUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionCategoryExistsException, QuestionCategoryNotFoundException {
+            throws  QuestionCategoryExistsException, QuestionCategoryNotFoundException {
         return questionCategoryService.update(updateDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) throws QuestionCategoryNotFoundException {
+    public void delete(@PathVariable UUID id) {
         questionCategoryService.delete(id);
     }
 }

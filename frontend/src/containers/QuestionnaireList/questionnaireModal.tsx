@@ -1,9 +1,9 @@
-import React from 'react';
-import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "./reducer";
+import React, {FC} from 'react';
 import {Button, Form, Modal, ModalContent, ModalHeader} from "semantic-ui-react";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import styles from './styles.module.sass';
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;
@@ -11,9 +11,9 @@ interface IQuestionnaireModalProps {
   modalError: string;
   isLoading: boolean;
 
-  addQuestionnaire(questionnaire: ICreateQuestionnaire): void;
+  addQuestionnaire(questionnaire: IQuestionnaire): void;
 
-  updateQuestionnaire(questionnaire: IUpdateQuestionnaire): void;
+  updateQuestionnaire(questionnaire: IQuestionnaire): void;
 
   hideModal(): void;
 }
@@ -24,7 +24,7 @@ const validationSchema = yup.object().shape({
     .required()
 });
 
-const QuestionnaireModal: React.FC<IQuestionnaireModalProps> = (
+const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
   {
     modalQuestionnaire,
     modalShown,
@@ -40,12 +40,12 @@ const QuestionnaireModal: React.FC<IQuestionnaireModalProps> = (
     modalQuestionnaire
       ? updateQuestionnaire({
         id: modalQuestionnaire.id,
-        title: values.title,
-        companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
+        title: values.title
+        // companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
       })
       : addQuestionnaire({
-        title: values.title,
-        companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
+        title: values.title
+        // companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
       });
   };
 

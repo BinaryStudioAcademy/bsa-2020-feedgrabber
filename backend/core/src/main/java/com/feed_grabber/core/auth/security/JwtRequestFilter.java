@@ -3,9 +3,7 @@ package com.feed_grabber.core.auth.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 import static com.feed_grabber.core.auth.security.SecurityConstants.*;
 
@@ -38,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String header = request.getHeader(AUTH_HEADER_STRING);
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(header);
+        var authentication = getAuthentication(header);
 
         var sec = SecurityContextHolder.getContext();
         sec.setAuthentication(authentication);

@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import javax.persistence.ManyToMany;
+
 @Mapper
 public interface QuestionCategoryMapper {
     QuestionCategoryMapper MAPPER = Mappers.getMapper(QuestionCategoryMapper.class);
@@ -18,5 +20,6 @@ public interface QuestionCategoryMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "company", target = "company")
     @Mapping(source = "createDto.title", target = "title")
+    @Mapping(target = "questions", ignore = true)
     QuestionCategory questionCategoryCreateDtoToModel(QuestionCategoryCreateDto createDto, Company company);
 }

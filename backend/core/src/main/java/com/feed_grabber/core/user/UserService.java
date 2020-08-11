@@ -1,17 +1,17 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
-import com.feed_grabber.core.company.Company;
-import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
+import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;
-import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -120,7 +120,7 @@ public class UserService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
-    public Optional<UserDetailsResponseDTO> getUserDetails(UUID id){
+    public Optional<UserDetailsResponseDTO> getUserDetails(UUID id) {
         return userRepository.findById(id).map(UserMapper.MAPPER::detailedFromUser);
     }
 
