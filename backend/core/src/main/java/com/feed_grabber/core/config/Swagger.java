@@ -19,7 +19,20 @@ public class Swagger {
     public Docket swaggerConfig() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.feed_grabber.core"))
-                .build();
+                .apis(RequestHandlerSelectors.basePackage("com.feed_grabber"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiDetails());
+    }
+
+    private ApiInfo apiDetails() {
+        return new ApiInfo("Feedgrabber",
+                "HR's personal assistant in gathering, managing and visualizing feedback",
+                "1.0",
+                "Free to use",
+                new Contact("BSA", "study.binary-studio.com", ""),
+                "",
+                "",
+                Collections.emptyList());
     }
 }
