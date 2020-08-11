@@ -6,7 +6,7 @@ import {
     hideModalQuestionnaireRoutine,
     loadQuestionnairesRoutine,
     updateQuestionnaireRoutine
-} from '../../containers/QuestionnaireList/routines';
+} from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
@@ -24,6 +24,7 @@ function* loadQuestionnairesList() {
 }
 
 function* addQuestionnaire(action) {
+    console.log(action);
     const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `api/questionnaires`, action.payload);
     if (res.data.error) {
         yield put(addQuestionnaireRoutine.failure());

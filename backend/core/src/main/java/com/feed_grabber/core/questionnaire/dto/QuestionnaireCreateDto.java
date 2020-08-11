@@ -1,11 +1,9 @@
 package com.feed_grabber.core.questionnaire.dto;
 
-import lombok.Value;
+import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 
-@Value
+@Data
 public class QuestionnaireCreateDto {
-    @NotBlank
-    String title;
+    private String title;
 }

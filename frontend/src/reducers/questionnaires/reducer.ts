@@ -5,7 +5,7 @@ import {
     loadQuestionnairesRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine
-} from '../../containers/QuestionnaireList/routines';
+} from '../../sagas/qustionnaires/routines';
 import {IAppState} from "../../models/IAppState";
 import {combineReducers} from "redux";
 

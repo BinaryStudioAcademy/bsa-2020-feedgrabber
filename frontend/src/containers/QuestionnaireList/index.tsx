@@ -6,7 +6,7 @@ import {
   hideModalQuestionnaireRoutine,
   loadQuestionnairesRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
-} from "./routines";
+} from "../../sagas/qustionnaires/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {Icon} from "semantic-ui-react";
 import QuestionnaireModal from "./questionnaireModal";
