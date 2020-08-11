@@ -1,4 +1,4 @@
-import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "../../components/AuthForm/routines";
+import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
 import {IUserErrors, IUserInfo} from "../../models/user/types";
 

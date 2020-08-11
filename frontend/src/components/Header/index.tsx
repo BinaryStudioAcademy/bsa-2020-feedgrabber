@@ -3,7 +3,7 @@ import {Menu, Icon, Image, Header as HeaderUI, Button, Dropdown} from "semantic-
 import {useHistory} from "react-router-dom";
 import styles from "./styles.module.scss";
 import icon from "../../assets/images/icon_bg.jpg";
-import {logoutRoutine} from "../AuthForm/routines";
+import {logoutRoutine} from "../../sagas/auth/routines";
 import {connect, useDispatch} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import {IUserInfo} from "../../models/user/types";
