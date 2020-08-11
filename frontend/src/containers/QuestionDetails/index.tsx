@@ -8,6 +8,7 @@ import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSe
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
+import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import { nameSchema } from "./schemas";
 
@@ -34,7 +35,12 @@ const questions: IQuestion[] = [
     categoryId: "Leadership",
     name: "Are you able to delegate responsibilities efficiently?",
     type: QuestionType.scale,
-    details: {}
+    details: {
+      min: 0,
+      max: 10,
+      minDescription: "",
+      maxDescription: ""
+    }
   }
 ];
 
@@ -157,7 +163,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           />
         );
       case QuestionType.scale:
-        return <FreeTextQuestionUI />;
+        return (
+          <ScaleQuestion 
+                  onValueChange={this.handleQuestionDetailsUpdate}
+                  value={question.details}
+                />
+        );
       case QuestionType.freeText:
         return <InputField />;
       case QuestionType.date:
