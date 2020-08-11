@@ -2,6 +2,7 @@ package com.feed_grabber.core.questionnaire;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
@@ -57,7 +58,7 @@ public class QuestionnaireController {
 
     @PostMapping
     public AppResponse<QuestionnaireDto> create(@RequestHeader("authorization") String token,
-                                                      @RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException {
+                                                      @RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
                 questionnaireService.create(createDto, tokenService.extractCompanyId(token)),
                 HttpStatus.OK

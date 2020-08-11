@@ -28,6 +28,7 @@ function* addQuestionnaire(action) {
     if (res.data.error) {
         yield put(addQuestionnaireRoutine.failure());
         toastr.error(res.data.error);
+        yield put(hideModalQuestionnaireRoutine.trigger());
         return;
     }
     yield put(hideModalQuestionnaireRoutine.trigger());
