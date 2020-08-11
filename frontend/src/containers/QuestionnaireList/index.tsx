@@ -44,9 +44,6 @@ const QuestionnaireList: FC<IQuestionnaireListProps> = (
         modalError={modalError}
       />
       <h1>Questionnaires</h1>
-      {isLoading
-        ? <div>Loading</div>
-        : (
           <div className={styles.container}>
             <div className={styles.content}>
               {questionnaireList && (
@@ -71,8 +68,6 @@ const QuestionnaireList: FC<IQuestionnaireListProps> = (
               </div>
             </div>
           </div>
-        )
-      }
     </>
   );
 };
