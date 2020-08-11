@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface QuestionnaireResponseRepository extends JpaRepository<QuestionnaireResponse, UUID> {
-    List<QuestionnaireResponse> findAllByRequestId(UUID requestId);
+    List<QuestionnaireResponse> findAllByRequest(UUID requestId);
 
     List<QuestionnaireResponse> findAllByRespondentId(UUID respondentId);
 

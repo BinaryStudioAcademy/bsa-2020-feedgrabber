@@ -1,7 +1,7 @@
 
 create table response (
     id uuid primary key,
-    request uuid,
+    request_id uuid,
     respondent_id uuid not null
 );
 
