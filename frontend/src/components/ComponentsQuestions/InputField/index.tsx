@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
-import "./style.modules.scss";
+import "./style.scss";
 
 const InputField: React.FunctionComponent = () => {
   return (
