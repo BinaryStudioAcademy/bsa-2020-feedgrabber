@@ -66,15 +66,17 @@ const GenericPagination: FC<IGenericPaginationProps> = (
       <div className={styles.paginationButtonsWrapper}>
         {buttons.map(b => <PaginationButton key={b.text} text={b.text} callback={b.callback}/>)}
       </div>
-      <div className={styles.paginationMetaWrapper}>
-        {pagination && <div>Total: {pagination.total}</div>}
-        <div>
-          <select onChange={e => handleChangeAmountPerPage(e.target.value)}>
-            {sizeOptions.map(o => <option key={o} selected={o === defaultSize}>{o}</option>)}
-          </select>
-          &nbsp;items per page
+      {pagination?.total > 0 && (
+        <div className={styles.paginationMetaWrapper}>
+          <div>Total: {pagination.total}</div>
+          <div>
+            <select onChange={e => handleChangeAmountPerPage(e.target.value)}>
+              {sizeOptions.map(o => <option key={o} selected={o === defaultSize}>{o}</option>)}
+            </select>
+            &nbsp;items per page
+          </div>
         </div>
-      </div>
+      )}
       <LoaderWrapper loading={isLoading}>
         <div>
           <div className={styles.listWrapper}>
@@ -84,24 +86,26 @@ const GenericPagination: FC<IGenericPaginationProps> = (
           </div>
         </div>
       </LoaderWrapper>
-      <div className={styles.paginationPagesWrapper}>
-        <ReactPaginate
-          forcePage={pagination?.page}
-          onPageChange={o => handleChangePage(o.selected)}
-          pageCount={getPageCount()}
-          pageRangeDisplayed={2}
-          marginPagesDisplayed={1}
-          previousLabel="<"
-          nextLabel=">"
-          containerClassName={styles.paginationPagesContainer}
-          breakLinkClassName={styles.pageLink}
-          pageLinkClassName={styles.pageLink}
-          previousLinkClassName={styles.pageLink}
-          nextLinkClassName={styles.pageLink}
-          activeClassName={styles.pageActive}
-          disabledClassName={styles.pageDisabled}
-        />
-      </div>
+      {pagination?.total > 0 && (
+        <div className={styles.paginationPagesWrapper}>
+          <ReactPaginate
+            forcePage={pagination?.page}
+            onPageChange={o => handleChangePage(o.selected)}
+            pageCount={getPageCount()}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            previousLabel="<"
+            nextLabel=">"
+            containerClassName={styles.paginationPagesContainer}
+            breakLinkClassName={styles.pageLink}
+            pageLinkClassName={styles.pageLink}
+            previousLinkClassName={styles.pageLink}
+            nextLinkClassName={styles.pageLink}
+            activeClassName={styles.pageActive}
+            disabledClassName={styles.pageDisabled}
+          />
+        </div>
+      )}
     </div>
   );
 };
