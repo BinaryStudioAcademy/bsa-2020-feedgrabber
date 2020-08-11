@@ -1,5 +1,5 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {loginRoutine, logoutRoutine, registerRoutine} from '../../components/AuthForm/routines';
+import {loginRoutine, logoutRoutine, registerRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import {history} from "../../helpers/history.helper";
 import {deleteTokens, saveTokens} from '../../security/authProvider';

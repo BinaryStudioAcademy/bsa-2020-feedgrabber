@@ -16,6 +16,8 @@ public interface TeamMapper {
     @Mapping(target = "users", ignore = true)
     Team teamDtoToModel(CreateTeamDto teamDto);
 
+    //TODO Unmapped target property: "companyDto"
+
     @Mapping(source = "users", target = "members")
     TeamDto teamToTeamDto(Team team);
 }

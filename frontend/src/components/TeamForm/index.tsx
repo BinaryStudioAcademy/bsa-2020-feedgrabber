@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {Formik} from 'formik';
 import {Button, Form, Segment} from 'semantic-ui-react';
 import * as yup from 'yup';
@@ -15,7 +15,7 @@ const schema = yup.object().shape({
         .min(1)
 });
 
-const TeamForm: React.FC = () => {
+const TeamForm: FC = () => {
     //  TODO pass users to UserSelection from store
     return (
         <Formik

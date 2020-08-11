@@ -5,12 +5,9 @@ import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.web.bind.annotation.*;
-import com.feed_grabber.core.exceptions.NotFoundException;
-
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController

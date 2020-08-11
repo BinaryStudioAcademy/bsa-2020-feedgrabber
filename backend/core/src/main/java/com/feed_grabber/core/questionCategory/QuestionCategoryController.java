@@ -1,9 +1,9 @@
 package com.feed_grabber.core.questionCategory;
 
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryCreateDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryUpdateDto;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryExistsException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import io.swagger.annotations.ApiOperation;
@@ -57,13 +57,13 @@ public class QuestionCategoryController {
     @PutMapping
     public QuestionCategoryDto update(@ApiParam("Provide an category object with id, title " +
             "and companyID to create new category") @RequestBody @Valid QuestionCategoryUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionCategoryExistsException, QuestionCategoryNotFoundException {
+            throws  QuestionCategoryExistsException, QuestionCategoryNotFoundException {
         return questionCategoryService.update(updateDto);
     }
 
     @ApiOperation(value = "Delete the category by id")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) throws QuestionCategoryNotFoundException {
+    public void delete(@PathVariable UUID id) {
         questionCategoryService.delete(id);
     }
 }

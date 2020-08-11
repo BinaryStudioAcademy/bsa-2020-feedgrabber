@@ -1,9 +1,11 @@
 package com.feed_grabber.core.questionnaire;
 
+import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
@@ -21,10 +23,12 @@ import java.util.UUID;
 public class QuestionnaireController {
 
     private final QuestionnaireService questionnaireService;
+    private final TokenService tokenService;
 
     @Autowired
-    public QuestionnaireController(QuestionnaireService questionnaireService) {
+    public QuestionnaireController(QuestionnaireService questionnaireService, TokenService tokenService) {
         this.questionnaireService = questionnaireService;
+        this.tokenService = tokenService;
     }
 
     @ApiOperation("Get all questionnaires")
@@ -57,18 +61,17 @@ public class QuestionnaireController {
 
     @ApiOperation("Create a questionnaire")
     @PostMapping
-    public AppResponse<QuestionnaireDto> create(@RequestBody @Valid QuestionnaireCreateDto createDto)
-            throws CompanyNotFoundException, QuestionnaireExistsException {
+    public AppResponse<QuestionnaireDto> create(@RequestHeader("authorization") String token,
+                                                      @RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
-                questionnaireService.create(createDto),
+                questionnaireService.create(createDto, tokenService.extractCompanyId(token)),
                 HttpStatus.OK
         );
     }
 
     @ApiOperation("Update the questionnaire")
     @PutMapping
-    public AppResponse<QuestionnaireDto> update(@RequestBody @Valid QuestionnaireUpdateDto updateDto)
-            throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
+    public AppResponse<QuestionnaireDto> update(@RequestBody QuestionnaireUpdateDto updateDto) throws QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.update(updateDto),
                 HttpStatus.OK
@@ -77,7 +80,7 @@ public class QuestionnaireController {
 
     @ApiOperation("Delete one")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) throws QuestionnaireNotFoundException {
+    public void delete(@PathVariable UUID id) {
         questionnaireService.delete(id);
     }
 }
