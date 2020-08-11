@@ -2,6 +2,7 @@ package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.team.dto.TeamDto;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ public class TeamController {
     @Autowired
     TeamService service;
 
+    @ApiOperation("Get all teams")
     @GetMapping("/teams")
     public AppResponse<List<TeamDto>> getAll() {
         var teams = service.getAll();
