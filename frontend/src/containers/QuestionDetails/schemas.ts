@@ -1,5 +1,9 @@
 import * as Yup from 'yup';
 
+export const nameSchema = Yup.object().shape({
+  name: Yup.string().required('Question should have name')
+});
+
 export const multichoiceSchema = Yup.object().shape({
   name: Yup.string().required('required'),
   answers: Yup.array()
@@ -19,7 +23,6 @@ export const radioSchema = Yup.object().shape({
       .required(`Answer can't be empty`)
       .max(200, 'Answer must be shorter then 200 symbols')
     )
-    .min(3, 'A multiple choice question must contain at least 3 answer choices')
 });
 
 export const checkboxSchema = Yup.object().shape({
@@ -30,9 +33,4 @@ export const checkboxSchema = Yup.object().shape({
       .required(`Answer can't be empty`)
       .max(200, 'Answer must be shorter then 200 symbols')
     )
-    .min(3, 'A multiple choice question must contain at least 3 answer choices')
-});
-
-export const scaleSchema = Yup.object().shape({
-  name: Yup.string().required('required')
 });
