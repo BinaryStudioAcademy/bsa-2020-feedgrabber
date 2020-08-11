@@ -1,35 +1,37 @@
-export interface IQuestionBase {
+export interface IMultiAnswerDetails{
+  answerOptions: string[];
+}
+
+export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
   categoryId: string;
   type: QuestionType;
+  details: TDetails;
 }
 
-export interface IRadioQuestion extends IQuestionBase {
+export interface IRadioQuestion extends IQuestionBase<IMultiAnswerDetails> {
   type: QuestionType.radio;
-  answerOptions: string[];
 }
 
-export interface IScaleQuestion extends IQuestionBase {
+export interface IScaleQuestion extends IQuestionBase<{}> {
   type: QuestionType.scale;
-  min: number;
-  minDescription: string;
-  max: number;
-  maxDescription: string;
 }
 
-export interface ITextQuestion extends IQuestionBase {
+export interface ITextQuestion extends IQuestionBase<{}>{
   type: QuestionType.freeText;
 }
 
-export interface IMultichoiceQuestion extends IQuestionBase {
+export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails>{
   type: QuestionType.multichoice;
-  answerOptions: string[];
 }
 
-export interface ICheckboxQuestion extends IQuestionBase {
+export interface ICheckboxQuestion extends IQuestionBase<IMultiAnswerDetails>{
   type: QuestionType.checkbox;
-  answerOptions: string[];
+}
+
+export interface IDateQuestion extends IQuestionBase<{}> {
+  type: QuestionType.date;
 }
 
 export type IQuestion =
@@ -37,12 +39,14 @@ export type IQuestion =
   | ITextQuestion
   | IScaleQuestion
   | IRadioQuestion
-  | ICheckboxQuestion;
+  | ICheckboxQuestion
+  | IDateQuestion;
 
 export enum QuestionType {
   freeText = "free_text",
   radio = "radio",
   scale = "scale",
   checkbox = "checkbox",
-  multichoice = "multichoice"
+  multichoice = "multichoice",
+  date = "date"
 }
