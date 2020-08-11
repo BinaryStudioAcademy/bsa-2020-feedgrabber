@@ -29,6 +29,7 @@ public abstract class QuestionMapper {
     @Mapping(source = "category", target = "category")
     @Mapping(source = "createDto.text", target = "text")
     @Mapping(target = "questionnaires", ignore = true)
+    @Mapping(target = "company", source="questionnaire.company")
     public abstract Question questionCreateDtoToModel(QuestionCreateDto createDto, Questionnaire questionnaire, QuestionCategory category);
 
     @AfterMapping

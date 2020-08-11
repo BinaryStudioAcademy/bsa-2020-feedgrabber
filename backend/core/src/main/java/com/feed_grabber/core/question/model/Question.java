@@ -1,5 +1,7 @@
 package com.feed_grabber.core.question.model;
 
+import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import lombok.AllArgsConstructor;
@@ -9,7 +11,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,10 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(
-        name = "questions",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"text", "category_id"})
-)
+@Table(name = "questions")
 public class Question {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -32,19 +30,22 @@ public class Question {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "text", nullable = false, unique = true)
     private String text;
 
-    @Builder.Default
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "questionnaire_question",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "questionnaire_id")
-    )
-    private List<Questionnaire> questionnaires = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private QuestionType type;
+
+    @Column
+    private String payload;
+
+    @ManyToMany(mappedBy = "questions")
+    private List<Questionnaire> questionnaires;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
     private QuestionCategory category;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 }

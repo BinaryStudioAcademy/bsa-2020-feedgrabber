@@ -10,6 +10,6 @@ import java.util.UUID;
 public class QuestionDto {
     UUID id;
     String text;
-    String questionnaireTitle;
     String categoryTitle;
+    String questionnaireTitle;
 }

@@ -6,8 +6,7 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../../models/IAppState";
-import {getUserRoutine} from "../../AuthForm/routines";
-import LoaderWrapper from "../../LoaderWrapper";
+import {getUserRoutine} from "../../../sagas/auth/routines";
 
 const validationSchema = yup.object().shape({
     userName: yup

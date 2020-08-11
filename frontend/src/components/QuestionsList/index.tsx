@@ -1,26 +1,18 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, {FC,  useEffect} from 'react';
 import { useHistory } from "react-router";
 import { Card, Dimmer, Loader, Button, Segment, Header, Icon} from 'semantic-ui-react';
 import styles from './styles.module.sass';
-import { connect } from "react-redux";
-import { IQuestion } from './reducer';
-import { loadQuestionsRoutine } from './routines';
+import {connect, ConnectedProps} from "react-redux";
+import {loadQuestionsRoutine} from "../../containers/QuestionsList/routines";
+import {IAppState} from "../../models/IAppState";
 
-interface IQuestionsListProps {
-    questions: IQuestion[];
-    isLoading: boolean;
-    loadQuestions(): void;
-}
-
-const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLoading, loadQuestions }) => {
+const QuestionsList: FC<IQuestionsListProps> = ({ questions, isLoading, loadQuestions }) => {
     const history = useHistory();
 
     useEffect(() => {
-        if (!questions) {
-            loadQuestions();
-        }
-    }, [questions, loadQuestions]);
-    
+        loadQuestions();
+    }, [loadQuestions]);
+
     const handleClick = (id: string) => {
         history.push(`question/${id}`);
     };
@@ -40,14 +32,14 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLo
                                     link centered fluid
                                     onClick ={() => handleClick(question.id)}>
                                 <Card.Content className={styles.content}>
-                                    <Card.Meta>{question.category}</Card.Meta>
+                                    <Card.Meta>{question.categoryTitle}</Card.Meta>
                                     <Card.Description>{question.text}</Card.Description>
                                     <Card.Meta className={styles.right}><span>{question.type}</span></Card.Meta>
                                 </Card.Content>
                         </Card>
                     </div>
                   );
-              })) : 
+              })) :
                 <div className={styles.emptyList}>
                 <Segment placeholder>
                     <Header icon><Icon name='question' />
@@ -66,16 +58,17 @@ const QuestionsList: FunctionComponent<IQuestionsListProps> = ({ questions, isLo
     );
 };
 
-const mapStateToProps = rootState => ({
-    questions: rootState.questions.questions,
-    isLoading: rootState.questions.isLoading
+const mapState = (state: IAppState) => ({
+    questions: state.questions.list,
+    isLoading: state.questions.isLoading
 });
 
-const mapDispatchToProps = {
+const mapDispatch = {
     loadQuestions: loadQuestionsRoutine
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(QuestionsList);
+const connector = connect(mapState, mapDispatch);
+
+type IQuestionsListProps = ConnectedProps<typeof connector>;
+
+export default connector(QuestionsList);
