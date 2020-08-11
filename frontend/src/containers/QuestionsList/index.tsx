@@ -30,7 +30,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
                             <div key={question.id} className={styles.questionContainer}>
                                 <Card className={styles.question}
                                       link centered fluid
-                                      description={question.text}
+                                      description={question.name}
                                       meta={question.categoryTitle}
                                       onClick={() => handleClick(question.id)}/>
                             </div>

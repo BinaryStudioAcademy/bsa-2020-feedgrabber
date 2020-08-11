@@ -5,7 +5,7 @@ export interface IMultiAnswerDetails{
 export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
-  categoryId: string;
+  categoryTitle: string;
   type: QuestionType;
   details: TDetails;
 }
@@ -47,6 +47,6 @@ export enum QuestionType {
   radio = "radio",
   scale = "scale",
   checkbox = "checkbox",
-  multichoice = "multichoice",
+  multichoice = "multi_choice",
   date = "date"
 }
