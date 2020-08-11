@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import TeamsList from '../../components/TeamsList';
-import { loadTeamsRoutine } from './routines';
+import { loadTeamsRoutine } from '../../sagas/teams/routines';
 import { ITeam } from 'models/ITeam';
 import {Dimmer, Loader} from "semantic-ui-react";
 

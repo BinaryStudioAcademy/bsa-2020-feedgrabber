@@ -1,4 +1,4 @@
-import { loadTeamsRoutine } from './routines';
+import { loadTeamsRoutine } from '../../sagas/teams/routines';
 import { Routine } from 'redux-saga-routines';
 import { ITeam } from 'models/ITeam';
 

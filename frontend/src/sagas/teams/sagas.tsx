@@ -1,5 +1,5 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { loadTeamsRoutine } from '../../containers/TeamsPage/routines';
+import { loadTeamsRoutine } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
@@ -12,7 +12,6 @@ function* loadTeams() {
       toastr.error(res.data.error);
       return;
     }
-    toastr.success("Loaded teams");
     yield put(loadTeamsRoutine.success(res.data.data));
 }
 
