@@ -32,5 +32,5 @@ public class QuestionnaireResponse {
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "respondent_id")
-    private User user;
+    private User respondent;
 }
