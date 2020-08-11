@@ -12,6 +12,7 @@ import QuestionDetails from "../QuestionDetails";
 import SideMenu from "../../components/SideMenu";
 import QuestionsList from "../../components/QuestionsList";
 import QuestionnaireList from "../QuestionnaireList";
+import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -34,7 +35,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
-          <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
           <Route path="/*">

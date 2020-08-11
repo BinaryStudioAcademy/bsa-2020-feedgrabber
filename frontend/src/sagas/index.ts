@@ -4,6 +4,7 @@ import teamsSagas from '../containers/TeamsPage/sagas';
 import authSaga from "./auth/sagas";
 import questionsSaga from '../components/QuestionsList/sagas';
 import questionnairesSagas from '../containers/QuestionnaireList/sagas';
+import expandedQuestionnaireSagas from "../containers/ExpandedQuestionnaire/sagas";
 
 export default function* rootSaga() {
   yield all([
@@ -11,6 +12,7 @@ export default function* rootSaga() {
     userSagas(),
     teamsSagas(),
     questionsSaga(),
-    questionnairesSagas()
+    questionnairesSagas(),
+    expandedQuestionnaireSagas()
   ]);
 }
