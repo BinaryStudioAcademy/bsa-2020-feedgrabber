@@ -31,7 +31,7 @@ public class Handler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({AlreadyExistsException.class})
     public ResponseEntity<AppResponse<Object>> handleAlreadyExistsException(AlreadyExistsException ex) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.OK)
                 .body(new AppResponse<>(ex, HttpStatus.BAD_REQUEST));
     }
 
