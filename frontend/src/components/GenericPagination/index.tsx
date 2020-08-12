@@ -3,9 +3,9 @@ import ReactPaginate from 'react-paginate';
 
 import styles from './styles.module.sass';
 import {IPaginationInfo} from "../../models/IPaginationInfo";
-import {IQuestionnaire} from "../../containers/QuestionnaireList/reducer";
 import LoaderWrapper from "../LoaderWrapper";
 import PaginationButton, {IGenericButtonProps} from "./button";
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IGenericPaginationProps {
   title: string;

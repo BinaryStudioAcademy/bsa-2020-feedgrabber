@@ -1,4 +1,4 @@
-// import QuestionItem from "components/Question"; 
+// import QuestionItem from "components/Question";
 import React, { useState } from "react";
 import { Menu } from "semantic-ui-react";
 import "./style.sass";
@@ -60,7 +60,7 @@ const questionsMock: Question[] = [
 const FormQuestionnaire = () => {
 
   const [questions, setQuestions] = useState([...questionsMock]);
-  const [selected, setSelected] = useState(null);
+  // const [selected, setSelected] = useState(null);
 
   return (
     <>

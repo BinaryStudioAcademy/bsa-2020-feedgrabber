@@ -1,5 +1,6 @@
 package com.feed_grabber.core.user.model;
 
+import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.team.model.Team;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class User {
 
     @Column(name = "password")
     private String password;
-  
+
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
@@ -65,5 +66,9 @@ public class User {
 
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserSettings userSettings;
-    
+
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 }

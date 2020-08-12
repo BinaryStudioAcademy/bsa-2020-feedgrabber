@@ -3,6 +3,8 @@ package com.feed_grabber.core.auth;
 import com.feed_grabber.core.auth.dto.*;
 import com.feed_grabber.core.register.RegisterService;
 import com.feed_grabber.core.response.AppResponse;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,26 +19,30 @@ public class AuthController {
         this.registerService = registerService;
     }
 
+    @ApiOperation(value = "Renovate the token", notes = "Provide a token to renovate it")
     @PostMapping("/renovate")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<TokenRefreshResponseDTO> renovate(@RequestBody String token) {
-            return new AppResponse<>(authService.refresh(token), HttpStatus.OK);
+    public AppResponse<TokenRefreshResponseDTO> renovate(@ApiParam(value = "Token to renovate",
+            required = true) @RequestBody String token) {
+        return new AppResponse<>(authService.refresh(token), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Register new user", notes = "Provide an email, username, companyName and password to register")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserDTO> register(@RequestBody UserRegisterDTO dto) {
-            var pass = dto.getPassword();
-            registerService.registerUser(dto);
+    public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
+        var pass = dto.getPassword();
+        registerService.registerUser(dto);
 
-            var loginDto = new UserLoginDTO(pass, dto.getUsername());
-            return login(loginDto);
+        var loginDto = new UserLoginDTO(pass, dto.getUsername());
+        return login(loginDto);
     }
 
+    @ApiOperation(value = "Login", notes = "Provide a username and password to login")
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<AuthUserDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-            return new AppResponse<>(authService.login(userLoginDTO), HttpStatus.OK);
+    public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
+        return new AppResponse<>(authService.login(userLoginDTO), HttpStatus.OK);
 
     }
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "./reducer";
 import {
   addQuestionnaireRoutine,
   deleteQuestionnaireRoutine,
   hideModalQuestionnaireRoutine,
   loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
-} from "./routines";
+} from "../../sagas/qustionnaires/routines";
+import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import QuestionnaireModal from "./questionnaireModal";
 import GenericPagination from "../../components/GenericPagination";
@@ -14,6 +14,7 @@ import PaginationListItem from "../../components/GenericPagination/listItem";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {history} from '../../helpers/history.helper';
 import {clearOneQuestionnaireRoutine} from "../ExpandedQuestionnaire/routines";
+import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IQuestionnaireListProps {
   pagination?: IPaginationInfo<IQuestionnaire>;
@@ -93,7 +94,7 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
   );
 };
 
-const mapStateToProps = rootState => ({
+const mapStateToProps = (rootState: IAppState) => ({
   pagination: rootState.questionnaires.pagination,
   modalShown: rootState.questionnaires.modalShown,
   modalQuestionnaire: rootState.questionnaires.modalQuestionnaire,
