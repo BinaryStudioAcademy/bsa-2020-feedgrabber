@@ -1,9 +1,6 @@
 package com.feed_grabber.core.auth;
 
-import com.feed_grabber.core.auth.dto.AuthUserDTO;
-import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
-import com.feed_grabber.core.auth.dto.UserLoginDTO;
-import com.feed_grabber.core.auth.dto.UserRegisterDTO;
+import com.feed_grabber.core.auth.dto.*;
 import com.feed_grabber.core.register.RegisterService;
 import com.feed_grabber.core.response.AppResponse;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +30,7 @@ public class AuthController {
     @ApiOperation(value = "Register new user", notes = "Provide an email, username, companyName and password to register")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserDTO> register(@RequestBody UserRegisterDTO dto) {
+    public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
         var pass = dto.getPassword();
         registerService.registerUser(dto);
 
@@ -44,7 +41,7 @@ public class AuthController {
     @ApiOperation(value = "Login", notes = "Provide a username and password to login")
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<AuthUserDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
+    public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
         return new AppResponse<>(authService.login(userLoginDTO), HttpStatus.OK);
 
     }

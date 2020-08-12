@@ -18,4 +18,6 @@ public class SecurityConstants {
             "/swagger-ui.html",
             "/webjars/**"
     };
+    public static final String AUTHORITIES_KEY = "role";
+    public static final String COMPANY_ID_KEY = "companyId";
 }

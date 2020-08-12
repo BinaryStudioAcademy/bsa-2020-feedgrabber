@@ -27,4 +27,6 @@ public class UserController {
         var id = TokenService.getUserId();
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow(), HttpStatus.OK);
     }
+
+
 }

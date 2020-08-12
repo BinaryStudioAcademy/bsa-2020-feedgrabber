@@ -1,5 +1,6 @@
 package com.feed_grabber.core.questionCategory;
 
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryCreateDto;
 import com.feed_grabber.core.questionCategory.dto.QuestionCategoryDto;
@@ -35,10 +36,16 @@ public class QuestionCategoryController {
     @ApiOperation(value = "Get all the categories of questions from one company")
     @GetMapping("/companies/{id}")
     public List<QuestionCategoryDto> getAllByCompany(@PathVariable UUID id) {
+        var id = TokenService.getCompanyId();
         return questionCategoryService.getAllByCompanyId(id);
     }
 
-    @ApiOperation(value = "Get the question category by id")
+//    @ApiOperation(value = "Get the question category by id")
+//    @GetMapping("/companies/{id}")
+//    public List<QuestionCategoryDto> getAllByCompany(@PathVariable UUID id) {
+//        return questionCategoryService.getAllByCompanyId(id);
+//    }
+
     @GetMapping("/{id}")
     public QuestionCategoryDto getOne(@PathVariable UUID id) throws QuestionCategoryNotFoundException {
         return questionCategoryService.getOne(id)
