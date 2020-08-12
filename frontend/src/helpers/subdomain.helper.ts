@@ -1,7 +1,7 @@
 import tokenProvider from "../security/tokenProvider";
 
 export const redirectToCompany = () => {
-    const companyName = 'mycompany';
+    const companyName = 'mycompany'; //mock company name
 
     const protocol = window.location.protocol;
     const pathname = window.location.pathname;

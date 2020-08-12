@@ -10,7 +10,6 @@ const SubdomainRouter = ({children}) => {
         } else {
             redirectToMain();
         }
-        console.log(isLogged);
     });
     return (
         <>
