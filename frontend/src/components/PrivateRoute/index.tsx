@@ -6,12 +6,6 @@ import SideMenu from "../SideMenu";
 import './styles.sass';
 import {connect} from "react-redux";
 
-const fakeUser = {
-    id: "",
-    username: "user",
-    avatar: "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png"
-};
-
 const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) => {
     const isLogged = useAuth();
 
@@ -25,7 +19,7 @@ const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) =
 
                 return (
                     <>
-                        <Header user={fakeUser}/>
+                        <Header />
                         <div className="view-container">
                             {showMenu && (
                                 <div className="side-bar">

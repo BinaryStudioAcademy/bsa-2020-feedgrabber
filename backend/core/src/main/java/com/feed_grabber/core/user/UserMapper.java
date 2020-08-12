@@ -1,16 +1,17 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.company.CompanyMapper;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserResponseDto;
-import com.feed_grabber.core.user.dto.UserResponseOnlyNameDTO;
+import com.feed_grabber.core.user.dto.UserResponseAuthDetailsDTO;
 import com.feed_grabber.core.user.model.User;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = {CompanyMapper.class})
 public interface UserMapper {
     UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
 
@@ -22,10 +23,8 @@ public interface UserMapper {
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
-
-    UserResponseDto userToUserResponseDto(User user);
-
-    UserResponseOnlyNameDTO responseFromUser(User user);
+    @Mapping(target = "role", source = "role.name")
+    UserResponseAuthDetailsDTO responseFromUser(User user);
 
     @Mapping(target = "userName", source = "username")
     @Mapping(target = "firstName", source = "userProfile.firstName")

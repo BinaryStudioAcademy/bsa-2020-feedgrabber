@@ -1,14 +1,15 @@
-import {IUserErrors, IUserInfo} from "./user/types";
+import {IUserState} from "./user/types";
+import {IQuestionsState} from "./forms/Questions/types";
+import {IQuestionnairesListState} from "./forms/Questionnaires/types";
+import {IAdditionalState} from "../reducers/app/reducer";
+import {ITeamsState} from "../reducers/teams/reducer";
 
 export interface IAppState {
     toastr: any;
-    user: {
-        isLoading: boolean;
-        info: IUserInfo;
-        error: IUserErrors;
-    };
-    app: {
-        showMenu: boolean;
-    };
-
+    user: IUserState;
+    questionnaires: IQuestionnairesListState;
+    questions: IQuestionsState;
+    app: IAdditionalState;
+    teams: ITeamsState;
+    isLoading: boolean;
 }

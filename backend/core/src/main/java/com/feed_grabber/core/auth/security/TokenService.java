@@ -1,5 +1,6 @@
 package com.feed_grabber.core.auth.security;
 
+import com.feed_grabber.core.auth.dto.TokenValuesDto;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import io.jsonwebtoken.Claims;
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.feed_grabber.core.auth.security.SecurityConstants.REFRESH_TOKEN_EXPIRATION_TIME;
-import static com.feed_grabber.core.auth.security.SecurityConstants.TOKEN_EXPIRATION_TIME;
+import static com.feed_grabber.core.auth.security.SecurityConstants.*;
 
 @Service
 public class TokenService {
@@ -28,6 +29,24 @@ public class TokenService {
 
     public String extractUserid(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public UUID extractCompanyId(String token) {
+        var body = getAllClaimsFromToken(token)
+                .get(COMPANY_ID_KEY, String.class);
+        return UUID.fromString(body);
+    }
+
+    public String extractRoleName(String token) {
+        return getAllClaimsFromToken(token)
+                .get(AUTHORITIES_KEY, String.class);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Date extractExpiration(String token) {
@@ -47,20 +66,24 @@ public class TokenService {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateAccessToken(UUID id) {
-        return generateToken(id, TOKEN_EXPIRATION_TIME);
+    public String generateAccessToken(TokenValuesDto user) {
+        return generateToken(user, TOKEN_EXPIRATION_TIME);
     }
 
-    public String generateRefreshToken(UUID id) {
-        return generateToken(id, REFRESH_TOKEN_EXPIRATION_TIME);
+    public String generateRefreshToken(TokenValuesDto user) {
+        return generateToken(user, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     public TokenRefreshResponseDTO refreshTokens(String refreshToken) {
         try {
             if (refreshToken != null && !isTokenExpired(refreshToken)) {
                 var userId = UUID.fromString(extractUserid(refreshToken));
-                String jwt = generateToken(userId, TOKEN_EXPIRATION_TIME);
-                String refreshJwt = generateToken(userId, REFRESH_TOKEN_EXPIRATION_TIME);
+                var companyId = extractCompanyId(refreshToken);
+                var role = extractRoleName(refreshToken);
+                var tokenDto = new TokenValuesDto(userId, companyId, role);
+
+                String jwt = generateToken(tokenDto, TOKEN_EXPIRATION_TIME);
+                String refreshJwt = generateToken(tokenDto, REFRESH_TOKEN_EXPIRATION_TIME);
                 return new TokenRefreshResponseDTO(jwt, refreshJwt);
             }
             throw new JwtTokenException("No token passed");
@@ -69,10 +92,13 @@ public class TokenService {
         }
     }
 
-    private String generateToken(UUID subject, long expiration) {
+    private String generateToken(TokenValuesDto dto, long expiration) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+        var claims = Jwts.claims().setSubject(dto.getUserId().toString());
+        claims.put(COMPANY_ID_KEY, dto.getCompanyId().toString());
+        claims.put(AUTHORITIES_KEY, dto.getRole());
         return Jwts.builder()
-                .setSubject(subject.toString())
+                .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -80,10 +106,19 @@ public class TokenService {
 
     }
 
-    public static UUID getUserId(){
+    public static UUID getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         var currentUserId = (String)auth.getPrincipal();
         return  UUID.fromString(currentUserId);
+    }
+
+    public static UUID getCompanyId() {
+        Map<String, Object> info = (Map<String, Object>)SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getDetails();
+        var companyId = (String)info.get(COMPANY_ID_KEY);
+        return UUID.fromString(companyId);
     }
 
 }

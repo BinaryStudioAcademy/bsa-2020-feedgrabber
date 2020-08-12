@@ -17,6 +17,17 @@ export interface IScaleDetails {
     max: number;
     maxDescription: string;
 }
+export interface ICheckboxAnswerDetails{
+    answerOptions: string[];
+    includeOther: boolean;
+}
+
+export interface IScaleDetails {
+  min: number;
+  minDescription: string;
+  max: number;
+  maxDescription: string;
+}
 
 export interface IQuestionBase<TDetails>{
     id: string;
@@ -43,7 +54,7 @@ export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails>
 }
 
 export interface ICheckboxQuestion extends IQuestionBase<ICheckboxAnswerDetails>{
-    type: QuestionType.checkbox;
+  type: QuestionType.checkbox;
 }
 
 export interface IDateQuestion extends IQuestionBase<{}> {

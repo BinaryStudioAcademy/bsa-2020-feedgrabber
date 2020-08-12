@@ -1,19 +1,21 @@
-import React, {useEffect} from 'react';
-import styles from './styles.module.sass';
-import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "./reducer";
+import React from 'react';
 import {
   addQuestionnaireRoutine,
   deleteQuestionnaireRoutine,
   hideModalQuestionnaireRoutine,
-  loadQuestionnairesRoutine,
+  loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
   showModalQuestionnaireRoutine, updateQuestionnaireRoutine
-} from "./routines";
+} from "../../sagas/qustionnaires/routines";
+import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
-import {Icon} from "semantic-ui-react";
 import QuestionnaireModal from "./questionnaireModal";
+import GenericPagination from "../../components/GenericPagination";
+import PaginationListItem from "../../components/GenericPagination/listItem";
+import {IPaginationInfo} from "../../models/IPaginationInfo";
+import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IQuestionnaireListProps {
-  questionnaireList: IQuestionnaire[];
+  pagination?: IPaginationInfo<IQuestionnaire>;
   modalQuestionnaire?: IQuestionnaire;
   isLoading: boolean;
   modalLoading: boolean;
@@ -26,11 +28,12 @@ interface IQuestionnaireListProps {
   updateQuestionnaire(questionnaire: IUpdateQuestionnaire): void;
   showModal(questionnaire?: IQuestionnaire): void;
   hideModal(): void;
+  setPagination(pagination: IPaginationInfo<IQuestionnaire>): void;
 }
 
 const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
   {
-    questionnaireList,
+    pagination,
     modalQuestionnaire,
     modalShown,
     isLoading,
@@ -41,14 +44,21 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
     addQuestionnaire,
     updateQuestionnaire,
     showModal,
-    hideModal
+    hideModal,
+    setPagination
   }
 ) => {
-  useEffect(() => {
-    if (!questionnaireList) {
-      loadQuestionnaires();
-    }
-  }, [questionnaireList, loadQuestionnaires]);
+  const mapItemToJSX = (item: IQuestionnaire) => (
+    <PaginationListItem
+      key={item.id}
+      title={item.title}
+      description={item.companyName}
+      actions={[
+        {icon: 'edit', callback: () => showModal(item)},
+        {icon: 'trash', callback: () => deleteQuestionnaire(item.id)}
+      ]}
+    />
+  );
 
   return (
     <>
@@ -61,42 +71,21 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
         updateQuestionnaire={updateQuestionnaire}
         modalError={modalError}
       />
-      <h1>Questionnaires</h1>
-      {isLoading
-        ? <div>Loading</div>
-        : (
-          <div className={styles.container}>
-            <div className={styles.content}>
-              {questionnaireList && (
-                <div className={styles.questionnairesContainer}>
-                  {questionnaireList.map(item => (
-                    <div key={item.id} className={styles.questionnaire}>
-                      <div>
-                        <h3>{item.title}</h3>
-                        <p className={styles.description}>{item.companyName}</p>
-                      </div>
-                      <div>
-                        <Icon className="edit" onClick={() => showModal(item)}/>
-                        <Icon className="trash" onClick={() => deleteQuestionnaire(item.id)}/>
-                      </div>
-                    </div>
-                  ))}
-                  {questionnaireList.length === 0 && <h2>No items</h2>}
-                </div>
-              )}
-              <div className={styles.addBlock}>
-                <Icon className="plus" onClick={() => showModal(undefined)}/>
-              </div>
-            </div>
-          </div>
-        )
-      }
+      <GenericPagination
+        title="Questionnaires"
+        isLoading={isLoading}
+        pagination={pagination}
+        setPagination={setPagination}
+        loadItems={loadQuestionnaires}
+        mapItemToJSX={mapItemToJSX}
+        buttons={[{text: "Add New", callback: () => showModal(undefined)}]}
+      />
     </>
   );
 };
 
-const mapStateToProps = rootState => ({
-  questionnaireList: rootState.questionnaires.items,
+const mapStateToProps = (rootState: IAppState) => ({
+  pagination: rootState.questionnaires.pagination,
   modalShown: rootState.questionnaires.modalShown,
   modalQuestionnaire: rootState.questionnaires.modalQuestionnaire,
   isLoading: rootState.questionnaires.isLoading,
@@ -110,7 +99,8 @@ const mapDispatchToProps = {
   addQuestionnaire: addQuestionnaireRoutine,
   updateQuestionnaire: updateQuestionnaireRoutine,
   showModal: showModalQuestionnaireRoutine,
-  hideModal: hideModalQuestionnaireRoutine
+  hideModal: hideModalQuestionnaireRoutine,
+  setPagination: setQuestionnairePaginationRoutine
 };
 
 export default connect(

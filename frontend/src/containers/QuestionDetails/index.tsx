@@ -8,6 +8,8 @@ import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSe
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
+import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
+import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import {nameSchema} from "./schemas";
 import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
@@ -85,11 +87,6 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         this.handleQuestionDetailsUpdate = this.handleQuestionDetailsUpdate.bind(this);
     }
 
-    componentDidMount() {
-        const {match} = this.props;
-        this.getQuestion(match.params.id);
-    }
-
     getQuestion = async (id: string) => {
         if (id !== "new") {
             const question = questions.find(question => question.id === id);
@@ -103,11 +100,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     };
 
     onSubmit = () => {
+        console.log(this.state);
         if (this.state.isQuestionDetailsValid) {
             this.props.saveQuestion(this.state.question);
             this.props.history.push("/questions");
         }
-    };
+    }
 
     readonly questionTypeOptions = [
         {
@@ -161,7 +159,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                         value={question.details}/>
                 );
             case QuestionType.checkbox:
-                return <span>checkbox</span>; // <CheckBox />;
+                return (
+                    <CheckboxQuestion
+                        onValueChange={this.handleQuestionDetailsUpdate}
+                        value={question.details}
+                    />
+                );
             case QuestionType.multichoice:
                 return (
                     <MultichoiseQuestion
@@ -170,7 +173,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                     />
                 );
             case QuestionType.scale:
-                return <FreeTextQuestionUI/>;
+                return (
+                    <ScaleQuestion
+                        onValueChange={this.handleQuestionDetailsUpdate}
+                        value={question.details}
+                    />
+                );
             case QuestionType.freeText:
                 return <InputField/>;
             case QuestionType.date:
@@ -232,9 +240,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                                 <Button className="ui button" color="red" onClick={this.onClose}>
                                     Cancel
                                 </Button>
-                                <Button type="submit" className="ui button" color="green" disabled=
-                                    {!isQuestionDetailsValid}
-                                >
+                                <Button className="ui button" color="green" disabled={!isQuestionDetailsValid}>
                                     Save
                                 </Button>
                             </Segment>
@@ -245,4 +251,5 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         );
     }
 }
+
 export default QuestionDetails;

@@ -5,6 +5,10 @@ const initialState = {
     showMenu: false
 };
 
+export interface IAdditionalState {
+    showMenu: boolean;
+}
+
 const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => {
     if (type === TOGGLE_MENU) {
         return {
