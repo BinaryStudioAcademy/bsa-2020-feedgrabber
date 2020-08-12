@@ -1,7 +1,7 @@
 import React from "react";
 import {History} from "history";
 import {Button, Form, Segment} from "semantic-ui-react";
-import {Formik} from "formik";
+import {Formik, FormikHelpers, FormikValues} from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
@@ -113,12 +113,21 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         this.props.history.push("/questions");
     };
 
-    onSubmit = () => {
+    onSubmit = (values: FormikValues, formikHelpers: FormikHelpers<FormikValues>) => {
         if (this.state.isQuestionDetailsValid) {
+            this.setState({...this.state,
+                question: { ...this.state.question,
+                    name: values.name,
+                    category: values.category }
+            });
             this.props.saveQuestion(this.state.question);
             this.props.history.push("/questions");
         }
     }
+
+  onChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    // const newValue = e.target.;
+  }
 
     readonly questionTypeOptions = [
         {
