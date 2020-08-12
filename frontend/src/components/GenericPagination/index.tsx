@@ -70,8 +70,8 @@ const GenericPagination: FC<IGenericPaginationProps> = (
         <div className={styles.paginationMetaWrapper}>
           <div>Total: {pagination.total}</div>
           <div>
-            <select onChange={e => handleChangeAmountPerPage(e.target.value)}>
-              {sizeOptions.map(o => <option key={o} selected={o === defaultSize}>{o}</option>)}
+            <select onChange={e => handleChangeAmountPerPage(e.target.value)} defaultValue={defaultSize}>
+              {sizeOptions.map(o => <option key={o}>{o}</option>)}
             </select>
             &nbsp;items per page
           </div>
