@@ -49,14 +49,14 @@ public class QuestionnaireResponseService {
         responseRepository.deleteById(id);
     }
 
-    public QuestionnaireResponseDto create(QuestionnaireResponseCreateDto createDto, UUID respondentId)
+    public QuestionnaireResponseDto create(QuestionnaireResponseCreateDto createDto)
             throws UserNotFoundException, AlreadyExistsException {
 
-        if (responseRepository.findByRequestAndRespondentId(createDto.getRequestId(), respondentId).isPresent()) {
+        if (responseRepository.findByRequestAndRespondentId(createDto.getRequestId(), createDto.getRespondentId()).isPresent()) {
             throw new AlreadyExistsException("Unable to save questionnaire response: response already exist");
         }
 
-        User respondent = userRepository.findById(respondentId)
+        User respondent = userRepository.findById(createDto.getRespondentId())
                 .orElseThrow(UserNotFoundException::new);
 
         QuestionnaireResponse questionnaireResponse = QuestionnaireResponseMapper.MAPPER

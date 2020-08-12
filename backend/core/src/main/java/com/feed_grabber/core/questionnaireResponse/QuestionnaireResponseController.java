@@ -53,11 +53,10 @@ public class QuestionnaireResponseController {
     }
 
     @PostMapping
-    public AppResponse<QuestionnaireResponseDto> create(@RequestHeader("authorization") String token,
-                                           @RequestBody QuestionnaireResponseCreateDto createDto)
+    public AppResponse<QuestionnaireResponseDto> create(@RequestBody QuestionnaireResponseCreateDto createDto)
             throws UserNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
-                responseService.create(createDto, UUID.fromString(tokenService.extractUserid(token))),
+                responseService.create(createDto),
                 HttpStatus.CREATED
         );
     }

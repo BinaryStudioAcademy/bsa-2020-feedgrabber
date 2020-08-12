@@ -42,7 +42,7 @@ public class ResponseAnswerController {
         );
     }
 
-    @PutMapping
+    @PostMapping
     public AppResponse<ResponseAnswerDto> create(@RequestBody ResponseAnswerCreateDto createDto)
             throws AlreadyExistsException, QuestionnaireResponseNotFoundException, QuestionNotFoundException {
         return new AppResponse<>(

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ResponseAnswerCreateDto {
     private String text;
     private UUID questionId;
