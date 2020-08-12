@@ -18,9 +18,10 @@ public class TeamService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public List<TeamDto> getAll() {
+    public List<TeamDto> getAllByCompany_Id(UUID companyId) {
+
         return teamRepository
-                .findAll()
+                .findAllByCompanyId(companyId)
                 .stream()
                 .map(TeamMapper.MAPPER::teamToTeamDto)
                 .collect(Collectors.toList());

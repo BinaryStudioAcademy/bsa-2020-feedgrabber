@@ -1,0 +1,40 @@
+
+.field input
+  background: 0 !important
+  border: 0 !important
+  outline: none !important
+  transition: padding 0.3s 0.2s ease !important
+  height: 100% !important
+
+
+  &:focus + .line
+    &:after
+      transform: scaleX(1)
+
+
+.field
+  position: relative
+
+  .line
+    width: 100%
+    height: 3px
+    position: absolute
+    bottom: -8px
+    background: #bdc3c7
+
+    &:after
+      content: " "
+      position: absolute
+      float: right
+      width: 100%
+      height: 3px
+
+      transform: scalex(0)
+      transition: transform 0.3s ease
+
+      background: #2c2c94
+
+  .error
+    background: red
+    &:after
+      background: red

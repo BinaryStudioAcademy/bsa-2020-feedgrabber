@@ -1,15 +1,16 @@
 import React from "react";
-import {History} from "history";
-import {Button, Form, Segment} from "semantic-ui-react";
-import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
-import {Formik} from "formik";
+import { History } from "history";
+import { Button, Form, Segment } from "semantic-ui-react";
+import { Formik } from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
-import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
-import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
-import {nameSchema} from "./schemas";
+import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
+import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
+import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
+import { nameSchema } from "./schemas";
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 
 const questions: IQuestion[] = [
     {
@@ -34,7 +35,12 @@ const questions: IQuestion[] = [
         categoryTitle: "Leadership",
         name: "Are you able to delegate responsibilities efficiently?",
         type: QuestionType.scale,
-        details: {}
+        details: {
+            min: 0,
+            max: 10,
+            minDescription: "",
+            maxDescription: ""
+        }
     }
 ];
 
@@ -61,7 +67,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         super(props);
         this.state = {
             validationSchema: nameSchema,
-            initialValues: {name: "", answers: []},
+            initialValues: { name: "", answers: [] },
             question: {
                 id: "",
                 name: "",
@@ -139,21 +145,26 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     ];
 
     handleQuestionDetailsUpdate(state: IComponentState<{}>) {
-        const {question} = this.state;
-        const {isCompleted, value} = state;
+        const { question } = this.state;
+        const { isCompleted, value } = state;
         this.setState({
             isQuestionDetailsValid: isCompleted,
-            question: {...question, details: value as any}
+            question: { ...question, details: value as any }
         });
     }
 
     renderForm() {
-        const {question} = this.state;
+        const { question } = this.state;
         switch (question.type) {
             case QuestionType.radio:
                 return <span>radio</span>; // <RadioButton />;
             case QuestionType.checkbox:
-                return <span>checkbox</span>; // <CheckBox />;
+                return (
+                    <CheckboxQuestion
+                        onValueChange={this.handleQuestionDetailsUpdate}
+                        value={question.details}
+                    />
+                );
             case QuestionType.multichoice:
                 return (
                     <MultichoiseQuestion
@@ -162,11 +173,16 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                     />
                 );
             case QuestionType.scale:
-                return <FreeTextQuestionUI/>;
+                return (
+                    <ScaleQuestion
+                        onValueChange={this.handleQuestionDetailsUpdate}
+                        value={question.details}
+                    />
+                );
             case QuestionType.freeText:
-                return <InputField/>;
+                return <InputField />;
             case QuestionType.date:
-                return <DateSelectionQuestionUI/>;
+                return <DateSelectionQuestionUI />;
             default:
                 return <span className="question_default">You should choose the type of the question :)</span>;
         }
@@ -176,12 +192,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         const type: QuestionType = data.value;
         this.setState({
             ...this.state,
-            question: {...this.state.question, type, details: undefined}
+            question: { ...this.state.question, type, details: undefined }
         });
     };
 
     render() {
-        const {initialValues, validationSchema, question, isQuestionDetailsValid} = this.state;
+        const { initialValues, validationSchema, question, isQuestionDetailsValid } = this.state;
         return (
             <Formik
                 enableReinitialize

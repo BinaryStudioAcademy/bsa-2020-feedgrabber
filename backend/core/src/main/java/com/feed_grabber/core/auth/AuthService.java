@@ -1,11 +1,11 @@
 package com.feed_grabber.core.auth;
 
-import com.feed_grabber.core.auth.dto.AuthUserDTO;
+import com.feed_grabber.core.auth.dto.AuthUserResponseDTO;
+import com.feed_grabber.core.auth.dto.TokenValuesDto;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
-import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.auth.security.TokenService;
-import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,20 +13,16 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 @Service
 public class AuthService {
     private final TokenService tokenService;
     private final UserRepository userRepository;
-    private final CompanyRepository companyRepository;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(TokenService tokenService, UserRepository userRepository
-            , CompanyRepository companyRepository, AuthenticationManager authenticationManager) {
+
+    public AuthService(TokenService tokenService, UserRepository userRepository, AuthenticationManager authenticationManager) {
         this.tokenService = tokenService;
         this.userRepository = userRepository;
-        this.companyRepository = companyRepository;
         this.authenticationManager = authenticationManager;
     }
 
@@ -34,7 +30,7 @@ public class AuthService {
         return tokenService.refreshTokens(refreshToken);
     }
 
-    public AuthUserDTO login(UserLoginDTO dto) {
+    public AuthUserResponseDTO login(UserLoginDTO dto) {
         try {
             var upa = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
 
@@ -44,13 +40,14 @@ public class AuthService {
             throw new WrongCredentialsException("Incorrect username or password");
         }
 
-        var user = userRepository.findByUsername(dto.getUsername());
-        var userResponseOnlyNameDTO = user.map(UserMapper.MAPPER::responseFromUser)
-                .orElseThrow();
+        var user = userRepository
+                .findByUsername(dto.getUsername())
+                .map(UserMapper.MAPPER::responseFromUser).get();
 
-        Map<String, Object> claims = Map.of("companyId", user.orElseThrow().getRole().getCompany().getId());
-        return new AuthUserDTO(tokenService.generateAccessToken(userResponseOnlyNameDTO.getId(), claims),
-                tokenService.generateRefreshToken(userResponseOnlyNameDTO.getId(), claims), userResponseOnlyNameDTO);
+        var tokenDto = new TokenValuesDto(user.getId(), user.getCompany().getId(), user.getRole());
+
+        return new AuthUserResponseDTO(tokenService.generateAccessToken(tokenDto),
+                tokenService.generateRefreshToken(tokenDto), user);
     }
 
 }
