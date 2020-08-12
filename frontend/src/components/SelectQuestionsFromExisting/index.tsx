@@ -17,10 +17,14 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
     const [selected, setSelected] = useState([] as IQuestion[]);
     const [open, setOpen] = useState(false);
 
-    const handleClick = id => {
-        setSelected([
-            ...selected, questions.find(q => q.id === id)
-        ]);
+    const handleClick = (id, isSelected) => {
+        if (isSelected) {
+            setSelected(selected.filter(q => q.id !== id));
+        } else {
+            setSelected([
+                ...selected, questions.find(q => q.id === id)
+            ]);
+        }
     };
 
     const handleSubmit = () => {
