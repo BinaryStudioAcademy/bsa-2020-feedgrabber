@@ -57,7 +57,7 @@ public class QuestionnaireResponseController {
             throws UserNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
                 responseService.create(createDto),
-                HttpStatus.CREATED
+                HttpStatus.OK
         );
     }
 

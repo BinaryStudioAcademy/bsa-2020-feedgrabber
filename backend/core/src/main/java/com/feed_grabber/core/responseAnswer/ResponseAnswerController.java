@@ -47,7 +47,7 @@ public class ResponseAnswerController {
             throws AlreadyExistsException, QuestionnaireResponseNotFoundException, QuestionNotFoundException {
         return new AppResponse<>(
                 answerService.create(createDto),
-                HttpStatus.CREATED
+                HttpStatus.OK
         );
     }
 
