@@ -8,11 +8,11 @@ import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSe
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
-import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
-import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import {nameSchema} from "./schemas";
 import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
+import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
+import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 
 const questions: IQuestion[] = [
     {
