@@ -11,6 +11,7 @@ public class SecurityConstants {
             "/api/auth/register",
             "/api/auth/register/confirm",
             "/api/auth/renovate",
+            "/api/invitations/sign-up/**",
             "/v2/api-docs",
             "/configuration/ui",
             "/swagger-resources/**",
