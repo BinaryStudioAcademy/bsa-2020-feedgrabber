@@ -26,3 +26,7 @@ cache:
 script:
     - if [[ $TRAVIS_EVENT_TYPE == "pull_request" && ($TRAVIS_PULL_REQUEST_BRANCH == "dev") || $TRAVIS_BRANCH == "infrastructure/ci_cd" ]] ; then bash scripts/test.sh ; fi
     - if [[ $TRAVIS_EVENT_TYPE == "push" && $TRAVIS_BRANCH == "dev" ]] ; then  bash scripts/build.sh && bash scripts/deploy.sh ; fi
+
+notifications:
+  slack:
+    secure: BrVZi8P29lTEQY2+4Sval7o+3bunrQ8dyxzuPClpjd2ZBmng7e4uYhU0f+SrzJaif9jZYL1geXiQj4nTsycGzab2eTEn/c3RGTgnxn1v0pdc/bxw/oiADfephPurwbjhkcMgKocpYeg/P305DrzRbVzFvyX2lGwyLGkI1NNVKkbfAAWPzdeF9IY4gpLYLurEySa6EVkFUfVJdm9J8WEQ8WOJvzHkEGyqmDWs3nrtf3gD2Gl9fUtvGDKGbaVovumuAplAWh0warYrl9XNiKQNwNRLbSyHQJc9jlTx/1KP1NpuNcwVy20nVL7TQrf6N1PRuV9BeOR0/bxvpjKjaV1ovHABdYp/0pzYj5yovUdsz8EV1TYRW8O/eaxz6VSaQC/XDdTlxmk62HTs6Jqj0s87N125PKR1ytDtii2YgT4iWyCOr+rq61XalDvofNDqdWJD1XhhyU5DrQ+2h0g/5F6CMjwRqYMuIXyUlupg+Mu11hReI98QGcOnhH3nJwtIFcmF8wEj3U5eZm0z2yq8RKxqABB/qL4F5kxJX+ytOWBUF+S4MZMmgX4+E8zqoXxE6jjGUy/PIEpAHmyNvlUln2Npi/rgqLzJtuPIE7piVanKkPDDWzhrkDe+Ym0FUc3/orN9K/rqxkpylKN3TsYdQqdRLQu7v8+3Vx3IE8Vb6otPoE8=
