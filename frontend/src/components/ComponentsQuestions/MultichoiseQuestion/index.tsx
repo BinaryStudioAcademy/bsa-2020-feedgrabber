@@ -8,6 +8,8 @@ import {
 } from "../IQuestionInputContract";
 import {IMultiAnswerDetails} from "../../../models/IQuesion";
 
+import "./style.scss";
+
 // TODO: this will be common logic for multiple components, move it to shared folder
 function replaceAtIndex<T>(arr: T[], val: T, index: number) {
   return [...arr.slice(0, index), val, ...arr.slice(index + 1)];
