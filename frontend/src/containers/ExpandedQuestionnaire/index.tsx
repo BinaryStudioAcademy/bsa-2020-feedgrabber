@@ -3,6 +3,9 @@ import {IQuestionnaireDetails} from "./reducer";
 import {loadOneQuestionnaireRoutine} from "./routines";
 import {connect} from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
+import styles from './styles.module.sass';
+import QuestionDetails from "../QuestionDetails";
+import {history} from '../../helpers/history.helper';
 
 interface IExpandedQuestionnaireProps {
   match: any;
@@ -28,7 +31,18 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
 
   return (
     <LoaderWrapper loading={isLoading}>
-      {questionnaire && <div>{questionnaire.title}</div>}
+      {questionnaire && (
+        <div>
+          <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
+          <div className={styles.formDetails}>
+          <div className={styles.formPreview}>Here will be preview</div>
+          <div className={styles.formEditor}>
+            {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+            <QuestionDetails saveQuestion={() => {}} match={{ params: {} }} history={history} />
+          </div>
+          </div>
+        </div>
+      )}
     </LoaderWrapper>
   );
 };
