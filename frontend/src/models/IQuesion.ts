@@ -1,5 +1,9 @@
-export interface IMultiAnswerDetails {
+export interface IMultiAnswerDetails{
     answerOptions: string[];
+}
+export interface ICheckboxAnswerDetails{
+    answerOptions: string[];
+    includeOther: boolean;
 }
 
 export interface IRadioButtonAnswerDetails {
@@ -7,7 +11,14 @@ export interface IRadioButtonAnswerDetails {
     includeOther: boolean;
 }
 
-export interface IQuestionBase<TDetails> {
+export interface IScaleDetails {
+    min: number;
+    minDescription: string;
+    max: number;
+    maxDescription: string;
+}
+
+export interface IQuestionBase<TDetails>{
     id: string;
     name: string;
     categoryId: string;
@@ -19,19 +30,19 @@ export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails>
     type: QuestionType.radio;
 }
 
-export interface IScaleQuestion extends IQuestionBase<{}> {
+export interface IScaleQuestion extends IQuestionBase<IScaleDetails> {
     type: QuestionType.scale;
 }
 
-export interface ITextQuestion extends IQuestionBase<{}> {
+export interface ITextQuestion extends IQuestionBase<{}>{
     type: QuestionType.freeText;
 }
 
-export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails> {
+export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails>{
     type: QuestionType.multichoice;
 }
 
-export interface ICheckboxQuestion extends IQuestionBase<IMultiAnswerDetails> {
+export interface ICheckboxQuestion extends IQuestionBase<ICheckboxAnswerDetails>{
     type: QuestionType.checkbox;
 }
 

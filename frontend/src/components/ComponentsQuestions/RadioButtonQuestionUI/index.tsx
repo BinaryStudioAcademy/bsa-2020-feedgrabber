@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Form, Icon} from "semantic-ui-react";
 import './styles.sass';
 import {
@@ -16,7 +16,6 @@ function replaceAtIndex<T>(arr: T[], val: T, index: number) {
 const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails> = ({
                                                                                          value: propValue, onValueChange
                                                                                      }) => {
-    const [includeOther, setIncludeOther] = useState(false);
     const value = useInitValue(
         {value: {answerOptions: [], includeOther: false}, isCompleted: false},
         propValue,
@@ -45,7 +44,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                         event.target.value,
                                         index
                                     ),
-                                    includeOther: includeOther
+                                    includeOther: value.includeOther
                                 })
                             );
                         }}
@@ -57,21 +56,20 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                     answerOptions: value.answerOptions.filter(
                                         (val, i) => i !== index
                                     ),
-                                    includeOther: includeOther
+                                    includeOther: value.includeOther
                                 })
                             );
                         }}/>
                     )}
                 </div>
             ))}
-            {includeOther && (
+            {value.includeOther && (
                 <div className={"option-container unselected"}>
                     <div>
                         <Icon name={"circle outline"}/>
                         <span className="action">Other...</span>
                     </div>
                     <Icon className={"close-icon"} name={"x"} onClick={() => {
-                        setIncludeOther(false);
                         onValueChange(
                             validState({answerOptions: value.answerOptions, includeOther: false})
                         );
@@ -86,15 +84,14 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                         onValueChange(
                             validState({
                                 answerOptions: value.answerOptions.concat(""),
-                                includeOther: includeOther
+                                includeOther: value.includeOther
                             })
                         );
                     }}>Add new answer</span>
-                    {!includeOther && (
+                    {!value.includeOther && (
                         <span>
                            <span> or </span>
                            <span className="other" onClick={() => {
-                               setIncludeOther(true);
                                onValueChange(
                                    validState({answerOptions: value.answerOptions, includeOther: true})
                                );
@@ -112,67 +109,3 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
 };
 
 export default RadioButtonQuestionUI;
-
-{/* <Segment>
-            <div>
-              {value.answerOptions.map((answer, index) => (
-                    <div className="option-container" key={index}>
-                        <Form.Input
-                            className="answer-input"
-                            fluid
-                            icon="check square outline"
-                            transparent
-                            iconPosition="left"
-                            placeholder="Type answer here..."
-                            type="text"
-                            name={`answers.${index}`}
-                            value={answer}
-                            error={answer.trim().length === 0}
-                            onChange={event => {
-                                onValueChange(
-                                    invalidState({
-                                        answerOptions: replaceAtIndex(
-                                            value.answerOptions,
-                                            event.target.value,
-                                            index
-                                        ),
-                                        includeOther: false
-                                    })
-                                );
-                            }}
-                        />
-                        <Icon
-                            className={"close-icon unselected"}
-                            name={"remove"}
-                            onClick={() => {
-                                onValueChange(
-                                    invalidState({
-                                        answerOptions: value.answerOptions.filter(
-                                            (val, i) => i !== index
-                                        ),
-                                        includeOther: false
-                                    })
-                                );
-                            }}
-                        />
-                    </div>
-                ))}
-                <div className={"option-container unselected left-grouped"}>
-                    <Icon name={"check square outline"}/>
-                    <span
-                        className="check square outline"
-                        onClick={() => {
-                            onValueChange(
-                                invalidState({
-                                    answerOptions: value.answerOptions.concat(""),
-                                    includeOther: false
-                                })
-                            );
-                        }}
-                    >
-            Add new answer
-          </span>
-                </div>
-            </div>
-        </Segment>*/
-}

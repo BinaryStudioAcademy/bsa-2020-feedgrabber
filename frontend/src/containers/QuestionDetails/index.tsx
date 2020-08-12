@@ -35,7 +35,12 @@ const questions: IQuestion[] = [
         categoryId: "Leadership",
         name: "Are you able to delegate responsibilities efficiently?",
         type: QuestionType.scale,
-        details: {}
+        details: {
+            min: 0,
+            max: 10,
+            minDescription: "",
+            maxDescription: ""
+        }
     }
 ];
 
