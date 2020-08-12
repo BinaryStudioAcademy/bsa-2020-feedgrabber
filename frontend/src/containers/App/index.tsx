@@ -21,7 +21,7 @@ const App: React.FC = () => (
                 closeOnToastrClick
             />
             <Router history={history}>
-                <Routing isLoading={false} />
+                <Routing />
             </Router>
         </Provider>
     </Scrollbars>

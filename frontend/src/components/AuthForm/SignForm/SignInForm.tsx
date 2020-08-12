@@ -4,7 +4,7 @@ import Input from './Input';
 import Button from './Button';
 import * as yup from "yup";
 import {Formik} from 'formik';
-import {loginRoutine} from 'components/AuthForm/routines';
+import {loginRoutine} from 'sagas/auth/routines';
 import {connect, ConnectedProps} from 'react-redux';
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";

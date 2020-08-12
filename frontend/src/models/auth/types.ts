@@ -5,6 +5,8 @@ export interface IAuthResponse {
         id: string;
         email: string;
         username: string;
+        companyName: string;
+        companyId: string;
     };
 }
 

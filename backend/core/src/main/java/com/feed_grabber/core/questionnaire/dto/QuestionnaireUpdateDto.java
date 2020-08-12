@@ -12,6 +12,4 @@ public class QuestionnaireUpdateDto {
     UUID id;
     @NotBlank
     String title;
-    @NotNull
-    UUID companyId;
 }

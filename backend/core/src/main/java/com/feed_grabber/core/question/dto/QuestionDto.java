@@ -1,5 +1,6 @@
 package com.feed_grabber.core.question.dto;
 
+import com.feed_grabber.core.question.QuestionType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class QuestionDto {
     UUID id;
-    String text;
-    String questionnaireTitle;
+    String name;
     String categoryTitle;
+    QuestionType type;
+    String details;
 }

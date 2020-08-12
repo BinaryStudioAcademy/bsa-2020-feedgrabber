@@ -18,7 +18,7 @@ const SideMenu = () => {
             <Menu.Item as={NavLink} to="/teams">
                 Teams
             </Menu.Item>
-            <Menu.Item as={NavLink} to="/questionnaire/1">
+            <Menu.Item as={NavLink} to="/questions">
                 Questions
             </Menu.Item>
         </Menu>

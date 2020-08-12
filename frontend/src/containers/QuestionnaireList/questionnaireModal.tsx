@@ -1,9 +1,9 @@
-import React from 'react';
-import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "./reducer";
+import React, {FC} from 'react';
 import {Button, Form, Modal, ModalContent, ModalHeader} from "semantic-ui-react";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import styles from './styles.module.sass';
+import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;
@@ -24,7 +24,7 @@ const validationSchema = yup.object().shape({
     .required()
 });
 
-const QuestionnaireModal: React.FC<IQuestionnaireModalProps> = (
+const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
   {
     modalQuestionnaire,
     modalShown,
@@ -35,17 +35,14 @@ const QuestionnaireModal: React.FC<IQuestionnaireModalProps> = (
     hideModal
   }
 ) => {
-  // to do companies select field, now - hardcoded companyId from seed.sql
   const onSubmit = values => {
     modalQuestionnaire
       ? updateQuestionnaire({
         id: modalQuestionnaire.id,
-        title: values.title,
-        companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
+        title: values.title
       })
       : addQuestionnaire({
-        title: values.title,
-        companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
+        title: values.title
       });
   };
 

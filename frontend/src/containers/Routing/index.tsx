@@ -7,11 +7,13 @@ import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
-import TeamsPage from "../TeamsPage";
+import QuestionsList from "../QuestionsList";
 import QuestionDetails from "../QuestionDetails";
-import SideMenu from "../../components/SideMenu";
-import QuestionsList from "../../components/QuestionsList";
+import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
+import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
+import {IAppState} from "../../models/IAppState";
+import {connect} from "react-redux";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -34,7 +36,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
-          <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
           <Route path="/*">
@@ -45,4 +47,8 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
   </>
 );
 
-export default Routing;
+const mapState = (state: IAppState) => ({
+    isLoading: state.isLoading
+});
+
+export default connect(mapState)(Routing);
