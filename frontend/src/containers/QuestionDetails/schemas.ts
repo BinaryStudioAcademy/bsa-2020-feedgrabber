@@ -34,3 +34,23 @@ export const checkboxSchema = Yup.object().shape({
       .max(200, 'Answer must be shorter then 200 symbols')
     )
 });
+
+export const fileUploadSchema = Yup.object().shape({
+    name: Yup.string().required('required'),
+    answers: Yup.object({
+        fileType: Yup.string().required('Choose file type'),
+        fileNumber: Yup.number()
+            .typeError("Enter number")
+            .positive("Number must be positive")
+            .integer("Number must be integer")
+            .min(1, "At least 1 file")
+            .max(10, "Maximum files: 10")
+            .required("Enter number of files"),
+        fileSize: Yup.number("Enter number")
+            .typeError("Enter number")
+            .positive("Number must be positive")
+            .integer("Number must be integer")
+            .min(1, "Minimum: 1")
+            .required("Enter files size")
+    })
+});

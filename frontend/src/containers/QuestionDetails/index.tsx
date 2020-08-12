@@ -1,15 +1,16 @@
 import React from "react";
-import { History } from "history";
-import { Button, Form, Segment } from "semantic-ui-react";
-import { IQuestion, QuestionType } from "../../models/IQuesion";
-import { Formik } from "formik";
+import {History} from "history";
+import {Button, Form, Segment} from "semantic-ui-react";
+import {IQuestion, QuestionType} from "../../models/IQuesion";
+import {Formik} from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
-import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
-import { nameSchema } from "./schemas";
+import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
+import {fileUploadSchema, nameSchema} from "./schemas";
+import FileUploadQuestion from "../../components/ComponentsQuestions/FileUploadQuestion";
 
 const questions: IQuestion[] = [
   {
@@ -135,6 +136,11 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       key: "Date",
       text: "Date",
       value: QuestionType.date
+    },
+    {
+      key: "FileUpload",
+      text: "File upload",
+      value: QuestionType.fileUpload
     }
   ];
 
@@ -167,6 +173,8 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         return <InputField />;
       case QuestionType.date:
         return <DateSelectionQuestionUI />;
+      case QuestionType.fileUpload:
+        return <FileUploadQuestion />;
       default:
         return <span className="question_default">You should choose the type of the question :)</span>;
     }
@@ -174,10 +182,27 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
 
   setQuestionType = (data: any) => {
     const type: QuestionType = data.value;
-    this.setState({
-      ...this.state,
-      question: { ...this.state.question, type, details: undefined }
-    });
+    if (type === QuestionType.fileUpload) {
+      this.setState({
+        ...this.state,
+        question: {...this.state.question, type, details: undefined},
+        initialValues: {
+          name: "",
+          answers: {
+            fileType: "",
+            fileNumber: 1,
+            fileSize: 100
+          }
+        },
+        validationSchema: fileUploadSchema
+      });
+    } else {
+        this.setState({
+          ...this.state,
+          question: {...this.state.question, type, details: undefined},
+          initialValues: { name: "", answers: [] }
+        });
+      }
   };
 
   render() {
