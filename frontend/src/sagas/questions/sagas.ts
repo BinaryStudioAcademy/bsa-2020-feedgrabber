@@ -4,6 +4,7 @@ import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 function* getAll() {
   const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `api/questions`);
@@ -24,18 +25,23 @@ function* getById(action) {
   try {
     const id = action.payload;
     if (id === 'empty') {
-      loadQuestionByIdRoutine.success({});
+      loadQuestionByIdRoutine.success(defaultQuestion);
       return;
     }
 
-    const question: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${action.payload}`);
-    if (question.data.error) {
+    const response = yield call(apiClient.get, `/api/questions/${action.payload}`);
+    if (response.data.error) {
       yield put(loadQuestionByIdRoutine.failure());
-      toastr.error(question.data.error);
+      toastr.error(response.data.error);
       return;
     }
-    yield put(loadQuestionByIdRoutine.success(question.data.data));
 
+    const question: IGeneric<IQuestion> = {
+      ...response.data.data,
+      type: response.data.data.type.toLowerCase(),
+      details: JSON.parse(response.data.data.details)
+    };
+    yield put(loadQuestionByIdRoutine.success(question));
   } catch (error) {
     yield put(loadQuestionByIdRoutine.failure());
     toastr.error('Sorry, something went wrong');

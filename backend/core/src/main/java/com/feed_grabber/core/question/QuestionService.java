@@ -86,6 +86,7 @@ public class QuestionService {
 
         question.setCategory(category);
         question.setText(dto.getName());
+        question.setPayload(dto.getDetails());
 
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
         // question.setText(updateDto.getText());

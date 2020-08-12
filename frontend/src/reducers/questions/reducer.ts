@@ -1,6 +1,7 @@
 import { loadQuestionsRoutine, loadQuestionByIdRoutine } from "sagas/questions/routines";
 import {IAppState} from "models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 export interface IQuestionsState {
     list?: IQuestion[];
@@ -10,7 +11,7 @@ export interface IQuestionsState {
 
 const initialState: IAppState['questions'] = {
     list: [] as IQuestion[],
-    current: undefined as IQuestion,
+    current: defaultQuestion as IQuestion,
     isLoading: false
 };
 
