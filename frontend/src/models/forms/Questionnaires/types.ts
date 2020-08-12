@@ -1,9 +1,18 @@
 import {IPaginationInfo} from "../../IPaginationInfo";
+import {IQuestion} from "../Questions/IQuesion";
+
+export interface IQuestionnairesState {
+    list?: IQuestionnairesListState;
+    current?: {
+        get?: IQuestionnaire;
+        questions?: IQuestion[];
+    };
+}
 
 export interface IQuestionnaire {
-  id: string;
-  title: string;
-  companyName: string;
+    id?: string;
+    title: string;
+    companyName?: string;
 }
 
 export interface ICreateQuestionnaire {

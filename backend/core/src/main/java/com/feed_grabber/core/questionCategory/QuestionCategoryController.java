@@ -34,8 +34,8 @@ public class QuestionCategoryController {
     }
 
     @ApiOperation(value = "Get all the categories of questions from one company")
-    @GetMapping("/companies/{id}")
-    public List<QuestionCategoryDto> getAllByCompany(@PathVariable UUID id) {
+    @GetMapping("/companies")
+    public List<QuestionCategoryDto> getAllByCompany() {
         var id = TokenService.getCompanyId();
         return questionCategoryService.getAllByCompanyId(id);
     }

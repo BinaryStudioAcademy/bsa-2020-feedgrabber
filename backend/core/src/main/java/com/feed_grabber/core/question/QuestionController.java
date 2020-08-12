@@ -1,3 +1,4 @@
+
 package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,34 +40,34 @@ public class QuestionController {
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")
     @GetMapping("/questionnaires/{id}")
-    public List<QuestionDto> getAllByQuestionnaire(@ApiParam(
+    public AppResponse<List<QuestionDto>> getAllByQuestionnaire(@ApiParam(
             value = "ID to get the questions list questionnaire", required = true) @PathVariable UUID id) {
         return new AppResponse<>(questionService.getAllByQuestionnaireId(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get the question by id")
     @GetMapping("/{id}")
-    public QuestionDto getOne(@ApiParam(value = "ID to get the questionnaire",
+    public AppResponse<QuestionDto> getOne(@ApiParam(value = "ID to get the questionnaire",
             required = true) @PathVariable UUID id) throws QuestionnaireNotFoundException {
         return new AppResponse<>(questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new)
                 , HttpStatus.OK);
     }
 
     @ApiOperation(value = "Create new question",
-        notes = "Provide an question object with text, categoryID and questionnaireID to create new question")
+            notes = "Provide an question object with text, categoryID and questionnaireID to create new question")
     @PostMapping
     public AppResponse<QuestionDto> create(@RequestHeader("authorization") String token,
-                              @RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
+                                           @RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
         return new AppResponse<>(questionService.create(dto, tokenService.extractCompanyId(token)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update the question",
-        notes = "Provide an object with id, text, categoryID and questionnaireID to update the question")
+            notes = "Provide an object with id, text, categoryID and questionnaireID to update the question")
     @PutMapping
     public AppResponse<QuestionDto> update(@RequestHeader("authorization") String token,
-                              @RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
+                                           @RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
 
         return new AppResponse<>(questionService.update(updateDto, tokenService.extractCompanyId(token)), HttpStatus.OK);
     }

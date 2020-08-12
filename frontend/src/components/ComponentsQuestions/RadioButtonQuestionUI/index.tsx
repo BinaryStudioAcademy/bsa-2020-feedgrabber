@@ -6,7 +6,7 @@ import {
     useInitValue,
     validState
 } from "../IQuestionInputContract";
-import {IRadioButtonAnswerDetails} from "../../../models/IQuesion";
+import {IRadioButtonAnswerDetails} from "../../../models/forms/Questions/IQuesion";
 
 // TODO: this will be common logic for multiple components, move it to shared folder
 function replaceAtIndex<T>(arr: T[], val: T, index: number) {

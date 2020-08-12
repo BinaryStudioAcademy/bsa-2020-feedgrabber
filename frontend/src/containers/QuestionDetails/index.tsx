@@ -1,23 +1,21 @@
 import React from "react";
 import {History} from "history";
 import {Button, Form, Segment} from "semantic-ui-react";
-import {IQuestion, QuestionType} from "../../models/IQuesion";
 import {Formik} from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
-import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
-import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
-import {nameSchema} from "./schemas";
-import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
 import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
 import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
+import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
+import {nameSchema} from "./schemas";
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 
 const questions: IQuestion[] = [
     {
         id: "1",
-        categoryId: "Soft skills",
+        categoryTitle: "Soft skills",
         name:
             "Can you tell me about a time when you successfully led a team through a sticky situation?",
         type: QuestionType.multichoice,
@@ -27,14 +25,14 @@ const questions: IQuestion[] = [
     },
     {
         id: "2",
-        categoryId: "Leadership",
+        categoryTitle: "Leadership",
         name: "Are you able to delegate responsibilities efficiently?",
         type: QuestionType.freeText,
         details: {}
     },
     {
         id: "3",
-        categoryId: "Leadership",
+        categoryTitle: "Leadership",
         name: "Are you able to delegate responsibilities efficiently?",
         type: QuestionType.scale,
         details: {
@@ -73,7 +71,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
             question: {
                 id: "",
                 name: "",
-                categoryId: "",
+                categoryTitle: "",
                 type: undefined,
                 details: undefined
             },
@@ -86,6 +84,13 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         this.setQuestionType = this.setQuestionType.bind(this);
         this.handleQuestionDetailsUpdate = this.handleQuestionDetailsUpdate.bind(this);
     }
+
+    // onSubmit = () => {
+    //     if (this.state.question) {
+    //         this.props.saveQuestion(this.state.question);
+    //         this.props.history.push("/questions");
+    //     }
+    // };
 
     getQuestion = async (id: string) => {
         if (id !== "new") {
@@ -100,13 +105,11 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     };
 
     onSubmit = () => {
-        console.log(this.state);
         if (this.state.isQuestionDetailsValid) {
             this.props.saveQuestion(this.state.question);
             this.props.history.push("/questions");
         }
     }
-
     readonly questionTypeOptions = [
         {
             key: "Radio",
@@ -153,11 +156,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         const {question} = this.state;
         switch (question.type) {
             case QuestionType.radio:
-                return (
-                    <RadioButtonQuestionUI
-                        onValueChange={this.handleQuestionDetailsUpdate}
-                        value={question.details}/>
-                );
+                return <span>radio</span>; // <RadioButton />;
             case QuestionType.checkbox:
                 return (
                     <CheckboxQuestion
@@ -226,10 +225,10 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                                 />
                                 {!question.type &&
                                 <Form.Dropdown
-                                    selection
-                                    options={this.questionTypeOptions}
-                                    placeholder={"Choose type"}
-                                    onChange={(event, data) => this.setQuestionType(data)}
+                                  selection
+                                  options={this.questionTypeOptions}
+                                  placeholder={"Choose type"}
+                                  onChange={(event, data) => this.setQuestionType(data)}
                                 />
                                 }
                             </Segment>

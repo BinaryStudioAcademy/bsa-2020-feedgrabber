@@ -30,11 +30,11 @@ export interface IScaleDetails {
 }
 
 export interface IQuestionBase<TDetails>{
-    id: string;
-    name: string;
-    categoryId: string;
-    type: QuestionType;
-    details: TDetails;
+  id: string;
+  name: string;
+  categoryTitle: string;
+  type: QuestionType;
+  details: TDetails;
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {
@@ -70,10 +70,10 @@ export type IQuestion =
     | IDateQuestion;
 
 export enum QuestionType {
-    freeText = "free_text",
-    radio = "radio",
-    scale = "scale",
-    checkbox = "checkbox",
-    multichoice = "multichoice",
-    date = "date"
+  freeText = "free_text",
+  radio = "radio",
+  scale = "scale",
+  checkbox = "checkbox",
+  multichoice = "multi_choice",
+  date = "date"
 }
