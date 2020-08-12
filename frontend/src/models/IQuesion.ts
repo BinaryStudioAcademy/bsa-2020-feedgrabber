@@ -2,6 +2,13 @@ export interface IMultiAnswerDetails{
   answerOptions: string[];
 }
 
+export interface IScaleDetails {
+  min: number;
+  minDescription: string;
+  max: number;
+  maxDescription: string;
+}
+
 export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
@@ -14,7 +21,7 @@ export interface IRadioQuestion extends IQuestionBase<IMultiAnswerDetails> {
   type: QuestionType.radio;
 }
 
-export interface IScaleQuestion extends IQuestionBase<{}> {
+export interface IScaleQuestion extends IQuestionBase<IScaleDetails> {
   type: QuestionType.scale;
 }
 
