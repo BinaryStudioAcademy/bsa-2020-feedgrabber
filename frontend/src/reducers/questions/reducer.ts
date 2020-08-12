@@ -1,4 +1,4 @@
-import {loadQuestionsRoutine} from "containers/QuestionsList/routines";
+import {loadQuestionsRoutine} from "sagas/questions/routines";
 import {IAppState} from "models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 

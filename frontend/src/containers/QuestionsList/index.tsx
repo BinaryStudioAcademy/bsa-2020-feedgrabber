@@ -3,7 +3,7 @@ import {useHistory} from "react-router";
 import {Button, Card, Dimmer, Loader} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
-import {loadQuestionsRoutine} from './routines';
+import {loadQuestionsRoutine} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
 
 const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions}) => {

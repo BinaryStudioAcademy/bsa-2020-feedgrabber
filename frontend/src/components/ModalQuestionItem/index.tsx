@@ -1,9 +1,9 @@
 import {Card, Modal} from 'semantic-ui-react';
 import styles from './styles.module.sass';
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useState} from "react";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "../../models/IAppState";
-import {loadQuestionsRoutine} from "../../containers/QuestionsList/routines";
+import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
 import {connect, ConnectedProps} from "react-redux";
 
 interface IItemProps {
@@ -27,7 +27,7 @@ export const ModalQuestionItem: FC<IItemProps> = ({question, handleClick, isSele
         </div>);
 };
 
-export const SelectQuestionsFromExisting: FC<ContainerProps> = ({questions, loadQuestions}) => {
+export const SelectQuestionsFromExisting: FC<ContainerProps> = ({questions, loadQuestions, addQuestions}) => {
     const [selected, setSelected] = useState([] as IQuestion[]);
 
     const handleClick = id => {
@@ -36,18 +36,18 @@ export const SelectQuestionsFromExisting: FC<ContainerProps> = ({questions, load
         ]);
     };
 
-    useEffect(() => {
-        loadQuestions();
-    }, [loadQuestions]);
+    const onClose = () => {
+        selected && addQuestions(selected);
+    };
 
     return (
-        <Modal>
+        <Modal onMount={() => loadQuestions()} onClose={onClose}>
             <Modal.Content scrolling>
                 <Modal.Description>
                     {questions.map(q => <ModalQuestionItem
-                            handleClick={handleClick}
-                            question={q}
-                            isSelected={selected.includes(q)}/>
+                        handleClick={handleClick}
+                        question={q}
+                        isSelected={selected.includes(q)}/>
                     )}
                 </Modal.Description>
             </Modal.Content>
@@ -62,7 +62,8 @@ const mapState = (state: IAppState) => ({
 });
 
 const mapDispatch = {
-    loadQuestions: loadQuestionsRoutine
+    loadQuestions: loadQuestionsRoutine,
+    addQuestions: addSelectedQuestionsRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

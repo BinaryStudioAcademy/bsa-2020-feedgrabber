@@ -8,8 +8,9 @@ import {
 } from '../../sagas/qustionnaires/routines';
 import {IAppState} from "../../models/IAppState";
 import {combineReducers} from "redux";
+import {addSelectedQuestionsRoutine} from "../../sagas/questions/routines";
 
-const questionnairesListReducer = (state: IAppState['questionnaires'] = {}, action) => {
+const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {
     switch (action.type) {
         case loadQuestionnairesRoutine.TRIGGER:
         case deleteQuestionnaireRoutine.TRIGGER:
@@ -65,7 +66,11 @@ const questionnairesListReducer = (state: IAppState['questionnaires'] = {}, acti
 
 const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] = {}, {payload, type}) => {
     switch (type) {
-
+        case addSelectedQuestionsRoutine.TRIGGER:
+            return {
+                ...state,
+                questions : [...state.questions, payload]
+            };
         default:
             return state;
     }
