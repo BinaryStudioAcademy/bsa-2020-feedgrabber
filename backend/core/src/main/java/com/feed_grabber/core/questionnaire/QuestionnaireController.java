@@ -10,6 +10,7 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class QuestionnaireController {
         this.tokenService = tokenService;
     }
 
-
+    @ApiOperation("Get all questionnaires")
     @GetMapping()
     public AppResponse<List<QuestionnaireDto>> getAll() {
         var companyId = TokenService.getCompanyId();
@@ -40,7 +41,7 @@ public class QuestionnaireController {
                 HttpStatus.OK
         );
     }
-
+//    @ApiOperation("Get all questionnaires of company by companyID")
 //    @GetMapping("/companies/{id}")
 //    public AppResponse<List<QuestionnaireDto>> getAllByCompany(@PathVariable UUID id) {
 //        return new AppResponse<>(
@@ -49,6 +50,7 @@ public class QuestionnaireController {
 //        );
 //    }
 
+    @ApiOperation("Get one questionnaire by id")
     @GetMapping("/{id}")
     public AppResponse<QuestionnaireDto> getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
         return new AppResponse<>(
@@ -58,6 +60,7 @@ public class QuestionnaireController {
         );
     }
 
+    @ApiOperation("Create a questionnaire")
     @PostMapping
     public AppResponse<QuestionnaireDto> create(@RequestHeader("authorization") String token,
                                                       @RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
@@ -67,6 +70,7 @@ public class QuestionnaireController {
         );
     }
 
+    @ApiOperation("Update the questionnaire")
     @PutMapping
     public AppResponse<QuestionnaireDto> update(@RequestBody QuestionnaireUpdateDto updateDto) throws QuestionnaireNotFoundException {
         return new AppResponse<>(
@@ -75,6 +79,7 @@ public class QuestionnaireController {
         );
     }
 
+    @ApiOperation("Delete one")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable UUID id) {
         questionnaireService.delete(id);
