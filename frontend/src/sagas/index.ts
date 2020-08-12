@@ -4,7 +4,7 @@ import teamsSagas from './teams/sagas';
 import authSaga from "./auth/sagas";
 import questionSagas from './questions/sagas';
 import questionnairesSagas from "./qustionnaires/sagas";
-import expandedQuestionnaireSagas from "../containers/ExpandedQuestionnaire/sagas";
+import expandedQuestionnaireSagas from "./expandedQuestionnaire/sagas";
 
 export default function* rootSaga() {
   yield all([

@@ -1,4 +1,4 @@
-import {clearOneQuestionnaireRoutine, loadOneQuestionnaireRoutine} from './routines';
+import {clearOneQuestionnaireRoutine, loadOneQuestionnaireRoutine} from '../../sagas/expandedQuestionnaire/routines';
 
 export interface IQuestionnaireDetails {
   id: string;

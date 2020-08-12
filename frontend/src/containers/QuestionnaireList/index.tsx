@@ -13,7 +13,7 @@ import GenericPagination from "../../components/GenericPagination";
 import PaginationListItem from "../../components/GenericPagination/listItem";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {history} from '../../helpers/history.helper';
-import {clearOneQuestionnaireRoutine} from "../ExpandedQuestionnaire/routines";
+import {clearOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IQuestionnaireListProps {

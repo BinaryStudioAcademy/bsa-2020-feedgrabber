@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {IQuestionnaireDetails} from "./reducer";
-import {loadOneQuestionnaireRoutine} from "./routines";
+import {IQuestionnaireDetails} from "../../reducers/expandedQuestionnaire/reducer";
+import {loadOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
 import {connect} from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
