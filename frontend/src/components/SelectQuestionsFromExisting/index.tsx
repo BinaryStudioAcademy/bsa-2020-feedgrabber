@@ -6,7 +6,6 @@ import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";
 import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import { classNames } from 'react-select/src/utils';
 
 const SelectQuestionsFromExisting: FC<ContainerProps> = (
     {
