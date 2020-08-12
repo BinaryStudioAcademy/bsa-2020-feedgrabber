@@ -4,22 +4,22 @@ import React, {FC} from "react";
 import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 
 interface IItemProps {
-    handleClick: (id: string) => void;
+    handleClick: (id: string, isSelected: boolean) => void;
     question: IQuestion;
     isSelected: boolean;
 }
 
 export const ModalQuestionItem: FC<IItemProps> = ({question, handleClick, isSelected}) => {
     return (
-        <div key={question.id} className={styles.questionContainer}>
+        <div className={styles.questionContainer}>
             <Card className={styles.question}
                   link centered fluid
                   style={isSelected?{backgroundColor:"rgba(19, 92, 195, 0.1)"}:{backgroundColor:"white"}}
-                  onClick={() => handleClick(question.id)}>
+                  onClick={() => handleClick(question.id, isSelected)}>
                 <Card.Content className={styles.content}>
                     <Card.Meta>{question.categoryTitle}</Card.Meta>
                     <Card.Description>{question.name}</Card.Description>
-                    <Card.Meta className={styles.right}>{question.type}</Card.Meta>
+                    <Card.Meta className={styles.right}>{question.type.toLowerCase()}</Card.Meta>
                 </Card.Content>
             </Card>
         </div>);
