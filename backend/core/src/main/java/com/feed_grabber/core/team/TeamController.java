@@ -1,5 +1,6 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.team.dto.TeamDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ public class TeamController {
 
     @GetMapping("/teams")
     public AppResponse<List<TeamDto>> getAll() {
-        var teams = service.getAll();
+        var companyId = TokenService.getCompanyId();
+        var teams = service.getAllByCompany_Id(companyId);
         return new AppResponse<>(teams, HttpStatus.OK);
     }
 

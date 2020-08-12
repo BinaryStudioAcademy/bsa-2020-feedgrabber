@@ -8,6 +8,7 @@ import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSe
 import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
+import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import { nameSchema } from "./schemas";
 
@@ -34,25 +35,33 @@ const questions: IQuestion[] = [
     categoryId: "Leadership",
     name: "Are you able to delegate responsibilities efficiently?",
     type: QuestionType.scale,
-    details: {}
+    details: {
+      min: 0,
+      max: 10,
+      minDescription: "",
+      maxDescription: ""
+    }
   }
 ];
 
 interface IQuestionProps {
-  saveQuestion(question: IQuestion): void;
-  match: {
-    params: {
-      id?: string;
+    saveQuestion(question: IQuestion): void;
+
+    match: {
+        params: {
+            id?: string;
+        };
     };
-  };
-  history: History;
+    history: History;
 }
+
 interface IQuestionState {
   initialValues: any;
   validationSchema: any;
   question: IQuestion;
   isQuestionDetailsValid: boolean;
 }
+
 class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
   constructor(props: IQuestionProps) {
     super(props);
@@ -76,17 +85,19 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     this.handleQuestionDetailsUpdate = this.handleQuestionDetailsUpdate.bind(this);
   }
 
-  componentDidMount() {
-    const { match } = this.props;
-    this.getQuestion(match.params.id);
-  }
+    // onSubmit = () => {
+    //     if (this.state.question) {
+    //         this.props.saveQuestion(this.state.question);
+    //         this.props.history.push("/questions");
+    //     }
+    // };
 
   getQuestion = async (id: string) => {
-    if (id !== "new") {
-      const question = questions.find(question => question.id === id);
-      const initialValues = { name: question.name, answers: question.details };
-      this.setState({ ...this.state, question, isQuestionDetailsValid: true, initialValues });
-    }
+      if (id !== "new") {
+          const question = questions.find(question => question.id === id);
+          const initialValues = {name: question.name, answers: question.details};
+          this.setState({...this.state, question, isQuestionDetailsValid: true, initialValues});
+      }
   }
 
   onClose = () => {
@@ -98,7 +109,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
       this.props.saveQuestion(this.state.question);
       this.props.history.push("/questions");
     }
-  };
+}
 
   readonly questionTypeOptions = [
     {
@@ -157,7 +168,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
           />
         );
       case QuestionType.scale:
-        return <FreeTextQuestionUI />;
+        return (
+          <ScaleQuestion 
+                  onValueChange={this.handleQuestionDetailsUpdate}
+                  value={question.details}
+                />
+        );
       case QuestionType.freeText:
         return <InputField />;
       case QuestionType.date:
@@ -230,4 +246,5 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     );
   }
 }
+
 export default QuestionDetails;

@@ -1,38 +1,15 @@
 import {
-  addQuestionnaireRoutine, deleteQuestionnaireRoutine,
+  addQuestionnaireRoutine,
+  deleteQuestionnaireRoutine,
   hideModalQuestionnaireRoutine,
   loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
-  showModalQuestionnaireRoutine, updateQuestionnaireRoutine
-} from './routines';
-import {IPaginationInfo} from "../../models/IPaginationInfo";
+  showModalQuestionnaireRoutine,
+  updateQuestionnaireRoutine
+} from '../../sagas/qustionnaires/routines';
+import {IAppState} from "../../models/IAppState";
+import {combineReducers} from "redux";
 
-export interface IQuestionnaire {
-  id: string;
-  title: string;
-  companyName: string;
-}
-
-export interface ICreateQuestionnaire {
-  title: string;
-  companyId: string;
-}
-
-export interface IUpdateQuestionnaire {
-  id: string;
-  title: string;
-  companyId: string;
-}
-
-interface IQuestionnairesListState {
-  isLoading?: boolean;
-  pagination?: IPaginationInfo<IQuestionnaire>;
-  modalShown?: boolean;
-  modalQuestionnaire?: IQuestionnaire;
-  modalLoading?: boolean;
-  modalError?: string;
-}
-
-export default (state: IQuestionnairesListState = {}, action): IQuestionnairesListState => {
+const questionnairesListReducer = (state: IAppState['questionnaires'] = {}, action) => {
   switch (action.type) {
     case setQuestionnairePaginationRoutine.TRIGGER:
       return {
@@ -88,5 +65,7 @@ export default (state: IQuestionnairesListState = {}, action): IQuestionnairesLi
       };
     default:
       return state;
-  }
+    }
 };
+
+export default questionnairesListReducer;

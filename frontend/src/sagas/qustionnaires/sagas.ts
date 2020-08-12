@@ -1,15 +1,14 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
-import {select} from 'redux-saga/effects';
-
 import {
-  addQuestionnaireRoutine,
-  deleteQuestionnaireRoutine,
-  hideModalQuestionnaireRoutine,
-  loadQuestionnairesRoutine, updateQuestionnaireRoutine
+    addQuestionnaireRoutine,
+    deleteQuestionnaireRoutine,
+    hideModalQuestionnaireRoutine,
+    loadQuestionnairesRoutine,
+    updateQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
-import {IQuestionnaire} from "./reducer";
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 function* loadQuestionnairesList(action: any) {
   try {
