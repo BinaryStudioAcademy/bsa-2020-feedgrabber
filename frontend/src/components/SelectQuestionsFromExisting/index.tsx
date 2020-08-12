@@ -1,10 +1,12 @@
 import {Button, Modal} from 'semantic-ui-react';
+import styles from './styles.module.sass';
 import React, {FC, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";
 import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import { classNames } from 'react-select/src/utils';
 
 const SelectQuestionsFromExisting: FC<ContainerProps> = (
     {
@@ -38,9 +40,10 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
         <Modal
             onMount={() => loadQuestions()}
             onClose={onClose}
+            className={styles.questionModal}
             trigger={<Button content="Add From Existing"/>}
         >
-            <Modal.Content scrolling>
+            <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>
                     {display.map(q => <ModalQuestionItem
                         handleClick={handleClick}

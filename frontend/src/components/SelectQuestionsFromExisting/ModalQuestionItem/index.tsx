@@ -14,6 +14,7 @@ export const ModalQuestionItem: FC<IItemProps> = ({question, handleClick, isSele
         <div key={question.id} className={styles.questionContainer}>
             <Card className={styles.question}
                   link centered fluid
+                  style={isSelected?{backgroundColor:"rgba(19, 92, 195, 0.1)"}:{backgroundColor:"white"}}
                   onClick={() => handleClick(question.id)}>
                 <Card.Content className={styles.content}>
                     <Card.Meta>{question.categoryTitle}</Card.Meta>
