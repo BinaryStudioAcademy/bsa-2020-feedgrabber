@@ -35,6 +35,7 @@ export interface IQuestionBase<TDetails>{
   categoryTitle: string;
   type: QuestionType;
   details: TDetails;
+  answer?: string | string[];
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {

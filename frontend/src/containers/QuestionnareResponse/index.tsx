@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, List, Button, Form} from 'semantic-ui-react';
-import { IQuestion, QuestionType } from '../../models/IQuesion';
+import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
 import FreeTextQuestion from '../../components/ComponentsQuestionsResponse/FreeTextQuestion';
 import { history } from '../../helpers/history.helper';
 import styles from './styles.module.scss';
@@ -135,7 +135,7 @@ class QuestionnaireResponse extends React.Component<IResponseProps, IResponseSta
 const defaultQuestions: IQuestion[] = [
     {
       id: "1",
-      categoryId: "Soft skills",
+      categoryTitle: "Soft skills",
       name:
         "Can you tell me about a time when you successfully led a team through a sticky situation?",
       type: QuestionType.multichoice,
@@ -145,16 +145,16 @@ const defaultQuestions: IQuestion[] = [
     },
     {
       id: "2",
-      categoryId: "Leadership",
+      categoryTitle: "Leadership",
       name: "Are you able to delegate responsibilities efficiently?",
       type: QuestionType.freeText,
       details: {}
     },
     {
       id: "3",
-      categoryId: "Abilities",
+      categoryTitle: "Abilities",
       name: "How do you handle stress and pressure?",
-      type: QuestionType.scale,
+      type: QuestionType.freeText,
       details: {}
     }
   ];

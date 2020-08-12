@@ -1,4 +1,4 @@
-import { IQuestion } from "models/IQuesion";
+import { IQuestion } from '../../models/forms/Questions/IQuesion';
 import { IComponentState } from "./IComponentProps";
 
 export function getValidAnswer<T> (question: IQuestion, answer: string | string[]): IComponentState {

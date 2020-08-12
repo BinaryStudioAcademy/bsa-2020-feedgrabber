@@ -1,4 +1,4 @@
-import { IQuestion } from 'models/IQuesion';
+import { IQuestion } from '../../models/forms/Questions/IQuesion';
 
 export interface IComponentState {
     question: IQuestion;
