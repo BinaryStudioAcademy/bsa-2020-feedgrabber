@@ -15,6 +15,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
         isLoading
     }) => {
     const [selected, setSelected] = useState([] as IQuestion[]);
+    const [open, setOpen] = useState(false);
 
     const handleClick = id => {
         setSelected([
@@ -22,8 +23,9 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
         ]);
     };
 
-    const onClose = () => {
-        addQuestions(selected);
+    const handleSubmit = () => {
+        selected && addQuestions(selected);
+        setOpen(false);
     };
 
     const display = questions.filter(q => {
@@ -36,19 +38,32 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
 
     return (
         <Modal
+            open={open}
             onMount={() => loadQuestions()}
-            onClose={onClose}
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
             trigger={<Button content="Add From Existing"/>}
         >
             <Modal.Content scrolling>
                 <Modal.Description>
                     {display.map(q => <ModalQuestionItem
+                        key={q.id}
                         handleClick={handleClick}
                         question={q}
                         isSelected={selected.includes(q)}/>
                     )}
                 </Modal.Description>
             </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setOpen(false)} content="Cancel"/>
+                <Button
+                    content="Add"
+                    labelPosition='right'
+                    icon='checkmark'
+                    onClick={handleSubmit}
+                    positive
+                />
+            </Modal.Actions>
         </Modal>);
 };
 
