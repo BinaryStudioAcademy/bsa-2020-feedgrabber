@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {Button, Form, Grid, Image} from "semantic-ui-react";
 import './styles.sass';
 import '../styles.sass';
@@ -26,15 +26,11 @@ const validationSchema = yup.object().shape({
 });
 
 const ProfileInfo: FC<ProfileInfoProps> = props => {
-        const {user, save, isLoading, pullUser} = props;
-
-        useEffect(() => {
-            pullUser();
-        }, [pullUser]);
+        const {user, save, isLoading} = props;
 
         return (
                 <Grid container textAlign="center">
-                    {!isLoading &&
+                    {!isLoading && user &&
                     <Grid.Column>
                       <Image centered src={user.avatar}
                              size={"small"} circular/>

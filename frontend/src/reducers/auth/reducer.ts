@@ -1,11 +1,8 @@
 import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
-import {IUserErrors, IUserInfo} from "../../models/user/types";
 
 const initialState = {
-    isLoading: false,
-    info: {} as IUserInfo,
-    error: {} as IUserErrors
+    isLoading: false
 };
 
 const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
