@@ -1,7 +1,8 @@
+import {IPaginationInfo} from "../../IPaginationInfo";
 import {IQuestion} from "../Questions/IQuesion";
 
 export interface IQuestionnairesState {
-    list?: IQuestionnairesList;
+    list?: IQuestionnairesListState;
     current?: {
         get?: IQuestionnaire;
         questions?: IQuestion[];
@@ -14,11 +15,20 @@ export interface IQuestionnaire {
     companyName?: string;
 }
 
-export interface IQuestionnairesList {
-    isLoading?: boolean;
-    items?: IQuestionnaire[];
-    modalShown?: boolean;
-    modalQuestionnaire?: IQuestionnaire;
-    modalLoading?: boolean;
-    modalError?: string;
+export interface ICreateQuestionnaire {
+  title: string;
+}
+
+export interface IUpdateQuestionnaire {
+  id: string;
+  title: string;
+}
+
+export interface IQuestionnairesListState {
+  isLoading?: boolean;
+  pagination?: IPaginationInfo<IQuestionnaire>;
+  modalShown?: boolean;
+  modalQuestionnaire?: IQuestionnaire;
+  modalLoading?: boolean;
+  modalError?: string;
 }
