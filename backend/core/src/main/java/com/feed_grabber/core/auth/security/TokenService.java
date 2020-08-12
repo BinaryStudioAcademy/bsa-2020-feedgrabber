@@ -1,37 +1,52 @@
 package com.feed_grabber.core.auth.security;
 
+import com.feed_grabber.core.auth.dto.TokenValuesDto;
 import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.feed_grabber.core.auth.security.SecurityConstants.REFRESH_TOKEN_EXPIRATION_TIME;
-import static com.feed_grabber.core.auth.security.SecurityConstants.TOKEN_EXPIRATION_TIME;
+import static com.feed_grabber.core.auth.security.SecurityConstants.*;
 
 @Service
 public class TokenService {
     @Value(value = "${auth0.secret-key}")
     private String SECRET_KEY;
 
-    public static UUID getUserId() {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        var currentUserId = (String) auth.getPrincipal();
-        return UUID.fromString(currentUserId);
-    }
-
     public String extractUserid(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public UUID extractCompanyId(String token) {
+        var body = getAllClaimsFromToken(token)
+                .get(COMPANY_ID_KEY, String.class);
+        return UUID.fromString(body);
+    }
+
+    public String extractRoleName(String token) {
+        return getAllClaimsFromToken(token)
+                .get(AUTHORITIES_KEY, String.class);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Date extractExpiration(String token) {
@@ -51,36 +66,39 @@ public class TokenService {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateAccessToken(UUID id, Map<String, Object> claims) {
-        return generateToken(id, claims, TOKEN_EXPIRATION_TIME);
+    public String generateAccessToken(TokenValuesDto user) {
+        return generateToken(user, TOKEN_EXPIRATION_TIME);
     }
 
-    public String generateRefreshToken(UUID id, Map<String, Object> claims) {
-        return generateToken(id, claims, REFRESH_TOKEN_EXPIRATION_TIME);
+    public String generateRefreshToken(TokenValuesDto user) {
+        return generateToken(user, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     public TokenRefreshResponseDTO refreshTokens(String refreshToken) {
         try {
             if (refreshToken != null && !isTokenExpired(refreshToken)) {
                 var userId = UUID.fromString(extractUserid(refreshToken));
-                var companyId = UUID.fromString(extractClaim(refreshToken, claims -> (String) claims.get("companyId")));
+                var companyId = extractCompanyId(refreshToken);
+                var role = extractRoleName(refreshToken);
+                var tokenDto = new TokenValuesDto(userId, companyId, role);
 
-                String jwt = generateToken(userId, Map.of("companyId", companyId), TOKEN_EXPIRATION_TIME);
-                String refreshJwt = generateToken(userId, Map.of("companyId", companyId), REFRESH_TOKEN_EXPIRATION_TIME);
-
+                String jwt = generateToken(tokenDto, TOKEN_EXPIRATION_TIME);
+                String refreshJwt = generateToken(tokenDto, REFRESH_TOKEN_EXPIRATION_TIME);
                 return new TokenRefreshResponseDTO(jwt, refreshJwt);
             }
             throw new JwtTokenException("No token passed");
-        } catch (Exception e) {
-            throw new JwtTokenException("Token expired/invalid");
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException("Token expired");
         }
     }
 
-    private String generateToken(UUID subject, Map<String, Object> claims, long expiration) {
-        var key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+    private String generateToken(TokenValuesDto dto, long expiration) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+        var claims = Jwts.claims().setSubject(dto.getUserId().toString());
+        claims.put(COMPANY_ID_KEY, dto.getCompanyId().toString());
+        claims.put(AUTHORITIES_KEY, dto.getRole());
         return Jwts.builder()
-                .setSubject(subject.toString())
-                .addClaims(claims)
+                .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -88,10 +106,19 @@ public class TokenService {
 
     }
 
-    public UUID extractCompanyId(String token) {
-        var res = extractClaim(token.split(" ", 2)[1], claims -> (String) claims.get("companyId"));
+    public static UUID getUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var currentUserId = (String)auth.getPrincipal();
+        return  UUID.fromString(currentUserId);
+    }
 
-        return UUID.fromString(res);
+    public static UUID getCompanyId() {
+        Map<String, Object> info = (Map<String, Object>)SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getDetails();
+        var companyId = (String)info.get(COMPANY_ID_KEY);
+        return UUID.fromString(companyId);
     }
 
 }
