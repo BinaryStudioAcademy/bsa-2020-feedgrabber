@@ -8,6 +8,7 @@ export interface IQuestionBase<TDetails>{
   categoryId: string;
   type: QuestionType;
   details: TDetails;
+  answer?: string | string[];
 }
 
 export interface IRadioQuestion extends IQuestionBase<IMultiAnswerDetails> {
