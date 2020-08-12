@@ -8,52 +8,50 @@ import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
 import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
 import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
-import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
-import {mainSchema} from "./schemas";
+import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
+import { mainSchema } from "./schemas";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
 import {IAppState} from "../../models/IAppState";
-import {loadTeamsRoutine} from "../../sagas/teams/routines";
-import {connect, ConnectedProps} from "react-redux";
-import {saveQuestionRoutine} from "../../sagas/questions/routines";
+import { connect } from "react-redux";
+import { saveQuestionRoutine } from "../../sagas/questions/routines";
+import { loadQuestionByIdRoutine } from "../../sagas/questions/routines";
 
-const questions: IQuestion[] = [
-    {
-        id: "1",
-        categoryTitle: "Soft skills",
-        name:
-            "Can you tell me about a time when you successfully led a team through a sticky situation?",
-        category: "gg",
-        type: QuestionType.multichoice,
-        details: {
-            answerOptions: ["1", "2"]
-        }
-    },
-    {
-        id: "2",
-        categoryTitle: "Leadership",
-        name: "Are you able to delegate responsibilities efficiently?",
-        category: "gg",
-        type: QuestionType.freeText,
-        details: {}
-    },
-    {
-        id: "3",
-        categoryTitle: "Leadership",
-        name: "Are you able to delegate responsibilities efficiently?",
-        category: "gg",
-        type: QuestionType.scale,
-        details: {
-            min: 0,
-            max: 10,
-            minDescription: "",
-            maxDescription: ""
-        }
-    }
-];
+// const questions: IQuestion[] = [
+//     {
+//         id: "1",
+//         categoryTitle: "Soft skills",
+//         name:
+//             "Can you tell me about a time when you successfully led a team through a sticky situation?",
+//         type: QuestionType.multichoice,
+//         details: {
+//             answerOptions: ["1", "2"]
+//         }
+//     },
+//     {
+//         id: "2",
+//         categoryTitle: "Leadership",
+//         name: "Are you able to delegate responsibilities efficiently?",
+//         type: QuestionType.freeText,
+//         details: {}
+//     },
+//     {
+//         id: "3",
+//         categoryTitle: "Leadership",
+//         name: "Are you able to delegate responsibilities efficiently?",
+//         type: QuestionType.scale,
+//         details: {
+//             min: 0,
+//             max: 10,
+//             minDescription: "",
+//             maxDescription: ""
+//         }
+//     }
+// ];
 
 interface IQuestionProps {
     saveQuestion(question: IQuestion): void;
+    loadQuestion(id: string): void;
 
     match: {
         params: {
@@ -75,11 +73,10 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         super(props);
         this.state = {
             validationSchema: mainSchema,
-            initialValues: {name: "", answers: []},
+            initialValues: {name: "", categoryTitle: "" },
             question: {
                 id: "",
                 name: "",
-                category: "",
                 categoryTitle: "",
                 type: undefined,
                 details: undefined
@@ -89,24 +86,31 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         this.onClose = this.onClose.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.renderForm = this.renderForm.bind(this);
-        this.getQuestion = this.getQuestion.bind(this);
         this.setQuestionType = this.setQuestionType.bind(this);
         this.handleQuestionDetailsUpdate = this.handleQuestionDetailsUpdate.bind(this);
     }
 
-    // onSubmit = () => {
-    //     if (this.state.question) {
-    //         this.props.saveQuestion(this.state.question);
-    //         this.props.history.push("/questions");
-    //     }
-    // };
+    componentDidMount() {
+        const { match, loadQuestion } = this.props;
+        match.params.id !== 'new'
+            ? loadQuestion(match.params.id)
+            : loadQuestion('empty');
+    }
 
-    getQuestion = async (id: string) => {
-        if (id !== "new") {
-            const question = questions.find(question => question.id === id);
-            const initialValues = {name: question.name, answers: question.details};
-            this.setState({...this.state, question, isQuestionDetailsValid: true, initialValues});
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (!nextProps.question || nextProps.question.id === prevState.question.id) {
+            return null;
         }
+        const type = nextProps.question.type.toLowerCase();
+        const details = JSON.parse(nextProps.question.details);
+        return nextProps.question && (nextProps.question.id !== prevState.question.id)
+            ? { question: { ...nextProps.question, type, details },
+                  initialValues: {
+                      name: nextProps.question.name,
+                      categoryTitle: nextProps.question.categoryTitle
+                  }
+              }
+            : null;
     }
 
     onClose = () => {
@@ -118,16 +122,13 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
             this.setState({...this.state,
                 question: { ...this.state.question,
                     name: values.name,
-                    category: values.category }
+                    categoryTitle: values.categoryTitle }
             });
             this.props.saveQuestion(this.state.question);
+            this.props.loadQuestion('empty');
             this.props.history.push("/questions");
         }
     }
-
-  onChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
-    // const newValue = e.target.;
-  }
 
     readonly questionTypeOptions = [
         {
@@ -229,6 +230,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
             >
                 {formik => (
                     <div className="question_container">
+
                         <Form className="question_form" onSubmit={formik.handleSubmit}>
                             <Segment className="question_header">
                                 <Form.Input
@@ -246,21 +248,21 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 />
-                              <Form.Input
-                                className="question_name_input"
-                                fluid
-                                placeholder="Type question category"
-                                type="text"
-                                value={formik.values.category}
-                                name="category"
-                                error={
-                                  formik.touched.category && formik.errors.category
-                                    ? formik.errors.category
-                                    : undefined
-                                }
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                              />
+                                <Form.Input
+                                  className="question_name_input"
+                                  fluid
+                                  placeholder="Type question category"
+                                  type="text"
+                                  value={formik.values.categoryTitle}
+                                  name="categoryTitle"
+                                  error={
+                                    formik.touched.categoryTitle && formik.errors.categoryTitle
+                                      ? formik.errors.categoryTitle
+                                      : undefined
+                                  }
+                                  onChange={formik.handleChange}
+                                  onBlur={formik.handleBlur}
+                                />
                                 {!question.type &&
                                 <Form.Dropdown
                                   selection
@@ -289,10 +291,17 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     }
 }
 
-const mapDispatch = {
-  saveQuestion: saveQuestionRoutine
+const mapState = (state: IAppState) => {
+  return {
+    question: state.questions.current
+  };
 };
 
-const connector = connect(null, mapDispatch);
+const mapDispatch = {
+  saveQuestion: saveQuestionRoutine,
+  loadQuestion: loadQuestionByIdRoutine
+};
+
+const connector = connect(mapState, mapDispatch);
 
 export default connector(QuestionDetails);

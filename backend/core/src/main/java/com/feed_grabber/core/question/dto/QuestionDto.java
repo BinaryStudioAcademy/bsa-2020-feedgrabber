@@ -11,7 +11,7 @@ import java.util.UUID;
 public class QuestionDto {
     UUID id;
     String name;
-    String category;
+    String categoryTitle;
     QuestionType type;
     String details;
 }

@@ -17,7 +17,7 @@ public class QuestionCreateDto {
     @NotBlank
     String name;
 
-    String category;
+    String categoryTitle;
 
     @NotNull
     QuestionType type;

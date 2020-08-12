@@ -63,7 +63,7 @@ public class QuestionService {
         // var questionnaire = anketRep.findById(dto.getQuestionnaireId())
         //         .orElseThrow(QuestionnaireNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategory(), company);
+        var category = findOrCreateCategory(dto.getCategoryTitle(), company);
 
         var q = Question.builder()
                 .category(category)
@@ -82,10 +82,10 @@ public class QuestionService {
         var question = quesRep.findById(dto.getId())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryName(), company);
+        var category = findOrCreateCategory(dto.getCategoryTitle(), company);
 
         question.setCategory(category);
-        question.setText(dto.getText());
+        question.setText(dto.getName());
 
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
         // question.setText(updateDto.getText());

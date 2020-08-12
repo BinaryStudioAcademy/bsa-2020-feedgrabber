@@ -32,7 +32,6 @@ export interface IScaleDetails {
 export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
-  category: string;
   categoryTitle: string;
   type: QuestionType;
   details: TDetails;

@@ -15,7 +15,7 @@ import org.mapstruct.factory.Mappers;
 public abstract class QuestionMapper {
     public static QuestionMapper MAPPER = Mappers.getMapper(QuestionMapper.class);
 
-    @Mapping(source = "category.title", target = "category")
+    @Mapping(source = "category.title", target = "categoryTitle")
     @Mapping(source = "text", target = "name")
     @Mapping(source = "payload", target = "details")
     public abstract QuestionDto questionToQuestionDto(Question question);

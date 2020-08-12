@@ -1,34 +1,33 @@
 package com.feed_grabber.core.question;
 
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
+
+import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 
 import java.io.IOException;
 import java.util.UUID;
 
-public class CustomDes extends StdDeserializer<QuestionCreateDto> {
-    public CustomDes() {
+public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
+    public QuestionUpdateDes() {
         this(null);
     }
 
-    public CustomDes(Class<?> vc) {
+    public QuestionUpdateDes(Class<?> vc) {
         super(vc);
     }
 
     @Override
-    public QuestionCreateDto deserialize(JsonParser jp, DeserializationContext ctxt)
+    public QuestionUpdateDto deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
-        // String id = (node.get("questionnaireId")).asText();
+        var id = UUID.fromString((node.get("id")).asText());
         String payload = node.get("details").toString();
         String category = node.get("categoryTitle").asText();
-        String type = node.get("type").asText();
         String text = node.get("name").asText();
-
-        return new QuestionCreateDto(text, category, QuestionType.fromString(type), payload);
-
+        return new QuestionUpdateDto(id, text, category, payload);
     }
 }

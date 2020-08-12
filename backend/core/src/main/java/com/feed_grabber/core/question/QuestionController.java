@@ -66,9 +66,11 @@ public class QuestionController {
     @ApiOperation(value = "Update the question",
             notes = "Provide an object with id, text, categoryID and questionnaireID to update the question")
     @PutMapping
-    public AppResponse<QuestionDto> update(@RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
+    public AppResponse<QuestionDto> update(@RequestBody String json)
+            throws QuestionNotFoundException, JsonProcessingException {
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(questionService.update(updateDto, companyId), HttpStatus.OK);
+        QuestionUpdateDto dto = new ObjectMapper().readValue(json, QuestionUpdateDto.class);
+        return new AppResponse<>(questionService.update(dto, companyId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete the question")

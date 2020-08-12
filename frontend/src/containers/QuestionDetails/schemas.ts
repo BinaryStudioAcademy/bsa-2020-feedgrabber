@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 export const mainSchema = Yup.object().shape({
   name: Yup.string().required('Question should have name'),
-  category: Yup.string().required('Category can not be empty')
+  categoryTitle: Yup.string().required('Category can not be empty')
 });
 
 export const multichoiceSchema = Yup.object().shape({

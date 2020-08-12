@@ -1,5 +1,5 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { loadQuestionsRoutine, saveQuestionRoutine } from './routines';
+import {loadQuestionByIdRoutine, loadQuestionsRoutine, saveQuestionRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
@@ -7,17 +7,47 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 function* getAll() {
   const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `api/questions`);
-
-  if (res.data.error) {
+  try {
+    if (res.data.error) {
+      yield put(loadQuestionsRoutine.failure());
+      toastr.error(res.data.error);
+      return;
+    }
+    yield put(loadQuestionsRoutine.success(res.data.data));
+  } catch (error) {
     yield put(loadQuestionsRoutine.failure());
-    toastr.error(res.data.error);
-    return;
+    toastr.error('Sorry, something went wrong');
   }
-  yield put(loadQuestionsRoutine.success(res.data.data));
+}
+
+function* getById(action) {
+  try {
+    const id = action.payload;
+    if (id === 'empty') {
+      loadQuestionByIdRoutine.success({});
+      return;
+    }
+
+    const question: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${action.payload}`);
+    if (question.data.error) {
+      yield put(loadQuestionByIdRoutine.failure());
+      toastr.error(question.data.error);
+      return;
+    }
+    yield put(loadQuestionByIdRoutine.success(question.data.data));
+
+  } catch (error) {
+    yield put(loadQuestionByIdRoutine.failure());
+    toastr.error('Sorry, something went wrong');
+  }
 }
 
 function* save(action) {
-  const res: IGeneric<IQuestion> = yield call(apiClient.post, `api/questions`, action.payload);
+  const question = action.payload;
+
+  const res: IGeneric<IQuestion> = question.id
+    ? yield call(apiClient.put, `api/questions`, question)
+    : yield call(apiClient.post, `api/questions`, question);
 
   if (res.data.error) {
     yield put(saveQuestionRoutine.failure());
@@ -31,6 +61,7 @@ function* save(action) {
 export default function* questionSagas() {
   yield all([
     yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
-    yield takeEvery(saveQuestionRoutine.TRIGGER, save)
+    yield takeEvery(saveQuestionRoutine.TRIGGER, save),
+    yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById)
   ]);
 }
