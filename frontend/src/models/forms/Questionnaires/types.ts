@@ -1,24 +1,25 @@
-import {IQuestion} from "../Questions/types";
-
-export interface IQuestionnairesState {
-    list?: IQuestionnairesList;
-    current?: {
-        get?: IQuestionnaire;
-        questions?: IQuestion[];
-    };
-}
+import {IPaginationInfo} from "../../IPaginationInfo";
 
 export interface IQuestionnaire {
-    id?: string;
-    title: string;
-    companyName?: string;
+  id: string;
+  title: string;
+  companyName: string;
 }
 
-export interface IQuestionnairesList {
-    isLoading?: boolean;
-    items?: IQuestionnaire[];
-    modalShown?: boolean;
-    modalQuestionnaire?: IQuestionnaire;
-    modalLoading?: boolean;
-    modalError?: string;
+export interface ICreateQuestionnaire {
+  title: string;
+}
+
+export interface IUpdateQuestionnaire {
+  id: string;
+  title: string;
+}
+
+export interface IQuestionnairesListState {
+  isLoading?: boolean;
+  pagination?: IPaginationInfo<IQuestionnaire>;
+  modalShown?: boolean;
+  modalQuestionnaire?: IQuestionnaire;
+  modalLoading?: boolean;
+  modalError?: string;
 }

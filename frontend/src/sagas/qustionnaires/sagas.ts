@@ -1,4 +1,4 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
     addQuestionnaireRoutine,
@@ -9,63 +9,70 @@ import {
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
-import {IGeneric} from "../../models/IGeneric";
 
-function* loadQuestionnairesList() {
-    const res: IGeneric<IQuestionnaire[]> = yield call(apiClient.get, `api/questionnaires`);
+function* loadQuestionnairesList(action: any) {
+  try {
+    const store = yield select();
+    const {page, size} = store.questionnaires.pagination;
+    const res = yield call(
+      apiClient.get,
+      `http://localhost:5000/api/questionnaires?page=${page}&size=${size}`
+    );
+    const items = res.data.data;
 
-    if (res.data.error) {
-        yield put(loadQuestionnairesRoutine.failure());
-        toastr.error(res.data.error);
-        return;
-    }
-    yield put(loadQuestionnairesRoutine.success(res.data.data));
+    yield put(loadQuestionnairesRoutine.success(items));
+  } catch (error) {
+    yield put(loadQuestionnairesRoutine.failure(error));
+    toastr.error("Unable to fetch data");
+  }
 }
 
-function* addQuestionnaire(action) {
-    console.log(action);
-    const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `api/questionnaires`, action.payload);
-    if (res.data.error) {
-        yield put(addQuestionnaireRoutine.failure());
-        toastr.error(res.data.error);
-        yield put(hideModalQuestionnaireRoutine.trigger());
-        return;
-    }
+function* addQuestionnaire(action: any) {
+  try {
+    const questionnaire: IQuestionnaire = action.payload;
+    yield call(apiClient.post, `http://localhost:5000/api/questionnaires`, questionnaire);
+
     yield put(hideModalQuestionnaireRoutine.trigger());
     yield put(loadQuestionnairesRoutine.trigger());
     toastr.success("Added questionnaire");
-    yield put(addQuestionnaireRoutine.success(res.data.data));
+  } catch (errorResponse) {
+    yield put(addQuestionnaireRoutine.failure(errorResponse.response?.data?.error || 'No response'));
+  }
 }
 
-function* updateQuestionnaire(action) {
-    const res: IGeneric<IQuestionnaire> = yield call(apiClient.put, `api/questionnaires`, action.payload);
-    if (res.data.error) {
-        yield put(updateQuestionnaireRoutine.failure());
-        toastr.error(res.data.error);
-        return;
-    }
+function* updateQuestionnaire(action: any) {
+  try {
+    const questionnaire: IQuestionnaire = action.payload;
+    yield call(apiClient.put, `http://localhost:5000/api/questionnaires`, questionnaire);
+
     yield put(hideModalQuestionnaireRoutine.trigger());
     yield put(loadQuestionnairesRoutine.trigger());
     toastr.success("Updated questionnaire");
+  } catch (errorResponse) {
+    yield put(updateQuestionnaireRoutine.failure(errorResponse.response?.data?.error || 'No response'));
+  }
 }
 
-function* deleteQuestionnaire(action) {
-    const res: IGeneric<null> = yield call(apiClient.delete, `api/questionnaires/${action.payload}`);
-    if (res.data.error) {
-        yield put(deleteQuestionnaireRoutine.failure());
-        toastr.error(res.data.error);
-        return;
-    }
+function* deleteQuestionnaire(action: any) {
+  try {
+    const id: string = action.payload;
+    yield call(apiClient.delete, `http://localhost:5000/api/questionnaires/${id}`);
+
     yield put(deleteQuestionnaireRoutine.success());
     toastr.success("Deleted questionnaire");
     yield put(loadQuestionnairesRoutine.trigger());
+  } catch (errorResponse) {
+    yield put(deleteQuestionnaireRoutine.failure());
+    toastr.error(errorResponse.response?.data?.error || 'No response');
+    yield put(loadQuestionnairesRoutine.trigger());
+  }
 }
 
 export default function* questionnairesSagas() {
-    yield all([
-        yield takeEvery(loadQuestionnairesRoutine.TRIGGER, loadQuestionnairesList),
-        yield takeEvery(addQuestionnaireRoutine.TRIGGER, addQuestionnaire),
-        yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
-        yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire)
-    ]);
+  yield all([
+    yield takeEvery(loadQuestionnairesRoutine.TRIGGER, loadQuestionnairesList),
+    yield takeEvery(addQuestionnaireRoutine.TRIGGER, addQuestionnaire),
+    yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
+    yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire)
+  ]);
 }
