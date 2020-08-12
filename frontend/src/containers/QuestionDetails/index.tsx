@@ -16,7 +16,6 @@ import {connect, ConnectedProps} from "react-redux";
 import { saveQuestionRoutine } from "../../sagas/questions/routines";
 import { loadQuestionByIdRoutine } from "../../sagas/questions/routines";
 import {useHistory} from "react-router-dom";
-import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 // const questions: IQuestion[] = [
 //     {
@@ -82,7 +81,7 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
     match.params.id === 'new'
       ? loadQuestion('empty')
       : loadQuestion(match.params.id);
-  }, []);
+  }, [loadQuestion, match.params.id]);
 
   useEffect(() => {
     setQuestion(currentQuestion);
