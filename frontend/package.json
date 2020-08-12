@@ -33,7 +33,8 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "styled-components": "^4.4.1",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "react-player": "latest"
   },
   "scripts": {
     "start": "react-app-rewired start",
