@@ -24,6 +24,9 @@ const schema = yup.object().shape({
         .required("Password required")
         .min(6, "Password too short!")
         .max(30, "Password too long!"),
+    passwordRepeat: yup
+        .string()
+        .oneOf([yup.ref('password'), null], 'Passwords must match'),
     username: yup
         .string()
         .required("Username required")
@@ -36,7 +39,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
     return (
         <Formik
-            initialValues={{email: '', password: '', companyName: '', username: ''}}
+            initialValues={{email: '', password: '', companyName: '', username: '', passwordRepeat: ''}}
             validationSchema={schema}
             onSubmit={values => {
                 signUp({
@@ -55,7 +58,8 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.email || errors.companyName || errors.password || error;
+                const errorText = errors.username || errors.email ||
+                    errors.companyName || errors.password || errors.passwordRepeat || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
@@ -73,8 +77,12 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
+                        <Input name="passwordRepeat" type="password"
+                               placeholder="Confirm password" value={values.passwordRepeat}
+                               onChange={handleChange} onBlur={handleBlur}
+                        />
                         {
-                            errorText && <Message attached="top" error size="small" content={errorText}/>
+                            errorText && <Message attached="top" error size="tiny" content={errorText}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
