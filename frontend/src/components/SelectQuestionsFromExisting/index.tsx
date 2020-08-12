@@ -48,7 +48,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
             className={styles.questionModal}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            trigger={<Button content="Add From Existing"/>}
+            trigger={<Button content="Add From Existing" disabled={display.length?false:true}/>}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>
