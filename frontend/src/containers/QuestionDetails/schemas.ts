@@ -1,7 +1,8 @@
 import * as Yup from 'yup';
 
-export const nameSchema = Yup.object().shape({
-  name: Yup.string().required('Question should have name')
+export const mainSchema = Yup.object().shape({
+  name: Yup.string().required('Question should have name'),
+  category: Yup.string().required('Category can not be empty')
 });
 
 export const multichoiceSchema = Yup.object().shape({

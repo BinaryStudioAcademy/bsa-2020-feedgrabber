@@ -9,8 +9,13 @@ import MultichoiseQuestion from "../../components/ComponentsQuestions/Multichois
 import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
 import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
-import {nameSchema} from "./schemas";
+import {mainSchema} from "./schemas";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
+import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
+import {IAppState} from "../../models/IAppState";
+import {loadTeamsRoutine} from "../../sagas/teams/routines";
+import {connect, ConnectedProps} from "react-redux";
+import {saveQuestionRoutine} from "../../sagas/questions/routines";
 
 const questions: IQuestion[] = [
     {
@@ -18,6 +23,7 @@ const questions: IQuestion[] = [
         categoryTitle: "Soft skills",
         name:
             "Can you tell me about a time when you successfully led a team through a sticky situation?",
+        category: "gg",
         type: QuestionType.multichoice,
         details: {
             answerOptions: ["1", "2"]
@@ -27,6 +33,7 @@ const questions: IQuestion[] = [
         id: "2",
         categoryTitle: "Leadership",
         name: "Are you able to delegate responsibilities efficiently?",
+        category: "gg",
         type: QuestionType.freeText,
         details: {}
     },
@@ -34,6 +41,7 @@ const questions: IQuestion[] = [
         id: "3",
         categoryTitle: "Leadership",
         name: "Are you able to delegate responsibilities efficiently?",
+        category: "gg",
         type: QuestionType.scale,
         details: {
             min: 0,
@@ -66,11 +74,12 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     constructor(props: IQuestionProps) {
         super(props);
         this.state = {
-            validationSchema: nameSchema,
+            validationSchema: mainSchema,
             initialValues: {name: "", answers: []},
             question: {
                 id: "",
                 name: "",
+                category: "",
                 categoryTitle: "",
                 type: undefined,
                 details: undefined
@@ -110,6 +119,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
             this.props.history.push("/questions");
         }
     }
+
     readonly questionTypeOptions = [
         {
             key: "Radio",
@@ -156,7 +166,11 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
         const {question} = this.state;
         switch (question.type) {
             case QuestionType.radio:
-                return <span>radio</span>; // <RadioButton />;
+                return (
+                  <RadioButtonQuestionUI
+                    value={question.details}
+                    onValueChange={this.handleQuestionDetailsUpdate} />
+                );
             case QuestionType.checkbox:
                 return (
                     <CheckboxQuestion
@@ -223,6 +237,21 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 />
+                              <Form.Input
+                                className="question_name_input"
+                                fluid
+                                placeholder="Type question category"
+                                type="text"
+                                value={formik.values.category}
+                                name="category"
+                                error={
+                                  formik.touched.category && formik.errors.category
+                                    ? formik.errors.category
+                                    : undefined
+                                }
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                              />
                                 {!question.type &&
                                 <Form.Dropdown
                                   selection
@@ -251,4 +280,10 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
     }
 }
 
-export default QuestionDetails;
+const mapDispatch = {
+  saveQuestion: saveQuestionRoutine
+};
+
+const connector = connect(null, mapDispatch);
+
+export default connector(QuestionDetails);

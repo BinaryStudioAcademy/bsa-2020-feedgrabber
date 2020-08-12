@@ -60,16 +60,15 @@ public class QuestionService {
     public QuestionDto create(QuestionCreateDto dto, UUID companyId) throws QuestionnaireNotFoundException {
         var company = companyRep.findById(companyId).get();
 
-        var questionnaire = anketRep.findById(dto.getQuestionnaireId())
-                .orElseThrow(QuestionnaireNotFoundException::new);
+        // var questionnaire = anketRep.findById(dto.getQuestionnaireId())
+        //         .orElseThrow(QuestionnaireNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryName(), company);
+        var category = findOrCreateCategory(dto.getCategory(), company);
 
         var q = Question.builder()
                 .category(category)
-                .payload(dto.getPayload())
-                .questionnaires(List.of(questionnaire))
-                .text(dto.getText())
+                .payload(dto.getDetails())
+                .text(dto.getName())
                 .type(dto.getType())
                 .company(company)
                 .build();

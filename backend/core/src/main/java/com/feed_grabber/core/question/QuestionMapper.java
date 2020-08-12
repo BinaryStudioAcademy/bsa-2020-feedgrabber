@@ -15,17 +15,22 @@ import org.mapstruct.factory.Mappers;
 public abstract class QuestionMapper {
     public static QuestionMapper MAPPER = Mappers.getMapper(QuestionMapper.class);
 
-    @Mapping(source = "category.title", target = "categoryTitle")
+    @Mapping(source = "category.title", target = "category")
     @Mapping(source = "text", target = "name")
     @Mapping(source = "payload", target = "details")
     public abstract QuestionDto questionToQuestionDto(Question question);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "category", target = "category")
-    @Mapping(source = "createDto.text", target = "text")
+    @Mapping(source = "createDto.name", target = "text")
     @Mapping(target = "questionnaires", ignore = true)
     @Mapping(target = "company", source="questionnaire.company")
-    public abstract Question questionCreateDtoToModel(QuestionCreateDto createDto, Questionnaire questionnaire, QuestionCategory category);
+    @Mapping(target = "payload", source="createDto.details")
+    public abstract Question questionCreateDtoToModel(
+            QuestionCreateDto createDto,
+            Questionnaire questionnaire,
+            QuestionCategory category
+    );
 
     @AfterMapping
     protected void setQuestionnaire(Questionnaire questionnaire, @MappingTarget Question question) {

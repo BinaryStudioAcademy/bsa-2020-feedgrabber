@@ -24,12 +24,10 @@ import java.util.UUID;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final TokenService tokenService;
 
     @Autowired
-    public QuestionController(QuestionService questionService, TokenService tokenService) {
+    public QuestionController(QuestionService questionService) {
         this.questionService = questionService;
-        this.tokenService = tokenService;
     }
 
     @ApiOperation(value = "Get all questions from repo")
@@ -49,27 +47,28 @@ public class QuestionController {
     @GetMapping("/{id}")
     public AppResponse<QuestionDto> getOne(@ApiParam(value = "ID to get the questionnaire",
             required = true) @PathVariable UUID id) throws QuestionnaireNotFoundException {
-        return new AppResponse<>(questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new)
-                , HttpStatus.OK);
+        return new AppResponse<>(
+                questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new),
+                HttpStatus.OK
+        );
     }
 
     @ApiOperation(value = "Create new question",
             notes = "Provide an question object with text, categoryID and questionnaireID to create new question")
     @PostMapping
-    public AppResponse<QuestionDto> create(@RequestHeader("authorization") String token,
-                                           @RequestBody String json) throws QuestionnaireNotFoundException, JsonProcessingException {
+    public AppResponse<QuestionDto> create(@RequestBody String json)
+            throws QuestionnaireNotFoundException, JsonProcessingException {
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
-
-        return new AppResponse<>(questionService.create(dto, tokenService.extractCompanyId(token)), HttpStatus.OK);
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<>(questionService.create(dto, companyId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update the question",
             notes = "Provide an object with id, text, categoryID and questionnaireID to update the question")
     @PutMapping
-    public AppResponse<QuestionDto> update(@RequestHeader("authorization") String token,
-                                           @RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
-
-        return new AppResponse<>(questionService.update(updateDto, tokenService.extractCompanyId(token)), HttpStatus.OK);
+    public AppResponse<QuestionDto> update(@RequestBody QuestionUpdateDto updateDto) throws QuestionNotFoundException {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<>(questionService.update(updateDto, companyId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Delete the question")

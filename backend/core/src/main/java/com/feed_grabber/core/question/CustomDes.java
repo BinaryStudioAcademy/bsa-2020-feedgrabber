@@ -22,13 +22,13 @@ public class CustomDes extends StdDeserializer<QuestionCreateDto> {
     public QuestionCreateDto deserialize(JsonParser jp, DeserializationContext ctxt)
             throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
-        String id = (node.get("questionnaireId")).asText();
-        String payload = node.get("payload").toString();
-        String category = node.get("categoryName").asText();
+        // String id = (node.get("questionnaireId")).asText();
+        String payload = node.get("details").toString();
+        String category = node.get("category").asText();
         String type = node.get("type").asText();
-        String text = node.get("text").asText();
+        String text = node.get("name").asText();
 
-        return new QuestionCreateDto(text, category, QuestionType.valueOf(type), UUID.fromString(id), payload);
+        return new QuestionCreateDto(text, category, QuestionType.fromString(type), payload);
 
     }
 }
