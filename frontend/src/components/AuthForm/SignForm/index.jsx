@@ -28,7 +28,7 @@ const Container = styled.div`
   overflow: hidden;
   width: 768px;
   max-width: 100%;
-  min-height: 480px;
+  min-height: 560px;
   text-align: center;
 `;
 

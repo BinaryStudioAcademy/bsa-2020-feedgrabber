@@ -1,4 +1,4 @@
-import * as IQuestion from "../../models/IQuesion";
+import * as IQuestion from "../../models/forms/Questions/IQuesion";
 /*
 export const Checkbox = (question: IQuestion.ICheckboxQuestion) => {
     return { name: question.name, answers: question.answerOptions };

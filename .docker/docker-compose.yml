@@ -37,6 +37,20 @@ services:
         max-size: "10m"
         max-file: "5"
 
+  # event-processor
+  event-processor:
+    image: 'fg-event-processor:latest'
+    container_name: 'fg-event-processor'
+    ports:
+      - '5001:5001'
+    env_file:
+      - ../.env/event-processor.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   # Frontend
   client:
     image: 'fg-client:latest'

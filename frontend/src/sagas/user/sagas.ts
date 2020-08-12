@@ -2,7 +2,7 @@ import {call, put, takeEvery} from 'redux-saga/effects';
 import apiClient from '../../helpers/apiClient';
 import {IUserInfo} from "../../models/user/types";
 import {IGeneric} from "../../models/IGeneric";
-import {getUserRoutine} from "../../components/AuthForm/routines";
+import {getUserRoutine} from "../auth/routines";
 
 function* getUser() {
     const res: IGeneric<IUserInfo> = yield call(apiClient.get, `api/user`);
