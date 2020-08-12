@@ -5,7 +5,7 @@ import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
-import SelectQuestionsFromExisting from "../../components/ModalQuestionItem";
+import SelectQuestionsFromExisting from "../../components/SelectQuestionsFromExisting";
 
 const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions}) => {
     const history = useHistory();
