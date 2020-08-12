@@ -9,6 +9,7 @@ import {
 import {IAppState} from "../../models/IAppState";
 import {combineReducers} from "redux";
 import {addSelectedQuestionsRoutine} from "../../sagas/questions/routines";
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {
     switch (action.type) {
@@ -64,12 +65,13 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
     }
 };
 
-const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] = {}, {payload, type}) => {
+const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] =
+                                         {questions:[], get:{} as IQuestionnaire}, {payload, type}) => {
     switch (type) {
         case addSelectedQuestionsRoutine.TRIGGER:
             return {
                 ...state,
-                questions : [...state.questions, payload]
+                questions : [...state.questions, ...payload]
             };
         default:
             return state;

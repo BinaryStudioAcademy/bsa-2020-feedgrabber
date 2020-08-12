@@ -1,4 +1,4 @@
-import {Card, Modal} from 'semantic-ui-react';
+import {Button, Card, Modal} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import React, {FC, useState} from "react";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
@@ -27,8 +27,23 @@ export const ModalQuestionItem: FC<IItemProps> = ({question, handleClick, isSele
         </div>);
 };
 
-export const SelectQuestionsFromExisting: FC<ContainerProps> = ({questions, loadQuestions, addQuestions}) => {
+const SelectQuestionsFromExisting: FC<ContainerProps> = (
+    {
+        questions,
+        loadQuestions,
+        addQuestions,
+        currentQuestions,
+        isLoading
+    }) => {
     const [selected, setSelected] = useState([] as IQuestion[]);
+
+    function difference(setA, setB) {
+        const _diff = new Set(setA);
+        for (const elem of setB) {
+            _diff.delete(elem);
+        }
+        return _diff;
+    }
 
     const handleClick = id => {
         setSelected([
@@ -37,26 +52,32 @@ export const SelectQuestionsFromExisting: FC<ContainerProps> = ({questions, load
     };
 
     const onClose = () => {
-        selected && addQuestions(selected);
+        addQuestions(selected);
     };
 
+    const diff = difference(new Set(questions), new Set(currentQuestions));
+    const display = [...diff] as IQuestion[];
+
     return (
-        <Modal onMount={() => loadQuestions()} onClose={onClose}>
+        <Modal
+            onMount={() => loadQuestions()}
+            onClose={onClose}
+            trigger={<Button content="Add From Existing"/>}
+        >
             <Modal.Content scrolling>
                 <Modal.Description>
-                    {questions.map(q => <ModalQuestionItem
+                    {display.map(q => <ModalQuestionItem
                         handleClick={handleClick}
                         question={q}
                         isSelected={selected.includes(q)}/>
                     )}
                 </Modal.Description>
             </Modal.Content>
-            <Modal.Actions>
-            </Modal.Actions>
         </Modal>);
 };
 
 const mapState = (state: IAppState) => ({
+    currentQuestions: state.questionnaires.current.questions,
     isLoading: state.user.isLoading,
     questions: state.questions.list
 });
