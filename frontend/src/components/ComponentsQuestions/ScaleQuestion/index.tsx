@@ -6,7 +6,7 @@ import {
     validState
   } from "../IQuestionInputContract";
 import styles from './styles.module.sass';
-import { IScaleDetails } from 'models/IQuesion';
+import {IScaleDetails} from "../../../models/forms/Questions/IQuesion";
 
 const getOptions = (from: number, to: number) => {
     const options: Array<any> = [];
@@ -34,11 +34,11 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
          onValueChange
     );
     console.log(values);
-    return ( 
-        <Form className={styles.container}> 
+    return (
+        <Form className={styles.container}>
             <div className={[styles.dropdown, styles.container].join(' ')}>
                     <Dropdown compact selection className={styles.first}
-                        options={optionsForMin} 
+                        options={optionsForMin}
                         name="min"
                         value={values.min}
                         onChange = {(e, data) => {
@@ -46,16 +46,16 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
                                     validState({
                                         ...values,
                                         min: Number(data.value)
-                                    }));}}/> 
-                    <Dropdown compact selection 
-                        options={optionsForMax}  
+                                    }));}}/>
+                    <Dropdown compact selection
+                        options={optionsForMax}
                         name="max"
                         value={values.max}
                         onChange = {(e, data) => onValueChange(
                                     validState({
                                         ...values,
                                         max: Number(data.value)
-                                    }))}/> 
+                                    }))}/>
             </div>
             <div className={styles.container}>
                 <div className={styles.description}>

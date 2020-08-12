@@ -6,9 +6,8 @@ import {
   validState,
   invalidState
 } from "../IQuestionInputContract";
-import {IMultiAnswerDetails} from "../../../models/IQuesion";
-
-import "./styles.sass";
+import './styles.sass';
+import {IMultiAnswerDetails} from "../../../models/forms/Questions/IQuesion";
 
 // TODO: this will be common logic for multiple components, move it to shared folder
 function replaceAtIndex<T>(arr: T[], val: T, index: number) {

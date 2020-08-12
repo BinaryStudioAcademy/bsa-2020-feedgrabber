@@ -15,14 +15,9 @@ import org.mapstruct.factory.Mappers;
 public abstract class QuestionMapper {
     public static QuestionMapper MAPPER = Mappers.getMapper(QuestionMapper.class);
 
-    @Mapping(source = "question.id", target = "id")
-    @Mapping(source = "question.category.title", target = "categoryTitle")
-    @Mapping(source = "questionnaire.title", target = "questionnaireTitle")
-    public abstract QuestionDto questionToQuestionDto(Question question, Questionnaire questionnaire);
-
     @Mapping(source = "category.title", target = "categoryTitle")
-    @Mapping(target = "questionnaireTitle",
-            expression = "java(question.getQuestionnaires().size() > 0 ? question.getQuestionnaires().get(0).getTitle() : null)")
+    @Mapping(source = "text", target = "name")
+    @Mapping(source = "payload", target = "details")
     public abstract QuestionDto questionToQuestionDto(Question question);
 
     @Mapping(target = "id", ignore = true)

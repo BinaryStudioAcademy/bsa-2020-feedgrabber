@@ -95,12 +95,12 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  pagination: rootState.questionnaires.pagination,
-  modalShown: rootState.questionnaires.modalShown,
-  modalQuestionnaire: rootState.questionnaires.modalQuestionnaire,
-  isLoading: rootState.questionnaires.isLoading,
-  modalLoading: rootState.questionnaires.modalLoading,
-  modalError: rootState.questionnaires.modalError
+  pagination: rootState.questionnaires.list.pagination,
+  modalShown: rootState.questionnaires.list.modalShown,
+  modalQuestionnaire: rootState.questionnaires.list.modalQuestionnaire,
+  isLoading: rootState.questionnaires.list.isLoading,
+  modalLoading: rootState.questionnaires.list.modalLoading,
+  modalError: rootState.questionnaires.list.modalError
 });
 
 const mapDispatchToProps = {

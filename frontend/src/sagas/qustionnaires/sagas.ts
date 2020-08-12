@@ -13,10 +13,10 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 function* loadQuestionnairesList(action: any) {
   try {
     const store = yield select();
-    const {page, size} = store.questionnaires.pagination;
-    const res = yield call(
+    const {page, size} = store.questionnaires.list.pagination;
+      const res = yield call(
       apiClient.get,
-      `http://localhost:5000/api/questionnaires?page=${page}&size=${size}`
+      `api/questionnaires?page=${page}&size=${size}`
     );
     const items = res.data.data;
 
@@ -26,11 +26,10 @@ function* loadQuestionnairesList(action: any) {
     toastr.error("Unable to fetch data");
   }
 }
-
 function* addQuestionnaire(action: any) {
   try {
     const questionnaire: IQuestionnaire = action.payload;
-    yield call(apiClient.post, `http://localhost:5000/api/questionnaires`, questionnaire);
+    yield call(apiClient.post, `api/questionnaires`, questionnaire);
 
     yield put(hideModalQuestionnaireRoutine.trigger());
     yield put(loadQuestionnairesRoutine.trigger());
@@ -43,7 +42,7 @@ function* addQuestionnaire(action: any) {
 function* updateQuestionnaire(action: any) {
   try {
     const questionnaire: IQuestionnaire = action.payload;
-    yield call(apiClient.put, `http://localhost:5000/api/questionnaires`, questionnaire);
+    yield call(apiClient.put, `api/questionnaires`, questionnaire);
 
     yield put(hideModalQuestionnaireRoutine.trigger());
     yield put(loadQuestionnairesRoutine.trigger());
@@ -56,7 +55,7 @@ function* updateQuestionnaire(action: any) {
 function* deleteQuestionnaire(action: any) {
   try {
     const id: string = action.payload;
-    yield call(apiClient.delete, `http://localhost:5000/api/questionnaires/${id}`);
+    yield call(apiClient.delete, `api/questionnaires/${id}`);
 
     yield put(deleteQuestionnaireRoutine.success());
     toastr.success("Deleted questionnaire");

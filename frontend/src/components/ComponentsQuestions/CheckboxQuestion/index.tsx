@@ -3,8 +3,8 @@ import {FieldArray, FormikProps} from "formik";
 import {Button, Form, Icon} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import CustomInput from "./CustomInput";
-import {ICheckboxAnswerDetails} from "../../../models/IQuesion";
 import {IGenericQuestionComponent, invalidState, useInitValue} from "../IQuestionInputContract";
+import {ICheckboxAnswerDetails} from "../../../models/forms/Questions/IQuesion";
 
 // TODO: this will be common logic for multiple components, move it to shared folder
 function replaceAtIndex<T>(arr: T[], val: T, index: number) {

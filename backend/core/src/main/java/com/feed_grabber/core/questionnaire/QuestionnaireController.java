@@ -25,16 +25,14 @@ import java.util.UUID;
 public class QuestionnaireController {
 
     private final QuestionnaireService questionnaireService;
-    private final TokenService tokenService;
 
     @Autowired
-    public QuestionnaireController(QuestionnaireService questionnaireService, TokenService tokenService) {
+    public QuestionnaireController(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
-        this.tokenService = tokenService;
     }
 
     @ApiOperation("Get all questionnaires")
-    @GetMapping()
+    @GetMapping
     public AppResponse<DataList<QuestionnaireDto>> getAll(
                 @RequestParam Integer page,
                 @RequestParam Integer size
