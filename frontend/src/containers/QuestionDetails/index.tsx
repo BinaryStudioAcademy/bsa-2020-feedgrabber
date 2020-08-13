@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { History } from "history";
-import { Button, DropdownItemProps, Form, Segment } from "semantic-ui-react";
+import { Button, Form, Segment } from "semantic-ui-react";
 import { Formik } from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
