@@ -8,41 +8,50 @@ import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class VerificationTokenService {
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    VerificationTokenRepository verificationTokenRepository;
+    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository, UserRepository userRepository) {
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.userRepository = userRepository;
+    }
 
-    @Autowired
-    UserRepository userRepository;
-
-    public void generateVerificationToken(User user) {
+    public String generateVerificationToken(User user, TokenType type) {
         String token = UUID.randomUUID().toString();
-        var verificationToken = new VerificationToken(token, user);
-        verificationTokenRepository.save(verificationToken);
+        var verificationToken = new VerificationToken(token, user, type);
+
+        return verificationTokenRepository.save(verificationToken).getToken();
 
 //TODO:  send request to email service
 //        var dto = SendVerificationEmailDto.builder().email(user.getEmail()).url(UrlPrefix + token)
 //        emailService.sendEmail(dto);
     }
 
-    public void verifyUserByToken(String token)
+    public User verifyUserByToken(String token, TokenType type)
             throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
-        VerificationToken verificationToken = verificationTokenRepository
+
+        var vToken = verificationTokenRepository
                 .findByToken(token)
                 .orElseThrow(() -> new VerificationTokenNotFoundException(token));
-        if (verificationToken.isExpired()) {
+
+        if (vToken.isExpired()) {
             throw new VerificationTokenExpiredException(token);
         }
 
-        User user = verificationToken.getUser();
+        if (!vToken.getType().equals(type)) {
+            throw new VerificationTokenNotFoundException(token);
+        }
+
+        User user = vToken.getUser();
         user.setIsEnabled(true);
 
-        userRepository.save(user);
-        verificationTokenRepository.delete(verificationToken);
+        verificationTokenRepository.delete(vToken);
+        return userRepository.save(user);
     }
 
 }

@@ -14,6 +14,8 @@ import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +30,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
+    private final PasswordEncoder passwordEncoder;
 
-
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, CompanyRepository companyRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, CompanyRepository companyRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -109,11 +112,21 @@ public class UserService implements UserDetailsService {
 
     public Optional<UserDto> updateUser(UUID id, UserDto userDto) {
         var userToUpdate = userRepository.getOne(id);
+
         userToUpdate.setEmail(userDto.getEmail());
-        userToUpdate.setPassword(userDto.getPassword());
+        userToUpdate.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userToUpdate.setUsername(userDto.getUsername());
-        userRepository.save(userToUpdate);
-        return Optional.of(UserMapper.MAPPER.userToUserDto(userToUpdate));
+
+        return Optional.of(UserMapper.MAPPER
+                .userToUserDto(userRepository.save(userToUpdate)));
+    }
+
+    public Optional<UserDto> updatePassword(UUID id, String password) {
+        var userToUpdate = userRepository.getOne(id);
+        userToUpdate.setPassword(passwordEncoder.encode(password));
+
+        return Optional.of(UserMapper.MAPPER
+                .userToUserDto(userRepository.save(userToUpdate)));
     }
 
     public void deleteUser(UUID id) {
