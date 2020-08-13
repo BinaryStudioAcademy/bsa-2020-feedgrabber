@@ -24,11 +24,10 @@ public enum QuestionType {
         return this.value;
     }
 
-    public static QuestionType fromString(String text) {
+    public static Optional<QuestionType> fromString(String text) {
         return Stream.of(QuestionType.values())
                 .filter(type -> type.value.equalsIgnoreCase(text))
-                .findFirst()
-                .orElseThrow(() -> new QuestionTypeNotExistsException("This type of question does not exists " + text));
+                .findFirst();
     }
 
     @Override
