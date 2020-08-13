@@ -5,6 +5,7 @@ import authSaga from "./auth/sagas";
 import questionSagas from './questions/sagas';
 import questionnairesSagas from "./qustionnaires/sagas";
 import expandedQuestionnaireSagas from "./expandedQuestionnaire/sagas";
+import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
 
 export default function* rootSaga() {
@@ -15,6 +16,7 @@ export default function* rootSaga() {
     teamsSagas(),
     questionnairesSagas(),
     expandedQuestionnaireSagas(),
+    categorieSagas(),
     companiesSaga()
   ]);
 }
