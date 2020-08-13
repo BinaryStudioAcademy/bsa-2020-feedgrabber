@@ -11,9 +11,11 @@ import QuestionsList from "../QuestionsList";
 import QuestionDetails from "../QuestionDetails";
 import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
+import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import UserList from "../UserList";
+import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -25,6 +27,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
         <Switch>
           <PublicRoute exact path="/layout" component={Landing} />
           <PublicRoute exact path="/auth" component={SignForm} />
+          <PublicRoute exact path="/reset/:id" component={ResetPasswordForm} />
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/profile/settings" component={ProfileX} />
@@ -36,7 +39,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
-          <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
            <PrivateRoute exact path="/employees" component={UserList} />

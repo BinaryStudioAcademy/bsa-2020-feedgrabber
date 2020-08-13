@@ -5,6 +5,9 @@ import teamsSagas from './teams/sagas';
 import authSaga from "./auth/sagas";
 import questionSagas from './questions/sagas';
 import questionnairesSagas from "./qustionnaires/sagas";
+import expandedQuestionnaireSagas from "./expandedQuestionnaire/sagas";
+import categorieSagas from './categories/sagas';
+import companiesSaga from "./companies/sagas";
 
 export default function* rootSaga() {
   yield all([
@@ -13,6 +16,9 @@ export default function* rootSaga() {
     questionSagas(),
     teamsSagas(),
     questionnairesSagas(),
-    usersSagas()
+    usersSagas(),
+    expandedQuestionnaireSagas(),
+    categorieSagas(),
+    companiesSaga()
   ]);
 }

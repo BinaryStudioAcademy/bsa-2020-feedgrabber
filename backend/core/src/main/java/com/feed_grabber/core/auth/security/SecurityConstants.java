@@ -8,15 +8,20 @@ public class SecurityConstants {
     public static final String AUTH_HEADER_STRING = "Authorization";
     public static final String[] ROUTES_WHITE_LIST = {
             "/api/auth/login",
+            "/api/user/email/reset",
+            "/api/user/reset",
             "/api/auth/register",
             "/api/auth/register/confirm",
             "/api/auth/renovate",
+            "/api/company/user-companies",
             "/v2/api-docs",
             "/configuration/ui",
             "/swagger-resources/**",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**"
+            "/webjars/**",
+            "/webjars",
+            "/swagger-resources"
     };
     public static final String AUTHORITIES_KEY = "role";
     public static final String COMPANY_ID_KEY = "companyId";
