@@ -1,0 +1,33 @@
+$container-height: 55vh
+
+.addFile
+  display: grid
+  grid-template-columns: 50% 50%
+  height: $container-height
+
+.Upload
+  grid-column: 1
+
+.images
+  grid-column: 2
+  grid-row: 1
+  max-height: 100%
+  overflow-y: scroll
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.images > img
+  margin: 5px
+
+.urlUpload
+  height: $container-height
+  overflow: auto
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.urlInput
+  margin-bottom: 5px
+  width: 100%
+

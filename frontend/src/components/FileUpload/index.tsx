@@ -1,135 +1,78 @@
 import React, {useState} from "react";
-import {Container, Icon, Segment, Tab} from "semantic-ui-react";
-import Upload from "./Upload";
-import UrlFile from "./UrlFile";
-import Progress from "./progress";
+import { Tab } from "semantic-ui-react";
+import VideoUrl from "./UrlVideo";
+import Dropzone from "./Dropzone";
+import styles from "./styles.module.sass";
+import ImageUrl from "./ImageUrl";
 
 const FileUpload = () => {
     const [files, setFiles] = useState([]);
     const [images, setImages] = useState([]);
     const [uploading, setUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState({});
-    const [successfulUploaded, setSuccessfulUploaded] = useState(false);
 
-    const onFilesAdded = newFiles => {
-        const addedFiles = files.length + newFiles.length <= 10? newFiles : newFiles.slice(0, 10 - files.length);
-        setFiles(files.concat(addedFiles));
+    const onFilesAdded = async addedFiles => {
+        const newFiles = files.length + addedFiles.length <= 10 ? addedFiles : addedFiles.slice(0, 10 - files.length);
+        setFiles(files.concat(newFiles));
 
-        addedFiles.forEach(loadImage);
-    };
-
-    const loadImage = file => {
-        const reader = new FileReader();
-        reader.onload = fileSrc => {
-            setImages(images.concat(fileSrc));
-            console.log(fileSrc);
-        };
-
-        reader.addEventListener('load', e => {
-            setImages(images.concat(e.target.result));
-        });
-
-        reader.readAsDataURL(file);
-    };
-
-    const uploadFiles = async () => {
-        setUploadProgress({});
-        setUploading(true);
-
+        const addedImages = [];
         const promises = [];
-        files.forEach(file => {
-            promises.push(sendRequest(file));
-        });
-        try {
-            await Promise.all(promises);
-
-            setSuccessfulUploaded(true);
-            setUploading(false);
-        } catch (e) {
-            // Not Production ready! Do some error handling here instead...
-            setSuccessfulUploaded(true);
-            setUploading(false);
+        for (const file of newFiles) {
+            promises.push(loadImage(file, addedImages));
         }
+        await Promise.all(promises);
+        setImages(images.concat(addedImages));
     };
 
-    const sendRequest = file => {
-        console.log("Request to server");
-    };
-
-    const renderProgress = file => {
-        if (uploading || successfulUploaded) {
-            return (
-                <div className="ProgressWrapper">
-                  <Progress progress={uploadProgress ? 100 : 0} />
-                  <Icon
-                      name="checkmark"
-                  />
-                </div>
-            );
-        } else {
+    const loadImage = (file, images) => {
+        if (!file.type.startsWith("image")) {
             return null;
         }
-    };
 
-    const renderActions = () => {
-        if (successfulUploaded) {
-            return (
-                <button
-                    onClick={() => {
-                        setFiles([]);
-                        setSuccessfulUploaded(false);
-                    }}
-                >
-                  Clear
-                </button>
-                    );
-                } else {
-                    return (
-                        <button
-                            disabled={files.length < 0 || uploading}
-                            onClick={uploadFiles}
-                        >
-                  Upload
-                </button>
-                    );
-                }
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                resolve(images.push(reader.result));
+            };
+
+            reader.readAsDataURL(file);
+        });
     };
 
     const panes = [
         {
             menuItem: "Add",
             render: () =>
-                <Tab.Pane className="addFile">
-                    <Upload
-                        files={files}
-                        images={images}
-                        uploading={uploading}
-                        successfulUploaded={successfulUploaded}
-                        onFilesAdded={onFilesAdded}
-                        renderProgress={renderProgress}
-                        renderActions={renderActions}
-                    />
-                    <Container className="images">
-                      {images.map(image => {
-                          return <img className="ui medium image" src={image} />;
-                      })}
-                    </Container>
+                <Tab.Pane>
+                    <div className={styles.addFile} >
+                        <Dropzone
+                            disabled={uploading || files.length >= 10}
+                            onFilesAdded={onFilesAdded}
+                        />
+                        <div className={styles.images}>
+                            {images.map(image => {
+                              return <img className="ui medium image" src={image} />;
+                            })}
+                        </div>
+                    </div>
                 </Tab.Pane>
         },
         {
-            menuItem: "Url",
-            render: () => <Tab.Pane><UrlFile/></Tab.Pane>
+            menuItem: "Video URL",
+            render: () => <Tab.Pane><VideoUrl/></Tab.Pane>
         },
         {
-            menuItem: "Uploaded files",
-            render: () => <Tab.Pane><div>Upload</div></Tab.Pane>
+            menuItem: "Image URL",
+            render: () => <Tab.Pane><ImageUrl/></Tab.Pane>
         }
     ];
 
     return (
-        <Segment>
-            <Tab panes={panes}/>
-        </Segment>
+        <div className={styles.segment} >
+            <Tab
+                className={styles.tab}
+                panes={panes}
+            />
+        </div>
     );
 };
 

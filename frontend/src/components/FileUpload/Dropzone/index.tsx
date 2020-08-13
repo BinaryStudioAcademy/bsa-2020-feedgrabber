@@ -2,7 +2,7 @@ import React, { createRef, RefObject, useState} from "react";
 import "./styles.sass";
 import {Icon} from "semantic-ui-react";
 
- const Dropzone = ({ disabled, onFilesAdded }) => {
+const Dropzone = ({ disabled, onFilesAdded }) => {
   const fileInputRef: RefObject<HTMLElement> = createRef();
   const [ highlight, setHighlight ] = useState(false);
 
