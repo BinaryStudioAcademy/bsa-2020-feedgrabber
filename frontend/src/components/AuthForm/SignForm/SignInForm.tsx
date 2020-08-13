@@ -10,7 +10,6 @@ import {Button as SemanticButton, Grid, Header, Icon, Message, Segment} from "se
 import {IAppState} from "../../../models/IAppState";
 import CompanySelectorForm from "./CompanySelectorForm";
 import styles from "./CompanySelectorForm/styles.module.sass";
-import {toastr} from 'react-redux-toastr';
 import {dropCompanyRoutine} from "../../../sagas/companies/routines";
 
 const schema = yup.object().shape({
