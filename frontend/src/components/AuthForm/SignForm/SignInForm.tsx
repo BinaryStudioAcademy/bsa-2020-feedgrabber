@@ -45,7 +45,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
                 </Grid.Column>
                 <Grid.Column width={12}>
                     <Header textAlign='left' as='h4' className={styles.company}>
-                        BinaryStudio
+                        {company.name}
                     </Header>
                 </Grid.Column>
             </Grid>
@@ -57,7 +57,8 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
             onSubmit={values => {
                 signIn({
                     password: values.password,
-                    username: values.username
+                    username: values.username,
+                    companyId: company.id
                 });
             }
             }

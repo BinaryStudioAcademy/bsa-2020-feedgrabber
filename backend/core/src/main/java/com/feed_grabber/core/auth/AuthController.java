@@ -34,7 +34,7 @@ public class AuthController {
         var pass = dto.getPassword();
         registerService.registerUser(dto);
 
-        var loginDto = new UserLoginDTO(pass, dto.getUsername());
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
         return login(loginDto);
     }
 
