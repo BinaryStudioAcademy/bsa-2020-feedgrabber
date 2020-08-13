@@ -1,6 +1,8 @@
+import Cookies from 'js-cookie';
+
 const createTokenProvider = () => {
   let _token: { accessToken: string; refreshToken: string } | null =
-    JSON.parse(localStorage.getItem("BSA_AUTH"));
+      Cookies.get("BSA_AUTH") ? JSON.parse(Cookies.get("BSA_AUTH")) : null;
 
   let observers: Array<(isLogged: boolean) => void> = [];
 
@@ -22,8 +24,8 @@ const createTokenProvider = () => {
   const getRefreshToken = () => _token?.refreshToken;
 
   const setToken = (token: typeof _token) => {
-    if (token) localStorage.setItem("BSA_AUTH", JSON.stringify(token));
-    else localStorage.removeItem("BSA_AUTH");
+    if (token) Cookies.set("BSA_AUTH", JSON.stringify(token), {path: '/', domain: '.feedgrabber.com.localhost' });
+    else Cookies.remove("BSA_AUTH", {path: '/', domain: '.feedgrabber.com.localhost' });
 
     _token = token;
     notify();
