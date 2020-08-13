@@ -57,18 +57,18 @@ public class Handler extends ResponseEntityExceptionHandler {
                 .body(new AppResponse<>(exception));
     }
 
-    @ExceptionHandler(value = InsertionException.class)
-    public ResponseEntity<AppResponse<Object>> handleInsertDefaultUserException(InsertionException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new AppResponse<>(exception));
-    }
-
-    @ExceptionHandler(value = InsertionException.class)
-    public ResponseEntity<AppResponse<Object>> handleQuestionTypeNotExistsException(InsertionException exception) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new AppResponse<>(exception));
-    }
+//    @ExceptionHandler(value = InsertionException.class)
+//    public ResponseEntity<AppResponse<Object>> handleInsertDefaultUserException(InsertionException exception) {
+//        return ResponseEntity
+//                .status(HttpStatus.BAD_REQUEST)
+//                .body(new AppResponse<>(exception));
+//    }
+//
+//    @ExceptionHandler(value = InsertionException.class)
+//    public ResponseEntity<AppResponse<Object>> handleQuestionTypeNotExistsException(InsertionException exception) {
+//        return ResponseEntity
+//                .status(HttpStatus.BAD_REQUEST)
+//                .body(new AppResponse<>(exception));
+//    }
 
 }
