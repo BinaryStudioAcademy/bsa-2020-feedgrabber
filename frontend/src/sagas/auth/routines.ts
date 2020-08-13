@@ -4,4 +4,5 @@ export const loginRoutine = createRoutine('SIGN_IN:LOGIN');
 export const registerRoutine = createRoutine('SIGN_UP:REGISTER');
 export const logoutRoutine = createRoutine('LOG_OUT:LOGOUT');
 export const getUserRoutine = createRoutine('USER:GET');
+export const resetPasswordRoutine = createRoutine('USER:RESET');
 

@@ -1,8 +1,9 @@
-import {call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, takeEvery} from 'redux-saga/effects';
 import apiClient from '../../helpers/apiClient';
 import {IUserInfo} from "../../models/user/types";
 import {IGeneric} from "../../models/IGeneric";
-import {getUserRoutine} from "../auth/routines";
+import {toastr} from 'react-redux-toastr';
+import {getUserRoutine, resetPasswordRoutine} from "../auth/routines";
 
 function* getUser() {
     try {
@@ -13,6 +14,19 @@ function* getUser() {
     }
 }
 
+function* resetPassword(action) {
+    try {
+        // payload: {companyId, userEmail}
+        yield call(apiClient.post, 'api/user/reset', action.payload);
+        yield call(toastr.info, ("Check your email"));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export default function* userSagas() {
-    yield takeEvery(getUserRoutine.TRIGGER, getUser);
+    yield all([
+        yield takeEvery(getUserRoutine.TRIGGER, getUser),
+        yield takeEvery(resetPasswordRoutine.TRIGGER, resetPassword)
+    ]);
 }

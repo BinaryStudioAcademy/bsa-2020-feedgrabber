@@ -4,7 +4,7 @@ import Input from './Input';
 import Button from './Button';
 import * as yup from "yup";
 import {Formik} from 'formik';
-import {loginRoutine} from 'sagas/auth/routines';
+import {loginRoutine, resetPasswordRoutine} from 'sagas/auth/routines';
 import {connect, ConnectedProps} from 'react-redux';
 import {Button as SemanticButton, Grid, Header, Icon, Message, Segment} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
@@ -26,12 +26,19 @@ const schema = yup.object().shape({
         .max(15, "Username too long!")
 });
 
-const SignInForm: FC<SignInFormProps & { className: string }> = props => {
-    const {signIn, dropCompany, className, error, company, userEmail} = props;
-
+const SignInForm: FC<SignInFormProps & { className: string }> = ({
+    signIn,
+    dropCompany,
+    className,
+    error,
+    company,
+    userEmail,
+    resetPassword
+}) => {
     if (!company) {
         return (<CompanySelectorForm className={className}/>);
     }
+
     const companyCard = (
         <Segment style={{width: '284px'}}>
             <Grid>
@@ -51,6 +58,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
                 </Grid.Column>
             </Grid>
         </Segment>);
+
     return (
         <Formik
             initialValues={{password: '', username: ''}}
@@ -60,8 +68,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
                     password: values.password,
                     username: values.username
                 });
-            }
-            }
+            }}
         >
             {({
                   values,
@@ -83,9 +90,8 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
-                        <a
-                            href={`mailto:${userEmail}`}
-                            onClick={() => toastr.info("Check your email")}
+                        <a href="#"
+                            onClick={() => resetPassword({userEmail, companyId: company.id})}
                         >Reset password</a>
                         {companyCard}
                         {
@@ -112,7 +118,8 @@ const mapState = (state: IAppState) => ({
 
 const mapDispatch = {
     signIn: loginRoutine,
-    dropCompany: dropCompanyRoutine
+    dropCompany: dropCompanyRoutine,
+    resetPassword: resetPasswordRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

@@ -8,6 +8,7 @@ public class SecurityConstants {
     public static final String AUTH_HEADER_STRING = "Authorization";
     public static final String[] ROUTES_WHITE_LIST = {
             "/api/auth/login",
+            "/api/user/reset",
             "/api/auth/register",
             "/api/auth/register/confirm",
             "/api/auth/renovate",
