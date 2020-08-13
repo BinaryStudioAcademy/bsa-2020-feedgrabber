@@ -33,8 +33,6 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
          chooseCompany,
          dropCompany
      }) => {
-        console.log('loading' + isLoading);
-        console.log(companiesList);
         const companies = !companiesList ? null
             : companiesList.length === 0 ? <Message color='blue'>No companies found. Create your own :)</Message>
                 : companiesList.map(

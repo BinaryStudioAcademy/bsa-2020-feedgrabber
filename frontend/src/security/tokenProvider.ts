@@ -1,5 +1,7 @@
 import Cookies from 'js-cookie';
 
+const domain = window.location.hostname.endsWith('localhost') ? '.feedgrabber.com.localhost' : '.feedgrabber.com';
+
 const createTokenProvider = () => {
   let _token: { accessToken: string; refreshToken: string } | null =
       Cookies.get("BSA_AUTH") ? JSON.parse(Cookies.get("BSA_AUTH")) : null;
@@ -24,8 +26,8 @@ const createTokenProvider = () => {
   const getRefreshToken = () => _token?.refreshToken;
 
   const setToken = (token: typeof _token) => {
-    if (token) Cookies.set("BSA_AUTH", JSON.stringify(token), {path: '/', domain: '.feedgrabber.com.localhost' });
-    else Cookies.remove("BSA_AUTH", {path: '/', domain: '.feedgrabber.com.localhost' });
+    if (token) Cookies.set("BSA_AUTH", JSON.stringify(token), {path: '/', domain: domain });
+    else Cookies.remove("BSA_AUTH", {path: '/', domain: domain });
 
     _token = token;
     notify();

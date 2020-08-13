@@ -1,7 +1,7 @@
-import tokenProvider from "../security/tokenProvider";
+import {ICompanyDomain} from "../models/companies/ICompanyDomain";
 
-export const redirectToCompany = () => {
-    const companyName = 'mycompany'; // mock company name
+export const redirectToCompany = (company: ICompanyDomain) => {
+    const companyName = company.id;
 
     const protocol = window.location.protocol;
     const pathname = window.location.pathname;
@@ -15,7 +15,7 @@ export const redirectToCompany = () => {
     }
     // www.feedgrabber.com
     else if (parts[parts.length - 1].startsWith('com')
-        && window.location.origin !== 'http://mycompany.feedgrabber.com') {
+        && window.location.origin !== protocol + '//' + companyName + '.feedgrabber.com') {
         window.location.replace(protocol + '//' + companyName + '.feedgrabber.com' + pathname);
     }
 };
