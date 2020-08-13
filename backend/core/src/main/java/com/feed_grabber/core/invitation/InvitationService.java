@@ -30,11 +30,11 @@ public class InvitationService {
         return InvitationMapper.MAPPER.invitationToInvitationDto(invitation);
     }
 
-    public InvitationDto getByCompanyId(UUID companyId) throws InvitationNotFoundException {
-        var invitation = invitationRepository.findByCompanyId(companyId)
-                .orElseThrow(InvitationNotFoundException::new);
-
-        return InvitationMapper.MAPPER.invitationToInvitationDto(invitation);
+    public UUID getByCompanyId(UUID companyId) {
+        return invitationRepository
+                .findByCompanyId(companyId)
+                .map(Invitation::getId)
+                .orElse(null);
     }
 
     public UUID generate(UUID companyId) throws CompanyNotFoundException {

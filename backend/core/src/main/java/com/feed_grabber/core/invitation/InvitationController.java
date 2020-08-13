@@ -4,7 +4,9 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,22 +24,22 @@ public class InvitationController {
     }
 
     @GetMapping("/sign-up/{id}")
-    public InvitationDto getById(@PathVariable UUID id) throws InvitationNotFoundException {
-        return invitationService.getById(id);
+    public AppResponse<InvitationDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
+        return new AppResponse<>(invitationService.getById(id), HttpStatus.OK);
     }
 
     @Secured("company_owner")
     @GetMapping
-    public InvitationDto getByCompanyId() throws InvitationNotFoundException {
+    public AppResponse<UUID> getByCompanyId() {
         var companyId = TokenService.getCompanyId();
-        return invitationService.getByCompanyId(companyId);
+        return new AppResponse<>(invitationService.getByCompanyId(companyId), HttpStatus.OK);
     }
 
     @Secured("company_owner")
     @PostMapping
-    public UUID generate() throws CompanyNotFoundException {
+    public AppResponse<UUID> generate() throws CompanyNotFoundException {
         var companyId = TokenService.getCompanyId();
-        return invitationService.generate(companyId);
+        return new AppResponse<>(invitationService.generate(companyId), HttpStatus.OK);
     }
 
     @Secured("company_owner")
