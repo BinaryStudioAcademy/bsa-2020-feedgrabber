@@ -7,6 +7,7 @@ import questionnairesSagas from "./qustionnaires/sagas";
 import expandedQuestionnaireSagas from "./expandedQuestionnaire/sagas";
 import invitationSagas from "./invitation/sagas";
 import invitationSignUpSagas from "./invitationSignUp/sagas";
+import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
 
 export default function* rootSaga() {
@@ -19,6 +20,7 @@ export default function* rootSaga() {
     expandedQuestionnaireSagas(),
     invitationSagas(),
     invitationSignUpSagas(),
+    categorieSagas(),
     companiesSaga()
   ]);
 }

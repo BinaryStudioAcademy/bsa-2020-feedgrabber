@@ -48,6 +48,12 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             error: {...state.error, getUser: payload}
         };
     }
+    if (type === "SET_USER_EMAIL") {
+        return {
+            ...state,
+            info: {...state.info, email: payload}
+        };
+    }
     return state;
 };
 

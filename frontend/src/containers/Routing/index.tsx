@@ -19,6 +19,7 @@ import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
 import GuestRoute from "../../components/GuestRoute";
 import InvitationSignUp from "../InvitationSignUp";
+import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -40,23 +41,24 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
     <>
       <LoaderWrapper loading={isLoading}>
         <Switch>
-          <PublicRoute exact path="/layout" component={Landing}/>
-          <PublicRoute exact path="/auth" component={SignForm}/>
+          <PublicRoute exact path="/layout" component={Landing} />
+          <PublicRoute exact path="/auth" component={SignForm} />
           <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
-          <PrivateRoute exact path="/" component={MainPage}/>
-          <PrivateRoute exact path="/profile" component={Profile}/>
-          <PrivateRoute exact path="/profile/settings" component={ProfileX}/>
-          <PrivateRoute exact path="/requests" component={() => <span>Requests</span>}/>
-          <PrivateRoute exact path="/help" component={() => <span>Help Center</span>}/>
-          <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>}/>
-          <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
-          <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
-          <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>
-          <PrivateRoute exact path="/teams" component={TeamsPage}/>
-          <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
-          <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire}/>
-          <PrivateRoute exact path="/questions" component={QuestionsList}/>
-          <PrivateRoute exact path="/question/:id" component={QuestionDetails}/>
+          <PublicRoute exact path="/reset/:id" component={ResetPasswordForm} />
+          <PrivateRoute exact path="/" component={MainPage} />
+          <PrivateRoute exact path="/profile" component={Profile} />
+          <PrivateRoute exact path="/profile/settings" component={ProfileX} />
+          <PrivateRoute exact path="/requests" component={() => <span>Requests</span>} />
+          <PrivateRoute exact path="/help" component={() => <span>Help Center</span>} />
+          <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>} />
+          <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>} />
+          <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
+          <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
+          <PrivateRoute exact path="/teams" component={TeamsPage} />
+          <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
+          <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
+          <PrivateRoute exact path="/questions" component={QuestionsList} />
+          <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
           <Route path="/*">
             <Redirect to="/layout"/>
           </Route>
