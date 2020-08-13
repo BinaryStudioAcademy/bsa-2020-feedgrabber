@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,14 +25,16 @@ public class CompanyController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<CompanyDto> getCompanyDetails() {
         var id = TokenService.getCompanyId();
-        return new AppResponse<>(companyService.getById(id).orElseThrow(), HttpStatus.OK);
+        return new AppResponse<>(companyService.getById(id).orElseThrow());
     }
 
     @GetMapping("/user-companies")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<CompanyDomainDto>> getCompaniesBuEmail(@RequestParam String email) {
-        return new AppResponse<>(companyService.getByUserEmail(email), HttpStatus.OK);
+        return new AppResponse<>(companyService.getByUserEmail(email));
     }
 
 }

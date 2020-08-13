@@ -33,6 +33,7 @@ public class QuestionnaireController {
 
     @ApiOperation("Get all questionnaires")
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<DataList<QuestionnaireDto>> getAll(
                 @RequestParam Integer page,
                 @RequestParam Integer size
@@ -44,7 +45,7 @@ public class QuestionnaireController {
                 page,
                 size
         );
-        return new AppResponse<>(dataList, HttpStatus.OK);
+        return new AppResponse<>(dataList);
     }
 //    @ApiOperation("Get all questionnaires of company by companyID")
 //    @GetMapping("/companies/{id}")
@@ -57,34 +58,35 @@ public class QuestionnaireController {
 
     @ApiOperation("Get one questionnaire by id")
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<QuestionnaireDto> getOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.getOne(id)
-                        .orElseThrow(QuestionnaireNotFoundException::new),
-                HttpStatus.OK
+                        .orElseThrow(QuestionnaireNotFoundException::new)
         );
     }
 
     @ApiOperation("Create a questionnaire")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
-                questionnaireService.create(createDto, TokenService.getCompanyId()),
-                HttpStatus.OK
+                questionnaireService.create(createDto, TokenService.getCompanyId())
         );
     }
 
     @ApiOperation("Update the questionnaire")
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<QuestionnaireDto> update(@RequestBody QuestionnaireUpdateDto updateDto) throws QuestionnaireNotFoundException, CompanyNotFoundException, QuestionnaireExistsException {
         return new AppResponse<>(
-                questionnaireService.update(updateDto, TokenService.getCompanyId()),
-                HttpStatus.OK
+                questionnaireService.update(updateDto, TokenService.getCompanyId())
         );
     }
 
     @ApiOperation("Delete one")
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         questionnaireService.delete(id);
     }

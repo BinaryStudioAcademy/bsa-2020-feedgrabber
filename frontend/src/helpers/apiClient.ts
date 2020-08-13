@@ -15,7 +15,7 @@ const responseErrorHandler = e => {
             // redirect to /auth only if user are not logged (forbidden response status)
             history.push('/auth');
         }
-        return Promise.reject(e);
+        return Promise.reject(e.response);
     }
 
     originalRequest._retry = true;

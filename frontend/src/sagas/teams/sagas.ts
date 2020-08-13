@@ -6,13 +6,13 @@ import {IGeneric} from "../../models/IGeneric";
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 function* loadTeams() {
-    const res: IGeneric<IQuestionnaire[]> = yield call(apiClient.get, '/api/teams');
-    if (res.data.error) {
+    try {
+      const res: IGeneric<IQuestionnaire[]> = yield call(apiClient.get, '/api/teams');
+      yield put(loadTeamsRoutine.success(res.data.data));
+    } catch (error) {
       yield put(loadTeamsRoutine.failure());
-      toastr.error(res.data.error);
-      return;
+      toastr.error(error);
     }
-    yield put(loadTeamsRoutine.success(res.data.data));
 }
 
 function* watchLoadTeams() {
