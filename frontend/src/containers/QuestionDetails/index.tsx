@@ -9,7 +9,7 @@ import FreeTextQuestionUI from "../../components/ComponentsQuestions/FreeTextQue
 import InputField from "../../components/ComponentsQuestions/InputField";
 import MultichoiseQuestion from "../../components/ComponentsQuestions/MultichoiseQuestion";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
-import {fileUploadSchema, nameSchema} from "./schemas";
+import { nameSchema} from "./schemas";
 import FileUploadQuestion from "../../components/ComponentsQuestions/FileUploadQuestion";
 
 const questions: IQuestion[] = [
@@ -193,8 +193,7 @@ class QuestionDetails extends React.Component<IQuestionProps, IQuestionState> {
             fileNumber: 1,
             fileSize: 100
           }
-        },
-        validationSchema: fileUploadSchema
+        }
       });
     } else {
         this.setState({
