@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -28,5 +30,11 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow(), HttpStatus.OK);
     }
 
-
+    @ApiOperation(value = "Get all users",
+            notes = "You should not to provide an id, it will be got from token service")
+    @GetMapping("/all")
+    public AppResponse<List<UserDetailsResponseDTO>> getAllUsers() {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getCompanyUsers(companyId), HttpStatus.OK);
+    }
 }

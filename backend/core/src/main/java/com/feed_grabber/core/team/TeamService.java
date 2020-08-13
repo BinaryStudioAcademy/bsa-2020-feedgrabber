@@ -1,11 +1,12 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.team.dto.CreateTeamDto;
 import com.feed_grabber.core.team.dto.TeamDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.feed_grabber.core.team.model.Team;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,5 +45,9 @@ public class TeamService {
 
     public void delete(UUID id) {
         teamRepository.deleteById(id);
+    }
+
+    public void create() {
+        teamRepository.save(new Team("masdasd",new Company(UUID.fromString("afa14521-b8db-44a7-b9b7-98bd8244cc19"))));
     }
 }

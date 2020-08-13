@@ -133,4 +133,8 @@ public class UserService implements UserDetailsService {
                         , Collections.emptyList()))
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
+
+    public List<UserDetailsResponseDTO> getCompanyUsers(UUID companyId) {
+        return userRepository.findAllByCompanyId(companyId).stream().map(UserMapper.MAPPER::detailedFromUser).collect(Collectors.toList());
+    }
 }
