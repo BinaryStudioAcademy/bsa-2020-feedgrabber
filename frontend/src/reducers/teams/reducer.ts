@@ -1,16 +1,28 @@
-import { loadTeamsRoutine } from '../../sagas/teams/routines';
+import {
+  createTeamRoutine,
+  hideModalTeamsRoutine, loadCompanyUsersRoutine,
+  loadTeamsRoutine,
+  showModalTeamsRoutine
+} from '../../sagas/teams/routines';
 import { Routine } from 'redux-saga-routines';
 import { ITeam } from 'models/teams/ITeam';
+import {IUserInfo} from "../../models/user/types";
 
 export interface ITeamsState {
   teams: ITeam[];
   isLoading: boolean;
+  modalShown: boolean;
+  isModalLoading: boolean;
+  companyUsers: IUserInfo[];
   error?: string;
 }
 
 const initState: ITeamsState = {
   teams: [],
-  isLoading: false
+  companyUsers: [],
+  isLoading: false,
+  modalShown: false,
+  isModalLoading: false
 };
 
 const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
@@ -27,9 +39,37 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
         isLoading: true
       };
     case loadTeamsRoutine.FAILURE:
+    case loadCompanyUsersRoutine.FAILURE:
       return {
         ...state,
         error: action.payload,
+        isLoading: false
+      };
+    case showModalTeamsRoutine.TRIGGER:
+      return {
+        ...state,
+        modalShown: true
+      };
+    case hideModalTeamsRoutine.TRIGGER:
+      return {
+        ...state,
+        modalShown: false
+      };
+    case createTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        isModalLoading: true
+      };
+    case createTeamRoutine.SUCCESS:
+    case createTeamRoutine.FAILURE:
+      return {
+        ...state,
+        isModalLoading: false
+      };
+    case loadCompanyUsersRoutine.SUCCESS:
+      return {
+        ...state,
+        companyUsers: action.payload,
         isLoading: false
       };
     default:
