@@ -8,34 +8,30 @@ import { Formik } from 'formik';
 import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { loadOneQuestionnaireRoutine } from "../../sagas/expandedQuestionnaire/routines";
+import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
+import { loadCurrentQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 
-interface IResponseState {
+interface IQuestionnaireResponseState {
     questions: IQuestion[];
     isCompleted: boolean;
     showErrors: boolean;
 }
 
-// TODO: implement saveResponse and add loadQuestions
+// TODO: implement saveResponse
 
-interface IResponseProps {
+interface IQuestionnaireResponseProps {
     match: any;
     title: string;
     questions: IQuestion[];
+    isLoading: boolean;
     loadQuestions(id: string): void;
+    loadQuestionnaire(id: string): void;
     saveResponse(): void;
 }
 
-class QuestionnaireResponse extends React.Component<IResponseProps, IResponseState> {
-    static defaultProps: { 
-        match: any; 
-        title: string; 
-        questions: IQuestion[]; 
-        loadQuestions: (id: string) => void; 
-        saveResponse: () => void; 
-    };
+class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps, IQuestionnaireResponseState> {
 
-    constructor(props: IResponseProps) {
+    constructor(props: IQuestionnaireResponseProps) {
         super(props);
         this.state = {
             questions: [],
@@ -47,7 +43,8 @@ class QuestionnaireResponse extends React.Component<IResponseProps, IResponseSta
     }
 
     componentDidMount() {
-        const { loadQuestions, match, questions} = this.props;
+        const { loadQuestions, loadQuestionnaire, match, questions} = this.props;
+        loadQuestionnaire(match.params.id);
         loadQuestions(match.params.id);
         this.setState({
             questions: questions
@@ -127,7 +124,7 @@ class QuestionnaireResponse extends React.Component<IResponseProps, IResponseSta
                                 </List.Item>);
                         })}
                     </List>
-                    <Button>Send</Button>
+                    <Button type="submit">Send</Button>
                 </Form>)
             }
             </Formik>
@@ -135,45 +132,14 @@ class QuestionnaireResponse extends React.Component<IResponseProps, IResponseSta
     }
 }
 
-// Mock
-const defaultQuestions: IQuestion[] = [
-    {
-      id: "1",
-      categoryTitle: "Soft skills",
-      name:
-        "Can you tell me about a time when you successfully led a team through a sticky situation?",
-      type: QuestionType.multichoice,
-      details: {
-        answerOptions: ["1", "2"]
-      }
-    },
-    {
-      id: "2",
-      categoryTitle: "Leadership",
-      name: "Are you able to delegate responsibilities efficiently?",
-      type: QuestionType.freeText,
-      details: {}
-    },
-    {
-      id: "3",
-      categoryTitle: "Abilities",
-      name: "How do you handle stress and pressure?",
-      type: QuestionType.freeText,
-      details: {}
-    }
-  ];
+const mapStateToProps = (state: IAppState) => ({
+    questions: state.questionnaires.current.questions,
+    title: state.questionnaires.current.get.title
+});
 
-QuestionnaireResponse.defaultProps = {
-    match: {
-        params: {
-            id: '1'
-        }
-    },
-    title: "Awesome questionnaire",
-    questions: defaultQuestions,
-    loadQuestions: id => {console.log(`loaded ${id}`);},
-    saveResponse: () => {console.log("saved");}
+const mapDispatchToProps = {
+    loadQuestionnaire: loadCurrentQuestionnaireRoutine,
+    loadQuestions: loadQuestionnaireQuestionsRoutine
 };
-// end of mock
 
-export default QuestionnaireResponse;
+export default connect(mapStateToProps, mapDispatchToProps) (QuestionnaireResponse);
