@@ -35,8 +35,9 @@ public class UserController {
     @ApiOperation(value = "Get all users",
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<UserDetailsResponseDTO>> getAllUsers() {
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getCompanyUsers(companyId), HttpStatus.OK);
+        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getCompanyUsers(companyId));
     }
 }

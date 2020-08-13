@@ -34,9 +34,10 @@ public class TeamController {
 
     @ApiOperation("Create team")
     @PostMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<TeamDto> createTeam(@RequestBody CreateTeamDto teamDto) throws CompanyNotFoundException, AlreadyExistsException {
         teamDto.setCompany_id(TokenService.getCompanyId());
-        return new AppResponse(service.create(teamDto), HttpStatus.OK);
+        return new AppResponse(service.create(teamDto));
     }
 
 }
