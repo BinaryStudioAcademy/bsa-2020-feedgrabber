@@ -9,6 +9,7 @@ public class SecurityConstants {
     public static final String[] ROUTES_WHITE_LIST = {
             "/api/auth/login",
             "/api/auth/register",
+            "/api/auth/invitation",
             "/api/auth/register/confirm",
             "/api/auth/renovate",
             "/api/invitations/sign-up/**",

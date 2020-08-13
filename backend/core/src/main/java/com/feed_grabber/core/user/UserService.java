@@ -1,10 +1,13 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
+import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.invitation.InvitationRepository;
+import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
@@ -28,12 +31,17 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
+    private final InvitationRepository invitationRepository;
 
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, CompanyRepository companyRepository) {
+    public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
+                       CompanyRepository companyRepository,
+                       InvitationRepository invitationRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
+        this.invitationRepository = invitationRepository;
     }
 
     @Transactional
@@ -80,6 +88,29 @@ public class UserService implements UserDetailsService {
                 .username(userRegisterDTO.getUsername())
                 .password(userRegisterDTO.getPassword())
                 .role(roles.get(0))
+                .company(company)
+                .build()
+        );
+    }
+
+    public void createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException {
+
+        if (userRepository.findByUsername(registerDto.getUsername()).isPresent()
+                || userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+
+        var invitation = invitationRepository.findById(registerDto.getInvitationId())
+                .orElseThrow(InvitationNotFoundException::new);
+        var company = invitation.getCompany();
+        var role = roleRepository.findByCompanyIdAndSystemRole(company.getId(), SystemRole.employee)
+                .orElseThrow();
+
+        userRepository.save(User.builder()
+                .email(registerDto.getEmail())
+                .username(registerDto.getUsername())
+                .password(registerDto.getPassword())
+                .role(role)
                 .company(company)
                 .build()
         );

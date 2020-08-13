@@ -1,13 +1,22 @@
-import {loadInvitationSingUpRoutine} from "../../sagas/invitationSignUp/routines";
+import {loadInvitationSingUpRoutine, registerInvitationSingUpRoutine} from "../../sagas/invitationSignUp/routines";
 
 export interface IInvitationSignUpData {
   companyName: string;
 }
 
+export interface IRegisterInvitationSignUpData {
+  email: string;
+  password: string;
+  username: string;
+  invitationId: string;
+}
+
 export interface IInvitationSignUpState {
   isLoading?: boolean;
   data?: IInvitationSignUpData;
-  error?: boolean;
+  loadFailed?: boolean;
+  error?: string;
+  registerLoading?: boolean;
 }
 
 export default (state: IInvitationSignUpState = {}, action): IInvitationSignUpState => {
@@ -15,7 +24,6 @@ export default (state: IInvitationSignUpState = {}, action): IInvitationSignUpSt
     case loadInvitationSingUpRoutine.TRIGGER:
       return {
         ...state,
-        error: false,
         isLoading: true
       };
     case loadInvitationSingUpRoutine.SUCCESS:
@@ -27,8 +35,24 @@ export default (state: IInvitationSignUpState = {}, action): IInvitationSignUpSt
     case loadInvitationSingUpRoutine.FAILURE:
       return {
         ...state,
-        error: true,
+        loadFailed: true,
         isLoading: false
+      };
+    case registerInvitationSingUpRoutine.TRIGGER:
+      return {
+        ...state,
+        registerLoading: true
+      };
+    case registerInvitationSingUpRoutine.SUCCESS:
+      return {
+        ...state,
+        registerLoading: false
+      };
+    case registerInvitationSingUpRoutine.FAILURE:
+      return {
+        ...state,
+        registerLoading: false,
+        error: action.payload
       };
     default:
       return state;

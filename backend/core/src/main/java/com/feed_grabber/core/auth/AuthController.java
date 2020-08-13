@@ -1,6 +1,7 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
+import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.register.RegisterService;
 import com.feed_grabber.core.response.AppResponse;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,17 @@ public class AuthController {
     public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
         var pass = dto.getPassword();
         registerService.registerUser(dto);
+
+        var loginDto = new UserLoginDTO(pass, dto.getUsername());
+        return login(loginDto);
+    }
+
+    @ApiOperation(value = "Register new user by invitation", notes = "Provide an email, username, invitationId and password to register")
+    @PostMapping("/invitation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
+        var pass = dto.getPassword();
+        registerService.registerUserByInvitation(dto);
 
         var loginDto = new UserLoginDTO(pass, dto.getUsername());
         return login(loginDto);
