@@ -42,7 +42,6 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
             content='Preview'
             history={history} />
           <div className={styles.formDetails}>
-          <div className={styles.formPreview}>Here will be preview</div>
           <div className={styles.formEditor}>
             <QuestionDetails match={{ params: {} }} />
           </div>

@@ -33,7 +33,7 @@ function* getById(action) {
     yield put(loadQuestionByIdRoutine.success(question));
   } catch (error) {
     yield put(loadQuestionByIdRoutine.failure());
-    toastr.error(error);
+    toastr.error('cant to get question by Id');
   }
 }
 
