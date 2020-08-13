@@ -6,6 +6,7 @@ import com.feed_grabber.core.response.AppResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -20,9 +21,10 @@ public class CompanyController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<CompanyDto> getCompanyDetails() {
         var id = TokenService.getCompanyId();
-        return new AppResponse<>(companyService.getById(id).orElseThrow(), HttpStatus.OK);
+        return new AppResponse<>(companyService.getById(id).orElseThrow());
     }
 
 }
