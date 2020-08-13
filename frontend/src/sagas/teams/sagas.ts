@@ -8,13 +8,13 @@ import {ITeamCreationDto} from "../../components/TeamsList/teamsModal";
 import {IUserInfo} from "../../models/user/types";
 
 function* loadTeams() {
-    const res: IGeneric<IQuestionnaire[]> = yield call(apiClient.get, '/api/teams');
-    if (res.data.error) {
-        yield put(loadTeamsRoutine.failure());
-        toastr.error(res.data.error);
-        return;
+    try {
+      const res: IGeneric<IQuestionnaire[]> = yield call(apiClient.get, '/api/teams');
+      yield put(loadTeamsRoutine.success(res.data.data));
+    } catch (error) {
+      yield put(loadTeamsRoutine.failure());
+      toastr.error(error);
     }
-    yield put(loadTeamsRoutine.success(res.data.data));
 }
 
 function* createTeamTeam(action: any) {

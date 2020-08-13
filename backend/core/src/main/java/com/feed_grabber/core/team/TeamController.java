@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
@@ -22,11 +23,13 @@ public class TeamController {
     TeamService service;
 
     @ApiOperation("Get all teams")
+
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<TeamDto>> getAll() {
         var companyId = TokenService.getCompanyId();
         var teams = service.getAllByCompany_Id(companyId);
-        return new AppResponse<>(teams, HttpStatus.OK);
+        return new AppResponse<>(teams);
     }
 
     @ApiOperation("Create team")

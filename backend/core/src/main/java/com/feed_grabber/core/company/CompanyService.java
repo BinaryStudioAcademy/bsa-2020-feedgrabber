@@ -1,5 +1,6 @@
 package com.feed_grabber.core.company;
 
+import com.feed_grabber.core.company.dto.CompanyDomainDto;
 import com.feed_grabber.core.company.dto.CompanyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,13 @@ public class CompanyService {
 
     public void delete(UUID id) {
         companyRepository.deleteById(id);
+    }
+
+    public List<CompanyDomainDto> getByUserEmail(String email) {
+        return companyRepository
+                .findAllByUserEmail(email)
+                .stream()
+                .map(CompanyMapper.MAPPER::companyToCompanyDomainDto)
+                .collect(Collectors.toList());
     }
 }

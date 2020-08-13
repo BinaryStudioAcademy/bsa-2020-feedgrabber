@@ -1,5 +1,6 @@
 package com.feed_grabber.core.company;
 
+import com.feed_grabber.core.company.dto.CompanyDomainDto;
 import com.feed_grabber.core.company.dto.CompanyDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,4 +16,7 @@ public interface CompanyMapper {
     @Mapping(source = "email", target = "corporateEmail")
     @Mapping(target = "questionnaires", ignore = true)
     Company companyDtoToModel(CompanyDto companyDto);
+
+
+    CompanyDomainDto companyToCompanyDomainDto(Company company);
 }

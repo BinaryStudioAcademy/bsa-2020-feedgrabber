@@ -41,7 +41,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
               value={answer}
               onChange={event => {
                 onValueChange(
-                  invalidState({
+                  validState({
                     answerOptions: replaceAtIndex(
                       value.answerOptions,
                       event.target.value,
