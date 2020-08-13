@@ -6,8 +6,8 @@ import { Header, Icon, Label, Segment } from "semantic-ui-react";
 export const ResponseQuestion: FC<IQuestionResponse> = ({ question, answerHandler }) => {
     const { name, categoryTitle, type } = question;
     return (<Segment>
-        <Header as h2>{name}</Header>
+        <Header as='h4'>{name}</Header>
         <Label>{categoryTitle}</Label>
-        {TypeToResponseMap.get(type).props(question, answerHandler)}
+        {TypeToResponseMap.get(type)?.({question, answerHandler})}
     </Segment>);
 };

@@ -6,6 +6,7 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import QuestionDetails from "../QuestionDetails";
 import {history} from '../../helpers/history.helper';
+import QuestionnairePreview from 'components/QuestionnairePreview';
 
 interface IExpandedQuestionnaireProps {
   match: any;
@@ -35,7 +36,7 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
         <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
           <div className={styles.formDetails}>
-          <div className={styles.formPreview}>Here will be preview</div>
+          <div className={styles.formPreview}><QuestionnairePreview/></div>
           <div className={styles.formEditor}>
             {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
             <QuestionDetails saveQuestion={() => {}} match={{ params: {} }} history={history} />
