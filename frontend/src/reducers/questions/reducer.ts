@@ -1,6 +1,12 @@
-import {loadQuestionsRoutine} from "containers/QuestionsList/routines";
+import {loadQuestionsRoutine} from "sagas/questions/routines";
 import {IAppState} from "models/IAppState";
-import {IQuestion} from "models/forms/Questions/types";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
+
+export interface IQuestionsState {
+    list?: IQuestion[];
+    current?: IQuestion;
+    isLoading?: boolean;
+}
 
 const initialState: IAppState['questions'] = {
     list: [] as IQuestion[],
@@ -8,7 +14,7 @@ const initialState: IAppState['questions'] = {
     isLoading: false
 };
 
-const questionsReducer = (state: IAppState['questions'] = initialState, {type, payload}) => {
+const questionsReducer = (state: IQuestionsState = initialState, {type, payload}) => {
     switch (type) {
         case loadQuestionsRoutine.SUCCESS:
             return {
