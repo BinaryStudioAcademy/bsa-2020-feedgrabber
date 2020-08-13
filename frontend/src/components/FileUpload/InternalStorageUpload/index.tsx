@@ -2,17 +2,15 @@ import styles from "../styles.module.sass";
 import Dropzone from "../Dropzone";
 import React from "react";
 
-const InternalStorageUpload = ({ images, onFilesAdded, disabled }) => {
+const InternalStorageUpload = ({ files, onFilesAdded, disabled, mapFiles }) => {
     return (
         <div className={styles.addFile} >
             <Dropzone
                 disabled={disabled}
                 onFilesAdded={onFilesAdded}
             />
-            <div className={styles.images}>
-                {images.map(image => {
-                    return <img className="ui medium image" src={image} alt="File loaded successfully" />;
-                })}
+            <div className={styles.filesContainer}>
+                {mapFiles(files)}
             </div>
         </div>
     );

@@ -4,7 +4,7 @@ import {Dropdown, Label} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {ErrorMessage} from "formik";
 
-const types = ["image", "video"];
+const types = ["image", "all"];
 
 const options = types.map(option => {
     return {
@@ -30,7 +30,7 @@ const FileUploadQuestion: React.FC = () => {
                     <ErrorMessage name={"answers.fileType"} />
                 </div>
             </div>
-            <QuestionField label={"Maximum number of files"}
+            <QuestionField label={"Maximum number of files, MB"}
                            name={"answers.fileNumber"} type={"number"} inputProps={{ min: 1, max: 10 }} />
             <QuestionField label={"Maximum file size"}
                            name={"answers.fileSize"} type={"number"} inputProps={{ min: 0 }}/>
