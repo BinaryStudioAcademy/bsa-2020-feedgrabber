@@ -10,6 +10,7 @@ import {Button as SemanticButton, Grid, Header, Icon, Message, Segment} from "se
 import {IAppState} from "../../../models/IAppState";
 import CompanySelectorForm from "./CompanySelectorForm";
 import styles from "./CompanySelectorForm/styles.module.sass";
+import {toastr} from 'react-redux-toastr';
 import {dropCompanyRoutine} from "../../../sagas/companies/routines";
 
 const schema = yup.object().shape({
@@ -26,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 const SignInForm: FC<SignInFormProps & { className: string }> = props => {
-    const {signIn, dropCompany, className, error, company} = props;
+    const {signIn, dropCompany, className, error, company, userEmail} = props;
 
     if (!company) {
         return (<CompanySelectorForm className={className}/>);
@@ -82,6 +83,10 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
+                        <a
+                            href={`mailto:${userEmail}`}
+                            onClick={() => toastr.info("Check your email")}
+                        >Reset password</a>
                         {companyCard}
                         {
                             errorText && <Message attached="top" error size="small" content={errorText}/>
@@ -101,7 +106,8 @@ const SignInForm: FC<SignInFormProps & { className: string }> = props => {
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
     error: state.user.error.login,
-    company: state.company.currentCompany
+    company: state.company.currentCompany,
+    userEmail: state.user.info.email
 });
 
 const mapDispatch = {
