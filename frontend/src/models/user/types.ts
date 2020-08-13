@@ -8,6 +8,7 @@ export interface IUserInfo {
     id: string;
     userName: string;
     companyName: string;
+    email: string;
     companyId: string;
     firstName?: string;
     lastName?: string;
