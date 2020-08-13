@@ -6,6 +6,7 @@ import questionSagas from './questions/sagas';
 import questionnairesSagas from "./qustionnaires/sagas";
 import expandedQuestionnaireSagas from "./expandedQuestionnaire/sagas";
 import companiesSaga from "./companies/sagas";
+import responseAnswersSaga from './responseAnswers/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -15,6 +16,7 @@ export default function* rootSaga() {
     teamsSagas(),
     questionnairesSagas(),
     expandedQuestionnaireSagas(),
-    companiesSaga()
+    companiesSaga(),
+    responseAnswersSaga()
   ]);
 }

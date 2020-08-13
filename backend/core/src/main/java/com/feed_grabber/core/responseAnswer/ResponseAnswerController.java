@@ -53,8 +53,8 @@ public class ResponseAnswerController {
                 answerService.create(createDto)
         );
     }
-    
-    @PostMapping
+
+    @PostMapping("/list")
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<List<ResponseAnswerDto>> saveAll(@RequestBody List<ResponseAnswerCreateDto> createDtos)
             throws AlreadyExistsException, QuestionnaireResponseNotFoundException, QuestionNotFoundException {

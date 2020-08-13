@@ -7,6 +7,7 @@ import appReducer from "./app/reducer";
 import teamsReducer from "./teams/reducer";
 import expandedQuestionnaireReducer from './expandedQuestionnaire/reducer';
 import companyReducer from "./companies/reducer";
+import answersReduser from './responseAnswers/reducer';
 
 export default combineReducers({
   toastr,
@@ -16,5 +17,6 @@ export default combineReducers({
   teams: teamsReducer,
   expandedQuestionnaire: expandedQuestionnaireReducer,
   app:appReducer,
-  company: companyReducer
+  company: companyReducer,
+  answers: answersReduser
 });
