@@ -26,32 +26,33 @@ public class ResponseAnswerController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<ResponseAnswerDto>> getAll() {
         return new AppResponse<>(
-                answerService.getAll(),
-                HttpStatus.OK
+                answerService.getAll()
         );
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<ResponseAnswerDto> getOne(@PathVariable UUID id)
             throws ResponseAnswerNotFoundException {
         return new AppResponse<>(
-                answerService.getOne(id).orElseThrow(ResponseAnswerNotFoundException::new),
-                HttpStatus.OK
+                answerService.getOne(id).orElseThrow(ResponseAnswerNotFoundException::new)
         );
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<ResponseAnswerDto> create(@RequestBody ResponseAnswerCreateDto createDto)
             throws AlreadyExistsException, QuestionnaireResponseNotFoundException, QuestionNotFoundException {
         return new AppResponse<>(
-                answerService.create(createDto),
-                HttpStatus.OK
+                answerService.create(createDto)
         );
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         answerService.delete(id);
     }

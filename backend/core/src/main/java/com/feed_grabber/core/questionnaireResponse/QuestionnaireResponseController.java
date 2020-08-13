@@ -18,50 +18,49 @@ import java.util.UUID;
 @RequestMapping("/api/responses")
 public class QuestionnaireResponseController {
 
-    private final TokenService tokenService;
     private final QuestionnaireResponseService responseService;
 
     @Autowired
-    public QuestionnaireResponseController(QuestionnaireResponseService responseService, TokenService tokenService) {
+    public QuestionnaireResponseController(QuestionnaireResponseService responseService) {
         this.responseService = responseService;
-        this.tokenService = tokenService;
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionnaireResponseDto>> getAll() {
         return new AppResponse<>(
-                responseService.getAll(),
-                HttpStatus.OK
+                responseService.getAll()
         );
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<QuestionnaireResponseDto> getOne(@PathVariable UUID id)
             throws QuestionnaireResponseNotFoundException {
         return new AppResponse<>(
-                responseService.getOne(id).orElseThrow(QuestionnaireResponseNotFoundException::new),
-                HttpStatus.OK
+                responseService.getOne(id).orElseThrow(QuestionnaireResponseNotFoundException::new)
         );
     }
 
     @GetMapping("/respondent/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionnaireResponseDto>> getByRespondent(@PathVariable UUID id) {
         return new AppResponse<>(
-                responseService.getByRespondentId(id),
-                HttpStatus.OK
+                responseService.getByRespondentId(id)
         );
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<QuestionnaireResponseDto> create(@RequestBody QuestionnaireResponseCreateDto createDto)
             throws UserNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
-                responseService.create(createDto),
-                HttpStatus.OK
+                responseService.create(createDto)
         );
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         responseService.delete(id);
     }
