@@ -1,16 +1,23 @@
 import {
-    addQuestionnaireRoutine,
-    deleteQuestionnaireRoutine,
-    hideModalQuestionnaireRoutine,
-    loadQuestionnairesRoutine,
-    showModalQuestionnaireRoutine,
-    updateQuestionnaireRoutine
+  addQuestionnaireRoutine,
+  deleteQuestionnaireRoutine,
+  hideModalQuestionnaireRoutine,
+  loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
+  showModalQuestionnaireRoutine,
+  updateQuestionnaireRoutine
 } from '../../sagas/qustionnaires/routines';
 import {IAppState} from "../../models/IAppState";
 import {combineReducers} from "redux";
+import {addSelectedQuestionsRoutine} from "../../sagas/questions/routines";
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
-const questionnairesListReducer = (state: IAppState['questionnaires'] = {}, action) => {
+const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {
     switch (action.type) {
+        case setQuestionnairePaginationRoutine.TRIGGER:
+            return {
+                ...state,
+                pagination: action.payload
+            };
         case loadQuestionnairesRoutine.TRIGGER:
         case deleteQuestionnaireRoutine.TRIGGER:
             return {
@@ -27,7 +34,7 @@ const questionnairesListReducer = (state: IAppState['questionnaires'] = {}, acti
         case loadQuestionnairesRoutine.SUCCESS:
             return {
                 ...state,
-                items: action.payload,
+                pagination: action.payload,
                 isLoading: false
             };
         case addQuestionnaireRoutine.TRIGGER:
@@ -63,9 +70,14 @@ const questionnairesListReducer = (state: IAppState['questionnaires'] = {}, acti
     }
 };
 
-const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] = {}, {payload, type}) => {
+const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] =
+                                         {questions:[], get:{} as IQuestionnaire}, {payload, type}) => {
     switch (type) {
-
+        case addSelectedQuestionsRoutine.TRIGGER:
+            return {
+                ...state,
+                questions : [...state.questions, ...payload]
+            };
         default:
             return state;
     }

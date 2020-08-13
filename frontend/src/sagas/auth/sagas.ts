@@ -11,18 +11,16 @@ function* auth(action) {
     const endpoint = isLogin ? 'login' : 'register';
     const routine = isLogin ? loginRoutine : registerRoutine;
 
-    const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
+    try {
+        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
+        const {user, refreshToken, accessToken} = res.data.data;
 
-    if (res.data.error) {
-        yield put(routine.failure(res.data.error));
-        return;
+        yield put(routine.success(user));
+        yield call(saveTokens, {accessToken, refreshToken});
+        yield call(history.push, "/");
+    } catch (error) {
+        yield put(routine.failure(error.data.error));
     }
-
-    const {user, refreshToken, accessToken} = res.data.data;
-
-    yield put(routine.success(user));
-    yield call(saveTokens, {accessToken, refreshToken});
-    yield call(history.push, "/");
 }
 
 function* logout() {

@@ -6,8 +6,10 @@ import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
+import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,18 +30,26 @@ public class QuestionnaireService {
         this.companyRepository = companyRepository;
     }
 
-    public List<QuestionnaireDto> getAll() {
-        return questionnaireRepository.findAll()
+//    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
+//        return questionnaireRepository.findAll(PageRequest.of(page, size))
+//                .stream()
+//                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
+//                .collect(Collectors.toList());
+//    }
+
+//    public Long getCountAll() {
+//        return questionnaireRepository.count();
+//    }
+
+    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
+        return questionnaireRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
-    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId) {
-        return questionnaireRepository.findAllByCompanyId(companyId)
-                .stream()
-                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
-                .collect(Collectors.toList());
+    public Long getCountByCompanyId(UUID companyId) {
+        return questionnaireRepository.countAllByCompanyId(companyId);
     }
 
     public Optional<QuestionnaireDto> getOne(UUID id) {
@@ -49,7 +59,7 @@ public class QuestionnaireService {
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId)
             throws CompanyNotFoundException, AlreadyExistsException {
-        if(questionnaireRepository.findByCompanyIdAndTitle(companyId, createDto.getTitle()).isPresent()){
+        if(questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)){
             throw new AlreadyExistsException("Such questionnair already exists in this company");
         }
 
@@ -63,15 +73,21 @@ public class QuestionnaireService {
                 .questionnaireToQuestionnaireDto(questionnaireRepository.save(questionnaire));
     }
 
-    public QuestionnaireDto update(QuestionnaireUpdateDto updateDto) throws QuestionnaireNotFoundException {
+    public QuestionnaireDto update(QuestionnaireUpdateDto updateDto, UUID companyId)
+            throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
 
         var questionnaire = questionnaireRepository.findById(updateDto.getId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
+        var company = companyRepository.findById(companyId)
+                .orElseThrow(CompanyNotFoundException::new);
+        if (questionnaireRepository.existsByTitleAndCompanyIdAndIdIsNot(updateDto.getTitle(), companyId, updateDto.getId())) {
+            throw new QuestionnaireExistsException();
+        }
 
+        questionnaire.setCompany(company);
         questionnaire.setTitle(updateDto.getTitle());
-
-        return QuestionnaireMapper.MAPPER
-                .questionnaireToQuestionnaireDto(questionnaireRepository.save(questionnaire));
+        questionnaire = questionnaireRepository.save(questionnaire);
+        return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
 
     public void delete(UUID id) {

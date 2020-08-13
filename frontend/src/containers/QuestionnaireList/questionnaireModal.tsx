@@ -3,7 +3,7 @@ import {Button, Form, Modal, ModalContent, ModalHeader} from "semantic-ui-react"
 import {Formik} from "formik";
 import * as yup from 'yup';
 import styles from './styles.module.sass';
-import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
+import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;
@@ -11,9 +11,9 @@ interface IQuestionnaireModalProps {
   modalError: string;
   isLoading: boolean;
 
-  addQuestionnaire(questionnaire: IQuestionnaire): void;
+  addQuestionnaire(questionnaire: ICreateQuestionnaire): void;
 
-  updateQuestionnaire(questionnaire: IQuestionnaire): void;
+  updateQuestionnaire(questionnaire: IUpdateQuestionnaire): void;
 
   hideModal(): void;
 }
@@ -35,17 +35,14 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
     hideModal
   }
 ) => {
-  // to do companies select field, now - hardcoded companyId from seed.sql
   const onSubmit = values => {
     modalQuestionnaire
       ? updateQuestionnaire({
         id: modalQuestionnaire.id,
         title: values.title
-        // companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
       })
       : addQuestionnaire({
         title: values.title
-        // companyId: '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'
       });
   };
 
