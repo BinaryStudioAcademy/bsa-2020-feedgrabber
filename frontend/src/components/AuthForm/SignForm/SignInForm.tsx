@@ -4,7 +4,7 @@ import Input from './Input';
 import Button from './Button';
 import * as yup from "yup";
 import {Formik} from 'formik';
-import {loginRoutine, resetPasswordRoutine} from 'sagas/auth/routines';
+import {loginRoutine, sendEmailToResetPasswordRoutine} from 'sagas/auth/routines';
 import {connect, ConnectedProps} from 'react-redux';
 import {Button as SemanticButton, Grid, Header, Icon, Message, Segment} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
@@ -93,7 +93,9 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
                         <a href="#"
                             onClick={() => resetPassword({userEmail, companyId: company.id})}
                         >Reset password</a>
-                        {companyCard}
+                        {
+                            companyCard
+                        }
                         {
                             errorText && <Message attached="top" error size="small" content={errorText}/>
                         }
@@ -119,7 +121,7 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     signIn: loginRoutine,
     dropCompany: dropCompanyRoutine,
-    resetPassword: resetPasswordRoutine
+    resetPassword: sendEmailToResetPasswordRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

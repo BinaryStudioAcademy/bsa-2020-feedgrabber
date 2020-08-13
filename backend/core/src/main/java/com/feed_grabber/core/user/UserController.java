@@ -2,8 +2,9 @@ package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.user.dto.ResetPassDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
-import com.feed_grabber.core.user.dto.UserResetPassDto;
+import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +30,17 @@ public class UserController {
     }
 
     @ApiOperation(value = "Send an email to reset password")
-    @PostMapping("/reset")
-    public void sendEmailToResetPass(@RequestBody UserResetPassDto dto) {
+    @PostMapping("/email/reset")
+    public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) {
         System.out.println(dto);
         // TODO: Send email
     }
+
+    @ApiOperation(value = "Reset password")
+    @PostMapping("/reset")
+    public void resetPassword(@RequestBody ResetPassDto dto) {
+        System.out.println("dto = " + dto);
+    }
+
 
 }
