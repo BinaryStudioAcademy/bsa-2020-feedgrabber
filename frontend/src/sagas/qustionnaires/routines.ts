@@ -7,3 +7,5 @@ export const addQuestionnaireRoutine = createRoutine('QUESTIONNAIRE:ADD');
 export const updateQuestionnaireRoutine = createRoutine('QUESTIONNAIRE:UPDATE');
 export const deleteQuestionnaireRoutine = createRoutine('QUESTIONNAIRE:DELETE');
 export const setQuestionnairePaginationRoutine = createRoutine('QUESTIONNAIRE:SET_PAGINATION');
+
+export const loadCurrentQuestionnaireRoutine = createRoutine('QUESTIONNAIRE:LOAD_ONE');

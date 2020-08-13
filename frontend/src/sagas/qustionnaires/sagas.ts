@@ -5,10 +5,12 @@ import {
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
     loadQuestionnairesRoutine,
-    updateQuestionnaireRoutine
+    updateQuestionnaireRoutine,
+    loadCurrentQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
+import { IGeneric } from 'models/IGeneric';
 
 function* loadQuestionnairesList(action: any) {
   try {
@@ -67,11 +69,26 @@ function* deleteQuestionnaire(action: any) {
   }
 }
 
+function* loadCurrentQuestionnaire(action: any) {
+  try {
+    const id: string = action.payload;
+    console.log(id);
+    const res: IGeneric<IQuestionnaire> = yield call(apiClient.get, 
+      `http://localhost:5000/api/questionnaires/${id}`);
+    yield put(loadCurrentQuestionnaireRoutine.success(res.data.data));
+  } catch (error) {
+    console.log(error);
+    yield put(loadCurrentQuestionnaireRoutine.failure(error));
+    toastr.error("Unable to load questionnaire");
+  }
+}
+
 export default function* questionnairesSagas() {
   yield all([
     yield takeEvery(loadQuestionnairesRoutine.TRIGGER, loadQuestionnairesList),
     yield takeEvery(addQuestionnaireRoutine.TRIGGER, addQuestionnaire),
     yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
-    yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire)
+    yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
+    yield takeEvery(loadCurrentQuestionnaireRoutine.TRIGGER, loadCurrentQuestionnaire)
   ]);
 }

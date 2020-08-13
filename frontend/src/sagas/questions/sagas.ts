@@ -1,5 +1,5 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { loadQuestionsRoutine, saveQuestionRoutine } from './routines';
+import { loadQuestionsRoutine, saveQuestionRoutine, loadQuestionnaireQuestionsRoutine } from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
@@ -28,9 +28,25 @@ function* save(action) {
   yield put(saveQuestionRoutine.success(res.data.data));
 }
 
+function* getByQuestionnaireId(action) {
+  try {
+    const res: IGeneric<IQuestion[]> = yield call(apiClient.get,
+       `http://localhost:5000/api/questions/questionnaires/${action.payload}`);
+    console.log("in sagas");
+    console.log(res);
+    const items = res.data.data;
+
+    yield put(loadQuestionnaireQuestionsRoutine.success(items));
+  } catch (error) {
+    yield put(loadQuestionnaireQuestionsRoutine.failure(error));
+    toastr.error("Unable to load questionnaire's questions");
+  }
+}
+
 export default function* questionSagas() {
   yield all([
     yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
-    yield takeEvery(saveQuestionRoutine.TRIGGER, save)
+    yield takeEvery(saveQuestionRoutine.TRIGGER, save),
+    yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId)
   ]);
 }
