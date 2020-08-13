@@ -71,10 +71,10 @@ export type IQuestion =
     | IDateQuestion;
 
 export enum QuestionType {
-  freeText = "free_text",
-  radio = "radio",
-  scale = "scale",
-  checkbox = "checkbox",
-  multichoice = "multi_choice",
-  date = "date"
+  freeText = "FREE_TEXT",
+  radio = "RADIO",
+  scale = "SCALE",
+  checkbox = "CHECKBOX",
+  multichoice = "MULTI_CHOICE",
+  date = "DATE"
 }
