@@ -13,6 +13,7 @@ import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
+import UserList from "../UserList";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -38,6 +39,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/questionnaire/:id" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
+           <PrivateRoute exact path="/employees" component={UserList} />
           <Route path="/*">
             <Redirect to="/layout" />
           </Route>

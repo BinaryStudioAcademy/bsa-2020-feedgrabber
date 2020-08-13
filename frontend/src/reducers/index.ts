@@ -5,9 +5,11 @@ import questionsReducer from "./questions/reducer";
 import questionnairesReducer from "./questionnaires/reducer";
 import appReducer from "./app/reducer";
 import teamsReducer from "./teams/reducer";
+import usersReducer from "./users/reducer";
 
 export default combineReducers({
   toastr,
+  users: usersReducer,
   user: authAndProfileReducer,
   questionnaires: questionnairesReducer,
   questions: questionsReducer,

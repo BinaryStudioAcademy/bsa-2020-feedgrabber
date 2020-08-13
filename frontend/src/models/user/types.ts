@@ -13,6 +13,7 @@ export interface IUserInfo {
     lastName?: string;
     phoneNumber?: string;
     avatar?: string;
+    role: string;
 }
 
 export interface IUserErrors {
