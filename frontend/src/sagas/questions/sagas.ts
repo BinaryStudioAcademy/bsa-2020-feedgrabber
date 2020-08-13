@@ -32,8 +32,6 @@ function* getByQuestionnaireId(action) {
   try {
     const res: IGeneric<IQuestion[]> = yield call(apiClient.get,
        `http://localhost:5000/api/questions/questionnaires/${action.payload}`);
-    console.log("in sagas");
-    console.log(res);
     const items = res.data.data;
 
     yield put(loadQuestionnaireQuestionsRoutine.success(items));
