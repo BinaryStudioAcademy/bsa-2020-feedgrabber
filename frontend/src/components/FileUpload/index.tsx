@@ -5,12 +5,22 @@ import styles from "./styles.module.sass";
 import ImageUrl from "./ImageUrl";
 import InternalStorageUpload from "./InternalStorageUpload";
 
-const FileUpload = () => {
+interface IFileUploadProps {
+    maxFilesCount: number;
+    maxFilesSize: number; // в МБ
+}
+
+const FileUpload: React.FC<IFileUploadProps> = ({ maxFilesCount, maxFilesSize  }) => {
     const [files, setFiles] = useState([]);
     const [images, setImages] = useState([]);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
     const onFilesAdded = async addedFiles => {
-        const newFiles = files.length + addedFiles.length <= 10 ? addedFiles : addedFiles.slice(0, 10 - files.length);
+        let newFiles = files.length + addedFiles.length <= maxFilesCount
+            ? addedFiles : addedFiles.slice(0, maxFilesCount - files.length);
+
+        newFiles = checkFilesSize(newFiles);
         setFiles(files.concat(newFiles));
 
         const addedImages = [];
@@ -37,6 +47,23 @@ const FileUpload = () => {
         });
     };
 
+    const checkFilesSize = checkedFiles => {
+       let filesSize = 0;
+       for (const file of files) {
+           filesSize += file.size / (1024 * 1024);
+       }
+
+       const result = [];
+       checkedFiles.forEach(file => {
+          filesSize += file.size / (1024 * 1024);
+          if (filesSize <= maxFilesSize) {
+              result.push(file);
+          }
+       });
+
+       return result;
+    };
+
     const panes = [
         {
             menuItem: "Add",
@@ -45,17 +72,23 @@ const FileUpload = () => {
                     <InternalStorageUpload
                         images={images}
                         onFilesAdded={onFilesAdded}
-                        disabled={files.length >= 10}
+                        disabled={files.length >= maxFilesCount}
                     />
                 </Tab.Pane>
         },
         {
             menuItem: "Video URL",
-            render: () => <Tab.Pane><VideoUrl/></Tab.Pane>
+            render: () =>
+                <Tab.Pane>
+                    <VideoUrl url={videoUrl} onChange={setVideoUrl}/>
+                </Tab.Pane>
         },
         {
             menuItem: "Image URL",
-            render: () => <Tab.Pane><ImageUrl/></Tab.Pane>
+            render: () =>
+                <Tab.Pane>
+                    <ImageUrl url={imageUrl} onChange={setImageUrl}/>
+                </Tab.Pane>
         }
     ];
 
