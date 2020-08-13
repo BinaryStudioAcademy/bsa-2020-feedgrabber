@@ -47,11 +47,8 @@ public class User {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "users_teams",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "team_id")}
+            },
+            mappedBy = "users"
     )
     @Builder.Default
     private List<Team> teams = new ArrayList<>();
