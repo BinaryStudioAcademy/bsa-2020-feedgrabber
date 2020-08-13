@@ -120,9 +120,9 @@ class QuestionDetails extends React.Component<IQuestionProps & CategoriesProps, 
         this.props.history.push("/questions");
     };
 
-    onSubmit = () => {
+    onSubmit = (question: IQuestion) => {
         if (this.state.isQuestionDetailsValid) {
-            this.props.saveQuestion(this.state.question);
+            this.props.saveQuestion(question);
             this.props.history.push("/questions");
         }
     }
@@ -227,7 +227,7 @@ class QuestionDetails extends React.Component<IQuestionProps & CategoriesProps, 
         return (
             <Formik
                 enableReinitialize
-                initialValues={initialValues}
+                initialValues={question}
                 validationSchema={validationSchema}
                 onSubmit={this.onSubmit}
             >
@@ -247,7 +247,11 @@ class QuestionDetails extends React.Component<IQuestionProps & CategoriesProps, 
                                             ? formik.errors.name
                                             : undefined
                                     }
-                                    onChange={formik.handleChange}
+                                    onChange={(e, { value }) => {
+                                        this.setState({
+                                            question: { ...question, name: value as string }
+                                        });
+                                    }}
                                     onBlur={formik.handleBlur}
                                 />
                                 {!question.type &&
@@ -268,14 +272,18 @@ class QuestionDetails extends React.Component<IQuestionProps & CategoriesProps, 
                                             question: { ...question, categoryTitle: value as string }
                                         });
                                     }}
-                                    value={question.categoryTitle}
+                                    value={formik.values.categoryTitle}
                                     onAddItem={(e, { value }) => {
                                         this.setState({
+                                            ...this.state,
                                             initialValues: {
+                                                ...initialValues,
                                                 createdCategories: 
-                                                [value as string, ...initialValues.createdCategories],
-                                                name: initialValues.name,
-                                                answers: initialValues.answers
+                                                [value as string, ...initialValues.createdCategories]
+                                            },
+                                            question: {
+                                                ...question,
+                                                categoryTitle: value as string
                                             }
                                         });
                                     }}
