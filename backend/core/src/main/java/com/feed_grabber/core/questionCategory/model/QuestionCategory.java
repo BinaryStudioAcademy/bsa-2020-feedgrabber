@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "question_categories")
+@Table(name = "question_categories", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "company_id"})})
 public class QuestionCategory {
     @Id
     @GeneratedValue(generator = "UUID")

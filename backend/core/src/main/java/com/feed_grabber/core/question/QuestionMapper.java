@@ -22,10 +22,15 @@ public abstract class QuestionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "category", target = "category")
-    @Mapping(source = "createDto.text", target = "text")
+    @Mapping(source = "createDto.name", target = "text")
     @Mapping(target = "questionnaires", ignore = true)
     @Mapping(target = "company", source="questionnaire.company")
-    public abstract Question questionCreateDtoToModel(QuestionCreateDto createDto, Questionnaire questionnaire, QuestionCategory category);
+    @Mapping(target = "payload", source="createDto.details")
+    public abstract Question questionCreateDtoToModel(
+            QuestionCreateDto createDto,
+            Questionnaire questionnaire,
+            QuestionCategory category
+    );
 
     @AfterMapping
     protected void setQuestionnaire(Questionnaire questionnaire, @MappingTarget Question question) {
