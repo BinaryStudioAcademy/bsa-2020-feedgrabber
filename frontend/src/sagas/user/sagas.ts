@@ -5,14 +5,12 @@ import {IGeneric} from "../../models/IGeneric";
 import {getUserRoutine} from "../auth/routines";
 
 function* getUser() {
-    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `http://localhost:5000/api/user`);
-
-    if (res.data.error) {
-        yield put(getUserRoutine.failure(res.data.error));
-        return;
+    try {
+        const res: IGeneric<IUserInfo> = yield call(apiClient.get, `http://localhost:5000/api/user`);
+        yield put(getUserRoutine.success(res.data.data));
+    } catch (error) {
+        yield put(getUserRoutine.failure(error));
     }
-
-    yield put(getUserRoutine.success(res.data.data));
 }
 
 export default function* userSagas() {

@@ -34,7 +34,8 @@ class Input extends React.Component {
     required: PropTypes.bool,
     onChange: PropTypes.func,
     pattern: PropTypes.string,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    disabled: PropTypes.bool
   };
 
   state = {
@@ -52,6 +53,7 @@ class Input extends React.Component {
         required={this.props.required}
         pattern={this.props.pattern}
         placeholder={this.props.placeholder}
+        disabled={this.props.disabled}
       />
     );
   }

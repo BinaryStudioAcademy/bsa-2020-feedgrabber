@@ -25,21 +25,21 @@ public class InvitationController {
 
     @GetMapping("/sign-up/{id}")
     public AppResponse<InvitationDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
-        return new AppResponse<>(invitationService.getById(id), HttpStatus.OK);
+        return new AppResponse<>(invitationService.getById(id));
     }
 
     @Secured("company_owner")
     @GetMapping
     public AppResponse<UUID> getByCompanyId() {
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(invitationService.getByCompanyId(companyId), HttpStatus.OK);
+        return new AppResponse<>(invitationService.getByCompanyId(companyId));
     }
 
     @Secured("company_owner")
     @PostMapping
     public AppResponse<UUID> generate() throws CompanyNotFoundException {
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(invitationService.generate(companyId), HttpStatus.OK);
+        return new AppResponse<>(invitationService.generate(companyId));
     }
 
     @Secured("company_owner")

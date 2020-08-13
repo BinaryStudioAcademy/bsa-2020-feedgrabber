@@ -4,22 +4,23 @@ import {useHistory} from "react-router-dom";
 import styles from "./styles.module.scss";
 import icon from "../../assets/images/icon_bg.jpg";
 import {logoutRoutine} from "../../sagas/auth/routines";
-import {connect, useDispatch} from "react-redux";
+import {connect} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import {IUserInfo} from "../../models/user/types";
+import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 export interface IHeaderProps {
     user: IUserInfo;
     logout: () => void;
     showMenu: boolean;
+    toggleMenu(): void;
 }
 
 const defaultAvatar =
     "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<IHeaderProps> = ({user, logout, showMenu}) => {
+const Header: FC<IHeaderProps> = ({user, logout, showMenu, toggleMenu}) => {
     const history = useHistory();
-    const dispatch = useDispatch();
     return (
         <Menu secondary borderless className={styles.main_header}>
             <Menu.Item onClick={() => history.push('/')}>
@@ -29,7 +30,7 @@ const Header: FC<IHeaderProps> = ({user, logout, showMenu}) => {
                     <span>FeedGrabber</span>
                 </HeaderUI>
             </Menu.Item>
-            <Menu.Item onClick={() => dispatch({type: 'TOGGLE_MENU'})}>
+            <Menu.Item onClick={() => toggleMenu()}>
                 <Icon name={showMenu ? "bars" : "options"}/>
             </Menu.Item>
             <Menu.Menu position="right">
@@ -81,7 +82,8 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    logout: logoutRoutine
+    logout: logoutRoutine,
+    toggleMenu: toggleMenuRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
