@@ -1,5 +1,5 @@
-import React, {FunctionComponent, useRef, useState} from 'react';
-import {Grid, Form, Header, Icon, Checkbox, Dropdown, Input, Button} from "semantic-ui-react";
+import React, {FunctionComponent} from 'react';
+import {Grid, Form, Header, Icon, Checkbox, Dropdown} from "semantic-ui-react";
 import './styles.sass';
 import {IAppState} from "../../../models/IAppState";
 import {connect} from "react-redux";
@@ -9,6 +9,7 @@ import {
   generateInvitationRoutine,
   loadInvitationRoutine
 } from "../../../sagas/invitation/routines";
+import InvitationLink from "../../InvitationLink";
 
 export interface IUserSettings {
   id: string;
@@ -23,11 +24,24 @@ interface IProfileSettingsProps {
   invitationLink?: string | null;
 
   loadInvitation(): void;
-
   generateInvitation(): void;
-
   deleteInvitation(): void;
 }
+
+const languages = [
+  {
+    key: 'English',
+    text: 'English',
+    value: 'English',
+    image: {avatar: true, src: 'https://www.countryflags.io/gb/flat/64.png'}
+  },
+  {
+    key: 'Ukrainian',
+    text: 'Ukrainian',
+    value: 'Ukrainian',
+    image: {avatar: true, src: 'https://www.countryflags.io/ua/flat/64.png'}
+  }
+];
 
 const ProfileSettings: FunctionComponent<IProfileSettingsProps> = (
   {
@@ -40,31 +54,6 @@ const ProfileSettings: FunctionComponent<IProfileSettingsProps> = (
     deleteInvitation
   }
 ) => {
-  const [copied, setCopied] = useState(false);
-  const input = useRef(null);
-
-  const languages = [
-    {
-      key: 'English',
-      text: 'English',
-      value: 'English',
-      image: {avatar: true, src: 'https://www.countryflags.io/gb/flat/64.png'}
-    },
-    {
-      key: 'Ukrainian',
-      text: 'Ukrainian',
-      value: 'Ukrainian',
-      image: {avatar: true, src: 'https://www.countryflags.io/ua/flat/64.png'}
-    }
-  ];
-
-  const copyToClipboard = e => {
-    input.current.select();
-    document.execCommand('copy');
-    e.target.focus();
-    setCopied(true);
-  };
-
   return (
     <Grid container textAlign="left" className={"settings-card"}>
       <Grid.Column>
@@ -91,55 +80,13 @@ const ProfileSettings: FunctionComponent<IProfileSettingsProps> = (
           <Checkbox checked={settings.enableNotifications} toggle label={"Turn on notifications"}/>
           <br/>
           {user?.role === "company_owner" && (
-            <>
-              <Header as='h4'>
-                <Icon name='pin'/>
-                <Header.Content>Invite</Header.Content>
-              </Header>
-              {invitationLink === undefined
-                ? (
-                  <Button loading={invitationLoading} disabled={invitationLoading} onClick={loadInvitation}>
-                    Show
-                  </Button>
-                )
-                : (
-                  <>
-                    <Button loading={invitationLoading} disabled={invitationLoading} onClick={loadInvitation}>
-                      Refresh
-                    </Button>
-                    <Button loading={invitationLoading} disabled={invitationLoading} onClick={generateInvitation}>
-                      Generate New
-                    </Button>
-                    <Button loading={invitationLoading} disabled={invitationLoading} onClick={deleteInvitation}>
-                      Delete
-                    </Button>
-                    <br/>
-                    <br/>
-                    <Input
-                      className="form-field"
-                      value={invitationLink ? `${window.location.host}/sign-up/${invitationLink}` : ''}
-                      placeholder="No link generated yet"
-                      readOnly
-                      action={{
-                        color: 'blue',
-                        labelPosition: 'right',
-                        icon: 'copy',
-                        content: 'Copy',
-                        onClick: copyToClipboard
-                      }}
-                      ref={input}
-                    />
-                    <br/>
-                    <br/>
-                    {copied && (
-                      <span>
-                          <Icon color="green" name="copy"/>
-                          Copied
-                        </span>
-                    )}
-                  </>
-                )}
-            </>
+            <InvitationLink
+              invitationLink={invitationLink}
+              invitationLoading={invitationLoading}
+              loadInvitation={loadInvitation}
+              generateInvitation={generateInvitation}
+              deleteInvitation={deleteInvitation}
+            />
           )}
         </Form>
       </Grid.Column>

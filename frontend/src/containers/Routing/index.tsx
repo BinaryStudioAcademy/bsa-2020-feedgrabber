@@ -16,6 +16,7 @@ import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import {IUserInfo} from "../../models/user/types";
 import {getUserRoutine} from "../../sagas/auth/routines";
+import {useAuth} from '../../security/authProvider';
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -25,11 +26,13 @@ export interface IRoutingProps {
 }
 
 const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
+  const isLogged = useAuth();
+
   useEffect(() => {
-    if (!user){
+    if (isLogged && !user){
       getUser();
     }
-  }, [user, getUser]);
+  }, [isLogged, user, getUser]);
 
   return (
     <>
