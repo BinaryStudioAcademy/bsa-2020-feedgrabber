@@ -51,7 +51,7 @@ const TeamsList: React.FunctionComponent<ITeamsListProps> = (
                             Teams
                         </Title>
                         <Button onClick={() => showModal()}>
-                            <Icon name="users"></Icon>
+                            <Icon name="users"/>
                             Add team</Button>
                     </div>
                     <Card.Group>
@@ -82,23 +82,6 @@ const TeamsList: React.FunctionComponent<ITeamsListProps> = (
             />
         </div>
     );
-};
-
-TeamsList.defaultProps = {
-    teams: [{
-        id: '533b5230-1b9f-11a8-9629-c7eca82aa7bd',
-        name: 'Bsa-2020',
-        members: [{
-            id: '533b5230-1b9f-11e8-9629-c7eca82aa7bd',
-            username: 'pasha',
-            avatar: 'https://i.imgur.com/hG4Th4U.jpg'
-        }, {
-            id: '',
-            username: 'misa',
-            avatar: 'https://i.imgur.com/hIjmHms.jpg'
-        }
-        ]
-    }]
 };
 
 export default TeamsList;

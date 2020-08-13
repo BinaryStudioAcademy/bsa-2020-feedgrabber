@@ -55,12 +55,12 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
         ...state,
         modalShown: false
       };
-    case createTeamRoutine.TRIGGER:
+    case createTeamRoutine.SUCCESS:
       return {
         ...state,
-        isModalLoading: true
+        modalShown: false,
+        isModalLoading: false
       };
-    case createTeamRoutine.SUCCESS:
     case createTeamRoutine.FAILURE:
       return {
         ...state,

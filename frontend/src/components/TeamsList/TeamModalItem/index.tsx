@@ -12,7 +12,7 @@ export interface IModalItemProps {
 const TeamsModalItem: React.FunctionComponent<IModalItemProps> = ({userName, index, remove}) => (
     <div className={styles.user_item_container}>
         <div>
-            <Icon name={"user outline"}/>
+            <Icon name={"user circle outline"}/>
             <span>{userName}</span>
         </div>
         <Icon className={styles.close_icon} name={"x"} onClick={() => remove(index)

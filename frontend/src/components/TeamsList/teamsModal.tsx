@@ -16,15 +16,8 @@ export interface ITeamsModalProps {
     createTeam(team: ITeamCreationDto): void;
 }
 
-export interface IDropdownItem{
-    key: string;
-    text: string;
-    value: string;
-}
-
 export interface ITeamCreationDto {
     name: string;
-    companyId: string;
     memberIds: string[];
 }
 
@@ -34,84 +27,12 @@ const TeamsModal: React.FunctionComponent<ITeamsModalProps> = ({
                                                                    isModalLoading,
                                                                    companyUsers
 }) => {
-    const validationSchema = yup.object().shape({
-        name: yup.string().required('required'),
-        companyId: yup.string().required("You must chose a company")
-    });
 
-    const onSubmit = values => {
-        console.log(values);
-        createTeam({name: values.name, companyId: values.companyId, memberIds: values.members});
-    };
+    const validationSchema = yup.object().shape({name: yup.string().required('required')});
 
-    const companyOptions = [
-        {
-            key: "1",
-            text: "Maksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        },
-        {
-            key: "2",
-            text: "Qaksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "3",
-            text: "Waksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "4",
-            text: "Daksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "5",
-            text: "Faksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "6",
-            text: "Vaksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        },
-        {
-            key: "7",
-            text: "Paksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "8",
-            text: "Laksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "9",
-            text: "Kaksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "10",
-            text: "jaksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-        ,
-        {
-            key: "11",
-            text: "zaksimko",
-            value: "afa14521-b8db-44a7-b9b7-98bd8244cc19"
-        }
-    ];
+    const onSubmit = values => createTeam({name: values.name, memberIds: values.memberIds});
 
-    const userOptions =  companyUsers.map(u=> ({ key: u.id,text: u.userName,value: u.id}));
-    // companyUsers.map(u=> { key: u.id,text: u.userName,value: u.id})
+    const userOptions =  companyUsers.map(u=> ({ key: u.id,text: u.userName,value: u.id,icon: 'user circle outline'}));
 
     return (
         <Modal
@@ -123,10 +44,12 @@ const TeamsModal: React.FunctionComponent<ITeamsModalProps> = ({
             <Formik
                 enableReinitialize
                 validationSchema={validationSchema}
-                initialValues={{name: '', companyId: '', members: []}}
+                initialValues={{name: '',  memberIds: []}}
                 onSubmit={onSubmit}>{props =>
                 <Form onSubmit={props.handleSubmit}>
-                    <Header as='h2'>Company name</Header>
+
+                    <Header as='h2'>Team name</Header>
+
                     <Form.Input
                         icon="tag"
                         name="name"
@@ -142,29 +65,32 @@ const TeamsModal: React.FunctionComponent<ITeamsModalProps> = ({
                         onBlur={props.handleBlur}
                     >
                     </Form.Input>
+
                     <Header as='h2'>Members</Header>
-                    <FieldArray name="members">{({push, remove}) => (
+
+                    <FieldArray name="memberIds">{({push, remove}) => (
                         <div>
                             <Form.Dropdown
                                 scrolling
                                 closeOnEscape
-                                selection
-                                trigger={props.values.members.length !== userOptions.length ?
+                                trigger={props.values.memberIds.length !== userOptions.length ?
                                     "Add new members to this team" :
-                                    "No more user :("}
-                                options={userOptions.filter(u => !props.values.members.includes(u.value))}
+                                    "No more users :("}
+                                options={userOptions.filter(u => !props.values.memberIds.includes(u.value))}
                                 onChange={(event, data) => push(data.value)}
                             />
                             <div className={styles.items_container}>
-                                {userOptions.filter(u => props.values.members.includes(u.value))
+                                {userOptions.filter(u => props.values.memberIds.includes(u.value))
                                     .map((member, index) => (
                                         <TeamsModalItem userName={member.text} index={index} remove={remove}/>
                                     ))}
                             </div>
                         </div>
                     )}</FieldArray>
+
                     <Button className={styles.submit_button} type="submit" loading={isModalLoading}
                             disabled={isModalLoading} primary>Create</Button>
+
                 </Form>
             }
             </Formik>

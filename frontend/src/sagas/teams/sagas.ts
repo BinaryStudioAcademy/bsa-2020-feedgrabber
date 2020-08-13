@@ -22,10 +22,11 @@ function* createTeamTeam(action: any) {
         const team: ITeamCreationDto = action.payload;
 
         yield call(apiClient.post, `api/teams`, team);
-        yield put(createTeamRoutine.trigger());
         yield put(createTeamRoutine.success());
         yield put(loadTeamsRoutine.trigger());
-        toastr.success("Added team");
+
+        toastr.success("Team added");
+
     } catch (errorResponse) {
         yield put(createTeamRoutine.failure());
     }
