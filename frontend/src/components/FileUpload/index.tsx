@@ -1,14 +1,13 @@
 import React, {useState} from "react";
 import { Tab } from "semantic-ui-react";
 import VideoUrl from "./UrlVideo";
-import Dropzone from "./Dropzone";
 import styles from "./styles.module.sass";
 import ImageUrl from "./ImageUrl";
+import InternalStorageUpload from "./InternalStorageUpload";
 
 const FileUpload = () => {
     const [files, setFiles] = useState([]);
     const [images, setImages] = useState([]);
-    const [uploading, setUploading] = useState(false);
 
     const onFilesAdded = async addedFiles => {
         const newFiles = files.length + addedFiles.length <= 10 ? addedFiles : addedFiles.slice(0, 10 - files.length);
@@ -43,17 +42,11 @@ const FileUpload = () => {
             menuItem: "Add",
             render: () =>
                 <Tab.Pane>
-                    <div className={styles.addFile} >
-                        <Dropzone
-                            disabled={uploading || files.length >= 10}
-                            onFilesAdded={onFilesAdded}
-                        />
-                        <div className={styles.images}>
-                            {images.map(image => {
-                              return <img className="ui medium image" src={image} />;
-                            })}
-                        </div>
-                    </div>
+                    <InternalStorageUpload
+                        images={images}
+                        onFilesAdded={onFilesAdded}
+                        disabled={files.length >= 10}
+                    />
                 </Tab.Pane>
         },
         {
