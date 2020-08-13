@@ -45,7 +45,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (auth != null) {
             HashMap<String, Object> info = new HashMap<String, Object>();
             var companyId = getCompanyId(header);
+            var role = getRoleName(header);
             info.put(COMPANY_ID_KEY, companyId.toString());
+            info.put(AUTHORITIES_KEY, role);
             auth.setDetails(info);
         }
 
@@ -80,6 +82,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (!tokenService.isTokenExpired(tokenString)) {
             return companyId;
+        }
+
+        return null;
+    }
+
+    private String getRoleName(String token) {
+        if (token == null) {
+            return null;
+        }
+
+        var tokenString = token.replace(TOKEN_PREFIX, "");
+        String role = tokenService.extractRoleName(tokenString);
+
+        if (!tokenService.isTokenExpired(tokenString)) {
+            return role;
         }
 
         return null;

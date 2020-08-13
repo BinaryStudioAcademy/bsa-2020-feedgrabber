@@ -114,7 +114,7 @@ const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
     error: state.user.error?.login,
     company: state.company.currentCompany,
-    userEmail: state.user.info.email
+    userEmail: state.user.info?.email
 });
 
 const mapDispatch = {

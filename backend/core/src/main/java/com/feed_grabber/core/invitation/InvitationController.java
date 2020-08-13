@@ -1,13 +1,12 @@
 package com.feed_grabber.core.invitation;
 
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -28,24 +27,30 @@ public class InvitationController {
         return new AppResponse<>(invitationService.getById(id));
     }
 
-    @Secured("company_owner")
     @GetMapping
     public AppResponse<UUID> getByCompanyId() {
+        assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(invitationService.getByCompanyId(companyId));
     }
 
-    @Secured("company_owner")
     @PostMapping
     public AppResponse<UUID> generate() throws CompanyNotFoundException {
+        assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(invitationService.generate(companyId));
     }
 
-    @Secured("company_owner")
     @DeleteMapping
     public void delete() {
+        assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
         invitationService.deleteByCompanyId(companyId);
+    }
+
+    private void assertCompanyOwner() {
+        if (!TokenService.getRoleName().equals("company_owner")){
+            throw new JwtTokenException("Only company owner could manage invitations");
+        }
     }
 }
