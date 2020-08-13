@@ -17,10 +17,12 @@ import {connect} from "react-redux";
 import {IUserInfo} from "../../models/user/types";
 import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
+import GuestRoute from "../../components/GuestRoute";
+import InvitationSignUp from "../InvitationSignUp";
 
 export interface IRoutingProps {
   isLoading: boolean;
-  user: IUserInfo;
+  user?: IUserInfo;
 
   getUser(): void;
 }
@@ -40,6 +42,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
         <Switch>
           <PublicRoute exact path="/layout" component={Landing}/>
           <PublicRoute exact path="/auth" component={SignForm}/>
+          <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
           <PrivateRoute exact path="/" component={MainPage}/>
           <PrivateRoute exact path="/profile" component={Profile}/>
           <PrivateRoute exact path="/profile/settings" component={ProfileX}/>

@@ -89,7 +89,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error.register
+    error: state.user.error?.register
 });
 
 const mapDispatch = {

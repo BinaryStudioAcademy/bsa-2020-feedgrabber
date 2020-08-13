@@ -3,6 +3,7 @@ import {
   generateInvitationRoutine,
   loadInvitationRoutine
 } from "../../sagas/invitation/routines";
+import {logoutRoutine} from "../../sagas/auth/routines";
 
 export interface IInvitationState {
   isLoading?: boolean;
@@ -23,6 +24,12 @@ export default (state: IInvitationState = {}, action): IInvitationState => {
       return {
         ...state,
         link: action.payload,
+        isLoading: false
+      };
+    case logoutRoutine.TRIGGER:
+      return {
+        ...state,
+        link: undefined,
         isLoading: false
       };
     case deleteInvitationRoutine.SUCCESS:

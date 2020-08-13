@@ -27,7 +27,7 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
     if (type === logoutRoutine.SUCCESS) {
         return {
             ...state,
-            info: {}
+            info: undefined
         };
     }
     if (type === registerRoutine.FAILURE) {

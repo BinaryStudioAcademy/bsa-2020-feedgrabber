@@ -73,7 +73,7 @@ const SignInForm: FC<SignInFormProps & {className: string}> = props => {
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error.login
+    error: state.user.error?.login
 });
 
 const mapDispatch = {
