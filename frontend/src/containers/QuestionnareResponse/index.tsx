@@ -118,7 +118,8 @@ class QuestionnaireResponse extends React.Component<IResponseProps, IResponseSta
                                         <h2 className={styles.name}>{question.name}</h2>
                                             {this.getQuestionForm(question)}
                                             {showErrors && !question.answer? 
-                                                <div>Please, fill the question</div> : null}
+                                                <div className={styles.error_message}>
+                                                    Please, fill the question</div> : null}
                                     </Segment>
                                 </List.Item>);
                         })}
