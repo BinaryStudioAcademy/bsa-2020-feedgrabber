@@ -32,49 +32,53 @@ public class QuestionController {
 
     @ApiOperation(value = "Get all questions from repo")
     @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAll() {
-        return new AppResponse<>(questionService.getAll(), HttpStatus.OK);
+        return new AppResponse<>(questionService.getAll());
     }
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")
     @GetMapping("/questionnaires/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAllByQuestionnaire(@ApiParam(
             value = "ID to get the questions list questionnaire", required = true) @PathVariable UUID id) {
-        return new AppResponse<>(questionService.getAllByQuestionnaireId(id), HttpStatus.OK);
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }
 
     @ApiOperation(value = "Get the question by id")
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppResponse<QuestionDto> getOne(@ApiParam(value = "ID to get the questionnaire",
             required = true) @PathVariable UUID id) throws QuestionnaireNotFoundException {
-        return new AppResponse<>(
-                questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new),
-                HttpStatus.OK
-        );
+        return new AppResponse<>(questionService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new));
     }
 
     @ApiOperation(value = "Create new question",
             notes = "Provide an question object with text, categoryID and questionnaireID to create new question")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public AppResponse<QuestionDto> create(@RequestBody String json)
             throws QuestionnaireNotFoundException, JsonProcessingException {
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(questionService.create(dto, companyId), HttpStatus.OK);
+        return new AppResponse<>(questionService.create(dto, companyId));
     }
 
     @ApiOperation(value = "Update the question",
             notes = "Provide an object with id, text, categoryID and questionnaireID to update the question")
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping
     public AppResponse<QuestionDto> update(@RequestBody String json)
             throws QuestionNotFoundException, JsonProcessingException {
         var companyId = TokenService.getCompanyId();
         QuestionUpdateDto dto = new ObjectMapper().readValue(json, QuestionUpdateDto.class);
-        return new AppResponse<>(questionService.update(dto, companyId), HttpStatus.OK);
+        return new AppResponse<>(questionService.update(dto, companyId));
+
     }
 
     @ApiOperation(value = "Delete the question")
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         questionService.delete(id);
     }

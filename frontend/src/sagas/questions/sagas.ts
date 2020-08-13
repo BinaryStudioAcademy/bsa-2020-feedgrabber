@@ -7,17 +7,12 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 function* getAll() {
-  const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `api/questions`);
   try {
-    if (res.data.error) {
-      yield put(loadQuestionsRoutine.failure());
-      toastr.error(res.data.error);
-      return;
-    }
+    const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `api/questions`);
     yield put(loadQuestionsRoutine.success(res.data.data));
   } catch (error) {
     yield put(loadQuestionsRoutine.failure());
-    toastr.error('Sorry, something went wrong');
+    toastr.error(error);
   }
 }
 
@@ -30,12 +25,6 @@ function* getById(action) {
     }
 
     const response = yield call(apiClient.get, `/api/questions/${action.payload}`);
-    if (response.data.error) {
-      yield put(loadQuestionByIdRoutine.failure());
-      toastr.error(response.data.error);
-      return;
-    }
-
     const question: IGeneric<IQuestion> = {
       ...response.data.data,
       type: response.data.data.type.toLowerCase(),
@@ -44,24 +33,22 @@ function* getById(action) {
     yield put(loadQuestionByIdRoutine.success(question));
   } catch (error) {
     yield put(loadQuestionByIdRoutine.failure());
-    toastr.error('Sorry, something went wrong');
+    toastr.error(error);
   }
 }
 
 function* save(action) {
   const question = action.payload;
+  try {
+    const res: IGeneric<IQuestion> = question.id
+      ? yield call(apiClient.put, `api/questions`, question)
+      : yield call(apiClient.post, `api/questions`, question);
 
-  const res: IGeneric<IQuestion> = question.id
-    ? yield call(apiClient.put, `api/questions`, question)
-    : yield call(apiClient.post, `api/questions`, question);
-
-  if (res.data.error) {
+    yield put(saveQuestionRoutine.success(res.data.data));
+  } catch (error) {
     yield put(saveQuestionRoutine.failure());
-    toastr.error(res.data.error);
-    return;
+    toastr.error(error);
   }
-
-  yield put(saveQuestionRoutine.success(res.data.data));
 }
 
 export default function* questionSagas() {
