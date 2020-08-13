@@ -7,12 +7,15 @@ import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.responseAnswer.dto.ResponseAnswerCreateDto;
 import com.feed_grabber.core.responseAnswer.dto.ResponseAnswerDto;
 import com.feed_grabber.core.responseAnswer.exceptions.ResponseAnswerNotFoundException;
+import com.feed_grabber.core.responseAnswer.model.ResponseAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/answers")
@@ -49,6 +52,18 @@ public class ResponseAnswerController {
         return new AppResponse<>(
                 answerService.create(createDto)
         );
+    }
+    
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public AppResponse<List<ResponseAnswerDto>> saveAll(@RequestBody List<ResponseAnswerCreateDto> createDtos)
+            throws AlreadyExistsException, QuestionnaireResponseNotFoundException, QuestionNotFoundException {
+        var responseAnswerDtos = new ArrayList<ResponseAnswerDto>();
+        for (ResponseAnswerCreateDto createDto : createDtos) {
+            ResponseAnswerDto responseAnswerDto = answerService.create(createDto);
+            responseAnswerDtos.add(responseAnswerDto);
+        }
+        return new AppResponse<>(responseAnswerDtos);
     }
 
     @DeleteMapping("/{id}")

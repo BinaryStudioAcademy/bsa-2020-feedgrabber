@@ -72,7 +72,6 @@ function* deleteQuestionnaire(action: any) {
 function* loadCurrentQuestionnaire(action: any) {
   try {
     const id: string = action.payload;
-    console.log(id);
     const res: IGeneric<IQuestionnaire> = yield call(apiClient.get, 
       `http://localhost:5000/api/questionnaires/${id}`);
     yield put(loadCurrentQuestionnaireRoutine.success(res.data.data));
