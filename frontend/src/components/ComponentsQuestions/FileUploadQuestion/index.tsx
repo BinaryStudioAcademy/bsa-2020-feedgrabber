@@ -30,9 +30,9 @@ const FileUploadQuestion: React.FC = () => {
                     <ErrorMessage name={"answers.fileType"} />
                 </div>
             </div>
-            <QuestionField label={"Maximum number of files, MB"}
+            <QuestionField label={"Maximum number of files"}
                            name={"answers.fileNumber"} type={"number"} inputProps={{ min: 1, max: 10 }} />
-            <QuestionField label={"Maximum file size"}
+            <QuestionField label={"Maximum file size, MB"}
                            name={"answers.fileSize"} type={"number"} inputProps={{ min: 0 }}/>
         </div>
     );
