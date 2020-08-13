@@ -63,4 +63,11 @@ public class Handler extends ResponseEntityExceptionHandler {
                 .body(new AppResponse<>(exception, HttpStatus.BAD_REQUEST));
     }
 
+    @ExceptionHandler(value = InsertionException.class)
+    public ResponseEntity<AppResponse<Object>> handleQuestionTypeNotExistsException(InsertionException exception) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new AppResponse<>(exception, HttpStatus.BAD_REQUEST));
+    }
+
 }

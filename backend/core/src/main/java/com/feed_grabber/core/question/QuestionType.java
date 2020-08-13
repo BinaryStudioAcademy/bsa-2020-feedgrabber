@@ -1,5 +1,10 @@
 package com.feed_grabber.core.question;
 
+import com.feed_grabber.core.question.exceptions.QuestionTypeNotExistsException;
+
+import java.util.Optional;
+import java.util.stream.Stream;
+
 public enum QuestionType {
     FREE_TEXT("free_text"),
     RADIO("radio"),
@@ -20,12 +25,10 @@ public enum QuestionType {
     }
 
     public static QuestionType fromString(String text) {
-        for (QuestionType type : QuestionType.values()) {
-            if (type.value.equalsIgnoreCase(text)) {
-                return type;
-            }
-        }
-        return null;
+        return Stream.of(QuestionType.values())
+                .filter(type -> type.value.equalsIgnoreCase(text))
+                .findFirst()
+                .orElseThrow(() -> new QuestionTypeNotExistsException("This type of question does not exists " + text));
     }
 
     @Override
