@@ -89,5 +89,5 @@ export enum QuestionType {
   checkbox = "checkbox",
   multichoice = "multi_choice",
   date = "date",
-  fileUpload = "file_upload"
+  fileUpload = "fileUpload"
 }
