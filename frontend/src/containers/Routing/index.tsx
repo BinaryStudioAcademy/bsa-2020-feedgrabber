@@ -14,6 +14,7 @@ import QuestionnaireList from "../QuestionnaireList";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
+import QuestionnairePreview from 'components/QuestionnairePreview';
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 
@@ -40,6 +41,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading }) => (
           <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
+          <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
            <PrivateRoute exact path="/employees" component={UserList} />
