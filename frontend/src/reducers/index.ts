@@ -7,11 +7,13 @@ import appReducer from "./app/reducer";
 import teamsReducer from "./teams/reducer";
 import expandedQuestionnaireReducer from './expandedQuestionnaire/reducer';
 import invitationReducer from './invitation/reducer';
+import invitationSignUpReducer from './invitationSignUp/reducer';
 
 export default combineReducers({
   toastr,
   user: authAndProfileReducer,
   invitation: invitationReducer,
+  invitationSignUp: invitationSignUpReducer,
   questionnaires: questionnairesReducer,
   questions: questionsReducer,
   teams: teamsReducer,

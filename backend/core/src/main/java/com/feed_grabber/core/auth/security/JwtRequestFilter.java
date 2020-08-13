@@ -42,10 +42,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         sec.setAuthentication(authentication);
 
         AbstractAuthenticationToken auth = (AbstractAuthenticationToken)sec.getAuthentication();
-        HashMap<String, Object> info = new HashMap<String, Object>();
-        var companyId = getCompanyId(header);
-        info.put(COMPANY_ID_KEY, companyId.toString());
-        auth.setDetails(info);
+        if (auth != null) {
+            HashMap<String, Object> info = new HashMap<String, Object>();
+            var companyId = getCompanyId(header);
+            info.put(COMPANY_ID_KEY, companyId.toString());
+            auth.setDetails(info);
+        }
 
         chain.doFilter(request, response);
     }

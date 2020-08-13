@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useRef, useState} from "react";
+import React, {FunctionComponent, useEffect, useRef, useState} from "react";
 import {Button, Header, Icon, Input} from "semantic-ui-react";
 
 interface IInvitationLinkProps {
@@ -21,6 +21,10 @@ const InvitationLink: FunctionComponent<IInvitationLinkProps> = (
 ) => {
   const [copied, setCopied] = useState(false);
   const input = useRef(null);
+
+  useEffect(() => {
+    setCopied(false);
+  }, [invitationLink]);
 
   const fullInvitationLink = invitationLink ? `${window.location.host}/sign-up/${invitationLink}` : '';
 

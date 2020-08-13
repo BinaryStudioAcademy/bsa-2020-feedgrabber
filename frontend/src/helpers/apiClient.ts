@@ -33,7 +33,10 @@ const responseErrorHandler = e => {
 };
 
 apiClient.interceptors.request.use(request => {
-    request.headers.Authorization = `Bearer ${tokenProvider.getToken()}`;
+    const token = tokenProvider.getToken();
+    if (token) {
+      request.headers.Authorization = `Bearer ${token}`;
+    }
     return request;
 });
 

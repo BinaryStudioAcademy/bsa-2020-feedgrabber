@@ -23,7 +23,7 @@ public interface UserMapper {
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
-    @Mapping(target = "role", source = "role.name")
+    @Mapping(target = "role", source = "role.systemRole")
     UserResponseAuthDetailsDTO responseFromUser(User user);
 
     @Mapping(target = "userName", source = "username")
