@@ -1,6 +1,7 @@
-import {loadQuestionsRoutine} from "sagas/questions/routines";
+import { loadQuestionsRoutine, loadQuestionByIdRoutine } from "sagas/questions/routines";
 import {IAppState} from "models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 export interface IQuestionsState {
     list?: IQuestion[];
@@ -10,7 +11,7 @@ export interface IQuestionsState {
 
 const initialState: IAppState['questions'] = {
     list: [] as IQuestion[],
-    current: {} as IQuestion,
+    current: defaultQuestion as IQuestion,
     isLoading: false
 };
 
@@ -32,9 +33,26 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
                 ...state,
                 isLoading: false
             };
+        case loadQuestionByIdRoutine.SUCCESS:
+            return {
+              ...state,
+              current: payload,
+              isLoading: false
+            };
+        case loadQuestionByIdRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case loadQuestionByIdRoutine.FAILURE:
+            return {
+                ...state,
+                isLoading: false
+            };
         default:
             return state;
     }
+
 };
 
 export default questionsReducer;
