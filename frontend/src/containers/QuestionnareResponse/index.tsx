@@ -6,6 +6,9 @@ import { history } from '../../helpers/history.helper';
 import styles from './styles.module.scss';
 import { Formik } from 'formik';
 import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
+import { IAppState } from 'models/IAppState';
+import { connect } from "react-redux";
+import { loadOneQuestionnaireRoutine } from "../../sagas/expandedQuestionnaire/routines";
 
 interface IResponseState {
     questions: IQuestion[];
@@ -16,7 +19,7 @@ interface IResponseState {
 // TODO: implement saveResponse and add loadQuestions
 
 interface IResponseProps {
-    questionnaireId: string;
+    match: any;
     title: string;
     questions: IQuestion[];
     loadQuestions(id: string): void;
@@ -25,7 +28,7 @@ interface IResponseProps {
 
 class QuestionnaireResponse extends React.Component<IResponseProps, IResponseState> {
     static defaultProps: { 
-        questionnaireId: string; 
+        match: any; 
         title: string; 
         questions: IQuestion[]; 
         loadQuestions: (id: string) => void; 
@@ -44,8 +47,8 @@ class QuestionnaireResponse extends React.Component<IResponseProps, IResponseSta
     }
 
     componentDidMount() {
-        const { loadQuestions, questionnaireId, questions} = this.props;
-        loadQuestions(questionnaireId);
+        const { loadQuestions, match, questions} = this.props;
+        loadQuestions(match.params.id);
         this.setState({
             questions: questions
         });
@@ -161,7 +164,11 @@ const defaultQuestions: IQuestion[] = [
   ];
 
 QuestionnaireResponse.defaultProps = {
-    questionnaireId: "1",
+    match: {
+        params: {
+            id: '1'
+        }
+    },
     title: "Awesome questionnaire",
     questions: defaultQuestions,
     loadQuestions: id => {console.log(`loaded ${id}`);},
