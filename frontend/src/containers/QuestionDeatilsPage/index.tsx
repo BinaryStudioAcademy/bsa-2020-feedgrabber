@@ -6,7 +6,7 @@ import {loadCategoriesRoutine} from "sagas/categories/routines";
 import {saveQuestionRoutine} from "../../sagas/questions/routines";
 import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import {useHistory} from "react-router-dom";
-import QuestionDetails from "../QuestionDetails";
+import QuestionDetails from "../../components/QuestionDetails";
 import {Button, Loader, Segment} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
