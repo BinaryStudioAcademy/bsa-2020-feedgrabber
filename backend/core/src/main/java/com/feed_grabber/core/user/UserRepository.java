@@ -11,17 +11,20 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-
+    // TODO rewrite to take companyId
     Optional<User> findByUsername(String username);
 
+    // TODO rewrite to take companyId
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByUsernameAndCompanyIdOrEmail(String username, UUID companyId, String email);
+    Optional<User> findByUsernameAndCompanyIdOrEmailAndCompanyId
+            (String username, UUID companyId1, String email, UUID companyId2);
+
+    Optional<User> findByCompanyIdAndEmail(UUID companyId, String email);
 
     List<User> findAllByCompanyId(UUID companyId);
 
     Long countAllByCompanyId(UUID companyId);
 
     List<User> findAllByCompanyId(UUID companyId, Pageable pageable);
-
 }

@@ -10,6 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserInfoToResetPassDto {
     String userEmail;
-    String companyId;
+    UUID companyId;
 }
 

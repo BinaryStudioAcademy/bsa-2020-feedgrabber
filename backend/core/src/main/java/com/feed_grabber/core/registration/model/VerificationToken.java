@@ -1,5 +1,6 @@
 package com.feed_grabber.core.registration.model;
 
+import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,12 +31,16 @@ public class VerificationToken {
     @Column(name = "expiration_date")
     private Date expirationDate;
 
+    @Enumerated(EnumType.STRING)
+    private TokenType type;
+
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    public VerificationToken(String token, User user) {
+    public VerificationToken(String token, User user, TokenType type) {
         this.token = token;
+        this.type = type;
         this.user = user;
         expirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS);
     }

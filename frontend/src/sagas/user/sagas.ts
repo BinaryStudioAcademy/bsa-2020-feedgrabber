@@ -28,7 +28,7 @@ function* sendEmailPassReset(action) {
 
 function* passwordReset(action) {
     try {
-        // payload: {uniqueUrl, password}
+        // payload: {token, password}
         yield call(apiClient.post, '/api/user/reset', action.payload);
         yield call(toastr.success, ("Your password was updated!"));
     } catch (e) {

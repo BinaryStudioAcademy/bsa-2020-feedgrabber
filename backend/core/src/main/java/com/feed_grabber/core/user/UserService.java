@@ -20,6 +20,8 @@ import com.feed_grabber.core.user.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,16 +37,19 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        CompanyRepository companyRepository,
-                       InvitationRepository invitationRepository) {
+                       InvitationRepository invitationRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -102,8 +107,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(InvitationNotFoundException::new);
         var company = invitation.getCompany();
 
-        var existing = userRepository.findByUsernameAndCompanyIdOrEmail(
-                registerDto.getUsername(), company.getId(), registerDto.getEmail()
+        var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
+                registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
         );
         if (existing.isPresent()) {
             throw new UserAlreadyExistsException();
@@ -146,11 +151,21 @@ public class UserService implements UserDetailsService {
 
     public Optional<UserDto> updateUser(UUID id, UserDto userDto) {
         var userToUpdate = userRepository.getOne(id);
+
         userToUpdate.setEmail(userDto.getEmail());
-        userToUpdate.setPassword(userDto.getPassword());
+        userToUpdate.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userToUpdate.setUsername(userDto.getUsername());
-        userRepository.save(userToUpdate);
-        return Optional.of(UserMapper.MAPPER.userToUserDto(userToUpdate));
+
+        return Optional.of(UserMapper.MAPPER
+                .userToUserDto(userRepository.save(userToUpdate)));
+    }
+
+    public Optional<UserDto> updatePassword(UUID id, String password) {
+        var userToUpdate = userRepository.getOne(id);
+        userToUpdate.setPassword(passwordEncoder.encode(password));
+
+        return Optional.of(UserMapper.MAPPER
+                .userToUserDto(userRepository.save(userToUpdate)));
     }
 
     public void removeCompany(UUID id) {
