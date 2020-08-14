@@ -64,7 +64,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
                 }
             };
         case loadQuestionByIdRoutine.SUCCESS:
-            
             return {
                 ...state,
                 current: payload,
