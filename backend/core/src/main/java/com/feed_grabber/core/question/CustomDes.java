@@ -8,6 +8,7 @@ import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.exceptions.QuestionTypeNotExistsException;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CustomDes extends StdDeserializer<QuestionCreateDto> {
@@ -20,19 +21,25 @@ public class CustomDes extends StdDeserializer<QuestionCreateDto> {
     }
 
     @Override
-    public QuestionCreateDto deserialize(JsonParser jp, DeserializationContext ctxt)
-            throws IOException {
+    public QuestionCreateDto deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
-        // String id = (node.get("questionnaireId")).asText();
+        Optional<UUID> anketId = Optional.empty();
+
+        if (node.has("questionnaireId")) {
+            anketId = Optional.of(UUID.fromString(node.get("questionnaireId").asText()));
+        }
+
         String payload = node.get("details").toString();
         String category = node.get("categoryTitle").asText();
         String typeName = node.get("type").asText();
+
         QuestionType type = QuestionType
                 .fromString(typeName)
                 .orElseThrow(() -> new QuestionTypeNotExistsException("This type of question does not exists " + typeName));
+
         String text = node.get("name").asText();
 
-        return new QuestionCreateDto(text, category, type, payload);
+        return new QuestionCreateDto(text, category, type, anketId, payload);
 
     }
 }
