@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {Menu, Icon, Image, Header as HeaderUI, Button, Dropdown} from "semantic-ui-react";
+import {Icon, Image, Dropdown} from "semantic-ui-react";
 import {NavLink, useHistory} from "react-router-dom";
 import styles from "./styles.module.sass";
 import icon from "../../assets/images/icon_bg.jpg";
@@ -7,20 +7,16 @@ import {logoutRoutine} from "../../sagas/auth/routines";
 import {connect} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import {IUserInfo} from "../../models/user/types";
-import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 export interface IHeaderProps {
   user: IUserInfo;
   logout: () => void;
-  showMenu: boolean;
-
-  toggleMenu(): void;
 }
 
 const defaultAvatar =
   "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<IHeaderProps> = ({user, logout, showMenu, toggleMenu}) => {
+const Header: FC<IHeaderProps> = ({user, logout}) => {
   const history = useHistory();
   return (
     <div className={styles.headerWrapper}>
@@ -30,9 +26,6 @@ const Header: FC<IHeaderProps> = ({user, logout, showMenu, toggleMenu}) => {
             <img alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
             <h1 className={styles.headerServiceName}>FeedGrabber</h1>
           </div>
-          {/* <Menu.Item onClick={() => toggleMenu()}>*/}
-          {/*   <Icon name={showMenu ? "bars" : "options"}/>*/}
-          {/* </Menu.Item>*/}
           <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive} className={styles.headerMenuItem}>
             PENDING FEEDBACKS
           </NavLink>
@@ -86,13 +79,11 @@ const Header: FC<IHeaderProps> = ({user, logout, showMenu, toggleMenu}) => {
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  user: state.user.info,
-  showMenu: state.app.showMenu
+  user: state.user.info
 });
 
 const mapDispatchToProps = {
-  logout: logoutRoutine,
-  toggleMenu: toggleMenuRoutine
+  logout: logoutRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

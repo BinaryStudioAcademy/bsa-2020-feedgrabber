@@ -5,40 +5,43 @@ import Header from "../Header";
 import SideMenu from "../SideMenu";
 import styles from './styles.module.sass';
 import {connect} from "react-redux";
+import {toggleMenuRoutine} from "../../sagas/app/routines";
 
-const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) => {
-    const isLogged = useAuth();
+const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null, ...rest}) => {
+  const isLogged = useAuth();
 
-    return (
-        <Route
-            {...rest}
-            render={props => {
-                if (!isLogged) {
-                    return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
-                }
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        if (!isLogged) {
+          return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
+        }
 
-                return (
-                    <>
-                        <Header />
-                        <div className={styles.viewContainer}>
-                            {showMenu && (
-                                <div className={styles.sideBar}>
-                                    <SideMenu/>
-                                </div>
-                            )}
-                            <div className={styles.appContent}>
-                                <Component {...props} />
-                            </div>
-                        </div>
-                    </>
-                );
-            }}
-        />
-    );
+        return (
+          <>
+            <Header/>
+            <div className={styles.viewContainer}>
+              <div className={styles.sideBarWrapper}>
+                <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
+              </div>
+              <div className={styles.appContent}>
+                <Component {...props} />
+              </div>
+            </div>
+          </>
+        );
+      }}
+    />
+  );
 };
 
 const mapStateToProps = state => ({
-    showMenu: state.app.showMenu
+  showMenu: state.app.showMenu
 });
 
-export default connect(mapStateToProps, null)(PrivateRoute);
+const mapDispatchToProps = {
+  toggleMenu: toggleMenuRoutine
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);

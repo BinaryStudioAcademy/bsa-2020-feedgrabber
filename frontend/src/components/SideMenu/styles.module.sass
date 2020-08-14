@@ -1,0 +1,43 @@
+.menuWrapper
+  padding-top: 1em
+  background-color: #e1e8ee
+
+.menuContent
+  display: flex
+  flex-direction: column
+
+.menuItem
+  color: #000
+  font-size: 0.8em
+  cursor: pointer
+
+  &:hover
+    color: #000
+    background-color: #ffc7d2
+
+.menuItemActive
+  background-color: #ff5077
+
+  &:hover
+    background-color: #ff5077
+
+.menuItemIcon
+  color: #130eda
+
+.menuWrapperOpen
+  width: 270px
+
+  .menuItem
+    padding: 1em 1em 1em 3em
+
+    .menuItemIcon
+      margin-right: 0.7em
+
+.menuWrapperClosed
+  width: 40px
+
+  .menuItem
+    padding: 1em
+
+    .menuItemTitle
+      display: none
