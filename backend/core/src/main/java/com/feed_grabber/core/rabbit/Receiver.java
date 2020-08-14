@@ -1,19 +1,14 @@
 package com.feed_grabber.core.rabbit;
 
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.CountDownLatch;
-
-@EnableRabbit
 @Component
+@Slf4j
 public class Receiver {
-    private final CountDownLatch latch = new CountDownLatch(1);
-    public void receiveMessage(String message) {
-        System.out.println("Received <" + message + ">");
-        latch.countDown();
-    }
-    public CountDownLatch getLatch() {
-        return latch;
+    @RabbitListener(queues = "${rabbitmq.queue.response}")
+    public void receive(String text) {
+        log.info(" [x] Received '{}'", text);
     }
 }

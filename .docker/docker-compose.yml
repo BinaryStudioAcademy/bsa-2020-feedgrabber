@@ -41,6 +41,8 @@ services:
   event-processor:
     image: 'fg-event-processor:latest'
     container_name: 'fg-event-processor'
+    depends_on:
+      - rabbitmq
     ports:
       - '5001:5001'
     env_file:
@@ -51,12 +53,21 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  #rabbitmq
+  # RabbitMQ
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    hostname: "rabbit"
+    env_file:
+      - ~/.env/rabbitmq.env
     ports:
       - "5672:5672"
       - "15672:15672"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # Frontend
   client:

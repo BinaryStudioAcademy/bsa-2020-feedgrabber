@@ -1,27 +1,28 @@
-package com.feed_grabber.core.rabbit
+package com.feed_grabber.event_processor.rabbit
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.boot.CommandLineRunner
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import java.util.concurrent.TimeUnit
-import kotlin.jvm.Throws
 
 @Component
-class Sender(receiver: Receiver, rabbitTemplate: RabbitTemplate) : CommandLineRunner {
-    private val rabbitTemplate: RabbitTemplate
-    private val receiver: Receiver
+class Sender {
+    @Value("\${rabbitmq.exchange}")
+    private val exchange: String? = null
 
-    @Override
-    @Throws(Exception::class)
-    fun run(vararg args: String?) {
-        System.out.println("Sending message...")
-        rabbitTemplate.convertAndSend(RabbitConfiguration.topicExchangeName,
-                "foo.bar", "Hello from RabbitMQ!")
-        receiver.getLatch().await(10000, TimeUnit.MILLISECONDS)
+    @Value("\${rabbitmq.routing-key}")
+    private val routingKey: String? = null
+
+    @Autowired
+    private val template: RabbitTemplate? = null
+
+    fun sendToFileProcessor(text: String?) {
+        //log.info(" [x] Sending...")
+        println(" [x] Sending...")
+        template!!.convertAndSend(exchange!!, routingKey!!, text!!)
+        //log.info(" [x] Sent '{}'", text)
+        println(" [x] Sent $text")
     }
 
-    init {
-        this.receiver = receiver
-        this.rabbitTemplate = rabbitTemplate
-    }
 }
