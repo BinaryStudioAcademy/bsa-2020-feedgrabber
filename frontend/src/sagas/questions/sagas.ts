@@ -7,34 +7,49 @@ import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
+/* TODO yield call(apiClient.patch, `/api/questions`, {questionId, questionnaireId})
+        when adding already existing question   */
+
+function parseQuestion(rawQuestion) {
+    return {
+        ...rawQuestion,
+        type: rawQuestion.type.toLowerCase(),
+        details: JSON.parse(rawQuestion.details as string)
+    };
+}
+
 function* getAll() {
   try {
-    const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `api/questions`);
-    yield put(loadQuestionsRoutine.success(res.data.data));
-  } catch (error) {
+    const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions`);
+
+    const questions = res.data.data.map(q => parseQuestion(q));
+
+    yield put(loadQuestionsRoutine.success(questions));
+
+  } catch (e) {
     yield put(loadQuestionsRoutine.failure());
-    toastr.error(error);
+    toastr.error("Unable to load questions");
   }
 }
 
 function* getById(action) {
   try {
     const id = action.payload;
+
     if (id === 'empty') {
-      loadQuestionByIdRoutine.success(defaultQuestion);
+      put(loadQuestionByIdRoutine.success(defaultQuestion));
       return;
     }
 
-    const response = yield call(apiClient.get, `/api/questions/${action.payload}`);
-    const question: IGeneric<IQuestion> = {
-      ...response.data.data,
-      type: response.data.data.type.toLowerCase(),
-      details: JSON.parse(response.data.data.details)
-    };
+    const res: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${action.payload}`);
+
+    const question = parseQuestion(res.data.data);
+
     yield put(loadQuestionByIdRoutine.success(question));
-  } catch (error) {
-    yield put(loadQuestionByIdRoutine.failure());
-    toastr.error('cant to get question by Id');
+
+  } catch (e) {
+    yield put(loadQuestionByIdRoutine.failure(e.data.error));
+    toastr.error("Unable to load question");
   }
 }
 
@@ -42,30 +57,28 @@ function* save(action) {
   const question = action.payload;
   try {
     const res: IGeneric<IQuestion> = question.id
-      ? yield call(apiClient.put, `api/questions`, question)
-      : yield call(apiClient.post, `api/questions`, question);
+      ? yield call(apiClient.put, `/api/questions`, question)
+      : yield call(apiClient.post, `/api/questions`, question);
 
     yield put(saveQuestionRoutine.success(res.data.data));
-  } catch (error) {
-    yield put(saveQuestionRoutine.failure());
-    toastr.error(error);
+
+  } catch (e) {
+    yield put(saveQuestionRoutine.failure(e.data.erorr));
+    toastr.error("Question wasn't saved");
   }
 }
 
 function* getByQuestionnaireId(action) {
   try {
-    const response = yield call(apiClient.get,
-       `http://localhost:5000/api/questions/questionnaires/${action.payload}`);
-    const items = response.data.data;
-    const questions: IGeneric<IQuestion[]> = items.map(item => {return {
-      ...item,
-      type: item.type.toLowerCase(),
-      details: JSON.parse(item.details)
-    };});
+    const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/questionnaires/${action.payload}`);
+
+    const questions = res.data.data.map(q => parseQuestion(q));
+
     yield put(loadQuestionnaireQuestionsRoutine.success(questions));
-  } catch (error) {
-    yield put(loadQuestionnaireQuestionsRoutine.failure(error));
-    toastr.error("Unable to load questionnaire's questions");
+
+  } catch (e) {
+    yield put(loadQuestionnaireQuestionsRoutine.failure(e.data.error));
+    toastr.error("Unable to load questionnaire");
   }
 }
 
