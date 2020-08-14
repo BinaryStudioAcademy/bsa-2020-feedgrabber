@@ -15,7 +15,7 @@ const App: React.FC = () => (
                 timeOut={4000}
                 newestOnTop={false}
                 preventDuplicates
-                position="top-left"
+                position="bottom-right"
                 getState={state => state.toastr}
                 transitionIn="fadeIn"
                 transitionOut="fadeOut"

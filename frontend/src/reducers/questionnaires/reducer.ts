@@ -1,16 +1,17 @@
 import {
-  addQuestionnaireRoutine,
-  deleteQuestionnaireRoutine,
-  hideModalQuestionnaireRoutine,
-  loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
-  showModalQuestionnaireRoutine,
-  updateQuestionnaireRoutine,
-  loadCurrentQuestionnaireRoutine
+    addQuestionnaireRoutine,
+    deleteQuestionnaireRoutine,
+    hideModalQuestionnaireRoutine,
+    loadOneQuestionnaireRoutine,
+    loadQuestionnairesRoutine,
+    setQuestionnairePaginationRoutine,
+    showModalQuestionnaireRoutine,
+    updateQuestionnaireRoutine
 } from '../../sagas/qustionnaires/routines';
-import {IAppState} from "../../models/IAppState";
-import {combineReducers} from "redux";
+import { IAppState } from "../../models/IAppState";
+import { combineReducers } from "redux";
 import {addSelectedQuestionsRoutine, loadQuestionnaireQuestionsRoutine} from "../../sagas/questions/routines";
-import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
+import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
 
 const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {
     switch (action.type) {
@@ -72,7 +73,7 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
 };
 
 const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] =
-                                         {questions:[], get:{} as IQuestionnaire}, {payload, type}) => {
+    { questions: [], get: {} as IQuestionnaire }, { payload, type }) => {
     switch (type) {
         case addSelectedQuestionsRoutine.SUCCESS:
             return {
@@ -80,7 +81,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 questions : [...state.questions, ...payload],
                 isLoading: false
             };
-        case loadCurrentQuestionnaireRoutine.SUCCESS:
+        case loadOneQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
                 get: payload,
@@ -92,19 +93,24 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 questions: payload,
                 isLoading: false
             };
-        case loadCurrentQuestionnaireRoutine.TRIGGER:
+        case loadOneQuestionnaireRoutine.TRIGGER:
         case loadQuestionnaireQuestionsRoutine.TRIGGER:
         case addSelectedQuestionsRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
             };
-        case loadCurrentQuestionnaireRoutine.FAILURE:
         case loadQuestionnaireQuestionsRoutine.FAILURE:
         case addSelectedQuestionsRoutine.FAILURE:
             return {
                 ...state,
-                isLoading: false
+                isLoading: false,
+                questions: payload
+            };
+        case loadOneQuestionnaireRoutine.FAILURE:
+            return {
+                ...state,
+                get: {}
             };
         default:
             return state;

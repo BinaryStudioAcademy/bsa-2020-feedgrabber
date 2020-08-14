@@ -19,7 +19,6 @@ import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
 import GuestRoute from "../../components/GuestRoute";
 import InvitationSignUp from "../InvitationSignUp";
-import QuestionnairePreview from 'components/QuestionnairePreview';
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
@@ -44,10 +43,10 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
     <>
       <LoaderWrapper loading={isLoading}>
         <Switch>
-          <PublicRoute exact path="/layout" component={Landing} />
-          <PublicRoute exact path="/auth" component={SignForm} />
+          <GuestRoute exact path="/layout" component={Landing} />
+          <GuestRoute exact path="/auth" component={SignForm} />
           <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
-          <PublicRoute exact path="/reset/:id" component={ResetPasswordForm} />
+          <GuestRoute exact path="/reset/:id" component={ResetPasswordForm} />
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/profile/settings" component={ProfileX} />
@@ -60,7 +59,6 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
-          <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview} />
           <PrivateRoute exact path="/response/:id" component={QuestionnareResponse} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
