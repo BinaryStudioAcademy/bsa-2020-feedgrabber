@@ -10,6 +10,7 @@ function* fetchCompanies(action) {
             yield call(apiClient.get, `/api/company/user-companies?email=${action.payload}`);
 
         yield put(loadCompaniesRoutine.success(res.data.data));
+        yield put({type: "SET_USER_EMAIL", payload: action.payload});
     } catch (error) {
         console.log(error);
         yield put(loadCompaniesRoutine.failure(error));

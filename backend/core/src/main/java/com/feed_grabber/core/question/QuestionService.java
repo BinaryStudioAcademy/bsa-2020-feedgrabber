@@ -60,16 +60,15 @@ public class QuestionService {
     public QuestionDto create(QuestionCreateDto dto, UUID companyId) throws QuestionnaireNotFoundException {
         var company = companyRep.findById(companyId).get();
 
-        var questionnaire = anketRep.findById(dto.getQuestionnaireId())
-                .orElseThrow(QuestionnaireNotFoundException::new);
+        // var questionnaire = anketRep.findById(dto.getQuestionnaireId())
+        //         .orElseThrow(QuestionnaireNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryName(), company);
+        var category = findOrCreateCategory(dto.getCategoryTitle(), company);
 
         var q = Question.builder()
                 .category(category)
-                .payload(dto.getPayload())
-                .questionnaires(List.of(questionnaire))
-                .text(dto.getText())
+                .payload(dto.getDetails())
+                .text(dto.getName())
                 .type(dto.getType())
                 .company(company)
                 .build();
@@ -83,10 +82,11 @@ public class QuestionService {
         var question = quesRep.findById(dto.getId())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryName(), company);
+        var category = findOrCreateCategory(dto.getCategoryTitle(), company);
 
         question.setCategory(category);
-        question.setText(dto.getText());
+        question.setText(dto.getName());
+        question.setPayload(dto.getDetails());
 
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
         // question.setText(updateDto.getText());

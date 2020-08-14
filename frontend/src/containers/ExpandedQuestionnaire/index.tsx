@@ -43,8 +43,7 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
             history={history} />
           <div className={styles.formDetails}>
           <div className={styles.formEditor}>
-            {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
-            <QuestionDetails saveQuestion={() => {}} match={{ params: {} }} history={history} />
+            <QuestionDetails match={{ params: {} }} />
           </div>
           </div>
         </div>
