@@ -121,4 +121,12 @@ public class TokenService {
         return UUID.fromString(companyId);
     }
 
+    public static String getRoleName() {
+        Map<String, Object> info = (Map<String, Object>)SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getDetails();
+        return  (String)info.get(AUTHORITIES_KEY);
+    }
+
 }

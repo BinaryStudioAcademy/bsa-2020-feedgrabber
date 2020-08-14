@@ -44,11 +44,11 @@ const Header: FC<IHeaderProps> = ({user, logout, showMenu, toggleMenu}) => {
                         icon={null}
                         pointing='top right'
                         trigger={<Image avatar
-                                        src={user.avatar ?? defaultAvatar}
+                                        src={user?.avatar ?? defaultAvatar}
                                         className={styles.headerUserDropDown}/>}
                         size="medium">
                         <Dropdown.Menu>
-                            <Dropdown.Header>{user.userName}</Dropdown.Header>
+                            <Dropdown.Header>{user?.userName}</Dropdown.Header>
                             <Dropdown.Item onClick={() => history.push('/profile')}>
                                 Your Profile
                             </Dropdown.Item>
