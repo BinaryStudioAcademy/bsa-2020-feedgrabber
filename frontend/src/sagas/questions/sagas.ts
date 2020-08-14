@@ -1,11 +1,12 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import {loadQuestionByIdRoutine, loadQuestionsRoutine,
-   saveQuestionRoutine, loadQuestionnaireQuestionsRoutine} from './routines';
+   saveQuestionRoutine, loadQuestionsByQuestionnaireRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import question from '../../models/forms/Questions/DefaultQuestion';
 
 function* getAll() {
   try {
@@ -62,9 +63,9 @@ function* getByQuestionnaireId(action) {
       type: item.type.toLowerCase(),
       details: JSON.parse(item.details)
     };});
-    yield put(loadQuestionnaireQuestionsRoutine.success(questions));
+    yield put(loadQuestionsByQuestionnaireRoutine.success(questions));
   } catch (error) {
-    yield put(loadQuestionnaireQuestionsRoutine.failure(error));
+    yield put(loadQuestionsByQuestionnaireRoutine.failure(error));
     toastr.error("Unable to load questionnaire's questions");
   }
 }
@@ -74,6 +75,6 @@ export default function* questionSagas() {
     yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
     yield takeEvery(saveQuestionRoutine.TRIGGER, save),
     yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),
-    yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId)
+    yield takeEvery(loadQuestionsByQuestionnaireRoutine.TRIGGER, getByQuestionnaireId)
   ]);
 }

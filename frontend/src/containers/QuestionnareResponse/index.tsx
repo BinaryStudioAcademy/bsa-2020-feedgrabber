@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
+import { loadQuestionsByQuestionnaireRoutine } from "../../sagas/questions/routines";
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
@@ -65,7 +65,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     getQuestionForm(question: IQuestion) {
-        switch(question.type) {
+        const type = question.type.toLowerCase();
+        switch(type) {
             case QuestionType.radio:
                 return <span>radio</span>;
             case QuestionType.checkbox:
@@ -141,7 +142,7 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
-    loadQuestions: loadQuestionnaireQuestionsRoutine,
+    loadQuestions: loadQuestionsByQuestionnaireRoutine,
     saveResponseAnswers: saveAnswersRoutine
 };
 
