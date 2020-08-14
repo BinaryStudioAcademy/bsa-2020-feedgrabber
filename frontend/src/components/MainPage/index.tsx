@@ -1,8 +1,10 @@
 import React, {FunctionComponent} from 'react';
 
-import styles from './styles.module.sass';
 import UIPageTitle from "../UI/UIPageTitle";
 import UIButton from "../UI/UIButton";
+import UICard from "../UI/UICard";
+import UIContent from "../UI/UIContent";
+import UICardBlock from "../UI/UICardBlock";
 
 interface IItem {
   id: string;
@@ -20,59 +22,51 @@ interface IMainPageProps {
 const MainPage: FunctionComponent<IMainPageProps> =
   ({questionnaireList = [], reportsList = [], newsList = []}) => (
     <>
-      <UIPageTitle title="Home" />
-      <div className={styles.cardContainer}>
-        <div className={styles.card}>
-          <h2>Pending Questionnaires</h2>
-          <ul className={styles.questionnaireList}>
-            {questionnaireList.map(item => (
-              <li key={item.id}>
-                <div>
-                  {item.header && <h3>{item.header}</h3>}
-                  {item.content && <p className={styles.description}>{item.content}</p>}
-                  {item.author && <p className={styles.author}>{item.author}</p>}
-                </div>
-                <div className={styles.centerContent}>
-                  <UIButton title="Answer" />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <UIPageTitle title="Home"/>
+      <UIContent>
+        <UICard>
+          <UICardBlock>
+            <h3>Pending Questionnaires</h3>
+          </UICardBlock>
+          {questionnaireList.map(item => (
+            <UICardBlock key={item.id}>
+              {item.header && <h4>{item.header}</h4>}
+              {item.content && <p>{item.content}</p>}
+              {item.author && <p><b>{item.author}</b></p>}
+              <UIButton title="Answer"/>
+            </UICardBlock>
+          ))}
+        </UICard>
 
-        <div className={styles.card}>
-          <h2>My Reports</h2>
-          <ul className={styles.reportsList}>
-            {reportsList.map(item => (
-              <li key={item.id}>
-                <div>
-                  {item.header && <h3>{item.header}</h3>}
-                  {item.content && <p className={styles.description}>{item.content}</p>}
-                  {item.author && <p className={styles.author}>{item.author}</p>}
-                </div>
-                <div className={styles.centerContent}>
-                  <UIButton title="Details" />
-                </div>
-              </li>
-            ))}
-          </ul>
+        <UICard>
+          <UICardBlock>
+            <h3>My Reports</h3>
+          </UICardBlock>
+          {reportsList.map(item => (
+            <UICardBlock key={item.id}>
+              {item.header && <h4>{item.header}</h4>}
+              {item.content && <p>{item.content}</p>}
+              {item.author && <p><b>{item.author}</b></p>}
+              <UIButton title="Details"/>
+            </UICardBlock>
+          ))}
+        </UICard>
 
-        </div>
+        <UICard>
+          <UICardBlock>
+            <h3>Company NewsFeed</h3>
+          </UICardBlock>
+          {newsList.map(item => (
+            <UICardBlock key={item.id}>
+              {item.header && <h4>{item.header}</h4>}
+              {item.content && <p>{item.content}</p>}
+              {item.author && <p><b>{item.author}</b></p>}
+            </UICardBlock>
+          ))}
+        </UICard>
+      </UIContent>
 
-        <div className={styles.card}>
-          <h2>Company NewsFeed</h2>
-          <div className={styles.newsContainer}>
-            {newsList.map(item => (
-              <div key={item.id} className={styles.newsItem}>
-                {item.header && <h3>{item.header}</h3>}
-                {item.content && <p className={styles.description}>{item.content}</p>}
-                {item.author && <p className={styles.author}>{item.author}</p>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <footer className={[styles.primaryFooter, styles.centerContent].join(" ")}>
+      <footer>
         Binary Studio Academy
       </footer>
     </>

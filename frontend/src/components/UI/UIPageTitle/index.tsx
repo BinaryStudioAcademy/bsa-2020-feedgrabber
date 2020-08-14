@@ -1,11 +1,11 @@
 import React, {FC} from "react";
 import styles from "./styles.module.sass";
 
-export interface IUIPageTitle {
+export interface IUIPageTitleProps {
   title: string;
 }
 
-const UIPageTitle: FC<IUIPageTitle> = ({title}) => {
+const UIPageTitle: FC<IUIPageTitleProps> = ({title}) => {
   return (
     <div className={styles.pageTitleWrapper}>
       <h2 className={styles.pageTitle}>{title}</h2>

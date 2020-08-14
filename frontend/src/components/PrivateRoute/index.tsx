@@ -24,10 +24,8 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null,
             <div className={styles.sideBarWrapper}>
               <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
             </div>
-            <div className={styles.viewContainer}>
-              <div className={styles.appContent}>
-                <Component {...props} />
-              </div>
+            <div className={styles.appContent}>
+              <Component {...props} />
             </div>
           </>
         );
