@@ -1,8 +1,12 @@
 package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.team.dto.CreateTeamDto;
 import com.feed_grabber.core.team.dto.TeamDto;
+import com.feed_grabber.core.team.model.Team;
+import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ public class TeamService {
     private TeamRepository teamRepository;
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<TeamDto> getAllByCompany_Id(UUID companyId) {
 
@@ -44,5 +50,24 @@ public class TeamService {
 
     public void delete(UUID id) {
         teamRepository.deleteById(id);
+    }
+
+    public TeamDto create(CreateTeamDto teamDto) throws CompanyNotFoundException, AlreadyExistsException {
+
+        if (teamRepository.existsByName(teamDto.getName())) {
+            throw new AlreadyExistsException("Such team already exists in this company");
+        }
+
+        Team t = TeamMapper.MAPPER.teamDtoToModel(teamDto);
+        var company = companyRepository.findById(teamDto.getCompany_id())
+                .orElseThrow(CompanyNotFoundException::new);
+        var users = userRepository.findAllById(teamDto.getMemberIds());
+
+        t.setCompany(company);
+        t.setUsers(users);
+
+       Team savedTeam = teamRepository.save(t);
+
+       return TeamMapper.MAPPER.teamToTeamDto(savedTeam);
     }
 }

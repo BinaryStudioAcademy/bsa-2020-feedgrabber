@@ -1,6 +1,7 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
+import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.register.RegisterService;
 import com.feed_grabber.core.response.AppResponse;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +25,7 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<TokenRefreshResponseDTO> renovate(@ApiParam(value = "Token to renovate",
             required = true) @RequestBody String token) {
-        return new AppResponse<>(authService.refresh(token), HttpStatus.OK);
+        return new AppResponse<>(authService.refresh(token));
     }
 
     @ApiOperation(value = "Register new user", notes = "Provide an email, username, companyName and password to register")
@@ -34,7 +35,18 @@ public class AuthController {
         var pass = dto.getPassword();
         registerService.registerUser(dto);
 
-        var loginDto = new UserLoginDTO(pass, dto.getUsername());
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
+        return login(loginDto);
+    }
+
+    @ApiOperation(value = "Register new user by invitation", notes = "Provide an email, username, invitationId and password to register")
+    @PostMapping("/invitation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
+        var pass = dto.getPassword();
+        registerService.registerUserByInvitation(dto);
+
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
         return login(loginDto);
     }
 
@@ -42,7 +54,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        return new AppResponse<>(authService.login(userLoginDTO), HttpStatus.OK);
+        return new AppResponse<>(authService.login(userLoginDTO));
 
     }
 
