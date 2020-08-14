@@ -23,7 +23,7 @@ public class RegistrationController {
     public ConfirmRegistrationResponseDto confirmRegistration(
             @RequestParam(name = "token", required = true) String token)
             throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
-        verificationTokenService.verifyUserByToken(token);
+        verificationTokenService.verifyUserByToken(token, TokenType.REGISTRATION);
         return new ConfirmRegistrationResponseDto(true);
     }
 }
