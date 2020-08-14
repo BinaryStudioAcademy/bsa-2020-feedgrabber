@@ -15,8 +15,12 @@ public class Sender {
     @Value("${rabbitmq.routing-key}")
     private String routingKey;
 
-    @Autowired
     private final RabbitTemplate template;
+
+    @Autowired
+    public Sender(RabbitTemplate template) {
+        this.template = template;
+    }
 
     public void sendToFileProcessor(String text) {
         log.info(" [x] Sending...");
