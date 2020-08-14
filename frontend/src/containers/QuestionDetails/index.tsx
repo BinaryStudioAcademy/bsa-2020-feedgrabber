@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {Button, Form, Segment} from "semantic-ui-react";
-import {Formik, FormikValues} from "formik";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Segment } from "semantic-ui-react";
+import { Formik, FormikValues } from "formik";
 import "./styles.sass";
 import DateSelectionQuestionUI from "../../components/ComponentsQuestions/DateSelectionQuestionUI";
 import InputField from "../../components/ComponentsQuestions/InputField";
@@ -8,14 +8,15 @@ import MultichoiseQuestion from "../../components/ComponentsQuestions/Multichois
 import CheckboxQuestion from "../../components/ComponentsQuestions/CheckboxQuestion";
 import ScaleQuestion from "../../components/ComponentsQuestions/ScaleQuestion";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
+import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
+import { IAppState } from "models/IAppState";
+import { connect, ConnectedProps } from "react-redux";
+import { loadCategoriesRoutine } from "sagas/categories/routines";
 import { mainSchema } from "./schemas";
-import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
-import {IAppState} from "../../models/IAppState";
-import {connect, ConnectedProps} from "react-redux";
 import { saveQuestionRoutine } from "../../sagas/questions/routines";
 import { loadQuestionByIdRoutine } from "../../sagas/questions/routines";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // const questions: IQuestion[] = [
 //     {
@@ -53,6 +54,8 @@ interface IQuestionProps {
   saveQuestion(question: IQuestion): void;
   loadQuestion(id: string): void;
   currentQuestion: IQuestion;
+  loadCategories: () => void;
+  categories: string[];
   match: {
     params: {
       id?: string;
@@ -61,21 +64,32 @@ interface IQuestionProps {
 }
 
 interface IQuestionState {
-  initialValues: any;
+  initialValues: {
+    name: string;
+    answers: any;
+    createdCategories: string[];
+  };
   validationSchema: any;
   question: IQuestion;
   isQuestionDetailsValid: boolean;
 }
 
 const QuestionDetails: React.FC<IQuestionProps> = ({
-                                                     currentQuestion,
-                                                     loadQuestion,
-                                                     saveQuestion,
-                                                     match
-                                                   }) => {
+  currentQuestion,
+  loadQuestion,
+  saveQuestion,
+  loadCategories,
+  categories,
+  match
+}) => {
   const [question, setQuestion] = useState<IQuestion>(currentQuestion);
   const history = useHistory();
   const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
+  const [addedCategories, setNewCategories] = useState([]);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   useEffect(() => {
     match.params.id === 'new'
@@ -138,9 +152,9 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
   ];
 
   const handleQuestionDetailsUpdate = (state: IComponentState<{}>) => {
-    const {isCompleted, value} = state;
+    const { isCompleted, value } = state;
     setIsQuestionDetailsValid(isCompleted);
-    setQuestion({...question, details: value as any});
+    setQuestion({ ...question, details: value as any });
   };
 
   const renderForm = () => {
@@ -173,9 +187,9 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
           />
         );
       case QuestionType.freeText:
-        return <InputField/>;
+        return <InputField />;
       case QuestionType.date:
-        return <DateSelectionQuestionUI/>;
+        return <DateSelectionQuestionUI />;
       default:
         return <span className="question_default">You should choose the type of the question :)</span>;
     }
@@ -183,13 +197,23 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
 
   const setQuestionType = (data: any) => {
     const type: QuestionType = data.value;
-    setQuestion({...question, type, details: undefined});
+    setQuestion({ ...question, type, details: undefined });
+  };
+
+  const categoriesOptions = (cat: string[]) => {
+    return cat.map(cat => {
+      return {
+        key: cat,
+        value: cat,
+        text: cat
+      };
+    });
   };
 
   return (
     <Formik
       enableReinitialize
-      initialValues={{name: question.name, categoryTitle: question.categoryTitle}}
+      initialValues={{ name: question.name, categoryTitle: question.categoryTitle }}
       validationSchema={mainSchema}
       onSubmit={onSubmit}
     >
@@ -210,32 +234,44 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
                     ? formik.errors.name
                     : undefined
                 }
-                onChange={formik.handleChange}
+                onChange={(e, { value }) => {
+                  setQuestion({
+                    ...question, name: value as string
+                  });
+                }}
                 onBlur={formik.handleBlur}
               />
-              <Form.Input
-                className="question_name_input"
-                fluid
-                placeholder="Type question category"
-                type="text"
+              <Form.Dropdown
+                placeholder='Choose category or type custom'
+                closeOnBlur
+                allowAdditions
+                additionLabel='Add new category: '
+                onChange={(e, { value }) => {
+                  setQuestion({
+                    ...question, categoryTitle: value as string
+                  });
+                }}
                 value={formik.values.categoryTitle}
-                name="categoryTitle"
-                error={
-                  formik.touched.categoryTitle && formik.errors.categoryTitle
-                    ? formik.errors.categoryTitle
-                    : undefined
-                }
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {!question.type &&
+                onAddItem={(e, { value }) => {
+                  setNewCategories(
+                    [value, ...addedCategories]
+                  );
+                  setQuestion({
+                    ...question, categoryTitle: value as string
+                  });
+                }}
+                search
+                selection
+                options={categoriesOptions(
+                  [...addedCategories, ...categories])}
+              />{' '}
               <Form.Dropdown
                 selection
                 options={questionTypeOptions}
                 placeholder={"Choose type"}
                 onChange={(event, data) => setQuestionType(data)}
               />
-              }
+
             </Segment>
             <Segment className="question_form-answers">
               {renderForm()}
@@ -257,15 +293,20 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
 
 const mapState = (state: IAppState) => {
   return {
-    currentQuestion: state.questions.current
+    currentQuestion: state.questions.current,
+    isLoading: state.questions.categories.isLoading,
+    categories: state.questions.categories.list
   };
 };
 
 const mapDispatch = {
   saveQuestion: saveQuestionRoutine,
-  loadQuestion: loadQuestionByIdRoutine
+  loadQuestion: loadQuestionByIdRoutine,
+  loadCategories: loadCategoriesRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
+
+type QuestionCreateProps = ConnectedProps<typeof connector>;
 
 export default connector(QuestionDetails);

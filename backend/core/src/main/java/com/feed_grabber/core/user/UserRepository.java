@@ -1,6 +1,7 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.user.model.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByEmail(String email);
 
+%%% feature/104-team-creation-ui
     List<User> findAllByCompanyId(UUID companyId);
+%%%
+    Long countAllByCompanyId(UUID companyId);
+
+    List<User> findAllByCompanyId(UUID companyId, Pageable pageable);
+%%% dev
 }

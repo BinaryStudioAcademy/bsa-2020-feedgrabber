@@ -2,13 +2,16 @@ package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.response.DataList;
+import com.feed_grabber.core.user.dto.ResetPassDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
+import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
 
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
+%%% feature/104-team-creation-u
     @ApiOperation(value = "Get all users",
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping("/all")
@@ -40,4 +44,41 @@ public class UserController {
         var companyId = TokenService.getCompanyId();
         return new AppResponse<List<UserDetailsResponseDTO>>(userService.getCompanyUsers(companyId));
     }
+%%%
+    @ApiOperation(value = "Send an email to reset password")
+    @PostMapping("/email/reset")
+    public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) {
+        System.out.println(dto);
+        // TODO: Send email
+    }
+
+    @ApiOperation(value = "Reset password")
+    @PostMapping("/reset")
+    public void resetPassword(@RequestBody ResetPassDto dto) {
+        System.out.println("dto = " + dto);
+    }
+
+
+    @GetMapping("/all")
+    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId (
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<>(
+                new DataList<>(
+                        userService.getAllByCompanyId(companyId, page, size),
+                        userService.getCountByCompanyId(companyId),
+                        page,
+                        size
+                ));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("{id}/removeCompany")
+    public void removeUserFromCompany (@PathVariable UUID id) {
+        userService.removeCompany(id);
+    }
+
+%%% dev
 }

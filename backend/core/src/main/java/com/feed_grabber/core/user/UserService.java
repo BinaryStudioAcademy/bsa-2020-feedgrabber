@@ -5,6 +5,8 @@ import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
+import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
@@ -12,6 +14,7 @@ import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.model.User;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -116,6 +119,12 @@ public class UserService implements UserDetailsService {
         return Optional.of(UserMapper.MAPPER.userToUserDto(userToUpdate));
     }
 
+    public void removeCompany(UUID id) {
+        var userToUpdate = userRepository.getOne(id);
+        userToUpdate.setCompany(null);
+        userRepository.save(userToUpdate);
+    }
+
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
@@ -134,7 +143,21 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+%%% feature/104-team-creation-ui
     public List<UserDetailsResponseDTO> getCompanyUsers(UUID companyId) {
         return userRepository.findAllByCompanyId(companyId).stream().map(UserMapper.MAPPER::detailedFromUser).collect(Collectors.toList());
     }
+%%%
+    public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
+        return userRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+                .stream()
+                .map(UserMapper.MAPPER::detailedFromUser)
+                .collect(Collectors.toList());
+    }
+
+    public Long getCountByCompanyId(UUID companyId) {
+        return userRepository.countAllByCompanyId(companyId);
+    }
+
+%%% dev
 }
