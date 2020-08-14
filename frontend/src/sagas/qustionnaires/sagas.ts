@@ -6,22 +6,17 @@ import {
   hideModalQuestionnaireRoutine,
   loadOneQuestionnaireRoutine,
   loadQuestionnairesRoutine,
-  loadQuestionsByQuestionnaireRoutine,
   updateQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
-import { IGeneric } from 'models/IGeneric';
-import { IQuestion } from 'models/forms/Questions/IQuesion';
+import {loadQuestionnaireQuestionsRoutine} from "../questions/routines";
 
-function* loadQuestionnairesList(action: any) {
+function* loadQuestionnairesList() {
   try {
     const store = yield select();
     const { page, size } = store.questionnaires.list.pagination;
-    const res = yield call(
-      apiClient.get,
-      `api/questionnaires?page=${page}&size=${size}`
-    );
+    const res = yield call(apiClient.get, `/api/questionnaires?page=${page}&size=${size}`);
     const items = res.data.data;
 
     yield put(loadQuestionnairesRoutine.success(items));
@@ -31,32 +26,21 @@ function* loadQuestionnairesList(action: any) {
   }
 }
 
-function* loadOneQuestionnaire(action: any) {
+function* loadOneQuestionnaire(action) {
   try {
-    const res = yield call(apiClient.get, `../api/questionnaires/${action.payload}`);
+    const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
     yield put(loadOneQuestionnaireRoutine.success(res.data.data));
-    yield put(loadQuestionsByQuestionnaireRoutine.trigger(action.payload));
+    yield put(loadQuestionnaireQuestionsRoutine.trigger(action.payload));
   } catch (error) {
     yield put(loadOneQuestionnaireRoutine.failure(error));
     toastr.error("Unable to fetch data");
   }
 }
 
-function* loadQuestionsForQuestionnaire(action: any) {
-  try {
-    const res: IGeneric<IQuestion[]> = yield call(apiClient.get,
-      `../api/questions/questionnaires/${action.payload}`);
-    yield put(loadQuestionsByQuestionnaireRoutine.success(res.data.data));
-  } catch (error) {
-    yield put(loadQuestionsByQuestionnaireRoutine.failure(error));
-    toastr.error("Unable to fetch data");
-  }
-}
-
-function* addQuestionnaire(action: any) {
+function* addQuestionnaire(action) {
   try {
     const questionnaire: IQuestionnaire = action.payload;
-    yield call(apiClient.post, `api/questionnaires`, questionnaire);
+    yield call(apiClient.post, `/api/questionnaires`, questionnaire);
 
     yield put(hideModalQuestionnaireRoutine.trigger());
     yield put(loadQuestionnairesRoutine.trigger());
@@ -66,10 +50,10 @@ function* addQuestionnaire(action: any) {
   }
 }
 
-function* updateQuestionnaire(action: any) {
+function* updateQuestionnaire(action) {
   try {
     const questionnaire: IQuestionnaire = action.payload;
-    yield call(apiClient.put, `api/questionnaires`, questionnaire);
+    yield call(apiClient.put, `/api/questionnaires`, questionnaire);
 
     yield put(hideModalQuestionnaireRoutine.trigger());
     yield put(loadQuestionnairesRoutine.trigger());
@@ -79,10 +63,10 @@ function* updateQuestionnaire(action: any) {
   }
 }
 
-function* deleteQuestionnaire(action: any) {
+function* deleteQuestionnaire(action) {
   try {
     const id: string = action.payload;
-    yield call(apiClient.delete, `api/questionnaires/${id}`);
+    yield call(apiClient.delete, `/api/questionnaires/${id}`);
 
     yield put(deleteQuestionnaireRoutine.success());
     toastr.success("Deleted questionnaire");
@@ -100,7 +84,6 @@ export default function* questionnairesSagas() {
     yield takeEvery(addQuestionnaireRoutine.TRIGGER, addQuestionnaire),
     yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
     yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
-    yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
-    yield takeEvery(loadQuestionsByQuestionnaireRoutine.TRIGGER, loadQuestionsForQuestionnaire)
+    yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire)
   ]);
 }
