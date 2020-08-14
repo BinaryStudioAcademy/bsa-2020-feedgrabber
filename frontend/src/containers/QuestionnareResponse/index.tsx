@@ -9,9 +9,9 @@ import { IComponentState } from 'components/ComponentsQuestionsResponse/ICompone
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
 import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
-import { loadCurrentQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer } from 'models/forms/responseAnswers/types';
+import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -140,7 +140,7 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadCurrentQuestionnaireRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
     loadQuestions: loadQuestionnaireQuestionsRoutine,
     saveResponseAnswers: saveAnswersRoutine
 };

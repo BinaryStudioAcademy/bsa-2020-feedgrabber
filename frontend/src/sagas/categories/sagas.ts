@@ -11,7 +11,7 @@ function* getAllCategories() {
         yield put(loadCategoriesRoutine.success(res.data.map(cat => cat.title)));
     } catch (e) {
         yield put(loadCategoriesRoutine.failure());
-        toastr.error(e);
+       // toastr.error(e);
     }
 }
 
