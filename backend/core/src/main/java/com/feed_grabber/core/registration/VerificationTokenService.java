@@ -36,15 +36,11 @@ public class VerificationTokenService {
             throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
 
         var vToken = verificationTokenRepository
-                .findByToken(token)
+                .findByTokenAndType(token, type)
                 .orElseThrow(() -> new VerificationTokenNotFoundException(token));
 
         if (vToken.isExpired()) {
             throw new VerificationTokenExpiredException(token);
-        }
-
-        if (!vToken.getType().equals(type)) {
-            throw new VerificationTokenNotFoundException(token);
         }
 
         User user = vToken.getUser();
