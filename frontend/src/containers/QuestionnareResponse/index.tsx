@@ -14,15 +14,13 @@ import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer } from 'models/forms/responseAnswers/types';
 
 interface IQuestionnaireResponseState {
-    questions: IQuestion[];
     isCompleted: boolean;
     showErrors: boolean;
 }
 
-// TODO: implement saveResponse
-
 interface IQuestionnaireResponseProps {
     match: any;
+    responseId: string;
     title: string;
     questions: IQuestion[];
     isLoading: boolean;
@@ -36,7 +34,6 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     constructor(props: IQuestionnaireResponseProps) {
         super(props);
         this.state = {
-            questions: [],
             isCompleted: false,
             showErrors: false
         };
@@ -45,17 +42,15 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const { loadQuestions, loadQuestionnaire, match, questions} = this.props;
+        const { loadQuestions, loadQuestionnaire, match} = this.props;
         loadQuestionnaire(match.params.id);
         loadQuestions(match.params.id);
-        this.setState({
-            questions: questions
-        });
     }
 
     handleComponentChange(state: IComponentState) { 
-        const { questions } = this.state;
+        const { questions } = this.props;
         let updatedQuestions: IQuestion[];
+        console.log(questions);
         if (state.isAnswered) {
             updatedQuestions = questions.map(question => {
                 if (question.id === state.question.id) {
@@ -65,8 +60,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         }
         const completeStates = updatedQuestions.map(question => question.answer);
         this.setState({
-            isCompleted: !completeStates.includes(undefined),
-            questions: updatedQuestions
+            isCompleted: !completeStates.includes(undefined)
         });
     }
 
@@ -92,10 +86,10 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 
     handleSubmit = () => {
         if (this.state.isCompleted) {
-            const answers: IAnswer<any>[] = this.state.questions.map(question => { return {
+            const answers: IAnswer<any>[] = this.props.questions.map(question => { return {
                 questionId: question.id,
                 text: question.answer,
-                responseQuestionnaireId: this.props.match.id
+                responseQuestionnaireId: this.props.responseId
             };});
             this.props.saveResponseAnswers(answers); 
             history.push("/questionnaires");
@@ -141,7 +135,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 
 const mapStateToProps = (state: IAppState) => ({
     questions: state.questionnaires.current.questions,
-    title: state.questionnaires.current.get.title
+    title: state.questionnaires.current.get.title,
+    responseId: state.questionnaires.current.get.id // should be id of response
 });
 
 const mapDispatchToProps = {
