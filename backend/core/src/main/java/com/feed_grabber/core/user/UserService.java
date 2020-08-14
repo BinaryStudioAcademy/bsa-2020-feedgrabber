@@ -98,14 +98,17 @@ public class UserService implements UserDetailsService {
 
     public void createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException {
 
-        if (userRepository.findByUsername(registerDto.getUsername()).isPresent()
-                || userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException();
-        }
-
         var invitation = invitationRepository.findById(registerDto.getInvitationId())
                 .orElseThrow(InvitationNotFoundException::new);
         var company = invitation.getCompany();
+
+        var existing = userRepository.findByUsernameAndCompanyIdOrEmail(
+                registerDto.getUsername(), company.getId(), registerDto.getEmail()
+        );
+        if (existing.isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+
         var role = roleRepository.findByCompanyIdAndSystemRole(company.getId(), SystemRole.employee)
                 .orElseThrow();
 
