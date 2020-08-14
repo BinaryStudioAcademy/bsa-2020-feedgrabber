@@ -10,6 +10,7 @@ import invitationSagas from "./invitation/sagas";
 import invitationSignUpSagas from "./invitationSignUp/sagas";
 import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
+import answersSaga from './responseAnswers/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -23,6 +24,7 @@ export default function* rootSaga() {
     invitationSagas(),
     invitationSignUpSagas(),
     categorieSagas(),
-    companiesSaga()
+    companiesSaga(),
+    answersSaga()
   ]);
 }
