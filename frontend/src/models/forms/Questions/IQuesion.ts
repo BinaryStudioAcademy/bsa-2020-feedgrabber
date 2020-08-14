@@ -44,6 +44,7 @@ export interface IQuestionBase<TDetails>{
   type: QuestionType;
   details: TDetails;
   answer: any;
+  isReused: boolean;
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {

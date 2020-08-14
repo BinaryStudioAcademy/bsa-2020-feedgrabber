@@ -29,7 +29,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
     };
 
     const handleSubmit = () => {
-        selected && addQuestions(selected);
+        selected && addQuestions(selected.forEach(q => q.isReused = true));
         setOpen(false);
     };
 
@@ -64,6 +64,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
             className={styles.modalActions}>
                 <Button onClick={() => setOpen(false)} content="Cancel"/>
                 <Button
+                    loading={isLoading}
                     content="Add"
                     labelPosition='right'
                     icon='checkmark'
@@ -76,7 +77,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
 
 const mapState = (state: IAppState) => ({
     currentQuestions: state.questionnaires.current.questions,
-    isLoading: state.user.isLoading,
+    isLoading: state.questions.isLoading,
     questions: state.questions.list
 });
 

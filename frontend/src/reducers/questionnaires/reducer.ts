@@ -82,12 +82,26 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
         case loadCurrentQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
-                get: payload
+                get: payload,
+                isLoading: false
             };
         case loadQuestionnaireQuestionsRoutine.SUCCESS:
             return {
                 ...state,
-                questions: [...state.questions, ...payload]
+                questions: payload,
+                isLoading: false
+            };
+        case loadCurrentQuestionnaireRoutine.TRIGGER:
+        case loadQuestionnaireQuestionsRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case loadCurrentQuestionnaireRoutine.FAILURE:
+        case loadQuestionnaireQuestionsRoutine.FAILURE:
+            return {
+                ...state,
+                isLoading: false
             };
         default:
             return state;
