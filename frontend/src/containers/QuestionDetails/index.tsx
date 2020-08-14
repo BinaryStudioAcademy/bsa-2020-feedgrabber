@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {FC, useEffect, useState} from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { Formik, FormikValues } from "formik";
 import "./styles.sass";
@@ -14,69 +14,14 @@ import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
 import { mainSchema } from "./schemas";
 import RadioButtonQuestionUI from "../../components/ComponentsQuestions/RadioButtonQuestionUI";
-import { saveQuestionRoutine } from "../../sagas/questions/routines";
+import { saveQuestionToQuestionnaireRoutine } from "../../sagas/questions/routines";
 import { loadQuestionByIdRoutine } from "../../sagas/questions/routines";
 import { useHistory } from "react-router-dom";
 import FileUploadQuestion from "../../components/ComponentsQuestions/FileUploadQuestion";
 
-// const questions: IQuestion[] = [
-//     {
-//         id: "1",
-//         categoryTitle: "Soft skills",
-//         name:
-//             "Can you tell me about a time when you successfully led a team through a sticky situation?",
-//         type: QuestionType.multichoice,
-//         details: {
-//             answerOptions: ["1", "2"]
-//         }
-//     },
-//     {
-//         id: "2",
-//         categoryTitle: "Leadership",
-//         name: "Are you able to delegate responsibilities efficiently?",
-//         type: QuestionType.freeText,
-//         details: {}
-//     },
-//     {
-//         id: "3",
-//         categoryTitle: "Leadership",
-//         name: "Are you able to delegate responsibilities efficiently?",
-//         type: QuestionType.scale,
-//         details: {
-//             min: 0,
-//             max: 10,
-//             minDescription: "",
-//             maxDescription: ""
-//         }
-//     }
-// ];
-
-interface IQuestionProps {
-    saveQuestion(question: IQuestion): void;
-    loadQuestion(id: string): void;
-    currentQuestion: IQuestion;
-    loadCategories: () => void;
-    categories: string[];
-    match: {
-        params: {
-            id?: string;
-        };
-    };
-}
-
-interface IQuestionState {
-    initialValues: {
-        name: string;
-        answers: any;
-        createdCategories: string[];
-    };
-    validationSchema: any;
-    question: IQuestion;
-    isQuestionDetailsValid: boolean;
-}
-
-const QuestionDetails: React.FC<IQuestionProps> = ({
+const QuestionDetails: FC<QuestionDetailsProps & {match}> = ({
         currentQuestion,
+        questionnaireId,
         loadQuestion,
         saveQuestion,
         loadCategories,
@@ -109,98 +54,20 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
 
     const onSubmit = (values: FormikValues) => {
         if (isQuestionDetailsValid) {
-            saveQuestion({
-                ...question,
-                name: values.name,
-                categoryTitle: values.categoryTitle
-            });
-            loadQuestion('empty');
-            history.push("/questions");
+                saveQuestion({
+                        ...question,
+                        name: values.name,
+                        categoryTitle: values.categoryTitle,
+                        questionnaireId
+                });
         }
-    };
-
-    const questionTypeOptions = [
-        {
-            key: "Radio",
-            text: "Radio",
-            value: QuestionType.radio
-        },
-        {
-            key: "CheckBoxes",
-            text: "CheckBoxes",
-            value: QuestionType.checkbox
-        },
-        {
-            key: "Multichoice",
-            text: "Multichoice",
-            value: QuestionType.multichoice
-        },
-        {
-            key: "TextArea",
-            text: "TextArea",
-            value: QuestionType.freeText
-        },
-        {
-            key: "Scaled",
-            text: "Scaled",
-            value: QuestionType.scale
-        },
-        {
-            key: "Date",
-            text: "Date",
-            value: QuestionType.date
-        },
-        {
-            key: "fileUpload",
-            text: "File upload",
-            value: "fileUpload"
-        }
-    ];
+            history.goBack();
+        };
 
     const handleQuestionDetailsUpdate = (state: IComponentState<{}>) => {
         const { isCompleted, value } = state;
         setIsQuestionDetailsValid(isCompleted);
         setQuestion({ ...question, details: value as any });
-    };
-
-    const renderForm = () => {
-        switch (question.type) {
-            case QuestionType.radio:
-                return (
-                    <RadioButtonQuestionUI
-                        value={question.details}
-                        onValueChange={handleQuestionDetailsUpdate} />
-                );
-            case QuestionType.checkbox:
-                return (
-                    <CheckboxQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
-            case QuestionType.multichoice:
-                return (
-                    <MultichoiseQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
-            case QuestionType.scale:
-                return (
-                    <ScaleQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
-            case QuestionType.freeText:
-                return <InputField />;
-            case QuestionType.date:
-                return <DateSelectionQuestionUI />;
-            case QuestionType.fileUpload:
-                return <FileUploadQuestion />;
-            default:
-                return <span className="question_default">You should choose the type of the question :)</span>;
-        }
     };
 
     const setQuestionType = (data: any) => {
@@ -227,7 +94,6 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
         >
       {formik => (
           <div className="question_container">
-
           <Form className="question_form" onSubmit={formik.handleSubmit}>
             <Segment className="question_header">
               <Form.Input
@@ -237,11 +103,7 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
                   type="text"
                   value={formik.values.name}
                   name="name"
-                  error={
-                      formik.touched.name && formik.errors.name
-                          ? formik.errors.name
-                          : undefined
-                  }
+                  error={(formik.touched.name && formik.errors.name) ?? undefined}
                   onChange={(e, { value }) => {
                       setQuestion({
                           ...question, name: value as string
@@ -282,7 +144,7 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
 
             </Segment>
             <Segment className="question_form-answers">
-              {renderForm()}
+              {renderForm(question, handleQuestionDetailsUpdate)}
             </Segment>
             <Segment className="question_actions">
               <Button className="ui button" color="red" onClick={onClose}>
@@ -299,22 +161,100 @@ const QuestionDetails: React.FC<IQuestionProps> = ({
     );
 };
 
-const mapState = (state: IAppState) => {
-    return {
+const mapState = (state: IAppState) => ({
         currentQuestion: state.questions.current,
         isLoading: state.questions.categories.isLoading,
-        categories: state.questions.categories.list
-    };
-};
+        categories: state.questions.categories.list,
+        questionnaireId: state.questionnaires.current.get.id
+});
 
 const mapDispatch = {
-    saveQuestion: saveQuestionRoutine,
+    saveQuestion: saveQuestionToQuestionnaireRoutine,
     loadQuestion: loadQuestionByIdRoutine,
     loadCategories: loadCategoriesRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
 
-type QuestionCreateProps = ConnectedProps<typeof connector>;
+type QuestionDetailsProps = ConnectedProps<typeof connector>;
 
 export default connector(QuestionDetails);
+
+const questionTypeOptions = [
+    {
+        key: "Radio",
+        text: "Radio",
+        value: QuestionType.radio
+    },
+    {
+        key: "CheckBoxes",
+        text: "CheckBoxes",
+        value: QuestionType.checkbox
+    },
+    {
+        key: "Multichoice",
+        text: "Multichoice",
+        value: QuestionType.multichoice
+    },
+    {
+        key: "TextArea",
+        text: "TextArea",
+        value: QuestionType.freeText
+    },
+    {
+        key: "Scaled",
+        text: "Scaled",
+        value: QuestionType.scale
+    },
+    {
+        key: "Date",
+        text: "Date",
+        value: QuestionType.date
+    },
+    {
+        key: "fileUpload",
+        text: "File upload",
+        value: "fileUpload"
+    }
+];
+
+const renderForm = (question, handleQuestionDetailsUpdate) => {
+    switch (question.type) {
+        case QuestionType.radio:
+            return (
+                <RadioButtonQuestionUI
+                    value={question.details}
+                    onValueChange={handleQuestionDetailsUpdate} />
+            );
+        case QuestionType.checkbox:
+            return (
+                <CheckboxQuestion
+                    onValueChange={handleQuestionDetailsUpdate}
+                    value={question.details}
+                />
+            );
+        case QuestionType.multichoice:
+            return (
+                <MultichoiseQuestion
+                    onValueChange={handleQuestionDetailsUpdate}
+                    value={question.details}
+                />
+            );
+        case QuestionType.scale:
+            return (
+                <ScaleQuestion
+                    onValueChange={handleQuestionDetailsUpdate}
+                    value={question.details}
+                />
+            );
+        case QuestionType.freeText:
+            return <InputField />;
+        case QuestionType.date:
+            return <DateSelectionQuestionUI />;
+        case QuestionType.fileUpload:
+            return <FileUploadQuestion />;
+        default:
+            return <span className="question_default">You should choose the type of the question :)</span>;
+    }
+};
+

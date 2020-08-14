@@ -65,6 +65,8 @@ public class QuestionController {
 
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
+        // if questionnaireId provided - will save it correctly to db
+        // otherwise will save only question
         return new AppResponse<>(questionService.create(dto));
     }
 
