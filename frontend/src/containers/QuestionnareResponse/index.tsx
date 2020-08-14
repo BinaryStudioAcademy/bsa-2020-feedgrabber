@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
 import { loadCurrentQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
+import { IAnswer } from 'models/forms/responseAnswers/types';
 
 interface IQuestionnaireResponseState {
     questions: IQuestion[];
@@ -27,7 +28,7 @@ interface IQuestionnaireResponseProps {
     isLoading: boolean;
     loadQuestions(id: string): void;
     loadQuestionnaire(id: string): void;
-    saveResponseAnswers(answers: IAnswer[]): void;
+    saveResponseAnswers(answers: IAnswer<any>[]): void;
 }
 
 class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps, IQuestionnaireResponseState> {
@@ -91,7 +92,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 
     handleSubmit = () => {
         if (this.state.isCompleted) {
-            const answers: IAnswer[] = this.state.questions.map(question => { return {
+            const answers: IAnswer<any>[] = this.state.questions.map(question => { return {
                 questionId: question.id,
                 text: question.answer,
                 responseQuestionnaireId: this.props.match.id

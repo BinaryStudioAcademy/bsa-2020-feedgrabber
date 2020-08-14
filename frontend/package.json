@@ -44,11 +44,6 @@
     "lint": "eslint src  --fix --ext .js,.ts,.tsx,.jsx",
     "checkTs": "tsc --noEmit"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run checkTs && npm run lint"
-    }
-  },
   "eslintConfig": {
     "extends": "react-app"
   },
