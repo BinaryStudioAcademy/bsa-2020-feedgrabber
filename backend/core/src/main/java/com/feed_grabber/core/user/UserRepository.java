@@ -16,11 +16,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByEmail(String email);
 
-%%% feature/104-team-creation-ui
     List<User> findAllByCompanyId(UUID companyId);
-%%%
+
     Long countAllByCompanyId(UUID companyId);
 
     List<User> findAllByCompanyId(UUID companyId, Pageable pageable);
-%%% dev
+
 }

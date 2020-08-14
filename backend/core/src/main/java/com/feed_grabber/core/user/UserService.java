@@ -143,11 +143,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-%%% feature/104-team-creation-ui
-    public List<UserDetailsResponseDTO> getCompanyUsers(UUID companyId) {
+
+    public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId) {
         return userRepository.findAllByCompanyId(companyId).stream().map(UserMapper.MAPPER::detailedFromUser).collect(Collectors.toList());
     }
-%%%
+
     public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
         return userRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
                 .stream()
@@ -159,5 +159,5 @@ public class UserService implements UserDetailsService {
         return userRepository.countAllByCompanyId(companyId);
     }
 
-%%% dev
+
 }

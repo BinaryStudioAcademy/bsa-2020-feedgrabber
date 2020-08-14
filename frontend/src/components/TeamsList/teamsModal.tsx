@@ -82,7 +82,8 @@ const TeamsModal: React.FunctionComponent<ITeamsModalProps> = ({
                             <div className={styles.items_container}>
                                 {userOptions.filter(u => props.values.memberIds.includes(u.value))
                                     .map((member, index) => (
-                                        <TeamsModalItem userName={member.text} index={index} remove={remove}/>
+                                        <TeamsModalItem key={index} userName={member.text} index={index}
+                                                        remove={remove}/>
                                     ))}
                             </div>
                         </div>

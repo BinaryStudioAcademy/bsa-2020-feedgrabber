@@ -35,16 +35,16 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
-%%% feature/104-team-creation-u
+/*%%% feature/104-team-creation-u*/
     @ApiOperation(value = "Get all users",
             notes = "You should not to provide an id, it will be got from token service")
-    @GetMapping("/all")
+    @GetMapping("/all/list")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<UserDetailsResponseDTO>> getAllUsers() {
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getCompanyUsers(companyId));
+        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getAllByCompanyId(companyId));
     }
-%%%
+/*%%%*/
     @ApiOperation(value = "Send an email to reset password")
     @PostMapping("/email/reset")
     public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) {
@@ -80,5 +80,5 @@ public class UserController {
         userService.removeCompany(id);
     }
 
-%%% dev
+/*%%% dev*/
 }

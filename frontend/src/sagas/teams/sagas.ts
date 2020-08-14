@@ -33,7 +33,7 @@ function* createTeamTeam(action: any) {
 }
 
 function* loadCompanyUsers() {
-    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `api/user/all`);
+    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `api/user/all/list`);
 
     if (res.data.error) {
         yield put(loadCompanyUsersRoutine.failure(res.data.error));
