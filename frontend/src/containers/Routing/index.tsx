@@ -22,6 +22,7 @@ import InvitationSignUp from "../InvitationSignUp";
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
+import QuestionDetailsPage from "../QuestionDeatilsPage";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -61,7 +62,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
-          <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
+          <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
            <PrivateRoute exact path="/employees" component={UserList} />
           <Route path="/*">
             <Redirect to="/layout"/>

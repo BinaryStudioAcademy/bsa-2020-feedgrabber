@@ -34,7 +34,7 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
   return (
     <LoaderWrapper loading={isLoading}>
       {questionnaire && (
-        <div>
+        <div className="question_container">
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
           <Button
             as={Link}
@@ -43,7 +43,6 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
             history={history} />
           <div className={styles.formDetails}>
           <div className={styles.formEditor}>
-            <QuestionDetails match={{ params: {} }} />
           </div>
           </div>
         </div>
