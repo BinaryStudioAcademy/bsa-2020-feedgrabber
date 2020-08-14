@@ -6,6 +6,7 @@ import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.response.DataList;
 import com.feed_grabber.core.user.dto.ResetPassDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
@@ -13,6 +14,11 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+
+import java.util.List;
 
 
 @RestController
@@ -37,6 +43,16 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
+/*%%% feature/104-team-creation-u*/
+    @ApiOperation(value = "Get all users",
+            notes = "You should not to provide an id, it will be got from token service")
+    @GetMapping("/all/list")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<UserDetailsResponseDTO>> getAllUsers() {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getAllByCompanyId(companyId));
+    }
+/*%%%*/
     @ApiOperation(value = "Send an email to reset password")
     @PostMapping("/email/reset")
     public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) throws UserNotFoundException {
@@ -58,4 +74,26 @@ public class UserController {
     }
 
 
+    @GetMapping("/all")
+    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId (
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<>(
+                new DataList<>(
+                        userService.getAllByCompanyId(companyId, page, size),
+                        userService.getCountByCompanyId(companyId),
+                        page,
+                        size
+                ));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("{id}/removeCompany")
+    public void removeUserFromCompany (@PathVariable UUID id) {
+        userService.removeCompany(id);
+    }
+
+/*%%% dev*/
 }

@@ -18,6 +18,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "companies")
 public class Company {
+    public Company(UUID id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
