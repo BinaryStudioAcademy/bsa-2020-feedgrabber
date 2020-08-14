@@ -7,7 +7,7 @@ import {saveQuestionRoutine} from "../../sagas/questions/routines";
 import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import {useHistory} from "react-router-dom";
 import QuestionDetails from "../QuestionDetails";
-import {Button, Segment} from "semantic-ui-react";
+import {Button, Loader, Segment} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 
@@ -19,6 +19,7 @@ interface IQuestionDetailsProps {
     currentQuestion: IQuestion;
     loadCategories: () => void;
     categories: string[];
+    isLoading: boolean;
     match: {
         params: {
             id?: string;
@@ -29,6 +30,7 @@ interface IQuestionDetailsProps {
 const QuestionDetailsPage: React.FC<IQuestionDetailsProps> = ({
                                                                   currentQuestion,
                                                                   loadQuestion,
+                                                                  isLoading,
                                                                   saveQuestion,
                                                                   loadCategories,
                                                                   categories,
@@ -42,7 +44,7 @@ const QuestionDetailsPage: React.FC<IQuestionDetailsProps> = ({
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
         const {isCompleted, value} = state;
         setIsQuestionDetailsValid(isCompleted); // встановлюємо стейт валід чи ні*/
-         setQuestion( value);
+        setQuestion(value);
     };
 
     useEffect(() => {
@@ -55,7 +57,13 @@ const QuestionDetailsPage: React.FC<IQuestionDetailsProps> = ({
             : loadQuestion(match.params.id);
     }, [loadQuestion, match.params.id]);
 
+    useEffect(() => {
+        setQuestion(currentQuestion);
+        console.log(currentQuestion);
+    }, [currentQuestion]);
+
     const onClose = () => {
+        console.log(1);
         loadQuestion('empty');
         history.push("/questions");
     };
@@ -71,19 +79,31 @@ const QuestionDetailsPage: React.FC<IQuestionDetailsProps> = ({
 
     return (
         <div className={styles.question_container}>
-            <QuestionDetails
-                currentQuestion={currentQuestion}
-                categories={categories}
-                onValueChange={handleQuestionDetailsUpdate}
-            />
-            <div className={ styles.question_actions}>
-                <Button className="ui button" color="red" onClick={onClose}>
-                    Cancel
-                </Button>
-                <Button className="ui button" color="green" disabled={!isQuestionDetailsValid} onClick={onSubmit}>
-                    Save
-                </Button>
-            </div>
+            {isLoading&&(
+                <Loader active inline='centered' />
+            )}
+            {!isLoading&&(
+                <div>
+                    <QuestionDetails
+                        key={currentQuestion.id}
+                        currentQuestion={currentQuestion}
+                        categories={categories}
+                        onValueChange={handleQuestionDetailsUpdate}
+                    />
+                    <div className={styles.question_actions}>
+                        <Button className="ui button" color="red" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button className="ui button"
+                                color="green"
+                                disabled={!isQuestionDetailsValid}
+                                onClick={onSubmit}>
+                            Save
+                        </Button>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

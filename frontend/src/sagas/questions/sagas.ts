@@ -19,11 +19,11 @@ function* getAll() {
 function* getById(action) {
   try {
     const id = action.payload;
+
     if (id === 'empty') {
-      loadQuestionByIdRoutine.success(defaultQuestion);
+      yield put(loadQuestionByIdRoutine.success(defaultQuestion));
       return;
     }
-
     const response = yield call(apiClient.get, `/api/questions/${action.payload}`);
     const question: IGeneric<IQuestion> = {
       ...response.data.data,
@@ -45,6 +45,7 @@ function* save(action) {
       : yield call(apiClient.post, `api/questions`, question);
 
     yield put(saveQuestionRoutine.success(res.data.data));
+    yield put(loadQuestionsRoutine.trigger());
   } catch (error) {
     yield put(saveQuestionRoutine.failure());
     toastr.error(error);

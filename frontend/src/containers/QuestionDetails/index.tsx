@@ -164,6 +164,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                             <Form.Dropdown
                                 selection
                                 options={questionTypeOptions}
+                                value={question.type}
                                 placeholder={"Choose type"}
                                 onChange={(event, data) => setQuestionType(data)}
                             />
