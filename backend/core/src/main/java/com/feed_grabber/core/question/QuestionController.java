@@ -8,7 +8,7 @@ import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.question.dto.AddExistingQuestionDto;
+import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -84,7 +84,7 @@ public class QuestionController {
     @ApiOperation(value = "Add existing question to questionnaire")
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping
-    public AppResponse<QuestionDto> addExisting(@RequestBody AddExistingQuestionDto dto)
+    public AppResponse<List<QuestionDto>> addExisting(@RequestBody AddExistingQuestionsDto dto)
             throws QuestionNotFoundException, QuestionnaireNotFoundException {
 
         return new AppResponse<>(questionService.addExistingQuestion(dto));

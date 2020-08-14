@@ -1,14 +1,13 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import {loadQuestionByIdRoutine, loadQuestionsRoutine,
-   saveQuestionRoutine, loadQuestionnaireQuestionsRoutine} from './routines';
+import {
+    loadQuestionByIdRoutine, loadQuestionsRoutine,
+    saveQuestionRoutine, loadQuestionnaireQuestionsRoutine, addSelectedQuestionsRoutine
+} from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-
-/* TODO yield call(apiClient.patch, `/api/questions`, {questionId, questionnaireId})
-        when adding already existing question   */
 
 function parseQuestion(rawQuestion) {
     return {
@@ -53,6 +52,22 @@ function* getById(action) {
   }
 }
 
+function* addFromExisting(action) {
+    // payload: {questionnaireId; questions}}
+    try {
+        const res: IGeneric<IQuestion[]> = yield call(apiClient.patch, `/api/questions`, action.payload);
+
+        const questions = res.data.data.map(q => parseQuestion(q));
+
+        yield put(addSelectedQuestionsRoutine.success(questions));
+
+    } catch (e) {
+        yield put(addSelectedQuestionsRoutine.failure(e.data.error));
+        toastr.error("Something went wrong, try again");
+    }
+
+}
+
 function* save(action) {
   const question = action.payload;
   try {
@@ -87,6 +102,7 @@ export default function* questionSagas() {
     yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
     yield takeEvery(saveQuestionRoutine.TRIGGER, save),
     yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),
-    yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId)
+    yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId),
+    yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting)
   ]);
 }
