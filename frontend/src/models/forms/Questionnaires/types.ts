@@ -7,6 +7,7 @@ export interface IQuestionnairesState {
         get?: IQuestionnaire;
         questions?: IQuestion[];
     };
+    currentQuestion?: IQuestion;
 }
 
 export interface IQuestionnaire {
