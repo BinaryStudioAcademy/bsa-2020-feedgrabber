@@ -9,7 +9,7 @@ import Routing from 'containers/Routing';
 
 const App: React.FC = () => (
     <Scrollbars autoHide>
-        <Provider store={store}>
+        <Provider store={store} >
             <ReduxToastr
                 timeOut={4000}
                 newestOnTop={false}

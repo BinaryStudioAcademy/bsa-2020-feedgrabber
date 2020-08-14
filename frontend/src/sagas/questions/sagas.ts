@@ -12,7 +12,7 @@ function* getAll() {
     yield put(loadQuestionsRoutine.success(res.data.data));
   } catch (error) {
     yield put(loadQuestionsRoutine.failure());
-    toastr.error(error);
+    toastr.error('can not fetch questions');
   }
 }
 
@@ -47,7 +47,7 @@ function* save(action) {
     yield put(saveQuestionRoutine.success(res.data.data));
   } catch (error) {
     yield put(saveQuestionRoutine.failure());
-    toastr.error(error);
+    toastr.error('can not save question');
   }
 }
 

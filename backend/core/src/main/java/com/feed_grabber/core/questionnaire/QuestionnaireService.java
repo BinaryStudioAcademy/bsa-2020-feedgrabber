@@ -3,18 +3,24 @@ package com.feed_grabber.core.questionnaire;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.question.QuestionRepository;
+import com.feed_grabber.core.question.QuestionService;
+import com.feed_grabber.core.question.dto.QuestionUpsertDto;
+import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
+import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
+import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestionId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +28,12 @@ public class QuestionnaireService {
 
     private final QuestionnaireRepository questionnaireRepository;
     private final CompanyRepository companyRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+    @Autowired
+    QuestionService questionService;
 
     @Autowired
     public QuestionnaireService(QuestionnaireRepository questionnaireRepository,
@@ -89,6 +101,25 @@ public class QuestionnaireService {
         questionnaire = questionnaireRepository.save(questionnaire);
         return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
+
+    public void saveOrdered(QuestionnaireOrderedDto dto, UUID companyId)
+            throws QuestionNotFoundException, QuestionnaireNotFoundException {
+        Map<Question, Integer> questionsIndices = new HashMap<>();
+        for (QuestionUpsertDto question: dto.getQuestions() ) {
+            questionsIndices.put(questionService.getOrCreate(question, companyId), question.getIndex());
+        }
+
+        var questionnaire = questionnaireRepository.findById(dto.getId())
+                .orElseThrow(QuestionnaireNotFoundException::new);
+        var bindRows = questionsIndices.entrySet().stream()
+                .map(entry -> QuestionnaireQuestion.getFromEntities(entry.getKey(), questionnaire, entry.getValue()))
+                .collect(Collectors.toList());
+        questionnaire.setQuestions(bindRows);
+
+        questionnaireRepository.save(questionnaire);
+    }
+
+
 
     public void delete(UUID id) {
         questionnaireRepository.deleteById(id);

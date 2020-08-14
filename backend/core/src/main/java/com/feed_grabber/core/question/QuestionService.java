@@ -5,6 +5,7 @@ import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
+import com.feed_grabber.core.question.dto.QuestionUpsertDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
@@ -57,14 +58,14 @@ public class QuestionService {
                 .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
 
-    public QuestionDto create(QuestionCreateDto dto, UUID companyId) throws QuestionnaireNotFoundException {
+    public QuestionDto create(QuestionCreateDto dto, UUID companyId) {
+        var question = this.createModel(dto, companyId);
+        return QuestionMapper.MAPPER.questionToQuestionDto(question);
+    }
+
+    public Question createModel(QuestionCreateDto dto, UUID companyId) {
         var company = companyRep.findById(companyId).get();
-
-        // var questionnaire = anketRep.findById(dto.getQuestionnaireId())
-        //         .orElseThrow(QuestionnaireNotFoundException::new);
-
         var category = findOrCreateCategory(dto.getCategoryTitle(), company);
-
         var q = Question.builder()
                 .category(category)
                 .payload(dto.getDetails())
@@ -72,11 +73,15 @@ public class QuestionService {
                 .type(dto.getType())
                 .company(company)
                 .build();
-
-        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(q));
+        return quesRep.save(q);
     }
 
     public QuestionDto update(QuestionUpdateDto dto, UUID companyId) throws QuestionNotFoundException {
+        var question = this.updateModel(dto, companyId);
+        return QuestionMapper.MAPPER.questionToQuestionDto(question);
+    }
+
+    private Question updateModel(QuestionUpdateDto dto, UUID companyId) throws QuestionNotFoundException {
         var company = companyRep.findById(companyId).get();
 
         var question = quesRep.findById(dto.getId())
@@ -87,17 +92,9 @@ public class QuestionService {
         question.setCategory(category);
         question.setText(dto.getName());
         question.setPayload(dto.getDetails());
-
-        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
-        // question.setText(updateDto.getText());
-        // question = questionRepository.save(question);
-
-        // if (!question.getQuestionnaires().contains(questionnaire)) {
-        //     question.getQuestionnaires().add(questionnaire);
-        // }
-
-        // return QuestionMapper.MAPPER.questionToQuestionDto(question, questionnaire);
+        return quesRep.save(question);
     }
+
 
     public void delete(UUID id) {
         quesRep.deleteById(id);
@@ -109,5 +106,11 @@ public class QuestionService {
                         .title(name)
                         .company(company)
                         .build()));
+    }
+
+    public Question getOrCreate(QuestionUpsertDto question, UUID companyId) throws QuestionNotFoundException {
+        return question.getId() == null
+                ? this.createModel(QuestionMapper.MAPPER.upsertDtoToCreateDto(question), companyId)
+                : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question), companyId);
     }
 }
