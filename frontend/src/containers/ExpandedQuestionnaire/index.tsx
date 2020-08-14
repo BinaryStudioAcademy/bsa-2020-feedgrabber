@@ -1,19 +1,16 @@
 import React, { useEffect } from 'react';
-import { IQuestionnaireDetails } from "../../reducers/expandedQuestionnaire/reducer";
-import { loadOneQuestionnaireRoutine } from "../../sagas/expandedQuestionnaire/routines";
 import { connect } from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
-import QuestionDetails from "../QuestionDetails";
-import { history } from '../../helpers/history.helper';
-import { Button } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import QuestionnairePreview from 'components/QuestionnairePreview';
+import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
+import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import { IAppState } from 'models/IAppState';
 
 interface IExpandedQuestionnaireProps {
   match: any;
   isLoading: boolean;
-  questionnaire: IQuestionnaireDetails;
-
+  questionnaire: IQuestionnaire;
   loadOneQuestionnaire(id: string): void;
 }
 
@@ -26,34 +23,23 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
   }
 ) => {
   useEffect(() => {
-    if (!questionnaire && !isLoading) {
-      loadOneQuestionnaire(match.params.id);
-    }
-  });
+    loadOneQuestionnaire(match.params.id);
+  }, [loadOneQuestionnaire, match.params.id]);
 
   return (
     <LoaderWrapper loading={isLoading}>
       {questionnaire && (
-        <div className="question_container">
+        <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
-          <Button
-            as={Link}
-            to={`${history.createHref(history.location)}/preview`}
-            content='Preview'
-            history={history} />
-          <div className={styles.formDetails}>
-          <div className={styles.formEditor}>
-          </div>
-          </div>
+          <QuestionnairePreview />
         </div>
       )}
     </LoaderWrapper>
   );
 };
 
-const mapStateToProps = rootState => ({
-  isLoading: rootState.expandedQuestionnaire.isLoading,
-  questionnaire: rootState.expandedQuestionnaire.questionnaire
+const mapStateToProps = (rootState: IAppState) => ({
+  questionnaire: rootState.questionnaires.current.get
 });
 
 const mapDispatchToProps = {
