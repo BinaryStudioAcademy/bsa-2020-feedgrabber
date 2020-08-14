@@ -1,7 +1,9 @@
 package com.feed_grabber.core.question;
 
-import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
@@ -14,6 +16,7 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundExcep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,53 +60,83 @@ public class QuestionService {
                 .map(QuestionMapper.MAPPER::questionToQuestionDto);
     }
 
-    public QuestionDto create(QuestionCreateDto dto, UUID companyId) throws QuestionnaireNotFoundException {
-        var company = companyRep.findById(companyId).get();
+    public QuestionDto create(QuestionCreateDto dto)
+            throws QuestionnaireNotFoundException, CompanyNotFoundException {
 
-        // var questionnaire = anketRep.findById(dto.getQuestionnaireId())
-        //         .orElseThrow(QuestionnaireNotFoundException::new);
+        var question = Question.builder();
 
-        var category = findOrCreateCategory(dto.getCategoryTitle(), company);
+        var company = companyRep
+                .findById(TokenService.getCompanyId())
+                .orElseThrow(CompanyNotFoundException::new);
 
-        var q = Question.builder()
+        if (dto.getQuestionnaireId().isPresent()) {
+            question.questionnaires(
+                    List.of(anketRep
+                            .findById(dto.getQuestionnaireId().get())
+                            .orElseThrow(QuestionnaireNotFoundException::new))
+            );
+        }
+
+        var category = findOrCreateCategory(dto.getCategoryTitle());
+
+        question
                 .category(category)
                 .payload(dto.getDetails())
                 .text(dto.getName())
                 .type(dto.getType())
-                .company(company)
-                .build();
+                .company(company);
 
-        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(q));
+        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question.build()));
     }
 
-    public QuestionDto update(QuestionUpdateDto dto, UUID companyId) throws QuestionNotFoundException {
-        var company = companyRep.findById(companyId).get();
+    @Transactional
+    public List<QuestionDto> addExistingQuestion(AddExistingQuestionsDto dto)
+            throws QuestionNotFoundException, QuestionnaireNotFoundException {
 
-        var question = quesRep.findById(dto.getId())
+        var questionnaire = anketRep
+                .findById(dto.getQuestionnaireId())
+                .orElseThrow(QuestionnaireNotFoundException::new);
+
+        questionnaire.getQuestions().addAll(dto.getQuestions());
+
+        try {
+            anketRep.save(questionnaire);
+        } catch (Throwable e) {
+            throw new QuestionNotFoundException();
+        }
+
+        return questionnaire
+                .getQuestions()
+                .stream()
+                .filter(dto.getQuestions()::contains)
+                .map(QuestionMapper.MAPPER::questionToQuestionDto)
+                .collect(Collectors.toList());
+    }
+
+    public QuestionDto update(QuestionUpdateDto dto)
+            throws QuestionNotFoundException, CompanyNotFoundException {
+
+        var question = quesRep
+                .findById(dto.getId())
                 .orElseThrow(QuestionNotFoundException::new);
 
-        var category = findOrCreateCategory(dto.getCategoryTitle(), company);
+        var category = findOrCreateCategory(dto.getCategoryTitle());
 
         question.setCategory(category);
         question.setText(dto.getName());
         question.setPayload(dto.getDetails());
 
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
-        // question.setText(updateDto.getText());
-        // question = questionRepository.save(question);
-
-        // if (!question.getQuestionnaires().contains(questionnaire)) {
-        //     question.getQuestionnaires().add(questionnaire);
-        // }
-
-        // return QuestionMapper.MAPPER.questionToQuestionDto(question, questionnaire);
     }
 
     public void delete(UUID id) {
         quesRep.deleteById(id);
     }
 
-    private QuestionCategory findOrCreateCategory(String name, Company company) {
+    private QuestionCategory findOrCreateCategory(String name) throws CompanyNotFoundException {
+        var company = companyRep.findById(TokenService.getCompanyId())
+                .orElseThrow(CompanyNotFoundException::new);
+
         return quesCategRep.findByTitle(name)
                 .orElseGet(() -> quesCategRep.save(QuestionCategory.builder()
                         .title(name)
