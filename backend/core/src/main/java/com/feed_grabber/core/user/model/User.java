@@ -20,7 +20,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 //@EqualsAndHashCode(callSuper = true)
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email", "company_id"}),
+        @UniqueConstraint(columnNames = {"username", "company_id"})
+})
 public class User {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -31,10 +34,10 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username")
     private String username;
 
     @Column(name = "password")
@@ -47,11 +50,8 @@ public class User {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "users_teams",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "team_id")}
+            },
+            mappedBy = "users"
     )
     @Builder.Default
     private List<Team> teams = new ArrayList<>();

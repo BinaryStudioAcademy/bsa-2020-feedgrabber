@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, UUID> {
     public List<Team> findAllByCompanyId(UUID companyId);
+
+    boolean existsByName(String name);
 }

@@ -1,4 +1,5 @@
 import {IUserState} from "./user/types";
+import {IUsersState} from "./users/types";
 import {IQuestionnairesState} from "./forms/Questionnaires/types";
 import {IAdditionalState} from "../reducers/app/reducer";
 import {ITeamsState} from "../reducers/teams/reducer";
@@ -12,6 +13,7 @@ export interface IAppState {
     user: IUserState;
     invitation: IInvitationState;
     invitationSignUp: IInvitationSignUpState;
+    users: IUsersState;
     questionnaires: IQuestionnairesState;
     questions: IQuestionsState;
     app: IAdditionalState;

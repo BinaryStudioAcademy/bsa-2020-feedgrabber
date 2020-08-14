@@ -19,6 +19,8 @@ import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
 import GuestRoute from "../../components/GuestRoute";
 import InvitationSignUp from "../InvitationSignUp";
+import QuestionnairePreview from 'components/QuestionnairePreview';
+import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 
 export interface IRoutingProps {
@@ -57,8 +59,10 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/teams" component={TeamsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
+          <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
+           <PrivateRoute exact path="/employees" component={UserList} />
           <Route path="/*">
             <Redirect to="/layout"/>
           </Route>
