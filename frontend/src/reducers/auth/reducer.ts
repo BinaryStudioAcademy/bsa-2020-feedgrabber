@@ -7,8 +7,15 @@ const initialState = {
 
 const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
     if (type === loginRoutine.SUCCESS
-        || type === registerRoutine.SUCCESS
-        || type === getUserRoutine.SUCCESS) {
+        || type === registerRoutine.SUCCESS) {
+        return {
+            ...state,
+            info: undefined,  // to load user details after login, currently - different DTO after login and getUser
+            isLoading: false,
+            error: {}
+        };
+    }
+    if (type === getUserRoutine.SUCCESS) {
         return {
             ...state,
             info: payload,
