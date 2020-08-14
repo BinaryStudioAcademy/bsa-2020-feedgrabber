@@ -1,0 +1,126 @@
+$background-color: #150eda
+
+.headerWrapper
+  background-color: $background-color
+  width: 100%
+  padding: 1em
+  box-shadow: 0 0 5px #000
+
+  .headerContent
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+    .headerPart
+      display: flex
+      justify-content: space-between
+      align-items: center
+
+      .headerTitle
+        margin-right: 1em
+        color: #fff
+        display: flex
+        justify-content: space-between
+        align-items: center
+        cursor: pointer
+
+        .headerServiceName
+          font-size: 1.5em
+
+        .headerLogo
+          width: 2.5em
+          height: 2.5em
+          margin: 0 1.5em
+
+      .headerMenuItem
+        font-size: 0.8em
+        cursor: pointer
+        font-weight: bold
+        margin: 0 1.5em
+        color: #fff
+        padding-bottom: 0.2em
+        border-bottom: 1px solid $background-color
+        transition: border-bottom-color 0.3s
+
+        &:hover
+          border-bottom-color: #fff
+
+      .headerMenuItemActive
+        border-bottom-width: 2px
+        border-bottom-color: #fff
+
+      .headerSearchWrapper
+        padding: 0.15em 0.3em
+        border: 1px solid #fff
+        border-radius: 5px
+
+        .headerSearchIcon
+          color: #fff
+          margin-left: 0.5em
+          cursor: pointer
+
+        .headerSearch
+          padding: 0.4em
+          width: 17em
+          font-size: 0.8em
+          background-color: $background-color
+          border: none
+          color: #fff
+
+      .headerBellWrapper
+        margin: 0 1em
+        position: relative
+        cursor: pointer
+
+        .headerBellIcon
+          color: #fff
+
+        .headerBellMessages
+          position: absolute
+          top: 0
+          right: 0
+          font-size: 0.8em
+          height: 1.1em
+          width: 1.1em
+          text-align: center
+          color: #000
+          background-color: #ff5176
+          border-radius: 50%
+
+      .headerAvatar
+        cursor: pointer
+
+      .headerMyAccount
+        font-size: 0.8em
+        margin: 0 1.5em 0 0.7em
+        color: #fff
+        cursor: pointer
+//
+//.logoutBtn,
+//.logoutBtn:hover {
+//  &:global(.ui.icon.button) {
+//    border: none;
+//    box-shadow: none;
+//  }
+//}
+//
+//.main_header {
+//  width: 100%;
+//  box-shadow: 0 4px 6px -6px grey;
+//}
+//
+//.headerUserDropDown {
+//  border: 2px solid transparent;
+//  border-radius: 50%;
+//}
+//.headerUserDropDown:hover {
+//  border: 2px solid #787878;
+//}
+//
+//.menuBtn,
+//.menuBtn:global(.ui.icon.button) {
+//  color: gray;
+//  &:hover {
+//    color: black !important;
+//  }
+//}

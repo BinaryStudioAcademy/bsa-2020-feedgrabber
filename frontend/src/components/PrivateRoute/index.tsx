@@ -3,7 +3,7 @@ import {Redirect, Route} from 'react-router-dom';
 import {useAuth} from '../../security/authProvider';
 import Header from "../Header";
 import SideMenu from "../SideMenu";
-import './styles.sass';
+import styles from './styles.module.sass';
 import {connect} from "react-redux";
 
 const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) => {
@@ -20,13 +20,13 @@ const PrivateRoute = ({component: Component, showMenu, roles = null, ...rest}) =
                 return (
                     <>
                         <Header />
-                        <div className="view-container">
+                        <div className={styles.viewContainer}>
                             {showMenu && (
-                                <div className="side-bar">
+                                <div className={styles.sideBar}>
                                     <SideMenu/>
                                 </div>
                             )}
-                            <div className="app-content">
+                            <div className={styles.appContent}>
                                 <Component {...props} />
                             </div>
                         </div>
