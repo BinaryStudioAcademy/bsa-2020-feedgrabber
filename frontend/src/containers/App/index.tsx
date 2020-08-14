@@ -1,11 +1,12 @@
 import React from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import {Scrollbars} from 'react-custom-scrollbars';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
-import { history } from '../../helpers/history.helper';
-import { store } from '../../store';
+import {history} from '../../helpers/history.helper';
+import {store} from '../../store';
 import Routing from 'containers/Routing';
+import SubdomainRouter from "../../components/SubdomainRouter";
 
 const App: React.FC = () => (
     <Scrollbars autoHide>
@@ -20,9 +21,11 @@ const App: React.FC = () => (
                 transitionOut="fadeOut"
                 closeOnToastrClick
             />
-            <Router history={history}>
-                <Routing />
-            </Router>
+            <SubdomainRouter>
+                <Router history={history}>
+                    <Routing/>
+                </Router>
+            </SubdomainRouter>
         </Provider>
     </Scrollbars>
 );

@@ -49,7 +49,7 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
                                 </Grid.Column>
                                 <Grid.Column width={12}>
                                     <Header textAlign='left' as='h4' className={styles.company}>
-                                        BinaryStudio
+                                        {company.name}
                                     </Header>
                                 </Grid.Column>
                             </Grid>
