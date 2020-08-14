@@ -44,10 +44,10 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
     <>
       <LoaderWrapper loading={isLoading}>
         <Switch>
-          <PublicRoute exact path="/layout" component={Landing} />
-          <PublicRoute exact path="/auth" component={SignForm} />
+          <GuestRoute exact path="/layout" component={Landing} />
+          <GuestRoute exact path="/auth" component={SignForm} />
           <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
-          <PublicRoute exact path="/reset/:id" component={ResetPasswordForm} />
+          <GuestRoute exact path="/reset/:id" component={ResetPasswordForm} />
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/profile/settings" component={ProfileX} />
