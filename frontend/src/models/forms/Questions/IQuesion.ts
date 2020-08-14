@@ -29,6 +29,14 @@ export interface IScaleDetails {
   maxDescription: string;
 }
 
+export interface IFileUploadDetails {
+    answers: {
+        fileType: string;
+        fileNumber: number;
+        fileSize: number;
+    };
+}
+
 export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
@@ -61,13 +69,18 @@ export interface IDateQuestion extends IQuestionBase<{}> {
     type: QuestionType.date;
 }
 
+export interface IFileUploadQuestion extends IQuestionBase<IFileUploadDetails>{
+    type: QuestionType.fileUpload;
+}
+
 export type IQuestion =
     | IMultichoiceQuestion
     | ITextQuestion
     | IScaleQuestion
     | IRadioQuestion
     | ICheckboxQuestion
-    | IDateQuestion;
+    | IDateQuestion
+    | IFileUploadQuestion;
 
 export enum QuestionType {
   freeText = "free_text",
@@ -75,5 +88,6 @@ export enum QuestionType {
   scale = "scale",
   checkbox = "checkbox",
   multichoice = "multi_choice",
-  date = "date"
+  date = "date",
+  fileUpload = "fileUpload"
 }
