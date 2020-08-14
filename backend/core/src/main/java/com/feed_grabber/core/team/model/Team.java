@@ -2,6 +2,7 @@ package com.feed_grabber.core.team.model;
 
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.user.model.User;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,6 +14,12 @@ import java.util.UUID;
 @Entity
 @Table(name = "teams")
 public class Team {
+    public Team(String name, Company company) {
+        this.name = name;
+        this.company = company;
+    }
+    public Team() {
+    }
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -33,8 +40,11 @@ public class Team {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-            },
-            mappedBy = "teams"
+            })
+    @JoinTable(
+            name = "users_teams",
+            joinColumns = {@JoinColumn(name = "team_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
     private List<User> users;
 

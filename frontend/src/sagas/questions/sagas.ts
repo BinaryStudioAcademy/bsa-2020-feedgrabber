@@ -1,10 +1,10 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
-import { loadQuestionsRoutine, loadQuestionByIdRoutine, loadQuestionnaireQuestionsRoutine,
-     saveQuestionRoutine } from './routines';
+import {loadQuestionByIdRoutine, loadQuestionsRoutine, saveQuestionRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IGeneric } from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 function* getAll() {
   try {
@@ -20,7 +20,7 @@ function* getById(action) {
   try {
     const id = action.payload;
     if (id === 'empty') {
-      loadQuestionByIdRoutine.success({});
+      loadQuestionByIdRoutine.success(defaultQuestion);
       return;
     }
 
@@ -33,7 +33,7 @@ function* getById(action) {
     yield put(loadQuestionByIdRoutine.success(question));
   } catch (error) {
     yield put(loadQuestionByIdRoutine.failure());
-    toastr.error(error);
+    toastr.error('cant to get question by Id');
   }
 }
 
@@ -51,24 +51,10 @@ function* save(action) {
   }
 }
 
-function* getByQuestionnaireId(action) {
-  try {
-    const res: IGeneric<IQuestion[]> = yield call(apiClient.get,
-       `http://localhost:5000/api/questions/questionnaires/${action.payload}`);
-    const items = res.data.data;
-
-    yield put(loadQuestionnaireQuestionsRoutine.success(items));
-  } catch (error) {
-    yield put(loadQuestionnaireQuestionsRoutine.failure(error));
-    toastr.error("Unable to load questionnaire's questions");
-  }
-}
-
 export default function* questionSagas() {
   yield all([
     yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
     yield takeEvery(saveQuestionRoutine.TRIGGER, save),
-    yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId),
     yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById)
   ]);
 }

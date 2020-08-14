@@ -1,11 +1,13 @@
-import React, {useEffect} from 'react';
-import {IQuestionnaireDetails} from "../../reducers/expandedQuestionnaire/reducer";
-import {loadOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
-import {connect} from "react-redux";
+import React, { useEffect } from 'react';
+import { IQuestionnaireDetails } from "../../reducers/expandedQuestionnaire/reducer";
+import { loadOneQuestionnaireRoutine } from "../../sagas/expandedQuestionnaire/routines";
+import { connect } from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import QuestionDetails from "../QuestionDetails";
-import {history} from '../../helpers/history.helper';
+import { history } from '../../helpers/history.helper';
+import { Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 interface IExpandedQuestionnaireProps {
   match: any;
@@ -34,11 +36,14 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
       {questionnaire && (
         <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
+          <Button
+            as={Link}
+            to={`${history.createHref(history.location)}/preview`}
+            content='Preview'
+            history={history} />
           <div className={styles.formDetails}>
-          <div className={styles.formPreview}>Here will be preview</div>
           <div className={styles.formEditor}>
-            {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
-            <QuestionDetails saveQuestion={() => {}} match={{ params: {} }} history={history} />
+            <QuestionDetails match={{ params: {} }} />
           </div>
           </div>
         </div>
