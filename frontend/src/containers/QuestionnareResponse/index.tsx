@@ -22,6 +22,7 @@ interface IQuestionnaireResponseProps {
     match: any;
     responseId: string;
     title: string;
+    description: string;
     questions: IQuestion[];
     isLoading: boolean;
     loadQuestions(id: string): void;
@@ -104,20 +105,26 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     render(){
         const { title, questions } = this.props;
         const { showErrors } = this.state;
+        const description = "Description";
         return (
         <div className={styles.response_container}>
-            <Segment padded><h1 className={styles.title}>{title}</h1></Segment>
+            <div className={styles.headerContainer}>
+                <div className={["ui very padded segment", styles.questionnaireHeader].join(' ')}>
+                    <h1 className={styles.title}>{title}</h1>
+                    {description? <h2 className={styles.description}>{description}</h2> : null}</div>
+            </div>
+
             <Formik
                 initialValues = {this.state}
                 onSubmit = {this.handleSubmit}
             >{formik => (
-            <Form onSubmit={formik.handleSubmit}>
-                    <List className={styles.questions_list}>
+            <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
+                    <ul>
                         {questions.map(question => {
                             return (
                                 <List.Item key={question.id}>
-                                    <Segment className={styles.question_wrapper}>
-                                        <h2 className={styles.name}>{question.name}</h2>
+                                    <Segment very padded className={styles.question_wrapper}>
+                                        <h2 className={styles.questionName}>{question.name}</h2>
                                             {this.getQuestionForm(question)}
                                             {showErrors && !question.answer? 
                                                 <div className={styles.error_message}>
@@ -125,8 +132,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                     </Segment>
                                 </List.Item>);
                         })}
-                    </List>
-                    <Button type="submit">Send</Button>
+                    </ul>
+                    <button className={[styles.button, styles.submit].join(' ')} type="submit">Send</button>
                 </Form>)
             }
             </Formik>
@@ -137,6 +144,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 const mapStateToProps = (state: IAppState) => ({
     questions: state.questionnaires.current.questions,
     title: state.questionnaires.current.get.title,
+    description: state.questionnaires.current.get.description,
     responseId: state.questionnaires.current.get.id // should be id of response
 });
 
