@@ -24,7 +24,7 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
 ) => {
   useEffect(() => {
     loadOneQuestionnaire(match.params.id);
-  }, [loadOneQuestionnaire]);
+  }, [loadOneQuestionnaire, match.params.id]);
 
   return (
     <LoaderWrapper loading={isLoading}>

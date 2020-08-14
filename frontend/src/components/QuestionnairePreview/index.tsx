@@ -14,7 +14,9 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ questions }) => {
                     { questions.map(q => <ResponseQuestion question={q} />)}
                     {/* Pass answerHandler to props if it is not preview */}
                 </>
-                : <Header as='h2'>Urrr... Maybe nothing is modifying right now?</Header>
+                : <Header as='h2'>
+                    Urrr... Maybe nothing is modifying right now or you haven`t created any questions yet?
+                </Header>
             }
         </div>);
 };
