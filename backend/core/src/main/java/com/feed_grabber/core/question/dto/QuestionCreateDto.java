@@ -3,7 +3,6 @@ package com.feed_grabber.core.question.dto;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.feed_grabber.core.question.CustomDes;
 import com.feed_grabber.core.question.QuestionType;
-import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
