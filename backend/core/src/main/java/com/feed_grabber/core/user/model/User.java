@@ -20,10 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 //@EqualsAndHashCode(callSuper = true)
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"email", "company_id"}),
-        @UniqueConstraint(columnNames = {"username", "company_id"})
-})
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -34,10 +31,10 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")

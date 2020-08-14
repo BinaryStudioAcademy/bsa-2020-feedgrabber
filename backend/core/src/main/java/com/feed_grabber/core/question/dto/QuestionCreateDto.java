@@ -15,15 +15,15 @@ import java.util.UUID;
 @JsonDeserialize(using = CustomDes.class)
 public class QuestionCreateDto {
     @NotBlank
-    String name;
+    String text;
 
-    String categoryTitle;
+    String categoryName;
 
     @NotNull
     QuestionType type;
 
-//    @NotNull
-//    UUID questionnaireId;
+    @NotNull
+    UUID questionnaireId;
 
-    String details;
+    String payload;
 }

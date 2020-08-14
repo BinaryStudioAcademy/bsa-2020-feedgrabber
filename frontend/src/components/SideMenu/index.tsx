@@ -20,9 +20,6 @@ const SideMenu = () => {
             <Menu.Item as={NavLink} to="/questions">
                 Questions
             </Menu.Item>
-            <Menu.Item as={NavLink} to="/employees">
-              Employees
-            </Menu.Item>
         </Menu>
     );
 };

@@ -5,14 +5,12 @@ import questionsReducer from "./questions/reducer";
 import questionnairesReducer from "./questionnaires/reducer";
 import appReducer from "./app/reducer";
 import teamsReducer from "./teams/reducer";
-import usersReducer from "./users/reducer";
 import expandedQuestionnaireReducer from './expandedQuestionnaire/reducer';
 import companyReducer from "./companies/reducer";
 import answersReduser from './responseAnswers/reducer';
 
 export default combineReducers({
   toastr,
-  users: usersReducer,
   user: authAndProfileReducer,
   questionnaires: questionnairesReducer,
   questions: questionsReducer,

@@ -8,13 +8,11 @@ export interface IUserInfo {
     id: string;
     userName: string;
     companyName: string;
-    email: string;
     companyId: string;
     firstName?: string;
     lastName?: string;
     phoneNumber?: string;
     avatar?: string;
-    role: string;
 }
 
 export interface IUserErrors {
