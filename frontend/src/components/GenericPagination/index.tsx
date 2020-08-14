@@ -5,7 +5,6 @@ import styles from './styles.module.sass';
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import LoaderWrapper from "../LoaderWrapper";
 import PaginationButton, {IGenericButtonProps} from "./button";
-import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 interface IGenericPaginationProps {
   title: string;
@@ -13,7 +12,7 @@ interface IGenericPaginationProps {
   pagination?: IPaginationInfo<any>;
   buttons: IGenericButtonProps[];
 
-  setPagination(pagination: IPaginationInfo<IQuestionnaire>): void;
+  setPagination(pagination: IPaginationInfo<any>): void;
   mapItemToJSX(item: any): JSX.Element;
   loadItems(): void;
 }

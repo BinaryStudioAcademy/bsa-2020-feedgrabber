@@ -8,6 +8,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -15,15 +16,14 @@ import java.util.UUID;
 @JsonDeserialize(using = CustomDes.class)
 public class QuestionCreateDto {
     @NotBlank
-    String text;
+    String name;
 
-    String categoryName;
+    String categoryTitle;
 
     @NotNull
     QuestionType type;
 
-    @NotNull
-    UUID questionnaireId;
+    Optional<UUID> questionnaireId;
 
-    String payload;
+    String details;
 }

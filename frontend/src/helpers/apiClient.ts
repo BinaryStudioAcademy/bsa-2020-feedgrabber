@@ -15,7 +15,7 @@ const responseErrorHandler = e => {
             // redirect to /auth only if user are not logged (forbidden response status)
             history.push('/auth');
         }
-        return Promise.reject(e);
+        return Promise.reject(e.response);
     }
 
     originalRequest._retry = true;
@@ -33,7 +33,10 @@ const responseErrorHandler = e => {
 };
 
 apiClient.interceptors.request.use(request => {
-    request.headers.Authorization = `Bearer ${tokenProvider.getToken()}`;
+    const token = tokenProvider.getToken();
+    if (token) {
+      request.headers.Authorization = `Bearer ${token}`;
+    }
     return request;
 });
 
