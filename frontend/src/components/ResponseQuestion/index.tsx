@@ -1,4 +1,4 @@
-import QuestionDetails from "containers/QuestionDetails";
+import QuestionDetails from "components/QuestionDetails";
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import { IAppState } from "models/IAppState";
 import { IQuestionResponse } from "models/IQuestionResponse";
@@ -21,7 +21,9 @@ const ResponseQuestion: FC<IQuestionResponse & ResponseQuestionProps> =
             className={styles.edit}
                 onClick={handleSegmentClick} />
             {editor && (id === nowModifying.id) ?
-                <QuestionDetails match={{ params: {} }} />
+                <div>
+                   {/* <QuestionDetails match={{ params: {} }} />*/}
+                </div>
                 : <>
                     <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
                     {TypeToResponseMap.get(type)?.({ question, answerHandler })}
