@@ -143,6 +143,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+
+    public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId) {
+        return userRepository.findAllByCompanyId(companyId).stream().map(UserMapper.MAPPER::detailedFromUser).collect(Collectors.toList());
+    }
+
     public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
         return userRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
                 .stream()
@@ -153,5 +158,6 @@ public class UserService implements UserDetailsService {
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
     }
+
 
 }
