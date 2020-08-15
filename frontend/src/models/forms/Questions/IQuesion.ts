@@ -40,6 +40,7 @@ export interface IFileUploadDetails {
 export interface IQuestionBase<TDetails>{
   id: string;
   name: string;
+  index?: number;
   categoryTitle: string;
   type: QuestionType;
   details: TDetails;
@@ -92,3 +93,7 @@ export enum QuestionType {
   date = "date",
   fileUpload = "fileUpload"
 }
+
+export const DraggableItemTypes = {
+  QUESTION_CARD: 'question_card'
+};

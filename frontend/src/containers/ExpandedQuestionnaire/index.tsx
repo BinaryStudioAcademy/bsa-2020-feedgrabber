@@ -8,6 +8,32 @@ import QuestionDetails from "../QuestionDetails";
 import { history } from '../../helpers/history.helper';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
+import QuestionnaireOrderView from "../../components/QuestionnaireOrderDraggableView";
+
+const questions =  [
+  {
+    id: "1",
+    name: "first",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  },
+  {
+    id: "2",
+    name: "second",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  },
+  {
+    id: "3",
+    name: "third",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  }
+] as IQuestion[];
 
 interface IExpandedQuestionnaireProps {
   match: any;
@@ -36,6 +62,8 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
       {questionnaire && (
         <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
+          {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+          <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} />
           <Button
             as={Link}
             to={`${history.createHref(history.location)}/preview`}
