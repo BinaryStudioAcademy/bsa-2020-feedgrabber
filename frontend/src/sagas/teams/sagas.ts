@@ -4,7 +4,7 @@ import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
-import {ITeamCreationDto} from "../../components/TeamsList/teamsModal";
+import {ITeamCreationDto} from "../../containers/TeamsPage/teamsModal";
 import {IUserInfo} from "../../models/user/types";
 
 function* loadTeams() {
