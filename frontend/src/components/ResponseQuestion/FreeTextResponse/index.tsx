@@ -1,3 +1,4 @@
+import UIButton from "components/UI/UIButton";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
 import { Button, Input, InputOnChangeData } from "semantic-ui-react";
@@ -14,8 +15,8 @@ export const FreeTextResponse: FC<IQuestionResponse> = ({ question, answerHandle
         placeholder='Answer field'
         className={styles.input}
     />
-        <Button
-            content='Submit'
+        <UIButton
+            title='Submit'
             disabled={!val}
             onClick={() => answerHandler?.(question.id, { payload: val })} />
     </>;
