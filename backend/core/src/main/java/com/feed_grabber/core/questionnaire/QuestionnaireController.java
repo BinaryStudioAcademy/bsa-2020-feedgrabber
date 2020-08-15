@@ -4,7 +4,9 @@ import com.feed_grabber.core.auth.security.TokenService;
 
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.question.QuestionService;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
@@ -29,9 +31,12 @@ public class QuestionnaireController {
 
     private final QuestionnaireService questionnaireService;
 
+    private final QuestionService questionService;
+
     @Autowired
-    public QuestionnaireController(QuestionnaireService questionnaireService) {
+    public QuestionnaireController(QuestionnaireService questionnaireService, QuestionService questionService) {
         this.questionnaireService = questionnaireService;
+        this.questionService = questionService;
     }
 
     @ApiOperation("Get all questionnaires")
@@ -98,8 +103,7 @@ public class QuestionnaireController {
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     public void updateQuestionnaireQuestions(QuestionnaireOrderedDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException {
-        var companyId = TokenService.getCompanyId();
-        this.questionnaireService.saveOrdered(dto, companyId);
+            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException {
+        this.questionService.saveOrdered(dto);
     }
 }

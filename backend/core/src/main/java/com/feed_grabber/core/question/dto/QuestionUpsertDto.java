@@ -2,6 +2,7 @@ package com.feed_grabber.core.question.dto;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.question.serializers.QuestionUpsertDes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,4 +27,6 @@ public class QuestionUpsertDto {
     String details;
 
     Integer index;
+
+    QuestionType type;
 }

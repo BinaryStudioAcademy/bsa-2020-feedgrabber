@@ -1,0 +1,52 @@
+$toggle-menu-duration: 0.2s
+$toggle-menu-timing: ease-out
+
+.menuWrapper
+  position: fixed
+  height: 100%
+  padding-top: 6em
+  background-color: #e1e8ee
+  transition: width $toggle-menu-duration $toggle-menu-timing
+
+.menuContent
+  display: flex
+  flex-direction: column
+
+.menuItem
+  font-size: 0.8em
+  cursor: pointer
+  transition: padding-left $toggle-menu-duration $toggle-menu-timing, background-color 0.1s
+
+  &:hover
+    background-color: #ffc7d2
+
+.menuItemActive
+  background-color: #ff5077
+
+  &:hover
+    background-color: #ff5077
+
+.menuItemIcon
+  color: #130eda
+
+.menuItemTitle
+  transition: margin-left $toggle-menu-duration $toggle-menu-timing, color $toggle-menu-duration $toggle-menu-timing
+  color: #000
+
+.menuWrapperOpen
+  width: 17em
+
+  .menuItem
+    padding: 1em 1em 1em 3em
+
+    .menuItemIcon
+      margin-right: 0.7em
+
+.menuWrapperClosed
+  width: 2.6em
+
+  .menuItem
+    padding: 1em
+
+    .menuItemTitle
+      margin-left: -20em

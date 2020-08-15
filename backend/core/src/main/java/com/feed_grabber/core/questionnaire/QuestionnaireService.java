@@ -102,25 +102,6 @@ public class QuestionnaireService {
         return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
 
-    public void saveOrdered(QuestionnaireOrderedDto dto, UUID companyId)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException {
-        Map<Question, Integer> questionsIndices = new HashMap<>();
-        for (QuestionUpsertDto question: dto.getQuestions() ) {
-            questionsIndices.put(questionService.getOrCreate(question, companyId), question.getIndex());
-        }
-
-        var questionnaire = questionnaireRepository.findById(dto.getId())
-                .orElseThrow(QuestionnaireNotFoundException::new);
-        var bindRows = questionsIndices.entrySet().stream()
-                .map(entry -> QuestionnaireQuestion.getFromEntities(entry.getKey(), questionnaire, entry.getValue()))
-                .collect(Collectors.toList());
-        questionnaire.setQuestions(bindRows);
-
-        questionnaireRepository.save(questionnaire);
-    }
-
-
-
     public void delete(UUID id) {
         questionnaireRepository.deleteById(id);
     }

@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
+import java.util.UUID;
+
 
 @Data
 @AllArgsConstructor
@@ -23,8 +26,7 @@ public class QuestionCreateDto {
     @NotNull
     QuestionType type;
 
-//    @NotNull
-//    UUID questionnaireId;
+    Optional<UUID> questionnaireId;
 
     String details;
 

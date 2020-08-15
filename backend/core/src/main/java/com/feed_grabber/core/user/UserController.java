@@ -1,11 +1,16 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.registration.TokenType;
+import com.feed_grabber.core.registration.VerificationTokenService;
+import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
+import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.response.DataList;
 import com.feed_grabber.core.user.dto.ResetPassDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +18,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final VerificationTokenService tokenService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository, VerificationTokenService tokenService) {
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
     }
 
     @ApiOperation(value = "Get details from one user",
@@ -33,17 +43,34 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
+/*%%% feature/104-team-creation-u*/
+    @ApiOperation(value = "Get all users",
+            notes = "You should not to provide an id, it will be got from token service")
+    @GetMapping("/all/list")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<UserDetailsResponseDTO>> getAllUsers() {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getAllByCompanyId(companyId));
+    }
+/*%%%*/
     @ApiOperation(value = "Send an email to reset password")
     @PostMapping("/email/reset")
-    public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) {
-        System.out.println(dto);
-        // TODO: Send email
+    public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) throws UserNotFoundException {
+        var user = userRepository
+                .findByCompanyIdAndEmail(dto.getCompanyId(), dto.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        var token = tokenService.generateVerificationToken(user, TokenType.RESET);
+        // TODO: Send email with token
     }
 
-    @ApiOperation(value = "Reset password")
+    @ApiOperation(value = "Update password")
     @PostMapping("/reset")
-    public void resetPassword(@RequestBody ResetPassDto dto) {
-        System.out.println("dto = " + dto);
+    public void resetPassword(@RequestBody ResetPassDto dto)
+            throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
+
+        var user = tokenService.verifyUserByToken(dto.getToken(), TokenType.RESET);
+        userService.updatePassword(user.getId(), dto.getPassword());
     }
 
 
@@ -68,4 +95,5 @@ public class UserController {
         userService.removeCompany(id);
     }
 
+/*%%% dev*/
 }
