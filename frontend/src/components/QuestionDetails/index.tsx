@@ -7,12 +7,12 @@ import {IComponentState} from "../ComponentsQuestions/IQuestionInputContract";
 import CheckboxQuestion from "../ComponentsQuestions/CheckboxQuestion";
 import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
-import InputField from "../ComponentsQuestions/InputField";
 import DateSelectionQuestionUI from "../ComponentsQuestions/DateSelectionQuestionUI";
 import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
 import {mainSchema} from "./schemas";
 import {questionTypeOptions} from "./questionTypeOptions";
 import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI";
+import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
@@ -78,7 +78,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                     />
                 );
             case QuestionType.freeText:
-                return <InputField/>;
+                return <FreeTextQuestionUI/>;
             case QuestionType.date:
                 return <DateSelectionQuestionUI/>;
             case QuestionType.fileUpload:
