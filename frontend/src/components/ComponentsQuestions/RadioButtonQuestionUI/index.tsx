@@ -121,8 +121,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
             </div>
         </div>
 
-    )
-        ;
+    );
 };
 
 export default RadioButtonQuestionUI;

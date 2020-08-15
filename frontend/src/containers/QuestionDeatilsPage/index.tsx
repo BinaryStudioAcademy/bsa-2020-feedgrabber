@@ -24,11 +24,10 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
     const history = useHistory();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    /* const [addedCategories, setNewCategories] = useState([]);*/
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
         const {isCompleted, value} = state;
-        setIsQuestionDetailsValid(isCompleted); // встановлюємо стейт валід чи ні*/
+        setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
 
