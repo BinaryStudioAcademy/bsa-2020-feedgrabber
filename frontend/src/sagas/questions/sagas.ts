@@ -39,7 +39,7 @@ function* getById(action) {
         const id = action.payload;
 
         if (id === 'empty') {
-            put(loadQuestionByIdRoutine.success(defaultQuestion));
+            yield  put(loadQuestionByIdRoutine.success(defaultQuestion));
             return;
         }
 

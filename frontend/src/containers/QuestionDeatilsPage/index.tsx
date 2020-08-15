@@ -44,23 +44,12 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
 
     useEffect(() => {
         setQuestion(currentQuestion);
-        console.log(currentQuestion);
     }, [currentQuestion]);
 
     const onClose = () => {
-        console.log(1);
         loadQuestion('empty');
         history.push("/questions");
     };
-
-    // const onSubmit = () => {
-    //     if (isQuestionDetailsValid) {
-    //         console.log(question);
-    //         saveQuestion(question);
-    //         loadQuestion('empty');
-    //         history.push("/questions");
-    //     }
-    // };
 
     const onSubmit = () => {
         if (isQuestionDetailsValid) {

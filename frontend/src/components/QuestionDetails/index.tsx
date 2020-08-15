@@ -28,13 +28,13 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
-    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(false);
+    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle.length > 0);
     const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(false);
     const [addedCategories, setNewCategories] = useState([]);
 
     useEffect(() => {
-        onValueChange({value: question, isCompleted: categoryIsValid && nameIsValid});
-    }, [nameIsValid, categoryIsValid, onValueChange, question]);
+        onValueChange({value: question, isCompleted: categoryIsValid && nameIsValid && innerFormIsValid});
+    }, [nameIsValid, categoryIsValid, onValueChange, question, innerFormIsValid]);
 
     const handleQuestionDetailsUpdate = (state: IComponentState<{}>) => {
         const {isCompleted, value} = state;
@@ -45,7 +45,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
 
     const handleQuestionUpdate = (question: IQuestion) => {
         setQuestion(question);
-        onValueChange({value: question, isCompleted: nameIsValid && categoryIsValid});
+        onValueChange({value: question, isCompleted: nameIsValid && categoryIsValid && innerFormIsValid});
     };
 
     const renderForm = () => {
