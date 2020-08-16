@@ -1,6 +1,5 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 import styles from "./styles.module.sass";
-import LoaderWrapper from "../../LoaderWrapper";
 
 export interface IUIButtonProps {
   title: string;

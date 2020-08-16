@@ -1,12 +1,15 @@
 import {
   clearCurrentTeamRoutine,
-  createTeamRoutine, deleteTeamRoutine,
-  hideModalTeamsRoutine, loadCompanyUsersRoutine, loadCurrentTeamRoutine,
+  createTeamRoutine,
+  deleteTeamRoutine,
+  loadCompanyUsersRoutine,
+  loadCurrentTeamRoutine,
   loadTeamsRoutine,
-  showModalTeamsRoutine, toggleUserCurrentTeamRoutine, updateTeamRoutine
+  toggleUserCurrentTeamRoutine,
+  updateTeamRoutine
 } from '../../sagas/teams/routines';
 import {Routine} from 'redux-saga-routines';
-import {ITeam, ITeamShort, ITeamUserToggle} from 'models/teams/ITeam';
+import {ITeam, ITeamShort} from 'models/teams/ITeam';
 import {IUserShort} from "../../models/user/types";
 
 export interface ITeamCurrent {
@@ -38,32 +41,22 @@ const initState: ITeamsState = {
 
 const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
   switch (action.type) {
+    case loadTeamsRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
     case loadTeamsRoutine.SUCCESS:
       return {
         ...state,
         teams: action.payload,
         isLoading: false
       };
-    case loadTeamsRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
     case loadTeamsRoutine.FAILURE:
       return {
         ...state,
         error: action.payload,
         isLoading: false
-      };
-    case showModalTeamsRoutine.TRIGGER:
-      return {
-        ...state,
-        modalShown: true
-      };
-    case hideModalTeamsRoutine.TRIGGER:
-      return {
-        ...state,
-        modalShown: false
       };
 
     case clearCurrentTeamRoutine.TRIGGER:

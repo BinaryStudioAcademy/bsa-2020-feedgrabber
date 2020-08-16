@@ -25,12 +25,18 @@ const TeamsPage: FC<ITeamsPageProps> = (
     deleteTeam,
     clearCurrentTeam,
     isLoading
-  }) => {
+  }
+) => {
   useEffect(() => {
     if (!teams && !isLoading) {
       loadTeams();
     }
   }, [teams, isLoading, loadTeams, loadUsers]);
+
+  const handleRedirect = (id: string): void => {
+    clearCurrentTeam();
+    history.push(`/teams/${id}`);
+  };
 
   return (
     <>
@@ -40,10 +46,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
           <UIColumn wide>
             <UIButton
               title="Add Team"
-              onClick={() => {
-                clearCurrentTeam();
-                history.push("/teams/new");
-              }}
+              onClick={() => handleRedirect("new")}
               center
               primary
             />
@@ -59,12 +62,9 @@ const TeamsPage: FC<ITeamsPageProps> = (
                   <Icon name="users"/>{team.membersAmount} Member(s)
                 </UICardBlock>
                 <UICardBlock>
-                  <UIButton title="Manage" onClick={() => {
-                    clearCurrentTeam();
-                    history.push(`/teams/${team.id}`);
-                  }}/>
-                  <UIButton title="Delete" secondary loading={team.deleteLoading} disabled={team.deleteLoading}
-                            onClick={() => deleteTeam(team.id)}/>
+                  <UIButton title="Manage" onClick={() => handleRedirect(team.id)}/>
+                  <UIButton title="Delete" secondary loading={team.deleteLoading}
+                            disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
                 </UICardBlock>
               </UICard>
             </UIColumn>

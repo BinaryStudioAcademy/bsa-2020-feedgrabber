@@ -3,14 +3,15 @@ import {
   createTeamRoutine, deleteTeamRoutine,
   loadCompanyUsersRoutine,
   loadCurrentTeamRoutine,
-  loadTeamsRoutine, toggleUserCurrentTeamRoutine,
+  loadTeamsRoutine,
+  toggleUserCurrentTeamRoutine,
   updateTeamRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
 import {IUserInfo} from "../../models/user/types";
-import {ITeam, ITeamCreate, ITeamShort, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
+import {ITeam, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
 
 function* loadTeams() {
@@ -36,9 +37,7 @@ function* loadCurrentTeam(action: any) {
 
 function* createTeam(action: any) {
   try {
-    const team: ITeamCreate = action.payload;
-
-    const response = yield call(apiClient.post, `http://localhost:5000/api/teams`, team);
+    const response = yield call(apiClient.post, `http://localhost:5000/api/teams`, action.payload);
     const data = response.data.data;
     yield put(createTeamRoutine.success(data));
     yield put(loadTeamsRoutine.trigger());
@@ -52,9 +51,7 @@ function* createTeam(action: any) {
 
 function* updateTeam(action: any) {
   try {
-    const team: ITeamUpdate = action.payload;
-
-    yield call(apiClient.put, `http://localhost:5000/api/teams`, team);
+    yield call(apiClient.put, `http://localhost:5000/api/teams`, action.payload);
     yield put(updateTeamRoutine.success());
     yield put(loadTeamsRoutine.trigger());
     toastr.success("Team metadata updated");
@@ -66,8 +63,7 @@ function* updateTeam(action: any) {
 
 function* deleteTeam(action: any) {
   try {
-    const id: string = action.payload;
-    yield call(apiClient.delete, `http://localhost:5000/api/teams/${id}`);
+    yield call(apiClient.delete, `http://localhost:5000/api/teams/${action.payload}`);
     yield put(deleteTeamRoutine.success());
     yield put(loadTeamsRoutine.trigger());
     toastr.success("Team deleted");
@@ -100,42 +96,14 @@ function* loadCompanyUsers() {
   }
 }
 
-function* watchLoadTeams() {
-  yield takeEvery(loadTeamsRoutine.TRIGGER, loadTeams);
-}
-
-function* watchLoadCurrentTeam() {
-  yield takeEvery(loadCurrentTeamRoutine.TRIGGER, loadCurrentTeam);
-}
-
-function* watchCreateTeam() {
-  yield takeEvery(createTeamRoutine.TRIGGER, createTeam);
-}
-
-function* watchUpdateTeam() {
-  yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam);
-}
-
-function* watchDeleteTeam() {
-  yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam);
-}
-
-function* watchToggleUserTeam() {
-  yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam);
-}
-
-function* watchLoadCompanyUsers() {
-  yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers);
-}
-
 export default function* teamsSaga() {
   yield all([
-    watchLoadTeams(),
-    watchLoadCurrentTeam(),
-    watchCreateTeam(),
-    watchUpdateTeam(),
-    watchDeleteTeam(),
-    watchToggleUserTeam(),
-    watchLoadCompanyUsers()
+    yield takeEvery(loadTeamsRoutine.TRIGGER, loadTeams),
+    yield takeEvery(loadCurrentTeamRoutine.TRIGGER, loadCurrentTeam),
+    yield takeEvery(createTeamRoutine.TRIGGER, createTeam),
+    yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam),
+    yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam),
+    yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam),
+    yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers)
   ]);
 }
