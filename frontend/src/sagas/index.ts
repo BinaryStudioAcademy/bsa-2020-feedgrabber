@@ -1,4 +1,4 @@
-import { all } from 'redux-saga/effects';
+import {all} from 'redux-saga/effects';
 import userSagas from 'sagas/user/sagas';
 import usersSagas from 'sagas/users/sagas';
 import teamsSagas from './teams/sagas';
@@ -10,6 +10,7 @@ import invitationSignUpSagas from "./invitationSignUp/sagas";
 import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
 import answersSaga from './responseAnswers/sagas';
+import requestSaga from "./request/sagas";
 
 export default function* rootSaga() {
   yield all([
@@ -23,6 +24,7 @@ export default function* rootSaga() {
     invitationSignUpSagas(),
     categorieSagas(),
     companiesSaga(),
-    answersSaga()
+    answersSaga(),
+    requestSaga()
   ]);
 }
