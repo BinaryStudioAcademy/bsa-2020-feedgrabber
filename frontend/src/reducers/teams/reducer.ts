@@ -65,17 +65,6 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
         ...state,
         modalShown: false
       };
-    case createTeamRoutine.SUCCESS:
-      return {
-        ...state,
-        modalShown: false,
-        isModalLoading: false
-      };
-    case createTeamRoutine.FAILURE:
-      return {
-        ...state,
-        isModalLoading: false
-      };
 
     case clearCurrentTeamRoutine.TRIGGER:
       return {
@@ -184,6 +173,31 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
         }
       };
     case updateTeamRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          error: action.payload,
+          isLoadingRequest: false
+        }
+      };
+
+    case createTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingRequest: true
+        }
+      };
+    case createTeamRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          currentTeam: action.payload
+        }
+      };
+    case createTeamRoutine.FAILURE:
       return {
         ...state,
         current: {

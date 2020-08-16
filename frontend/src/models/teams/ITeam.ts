@@ -16,6 +16,10 @@ export interface ITeamUpdate {
   name: string;
 }
 
+export interface ITeamCreate {
+  name: string;
+}
+
 export interface ITeamUserToggle {
   teamId: string;
   userId: string;

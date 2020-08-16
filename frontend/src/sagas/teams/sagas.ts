@@ -9,9 +9,8 @@ import {
 import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
-import {ITeamCreationDto} from "../../containers/TeamsPage/teamsModal";
 import {IUserInfo} from "../../models/user/types";
-import {ITeam, ITeamShort, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
+import {ITeam, ITeamCreate, ITeamShort, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
 
 function* loadTeams() {
@@ -35,18 +34,19 @@ function* loadCurrentTeam(action: any) {
   }
 }
 
-function* createTeamTeam(action: any) {
+function* createTeam(action: any) {
   try {
-    const team: ITeamCreationDto = action.payload;
+    const team: ITeamCreate = action.payload;
 
-    yield call(apiClient.post, `api/teams`, team);
-    yield put(createTeamRoutine.success());
+    const response = yield call(apiClient.post, `http://localhost:5000/api/teams`, team);
+    const data = response.data.data;
+    yield put(createTeamRoutine.success(data));
     yield put(loadTeamsRoutine.trigger());
-
+    history.replace(`/teams/${data.id}`);
     toastr.success("Team added");
-
   } catch (errorResponse) {
-    yield put(createTeamRoutine.failure());
+    yield put(createTeamRoutine.failure(errorResponse.data?.error || "No response"));
+    toastr.error("Unable to create Team");
   }
 }
 
@@ -109,7 +109,7 @@ function* watchLoadCurrentTeam() {
 }
 
 function* watchCreateTeam() {
-  yield takeEvery(createTeamRoutine.TRIGGER, createTeamTeam);
+  yield takeEvery(createTeamRoutine.TRIGGER, createTeam);
 }
 
 function* watchUpdateTeam() {

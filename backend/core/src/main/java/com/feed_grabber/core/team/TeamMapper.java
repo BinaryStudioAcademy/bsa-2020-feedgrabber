@@ -4,6 +4,7 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyMapper;
 import com.feed_grabber.core.team.dto.CreateTeamDto;
 import com.feed_grabber.core.team.dto.TeamDto;
+import com.feed_grabber.core.team.dto.UpdateTeamDto;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.model.User;
 import org.mapstruct.Mapper;
@@ -16,9 +17,9 @@ import java.util.List;
 public interface TeamMapper {
     TeamMapper MAPPER = Mappers.getMapper(TeamMapper.class);
 
-    @Mapping(source = "company_id", target = "company.id")
-    @Mapping(target = "users", ignore = true)
-    Team teamDtoToModel(CreateTeamDto teamDto);
+    @Mapping(source = "companyId", target = "company.id")
+    @Mapping(target = "id", ignore = true)
+    Team teamDtoToModel(UpdateTeamDto teamDto);
 
     //TODO Unmapped target property: "companyDto"
 

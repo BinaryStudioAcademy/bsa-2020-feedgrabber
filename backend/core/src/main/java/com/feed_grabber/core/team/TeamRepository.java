@@ -29,7 +29,7 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
 
     Optional<Team> findOneByCompanyIdAndNameAndIdIsNot(UUID companyId, String name, UUID id);
 
-    boolean existsByName(String name);
+    boolean existsByNameAndCompanyId(String name, UUID companyId);
 
     @Transactional
     @Modifying

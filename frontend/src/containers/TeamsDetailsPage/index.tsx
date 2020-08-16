@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import * as yup from 'yup';
 import {IAppState} from "../../models/IAppState";
@@ -15,7 +15,7 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IUserShort} from "../../models/user/types";
-import {ITeam, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
+import {ITeam, ITeamCreate, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
 import UIButton from "../../components/UI/UIButton";
 import styles from './styles.module.sass';
 import {Formik} from "formik";
@@ -36,7 +36,7 @@ export interface ITeamDetailsPageProps {
   updateTeam(team: ITeamUpdate): void;
   toggleUser(request: ITeamUserToggle): void;
   loadCurrentTeam(id: string): void;
-  createTeam(): void;
+  createTeam(team: ITeamCreate): void;
 }
 
 const validationSchema = yup.object().shape({
@@ -65,6 +65,8 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
     isLoadingTeam,
     isLoadingRequest
   }) => {
+  const [isNew, setIsNew] = useState<boolean>(match.params.id === "new");
+
   useEffect(() => {
     if (!companyUsers && !isLoadingUsers && !failedUsers) {
       loadUsers();
@@ -72,28 +74,38 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
   }, [failedUsers, companyUsers, isLoadingUsers, loadUsers]);
 
   useEffect(() => {
-    if (!currentTeam && !isLoadingTeam && !failedTeam && companyUsers) {
+    if (!isNew && !currentTeam && !isLoadingTeam && !failedTeam && companyUsers) {
       loadCurrentTeam(match.params.id);
     }
-  }, [failedTeam, match, currentTeam, isLoadingTeam, loadCurrentTeam, companyUsers]);
+  }, [isNew, failedTeam, match, currentTeam, isLoadingTeam, companyUsers, loadCurrentTeam]);
+
+  useEffect(() => {
+    if (isNew && match.params.id !== "new") {
+      setIsNew(false);
+    }
+  }, [match, isNew]);
 
   const onSubmit = values => {
-    updateTeam({id: currentTeam?.id, name: values.name});
+    if (isNew) {
+      createTeam({name: values.name});
+    } else {
+      updateTeam({id: currentTeam?.id, name: values.name});
+    }
   };
 
   return (
     <>
-      <UIPageTitle title="Edit Team"/>
+      <UIPageTitle title={isNew ? "Add Team" : "Edit Team"}/>
       <UIContent>
         <UIColumn wide>
-          <LoaderWrapper loading={!currentTeam || isLoadingTeam}>
+          <LoaderWrapper loading={!isNew && (!currentTeam || isLoadingTeam)}>
             <UICard>
               <UICardBlock>
                 <h3>Metadata</h3>
               </UICardBlock>
               <UICardBlock>
                 <Formik
-                  initialValues={{name: currentTeam?.name || ""}}
+                  initialValues={{name: (currentTeam?.name || "")}}
                   validationSchema={validationSchema}
                   onSubmit={onSubmit}
                 >
@@ -119,7 +131,12 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
                           value={values.name}
                         />
                         {error && <div>{error}<br/><br/></div>}
-                        <UIButton title="Save" onClick={handleSubmit} submit loading={isLoadingRequest}/>
+                        <UIButton
+                          title={isNew ? "Add" : "Update"}
+                          onClick={handleSubmit}
+                          submit
+                          loading={isLoadingRequest}
+                        />
                       </form>
                     );
                   }}
@@ -128,41 +145,45 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
             </UICard>
           </LoaderWrapper>
         </UIColumn>
-        <UIColumn>
-          <LoaderWrapper loading={isLoadingUsers}>
-            <UICard>
-              <UICardBlock>
-                <h3>Users</h3>
-              </UICardBlock>
-              {(companyUsers || []).map(user => (
-                <UICardBlock key={user.id} className={styles.toggleCardBlock}>
-                  <div className={styles.cardUserBlock}>
-                    <Image src={user.avatar ?? defaultAvatar} size="mini" avatar />
-                    <h4>{user.username}</h4>
-                  </div>
-                  {currentTeam && (
-                    <UIButton
-                      title={user.selected ? "Remove" : "Add"}
-                      secondary={user.selected}
-                      loading={user.loading}
-                      onClick={() => toggleUser({teamId: currentTeam.id, userId: user.id, username: user.username})}
-                    />
-                  )}
+        {!isNew && (
+          <>
+            <UIColumn>
+              <LoaderWrapper loading={isLoadingUsers}>
+                <UICard>
+                  <UICardBlock>
+                    <h3>Users</h3>
+                  </UICardBlock>
+                  {(companyUsers || []).map(user => (
+                    <UICardBlock key={user.id} className={styles.toggleCardBlock}>
+                      <div className={styles.cardUserBlock}>
+                        <Image src={user.avatar ?? defaultAvatar} size="mini" avatar/>
+                        <h4>{user.username}</h4>
+                      </div>
+                      {currentTeam && (
+                        <UIButton
+                          title={user.selected ? "Remove" : "Add"}
+                          secondary={user.selected}
+                          loading={user.loading}
+                          onClick={() => toggleUser({teamId: currentTeam.id, userId: user.id, username: user.username})}
+                        />
+                      )}
+                    </UICardBlock>
+                  ))}
+                </UICard>
+              </LoaderWrapper>
+            </UIColumn>
+            <UIColumn>
+              <UICard>
+                <UICardBlock>
+                  <h3>Requests</h3>
                 </UICardBlock>
-              ))}
-            </UICard>
-          </LoaderWrapper>
-        </UIColumn>
-        <UIColumn>
-          <UICard>
-            <UICardBlock>
-              <h3>Requests</h3>
-            </UICardBlock>
-            <UICardBlock>
-              <p>Here could be requests or something else</p>
-            </UICardBlock>
-          </UICard>
-        </UIColumn>
+                <UICardBlock>
+                  <p>Here could be requests or something else</p>
+                </UICardBlock>
+              </UICard>
+            </UIColumn>
+          </>
+        )}
       </UIContent>
     </>
   );

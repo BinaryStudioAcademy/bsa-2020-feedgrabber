@@ -5,6 +5,7 @@ import LoaderWrapper from "../../LoaderWrapper";
 export interface IUIButtonProps {
   title: string;
   center?: boolean;
+  primary?: boolean;
   secondary?: boolean;
   submit?: boolean;
   loading?: boolean;
@@ -17,6 +18,7 @@ const UIButton: FC<IUIButtonProps> = (
     title,
     center,
     secondary,
+    primary,
     submit,
     onClick,
     loading
@@ -24,11 +26,14 @@ const UIButton: FC<IUIButtonProps> = (
 ) => {
   return (
     <button
-      className={`${styles.uiButton} ${center && styles.uiButtonCenter} ${secondary && styles.uiButtonSecondary}`}
+      className={`${styles.uiButton} 
+                  ${center && styles.uiButtonCenter} 
+                  ${secondary && styles.uiButtonSecondary}
+                  ${primary && styles.uiButtonPrimary}`}
       onClick={() => {
         if (!loading) onClick();
       }}
-      type={submit ? "submit" : "button"}
+      type={submit && !loading ? "submit" : "button"}
     >
       {loading ? "..." : title}
     </button>
