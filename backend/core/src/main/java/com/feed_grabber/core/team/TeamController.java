@@ -4,11 +4,8 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.response.AppResponse;
-import com.feed_grabber.core.team.dto.CreateTeamDto;
-import com.feed_grabber.core.team.dto.TeamDetailsDto;
-import com.feed_grabber.core.team.dto.TeamDto;
+import com.feed_grabber.core.team.dto.*;
 
-import com.feed_grabber.core.team.dto.TeamShortDto;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,14 @@ public class TeamController {
     public AppResponse<TeamDto> createTeam(@RequestBody CreateTeamDto teamDto) throws CompanyNotFoundException, AlreadyExistsException {
         teamDto.setCompany_id(TokenService.getCompanyId());
         return new AppResponse(service.create(teamDto));
+    }
+
+    @ApiOperation("Update team")
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<TeamDto> update(@RequestBody UpdateTeamDto teamDto) throws AlreadyExistsException, TeamNotFoundException {
+        teamDto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse(service.update(teamDto));
     }
 
 }

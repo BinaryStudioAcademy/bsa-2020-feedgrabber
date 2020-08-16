@@ -1,7 +1,13 @@
 import React, {FC, useEffect} from 'react';
 import {connect} from 'react-redux';
+import * as yup from 'yup';
 import {IAppState} from "../../models/IAppState";
-import {createTeamRoutine, loadCompanyUsersRoutine, loadCurrentTeamRoutine} from "../../sagas/teams/routines";
+import {
+  createTeamRoutine,
+  loadCompanyUsersRoutine,
+  loadCurrentTeamRoutine,
+  toggleUserCurrentTeamRoutine, updateTeamRoutine
+} from "../../sagas/teams/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -9,36 +15,51 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IUserShort} from "../../models/user/types";
-import {ITeam} from "../../models/teams/ITeam";
+import {ITeam, ITeamUpdate} from "../../models/teams/ITeam";
 import UIButton from "../../components/UI/UIButton";
 import styles from './styles.module.sass';
+import {Formik} from "formik";
 
 export interface ITeamDetailsPageProps {
   match: any;
   failedTeam?: boolean;
   failedUsers?: boolean;
+  currentTeamError?: string;
   currentTeam?: ITeam;
   companyUsers?: IUserShort[];
   isLoadingUsers?: boolean;
   isLoadingTeam?: boolean;
+  isLoadingRequest?: boolean;
 
   loadUsers(): void;
+  updateTeam(team: ITeamUpdate): void;
+  toggleUser(id: string): void;
   loadCurrentTeam(id: string): void;
   createTeam(): void;
 }
 
+const validationSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required()
+});
+
 const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
   {
     match,
+    currentTeamError,
     currentTeam,
     companyUsers,
     loadUsers,
+    updateTeam,
+    toggleUser,
     loadCurrentTeam,
     createTeam,
     failedTeam,
     failedUsers,
     isLoadingUsers,
-    isLoadingTeam
+    isLoadingTeam,
+    isLoadingRequest
   }) => {
   useEffect(() => {
     if (!companyUsers && !isLoadingUsers && !failedUsers) {
@@ -52,6 +73,10 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
     }
   }, [failedTeam, match, currentTeam, isLoadingTeam, loadCurrentTeam, companyUsers]);
 
+  const onSubmit = values => {
+    updateTeam({id: currentTeam?.id, name: values.name});
+  };
+
   return (
     <>
       <UIPageTitle title="Edit Team"/>
@@ -63,11 +88,43 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
                 <h3>Metadata</h3>
               </UICardBlock>
               <UICardBlock>
-                <h4>Title</h4>
-                <p><b>{currentTeam && currentTeam.name}</b></p>
+                <Formik
+                  initialValues={{name: currentTeam?.name || ""}}
+                  validationSchema={validationSchema}
+                  onSubmit={onSubmit}
+                >
+                  {({
+                      values,
+                      errors,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      touched
+                    }) => {
+                    const error = errors.name || currentTeamError;
+                    return (
+                      <form onSubmit={handleSubmit}>
+                        <label>Team name</label>
+                        <input
+                          id="name"
+                          name="name"
+                          placeholder="Team name"
+                          type="text"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          value={values.name}
+                        />
+                        {error && <div>{error}<br /><br /></div>}
+                        <UIButton title="Save" onClick={handleSubmit} submit loading={isLoadingRequest}/>
+                      </form>
+                    );
+                  }}
+                </Formik>
               </UICardBlock>
             </UICard>
           </LoaderWrapper>
+        </UIColumn>
+        <UIColumn>
           <LoaderWrapper loading={isLoadingUsers}>
             <UICard>
               <UICardBlock>
@@ -76,13 +133,27 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
               {(companyUsers || []).map(user => (
                 <UICardBlock key={user.id} className={styles.toggleCardBlock}>
                   <h4>{user.username}</h4>
-                  {currentTeam && (user.selected
-                    ? <UIButton title="Remove" secondary />
-                    : <UIButton title="Add" />)}
+                  {currentTeam && (
+                    <UIButton
+                      title={user.selected ? "Remove" : "Add"}
+                      secondary={user.selected}
+                      onClick={() => toggleUser(user.id)}
+                    />
+                  )}
                 </UICardBlock>
               ))}
             </UICard>
           </LoaderWrapper>
+        </UIColumn>
+        <UIColumn>
+          <UICard>
+            <UICardBlock>
+              <h3>Requests</h3>
+            </UICardBlock>
+            <UICardBlock>
+              <p>Here could be requests or something else</p>
+            </UICardBlock>
+          </UICard>
         </UIColumn>
       </UIContent>
     </>
@@ -95,6 +166,8 @@ const mapState = (state: IAppState) => {
     isLoadingUsers: state.teams.isLoadingUsers,
     isLoadingTeam: state.teams.current.isLoadingTeam,
     currentTeam: state.teams.current.currentTeam,
+    currentTeamError: state.teams.current.error,
+    isLoadingRequest: state.teams.current.isLoadingRequest,
     failedTeam: state.teams.current.failed,
     failedUsers: state.teams.failedUsers
   };
@@ -103,7 +176,9 @@ const mapState = (state: IAppState) => {
 const mapDispatch = {
   loadUsers: loadCompanyUsersRoutine,
   loadCurrentTeam: loadCurrentTeamRoutine,
-  createTeam: createTeamRoutine
+  createTeam: createTeamRoutine,
+  updateTeam: updateTeamRoutine,
+  toggleUser: toggleUserCurrentTeamRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

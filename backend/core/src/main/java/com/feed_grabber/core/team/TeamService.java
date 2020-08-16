@@ -5,10 +5,8 @@ import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
-import com.feed_grabber.core.team.dto.CreateTeamDto;
-import com.feed_grabber.core.team.dto.TeamDetailsDto;
-import com.feed_grabber.core.team.dto.TeamDto;
-import com.feed_grabber.core.team.dto.TeamShortDto;
+import com.feed_grabber.core.team.dto.*;
+import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
@@ -53,14 +51,23 @@ public class TeamService {
                 .map(TeamMapper.MAPPER::teamToTeamDto);
     }
 
-    public Optional<TeamDto> update(CreateTeamDto teamDto) {
-        return teamRepository.findById(teamDto.getId())
+    public TeamDto update(UpdateTeamDto teamDto) throws TeamNotFoundException, TeamExistsException {
+        var existing =
+                teamRepository.findOneByCompanyIdAndNameAndIdIsNot(
+                        teamDto.getCompanyId(), teamDto.getName(), teamDto.getId()
+                );
+        if (existing.isPresent()) {
+            throw new TeamExistsException();
+        }
+
+        return teamRepository.findOneByCompanyIdAndId(teamDto.getCompanyId(), teamDto.getId())
                 .map(team -> {
                     team.setName(teamDto.getName());
                     teamRepository.save(team);
                     return team;
                 })
-                .map(TeamMapper.MAPPER::teamToTeamDto);
+                .map(TeamMapper.MAPPER::teamToTeamDto)
+                .orElseThrow(TeamNotFoundException::new);
     }
 
     public void delete(UUID id) {
@@ -81,8 +88,8 @@ public class TeamService {
         t.setCompany(company);
         t.setUsers(users);
 
-       Team savedTeam = teamRepository.save(t);
+        Team savedTeam = teamRepository.save(t);
 
-       return TeamMapper.MAPPER.teamToTeamDto(savedTeam);
+        return TeamMapper.MAPPER.teamToTeamDto(savedTeam);
     }
 }

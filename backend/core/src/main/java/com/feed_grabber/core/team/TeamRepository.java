@@ -25,5 +25,7 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
 
     public Optional<Team> findOneByCompanyIdAndId(UUID companyId, UUID id);
 
+    public Optional<Team> findOneByCompanyIdAndNameAndIdIsNot(UUID companyId, String name, UUID id);
+
     boolean existsByName(String name);
 }

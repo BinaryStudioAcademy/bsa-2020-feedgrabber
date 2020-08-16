@@ -1,11 +1,17 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {createTeamRoutine, loadCompanyUsersRoutine, loadCurrentTeamRoutine, loadTeamsRoutine} from './routines';
+import {
+  createTeamRoutine,
+  loadCompanyUsersRoutine,
+  loadCurrentTeamRoutine,
+  loadTeamsRoutine,
+  updateTeamRoutine
+} from './routines';
 import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
 import {ITeamCreationDto} from "../../containers/TeamsPage/teamsModal";
 import {IUserInfo} from "../../models/user/types";
-import {ITeam, ITeamShort} from "../../models/teams/ITeam";
+import {ITeam, ITeamShort, ITeamUpdate} from "../../models/teams/ITeam";
 
 function* loadTeams() {
   try {
@@ -42,6 +48,20 @@ function* createTeamTeam(action: any) {
   }
 }
 
+function* updateTeam(action: any) {
+  try {
+    const team: ITeamUpdate = action.payload;
+
+    yield call(apiClient.put, `http://localhost:5000/api/teams`, team);
+    yield put(updateTeamRoutine.success());
+    yield put(loadTeamsRoutine.trigger());
+    toastr.success("Team metadata updated");
+  } catch (errorResponse) {
+    yield put(updateTeamRoutine.failure(errorResponse.data.error || "No response"));
+    toastr.error("Unable to update Team metadata");
+  }
+}
+
 function* loadCompanyUsers() {
   try{
     const res: IGeneric<IUserInfo> = yield call(apiClient.get, `http://localhost:5000/api/user/all/list`);
@@ -64,6 +84,10 @@ function* watchCreateTeam() {
   yield takeEvery(createTeamRoutine.TRIGGER, createTeamTeam);
 }
 
+function* watchUpdateTeam() {
+  yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam);
+}
+
 function* watchLoadCompanyUsers() {
   yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers);
 }
@@ -73,6 +97,7 @@ export default function* teamsSaga() {
     watchLoadTeams(),
     watchLoadCurrentTeam(),
     watchCreateTeam(),
+    watchUpdateTeam(),
     watchLoadCompanyUsers()
   ]);
 }
