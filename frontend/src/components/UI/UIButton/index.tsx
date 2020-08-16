@@ -8,7 +8,7 @@ export interface IUIButtonProps {
   type?: 'button'|'submit'|'reset';
 }
 
-const UIButton: FC<IUIButtonProps> = ({ title, onClick, disabled, title}) => {
+const UIButton: FC<IUIButtonProps> = ({ title, onClick, disabled, type}) => {
   return (
     <button className={styles.uiButton} disabled={disabled} onClick={onClick} type={type}>
       {title}
