@@ -63,7 +63,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                     clearCurrentTeam();
                     history.push(`/teams/${team.id}`);
                   }}/>
-                  <UIButton title="Delete" secondary loading={team.deleteLoading}
+                  <UIButton title="Delete" secondary loading={team.deleteLoading} disabled={team.deleteLoading}
                             onClick={() => deleteTeam(team.id)}/>
                 </UICardBlock>
               </UICard>

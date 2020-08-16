@@ -136,6 +136,7 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
                           onClick={handleSubmit}
                           submit
                           loading={isLoadingRequest}
+                          disabled={isLoadingRequest}
                         />
                       </form>
                     );
@@ -164,6 +165,7 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
                           title={user.selected ? "Remove" : "Add"}
                           secondary={user.selected}
                           loading={user.loading}
+                          disabled={user.loading}
                           onClick={() => toggleUser({teamId: currentTeam.id, userId: user.id, username: user.username})}
                         />
                       )}
