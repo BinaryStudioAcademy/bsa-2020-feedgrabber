@@ -29,7 +29,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
             <div className={styles.questionField}>
                 <Label className={styles.label}>Type of file</Label>
                 <Dropdown
-                    className={styles.inputField} name="fileType" selection placeholder="Choose file type"
+                    className={styles.inputField} name="filesType" selection placeholder="Choose file type"
                     options={options} value={values.fileType}
                     onChange={(e, data) => {
                         onValueChange(
@@ -41,7 +41,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                     }}
                 />
                 <div className={styles.errorMessage}>
-                    <ErrorMessage name={"fileType"} />
+                    <ErrorMessage name={"filesType"} />
                 </div>
             </div>
             <QuestionField

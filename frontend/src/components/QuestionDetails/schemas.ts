@@ -38,15 +38,15 @@ export const checkboxSchema = Yup.object().shape({
 
 export const fileUploadSchema = Yup.object().shape({
     name: Yup.string().required('required'),
-    fileType: Yup.string().required('Choose file type'),
-    fileNumber: Yup.number()
+    filesType: Yup.string().required('Choose file type'),
+    filesNumber: Yup.number()
         .typeError("Enter number")
         .positive("Number must be positive")
         .integer("Number must be integer")
         .min(1, "At least 1 file")
         .max(10, "Maximum files: 10")
         .required("Enter number of files"),
-    fileSize: Yup.number("Enter number")
+    filesSize: Yup.number("Enter number")
         .typeError("Enter number")
         .positive("Number must be positive")
         .integer("Number must be integer")
