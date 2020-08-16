@@ -72,7 +72,7 @@ export interface IDateQuestion extends IQuestionBase<{}> {
     type: QuestionType.date;
 }
 
-export interface IFileUploadQuestion extends IQuestionBase<IFileUploadDetails> {
+export interface IFileUploadQuestion extends IQuestionBase<IFileUploadAnswerDetails> {
     type: QuestionType.fileUpload;
 }
 

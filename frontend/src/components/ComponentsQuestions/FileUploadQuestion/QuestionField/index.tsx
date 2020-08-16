@@ -8,6 +8,8 @@ interface IQuestionFieldProps {
     name: string;
     type: string;
     inputProps?: any;
+    value?: number;
+    onChange?: any;
 }
 
 const QuestionField: React.FC<IQuestionFieldProps> = data => {
@@ -15,7 +17,10 @@ const QuestionField: React.FC<IQuestionFieldProps> = data => {
     return (
         <div className={styles.questionField}>
             <Label className={styles.label}>{data.label}</Label>
-            <Input className={styles.inputField} type={data.type} {...field} {...data.inputProps} />
+            <Input className={styles.inputField}
+                   type={data.type} {...field} {...data.inputProps}
+                   value={data.value} onChange={data.onChange}
+            />
             <div className={styles.errorMessage}>
                 <ErrorMessage {...field} />
             </div>
