@@ -16,14 +16,6 @@ import java.util.UUID;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, UUID> {
-    @Query("SELECT new com.feed_grabber.core.team.dto.TeamShortDto(" +
-            "   t.id," +
-            "   t.name," +
-            "   t.users.size" +
-            ") " +
-            "FROM Team t " +
-            "WHERE t.company.id = :companyId")
-    List<TeamShortDto> findAllByCompanyId(UUID companyId);
 
     Optional<Team> findOneByCompanyIdAndId(UUID companyId, UUID id);
 
@@ -55,4 +47,13 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
             value = "DELETE FROM users_teams ut " +
                     "WHERE ut.team_id = :teamId AND ut.user_id = :userId")
     void deleteUser(UUID teamId, UUID userId);
+
+    @Query("SELECT new com.feed_grabber.core.team.dto.TeamShortDto(" +
+            "   t.id," +
+            "   t.name," +
+            "   t.users.size" +
+            ") " +
+            "FROM Team t " +
+            "WHERE t.company.id = :companyId")
+    List<TeamShortDto> findAllByCompanyId(UUID companyId);
 }

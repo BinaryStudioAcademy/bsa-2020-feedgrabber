@@ -1,7 +1,6 @@
 package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.team.dto.*;
 import com.feed_grabber.core.team.exceptions.TeamExistsException;
@@ -24,14 +23,10 @@ public class TeamService {
     @Autowired
     private TeamRepository teamRepository;
     @Autowired
-    private CompanyRepository companyRepository;
-    @Autowired
     private UserRepository userRepository;
 
     public List<TeamShortDto> getAllByCompany_Id(UUID companyId) {
-
-        return teamRepository
-                .findAllByCompanyId(companyId);
+        return teamRepository.findAllByCompanyId(companyId);
     }
 
     public TeamDetailsDto getOne(UUID companyId, UUID id) throws TeamNotFoundException {
@@ -46,16 +41,10 @@ public class TeamService {
         return new TeamDetailsDto(team.getId(), team.getName(), ids);
     }
 
-    public Optional<TeamDto> getById(UUID id) {
-        return teamRepository.findById(id)
-                .map(TeamMapper.MAPPER::teamToTeamDto);
-    }
-
-    public TeamDto update(UpdateTeamDto teamDto) throws TeamNotFoundException, TeamExistsException {
-        var existing =
-                teamRepository.findOneByCompanyIdAndNameAndIdIsNot(
-                        teamDto.getCompanyId(), teamDto.getName(), teamDto.getId()
-                );
+    public TeamDto update(RequestTeamDto teamDto) throws TeamNotFoundException, TeamExistsException {
+        var existing = teamRepository.findOneByCompanyIdAndNameAndIdIsNot(
+                teamDto.getCompanyId(), teamDto.getName(), teamDto.getId()
+        );
         if (existing.isPresent()) {
             throw new TeamExistsException();
         }
@@ -89,16 +78,15 @@ public class TeamService {
         }
     }
 
-    public TeamDetailsDto create(UpdateTeamDto teamDto) throws AlreadyExistsException {
-
+    public TeamDetailsDto create(RequestTeamDto teamDto) throws AlreadyExistsException {
         if (teamRepository.existsByNameAndCompanyId(teamDto.getName(), teamDto.getCompanyId())) {
             throw new AlreadyExistsException("Such team already exists in this company");
         }
 
-        Team t = TeamMapper.MAPPER.teamDtoToModel(teamDto);
-        t = teamRepository.save(t);
+        Team team = TeamMapper.MAPPER.teamDtoToModel(teamDto);
+        team = teamRepository.save(team);
 
-        return new TeamDetailsDto(t.getId(), t.getName(), Collections.emptyList());
+        return new TeamDetailsDto(team.getId(), team.getName(), Collections.emptyList());
     }
 
     public void delete(UUID id, UUID companyId) {

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @ToString
 @AllArgsConstructor
-public class UpdateTeamDto {
+public class RequestTeamDto {
     UUID id;
     String name;
     UUID companyId;
