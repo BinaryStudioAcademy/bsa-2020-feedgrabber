@@ -33,6 +33,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     };
 
     useEffect(() => {
+        loadQuestion('empty');
         loadCategories();
     }, [loadCategories]);
 
@@ -47,7 +48,6 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     }, [currentQuestion]);
 
     const onClose = () => {
-        loadQuestion('empty');
         isPreview ? isPreview.close() : history.push("/questions");
     };
 
