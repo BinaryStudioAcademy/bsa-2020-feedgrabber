@@ -34,6 +34,6 @@ export const questionTypeOptions = [
     {
         key: "fileUpload",
         text: "File upload",
-        value: "fileUpload"
+        value: QuestionType.fileUpload
     }
 ];
