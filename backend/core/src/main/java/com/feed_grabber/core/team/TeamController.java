@@ -66,4 +66,12 @@ public class TeamController {
         return new AppResponse<>(service.toggleUser(requestDto));
     }
 
+    @ApiOperation("Delete User")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<Boolean> delete(@PathVariable UUID id) {
+        service.delete(id, TokenService.getCompanyId());
+        return new AppResponse<>(true);
+    }
+
 }

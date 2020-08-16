@@ -90,10 +90,6 @@ public class TeamService {
         }
     }
 
-    public void delete(UUID id) {
-        teamRepository.deleteById(id);
-    }
-
     public TeamDto create(CreateTeamDto teamDto) throws CompanyNotFoundException, AlreadyExistsException {
 
         if (teamRepository.existsByName(teamDto.getName())) {
@@ -111,5 +107,9 @@ public class TeamService {
         Team savedTeam = teamRepository.save(t);
 
         return TeamMapper.MAPPER.teamToTeamDto(savedTeam);
+    }
+
+    public void delete(UUID id, UUID companyId) {
+        teamRepository.deleteByIdAndCompanyId(id, companyId);
     }
 }

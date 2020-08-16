@@ -3,7 +3,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {IAppState} from "../../models/IAppState";
 import {
   clearCurrentTeamRoutine,
-  createTeamRoutine,
+  createTeamRoutine, deleteTeamRoutine,
   hideModalTeamsRoutine, loadCompanyUsersRoutine,
   loadTeamsRoutine,
   showModalTeamsRoutine
@@ -28,6 +28,7 @@ const TeamList: FC<ITeamListProps> = (
     modalShown,
     showModal,
     hideModal,
+    deleteTeam,
     clearCurrentTeam,
     createTeam,
     isModalLoading,
@@ -55,13 +56,6 @@ const TeamList: FC<ITeamListProps> = (
                 <UICardBlock>
                   <h3>{team.name}</h3>
                 </UICardBlock>
-                {/* <UICardBlock>*/}
-                {/* {team.members.slice(0, 7).map(user => (*/}
-                {/*  <Image avatar src={user.avatar} key={user.id}/>*/}
-                {/* ))}*/}
-                {/* {team.members.length > 2 &&*/}
-                {/* <Icon name="angle right" size="large"/>}*/}
-                {/* </UICardBlock>*/}
                 <UICardBlock>
                   <Icon name="users"/>{team.membersAmount} Member(s)
                 </UICardBlock>
@@ -70,7 +64,8 @@ const TeamList: FC<ITeamListProps> = (
                     clearCurrentTeam();
                     history.push(`/teams/${team.id}`);
                   }}/>
-                  <UIButton title="Delete" secondary/>
+                  <UIButton title="Delete" secondary loading={team.deleteLoading}
+                            onClick={() => deleteTeam(team.id)}/>
                 </UICardBlock>
               </UICard>
             </UIColumn>
@@ -103,6 +98,7 @@ const mapDispatch = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
   createTeam: createTeamRoutine,
+  deleteTeam: deleteTeamRoutine,
   showModal: showModalTeamsRoutine,
   hideModal: hideModalTeamsRoutine,
   clearCurrentTeam: clearCurrentTeamRoutine

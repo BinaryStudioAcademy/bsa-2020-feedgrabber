@@ -31,6 +31,10 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
 
     boolean existsByName(String name);
 
+    @Transactional
+    @Modifying
+    void deleteByIdAndCompanyId(UUID id, UUID companyId);
+
     @Query(nativeQuery = true,
             value = "SELECT (EXISTS( " +
                     "SELECT * " +

@@ -10,3 +10,4 @@ export const clearCurrentTeamRoutine = createRoutine('TEAMS:CLEAR_CURRENT');
 export const loadCurrentTeamRoutine = createRoutine('TEAMS:LOAD_CURRENT');
 export const toggleUserCurrentTeamRoutine = createRoutine('TEAMS:TOGGLE_USER');
 export const updateTeamRoutine = createRoutine('TEAMS:UPDATE_METADATA');
+export const deleteTeamRoutine = createRoutine('TEAMS:DELETE');

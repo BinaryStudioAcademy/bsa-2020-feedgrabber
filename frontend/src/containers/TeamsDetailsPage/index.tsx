@@ -33,13 +33,9 @@ export interface ITeamDetailsPageProps {
   isLoadingRequest?: boolean;
 
   loadUsers(): void;
-
   updateTeam(team: ITeamUpdate): void;
-
   toggleUser(request: ITeamUserToggle): void;
-
   loadCurrentTeam(id: string): void;
-
   createTeam(): void;
 }
 

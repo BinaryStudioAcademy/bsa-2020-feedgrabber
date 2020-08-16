@@ -1,6 +1,6 @@
 import {
   clearCurrentTeamRoutine,
-  createTeamRoutine,
+  createTeamRoutine, deleteTeamRoutine,
   hideModalTeamsRoutine, loadCompanyUsersRoutine, loadCurrentTeamRoutine,
   loadTeamsRoutine,
   showModalTeamsRoutine, toggleUserCurrentTeamRoutine, updateTeamRoutine
@@ -191,6 +191,18 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
           error: action.payload,
           isLoadingRequest: false
         }
+      };
+
+    case deleteTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        teams: (state.teams || []).map(t => t.id === action.payload ? {...t, deleteLoading: true} : t)
+      };
+    case deleteTeamRoutine.SUCCESS:
+    case deleteTeamRoutine.FAILURE:
+      return {
+        ...state,
+        teams: (state.teams || []).map(t => t.id === action.payload ? {...t, deleteLoading: false} : t)
       };
 
     default:

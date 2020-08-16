@@ -1,6 +1,6 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {
-  createTeamRoutine,
+  createTeamRoutine, deleteTeamRoutine,
   loadCompanyUsersRoutine,
   loadCurrentTeamRoutine,
   loadTeamsRoutine, toggleUserCurrentTeamRoutine,
@@ -12,6 +12,7 @@ import {IGeneric} from "../../models/IGeneric";
 import {ITeamCreationDto} from "../../containers/TeamsPage/teamsModal";
 import {IUserInfo} from "../../models/user/types";
 import {ITeam, ITeamShort, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
+import {history} from "../../helpers/history.helper";
 
 function* loadTeams() {
   try {
@@ -29,7 +30,8 @@ function* loadCurrentTeam(action: any) {
     yield put(loadCurrentTeamRoutine.success(res.data.data));
   } catch (error) {
     yield put(loadCurrentTeamRoutine.failure());
-    toastr.error(error.data.error);
+    toastr.error("Unable to load team");
+    history.push("/teams");
   }
 }
 
@@ -57,8 +59,21 @@ function* updateTeam(action: any) {
     yield put(loadTeamsRoutine.trigger());
     toastr.success("Team metadata updated");
   } catch (errorResponse) {
-    yield put(updateTeamRoutine.failure(errorResponse.data.error || "No response"));
+    yield put(updateTeamRoutine.failure(errorResponse.data?.error || "No response"));
     toastr.error("Unable to update Team metadata");
+  }
+}
+
+function* deleteTeam(action: any) {
+  try {
+    const id: string = action.payload;
+    yield call(apiClient.delete, `http://localhost:5000/api/teams/${id}`);
+    yield put(deleteTeamRoutine.success());
+    yield put(loadTeamsRoutine.trigger());
+    toastr.success("Team deleted");
+  } catch (errorResponse) {
+    yield put(updateTeamRoutine.failure());
+    toastr.error(errorResponse.data?.error || "No response");
   }
 }
 
@@ -101,6 +116,10 @@ function* watchUpdateTeam() {
   yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam);
 }
 
+function* watchDeleteTeam() {
+  yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam);
+}
+
 function* watchToggleUserTeam() {
   yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam);
 }
@@ -115,6 +134,7 @@ export default function* teamsSaga() {
     watchLoadCurrentTeam(),
     watchCreateTeam(),
     watchUpdateTeam(),
+    watchDeleteTeam(),
     watchToggleUserTeam(),
     watchLoadCompanyUsers()
   ]);
