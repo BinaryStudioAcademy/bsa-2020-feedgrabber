@@ -19,6 +19,22 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    hostname: "rabbit"
+    env_file:
+      - ../.env/rabbitmq.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
   # api
   api:
     image: 'fg-core:latest'
@@ -53,21 +69,6 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  # RabbitMQ
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: 'rabbitmq'
-    hostname: "rabbit"
-    env_file:
-      - ~/.env/rabbitmq.env
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   # Frontend
   client:
