@@ -2,6 +2,7 @@ import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {IAppState} from "../../models/IAppState";
 import {
+  clearCurrentTeamRoutine,
   createTeamRoutine,
   hideModalTeamsRoutine, loadCompanyUsersRoutine,
   loadTeamsRoutine,
@@ -15,6 +16,8 @@ import TeamsModal from "./teamsModal";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
+import LoaderWrapper from "../../components/LoaderWrapper";
+import {history} from "../../helpers/history.helper";
 
 const TeamList: FC<ITeamListProps> = (
   {
@@ -25,46 +28,62 @@ const TeamList: FC<ITeamListProps> = (
     modalShown,
     showModal,
     hideModal,
+    clearCurrentTeam,
     createTeam,
-    isModalLoading
+    isModalLoading,
+    isLoading
   }) => {
   useEffect(() => {
-    loadTeams();
-    loadUsers();
-  }, [loadTeams, loadUsers]);
+    if (!teams && !isLoading) {
+      loadTeams();
+    }
+  }, [teams, isLoading, loadTeams, loadUsers]);
 
   return (
     <>
-      <UIPageTitle title="Teams List" />
+      <UIPageTitle title="Teams List"/>
       <UIContent>
-        <UIColumn wide>
-          <UIButton title="Add Team" onClick={showModal} center />
+        {/* <UIColumn wide>*/}
+        <LoaderWrapper loading={isLoading}>
+          <UIColumn wide>
+            <UIButton title="Add Team" onClick={showModal} center/>
+          </UIColumn>
 
-          {teams.map(team => (
-            <UICard key={team.id}>
-              <UICardBlock>
-                <h3>{team.name}</h3>
-              </UICardBlock>
-              <UICardBlock>
+          {(teams || []).map(team => (
+            <UIColumn>
+              <UICard key={team.id}>
+                <UICardBlock>
+                  <h3>{team.name}</h3>
+                </UICardBlock>
+                {/* <UICardBlock>*/}
                 {/* {team.members.slice(0, 7).map(user => (*/}
                 {/*  <Image avatar src={user.avatar} key={user.id}/>*/}
                 {/* ))}*/}
                 {/* {team.members.length > 2 &&*/}
                 {/* <Icon name="angle right" size="large"/>}*/}
-              </UICardBlock>
-              <UICardBlock>
-                <Icon name="users"/>{team.members.length} Member(s)
-              </UICardBlock>
-            </UICard>
+                {/* </UICardBlock>*/}
+                <UICardBlock>
+                  <Icon name="users"/>{team.membersAmount} Member(s)
+                </UICardBlock>
+                <UICardBlock>
+                  <UIButton title="Manage" onClick={() => {
+                    clearCurrentTeam();
+                    history.push(`/teams/${team.id}`);
+                  }}/>
+                  <UIButton title="Delete" secondary/>
+                </UICardBlock>
+              </UICard>
+            </UIColumn>
           ))}
-        </UIColumn>
+        </LoaderWrapper>
+        {/* </UIColumn>*/}
       </UIContent>
       <TeamsModal
         modalShown={modalShown}
         hideModal={hideModal}
         createTeam={createTeam}
         isModalLoading={isModalLoading}
-        companyUsers={companyUsers}
+        companyUsers={[]}
       />
     </>
   );
@@ -85,7 +104,8 @@ const mapDispatch = {
   loadUsers: loadCompanyUsersRoutine,
   createTeam: createTeamRoutine,
   showModal: showModalTeamsRoutine,
-  hideModal: hideModalTeamsRoutine
+  hideModal: hideModalTeamsRoutine,
+  clearCurrentTeam: clearCurrentTeamRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

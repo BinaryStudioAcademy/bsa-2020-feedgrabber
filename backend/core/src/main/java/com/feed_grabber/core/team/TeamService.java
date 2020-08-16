@@ -1,12 +1,18 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.team.dto.CreateTeamDto;
+import com.feed_grabber.core.team.dto.TeamDetailsDto;
 import com.feed_grabber.core.team.dto.TeamDto;
+import com.feed_grabber.core.team.dto.TeamShortDto;
+import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +30,22 @@ public class TeamService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<TeamDto> getAllByCompany_Id(UUID companyId) {
+    public List<TeamShortDto> getAllByCompany_Id(UUID companyId) {
 
         return teamRepository
-                .findAllByCompanyId(companyId)
+                .findAllByCompanyId(companyId);
+    }
+
+    public TeamDetailsDto getOne(UUID companyId, UUID id) throws TeamNotFoundException {
+        var team = teamRepository.findOneByCompanyIdAndId(companyId, id)
+                .orElseThrow(TeamNotFoundException::new);
+
+        var ids = team.getUsers()
                 .stream()
-                .map(TeamMapper.MAPPER::teamToTeamDto)
+                .map(User::getId)
                 .collect(Collectors.toList());
+
+        return new TeamDetailsDto(team.getId(), team.getName(), ids);
     }
 
     public Optional<TeamDto> getById(UUID id) {

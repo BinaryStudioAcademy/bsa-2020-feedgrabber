@@ -24,6 +24,7 @@ import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 
 import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
+import TeamDetailsPage from "../TeamsDetailsPage";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -59,6 +60,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/teams" component={TeamsPage} />
+          <PrivateRoute exact path="/teams/:id" component={TeamDetailsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/response/:id" component={QuestionnareResponse} />

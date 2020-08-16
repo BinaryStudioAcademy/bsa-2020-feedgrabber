@@ -1,28 +1,37 @@
 import {
+  clearCurrentTeamRoutine,
   createTeamRoutine,
-  hideModalTeamsRoutine, loadCompanyUsersRoutine,
+  hideModalTeamsRoutine, loadCompanyUsersRoutine, loadCurrentTeamRoutine,
   loadTeamsRoutine,
   showModalTeamsRoutine
 } from '../../sagas/teams/routines';
-import { Routine } from 'redux-saga-routines';
-import { ITeam } from 'models/teams/ITeam';
-import {IUserInfo} from "../../models/user/types";
+import {Routine} from 'redux-saga-routines';
+import {ITeam, ITeamShort} from 'models/teams/ITeam';
+import {IUserShort} from "../../models/user/types";
+
+export interface ITeamCurrent {
+  failed?: boolean;
+  isLoadingTeam?: boolean;
+  currentTeam?: ITeam;
+}
 
 export interface ITeamsState {
-  teams: ITeam[];
+  teams?: ITeamShort[];
   isLoading: boolean;
   modalShown: boolean;
   isModalLoading: boolean;
-  companyUsers: IUserInfo[];
+  companyUsers?: IUserShort[];
+  failedUsers?: boolean;
+  isLoadingUsers?: boolean;
+  current: ITeamCurrent;
   error?: string;
 }
 
 const initState: ITeamsState = {
-  teams: [],
-  companyUsers: [],
   isLoading: false,
   modalShown: false,
-  isModalLoading: false
+  isModalLoading: false,
+  current: {}
 };
 
 const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
@@ -39,7 +48,6 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
         isLoading: true
       };
     case loadTeamsRoutine.FAILURE:
-    case loadCompanyUsersRoutine.FAILURE:
       return {
         ...state,
         error: action.payload,
@@ -66,11 +74,59 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
         ...state,
         isModalLoading: false
       };
+
+    case clearCurrentTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        companyUsers: state.companyUsers ? state.companyUsers.map(u => ({...u, selected: undefined})) : undefined,
+        current: {}
+      };
+
+    case loadCurrentTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeam: true
+        }
+      };
+    case loadCurrentTeamRoutine.SUCCESS:
+      const team: ITeam = action.payload;
+      return {
+        ...state,
+        companyUsers: state.companyUsers.map(u => (team.membersId.includes(u.id) ? {...u, selected: true} : u)),
+        current: {
+          ...state.current,
+          isLoadingTeam: false,
+          currentTeam: team
+        }
+      };
+    case loadCurrentTeamRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeam: false,
+          failed: true
+        }
+      };
+
+    case loadCompanyUsersRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoadingUsers: true
+      };
     case loadCompanyUsersRoutine.SUCCESS:
       return {
         ...state,
         companyUsers: action.payload,
-        isLoading: false
+        isLoadingUsers: false
+      };
+    case loadCompanyUsersRoutine.FAILURE:
+      return {
+        ...state,
+        isLoadingUsers: false,
+        failedUsers: true
       };
     default:
       return state;

@@ -1,9 +1,11 @@
-import { ICompany } from "../companies/ICompany";
-import {IUserShort} from "../user/types";
+export interface ITeamShort {
+  id: string;
+  name: string;
+  membersAmount: number;
+}
 
 export interface ITeam {
   id: string;
   name: string;
-  company: ICompany;
-  members: IUserShort[];
+  membersId: string[];
 }
