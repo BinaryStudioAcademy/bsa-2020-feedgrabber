@@ -29,12 +29,10 @@ export interface IScaleDetails {
     maxDescription: string;
 }
 
-export interface IFileUploadDetails {
-    answers: {
-        fileType: string;
-        fileNumber: number;
-        fileSize: number;
-    };
+export interface IFileUploadAnswerDetails {
+    filesType: string;
+    filesNumber: number;
+    filesSize: number;
 }
 
 export interface IQuestionBase<TDetails>{
