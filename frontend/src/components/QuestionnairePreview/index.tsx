@@ -1,9 +1,8 @@
 import ResponseQuestion from "components/ResponseQuestion";
-import { History } from "history";
 import { IAppState } from "models/IAppState";
 import React, { FC } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { Button, Header } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
 const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ questions }) => {

@@ -1,7 +1,6 @@
 export interface IMultiAnswerDetails {
     answerOptions: string[];
 }
-
 export interface ICheckboxAnswerDetails {
     answerOptions: string[];
     includeOther: boolean;
@@ -18,7 +17,6 @@ export interface IScaleDetails {
     max: number;
     maxDescription: string;
 }
-
 export interface ICheckboxAnswerDetails {
     answerOptions: string[];
     includeOther: boolean;
@@ -31,20 +29,23 @@ export interface IScaleDetails {
     maxDescription: string;
 }
 
-export interface IFileUploadAnswerDetails {
-    filesType: string;
-    filesNumber: number;
-    filesSize: number;
+export interface IFileUploadDetails {
+    answers: {
+        fileType: string;
+        fileNumber: number;
+        fileSize: number;
+    };
 }
 
-export interface IQuestionBase<TDetails> {
-    id: string;
-    name: string;
-    categoryTitle: string;
-    type: QuestionType;
-    details: TDetails;
-    answer: any;
-    isReused: boolean;
+export interface IQuestionBase<TDetails>{
+  id: string;
+  name: string;
+  index?: number;
+  categoryTitle: string;
+  type: QuestionType;
+  details: TDetails;
+  answer: any;
+  isReused: boolean;
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {
@@ -93,3 +94,7 @@ export enum QuestionType {
     date = "date",
     fileUpload = "fileUpload"
 }
+
+export const DraggableItemTypes = {
+  QUESTION_CARD: 'question_card'
+};
