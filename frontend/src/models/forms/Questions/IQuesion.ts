@@ -32,7 +32,7 @@ export interface IScaleDetails {
 }
 
 export interface IFileUploadAnswerDetails {
-    fileType: string;
+    filesType: string;
     filesNumber: number;
     filesSize: number;
 }

@@ -19,7 +19,7 @@ const options = types.map(option => {
 const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
     ({value: propValue, onValueChange}) => {
         const values = useInitValue(
-            {value: {fileType: "", filesNumber: 1, filesSize: 10}, isCompleted: false},
+            {value: {filesType: "", filesNumber: 1, filesSize: 10}, isCompleted: false},
             propValue,
             onValueChange
         );
@@ -30,7 +30,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 <Label className={styles.label}>Type of file</Label>
                 <Dropdown
                     className={styles.inputField} name="filesType" selection placeholder="Choose file type"
-                    options={options} value={values.fileType}
+                    options={options} value={values.filesType}
                     onChange={(e, data) => {
                         onValueChange(
                             validState({
