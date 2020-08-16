@@ -1,10 +1,9 @@
 package com.feed_grabber.core.question;
 
 import com.feed_grabber.core.auth.security.TokenService;
-import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.question.dto.AddExistingQuestionDto;
+import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
@@ -17,6 +16,7 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundExcep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -89,24 +89,28 @@ public class QuestionService {
         return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question.build()));
     }
 
-    public QuestionDto addExistingQuestion(AddExistingQuestionDto dto)
+    @Transactional
+    public List<QuestionDto> addExistingQuestion(AddExistingQuestionsDto dto)
             throws QuestionNotFoundException, QuestionnaireNotFoundException {
-
-        var question = quesRep
-                .findById(dto.getQuestionId())
-                .orElseThrow(QuestionNotFoundException::new);
 
         var questionnaire = anketRep
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
 
-        if (question.getQuestionnaires() == null) {
-            question.setQuestionnaires(List.of(questionnaire));
-        } else {
-            question.getQuestionnaires().add(questionnaire);
+        questionnaire.getQuestions().addAll(dto.getQuestions());
+
+        try {
+            anketRep.save(questionnaire);
+        } catch (Throwable e) {
+            throw new QuestionNotFoundException();
         }
 
-        return QuestionMapper.MAPPER.questionToQuestionDto(quesRep.save(question));
+        return questionnaire
+                .getQuestions()
+                .stream()
+                .filter(dto.getQuestions()::contains)
+                .map(QuestionMapper.MAPPER::questionToQuestionDto)
+                .collect(Collectors.toList());
     }
 
     public QuestionDto update(QuestionUpdateDto dto)

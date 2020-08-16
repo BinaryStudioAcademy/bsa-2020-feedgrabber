@@ -1,16 +1,17 @@
 import {
-  addQuestionnaireRoutine,
-  deleteQuestionnaireRoutine,
-  hideModalQuestionnaireRoutine,
-  loadQuestionnairesRoutine, setQuestionnairePaginationRoutine,
-  showModalQuestionnaireRoutine,
-  updateQuestionnaireRoutine,
-  loadCurrentQuestionnaireRoutine
+    addQuestionnaireRoutine,
+    deleteQuestionnaireRoutine,
+    hideModalQuestionnaireRoutine,
+    loadOneQuestionnaireRoutine,
+    loadQuestionnairesRoutine,
+    setQuestionnairePaginationRoutine,
+    showModalQuestionnaireRoutine,
+    updateQuestionnaireRoutine
 } from '../../sagas/qustionnaires/routines';
-import {IAppState} from "../../models/IAppState";
-import {combineReducers} from "redux";
+import { IAppState } from "../../models/IAppState";
+import { combineReducers } from "redux";
 import {addSelectedQuestionsRoutine, loadQuestionnaireQuestionsRoutine} from "../../sagas/questions/routines";
-import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
+import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
 
 const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {
     switch (action.type) {
@@ -72,22 +73,44 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
 };
 
 const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] =
-                                         {questions:[], get:{} as IQuestionnaire}, {payload, type}) => {
+    { questions: [], get: {} as IQuestionnaire }, { payload, type }) => {
     switch (type) {
-        case addSelectedQuestionsRoutine.TRIGGER:
+        case addSelectedQuestionsRoutine.SUCCESS:
             return {
                 ...state,
-                questions : [...state.questions, ...payload]
+                questions : [...state.questions, ...payload],
+                isLoading: false
             };
-        case loadCurrentQuestionnaireRoutine.SUCCESS:
+        case loadOneQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
-                get: payload
+                get: payload,
+                isLoading: false
             };
         case loadQuestionnaireQuestionsRoutine.SUCCESS:
             return {
                 ...state,
-                questions: [...state.questions, ...payload]
+                questions: payload,
+                isLoading: false
+            };
+        case loadOneQuestionnaireRoutine.TRIGGER:
+        case loadQuestionnaireQuestionsRoutine.TRIGGER:
+        case addSelectedQuestionsRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case loadQuestionnaireQuestionsRoutine.FAILURE:
+        case addSelectedQuestionsRoutine.FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                questions: payload
+            };
+        case loadOneQuestionnaireRoutine.FAILURE:
+            return {
+                ...state,
+                get: {}
             };
         default:
             return state;
