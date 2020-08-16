@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { QuestionCard } from './QuestionCard';
-import update from 'immutability-helper';
-import {IQuestion, QuestionType} from "models/forms/Questions/IQuesion";
+import {IQuestion} from "models/forms/Questions/IQuesion";
 import {Button, Dimmer, Loader} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
@@ -19,21 +18,17 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
     const [cards, setCards] = useState<IQuestion[]>(questions);
 
     const handleSaveButton = () => {
-      const questions = cards.map((card, i) => update(card, {index: {$set: i}}));
+      const questions = cards.map((card, i) => { return {...card, index: i}; });
       save(questions);
     };
 
     const moveCard = useCallback(
       (dragIndex: number, hoverIndex: number) => {
         const dragCard = cards[dragIndex];
-        setCards(
-          update(cards, {
-            $splice: [
-              [dragIndex, 1],
-              [hoverIndex, 0, dragCard]
-            ]
-          })
-        );
+        const updCards = cards.slice();
+        updCards.splice(dragIndex, 1);
+        updCards.splice(hoverIndex, 0, dragCard);
+        setCards(updCards);
       },
       [cards]
     );

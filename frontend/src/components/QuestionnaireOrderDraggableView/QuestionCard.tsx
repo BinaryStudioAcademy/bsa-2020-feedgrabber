@@ -51,9 +51,6 @@ export const QuestionCard: React.FC<ICardProps> = ({
         return;
       }
 
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
       moveCard(dragIndex, hoverIndex);
 
       // Note: we're mutating the monitor item here!
