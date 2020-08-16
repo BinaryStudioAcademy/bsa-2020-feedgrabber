@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 import styles from "./styles.module.sass";
 import LoaderWrapper from "../../LoaderWrapper";
 
@@ -9,6 +9,7 @@ export interface IUIButtonProps {
   secondary?: boolean;
   submit?: boolean;
   loading?: boolean;
+  disabled?: boolean;
 
   onClick?(): void;
 }
@@ -17,6 +18,7 @@ const UIButton: FC<IUIButtonProps> = (
   {
     title,
     center,
+    disabled,
     secondary,
     primary,
     submit,
@@ -30,10 +32,9 @@ const UIButton: FC<IUIButtonProps> = (
                   ${center && styles.uiButtonCenter} 
                   ${secondary && styles.uiButtonSecondary}
                   ${primary && styles.uiButtonPrimary}`}
-      onClick={() => {
-        if (!loading) onClick();
-      }}
-      type={submit && !loading ? "submit" : "button"}
+      onClick={onClick}
+      type={submit ? "submit" : "button"}
+      disabled={disabled}
     >
       {loading ? "..." : title}
     </button>

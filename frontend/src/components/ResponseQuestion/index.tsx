@@ -1,4 +1,4 @@
-import QuestionDetails from "components/QuestionDetails";
+import QuestionDetailsPage from '../../containers/QuestionDeatilsPage';
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import { IAppState } from "models/IAppState";
 import { IQuestionResponse } from "models/IQuestionResponse";
@@ -8,7 +8,7 @@ import { loadQuestionByIdRoutine } from "sagas/questions/routines";
 import { Header, Icon, Label, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
-const ResponseQuestion: FC<IQuestionResponse & ResponseQuestionProps> =
+const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({ question, answerHandler, loadCurrent, nowModifying }) => {
         const { name, categoryTitle, type, id } = question;
         const [editor, setEditor] = useState(false);
@@ -16,17 +16,20 @@ const ResponseQuestion: FC<IQuestionResponse & ResponseQuestionProps> =
             setEditor(!editor);
             loadCurrent(question.id);
         };
-        return (<Segment>
+        return (<Segment
+            className={styles.container}>
             <Icon name='code'
-            className={styles.edit}
+                className={styles.edit}
                 onClick={handleSegmentClick} />
             {editor && (id === nowModifying.id) ?
-                <div>
-                   {/* <QuestionDetails match={{ params: {} }} />*/}
+                <div className={styles.scaleTop}>
+                    <QuestionDetailsPage 
+                    match={{ params: {} }}
+                        isPreview={{ question: question, close: handleSegmentClick }} />
                 </div>
                 : <>
                     <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
-                    {TypeToResponseMap.get(type)?.({ question, answerHandler })}
+                    {TypeToResponseMap.get(type.toUpperCase())?.({ question, answerHandler })}
                 </>
             }
         </Segment>);
