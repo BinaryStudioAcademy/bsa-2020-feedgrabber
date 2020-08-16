@@ -27,7 +27,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
         return (
             <div className={styles.fileUploadQuestion}>
             <div className={styles.questionField}>
-                <Label className={styles.label}>Type of file</Label>
+                <Label className={styles.label}>Type of files</Label>
                 <Dropdown
                     className={styles.inputField} name="filesType" selection placeholder="Choose file type"
                     options={options} value={values.filesType}
@@ -35,7 +35,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                         onValueChange(
                             validState({
                                 ...values,
-                                fileType: data.value as string
+                                filesType: data.value as string
                             })
                         );
                     }}
@@ -57,7 +57,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 }}
             />
             <QuestionField
-                label={"Maximum file size, MB"} name={"filesSize"} type={"number"}
+                label={"Maximum files size, MB"} name={"filesSize"} type={"number"}
                 inputProps={{min: 1}}
                 value={values.filesSize}
                 onChange={(e, data) => {
