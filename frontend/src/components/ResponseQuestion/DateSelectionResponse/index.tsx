@@ -3,22 +3,21 @@ import { IQuestionResponse } from '../../../models/IQuestionResponse';
 import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from '../FreeTextResponse/styles.module.sass';
 import { IDateQuestion } from "../../../models/forms/Questions/IQuesion";
-import UIButton from "../../UI/UIButton";
 
 export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ question, answerHandler }) => {
-  const [date, setDate] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (event, value: InputOnChangeData) => {
-    console.log(value.value);
-    setDate(value.value);
+    const newDate = value.value;
+    if (!newDate) {
+      setError('Cannot be blank');
+      return;
+	}
+    setError('');
+    answerHandler?.(question.id, !error ? value : null);
   };
 
   return (
-    <>
-      <Input type='date' value={date} onChange={handleChange} className={styles.input} />
-      <UIButton title='Submit'
-                disabled={!date}
-                onClick={() => answerHandler?.(question.id, { payload: date })} />
-    </>
+    <Input type='date' onChange={handleChange} className={styles.input} error={!!error}/>
   );
 };
