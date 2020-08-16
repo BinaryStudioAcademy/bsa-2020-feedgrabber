@@ -19,6 +19,6 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ questio
         <UIButton
             title='Submit'
             disabled={!val}
-            onClick={() => answerHandler?.(question.id, val)} />
+            onClick={() => answerHandler?.(question.id, { payload: val })} />
     </>;
 };
