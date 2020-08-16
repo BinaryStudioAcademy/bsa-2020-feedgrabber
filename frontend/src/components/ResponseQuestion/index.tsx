@@ -8,7 +8,7 @@ import { loadQuestionByIdRoutine } from "sagas/questions/routines";
 import { Header, Icon, Label, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
-const ResponseQuestion: FC<IQuestionResponse & ResponseQuestionProps> =
+const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({ question, answerHandler, loadCurrent, nowModifying }) => {
         const { name, categoryTitle, type, id } = question;
         const [editor, setEditor] = useState(false);
