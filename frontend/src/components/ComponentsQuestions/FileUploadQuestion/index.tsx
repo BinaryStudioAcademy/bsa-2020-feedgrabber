@@ -51,7 +51,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                     onValueChange(
                         validState({
                             ...values,
-                            filesNumber: data.value
+                            filesNumber: Number(data.value)
                         })
                     );
                 }}
@@ -64,7 +64,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                     onValueChange(
                         validState({
                             ...values,
-                            filesSize: data.value
+                            filesSize: Number(data.value)
                         })
                     );
                 }}
