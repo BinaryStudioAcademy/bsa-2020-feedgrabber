@@ -1,15 +1,16 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 import styles from "./styles.module.sass";
 
 export interface IUIButtonProps {
   title: string;
+  disabled?: boolean;
   onClick?(): void;
   type?: 'button'|'submit'|'reset';
 }
 
-const UIButton: FC<IUIButtonProps> = ({title, onClick, type}) => {
+const UIButton: FC<IUIButtonProps> = ({ title, onClick, disabled, title}) => {
   return (
-    <button className={styles.uiButton} onClick={onClick} type={type}>
+    <button className={styles.uiButton} disabled={disabled} onClick={onClick} type={type}>
       {title}
     </button>
   );
