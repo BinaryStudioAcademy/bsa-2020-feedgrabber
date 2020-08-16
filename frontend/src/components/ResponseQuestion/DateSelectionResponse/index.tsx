@@ -1,9 +1,11 @@
 import React, { FC, useState } from 'react';
 import { IQuestionResponse } from '../../../models/IQuestionResponse';
-import { Button, Input, InputOnChangeData } from "semantic-ui-react";
+import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from '../FreeTextResponse/styles.module.sass';
+import { IDateQuestion } from "../../../models/forms/Questions/IQuesion";
+import UIButton from "../../UI/UIButton";
 
-export const DateSelectionResponse: FC<IQuestionResponse> = ({ question, answerHandler }) => {
+export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ question, answerHandler }) => {
   const [date, setDate] = useState('');
 
   const handleChange = (event, value: InputOnChangeData) => {
@@ -14,9 +16,9 @@ export const DateSelectionResponse: FC<IQuestionResponse> = ({ question, answerH
   return (
     <>
       <Input type='date' value={date} onChange={handleChange} className={styles.input} />
-      <Button content='Submit'
-              disabled={!date}
-              onClick={() => answerHandler?.(question.id, { payload: date })} />
+      <UIButton title='Submit'
+                disabled={!date}
+                onClick={() => answerHandler?.(question.id, { payload: date })} />
     </>
   );
 };
