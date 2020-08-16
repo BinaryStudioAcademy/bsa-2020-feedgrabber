@@ -1,16 +1,16 @@
-import React, {FC, useEffect, useState} from "react";
-import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import {IAppState} from "models/IAppState";
-import {connect, ConnectedProps} from "react-redux";
-import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {loadQuestionByIdRoutine, saveQuestionToQuestionnaireRoutine} from "../../sagas/questions/routines";
-import {useHistory} from "react-router-dom";
+import React, { FC, useEffect, useState } from "react";
+import { IQuestion } from "../../models/forms/Questions/IQuesion";
+import { IAppState } from "models/IAppState";
+import { connect, ConnectedProps } from "react-redux";
+import { loadCategoriesRoutine } from "sagas/categories/routines";
+import { loadQuestionByIdRoutine, saveQuestionToQuestionnaireRoutine } from "../../sagas/questions/routines";
+import { useHistory } from "react-router-dom";
 import QuestionDetails from "../../components/QuestionDetails";
-import {Button, Loader} from "semantic-ui-react";
-import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
+import { Button, Loader } from "semantic-ui-react";
+import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 
-const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
+const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
         currentQuestion,
         loadQuestion,
@@ -19,7 +19,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
         loadCategories,
         questionnaireId,
         categories,
-        match
+        match,
+        isPreview
     }) => {
     const history = useHistory();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
@@ -47,7 +48,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
 
     const onClose = () => {
         loadQuestion('empty');
-        history.push("/questions");
+        isPreview ? isPreview.close() : history.push("/questions");
     };
 
     const onSubmit = () => {
@@ -61,9 +62,9 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
     };
 
     return (
-        <div className={styles.question_container}>
+        <div className={`${styles.question_container} ${isPreview ? styles.question_container_preview : ''}`}>
             {isLoading && (
-                <Loader active inline='centered'/>
+                <Loader active inline='centered' />
             )}
             {!isLoading && (
                 <div>
@@ -73,14 +74,14 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
                         categories={categories}
                         onValueChange={handleQuestionDetailsUpdate}
                     />
-                    <div className={styles.question_actions}>
+                    <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
                         <Button className="ui button" color="red" onClick={onClose}>
                             Cancel
                         </Button>
                         <Button className="ui button"
-                                color="green"
-                                disabled={!isQuestionDetailsValid}
-                                onClick={onSubmit}>
+                            color="green"
+                            disabled={!isQuestionDetailsValid}
+                            onClick={onSubmit}>
                             Save
                         </Button>
                     </div>
