@@ -25,7 +25,9 @@ const UIButton: FC<IUIButtonProps> = (
   return (
     <button
       className={`${styles.uiButton} ${center && styles.uiButtonCenter} ${secondary && styles.uiButtonSecondary}`}
-      onClick={onClick}
+      onClick={() => {
+        if (!loading) onClick();
+      }}
       type={submit ? "submit" : "button"}
     >
       {loading ? "..." : title}

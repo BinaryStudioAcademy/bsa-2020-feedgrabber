@@ -7,6 +7,7 @@ import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.team.dto.*;
 
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class TeamController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<TeamDto> createTeam(@RequestBody CreateTeamDto teamDto) throws CompanyNotFoundException, AlreadyExistsException {
         teamDto.setCompany_id(TokenService.getCompanyId());
-        return new AppResponse(service.create(teamDto));
+        return new AppResponse<>(service.create(teamDto));
     }
 
     @ApiOperation("Update team")
@@ -54,7 +55,15 @@ public class TeamController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<TeamDto> update(@RequestBody UpdateTeamDto teamDto) throws AlreadyExistsException, TeamNotFoundException {
         teamDto.setCompanyId(TokenService.getCompanyId());
-        return new AppResponse(service.update(teamDto));
+        return new AppResponse<>(service.update(teamDto));
+    }
+
+    @ApiOperation("Toggle User")
+    @PutMapping("/toggle_user")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<ResponseUserTeamDto> toggle(@RequestBody RequestUserTeamDto requestDto) throws AlreadyExistsException, TeamNotFoundException, UserNotFoundException {
+        requestDto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse<>(service.toggleUser(requestDto));
     }
 
 }

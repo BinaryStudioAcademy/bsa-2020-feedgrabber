@@ -15,10 +15,11 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IUserShort} from "../../models/user/types";
-import {ITeam, ITeamUpdate} from "../../models/teams/ITeam";
+import {ITeam, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
 import UIButton from "../../components/UI/UIButton";
 import styles from './styles.module.sass';
 import {Formik} from "formik";
+import {Image} from "semantic-ui-react";
 
 export interface ITeamDetailsPageProps {
   match: any;
@@ -32,9 +33,13 @@ export interface ITeamDetailsPageProps {
   isLoadingRequest?: boolean;
 
   loadUsers(): void;
+
   updateTeam(team: ITeamUpdate): void;
-  toggleUser(id: string): void;
+
+  toggleUser(request: ITeamUserToggle): void;
+
   loadCurrentTeam(id: string): void;
+
   createTeam(): void;
 }
 
@@ -43,6 +48,9 @@ const validationSchema = yup.object().shape({
     .string()
     .required()
 });
+
+const defaultAvatar =
+  "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
 const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
   {
@@ -114,7 +122,7 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
                           onBlur={handleBlur}
                           value={values.name}
                         />
-                        {error && <div>{error}<br /><br /></div>}
+                        {error && <div>{error}<br/><br/></div>}
                         <UIButton title="Save" onClick={handleSubmit} submit loading={isLoadingRequest}/>
                       </form>
                     );
@@ -132,12 +140,16 @@ const TeamDetailsPage: FC<ITeamDetailsPageProps> = (
               </UICardBlock>
               {(companyUsers || []).map(user => (
                 <UICardBlock key={user.id} className={styles.toggleCardBlock}>
-                  <h4>{user.username}</h4>
+                  <div className={styles.cardUserBlock}>
+                    <Image src={user.avatar ?? defaultAvatar} size="mini" avatar />
+                    <h4>{user.username}</h4>
+                  </div>
                   {currentTeam && (
                     <UIButton
                       title={user.selected ? "Remove" : "Add"}
                       secondary={user.selected}
-                      onClick={() => toggleUser(user.id)}
+                      loading={user.loading}
+                      onClick={() => toggleUser({teamId: currentTeam.id, userId: user.id, username: user.username})}
                     />
                   )}
                 </UICardBlock>

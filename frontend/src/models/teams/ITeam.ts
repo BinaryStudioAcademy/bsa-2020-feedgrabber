@@ -14,3 +14,9 @@ export interface ITeamUpdate {
   id: string;
   name: string;
 }
+
+export interface ITeamUserToggle {
+  teamId: string;
+  userId: string;
+  username: string;
+}

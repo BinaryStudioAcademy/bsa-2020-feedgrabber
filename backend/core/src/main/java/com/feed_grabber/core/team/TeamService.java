@@ -10,6 +10,7 @@ import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,25 @@ public class TeamService {
                 })
                 .map(TeamMapper.MAPPER::teamToTeamDto)
                 .orElseThrow(TeamNotFoundException::new);
+    }
+
+    public ResponseUserTeamDto toggleUser(RequestUserTeamDto requestDto) throws TeamNotFoundException, UserNotFoundException {
+        var team = teamRepository
+                .findOneByCompanyIdAndId(requestDto.getCompanyId(), requestDto.getTeamId())
+                .orElseThrow(TeamNotFoundException::new);
+        var user = userRepository.findById(requestDto.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        var teamId = team.getId();
+        var userId = user.getId();
+
+        if (teamRepository.existsUser(teamId, userId)) {
+            teamRepository.deleteUser(teamId, userId);
+            return new ResponseUserTeamDto(teamId, userId, false);
+        } else {
+            teamRepository.addUser(teamId, userId);
+            return new ResponseUserTeamDto(teamId, userId, true);
+        }
     }
 
     public void delete(UUID id) {

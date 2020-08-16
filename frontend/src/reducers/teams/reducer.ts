@@ -6,7 +6,7 @@ import {
   showModalTeamsRoutine, toggleUserCurrentTeamRoutine, updateTeamRoutine
 } from '../../sagas/teams/routines';
 import {Routine} from 'redux-saga-routines';
-import {ITeam, ITeamShort} from 'models/teams/ITeam';
+import {ITeam, ITeamShort, ITeamUserToggle} from 'models/teams/ITeam';
 import {IUserShort} from "../../models/user/types";
 
 export interface ITeamCurrent {
@@ -134,7 +134,37 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
     case toggleUserCurrentTeamRoutine.TRIGGER:
       return {
         ...state,
-        companyUsers: state.companyUsers.map(u => (u.id === action.payload ? {...u, selected: !u.selected} : u))
+        companyUsers: state.companyUsers.map(u => (
+          u.id === action.payload.userId
+            ? {...u, loading: true}
+            : u
+        ))
+      };
+    case toggleUserCurrentTeamRoutine.SUCCESS:
+      const difference = action.payload.added ? 1 : -1;
+      return {
+        ...state,
+        companyUsers: state.companyUsers.map(u => (
+          u.id === action.payload.userId
+            ? {...u, loading: false, selected: action.payload.added}
+            : u
+        )),
+        teams: state.teams ?
+          state.teams.map(t => (
+            t.id === action.payload.teamId
+              ? {...t, membersAmount: t.membersAmount + difference}
+              : t
+          ))
+          : undefined
+      };
+    case toggleUserCurrentTeamRoutine.FAILURE:
+      return {
+        ...state,
+        companyUsers: state.companyUsers.map(u => (
+          u.id === action.payload
+            ? {...u, loading: false}
+            : u
+        ))
       };
 
     case updateTeamRoutine.TRIGGER:

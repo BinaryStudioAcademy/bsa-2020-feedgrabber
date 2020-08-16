@@ -3,7 +3,7 @@ import {
   createTeamRoutine,
   loadCompanyUsersRoutine,
   loadCurrentTeamRoutine,
-  loadTeamsRoutine,
+  loadTeamsRoutine, toggleUserCurrentTeamRoutine,
   updateTeamRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
@@ -11,7 +11,7 @@ import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
 import {ITeamCreationDto} from "../../containers/TeamsPage/teamsModal";
 import {IUserInfo} from "../../models/user/types";
-import {ITeam, ITeamShort, ITeamUpdate} from "../../models/teams/ITeam";
+import {ITeam, ITeamShort, ITeamUpdate, ITeamUserToggle} from "../../models/teams/ITeam";
 
 function* loadTeams() {
   try {
@@ -62,6 +62,19 @@ function* updateTeam(action: any) {
   }
 }
 
+function* toggleUserTeam(action: any) {
+  const request: ITeamUserToggle = action.payload;
+  try {
+    const response = yield call(apiClient.put, `http://localhost:5000/api/teams/toggle_user`, request);
+    const data = response.data.data;
+    yield put(toggleUserCurrentTeamRoutine.success(data));
+    toastr.success(`User ${request.username} ${data.added ? "added to" : "deleted from"} the team`);
+  } catch (errorResponse) {
+    yield put(toggleUserCurrentTeamRoutine.failure(request.userId));
+    toastr.error("Error while user toggle");
+  }
+}
+
 function* loadCompanyUsers() {
   try{
     const res: IGeneric<IUserInfo> = yield call(apiClient.get, `http://localhost:5000/api/user/all/list`);
@@ -88,6 +101,10 @@ function* watchUpdateTeam() {
   yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam);
 }
 
+function* watchToggleUserTeam() {
+  yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam);
+}
+
 function* watchLoadCompanyUsers() {
   yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers);
 }
@@ -98,6 +115,7 @@ export default function* teamsSaga() {
     watchLoadCurrentTeam(),
     watchCreateTeam(),
     watchUpdateTeam(),
+    watchToggleUserTeam(),
     watchLoadCompanyUsers()
   ]);
 }
