@@ -2,10 +2,36 @@ import React, { useEffect } from 'react';
 import { connect } from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
+import QuestionnaireOrderView from "../../components/QuestionnaireOrderDraggableView";
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import { IQuestionnaire } from 'models/forms/Questionnaires/types';
 import { IAppState } from 'models/IAppState';
+
+const questions =  [
+  {
+    id: "1",
+    name: "first",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  },
+  {
+    id: "2",
+    name: "second",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  },
+  {
+    id: "3",
+    name: "third",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  }
+] as IQuestion[];
 
 interface IExpandedQuestionnaireProps {
   match: any;
@@ -31,6 +57,8 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
       {questionnaire && (
         <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
+          {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+          <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} />
           <QuestionnairePreview />
         </div>
       )}
