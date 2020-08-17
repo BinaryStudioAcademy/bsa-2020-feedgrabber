@@ -31,11 +31,10 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
-
     useEffect(() => {
         loadQuestion('empty');
         loadCategories();
-    }, [loadCategories]);
+    }, [loadCategories, loadQuestion]);
 
     useEffect(() => {
         match.params.id === 'new'

@@ -36,7 +36,7 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
     );
 
     return (
-        <Form className={styles.container}>
+        <div className={styles.container}>
             <div className={[styles.dropdown, styles.container].join(' ')}>
                     <Dropdown compact selection className={styles.first}
                         options={optionsForMin}
@@ -83,7 +83,7 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
                                 }))}/>
                 </div>
             </div>
-        </Form>
+        </div>
     );
 };
 
