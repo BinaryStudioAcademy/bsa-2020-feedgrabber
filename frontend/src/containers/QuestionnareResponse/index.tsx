@@ -12,6 +12,10 @@ import { loadQuestionsByQuestionnaireRoutine } from "../../sagas/questions/routi
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
+import UIPageTitle from 'components/UI/UIPageTitle';
+import UIButton from 'components/UI/UIButton';
+import UIListItem from "components/UI/UIListItem";
+import UIListHeader from 'components/UI/UIListHeader';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -103,17 +107,12 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     render(){
-        const { title, questions } = this.props;
+        const { title, questions, description } = this.props;
         const { showErrors } = this.state;
-        const description = "Description";
         return (
         <div className={styles.response_container}>
-            <div className={styles.headerContainer}>
-                <div className={["ui very padded segment", styles.questionnaireHeader].join(' ')}>
-                    <h1 className={styles.title}>{title}</h1>
-                    {description? <h2 className={styles.description}>{description}</h2> : null}</div>
-            </div>
-
+            <UIPageTitle title="Response"/>
+            <UIListHeader title={title} description={description}></UIListHeader>
             <Formik
                 initialValues = {this.state}
                 onSubmit = {this.handleSubmit}
@@ -122,18 +121,18 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                     <ul>
                         {questions.map(question => {
                             return (
-                                <List.Item key={question.id}>
-                                    <Segment very padded className={styles.question_wrapper}>
-                                        <h2 className={styles.questionName}>{question.name}</h2>
-                                            {this.getQuestionForm(question)}
-                                            {showErrors && !question.answer? 
-                                                <div className={styles.error_message}>
-                                                    Please, fill the question</div> : null}
-                                    </Segment>
-                                </List.Item>);
+                                <UIListItem key={question.id} name={question.name}>
+                                    {this.getQuestionForm(question)}
+                                    {showErrors && !question.answer? 
+                                        <div className={styles.error_message}>
+                                            Please, fill the question</div> : null}
+                                </UIListItem>);
                         })}
                     </ul>
-                    <button className={[styles.button, styles.submit].join(' ')} type="submit">Send</button>
+                    <div className={styles.submit}> 
+                        <UIButton title="Send"></UIButton>
+                    </div>
+                    
                 </Form>)
             }
             </Formik>
