@@ -8,7 +8,7 @@ import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
 import QuestionsList from "../QuestionsList";
-import QuestionDetails from "../QuestionDetails";
+import QuestionDetails from "../../components/QuestionDetails";
 import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
@@ -21,6 +21,8 @@ import GuestRoute from "../../components/GuestRoute";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
+
+import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
 
 export interface IRoutingProps {
@@ -61,7 +63,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/response/:id" component={QuestionnareResponse} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
-          <PrivateRoute exact path="/question/:id" component={QuestionDetails} />
+          <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
            <PrivateRoute exact path="/employees" component={UserList} />
           <Route path="/*">
             <Redirect to="/layout"/>

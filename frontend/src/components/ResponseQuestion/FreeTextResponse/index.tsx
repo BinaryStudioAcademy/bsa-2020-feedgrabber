@@ -1,22 +1,25 @@
+import { ITextQuestion } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
-import { Button, Input, InputOnChangeData } from "semantic-ui-react";
+import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
-export const FreeTextResponse: FC<IQuestionResponse> = ({ question, answerHandler }) => {
-    const [val, setVal] = useState("");
-    const handleChange = (e, v: InputOnChangeData) => {
-        setVal(v.value);
+export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ question, answerHandler }) => {
+    const [invalidMessage, setInvalidMessage] = useState('');
+
+    const validate = (value: string) => {
+        value.trim() ? setInvalidMessage('') : setInvalidMessage('Cannot be blank');
     };
-    return <><Input
-        value={val}
+
+    const handleChange = (e, v: InputOnChangeData) => {
+        const { value } = v;
+        validate(value);
+        answerHandler?.(question.id, !invalidMessage ? value : null);
+    };
+    return <Input
         onChange={handleChange}
         placeholder='Answer field'
+        error={!!invalidMessage}
         className={styles.input}
-    />
-        <Button
-            content='Submit'
-            disabled={!val}
-            onClick={() => answerHandler?.(question.id, { payload: val })} />
-    </>;
+    />;
 };
