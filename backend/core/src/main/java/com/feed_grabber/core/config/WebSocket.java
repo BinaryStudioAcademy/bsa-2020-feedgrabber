@@ -44,6 +44,6 @@ public class WebSocket implements WebSocketMessageBrokerConfigurer {
                             attributes.put("sessionId", session.getId());
                         }
                         return true;
-                    }});
+                    }}).withSockJS();
     }
 }
