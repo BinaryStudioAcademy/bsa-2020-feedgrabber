@@ -6,10 +6,10 @@ import {useEffect} from "react";
 const stompClient = Stomp.over(new SockJS("/ws"));
 stompClient.activate();
 
-export function useStomp(path: string, callback: () => void) {
+export function useStomp(topic: string, callback: () => void) {
     useEffect(() => {
         try {
-            const s = stompClient.subscribe(path, callback);
+            const s = stompClient.subscribe(`/topic/${topic}`, callback);
             return () => s.unsubscribe();
         } catch (e) {
             return undefined;
