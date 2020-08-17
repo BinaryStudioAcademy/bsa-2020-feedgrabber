@@ -5,10 +5,9 @@ import styles from "./styles.module.sass";
 import {ErrorMessage} from "formik";
 import {IGenericQuestionComponent, useInitValue, validState} from "../IQuestionInputContract";
 import {IFileUploadAnswerDetails} from "../../../models/forms/Questions/IQuesion";
+import {fileTypesArray} from "./types";
 
-const types = ["image", "all"];
-
-const options = types.map(option => {
+const options = fileTypesArray.map(option => {
     return {
         key: option,
         text: option,
