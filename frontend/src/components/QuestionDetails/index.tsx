@@ -55,7 +55,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
 
     const handleQuestionUpdate = (question: IQuestion) => {
         setQuestion(question);
-        console.log(question);
         onValueChange({value: question, isCompleted:
                 nameIsValid &&
                 categoryIsValid &&
@@ -64,7 +63,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
     };
 
     const renderForm = () => {
-        console.log(question.type);
         switch (question.type) {
             case QuestionType.radio:
                 return (

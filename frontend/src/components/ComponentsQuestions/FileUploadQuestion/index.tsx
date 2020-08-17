@@ -27,7 +27,6 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
         const check = (details: IFileUploadAnswerDetails) => {
             if(details.filesNumber<1){details.filesNumber=1;}
             if(details.filesSize<1){details.filesSize=1;}
-            console.log("Chaeck ",details);
             if(details.filesType){
                 onValueChange(validState(details));
             }else{

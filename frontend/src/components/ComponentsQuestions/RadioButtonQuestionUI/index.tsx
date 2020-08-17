@@ -21,8 +21,6 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
     const [isFieldTouched, setIsFieldTouched] = useState(value.answerOptions.map(a => true));
 
     function validate(details: IRadioButtonAnswerDetails) {
-        console.log("D: ",details);
-        console.log("Touched",isFieldTouched);
         const valid = details.answerOptions
             .filter(a => (a.trim().length === 0) || (a.trim().length > 200))
             .length === 0;
