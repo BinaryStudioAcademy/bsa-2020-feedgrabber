@@ -90,7 +90,7 @@ export enum QuestionType {
     checkbox = "checkbox",
     multichoice = "multi_choice",
     date = "date",
-    fileUpload = "fileUpload"
+    fileUpload = "file_upload"
 }
 
 export const DraggableItemTypes = {

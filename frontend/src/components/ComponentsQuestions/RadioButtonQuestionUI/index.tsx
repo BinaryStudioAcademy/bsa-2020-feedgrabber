@@ -1,26 +1,34 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Form, Icon} from "semantic-ui-react";
 import './styles.sass';
 import {
-    IGenericQuestionComponent,
+    IGenericQuestionComponent, invalidState,
     useInitValue,
     validState
 } from "../IQuestionInputContract";
 import {IRadioButtonAnswerDetails} from "../../../models/forms/Questions/IQuesion";
-
-// TODO: this will be common logic for multiple components, move it to shared folder
-function replaceAtIndex<T>(arr: T[], val: T, index: number) {
-    return [...arr.slice(0, index), val, ...arr.slice(index + 1)];
-}
+import {replaceAtIndex} from "../../../helpers/array.helper";
 
 const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails> = ({
                                                                                          value: propValue, onValueChange
                                                                                      }) => {
     const value = useInitValue(
-        {value: {answerOptions: [], includeOther: false}, isCompleted: false},
+        {value: {answerOptions: [""], includeOther: false}, isCompleted: false},
         propValue,
         onValueChange
     );
+
+    const [isFieldTouched, setIsFieldTouched] = useState(value.answerOptions.map(a => true));
+
+    function validate(details: IRadioButtonAnswerDetails) {
+        const valid = details.answerOptions
+            .filter(a => (a.trim().length === 0) || (a.trim().length > 200))
+            .length === 0;
+        onValueChange(valid ? validState(details) : invalidState(details));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => validate(value), [value]);
 
     return (
         <div>
@@ -34,30 +42,33 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                         iconPosition="left"
                         placeholder="Type answer here..."
                         type="text"
-                        value={value.answerOptions[index]}
-                        error={answer.trim().length === 0}
+                        value={answer}
+                        error={isFieldTouched[index] &&
+                        (answer.trim().length === 0 || answer.trim().length > 200)}
                         onChange={event => {
-                            onValueChange(
-                                validState({
+                            setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index));
+                            validate(
+                                {
                                     answerOptions: replaceAtIndex(
                                         value.answerOptions,
                                         event.target.value,
                                         index
                                     ),
                                     includeOther: value.includeOther
-                                })
+                                }
                             );
                         }}
+                        onBlur={() => setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index))}
                     />
                     {value.answerOptions.length !== 1 && (
                         <Icon className={"close-icon unselected"} name={"x"} onClick={() => {
-                            onValueChange(
-                                validState({
+                            validate(
+                                {
                                     answerOptions: value.answerOptions.filter(
                                         (val, i) => i !== index
                                     ),
                                     includeOther: value.includeOther
-                                })
+                                }
                             );
                         }}/>
                     )}
@@ -71,7 +82,10 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                     </div>
                     <Icon className={"close-icon"} name={"x"} onClick={() => {
                         onValueChange(
-                            validState({answerOptions: value.answerOptions, includeOther: false})
+                            validState({
+                                answerOptions: value.answerOptions,
+                                includeOther: false
+                            })
                         );
                     }
                     }/>
@@ -87,13 +101,17 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                 includeOther: value.includeOther
                             })
                         );
+                        setIsFieldTouched(isFieldTouched.concat(false));
                     }}>Add new answer</span>
                     {!value.includeOther && (
                         <span>
                            <span> or </span>
                            <span className="other" onClick={() => {
                                onValueChange(
-                                   validState({answerOptions: value.answerOptions, includeOther: true})
+                                   validState({
+                                       answerOptions: value.answerOptions,
+                                       includeOther: true
+                                   })
                                );
                            }
                            }> add "Other"
@@ -104,8 +122,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
             </div>
         </div>
 
-    )
-        ;
+    );
 };
 
 export default RadioButtonQuestionUI;

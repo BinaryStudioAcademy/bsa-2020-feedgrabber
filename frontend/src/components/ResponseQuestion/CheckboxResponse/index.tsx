@@ -3,7 +3,7 @@ import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
 import { Checkbox, Icon, Input } from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import ReplaceAtIndex from 'models/ReplaceAtIndex';
+import {replaceAtIndex} from "../../../helpers/array.helper";
 
 export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ question, answerHandler }) => {
     const [boxes, setBoxes]
@@ -26,7 +26,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                         onChange={() => {
                             setBoxes(() => {
                                 const { checked, value } = boxes[i];
-                                return ReplaceAtIndex(boxes, { checked: !checked, value }, i);
+                                return replaceAtIndex(boxes, { checked: !checked, value }, i);
                             });
                             handleAnswer();
                         }
@@ -38,7 +38,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                         onChange={(e, { value }) => {
                             setBoxes(() => {
                                 const { checked } = boxes[i];
-                                return ReplaceAtIndex(boxes, { checked, value }, i);
+                                return replaceAtIndex(boxes, { checked, value }, i);
                             });
                         }}
                     />
@@ -49,7 +49,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                     onChange={() => {
                         setBoxes(() => {
                             const { checked, value } = boxes[i];
-                            return ReplaceAtIndex(boxes, { checked: !checked, value }, i);
+                            return replaceAtIndex(boxes, { checked: !checked, value }, i);
                         });
                         handleAnswer();
                     }

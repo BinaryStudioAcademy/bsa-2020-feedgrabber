@@ -1,5 +1,5 @@
-import React from "react";
-import { Form, Segment, Icon, Label } from "semantic-ui-react";
+import React, {useEffect, useState} from "react";
+import { Form, Segment, Icon } from "semantic-ui-react";
 import {
   IGenericQuestionComponent,
   useInitValue,
@@ -8,17 +8,30 @@ import {
 } from "../IQuestionInputContract";
 import './styles.sass';
 import {IMultiAnswerDetails} from "../../../models/forms/Questions/IQuesion";
-import ReplaceAtIndex from 'models/ReplaceAtIndex';
+import {replaceAtIndex} from "../../../helpers/array.helper";
 
 const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
   value: propValue,
   onValueChange
 }) => {
+
   const value = useInitValue(
-    { value: { answerOptions: [] }, isCompleted: false },
+    { value: { answerOptions: [""] }, isCompleted: false },
     propValue,
     onValueChange
   );
+
+  const [isFieldTouched, setIsFieldTouched] = useState(value.answerOptions.map(a => true));
+
+  function validate(details: IMultiAnswerDetails) {
+    const valid = details.answerOptions
+        .filter(a => (a.trim().length === 0) || (a.trim().length > 200))
+        .length === 0;
+    onValueChange(valid ? validState(details) : invalidState(details));
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => validate(value), [value]);
 
   return (
     <Segment>
@@ -32,31 +45,32 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
               transparent
               iconPosition="left"
               placeholder="Type answer here..."
-              type="text"
-              name={`answers.${index}`}
               value={answer}
+              error={isFieldTouched[index] &&
+              (answer.trim().length === 0 || answer.trim().length > 200)}
               onChange={event => {
-                onValueChange(
-                  validState({
-                    answerOptions: ReplaceAtIndex(
-                      value.answerOptions,
-                      event.target.value,
-                      index
-                    )
-                  })
+                setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index));
+                validate(
+                    {
+                      answerOptions: replaceAtIndex(
+                          value.answerOptions,
+                          event.target.value,
+                          index
+                      )
+                    }
                 );
               }}
+              onBlur={() => setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index))}
             />
             <Icon
               className={"close-icon unselected"}
-              name={"remove"}
               onClick={() => {
-                onValueChange(
-                  invalidState({
+                validate(
+                  {
                     answerOptions: value.answerOptions.filter(
                       (val, i) => i !== index
                     )
-                  })
+                  }
                 );
               }}
             />
@@ -70,6 +84,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
               onValueChange(
                 invalidState({ answerOptions: value.answerOptions.concat("") })
               );
+              setIsFieldTouched(isFieldTouched.concat(false));
             }}
           >
             Add new answer

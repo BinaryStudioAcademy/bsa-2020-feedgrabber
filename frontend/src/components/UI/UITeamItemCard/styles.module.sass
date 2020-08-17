@@ -1,0 +1,46 @@
+.teamGrid
+  display: grid
+  grid-template-rows: 50px 40px auto
+  border: 1px solid #c5c4c4
+  border-radius: 5px
+  margin-bottom: 10px
+  transition: background-color 0.1s
+
+
+.teamName
+  align-self: center
+  font-weight: bold
+  font-size: 1.3rem
+  padding-left: 5px
+  padding-top: 5px
+  height: 100%
+
+
+.teamInfo
+  height: 100%
+  align-self: center
+  padding-top: 5px
+  padding-left: 5px
+  font-weight: bold
+
+.hoverable
+  cursor: pointer
+  transition: background-color 0.1s
+  border: 1px solid #FFFFFF
+  border-radius: 5px
+  &:hover
+    border: 1px solid rgba(26, 14, 218, 0.42)
+    background-color: #f7f7f7
+
+.selected
+  transition: background-color 0.1s
+  background-color: rgba(26, 14, 218, 0.07)
+
+  .hoverable:hover
+    background-color: rgba(26, 14, 218, 0.16)
+
+.showHide
+  margin-left: 10px
+  cursor: pointer
+  &:hover
+    color: #F55078
