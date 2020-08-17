@@ -1,22 +1,21 @@
 package com.feed_grabber.core.question.dto;
 
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.feed_grabber.core.question.serializers.QuestionUpdateDes;
+import com.feed_grabber.core.question.QuestionType;
+import com.feed_grabber.core.question.serializers.QuestionUpsertDes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@JsonDeserialize(using = QuestionUpdateDes.class)
-public class QuestionUpdateDto {
-    @NotNull
+@JsonDeserialize(using = QuestionUpsertDes.class)
+public class QuestionUpsertDto {
+
     UUID id;
 
     @NotBlank
@@ -28,4 +27,6 @@ public class QuestionUpdateDto {
     String details;
 
     Integer index;
+
+    QuestionType type;
 }
