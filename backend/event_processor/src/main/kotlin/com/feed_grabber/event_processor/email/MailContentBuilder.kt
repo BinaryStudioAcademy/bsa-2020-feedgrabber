@@ -14,9 +14,6 @@ class MailContentBuilder(
     fun buildInvitationMail(link: String): Content {
         val context = Context()
         context.setVariable("link", link)
-//        return Content("text/plain", "Please, confirm the account.\n" +
-//                "Click on the link " + link + " .")
-        println(templateEngine.process("invite", context))
         return Content("text/html", templateEngine.process("invite", context))
     }
 

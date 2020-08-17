@@ -14,11 +14,10 @@ import java.io.IOException
 class EmailSender(
         @Autowired val mailContentBuilder: MailContentBuilder,
         @Value("\${send-grid-api-key}") val sendGridApiKey: String,
-        @Value("\${official-email}") val fromEmail: String = "email"
+        @Value("\${official-email}") val fromEmail: String
 ) {
 
     fun send(mail: Mail) {
-        println(sendGridApiKey)
         val sendGrid = SendGrid(sendGridApiKey)
         val request = Request()
         try {
@@ -26,7 +25,7 @@ class EmailSender(
             request.endpoint = "mail/send"
             request.body = mail.build()
             val response = sendGrid.api(request)
-            println(response.statusCode)
+            println(response.statusCode) // this code should be equal to 202
             println(response.body)
             println(response.headers)
         } catch (ex: IOException) {
