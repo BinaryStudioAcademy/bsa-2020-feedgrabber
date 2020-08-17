@@ -4,7 +4,7 @@ import { IAppState } from "../../models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
 import { deleteQuestionRoutine } from "sagas/qustionnaires/routines";
-import { addSelectedQuestionsRoutine, saveQuestionRoutine } from "sagas/questions/routines";
+import { addSelectedQuestionsRoutine, saveQuestionToQuestionnaireRoutine } from "sagas/questions/routines";
 import { IQuestion } from "../../models/forms/Questions/IQuesion";
 
 const QuestionMenu: FC<ContainerProps> = ({ deleteQuestion, addQuestion, saveQuestion, currentQuestion }) => {
@@ -41,7 +41,7 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     deleteQuestion: deleteQuestionRoutine,
     addQuestion: addSelectedQuestionsRoutine,
-    saveQuestion: saveQuestionRoutine
+    saveQuestion: saveQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
