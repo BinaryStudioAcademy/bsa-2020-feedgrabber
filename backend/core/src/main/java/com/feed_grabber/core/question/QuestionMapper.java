@@ -2,9 +2,13 @@ package com.feed_grabber.core.question;
 
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
+import com.feed_grabber.core.question.dto.QuestionUpdateDto;
+import com.feed_grabber.core.question.dto.QuestionUpsertDto;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
+import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
+import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestionId;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,10 +36,22 @@ public abstract class QuestionMapper {
             QuestionCategory category
     );
 
+    public abstract QuestionCreateDto upsertDtoToCreateDto(QuestionUpsertDto dto);
+
+    public abstract QuestionUpdateDto upsertDtoToUpdateDto(QuestionUpsertDto dto);
+
     @AfterMapping
-    protected void setQuestionnaire(Questionnaire questionnaire, @MappingTarget Question question) {
-        if (!question.getQuestionnaires().contains(questionnaire)) {
-            question.getQuestionnaires().add(questionnaire);
+    protected void setQuestionnaire(
+            Questionnaire questionnaire,
+            QuestionCreateDto createDto,
+            @MappingTarget Question question) {
+        var isQuestionnaireAlreadyExists = question.getQuestionnaires()
+                .stream()
+                .anyMatch(questionnaireQuestion -> questionnaireQuestion.getQuestionnaire().equals(questionnaire));
+        if (!isQuestionnaireAlreadyExists) {
+            var qqId = new QuestionnaireQuestionId(questionnaire.getId(), question.getId());
+            var questionnaireQuestion = new QuestionnaireQuestion(qqId, question, questionnaire, createDto.getIndex());
+            question.getQuestionnaires().add(questionnaireQuestion);
         }
     }
 }

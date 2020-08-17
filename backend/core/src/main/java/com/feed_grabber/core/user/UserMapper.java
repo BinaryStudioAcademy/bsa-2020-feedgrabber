@@ -1,12 +1,8 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.company.CompanyMapper;
-import com.feed_grabber.core.user.dto.UserCreateDto;
-import com.feed_grabber.core.user.dto.UserDto;
-import com.feed_grabber.core.user.dto.UserResponseDto;
-import com.feed_grabber.core.user.dto.UserResponseAuthDetailsDTO;
+import com.feed_grabber.core.user.dto.*;
 import com.feed_grabber.core.user.model.User;
-import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -32,5 +28,7 @@ public interface UserMapper {
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
     @Mapping(target = "role", source = "role.systemRole")
     UserDetailsResponseDTO detailedFromUser(User user);
+
+    UserShortDto shortFromUser(User user);
 
 }

@@ -24,10 +24,10 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.exchange}")
     private val exchange: String? = null
 
-    @Value("\${rabbitmq.routing-key-response}")
+    @Value("\${rabbitmq.routing-key}")
     private val routingKey: String? = null
 
-    @Value("\${rabbitmq.queue.response}")
+    @Value("\${rabbitmq.queue}")
     private val queue: String? = null
 
     @Bean

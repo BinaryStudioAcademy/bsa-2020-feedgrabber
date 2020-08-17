@@ -1,0 +1,11 @@
+@import "src/assets/styles/variables";
+
+.name {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.listContainer {
+    margin: 0px $base-margin
+}

@@ -2,6 +2,7 @@ package com.feed_grabber.core.questionnaire.model;
 
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.model.Question;
+import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,12 +32,12 @@ public class Questionnaire {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "question_questionnaire",
-            joinColumns = @JoinColumn(name = "questionnaire_id"),
-            inverseJoinColumns = @JoinColumn(name = "question_id"))
-    private List<Question> questions;
+    @OneToMany(
+            mappedBy = "questionnaire",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<QuestionnaireQuestion> questions;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private Company company;

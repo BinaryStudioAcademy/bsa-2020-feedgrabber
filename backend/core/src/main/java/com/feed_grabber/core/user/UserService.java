@@ -16,6 +16,7 @@ import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
+import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -193,8 +194,11 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId) {
-        return userRepository.findAllByCompanyId(companyId).stream().map(UserMapper.MAPPER::detailedFromUser).collect(Collectors.toList());
+    public List<UserShortDto> getAllByCompanyId(UUID companyId) {
+        return userRepository.findAllByCompanyId(companyId)
+                .stream()
+                .map(UserMapper.MAPPER::shortFromUser)
+                .collect(Collectors.toList());
     }
 
     public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId, Integer page, Integer size) {

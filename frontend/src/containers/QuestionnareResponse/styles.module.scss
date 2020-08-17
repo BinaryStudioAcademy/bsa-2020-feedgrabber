@@ -1,21 +1,9 @@
-.response_container {
-    margin: 20px calc((100% - 800px) / 2)
-}
-    
-.title {
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #767676
-}
-
-.name {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #767676
+.submit {
+    margin: 20px;
+    text-align: end;
 }
 
 .error_message {
+    margin-top: 10px;
     color: #c10000
 }
