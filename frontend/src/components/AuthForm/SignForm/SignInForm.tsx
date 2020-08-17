@@ -52,7 +52,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
                 </Grid.Column>
                 <Grid.Column width={12}>
                     <Header textAlign='left' as='h4' className={styles.company}>
-                        BinaryStudio
+                        {company.name}
                     </Header>
                 </Grid.Column>
             </Grid>
@@ -65,7 +65,8 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
             onSubmit={values => {
                 signIn({
                     password: values.password,
-                    username: values.username
+                    username: values.username,
+                    companyId: company.id
                 });
             }}
         >
@@ -112,9 +113,9 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error.login,
+    error: state.user.error?.login,
     company: state.company.currentCompany,
-    userEmail: state.user.info.email
+    userEmail: state.user.info?.email
 });
 
 const mapDispatch = {

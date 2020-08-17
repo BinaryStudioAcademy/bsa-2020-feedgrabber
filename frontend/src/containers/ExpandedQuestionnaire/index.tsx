@@ -1,17 +1,42 @@
-import React, {useEffect} from 'react';
-import {IQuestionnaireDetails} from "../../reducers/expandedQuestionnaire/reducer";
-import {loadOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
-import {connect} from "react-redux";
+import React, { useEffect } from 'react';
+import { connect } from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
-import QuestionDetails from "../QuestionDetails";
-import {history} from '../../helpers/history.helper';
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
+import QuestionnaireOrderView from "../../components/QuestionnaireOrderDraggableView";
+import QuestionnairePreview from 'components/QuestionnairePreview';
+import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
+import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import { IAppState } from 'models/IAppState';
+
+const questions =  [
+  {
+    id: "1",
+    name: "first",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  },
+  {
+    id: "2",
+    name: "second",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  },
+  {
+    id: "3",
+    name: "third",
+    type: QuestionType.multichoice,
+    categoryTitle: "sdf",
+    details: {answerOptions: []}
+  }
+] as IQuestion[];
 
 interface IExpandedQuestionnaireProps {
   match: any;
   isLoading: boolean;
-  questionnaire: IQuestionnaireDetails;
-
+  questionnaire: IQuestionnaire;
   loadOneQuestionnaire(id: string): void;
 }
 
@@ -24,31 +49,25 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
   }
 ) => {
   useEffect(() => {
-    if (!questionnaire && !isLoading) {
-      loadOneQuestionnaire(match.params.id);
-    }
-  });
+    loadOneQuestionnaire(match.params.id);
+  }, [loadOneQuestionnaire, match.params.id]);
 
   return (
     <LoaderWrapper loading={isLoading}>
       {questionnaire && (
         <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
-          <div className={styles.formDetails}>
-          <div className={styles.formPreview}>Here will be preview</div>
-          <div className={styles.formEditor}>
-            <QuestionDetails match={{ params: {} }} />
-          </div>
-          </div>
+          {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+          <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} />
+          <QuestionnairePreview />
         </div>
       )}
     </LoaderWrapper>
   );
 };
 
-const mapStateToProps = rootState => ({
-  isLoading: rootState.expandedQuestionnaire.isLoading,
-  questionnaire: rootState.expandedQuestionnaire.questionnaire
+const mapStateToProps = (rootState: IAppState) => ({
+  questionnaire: rootState.questionnaires.current.get
 });
 
 const mapDispatchToProps = {

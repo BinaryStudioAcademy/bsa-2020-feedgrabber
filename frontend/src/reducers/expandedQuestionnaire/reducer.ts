@@ -1,4 +1,4 @@
-import {clearOneQuestionnaireRoutine, loadOneQuestionnaireRoutine} from '../../sagas/expandedQuestionnaire/routines';
+import {clearOneQuestionnaireRoutine} from '../../sagas/expandedQuestionnaire/routines';
 
 export interface IQuestionnaireDetails {
   id: string;
@@ -17,22 +17,6 @@ export default (state: IExpandedQuestionnaireState = {}, action): IExpandedQuest
       return {
         ...state,
         questionnaire: undefined
-      };
-    case loadOneQuestionnaireRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
-    case loadOneQuestionnaireRoutine.FAILURE:
-      return {
-        ...state,
-        isLoading: false
-      };
-    case loadOneQuestionnaireRoutine.SUCCESS:
-      return {
-        ...state,
-        questionnaire: action.payload,
-        isLoading: false
       };
     default:
       return state;

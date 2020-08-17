@@ -12,13 +12,29 @@ services:
       - pgconf_core:/etc/postgresql
       - pglog_core:/var/log/postgresql
     env_file:
-     - ../.env/core-db.env
+      - ../.env/core-db.env
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
 
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    hostname: "rabbit"
+    env_file:
+      - ../.env/rabbitmq.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
   # api
   api:
     image: 'fg-core:latest'
@@ -26,7 +42,7 @@ services:
     depends_on:
       - core-db
     ports:
-     - '5000:5000'
+      - '5000:5000'
     env_file:
       - ../.env/core.env
     environment:
@@ -41,6 +57,8 @@ services:
   event-processor:
     image: 'fg-event-processor:latest'
     container_name: 'fg-event-processor'
+    depends_on:
+      - rabbitmq
     ports:
       - '5001:5001'
     env_file:
@@ -50,6 +68,7 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+
 
   # Frontend
   client:

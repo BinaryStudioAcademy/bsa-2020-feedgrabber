@@ -6,6 +6,7 @@ export interface IQuestionnairesState {
     current?: {
         get?: IQuestionnaire;
         questions?: IQuestion[];
+        isLoading?: boolean;
     };
     currentQuestion?: IQuestion;
 }
@@ -13,7 +14,9 @@ export interface IQuestionnairesState {
 export interface IQuestionnaire {
     id?: string;
     title: string;
+    description?: string; 
     companyName?: string;
+    questions?: IQuestion[];
 }
 
 export interface ICreateQuestionnaire {

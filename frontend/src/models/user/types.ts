@@ -14,6 +14,7 @@ export interface IUserInfo {
     lastName?: string;
     phoneNumber?: string;
     avatar?: string;
+    role: string;
 }
 
 export interface IUserErrors {
@@ -24,7 +25,9 @@ export interface IUserErrors {
 
 export interface IUserShort {
     id: string;
-    avatar: string;
+    avatar?: string;
     username: string;
+    selected?: boolean;
+    loading?: boolean;
 }
 

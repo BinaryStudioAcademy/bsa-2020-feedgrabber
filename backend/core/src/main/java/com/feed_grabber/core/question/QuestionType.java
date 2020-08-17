@@ -11,7 +11,8 @@ public enum QuestionType {
     SCALE("scale"),
     CHECKBOX("checkbox"),
     MULTI_CHOICE("multi_choice"),
-    DATE("date");
+    DATE("date"),
+    FILE_UPLOAD("file_upload");
 
 
     private String value;

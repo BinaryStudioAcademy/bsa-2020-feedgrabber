@@ -44,6 +44,10 @@ public class AuthService {
                 .findByUsername(dto.getUsername())
                 .map(UserMapper.MAPPER::responseFromUser).get();
 
+        if(dto.getCompanyId() != null && !dto.getCompanyId().equals(user.getCompany().getId()) ) {
+            throw new WrongCredentialsException("Incorrect username or password");
+        }
+
         var tokenDto = new TokenValuesDto(user.getId(), user.getCompany().getId(), user.getRole());
 
         return new AuthUserResponseDTO(tokenService.generateAccessToken(tokenDto),
