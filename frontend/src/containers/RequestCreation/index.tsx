@@ -16,16 +16,16 @@ import "react-datepicker/dist/react-datepicker.css";
 import {Message} from "semantic-ui-react";
 import {sendQuestionnaireRequestRoutine} from "../../sagas/request/routines";
 import {history} from '../../helpers/history.helper';
-import {IUserInfo, IUserShort} from "../../models/user/types";
-import {ITeam} from "../../models/teams/ITeam";
-import QuestionnairePreview from "../../components/QuestionnairePreview";
+import {IUserShort} from "../../models/user/types";
+import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
-  chosenTeams: new Array<ITeam>(),
+  chosenTeams: new Array<ITeamShort>(),
   targetUserId: null,
+  includeTargetUser: false,
   withDeadline: false,
   expirationDate: null,
   notifyUsers: false,
@@ -40,29 +40,34 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        loadTeams,
        loadUsers,
        sendRequest,
-       isLoading
+       isLoadingUsers,
+       isLoadingTeams
      }) => {
+
+      // load users
+      useEffect(() => {
+        loadUsers();
+      }, [loadUsers]);
+
+      // load teams
       useEffect(() => {
         loadTeams();
-        loadUsers();
-        console.log('loading...');
-      }, [loadTeams, loadUsers]);
+      }, [loadTeams]);
+
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
-      if(isLoading) {
-        return (<LoaderWrapper loading={true}/>);
-      }
       return (
           <>
             <UIPageTitle title='Send Request'/>
-            <LoaderWrapper loading={isLoading}>
-              <UIContent>
-                <UIColumn>
-                  <UICard>
-                    <QuestionnairePreview/>
-                  </UICard>
-                </UIColumn>
-                <UIColumn>
+
+            <UIContent>
+              <UIColumn>
+                <UICard>
+                  questionnaire preview here
+                </UICard>
+              </UIColumn>
+              <UIColumn>
+                <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
                   <UICard>
                     <Formik
                         initialValues={initialValues}
@@ -87,11 +92,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             notifyUsers: values.notifyUsers,
                             questionnaireId: match.params.id,
                             targetUserId: values.targetUserId,
-                            respondentIds: values.chosenUsers.length > 0
-                                ? values.chosenUsers.map(user => user.id)
-                                : []
-                            // : [...new Set(values.chosenTeams.flatMap(team => team.members.map(user => user.id)))]
-
+                            includeTargetUser: values.includeTargetUser,
+                            respondentIds: values.chosenUsers.map(user => user.id),
+                            teamIds: values.chosenTeams.map(team => team.id)
                           };
                           sendRequest(data);
                           history.goBack();
@@ -109,9 +112,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                     users.map(user => (
                                         <UIUserItemCard
                                             key={user.id}
-                                            userInfo={'username: ' + user.username}
-                                            // firstName={user.firstName}
-                                            // lastName={user.lastName}
+                                            firstName={'username: ' + user.username}
                                             avatar={user.avatar}
                                             onClick={() => {
                                               formik.setFieldValue('targetUserId',
@@ -122,6 +123,17 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                     ))
                                   }
                                 </div>
+                              </UICardBlock>
+
+                              <UICardBlock>
+                                <h4 className={styles.yesNoHeader}>Include target user to request?
+                                  <input type='checkbox'
+                                         name='includeTargetUser'
+                                         checked={formik.values.includeTargetUser}
+                                         onChange={formik.handleChange}
+                                  />
+                                </h4>
+                                <p>If yes, this user will also receive request</p>
                               </UICardBlock>
 
                               <UICardBlock>
@@ -195,28 +207,26 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                   </h4>
                                 </div>
 
-                                {/* {selectTeams && teams.map(team => (*/}
-                                {/*    <UITeamItemCard*/}
-                                {/*        key={team.id}*/}
-                                {/*        team={team}*/}
-                                {/*        selected={formik.values.chosenTeams.includes(team)}*/}
-                                {/*        onClick={() => {*/}
-                                {/*          let newTeams = [];*/}
-                                {/*          if (formik.values.chosenTeams.includes(team)) {*/}
-                                {/*            newTeams = formik.values.chosenTeams.filter(t => t !== team);*/}
-                                {/*          } else {*/}
-                                {/*            newTeams = [...formik.values.chosenTeams, team];*/}
-                                {/*          }*/}
-                                {/*          formik.setFieldValue('chosenTeams', newTeams);*/}
-                                {/*        }}*/}
+                                {selectTeams && teams.map(team => (
+                                    <UITeamItemCard
+                                        key={team.id}
+                                        team={team}
+                                        selected={formik.values.chosenTeams.includes(team)}
+                                        onClick={() => {
+                                          let newTeams = [];
+                                          if (formik.values.chosenTeams.includes(team)) {
+                                            newTeams = formik.values.chosenTeams.filter(t => t !== team);
+                                          } else {
+                                            newTeams = [...formik.values.chosenTeams, team];
+                                          }
+                                          formik.setFieldValue('chosenTeams', newTeams);
+                                        }}
 
-                                {/*    />*/}
-                                {/* ))}*/}
+                                    />
+                                ))}
                                 {!selectTeams && users.map(user => (
                                     <UIUserItemCard
                                         key={user.id}
-                                        // firstName={user.firstName}
-                                        // lastName={user.lastName}
                                         avatar={user.avatar}
                                         userInfo={'Username: ' + user.username}
                                         selected={formik.values.chosenUsers.includes(user)}
@@ -241,18 +251,19 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                         )}
                     </Formik>
                   </UICard>
-                </UIColumn>
+                </LoaderWrapper>
+              </UIColumn>
 
-              </UIContent>
-            </LoaderWrapper>
+            </UIContent>
           </>
       );
     };
 
 const mapStateToProps = (state: IAppState) => ({
   teams: state.teams.teams,
+  isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
-  isLoading: state.teams.isLoadingUsers
+  isLoadingUsers: state.teams.isLoadingUsers
 });
 
 const mapDispatchToProps = {
