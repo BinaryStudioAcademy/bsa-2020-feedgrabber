@@ -11,6 +11,7 @@ import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import question from '../../models/forms/Questions/DefaultQuestion';
 
 function parseQuestion(rawQuestion) {
   return {
