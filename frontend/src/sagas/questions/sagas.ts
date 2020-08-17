@@ -77,12 +77,14 @@ function* saveOrUpdateQuestion(action) {
       ? yield call(apiClient.put, `/api/questions`, action.payload)
       : yield call(apiClient.post, `/api/questions`, action.payload);
 
-    yield put(saveQuestionToQuestionnaireRoutine.success(res.data.data));
+        const question = parseQuestion(res.data.data);
 
-  } catch (e) {
-    yield put(saveQuestionToQuestionnaireRoutine.failure());
-    toastr.error("Question wasn't saved");
-  }
+        yield put(saveQuestionToQuestionnaireRoutine.success(question));
+
+    } catch (e) {
+        yield put(saveQuestionToQuestionnaireRoutine.failure());
+        toastr.error("Question wasn't saved");
+    }
 }
 
 function* getByQuestionnaireId(action) {
