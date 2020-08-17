@@ -12,6 +12,10 @@ import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routine
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
+import UIPageTitle from 'components/UI/UIPageTitle';
+import UIButton from 'components/UI/UIButton';
+import UIListItem from "components/UI/UIListItem";
+import UIListHeader from 'components/UI/UIListHeader';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -22,6 +26,7 @@ interface IQuestionnaireResponseProps {
     match: any;
     responseId: string;
     title: string;
+    description: string;
     questions: IQuestion[];
     isLoading: boolean;
     loadQuestions(id: string): void;
@@ -65,7 +70,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     getQuestionForm(question: IQuestion) {
-        switch(question.type) {
+        const type = question.type.toLowerCase();
+        switch(type) {
             case QuestionType.radio:
                 return <span>radio</span>;
             case QuestionType.checkbox:
@@ -101,31 +107,32 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     render(){
-        const { title, questions } = this.props;
+        const { title, questions, description } = this.props;
         const { showErrors } = this.state;
         return (
         <div className={styles.response_container}>
-            <Segment padded><h1 className={styles.title}>{title}</h1></Segment>
+            <UIPageTitle title="Response"/>
+            <UIListHeader title={title} description={description}></UIListHeader>
             <Formik
                 initialValues = {this.state}
                 onSubmit = {this.handleSubmit}
             >{formik => (
-            <Form onSubmit={formik.handleSubmit}>
-                    <List className={styles.questions_list}>
+            <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
+                    <ul>
                         {questions.map(question => {
                             return (
-                                <List.Item key={question.id}>
-                                    <Segment className={styles.question_wrapper}>
-                                        <h2 className={styles.name}>{question.name}</h2>
-                                            {this.getQuestionForm(question)}
-                                            {showErrors && !question.answer? 
-                                                <div className={styles.error_message}>
-                                                    Please, fill the question</div> : null}
-                                    </Segment>
-                                </List.Item>);
+                                <UIListItem key={question.id} name={question.name}>
+                                    {this.getQuestionForm(question)}
+                                    {showErrors && !question.answer? 
+                                        <div className={styles.error_message}>
+                                            Please, fill the question</div> : null}
+                                </UIListItem>);
                         })}
-                    </List>
-                    <Button type="submit">Send</Button>
+                    </ul>
+                    <div className={styles.submit}> 
+                        <UIButton title="Send"></UIButton>
+                    </div>
+                    
                 </Form>)
             }
             </Formik>
@@ -136,6 +143,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 const mapStateToProps = (state: IAppState) => ({
     questions: state.questionnaires.current.questions,
     title: state.questionnaires.current.get.title,
+    description: state.questionnaires.current.get.description,
     responseId: state.questionnaires.current.get.id // should be id of response
 });
 
