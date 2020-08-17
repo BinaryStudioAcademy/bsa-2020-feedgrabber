@@ -3,12 +3,10 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
-import PublicRoute from "../../components/PublicRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import {Profile, ProfileX} from "../../components/Profile";
 import QuestionsList from "../QuestionsList";
-import QuestionDetails from "../../components/QuestionDetails";
 import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
@@ -24,6 +22,7 @@ import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 
 import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
+import TeamDetailsPage from "../TeamsDetailsPage";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -59,12 +58,13 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
           <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
           <PrivateRoute exact path="/teams" component={TeamsPage} />
+          <PrivateRoute exact path="/teams/:id" component={TeamDetailsPage} />
           <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
           <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
           <PrivateRoute exact path="/response/:id" component={QuestionnareResponse} />
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
-           <PrivateRoute exact path="/employees" component={UserList} />
+          <PrivateRoute exact path="/employees" component={UserList} />
           <Route path="/*">
             <Redirect to="/layout"/>
           </Route>
@@ -75,8 +75,8 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
 };
 
 const mapState = (state: IAppState) => ({
-    isLoading: state.isLoading,
-    user: state.user.info
+  isLoading: state.isLoading,
+  user: state.user.info
 });
 
 const mapDispatchToProps = {

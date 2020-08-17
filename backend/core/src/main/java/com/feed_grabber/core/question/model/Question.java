@@ -4,6 +4,7 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
+import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,8 +40,11 @@ public class Question {
     @Column
     private String payload;
 
-    @ManyToMany(mappedBy = "questions")
-    private List<Questionnaire> questionnaires;
+    @OneToMany(
+            mappedBy = "question",
+            cascade = CascadeType.REFRESH
+    )
+    private List<QuestionnaireQuestion> questionnaires;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;

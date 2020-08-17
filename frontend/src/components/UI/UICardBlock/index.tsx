@@ -3,11 +3,12 @@ import styles from "./styles.module.sass";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IUICardBlockProps {
+  className?: string;
 }
 
-const UICardBlock: FC<IUICardBlockProps> = ({children}) => {
+const UICardBlock: FC<IUICardBlockProps> = ({children, className}) => {
   return (
-    <div className={styles.uiCardBlock}>
+    <div className={`${styles.uiCardBlock} ${className || ""}`}>
       {children}
     </div>
   );

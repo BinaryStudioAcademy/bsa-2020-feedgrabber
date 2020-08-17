@@ -11,17 +11,15 @@ class Sender {
     @Value("\${rabbitmq.exchange}")
     private val exchange: String? = null
 
-    @Value("\${rabbitmq.routing-key}")
+    @Value("\${rabbitmq.routing-key-response}")
     private val routingKey: String? = null
 
     @Autowired
     private val template: RabbitTemplate? = null
 
-    fun sendToFileProcessor(text: String?) {
-        //log.info(" [x] Sending...")
+    fun send(text: String) {
         println(" [x] Sending...")
         template!!.convertAndSend(exchange!!, routingKey!!, text!!)
-        //log.info(" [x] Sent '{}'", text)
         println(" [x] Sent $text")
     }
 
