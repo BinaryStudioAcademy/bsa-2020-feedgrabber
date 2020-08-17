@@ -29,24 +29,38 @@ const QuestionD: React.FC<IQuestionProps> = ({
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
     const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle.length > 0);
-    const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(false);
+    const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(true);
     const [addedCategories, setNewCategories] = useState([]);
 
     useEffect(() => {
-        onValueChange({value: question, isCompleted: categoryIsValid && nameIsValid && innerFormIsValid});
+        onValueChange({value: question, isCompleted:
+                categoryIsValid &&
+                nameIsValid &&
+                innerFormIsValid &&
+                !!question.type
+        });
     }, [nameIsValid, categoryIsValid, onValueChange, question, innerFormIsValid]);
 
     const handleQuestionDetailsUpdate = (state: IComponentState<{}>) => {
         const {isCompleted, value} = state;
         setInnerFormIsValid(isCompleted);
         setQuestion({...question, details: value as any});
-        onValueChange({value: question, isCompleted: nameIsValid && categoryIsValid && innerFormIsValid});
+        onValueChange({value: question, isCompleted:
+                nameIsValid &&
+                categoryIsValid &&
+                innerFormIsValid&&
+                !!question.type
+        });
     };
 
     const handleQuestionUpdate = (question: IQuestion) => {
         setQuestion(question);
         console.log(question);
-        onValueChange({value: question, isCompleted: nameIsValid && categoryIsValid && innerFormIsValid});
+        onValueChange({value: question, isCompleted:
+                nameIsValid &&
+                categoryIsValid &&
+                innerFormIsValid &&
+                !!question.type});
     };
 
     const renderForm = () => {
@@ -95,6 +109,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
 
     const setQuestionType = (data: any) => {
         const type: QuestionType = data.value;
+        setInnerFormIsValid(true);
         setQuestion({...question, type, details: undefined});
     };
 

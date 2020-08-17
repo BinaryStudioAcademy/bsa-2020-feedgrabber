@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import QuestionField from "./QuestionField";
 import {Dropdown, Label} from "semantic-ui-react";
 import styles from "./styles.module.sass";
@@ -19,22 +19,24 @@ const options = types.map(option => {
 const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
     ({value: propValue, onValueChange}) => {
         const values = useInitValue(
-            {value: {filesType: "file_upload", filesNumber: 1, filesSize: 10}, isCompleted: false},
+            {value: {filesType: "", filesNumber: 1, filesSize: 10}, isCompleted: false},
             propValue,
             onValueChange
         );
 
         const check = (details: IFileUploadAnswerDetails) => {
-            console.log(details);
             if(details.filesNumber<1){details.filesNumber=1;}
             if(details.filesSize<1){details.filesSize=1;}
-            console.log(details);
+            console.log("Chaeck ",details);
             if(details.filesType){
                 onValueChange(validState(details));
             }else{
                 onValueChange(invalidState(details));
             }
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        useEffect(() => check(values), [values]);
 
         return (
             <div className={styles.fileUploadQuestion}>

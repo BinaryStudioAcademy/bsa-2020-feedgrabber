@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Form, Segment, Icon, Label } from "semantic-ui-react";
+import { Form, Segment, Icon } from "semantic-ui-react";
 import {
   IGenericQuestionComponent,
   useInitValue,
@@ -16,7 +16,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
 }) => {
 
   const value = useInitValue(
-    { value: { answerOptions: [] }, isCompleted: false },
+    { value: { answerOptions: [""] }, isCompleted: false },
     propValue,
     onValueChange
   );
@@ -30,6 +30,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
     onValueChange(valid ? validState(details) : invalidState(details));
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => validate(value), [value]);
 
   return (

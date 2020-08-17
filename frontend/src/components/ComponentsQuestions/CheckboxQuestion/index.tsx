@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Form, Icon} from "semantic-ui-react";
+import {Icon} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import CustomInput from "./CustomInput";
 import {IGenericQuestionComponent, invalidState, useInitValue, validState} from "../IQuestionInputContract";
@@ -12,7 +12,7 @@ onValueChange
 }) => {
 
     const value = useInitValue(
-        {value: {answerOptions: [], includeOther: false}, isCompleted: false},
+        {value: {answerOptions: [""], includeOther: false}, isCompleted: false},
         propValue,
         onValueChange
     );
@@ -26,6 +26,7 @@ onValueChange
         onValueChange(valid ? validState(details) : invalidState(details));
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => validate(value), [value]);
 
     const buttons = (
