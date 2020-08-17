@@ -2,25 +2,32 @@ html, body
   height: 100%
 
 .question_container
-    display: flex
-    flex-direction: column
-    align-items: center
-    padding-top: 30px
-    background-color: transparent
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding-top: 30px
+  background-color: transparent
+
+  &_preview
+    margin: 0 !important
+    display: block !important
+    padding-top: 0 !important
 
 .question_actions
-    border: none!important
+  border: none!important
+  background: transparent!important
+  height: fit-content
+  width: 50vw
+  display: inline-flex
+  align-items: center
+  justify-content: flex-end
+  backdrop-filter: blur(10px)
+  margin-top: 20px
 
-    background: transparent!important
-    height: fit-content
-    width: 50vw
-    display: inline-flex
-    align-items: center
-    justify-content: flex-end
-    backdrop-filter: blur(10px)
-    margin-top: 20px
+  &_preview
+    display: block !important
 
     & Button
-        width: 100px
-        margin-left: 20px!important
-        margin-right: 10px!important
+      width: 100px
+      margin-left: 20px!important
+      margin-right: 10px!important

@@ -82,7 +82,10 @@ const QuestionD: React.FC<IQuestionProps> = ({
             case QuestionType.date:
                 return <DateSelectionQuestionUI/>;
             case QuestionType.fileUpload:
-                return <FileUploadQuestion/>;
+                return <FileUploadQuestion
+                        onValueChange={handleQuestionDetailsUpdate}
+                        value={question.details}
+                    />;
             default:
                 return <span className={styles.question_default}>You should choose the type of the question :)</span>;
         }
