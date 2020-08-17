@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { loadQuestionsByQuestionnaireRoutine } from "../../sagas/questions/routines";
+import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
@@ -149,7 +149,7 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
-    loadQuestions: loadQuestionsByQuestionnaireRoutine,
+    loadQuestions: loadQuestionnaireQuestionsRoutine,
     saveResponseAnswers: saveAnswersRoutine
 };
 

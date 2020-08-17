@@ -4,4 +4,4 @@ export const loadQuestionsRoutine = createRoutine('QUESTION:LOAD_ALL');
 export const saveQuestionToQuestionnaireRoutine = createRoutine('QUESTION:SAVE');
 export const addSelectedQuestionsRoutine = createRoutine('QUESTION:ADD_SELECTED');
 export const loadQuestionByIdRoutine = createRoutine('QUESTION:LOAD_ONE');
-export const loadQuestionsByQuestionnaireRoutine = createRoutine('QUESTION:LOAD_QUESTIONNAIRE');
+export const loadQuestionnaireQuestionsRoutine = createRoutine('QUESTION:LOAD_QUESTIONNAIRE');
