@@ -8,6 +8,8 @@ import com.feed_grabber.core.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 
 @Service
 public class RegisterService {
@@ -19,18 +21,18 @@ public class RegisterService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public void registerUser(UserRegisterDTO userRegisterDTO) {
+    public UUID registerUser(UserRegisterDTO userRegisterDTO) {
         userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
 
         try {
-            userService.createDefault(userRegisterDTO);
+            return userService.createDefault(userRegisterDTO);
         } catch (Exception exception) {
             throw new UserAlreadyExistsException();
         }
     }
 
-    public void registerUserByInvitation(UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
+    public UUID registerUserByInvitation(UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
         dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
-        userService.createInCompany(dto);
+        return userService.createInCompany(dto);
     }
 }
