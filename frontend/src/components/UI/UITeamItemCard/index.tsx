@@ -28,7 +28,7 @@ const UITeamItemCard: FC<IUITeamItemCardProps> =
             </div>
             <div className={styles.teamInfo}>
               <Icon name='users'/>
-              {team.members.length}
+              {team.membersId.length}
               <span className={styles.showHide}
                     onClick={event => {
                       event.preventDefault();
@@ -37,16 +37,16 @@ const UITeamItemCard: FC<IUITeamItemCardProps> =
               > {showUsers ? 'Hide Members' : 'Show Members'}</span>
             </div>
 
-            {showUsers &&
-            (<div>
-                  {team.members.map(user => (
-                      <UIUserItemCard
-                          key={user.id}
-                          firstName={'Username: ' + user.username}
-                          avatar={user.avatar}/>))
-                  }
-                </div>
-            )}
+            {/* {showUsers &&*/}
+            {/* (<div>*/}
+            {/*      {team.members.map(user => (*/}
+            {/*          <UIUserItemCard*/}
+            {/*              key={user.id}*/}
+            {/*              firstName={'Username: ' + user.username}*/}
+            {/*              avatar={user.avatar}/>))*/}
+            {/*      }*/}
+            {/*    </div>*/}
+            {/* )}*/}
 
           </div>
       );

@@ -1,25 +1,33 @@
-import React from "react";
-import {FieldArray, FormikProps} from "formik";
-import {Button, Form, Icon} from "semantic-ui-react";
+import React, {useEffect, useState} from "react";
+import {Icon} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import CustomInput from "./CustomInput";
-import {IGenericQuestionComponent, invalidState, useInitValue} from "../IQuestionInputContract";
-import {ICheckboxAnswerDetails} from "../../../models/forms/Questions/IQuesion";
-
-// TODO: this will be common logic for multiple components, move it to shared folder
-function replaceAtIndex<T>(arr: T[], val: T, index: number) {
-    return [...arr.slice(0, index), val, ...arr.slice(index + 1)];
-}
+import {IGenericQuestionComponent, invalidState, useInitValue, validState} from "../IQuestionInputContract";
+import {ICheckboxAnswerDetails, IRadioButtonAnswerDetails} from "../../../models/forms/Questions/IQuesion";
+import {replaceAtIndex} from "../../../helpers/array.helper";
 
 const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
 value: propValue,
 onValueChange
 }) => {
+
     const value = useInitValue(
-        {value: {answerOptions: [], includeOther: false}, isCompleted: false},
+        {value: {answerOptions: [""], includeOther: false}, isCompleted: false},
         propValue,
         onValueChange
     );
+
+    const [isFieldTouched, setIsFieldTouched] = useState(value.answerOptions.map(a => true));
+
+    function validate(details: IRadioButtonAnswerDetails) {
+        const valid = details.answerOptions
+            .filter(a => (a.trim().length === 0) || (a.trim().length > 200))
+            .length === 0;
+        onValueChange(valid ? validState(details) : invalidState(details));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => validate(value), [value]);
 
     const buttons = (
         <div className={[styles.centerContent, styles.buttonContainer].join(' ')}>
@@ -39,6 +47,7 @@ onValueChange
                         onValueChange(
                             invalidState({...value, includeOther: true})
                         );
+                        setIsFieldTouched(isFieldTouched.concat(false));
                     }}
             >
                 Add Other option
@@ -83,33 +92,35 @@ onValueChange
                             placeholder="Type answer here..."
                             name={`answers.${index}`}
                             value={answer}
-                            error={false} // TODO change this after adding validation
+                            error={isFieldTouched[index] &&
+                            (answer.trim().length === 0 || answer.trim().length > 200)}
                             onChange={event => {
-                                onValueChange(
-                                    invalidState({
-                                        ...value,
+                                setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index));
+                                validate(
+                                    {
                                         answerOptions: replaceAtIndex(
                                             value.answerOptions,
                                             event.target.value,
                                             index
-                                        )
-                                    })
+                                        ),
+                                        includeOther: value.includeOther
+                                    }
                                 );
                             }}
+                            onBlur={() => setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index))}
                         />
                         {value.answerOptions.length > 1 && (
-
                             <button
                                 className={styles.centerContent}
                                 type='button'
                                 onClick={() => {
-                                    onValueChange(
-                                        invalidState({
-                                            ...value,
+                                    validate(
+                                        {
                                             answerOptions: value.answerOptions.filter(
                                                 (val, i) => i !== index
-                                            )
-                                        })
+                                            ),
+                                            includeOther: value.includeOther
+                                        }
                                     );
                                 }}
                             >

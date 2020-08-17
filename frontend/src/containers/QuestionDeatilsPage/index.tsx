@@ -25,17 +25,16 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     const history = useHistory();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    /* const [addedCategories, setNewCategories] = useState([]);*/
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
-        const { isCompleted, value } = state;
-        setIsQuestionDetailsValid(isCompleted); // встановлюємо стейт валід чи ні*/
+        const {isCompleted, value} = state;
+        setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
-
     useEffect(() => {
+        loadQuestion('empty');
         loadCategories();
-    }, [loadCategories]);
+    }, [loadCategories, loadQuestion]);
 
     useEffect(() => {
         match.params.id === 'new'
@@ -45,23 +44,11 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     useEffect(() => {
         setQuestion(currentQuestion);
-        console.log(currentQuestion);
     }, [currentQuestion]);
 
     const onClose = () => {
-        console.log(1);
-        loadQuestion('empty');
         isPreview ? isPreview.close() : history.push("/questions");
     };
-
-    // const onSubmit = () => {
-    //     if (isQuestionDetailsValid) {
-    //         console.log(question);
-    //         saveQuestion(question);
-    //         loadQuestion('empty');
-    //         history.push("/questions");
-    //     }
-    // };
 
     const onSubmit = () => {
         if (isQuestionDetailsValid) {

@@ -39,10 +39,10 @@ function* getById(action) {
   try {
     const id = action.payload;
 
-    if (id === 'empty') {
-      put(loadQuestionByIdRoutine.success(defaultQuestion));
-      return;
-    }
+        if (id === 'empty') {
+            yield  put(loadQuestionByIdRoutine.success(defaultQuestion));
+            return;
+        }
 
     const res: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${action.payload}`);
 
