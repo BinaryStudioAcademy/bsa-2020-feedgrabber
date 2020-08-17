@@ -23,13 +23,14 @@ public interface UserMapper {
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
-    @Mapping(target = "role", source = "role.name")
+    @Mapping(target = "role", source = "role.systemRole")
     UserResponseAuthDetailsDTO responseFromUser(User user);
 
     @Mapping(target = "userName", source = "username")
     @Mapping(target = "firstName", source = "userProfile.firstName")
     @Mapping(target = "lastName", source = "userProfile.lastName")
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
+    @Mapping(target = "role", source = "role.systemRole")
     UserDetailsResponseDTO detailedFromUser(User user);
 
 }

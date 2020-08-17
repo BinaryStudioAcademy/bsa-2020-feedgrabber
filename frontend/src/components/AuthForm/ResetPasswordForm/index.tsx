@@ -41,7 +41,7 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                 onSubmit={values => {
                     resetPass({
                         password: values.password,
-                        uniqueUrl: match.params.id
+                        token: match.params.id
                     });
                 }}
             >

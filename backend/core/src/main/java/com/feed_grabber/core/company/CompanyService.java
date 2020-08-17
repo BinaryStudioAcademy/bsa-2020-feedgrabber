@@ -2,6 +2,7 @@ package com.feed_grabber.core.company;
 
 import com.feed_grabber.core.company.dto.CompanyDomainDto;
 import com.feed_grabber.core.company.dto.CompanyDto;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +58,11 @@ public class CompanyService {
                 .stream()
                 .map(CompanyMapper.MAPPER::companyToCompanyDomainDto)
                 .collect(Collectors.toList());
+    }
+
+    public CompanyDomainDto getCompanyDomain(UUID id) throws CompanyNotFoundException {
+        return companyRepository.findById(id)
+                .map(CompanyMapper.MAPPER::companyToCompanyDomainDto)
+                .orElseThrow(() -> new CompanyNotFoundException());
     }
 }
