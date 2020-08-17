@@ -7,12 +7,12 @@ import {IComponentState} from "../ComponentsQuestions/IQuestionInputContract";
 import CheckboxQuestion from "../ComponentsQuestions/CheckboxQuestion";
 import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
-import InputField from "../ComponentsQuestions/InputField";
 import DateSelectionQuestionUI from "../ComponentsQuestions/DateSelectionQuestionUI";
 import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
 import {mainSchema} from "./schemas";
 import {questionTypeOptions} from "./questionTypeOptions";
 import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI";
+import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
@@ -28,24 +28,38 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
-    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(false);
-    const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(false);
+    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle.length > 0);
+    const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(true);
     const [addedCategories, setNewCategories] = useState([]);
 
     useEffect(() => {
-        onValueChange({value: question, isCompleted: categoryIsValid && nameIsValid});
-    }, [nameIsValid, categoryIsValid, onValueChange, question]);
+        onValueChange({value: question, isCompleted:
+                categoryIsValid &&
+                nameIsValid &&
+                innerFormIsValid &&
+                !!question.type
+        });
+    }, [nameIsValid, categoryIsValid, onValueChange, question, innerFormIsValid]);
 
     const handleQuestionDetailsUpdate = (state: IComponentState<{}>) => {
         const {isCompleted, value} = state;
         setInnerFormIsValid(isCompleted);
         setQuestion({...question, details: value as any});
-        onValueChange({value: question, isCompleted: nameIsValid && categoryIsValid && innerFormIsValid});
+        onValueChange({value: question, isCompleted:
+                nameIsValid &&
+                categoryIsValid &&
+                innerFormIsValid&&
+                !!question.type
+        });
     };
 
     const handleQuestionUpdate = (question: IQuestion) => {
         setQuestion(question);
-        onValueChange({value: question, isCompleted: nameIsValid && categoryIsValid});
+        onValueChange({value: question, isCompleted:
+                nameIsValid &&
+                categoryIsValid &&
+                innerFormIsValid &&
+                !!question.type});
     };
 
     const renderForm = () => {
@@ -78,11 +92,14 @@ const QuestionD: React.FC<IQuestionProps> = ({
                     />
                 );
             case QuestionType.freeText:
-                return <InputField/>;
+                return <FreeTextQuestionUI/>;
             case QuestionType.date:
                 return <DateSelectionQuestionUI/>;
             case QuestionType.fileUpload:
-                return <FileUploadQuestion/>;
+                return <FileUploadQuestion
+                        onValueChange={handleQuestionDetailsUpdate}
+                        value={question.details}
+                    />;
             default:
                 return <span className={styles.question_default}>You should choose the type of the question :)</span>;
         }
@@ -90,6 +107,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
 
     const setQuestionType = (data: any) => {
         const type: QuestionType = data.value;
+        setInnerFormIsValid(true);
         setQuestion({...question, type, details: undefined});
     };
 

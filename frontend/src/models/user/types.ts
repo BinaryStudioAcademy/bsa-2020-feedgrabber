@@ -25,7 +25,9 @@ export interface IUserErrors {
 
 export interface IUserShort {
     id: string;
-    avatar: string;
+    avatar?: string;
     username: string;
+    selected?: boolean;
+    loading?: boolean;
 }
 

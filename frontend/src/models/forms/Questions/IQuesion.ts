@@ -29,12 +29,10 @@ export interface IScaleDetails {
     maxDescription: string;
 }
 
-export interface IFileUploadDetails {
-    answers: {
-        fileType: string;
-        fileNumber: number;
-        fileSize: number;
-    };
+export interface IFileUploadAnswerDetails {
+    filesType: string;
+    filesNumber: number;
+    filesSize: number;
 }
 
 export interface IQuestionBase<TDetails>{
@@ -72,7 +70,7 @@ export interface IDateQuestion extends IQuestionBase<{}> {
     type: QuestionType.date;
 }
 
-export interface IFileUploadQuestion extends IQuestionBase<IFileUploadDetails> {
+export interface IFileUploadQuestion extends IQuestionBase<IFileUploadAnswerDetails> {
     type: QuestionType.fileUpload;
 }
 
@@ -92,7 +90,7 @@ export enum QuestionType {
     checkbox = "checkbox",
     multichoice = "multi_choice",
     date = "date",
-    fileUpload = "fileUpload"
+    fileUpload = "file_upload"
 }
 
 export const DraggableItemTypes = {

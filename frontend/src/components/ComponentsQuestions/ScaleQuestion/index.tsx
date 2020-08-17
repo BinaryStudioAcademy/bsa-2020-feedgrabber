@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React from 'react';
 import { Form, Dropdown } from 'semantic-ui-react';
 import {
     IGenericQuestionComponent,
@@ -28,14 +28,15 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
     value: propValue,
     onValueChange
 }) => {
+
     const values = useInitValue(
          {value: {min: 1, max: 5, minDescription: "", maxDescription: ""}, isCompleted: true},
          propValue,
          onValueChange
     );
-    console.log(values);
+
     return (
-        <Form className={styles.container}>
+        <div className={styles.container}>
             <div className={[styles.dropdown, styles.container].join(' ')}>
                     <Dropdown compact selection className={styles.first}
                         options={optionsForMin}
@@ -64,7 +65,6 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
                             name="minDescription"
                             value= {values.minDescription}
                             onChange = {event => {
-                                console.log(event.target.value);
                                 onValueChange(
                                 validState({
                                     ...values,
@@ -83,7 +83,7 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
                                 }))}/>
                 </div>
             </div>
-        </Form>
+        </div>
     );
 };
 

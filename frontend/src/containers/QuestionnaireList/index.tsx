@@ -58,6 +58,10 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
       title={item.title}
       description={item.companyName}
       actions={[
+        {icon: 'plus', callback: () => {
+            history.push(`/questionnaires/${item.id}/new-request`);
+          }
+        },
         {
           icon: 'settings', callback: () => {
             clearOneQuestionnaire();
