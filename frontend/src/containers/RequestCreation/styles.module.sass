@@ -1,0 +1,40 @@
+.yesNoHeader
+  input
+    position: relative
+    top: 1px
+    margin-left: 10px
+    width: 1.2rem
+    height: 1.2rem
+    &:after
+      content: "No"
+      position: relative
+      left: 20px
+    &:checked:after
+      content: "Yes!"
+
+.option
+  padding-left: 20px
+  padding-right: 20px
+  padding-bottom: 6px
+  cursor: pointer
+  color: rgb(169, 169, 169)
+  border-bottom: 2px solid rgb(169, 169, 169)
+  transition: border-bottom 0.2s, color 0.2s
+
+  &:hover
+    color: #1A0EDA
+    border-bottom: 2px solid #1A0EDA
+
+
+.selected
+  color: #1A0EDA
+  border-bottom: 2px solid #1A0EDA
+
+.selectHeader
+  height: 60px
+
+.deadlineDate
+  font-weight: bold
+  height: 20px
+
+

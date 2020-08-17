@@ -1,6 +1,7 @@
 package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.team.model.Team;
 import lombok.AllArgsConstructor;
@@ -70,5 +71,14 @@ public class User {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToMany(
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "respondents")
+    @Builder.Default
+    private List<Request> requests = new ArrayList<>();
 
 }

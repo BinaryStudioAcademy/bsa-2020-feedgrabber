@@ -22,7 +22,7 @@ public class Sender {
         this.template = template;
     }
 
-    public void sendToFileProcessor(String text) {
+    public void sendToProcessor(String text) {
         log.info(" [x] Sending...");
         this.template.convertAndSend(exchange, routingKey, text);
         log.info(" [x] Sent '{}'", text);

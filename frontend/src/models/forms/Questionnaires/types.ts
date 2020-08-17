@@ -13,6 +13,7 @@ export interface IQuestionnairesState {
 export interface IQuestionnaire {
     id?: string;
     title: string;
+    description?: string; 
     companyName?: string;
     questions?: IQuestion[];
 }
