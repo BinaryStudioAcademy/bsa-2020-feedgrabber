@@ -29,6 +29,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.sendgrid:sendgrid-java:4.6.3")
 	compileOnly("org.projectlombok:lombok")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.3.2.RELEASE")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
