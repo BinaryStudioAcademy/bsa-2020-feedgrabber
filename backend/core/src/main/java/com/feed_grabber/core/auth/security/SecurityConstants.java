@@ -6,7 +6,6 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String AUTH_HEADER_STRING = "Authorization";
     public static final String[] ROUTES_WHITE_LIST = {
-            "/ws/**",
             "/api/auth/login",
             "/api/user/email/reset",
             "/api/user/reset",
@@ -18,6 +17,7 @@ public class SecurityConstants {
             "/api/company/user-companies",
             "/v2/api-docs",
             "/configuration/ui",
+            "/ws/**",
             "/swagger-resources/**",
             "/configuration/security",
             "/swagger-ui.html",

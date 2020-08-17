@@ -9,6 +9,7 @@ import Routing from 'containers/Routing';
 import SubdomainRouter from "../../components/SubdomainRouter";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
+import Notifications from "../Notifications";
 
 const App: React.FC = () => (
     <DndProvider backend={HTML5Backend} >
@@ -28,6 +29,7 @@ const App: React.FC = () => (
                     <Router history={history}>  <Routing/>
                     </Router>
                 </SubdomainRouter>
+                {Notifications()}
             </Provider>
         </Scrollbars>
     </DndProvider>
