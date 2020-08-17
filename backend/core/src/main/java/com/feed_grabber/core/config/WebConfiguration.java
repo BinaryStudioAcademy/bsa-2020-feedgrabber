@@ -1,4 +1,4 @@
-package com.feed_grabber.core.security;
+package com.feed_grabber.core.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
