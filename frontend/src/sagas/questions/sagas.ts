@@ -91,11 +91,7 @@ function* getByQuestionnaireId(action) {
     const response = yield call(apiClient.get,
        `http://localhost:5000/api/questions/questionnaires/${action.payload}`);
     const items = response.data.data;
-    const questions: IGeneric<IQuestion[]> = items.map(item => {return {
-      ...item,
-      type: item.type.toLowerCase(),
-      details: JSON.parse(item.details)
-    };});
+    const questions: IGeneric<IQuestion[]> = items.map(item => parseQuestion(item));
     yield put(loadQuestionsByQuestionnaireRoutine.success(questions));
   } catch (error) {
     yield put(loadQuestionsByQuestionnaireRoutine.failure(error));
