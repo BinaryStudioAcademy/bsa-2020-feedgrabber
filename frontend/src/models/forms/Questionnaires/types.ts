@@ -15,6 +15,7 @@ export interface IQuestionnaire {
     title: string;
     description?: string; 
     companyName?: string;
+    questions?: IQuestion[];
 }
 
 export interface ICreateQuestionnaire {
