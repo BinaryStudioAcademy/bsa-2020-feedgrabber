@@ -8,11 +8,7 @@ import {
 } from "../IQuestionInputContract";
 import './styles.sass';
 import {IMultiAnswerDetails} from "../../../models/forms/Questions/IQuesion";
-
-// TODO: this will be common logic for multiple components, move it to shared folder
-function replaceAtIndex<T>(arr: T[], val: T, index: number) {
-  return [...arr.slice(0, index), val, ...arr.slice(index + 1)];
-}
+import ReplaceAtIndex from 'models/ReplaceAtIndex';
 
 const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
   value: propValue,
@@ -42,7 +38,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
               onChange={event => {
                 onValueChange(
                   validState({
-                    answerOptions: replaceAtIndex(
+                    answerOptions: ReplaceAtIndex(
                       value.answerOptions,
                       event.target.value,
                       index
