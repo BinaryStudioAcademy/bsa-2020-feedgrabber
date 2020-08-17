@@ -1,11 +1,11 @@
 import React, {FC, useState} from 'react';
 import {Icon} from 'semantic-ui-react';
 import styles from "./styles.module.sass";
-import {ITeam} from "../../../models/teams/ITeam";
+import {ITeam, ITeamShort} from "../../../models/teams/ITeam";
 import UIUserItemCard from "../UIUserItemCard";
 
 interface IUITeamItemCardProps {
-  team: ITeam;
+  team: ITeamShort;
   onClick?: () => void;
   selected?: boolean;
 }
@@ -16,7 +16,6 @@ const UITeamItemCard: FC<IUITeamItemCardProps> =
        selected,
        onClick
      }) => {
-      const [showUsers, setShowUsers] = useState(false);
 
       return (
           <div id={team.id}
@@ -28,26 +27,8 @@ const UITeamItemCard: FC<IUITeamItemCardProps> =
             </div>
             <div className={styles.teamInfo}>
               <Icon name='users'/>
-              {team.membersId.length}
-              <span className={styles.showHide}
-                    onClick={event => {
-                      event.preventDefault();
-                      setShowUsers(!showUsers);
-                    }}
-              > {showUsers ? 'Hide Members' : 'Show Members'}</span>
+              {team.membersAmount}
             </div>
-
-            {/* {showUsers &&*/}
-            {/* (<div>*/}
-            {/*      {team.members.map(user => (*/}
-            {/*          <UIUserItemCard*/}
-            {/*              key={user.id}*/}
-            {/*              firstName={'Username: ' + user.username}*/}
-            {/*              avatar={user.avatar}/>))*/}
-            {/*      }*/}
-            {/*    </div>*/}
-            {/* )}*/}
-
           </div>
       );
     };
