@@ -24,6 +24,9 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
             {editor && (id === nowModifying.id) ?
                 <div className={styles.scaleTop}>
                     <FormEditorSelectedContainer question={question} handleSegmentClick={handleSegmentClick}/>
+                    {/* <QuestionDetailsPage
+                        match={{ params: { id: question.id } }}
+                        isPreview={{ question: question, close: handleSegmentClick }} /> */}
                 </div>
                 : <>
                     <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>

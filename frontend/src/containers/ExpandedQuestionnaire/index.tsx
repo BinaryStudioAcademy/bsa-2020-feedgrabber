@@ -53,19 +53,17 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
         loadOneQuestionnaire(match.params.id);
     }, [loadOneQuestionnaire, match.params.id]);
 
-    return (
-        <LoaderWrapper loading={isLoading}>
-            {questionnaire && (
-                <div>
-                    <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
-                    {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
-                    <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {
-                    }}/>
-                    <QuestionnairePreview/>
-                </div>
-            )}
-        </LoaderWrapper>
-    );
+  return (
+    <LoaderWrapper loading={isLoading}>
+      {questionnaire && (
+        <div>
+          <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
+          {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
+          <QuestionnairePreview />
+        </div>
+      )}
+    </LoaderWrapper>
+  );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
