@@ -13,7 +13,7 @@ import { IAppState } from "../../models/IAppState";
 import { combineReducers } from "redux";
 import {
     addNewQuestionToQuestionnaireRoutine,
-    addSelectedQuestionsRoutine, copyQuestionInQuestionnaireRoutine,
+    addSelectedQuestionsRoutine, copyQuestionInQuestionnaireRoutine, deleteFromQuestionnaireRoutine,
     loadQuestionnaireQuestionsRoutine
 } from "../../sagas/questions/routines";
 import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
@@ -100,6 +100,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 get: payload,
                 isLoading: false
             };
+        case deleteFromQuestionnaireRoutine.SUCCESS:
         case copyQuestionInQuestionnaireRoutine.SUCCESS:
         case addNewQuestionToQuestionnaireRoutine.SUCCESS:
         case loadQuestionnaireQuestionsRoutine.SUCCESS:
@@ -108,7 +109,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 questions: payload,
                 isLoading: false
             };
-
+        case deleteFromQuestionnaireRoutine.TRIGGER:
         case copyQuestionInQuestionnaireRoutine.TRIGGER:
         case addNewQuestionToQuestionnaireRoutine.TRIGGER:
         case loadOneQuestionnaireRoutine.TRIGGER:
@@ -118,18 +119,15 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 ...state,
                 isLoading: true
             };
+        case deleteFromQuestionnaireRoutine.FAILURE:
+        case copyQuestionInQuestionnaireRoutine.FAILURE:
+        case addNewQuestionToQuestionnaireRoutine.FAILURE:
         case loadQuestionnaireQuestionsRoutine.FAILURE:
         case addSelectedQuestionsRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false,
                 questions: payload
-            };
-        case copyQuestionInQuestionnaireRoutine.FAILURE:
-        case addNewQuestionToQuestionnaireRoutine.FAILURE:
-            return {
-                ...state,
-                isLoading: false
             };
         case loadOneQuestionnaireRoutine.FAILURE:
             return {

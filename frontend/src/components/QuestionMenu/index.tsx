@@ -28,7 +28,7 @@ const QuestionMenu: FC<ContainerProps> = ({
     };
 
     const handleDelete = () => {
-        deleteQuestion(currentQuestion.id);
+        deleteQuestion({qId: currentQuestionnaireId, id: currentQuestion.id});
     };
 
     return (

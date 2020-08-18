@@ -137,8 +137,8 @@ function* deleteOneByQuestionnaireId(action) {
     try {
         const { id, qId } = action.payload;
         const res: IGeneric<IQuestion[]> = yield call(apiClient.delete, `/api/questions/questionnaires/${qId}`, id);
-
-        yield put(deleteFromQuestionnaireRoutine.success(res.data.data));
+        const questions = res.data.data.map(q => parseQuestion(q));
+        yield put(deleteFromQuestionnaireRoutine.success(questions));
     } catch (e) {
         yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
         toastr.error("Unable to delete question");
