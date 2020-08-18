@@ -1,5 +1,6 @@
 package com.feed_grabber.core.registration;
 
+import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.registration.model.VerificationToken;
@@ -15,17 +16,23 @@ import java.util.UUID;
 public class VerificationTokenService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final UserRepository userRepository;
+    private final Sender emailSender;
 
-    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository, UserRepository userRepository) {
+    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository,
+                                    UserRepository userRepository,
+                                    Sender emailSender) {
         this.verificationTokenRepository = verificationTokenRepository;
         this.userRepository = userRepository;
+        this.emailSender = emailSender;
     }
 
     public String generateVerificationToken(User user, TokenType type) {
         String token = UUID.randomUUID().toString();
         var verificationToken = new VerificationToken(token, user, type);
 
-        return verificationTokenRepository.save(verificationToken).getToken();
+        var verificationTokenStr = verificationTokenRepository.save(verificationToken).getToken();
+        emailSender.sendToProcessor("localhost:5000/" + type +"/" + verificationTokenStr, user.getEmail());
+        return verificationTokenStr;
 
 //TODO:  send request to email service
 //        var dto = SendVerificationEmailDto.builder().email(user.getEmail()).url(UrlPrefix + token)
