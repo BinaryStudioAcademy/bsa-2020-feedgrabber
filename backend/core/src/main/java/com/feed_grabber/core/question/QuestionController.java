@@ -46,14 +46,6 @@ public class QuestionController {
         return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }
 
-    @ApiOperation(value = "Get the question by id and questionnaireId")
-    @GetMapping("/questionnaires/{qId}")
-    @ResponseStatus(HttpStatus.OK)
-    public AppResponse<QuestionDto> getOneByQuestionnaireAndID(@ApiParam(
-            value = "IDs to get one question from questionnaire", required = true) @RequestParam UUID id, @PathVariable UUID qId) throws QuestionnaireNotFoundException {
-        return new AppResponse<>(questionService.getOneByQuestionnaireIdAndQuestionId(id, qId).orElseThrow(QuestionnaireNotFoundException::new));
-    }
-
     @ApiOperation(value = "Get the question by id")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -99,19 +91,18 @@ public class QuestionController {
         return new AppResponse<>(questionService.addExistingQuestion(dto));
     }
 
-
     @ApiOperation(value = "Delete the question")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         questionService.delete(id);
     }
-
-    @ApiOperation(value = "Delete the question by id and questionnaireId")
-    @DeleteMapping("/questionnaires/{qId}/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteOneByQuestionnaireAndID(@ApiParam(
-            value = "IDs to delete one question from questionnaire", required = true) @PathVariable UUID id, @PathVariable UUID qId){
-        questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
-    }
+//
+//    @ApiOperation(value = "Delete the question by id and questionnaireId")
+//    @DeleteMapping("/questionnaires/{qId}/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void deleteOneByQuestionnaireAndID(@ApiParam(
+//            value = "IDs to delete one question from questionnaire", required = true) @PathVariable UUID id, @PathVariable UUID qId){
+//        questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
+//    }
 }
