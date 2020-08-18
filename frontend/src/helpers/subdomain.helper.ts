@@ -1,7 +1,7 @@
 import {ICompanyDomain} from "../models/companies/ICompanyDomain";
 
 export const redirectToCompany = (company: ICompanyDomain) => {
-    const companyName = company.id;
+    const companyName = company.subdomainName;
 
     const protocol = window.location.protocol;
     const pathname = window.location.pathname;
