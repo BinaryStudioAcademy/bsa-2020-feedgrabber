@@ -13,7 +13,6 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> =
 
   const getVariants = (min: number, max: number) => {
     const group = question.id;
-    console.log(group);
     const variants = [];
     for (let i = min; i <= max; i++) {
       variants.push(
