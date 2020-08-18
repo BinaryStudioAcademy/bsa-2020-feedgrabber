@@ -8,7 +8,7 @@ function* saveRequest(action) {
     yield call(apiClient.post,'/api/request/new' ,action.payload);
     toastr.success('Request Created');
   } catch(error) {
-    toastr.error('CReating Request Failed');
+    toastr.error('Creating Request Failed');
   }
 }
 

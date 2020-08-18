@@ -33,9 +33,9 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
         var pass = dto.getPassword();
-        registerService.registerUser(dto);
+        var companyId = registerService.registerUser(dto);
 
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
         return login(loginDto);
     }
 
@@ -44,9 +44,9 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
         var pass = dto.getPassword();
-        registerService.registerUserByInvitation(dto);
+        var companyId = registerService.registerUserByInvitation(dto);
 
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
         return login(loginDto);
     }
 

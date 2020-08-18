@@ -25,43 +25,34 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     const history = useHistory();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    /* const [addedCategories, setNewCategories] = useState([]);*/
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
         const { isCompleted, value } = state;
-        setIsQuestionDetailsValid(isCompleted); // встановлюємо стейт валід чи ні*/
+        setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
+    // useEffect(() => {
+    //     loadQuestion('empty');
+    //     loadCategories();
+    // }, [loadCategories, loadQuestion]);
 
     useEffect(() => {
-        loadCategories();
-    }, [loadCategories]);
-
-    useEffect(() => {
-        match.params.id === 'new'
-            ? loadQuestion('empty')
-            : loadQuestion(match.params.id);
-    }, [loadQuestion, match.params.id]);
+        if (match.params.id === 'new') {
+            loadQuestion('empty');
+        }
+        else {
+            loadQuestion(match.params.id);
+            loadCategories();
+        }
+    }, [loadQuestion, match.params.id, loadCategories]);
 
     useEffect(() => {
         setQuestion(currentQuestion);
-        console.log(currentQuestion);
     }, [currentQuestion]);
 
     const onClose = () => {
-        console.log(1);
-        loadQuestion('empty');
         isPreview ? isPreview.close() : history.push("/questions");
     };
-
-    // const onSubmit = () => {
-    //     if (isQuestionDetailsValid) {
-    //         console.log(question);
-    //         saveQuestion(question);
-    //         loadQuestion('empty');
-    //         history.push("/questions");
-    //     }
-    // };
 
     const onSubmit = () => {
         if (isQuestionDetailsValid) {
@@ -70,7 +61,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                 questionnaireId
             });
         }
-        history.goBack();
+        isPreview ? isPreview.close() : history.goBack();
     };
 
     return (

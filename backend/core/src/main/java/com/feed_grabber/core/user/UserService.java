@@ -1,11 +1,13 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.auth.AuthService;
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
+import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.registration.TokenType;
@@ -19,13 +21,13 @@ import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,11 +57,15 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void createDefault(UserRegisterDTO userRegisterDTO) {
+    public UUID createDefault(UserRegisterDTO userRegisterDTO) {
 
-        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
-                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException();
+//        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
+//                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
+//            throw new UserAlreadyExistsException();
+//        }
+
+        if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
+            throw new CompanyAlreadyExistsException();
         }
 
         var company = companyRepository.save(
@@ -102,9 +108,10 @@ public class UserService implements UserDetailsService {
                 .build()
         );
         verificationTokenService.generateVerificationToken(user, TokenType.REGISTRATION);
+        return company.getId();
     }
 
-    public void createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException {
+    public UUID createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException {
 
         var invitation = invitationRepository.findById(registerDto.getInvitationId())
                 .orElseThrow(InvitationNotFoundException::new);
@@ -129,6 +136,7 @@ public class UserService implements UserDetailsService {
                 .build()
         );
         verificationTokenService.generateVerificationToken(user, TokenType.REGISTRATION);
+        return invitation.getCompany().getId();
     }
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
@@ -187,15 +195,31 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public org.springframework.security.core.userdetails.User loadUserByUsername(String username) throws UsernameNotFoundException {
+    public org.springframework.security.core.userdetails.User loadUserByUsername(String usernameAndCompanyId) throws UsernameNotFoundException {
+        var username = this.extractUserName(usernameAndCompanyId);
+        var companyId = this.extractCompanyId(usernameAndCompanyId);
         return userRepository
-                .findByUsername(username)
+                .findByUsernameAndCompanyId(username, companyId)
                 .map(u -> new org.springframework.security.core.userdetails.User(u.getUsername()
                         , u.getPassword()
-                        , Collections.emptyList()))
+                        , List.of(new SimpleGrantedAuthority(u.getRole().getName()))))
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+    private String extractUserName(String usernameAndCompanyId) {
+        var index = this.getDividerIndex(usernameAndCompanyId);
+        return usernameAndCompanyId.substring(0, index);
+    }
+
+    private UUID extractCompanyId (String usernameAndCompanyId) {
+        var startIndex = this.getDividerIndex(usernameAndCompanyId) + 1;
+        var companyId = usernameAndCompanyId.substring(startIndex, usernameAndCompanyId.length());
+        return UUID.fromString(companyId);
+    }
+
+    private int getDividerIndex(String usernameAndCompanyId) {
+        return usernameAndCompanyId.indexOf(AuthService.LOGIN_DIVIDER);
+    }
 
     public List<UserShortDto> getAllByCompanyId(UUID companyId) {
         return userRepository.findAllByCompanyId(companyId)
@@ -214,6 +238,5 @@ public class UserService implements UserDetailsService {
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
     }
-
 
 }
