@@ -1,6 +1,7 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
+import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
 import io.swagger.annotations.ApiOperation;
@@ -53,7 +54,8 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        return new AppResponse<>(authService.login(userLoginDTO));
+        var login = authService.login(userLoginDTO);
+        return new AppResponse<>(login);
 
     }
 

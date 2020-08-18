@@ -25,6 +25,7 @@ import QuestionnareResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
+import useStomp from "../../helpers/websocket.helper";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -35,8 +36,9 @@ export interface IRoutingProps {
 
 const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
   const isLogged = useAuth();
+    useStomp("questions", () => console.log("here"));
 
-  useEffect(() => {
+    useEffect(() => {
     if (isLogged && !user){
       getUser();
     }
