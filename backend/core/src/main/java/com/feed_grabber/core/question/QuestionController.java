@@ -102,7 +102,7 @@ public class QuestionController {
     @DeleteMapping("/questionnaires/{qId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteOneByQuestionnaireAndID(@ApiParam(
-            value = "IDs to delete one question from questionnaire", required = true) @PathVariable UUID id, @RequestParam UUID qId){
+            value = "IDs to delete one question from questionnaire", required = true) @RequestParam UUID id, @PathVariable UUID qId){
         questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
     }
 }
