@@ -11,10 +11,10 @@ class MailContentBuilder(
         @Autowired val templateEngine: TemplateEngine
 ) {
 
-    fun buildInvitationMail(link: String): Content {
+    fun buildAccountActivationMail(link: String): Content {
         val context = Context()
         context.setVariable("link", link)
-        return Content("text/html", templateEngine.process("invite", context))
+        return Content("text/html", templateEngine.process("activate_account", context))
     }
 
 }
