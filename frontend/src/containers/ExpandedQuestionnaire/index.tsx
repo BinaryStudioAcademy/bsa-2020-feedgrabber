@@ -8,6 +8,7 @@ import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IQuestionnaire} from 'models/forms/Questionnaires/types';
 import {IAppState} from 'models/IAppState';
+import QuestionMenu from "../../components/QuestionMenu";
 
 const questions = [
     {
@@ -53,17 +54,20 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
         loadOneQuestionnaire(match.params.id);
     }, [loadOneQuestionnaire, match.params.id]);
 
-  return (
-    <LoaderWrapper loading={isLoading}>
-      {questionnaire && (
-        <div>
-          <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
-          {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
-          <QuestionnairePreview />
-        </div>
-      )}
-    </LoaderWrapper>
-  );
+    return (
+        <LoaderWrapper loading={isLoading}>
+            {questionnaire && (
+                <div>
+                    <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
+                    {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
+                    <div className={styles.formDetails}>
+                        <QuestionnairePreview/>
+                        <QuestionMenu/>
+                    </div>
+                </div>
+            )}
+        </LoaderWrapper>
+    );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({

@@ -30,9 +30,6 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
             (@Param("text") String text, @Param("questionnaireId") UUID questionnaireId,
              @Param("categoryId") UUID categoryId, @Param("id") UUID id);
 
-    @Query("SELECT q from Question q inner join q.questionnaires que where q.id = ?1 and que.id = ?2")
-    Optional<QuestionDto> findByIdAndQuestionnaireID(UUID questionId, UUID questionnaireId);
-
     @Query("delete from Question where id in (select q.id from Question q inner join q.questionnaires que on (q.id = ?2 and que.id = ?1))")
     void deleteByQuestionnaireId(UUID qId, UUID id);
 }
