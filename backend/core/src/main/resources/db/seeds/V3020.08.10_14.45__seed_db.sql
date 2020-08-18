@@ -8,16 +8,17 @@ values
 ('246f9299-57bf-4667-bb46-217fe64cc34c', 'NASA', 'Washington, D.C.', '', '');
 
 insert into roles (id, name, description, system_role, company_id)
-values ('1d14354d-586b-4f90-84dd-9d439cb36e52', 'Role)', 'role description', 'HR', '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7');
+values ('1d14354d-586b-4f90-84dd-9d439cb36e52', 'Role)', 'role description', 'hr', '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7');
 
 insert into users
-(id, email, username, password, role_id)
+(id, email, username, password, role_id, is_enabled, company_id)
 values
-('1d14354d-586b-4f90-84dd-9d439cb36e52', 'anayah@gmail.com', 'Anayah','b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52'),
-('a9212bcd-9410-4f2c-a51e-cad095d6982b', 'avleen@gmail.com', 'Avleen','b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52'),
-('e1ed2f0f-b402-4208-b39b-ff8d2fbf6164', 'lilli@gmail.com', 'Lilli', 'b4a6fb5a-6f18-4581-a32d-108c12b1e3ae', '1d14354d-586b-4f90-84dd-9d439cb36e52'),
-('5422df61-f6dc-496d-a9bf-5c7352275d24', 'celeste@gmail.com', 'Celeste','b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52' ),
-('df14aac7-861e-42e0-a6ed-49b9713d4d11', 'maximilian@gmail.com', 'Maximilian', 'b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52');
+('1d14354d-586b-4f90-84dd-9d439cb36e52', 'anayah@gmail.com', 'Anayah','b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52', false, '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'),
+('a9212bcd-9410-4f2c-a51e-cad095d6982b', 'avleen@gmail.com', 'Avleen','b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52',false, '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'),
+('e1ed2f0f-b402-4208-b39b-ff8d2fbf6164', 'lilli@gmail.com', 'Lilli', 'b4a6fb5a-6f18-4581-a32d-108c12b1e3ae', '1d14354d-586b-4f90-84dd-9d439cb36e52',false, '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'),
+('5422df61-f6dc-496d-a9bf-5c7352275d24', 'celeste@gmail.com', 'Celeste','b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52',false, '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'),
+('df14aac7-861e-42e0-a6ed-49b9713d4d11', 'maximilian@gmail.com', 'Maximilian', 'b4a6fb5a-6f18-4581-a32d-108c12b1e3ae','1d14354d-586b-4f90-84dd-9d439cb36e52',false, '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7'),
+('eede1a9b-dce2-4038-99c5-a349082ebe77', 'qwerty@gmail.com', 'qwerty','$2a$10$u8pk7NAy.e6GsoZAZrvfAONZ2uqHAwSGTuXubrC14tXa52AC9e622','1d14354d-586b-4f90-84dd-9d439cb36e52',true, '31c6aeb4-3dad-4bbf-a3d1-21069ac67fc7');
 
 insert into verification_tokens
 (id, token, expiration_date, user_id)
