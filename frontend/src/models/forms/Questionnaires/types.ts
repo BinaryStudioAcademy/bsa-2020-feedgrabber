@@ -35,4 +35,5 @@ export interface IQuestionnairesListState {
   modalQuestionnaire?: IQuestionnaire;
   modalLoading?: boolean;
   modalError?: string;
+  questionnaires?: IQuestionnaire[];
 }

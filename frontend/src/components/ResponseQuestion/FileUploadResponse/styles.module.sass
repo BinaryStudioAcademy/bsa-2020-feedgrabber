@@ -1,0 +1,67 @@
+$container-height: 55vh
+
+.fileUpload
+  display: grid
+  grid-template-columns: 50% 50%
+  grid-template-rows: 90% 10%
+  height: $container-height
+
+.Upload
+  grid-column: 1
+  grid-row: 1
+
+.filesContainer
+  grid-column: 2
+  grid-row: 1
+  max-height: 100%
+  overflow-y: scroll
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.filesContainer > img
+  margin: 5px
+
+.wrap
+  grid-column: 2
+  grid-row: 2
+  display: grid
+  grid-template-columns: 80% 20%
+  margin: 10px 35px 0 10px
+
+.errorMessage
+  color: red
+  display: flex
+  align-items: center
+  justify-content: center
+  word-break: break-word
+  margin-right: 10px
+  overflow: hidden
+
+.clearButton
+  grid-column: 2
+  height: 2.5vw
+  width: 6vw
+  padding: 5px !important
+  font-size: 1.2vw !important
+  &:active
+    background: #0000ab !important
+
+.urlUpload
+  height: $container-height
+  overflow: auto
+  display: flex
+  flex-direction: column
+  align-items: center
+
+.urlInput
+  margin-bottom: 5px
+  width: 100%
+
+.file
+  margin-top: 10px !important
+  margin-bottom: 10px !important
+
+.dropzone
+  grid-row: 1 / 3
+
