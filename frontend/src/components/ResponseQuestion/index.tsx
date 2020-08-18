@@ -23,8 +23,8 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                 onClick={handleSegmentClick} />
             {editor && (id === nowModifying.id) ?
                 <div className={styles.scaleTop}>
-                    <QuestionDetailsPage 
-                    match={{ params: {} }}
+                    <QuestionDetailsPage
+                        match={{ params: { id: question.id } }}
                         isPreview={{ question: question, close: handleSegmentClick }} />
                 </div>
                 : <>
