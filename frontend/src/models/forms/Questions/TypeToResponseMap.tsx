@@ -1,5 +1,6 @@
 import { FreeTextResponse } from "components/ResponseQuestion/FreeTextResponse";
 import { DateSelectionResponse } from "components/ResponseQuestion/DateSelectionResponse";
+import { ScaleQuestionResponse } from "components/ResponseQuestion/ScaleQuestionResponse";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import RadioButtonResponse from "../../../components/ResponseQuestion/RadioButtonResponse";
 import React from "react";
@@ -16,6 +17,9 @@ export default new Map<string, ({ question, answerHandler }: IQuestionResponse<a
     }],
     ['RADIO', ({question, answerHandler}: IQuestionResponse<IRadioQuestion>) => {
         return <RadioButtonResponse question={question} answerHandler={answerHandler}/>;
+    }],
+    ['SCALE', ({question, answerHandler}: IQuestionResponse<IScaleQuestion>) => {
+        return <ScaleQuestionResponse question={question} answerHandler={answerHandler}/>;
     }],
     ['CHECKBOX', ({question, answerHandler}: IQuestionResponse<ICheckboxQuestion>) => {
         return <CheckboxResponse question={question} answerHandler={answerHandler}/>;
