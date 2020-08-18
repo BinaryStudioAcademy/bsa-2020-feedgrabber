@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, List, Button, Form } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
 import FreeTextQuestion from '../../components/ComponentsQuestionsResponse/FreeTextQuestion';
 import { history } from '../../helpers/history.helper';
@@ -14,10 +14,10 @@ import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
-import UIListItem from "components/UI/UIListItem";
-import UIListHeader from 'components/UI/UIListHeader';
-import ResponseQuestion from 'components/ResponseQuestion';
 import question from 'models/forms/Questions/DefaultQuestion';
+import UIListHeader from 'components/UI/UIQuestionListHeader';
+import UIListItem from 'components/UI/UIQuestionItemCard';
+import ResponseQuestion from 'components/ResponseQuestion';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;

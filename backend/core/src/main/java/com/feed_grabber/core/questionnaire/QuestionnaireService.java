@@ -14,8 +14,12 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestionId;
+import com.feed_grabber.core.questionnaireResponse.QuestionnaireResponseService;
+import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,18 +32,19 @@ public class QuestionnaireService {
 
     private final QuestionnaireRepository questionnaireRepository;
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    QuestionRepository questionRepository;
-
-    @Autowired
-    QuestionService questionService;
+    private final QuestionnaireResponseService questionnaireResponseService;
 
     @Autowired
     public QuestionnaireService(QuestionnaireRepository questionnaireRepository,
-                                CompanyRepository companyRepository) {
+                                CompanyRepository companyRepository,
+                                UserRepository userRepository,
+                                QuestionnaireResponseService questionnaireResponseService) {
         this.questionnaireRepository = questionnaireRepository;
         this.companyRepository = companyRepository;
+        this.userRepository = userRepository;
+        this.questionnaireResponseService = questionnaireResponseService;
     }
 
 //    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
@@ -58,6 +63,14 @@ public class QuestionnaireService {
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<QuestionnaireDto> getAllByRespondentId(UUID id) {
+            return questionnaireRepository
+                    .findAllByRespondentId(id)
+                    .stream()
+                    .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
+                    .collect(Collectors.toList());
     }
 
     public Long getCountByCompanyId(UUID companyId) {
