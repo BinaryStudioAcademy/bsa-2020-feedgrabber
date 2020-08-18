@@ -41,7 +41,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
             loadQuestion('empty');
         }
         else {
-            loadQuestion(match.params.id);
+            if (!isPreview)
+                loadQuestion({ id: match.params.id });
             loadCategories();
         }
     }, [loadQuestion, match.params.id, loadCategories]);
