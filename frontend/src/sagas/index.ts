@@ -11,6 +11,7 @@ import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
 import answersSaga from './responseAnswers/sagas';
 import requestSaga from "./request/sagas";
+import questionnaireReportSagas from "./questionnaireReport/sagas";
 
 export default function* rootSaga() {
   yield all([
@@ -19,6 +20,7 @@ export default function* rootSaga() {
     questionSagas(),
     teamsSagas(),
     questionnairesSagas(),
+    questionnaireReportSagas(),
     usersSagas(),
     invitationSagas(),
     invitationSignUpSagas(),
