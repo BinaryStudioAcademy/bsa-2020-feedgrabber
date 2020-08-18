@@ -8,7 +8,7 @@ import {
     deleteFromQuestionnaireRoutine
 } from "sagas/questions/routines";
 
-import "./styles.module.sass";
+import styles from "./styles.module.sass";
 
 const QuestionMenu: FC<ContainerProps> = ({
                                               deleteQuestion,
@@ -28,7 +28,7 @@ const QuestionMenu: FC<ContainerProps> = ({
     };
 
     return (
-        <Form className="question_menu_container">
+        <Form className={styles.question_menu_container}>
             <Button.Group vertical>
                 <Popup content='New question' 
                     trigger={<Button icon="plus circle" onClick={() => handleAdd("new")} />}
@@ -46,7 +46,7 @@ const QuestionMenu: FC<ContainerProps> = ({
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestion: state.questionnaires.currentQuestion
+    currentQuestion: state.questions.current
 });
 
 const mapDispatch = {
