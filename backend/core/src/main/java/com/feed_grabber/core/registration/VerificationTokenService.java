@@ -31,12 +31,10 @@ public class VerificationTokenService {
         var verificationToken = new VerificationToken(token, user, type);
 
         var verificationTokenStr = verificationTokenRepository.save(verificationToken).getToken();
-        emailSender.sendToProcessor("localhost:5000/" + type +"/" + verificationTokenStr, user.getEmail());
+        emailSender.sendToProcessor("localhost:3000/token/" + type +"/" + verificationTokenStr,
+                user.getEmail(),
+                type.toString());
         return verificationTokenStr;
-
-//TODO:  send request to email service
-//        var dto = SendVerificationEmailDto.builder().email(user.getEmail()).url(UrlPrefix + token)
-//        emailService.sendEmail(dto);
     }
 
     public User verifyUserByToken(String token, TokenType type)

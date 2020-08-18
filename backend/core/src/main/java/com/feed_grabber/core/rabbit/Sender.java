@@ -24,9 +24,9 @@ public class Sender {
         this.template = template;
     }
 
-    public void sendToProcessor(String message, String email) {
+    public void sendToProcessor(String message, String email, String type) {
         log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, routingKey, new MailEntity(MailType.ACTIVATE, message, email));
+        this.template.convertAndSend(exchange, routingKey, new MailEntity(MailType.valueOf(type), message, email));
         log.info(" [x] Sent '{}'", message);
     }
 
