@@ -31,6 +31,12 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     switch (question.type) {
       case QuestionType.radio:
         return <RadioQuestionReport data={question.data} />;
+      // case QuestionType.checkbox:
+      // case QuestionType.date:
+      // case QuestionType.fileUpload:
+      // case QuestionType.freeText:
+      // case QuestionType.multichoice:
+      // case QuestionType.scale:
     }
   };
 
