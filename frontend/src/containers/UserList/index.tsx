@@ -38,6 +38,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
       surname={user.lastName}
       avatar={user.avatar}
       contact={user.phoneNumber}
+      username={user.userName}
       fire={userRole && userRole === 'company_owner' ? fireUser : undefined}
     />
   );
