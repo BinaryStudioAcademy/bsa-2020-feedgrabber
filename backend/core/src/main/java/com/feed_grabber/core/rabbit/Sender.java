@@ -1,5 +1,6 @@
 package com.feed_grabber.core.rabbit;
 
+import com.feed_grabber.core.rabbit.entityExample.PostEntity;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -22,10 +23,11 @@ public class Sender {
         this.template = template;
     }
 
-    public void sendToProcessor(String text) {
+    public void send(PostEntity postEntity) {
+        System.out.println("Sending...");
         log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, routingKey, text);
-        log.info(" [x] Sent '{}'", text);
+        this.template.convertAndSend(exchange, routingKey, postEntity);
+        log.info(" [x] Sent '{}'", postEntity);
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class Receiver {
     @RabbitListener(queues = "${rabbitmq.queue.response}")
     public void receive(PostEntity postEntity) {
+        System.out.println("Receiving...");
         if(postEntity.getType() == EntityType.RESPONSE) {
             log.info(" [x] Received '{}'", postEntity);
         }

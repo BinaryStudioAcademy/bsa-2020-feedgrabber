@@ -5,6 +5,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import com.feed_grabber.event_processor.rabbit.entityExample.PostEntity
+
 
 @Component
 class Sender {
@@ -17,10 +19,10 @@ class Sender {
     @Autowired
     private val template: RabbitTemplate? = null
 
-    fun send(text: String) {
+    fun send(postEntity: PostEntity) {
         println(" [x] Sending...")
-        template!!.convertAndSend(exchange!!, routingKey!!, text!!)
-        println(" [x] Sent $text")
+        template!!.convertAndSend(exchange!!, routingKey!!, postEntity!!)
+        println(" [x] Sent $postEntity")
     }
 
 }
