@@ -3,7 +3,13 @@ import apiClient from '../../helpers/apiClient';
 import {IUserInfo} from "../../models/user/types";
 import {IGeneric} from "../../models/IGeneric";
 import {toastr} from 'react-redux-toastr';
-import {getUserRoutine, resetPasswordRoutine, sendEmailToResetPasswordRoutine} from "../auth/routines";
+import {
+  editUserProfileRoutine,
+  getUserRoutine,
+  resetPasswordRoutine,
+  sendEmailToResetPasswordRoutine,
+  uploadUserAvatarRoutine
+} from "../auth/routines";
 import {history} from "../../helpers/history.helper";
 
 function* getUser() {
@@ -15,11 +21,24 @@ function* getUser() {
     }
 }
 
-// function* uploadAvatar(action) {
-//   try{
-//     const image = yield call(apiClient.post, )
-//   }
-// }
+function* uploadAvatar(action) {
+  try {
+    const image = yield call(apiClient.post, '/api/image', action.payload);
+    yield put(uploadUserAvatarRoutine.success(image.data.data.url));
+  } catch (e) {
+    yield put(uploadUserAvatarRoutine.failure(e));
+  }
+}
+
+function* editUserProfile(action) {
+  try {
+    const user = { ...action.payload, userId: action.payload.id };
+    yield call(apiClient.post, 'api/user/editProfile', user);
+    getUser();
+  } catch (error) {
+    yield call(toastr.error, ("Something went wrong, try again"));
+  }
+}
 
 function* sendEmailPassReset(action) {
     try {
@@ -48,6 +67,8 @@ export default function* userSagas() {
     yield all([
         yield takeEvery(getUserRoutine.TRIGGER, getUser),
         yield takeEvery(sendEmailToResetPasswordRoutine.TRIGGER, sendEmailPassReset),
-        yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset)
+        yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset),
+        yield takeEvery(editUserProfileRoutine.TRIGGER, editUserProfile),
+        yield takeEvery(uploadUserAvatarRoutine.TRIGGER, uploadAvatar)
     ]);
 }

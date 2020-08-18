@@ -6,7 +6,7 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../../models/IAppState";
-import {getUserRoutine} from "../../../sagas/auth/routines";
+import {editUserProfileRoutine, getUserRoutine, uploadUserAvatarRoutine} from "../../../sagas/auth/routines";
 import ImageCropModal from "../../ImageCropModal";
 
 const validationSchema = yup.object().shape({
@@ -163,8 +163,8 @@ const mapState = (state: IAppState) => ({
 
 const mapDispatch = {
     pullUser: getUserRoutine,
-    save: undefined,
-    uploadImage: undefined
+    save: editUserProfileRoutine,
+    uploadImage: uploadUserAvatarRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

@@ -4,9 +4,8 @@ import './styles.sass';
 import {NavLink} from 'react-router-dom';
 import ProfileInfo from "./ProfileInfo";
 import ProfileSettings from "./ProfileSettings";
-import Avatar from "./AvatarSettings";
 
-type IProfileMode = { mode: 'profile' | 'settings' | 'set avatar' }
+type IProfileMode = { mode: 'profile' | 'settings' }
 
 const ProfilePage: FC<IProfileMode> =
     ({mode}) => {
@@ -14,9 +13,6 @@ const ProfilePage: FC<IProfileMode> =
             switch (key) {
                 case 'profile' :
                     return <ProfileInfo/>;
-                case 'set avatar' :
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    return <Avatar save={() => {}} />;
                 default:
                     return <ProfileSettings settings={undefined}/>;
             }
@@ -45,5 +41,3 @@ const ProfilePage: FC<IProfileMode> =
 export const Profile = () => <ProfilePage mode="profile"/>;
 
 export const ProfileX = () => <ProfilePage mode="settings"/>;
-
-export const AvatarSettings = () => <ProfilePage mode={'set avatar'}/>;

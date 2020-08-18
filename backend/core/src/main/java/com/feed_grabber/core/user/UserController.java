@@ -7,10 +7,7 @@ import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredExc
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.response.DataList;
-import com.feed_grabber.core.user.dto.ResetPassDto;
-import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
-import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
-import com.feed_grabber.core.user.dto.UserShortDto;
+import com.feed_grabber.core.user.dto.*;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -96,5 +93,10 @@ public class UserController {
         userService.removeCompany(id);
     }
 
-/*%%% dev*/
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/editProfile")
+    public void editProfile(@RequestBody UserProfileEditDto dto) {
+        this.userService.editUserProfile(dto);
+    }
+
 }

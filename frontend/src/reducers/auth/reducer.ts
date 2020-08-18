@@ -1,4 +1,10 @@
-import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "../../sagas/auth/routines";
+import {
+  getUserRoutine,
+  loginRoutine,
+  logoutRoutine,
+  registerRoutine,
+  uploadUserAvatarRoutine
+} from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
 
 const initialState = {
@@ -61,7 +67,13 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             info: {...state.info, email: payload}
         };
     }
-    return state;
+    if (type === uploadUserAvatarRoutine.SUCCESS) {
+      return {
+        ...state,
+        info: {...state.info, avatar: payload}
+      };
+    }
+  return state;
 };
 
 export default authAndProfileReducer;

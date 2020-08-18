@@ -8,20 +8,15 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
-import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
-import com.feed_grabber.core.user.dto.UserCreateDto;
-import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
-import com.feed_grabber.core.user.dto.UserDto;
-import com.feed_grabber.core.user.dto.UserShortDto;
+import com.feed_grabber.core.user.dto.*;
 import com.feed_grabber.core.user.model.User;
+import com.feed_grabber.core.user.model.UserProfile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,18 +34,19 @@ public class UserService implements UserDetailsService {
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final UserProfileRepository profileRepository;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, UserProfileRepository profileRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
         this.passwordEncoder = passwordEncoder;
+        this.profileRepository = profileRepository;
     }
 
     @Transactional
@@ -212,5 +208,23 @@ public class UserService implements UserDetailsService {
         return userRepository.countAllByCompanyId(companyId);
     }
 
-
+    @Transactional
+    public void editUserProfile(UserProfileEditDto dto) {
+        var user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
+        if (user.getUserProfile() == null) {
+            user.setUserProfile(new UserProfile());
+        }
+        var profile = UserProfile.builder()
+                .avatar(dto.getAvatar())
+                .firstName(dto.getFirstName())
+                .lastName(dto.getLastName())
+                .phoneNumber(dto.getPhoneNumber())
+                .user(user)
+                .build();
+        var savedProfile = profileRepository.save(profile);
+        user.setUserProfile(savedProfile);
+        user.setUsername(dto.getUserName());
+        userRepository.save(user);
+    }
 }
