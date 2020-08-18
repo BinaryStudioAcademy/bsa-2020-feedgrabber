@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
+
 import {IAppState} from 'models/IAppState';
 import {loadQuestionnaireReportRoutine} from "../../sagas/questionnaireReport/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
@@ -8,6 +9,9 @@ import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
+import {IQuestionReport} from "../../models/report/IReport";
+import {QuestionType} from "../../models/forms/Questions/IQuesion";
+import RadioQuestionReport from "./RadioQuestionReport";
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
@@ -23,17 +27,35 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     }
   }, [report, isLoading, loadQuestionnaireReport, match]);
 
+  const renderQuestionData = (question: IQuestionReport) => {
+    switch (question.type) {
+      case QuestionType.radio:
+        return <RadioQuestionReport data={question.data} />;
+    }
+  };
+
   return (
     <>
       <UIPageTitle title="Report"/>
       <UIContent>
         <LoaderWrapper loading={isLoading}>
-          <UIColumn wide>
-            <UICard>
-              <UICardBlock>
-                {report && <h3>{report.questionnaireTitle}</h3>}
-              </UICardBlock>
-            </UICard>
+          <UIColumn>
+            {report && (
+              <UICard>
+                <UICardBlock>
+                  <h3>{report.questionnaireTitle}</h3>
+                </UICardBlock>
+                <UICardBlock>
+                  {report.questions.map(q => (
+                    <>
+                      <h4>{q.title}</h4>
+                      <p><b>{q.answers} answers</b></p>
+                      {renderQuestionData(q)}
+                    </>
+                  ))}
+                </UICardBlock>
+              </UICard>
+            )}
           </UIColumn>
         </LoaderWrapper>
       </UIContent>
