@@ -77,8 +77,6 @@ public class QuestionnaireController {
     @GetMapping("/requested")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionnaireDto>> getPending(Principal principal) {
-        System.out.println("Here is smth");
-        System.out.println(questionnaireService.getAllByRespondentId(UUID.fromString(principal.getName())));
         return new AppResponse<>(
                 questionnaireService.getAllByRespondentId(UUID.fromString(principal.getName()))
         );

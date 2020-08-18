@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { loadRequestedQuestionnairesRoutine } from 'sagas/qustionnaires/routines';
 import { IQuestionnaire } from 'models/forms/Questionnaires/types';
 import LoaderWrapper from 'components/LoaderWrapper';
+import { history } from '../../helpers/history.helper';
 
 interface IItem {
   id: string;
@@ -35,7 +36,11 @@ const MainPage: FC<IMainPageProps> =
       if (!questionnaireList && !isLoading) {
           loadQuestionnaires();
       }
-    }, [questionnaireList, isLoading, loadQuestionnaires]);
+    }, [questionnaireList, loadQuestionnaires]);
+
+    const handleClick = id => {
+      history.push(`/response/${id}`);
+    };
 
     return (
     <>
@@ -47,12 +52,12 @@ const MainPage: FC<IMainPageProps> =
               <h3>Pending Questionnaires</h3>
             </UICardBlock>
             <LoaderWrapper loading={isLoading}>
-              {questionnaireList && questionnaireList.map(question => (
-                <UICardBlock key={question.id}>
-                  {question.title && <h4>{question.title}</h4>}
-                  {question.description && <p>{question.description}</p>}
-                  {question.companyName && <p><b>{question.companyName}</b></p>}
-                  <UIButton title="Answer"/>
+              {questionnaireList && questionnaireList.map(questionnaire => (
+                <UICardBlock key={questionnaire.id}>
+                  {questionnaire.title && <h4>{questionnaire.title}</h4>}
+                  {questionnaire.description && <p>{questionnaire.description}</p>}
+                  {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
+                  <UIButton title="Answer" onClick={() => handleClick(questionnaire.id)}/>
                 </UICardBlock>
               ))}
             </LoaderWrapper>
