@@ -3,17 +3,26 @@ import { Button, Form, Popup } from "semantic-ui-react";
 import { IAppState } from "../../models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
-import { deleteQuestionRoutine } from "sagas/qustionnaires/routines";
-import { addSelectedQuestionsRoutine, saveQuestionToQuestionnaireRoutine } from "sagas/questions/routines";
-import { IQuestion } from "../../models/forms/Questions/IQuesion";
+import {
+    saveQuestionToQuestionnaireRoutine,
+    deleteFromQuestionnaireRoutine
+} from "sagas/questions/routines";
 
-const QuestionMenu: FC<ContainerProps> = ({ deleteQuestion, addQuestion, saveQuestion, currentQuestion }) => {
+const QuestionMenu: FC<ContainerProps> = ({
+                                              deleteQuestion,
+                                              addQuestion,
+                                              currentQuestion
+}) => {
     const handleAdd = (id: string) => {
-        return;
+        if(id === "new") {
+            addQuestion('empty');
+        }else {
+            addQuestion(currentQuestion.id);
+        }
     };
 
     const handleDelete = () => {
-        return;
+        deleteQuestion(currentQuestion.id);
     };
 
     return (
@@ -39,9 +48,8 @@ const mapState = (state: IAppState) => ({
 });
 
 const mapDispatch = {
-    deleteQuestion: deleteQuestionRoutine,
-    addQuestion: addSelectedQuestionsRoutine,
-    saveQuestion: saveQuestionToQuestionnaireRoutine
+    deleteQuestion: deleteFromQuestionnaireRoutine,
+    addQuestion: saveQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

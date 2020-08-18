@@ -55,6 +55,10 @@ public class QuestionService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<QuestionDto> getOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID questionnaireId) {
+        return quesRep.findByIdAndQuestionnaireID(questionId, questionnaireId);
+    }
+
     public Optional<QuestionDto> getOne(UUID id) {
         return quesRep
                 .findById(id)
@@ -184,5 +188,9 @@ public class QuestionService {
         return question.getId() == null
                 ? this.createModel(QuestionMapper.MAPPER.upsertDtoToCreateDto(question))
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
+    }
+
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID id, UUID qId) {
+        quesRep.deleteByQuestionnaireId(qId, id);
     }
 }
