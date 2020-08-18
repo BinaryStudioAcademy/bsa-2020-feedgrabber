@@ -31,7 +31,7 @@ const QuestionMenu: FC<ContainerProps> = ({
         <div style={{
             position: 'absolute',
             top: currentQuestion.top,
-            transition: 'all 0.5s linear'
+            transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Form className={styles.question_menu_container}>
                 <Button.Group vertical>

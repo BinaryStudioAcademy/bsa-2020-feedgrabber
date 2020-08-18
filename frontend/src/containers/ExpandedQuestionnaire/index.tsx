@@ -57,12 +57,12 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
     return (
         <LoaderWrapper loading={isLoading}>
             {questionnaire && (
-                <div>
+                <div className={styles.formDetails}>
                     <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
-                    <div className={styles.formDetails}>
-                        <QuestionnairePreview/>
-                        <QuestionMenu/>
+                    <div className={styles.formPreview}>
+                    <QuestionnairePreview/>
+                    <QuestionMenu/>
                     </div>
                 </div>
             )}
