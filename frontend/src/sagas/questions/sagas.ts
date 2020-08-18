@@ -1,4 +1,4 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 import {
     addSelectedQuestionsRoutine, deleteFromQuestionnaireRoutine,
     loadQuestionByIdRoutine,
@@ -7,9 +7,9 @@ import {
     saveQuestionToQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
-import {IGeneric} from 'models/IGeneric';
-import {toastr} from 'react-redux-toastr';
-import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import { IGeneric } from 'models/IGeneric';
+import { toastr } from 'react-redux-toastr';
+import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import question from '../../models/forms/Questions/DefaultQuestion';
 
@@ -37,17 +37,20 @@ function* getAll() {
 
 function* getById(action) {
     try {
-        const id = action.payload;
+        const { id, top, right } = action.payload;
 
         if (id === 'empty') {
-            yield  put(loadQuestionByIdRoutine.success(defaultQuestion));
+            yield put(loadQuestionByIdRoutine.success(defaultQuestion));
             return;
         }
 
-        const res: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${action.payload}`);
+        const res: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${id}`);
 
-        const question = parseQuestion(res.data.data);
-
+        const question: IQuestion = parseQuestion(res.data.data);
+        if (top && right) {
+            question['top'] = top;
+            question['right'] = right;
+        }
         yield put(loadQuestionByIdRoutine.success(question));
 
     } catch (e) {
@@ -102,7 +105,7 @@ function* getByQuestionnaireId(action) {
 
 function* deleteOneByQuestionnaireId(action) {
     try {
-        const {id, qId} = action.payload;
+        const { id, qId } = action.payload;
         const res: IGeneric<IQuestion[]> = yield call(apiClient.delete, `/api/questions/questionnaires/${qId}`, id);
 
         yield put(deleteFromQuestionnaireRoutine.success(res.data.data));
