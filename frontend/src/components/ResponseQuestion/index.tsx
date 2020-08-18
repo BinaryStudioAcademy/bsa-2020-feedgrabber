@@ -18,14 +18,17 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         };
         return (<Segment
             className={styles.container}>
-            <Icon name='code'
-                className={styles.edit}
-                onClick={handleSegmentClick} />
+            {!answerHandler ?
+                <Icon name='code'
+                    className={styles.edit}
+                    onClick={handleSegmentClick} />
+                : <></>
+            }
             {editor && (id === nowModifying.id) ?
                 <div className={styles.scaleTop}>
-                    <QuestionDetailsPage 
-                    match={{ params: {} }}
-                        isPreview={{ question: question, close: handleSegmentClick }} />
+                    <QuestionDetailsPage
+                        match={{ params: {} }}
+                        isPreview={!answerHandler ? { question: question, close: handleSegmentClick } : {}} />
                 </div>
                 : <>
                     <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
