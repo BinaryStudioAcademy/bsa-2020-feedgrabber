@@ -14,5 +14,5 @@ export function useStomp(topic: string, callback: () => void) {
         } catch (e) {
             return undefined;
         }
-    });
+    }, [topic, callback]);
 }
