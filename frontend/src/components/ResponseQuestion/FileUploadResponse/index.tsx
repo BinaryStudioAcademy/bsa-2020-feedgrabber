@@ -6,6 +6,7 @@ import InternalStorageUpload from "./InternalStorageUpload";
 import {IQuestionResponse} from "../../../models/IQuestionResponse";
 import { IFileUploadQuestion } from "../../../models/forms/Questions/IQuesion";
 import { fileTypes as allTypes } from "../../ComponentsQuestions/FileUploadQuestion/types";
+import VideoUrl from "./UrlVideo";
 
 const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
     ({ question, answerHandler}) => {
@@ -75,7 +76,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
      const deleteNotAllowedFiles = files => {
         const result = [];
         files.forEach(file => {
-            if (!file.type.startsWith(filesType)) {
+            if (file.type.startsWith(filesType)) {
                 result.push(file);
             }
         });
@@ -95,6 +96,11 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         });
     };
 
+    const onClear = () => {
+       setFiles([]);
+       setImages([]);
+    };
+
     const getPanes = () => {
         switch(filesType) {
             case allTypes.image:
@@ -107,14 +113,19 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
                                 <InternalStorageUpload
                                     onFilesAdded={onFilesAdded}
                                     disabled={files.length >= filesNumber}
-                                    mapFiles={filesType === allTypes.image ? mapImages : mapVideos} />
+                                    mapFiles={filesType === allTypes.image ? mapImages : mapVideos}
+                                    onClear={onClear}
+                                />
                             </Tab.Pane>
                     },
                     {
                         menuItem: `URL`,
                         render: () =>
                             <Tab.Pane>
-                                <ImageUrl url={url} onChange={setUrl} />
+                                {filesType === allTypes.image
+                                    ? <ImageUrl url={url} onChange={setUrl} />
+                                    : <VideoUrl url={url} onChange={setUrl} />
+                                }
                             </Tab.Pane>
                     }
                 ];
