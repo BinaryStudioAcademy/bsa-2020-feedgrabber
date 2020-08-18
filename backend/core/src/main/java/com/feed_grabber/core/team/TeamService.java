@@ -1,15 +1,18 @@
 package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
-import com.feed_grabber.core.team.dto.CreateTeamDto;
-import com.feed_grabber.core.team.dto.TeamDto;
+import com.feed_grabber.core.team.dto.*;
+import com.feed_grabber.core.team.exceptions.TeamExistsException;
+import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,54 +23,73 @@ public class TeamService {
     @Autowired
     private TeamRepository teamRepository;
     @Autowired
-    private CompanyRepository companyRepository;
-    @Autowired
     private UserRepository userRepository;
 
-    public List<TeamDto> getAllByCompany_Id(UUID companyId) {
+    public List<TeamShortDto> getAllByCompany_Id(UUID companyId) {
+        return teamRepository.findAllByCompanyId(companyId);
+    }
 
-        return teamRepository
-                .findAllByCompanyId(companyId)
+    public TeamDetailsDto getOne(UUID companyId, UUID id) throws TeamNotFoundException {
+        var team = teamRepository.findOneByCompanyIdAndId(companyId, id)
+                .orElseThrow(TeamNotFoundException::new);
+
+        var ids = team.getUsers()
                 .stream()
-                .map(TeamMapper.MAPPER::teamToTeamDto)
+                .map(User::getId)
                 .collect(Collectors.toList());
+
+        return new TeamDetailsDto(team.getId(), team.getName(), ids);
     }
 
-    public Optional<TeamDto> getById(UUID id) {
-        return teamRepository.findById(id)
-                .map(TeamMapper.MAPPER::teamToTeamDto);
-    }
+    public TeamDto update(RequestTeamDto teamDto) throws TeamNotFoundException, TeamExistsException {
+        var existing = teamRepository.findOneByCompanyIdAndNameAndIdIsNot(
+                teamDto.getCompanyId(), teamDto.getName(), teamDto.getId()
+        );
+        if (existing.isPresent()) {
+            throw new TeamExistsException();
+        }
 
-    public Optional<TeamDto> update(CreateTeamDto teamDto) {
-        return teamRepository.findById(teamDto.getId())
+        return teamRepository.findOneByCompanyIdAndId(teamDto.getCompanyId(), teamDto.getId())
                 .map(team -> {
                     team.setName(teamDto.getName());
                     teamRepository.save(team);
                     return team;
                 })
-                .map(TeamMapper.MAPPER::teamToTeamDto);
+                .map(TeamMapper.MAPPER::teamToTeamDto)
+                .orElseThrow(TeamNotFoundException::new);
     }
 
-    public void delete(UUID id) {
-        teamRepository.deleteById(id);
+    public ResponseUserTeamDto toggleUser(RequestUserTeamDto requestDto) throws TeamNotFoundException, UserNotFoundException {
+        var team = teamRepository
+                .findOneByCompanyIdAndId(requestDto.getCompanyId(), requestDto.getTeamId())
+                .orElseThrow(TeamNotFoundException::new);
+        var user = userRepository.findById(requestDto.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        var teamId = team.getId();
+        var userId = user.getId();
+
+        if (teamRepository.existsUser(teamId, userId)) {
+            teamRepository.deleteUser(teamId, userId);
+            return new ResponseUserTeamDto(teamId, userId, false);
+        } else {
+            teamRepository.addUser(teamId, userId);
+            return new ResponseUserTeamDto(teamId, userId, true);
+        }
     }
 
-    public TeamDto create(CreateTeamDto teamDto) throws CompanyNotFoundException, AlreadyExistsException {
-
-        if (teamRepository.existsByName(teamDto.getName())) {
+    public TeamDetailsDto create(RequestTeamDto teamDto) throws AlreadyExistsException {
+        if (teamRepository.existsByNameAndCompanyId(teamDto.getName(), teamDto.getCompanyId())) {
             throw new AlreadyExistsException("Such team already exists in this company");
         }
 
-        Team t = TeamMapper.MAPPER.teamDtoToModel(teamDto);
-        var company = companyRepository.findById(teamDto.getCompany_id())
-                .orElseThrow(CompanyNotFoundException::new);
-        var users = userRepository.findAllById(teamDto.getMemberIds());
+        Team team = TeamMapper.MAPPER.teamDtoToModel(teamDto);
+        team = teamRepository.save(team);
 
-        t.setCompany(company);
-        t.setUsers(users);
+        return new TeamDetailsDto(team.getId(), team.getName(), Collections.emptyList());
+    }
 
-       Team savedTeam = teamRepository.save(t);
-
-       return TeamMapper.MAPPER.teamToTeamDto(savedTeam);
+    public void delete(UUID id, UUID companyId) {
+        teamRepository.deleteByIdAndCompanyId(id, companyId);
     }
 }

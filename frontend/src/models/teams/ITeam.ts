@@ -1,9 +1,27 @@
-import { ICompany } from "../companies/ICompany";
-import {IUserShort} from "../user/types";
+export interface ITeamShort {
+  id: string;
+  name: string;
+  membersAmount: number;
+  deleteLoading?: boolean;
+}
 
 export interface ITeam {
   id: string;
   name: string;
-  company: ICompany;
-  members: IUserShort[];
+  membersId: string[];
+}
+
+export interface ITeamUpdate {
+  id: string;
+  name: string;
+}
+
+export interface ITeamCreate {
+  name: string;
+}
+
+export interface ITeamUserToggle {
+  teamId: string;
+  userId: string;
+  username: string;
 }

@@ -1,77 +1,217 @@
 import {
+  clearCurrentTeamRoutine,
   createTeamRoutine,
-  hideModalTeamsRoutine, loadCompanyUsersRoutine,
+  deleteTeamRoutine,
+  loadCompanyUsersRoutine,
+  loadCurrentTeamRoutine,
   loadTeamsRoutine,
-  showModalTeamsRoutine
+  toggleUserCurrentTeamRoutine,
+  updateTeamRoutine
 } from '../../sagas/teams/routines';
-import { Routine } from 'redux-saga-routines';
-import { ITeam } from 'models/teams/ITeam';
-import {IUserInfo} from "../../models/user/types";
+import {Routine} from 'redux-saga-routines';
+import {ITeam, ITeamShort} from 'models/teams/ITeam';
+import {IUserShort} from "../../models/user/types";
+
+export interface ITeamCurrent {
+  failed?: boolean;
+  isLoadingTeam?: boolean;
+  isLoadingRequest?: boolean;
+  currentTeam?: ITeam;
+  error?: string;
+}
 
 export interface ITeamsState {
-  teams: ITeam[];
+  teams?: ITeamShort[];
   isLoading: boolean;
   modalShown: boolean;
   isModalLoading: boolean;
-  companyUsers: IUserInfo[];
+  companyUsers?: IUserShort[];
+  failedUsers?: boolean;
+  isLoadingUsers?: boolean;
+  current: ITeamCurrent;
   error?: string;
 }
 
 const initState: ITeamsState = {
-  teams: [],
-  companyUsers: [],
   isLoading: false,
   modalShown: false,
-  isModalLoading: false
+  isModalLoading: false,
+  current: {}
 };
 
 const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
   switch (action.type) {
+    case loadTeamsRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoading: true
+      };
     case loadTeamsRoutine.SUCCESS:
       return {
         ...state,
         teams: action.payload,
         isLoading: false
       };
-    case loadTeamsRoutine.TRIGGER:
-      return {
-        ...state,
-        isLoading: true
-      };
     case loadTeamsRoutine.FAILURE:
-    case loadCompanyUsersRoutine.FAILURE:
       return {
         ...state,
         error: action.payload,
         isLoading: false
       };
-    case showModalTeamsRoutine.TRIGGER:
+
+    case clearCurrentTeamRoutine.TRIGGER:
       return {
         ...state,
-        modalShown: true
+        companyUsers: state.companyUsers ? state.companyUsers.map(u => ({...u, selected: undefined})) : undefined,
+        current: {}
       };
-    case hideModalTeamsRoutine.TRIGGER:
+
+    case loadCurrentTeamRoutine.TRIGGER:
       return {
         ...state,
-        modalShown: false
+        current: {
+          ...state.current,
+          isLoadingTeam: true
+        }
       };
-    case createTeamRoutine.SUCCESS:
+    case loadCurrentTeamRoutine.SUCCESS:
+      const team: ITeam = action.payload;
       return {
         ...state,
-        modalShown: false,
-        isModalLoading: false
+        companyUsers: state.companyUsers.map(u => (team.membersId.includes(u.id) ? {...u, selected: true} : u)),
+        current: {
+          ...state.current,
+          isLoadingTeam: false,
+          currentTeam: team
+        }
       };
-    case createTeamRoutine.FAILURE:
+    case loadCurrentTeamRoutine.FAILURE:
       return {
         ...state,
-        isModalLoading: false
+        current: {
+          ...state.current,
+          isLoadingTeam: false,
+          failed: true
+        }
+      };
+
+    case loadCompanyUsersRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoadingUsers: true
       };
     case loadCompanyUsersRoutine.SUCCESS:
       return {
         ...state,
         companyUsers: action.payload,
-        isLoading: false
+        isLoadingUsers: false
       };
+    case loadCompanyUsersRoutine.FAILURE:
+      return {
+        ...state,
+        isLoadingUsers: false,
+        failedUsers: true
+      };
+
+    case toggleUserCurrentTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        companyUsers: state.companyUsers.map(u => (
+          u.id === action.payload.userId
+            ? {...u, loading: true}
+            : u
+        ))
+      };
+    case toggleUserCurrentTeamRoutine.SUCCESS:
+      const difference = action.payload.added ? 1 : -1;
+      return {
+        ...state,
+        companyUsers: state.companyUsers.map(u => (
+          u.id === action.payload.userId
+            ? {...u, loading: false, selected: action.payload.added}
+            : u
+        )),
+        teams: state.teams ?
+          state.teams.map(t => (
+            t.id === action.payload.teamId
+              ? {...t, membersAmount: t.membersAmount + difference}
+              : t
+          ))
+          : undefined
+      };
+    case toggleUserCurrentTeamRoutine.FAILURE:
+      return {
+        ...state,
+        companyUsers: state.companyUsers.map(u => (
+          u.id === action.payload
+            ? {...u, loading: false}
+            : u
+        ))
+      };
+
+    case updateTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingRequest: true
+        }
+      };
+    case updateTeamRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingRequest: false
+        }
+      };
+    case updateTeamRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          error: action.payload,
+          isLoadingRequest: false
+        }
+      };
+
+    case createTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingRequest: true
+        }
+      };
+    case createTeamRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          currentTeam: action.payload
+        }
+      };
+    case createTeamRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          error: action.payload,
+          isLoadingRequest: false
+        }
+      };
+
+    case deleteTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        teams: (state.teams || []).map(t => t.id === action.payload ? {...t, deleteLoading: true} : t)
+      };
+    case deleteTeamRoutine.SUCCESS:
+    case deleteTeamRoutine.FAILURE:
+      return {
+        ...state,
+        teams: (state.teams || []).map(t => t.id === action.payload ? {...t, deleteLoading: false} : t)
+      };
+
     default:
       return state;
   }

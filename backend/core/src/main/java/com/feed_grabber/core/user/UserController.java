@@ -10,6 +10,7 @@ import com.feed_grabber.core.response.DataList;
 import com.feed_grabber.core.user.dto.ResetPassDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
+import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -48,9 +49,9 @@ public class UserController {
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping("/all/list")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<UserDetailsResponseDTO>> getAllUsers() {
+    public AppResponse<List<UserShortDto>> getAllUsers() {
         var companyId = TokenService.getCompanyId();
-        return new AppResponse<List<UserDetailsResponseDTO>>(userService.getAllByCompanyId(companyId));
+        return new AppResponse<>(userService.getAllByCompanyId(companyId));
     }
 /*%%%*/
     @ApiOperation(value = "Send an email to reset password")

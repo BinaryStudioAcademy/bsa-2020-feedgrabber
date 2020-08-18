@@ -1,4 +1,4 @@
-package com.feed_grabber.core.question;
+package com.feed_grabber.core.question.serializers;
 
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -28,6 +28,10 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
         String payload = node.get("details").toString();
         String category = node.get("categoryTitle").asText();
         String text = node.get("name").asText();
-        return new QuestionUpdateDto(id, text, category, payload);
+        Integer index = node.hasNonNull("index")
+                ? node.get("index").asInt(Integer.MAX_VALUE)
+                : Integer.MAX_VALUE;
+
+        return new QuestionUpdateDto(id, text, category, payload, index);
     }
 }

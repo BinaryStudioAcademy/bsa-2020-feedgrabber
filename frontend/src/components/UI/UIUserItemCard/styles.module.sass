@@ -1,0 +1,40 @@
+.userGrid
+  display: grid
+  grid-template-columns: 50px auto
+  grid-template-rows: 30px 30px
+  grid-column-gap: 10px
+  grid-template-areas: "avatar names" "avatar info"
+  border: 1px solid #bababa
+  border-radius: 5px
+  padding-left: 5px
+  margin-bottom: 5px
+
+.userAvatar
+  padding-top: 5px
+  grid-area: avatar
+  justify-self: center
+  align-content: center
+
+.userNames
+  grid-area: names
+  align-self: center
+  font-weight: bold
+
+.userInfo
+  grid-area: info
+  font-size: 1rem
+  color: #717171
+
+.hoverable
+  cursor: pointer
+  transition: background-color 0.2s
+  &:hover
+    border: 1px solid rgba(26, 14, 218, 0.42)
+    background-color: #f7f7f7
+
+
+.selected
+  transition: background-color 0.2s
+  background-color: rgba(26, 14, 218, 0.07)
+  &:hover
+    background-color: rgba(26, 14, 218, 0.16)
