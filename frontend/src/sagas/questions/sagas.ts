@@ -77,9 +77,9 @@ function* addFromExisting(action) {
 
 function* saveOrUpdateQuestion(action) {
     try {
-        const res: IGeneric<IQuestion> = action.payload.id
+        const res: IGeneric<IQuestion> = action.payload?.id
             ? yield call(apiClient.put, `/api/questions`, action.payload)
-            : yield call(apiClient.post, `/api/questions`, action.payload);
+            : yield call(apiClient.post, `/api/questions`, action.payload || {});
 
         yield put(saveQuestionToQuestionnaireRoutine.success(res.data.data));
 
