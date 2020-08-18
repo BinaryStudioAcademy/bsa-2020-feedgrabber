@@ -7,5 +7,6 @@ import java.util.UUID;
 @Data
 public class CompanyDomainDto {
     private UUID id;
+    private String name;
     private String subdomainName;
 }
