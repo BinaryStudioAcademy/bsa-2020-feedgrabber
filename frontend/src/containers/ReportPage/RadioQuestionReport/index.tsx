@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 import {IQuestionReportRadioData} from "../../../models/report/IReport";
-import PieChartTemplate from "../PieChartTemplate";
+import PieChartTemplate from "../../../components/PieChartTemplate";
 
 export interface IRadioQuestionReportProps {
   data: IQuestionReportRadioData;
