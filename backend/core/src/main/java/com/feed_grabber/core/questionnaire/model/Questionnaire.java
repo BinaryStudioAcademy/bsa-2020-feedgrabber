@@ -3,6 +3,7 @@ package com.feed_grabber.core.questionnaire.model;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
+import com.feed_grabber.core.sections.model.Section;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,4 +42,7 @@ public class Questionnaire {
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private Company company;
+
+    @OneToMany(mappedBy = "section")
+    private List<Section> sections;
 }
