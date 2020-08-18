@@ -1,5 +1,5 @@
 import React, {FC, useState} from "react";
-import {Tab} from "semantic-ui-react";
+import {Label, Tab} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import ImageUrl from "./ImageUrl";
 import InternalStorageUpload from "./InternalStorageUpload";
@@ -13,13 +13,20 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
     const [files, setFiles] = useState([]);
     const [images, setImages] = useState([]);
     const [url, setUrl] = useState('');
+    const [error, setError] = useState('');
     const filesNumber = question.details.filesNumber;
     const maxFilesSize = question.details.filesSize * (1024 * 1024);
     const filesType = question.details.filesType;
 
     const onFilesAdded = async addedFiles => {
-        let newFiles = files.length + addedFiles.length <= filesNumber
-            ? addedFiles : addedFiles.slice(0, filesNumber - files.length);
+        setError("");
+        let newFiles: any[];
+        if (files.length + addedFiles.length <= filesNumber) {
+            newFiles = addedFiles;
+        } else {
+            newFiles = addedFiles.slice(0, filesNumber - files.length);
+            setError(`Maximum number of files ${filesNumber}`);
+        }
 
         newFiles = checkFilesSize(deleteNotAllowedFiles(newFiles));
 
@@ -67,6 +74,8 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
             if (currentFilesSize + file.size <= maxFilesSize) {
                 result.push(file);
                 currentFilesSize += file.size;
+            } else {
+                setError(`Maximum files size: ${question.details.filesSize} MB`);
             }
         });
 
@@ -78,6 +87,8 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         files.forEach(file => {
             if (file.type.startsWith(filesType)) {
                 result.push(file);
+            } else {
+                setError(`Only ${filesType} allowed`);
             }
         });
 
@@ -92,13 +103,17 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
 
     const mapVideos = () => {
         return files.map(file => {
-            return <div className={styles.file}>{file.name}</div>;
+            return <Label className={styles.file}>
+                {`${file.name} 
+                (${Math.round(file.size / (1024 * 1024) * 100) / 100} MB)`}
+            </Label>;
         });
     };
 
     const onClear = () => {
         setFiles([]);
         setImages([]);
+        setError('');
         answerHandler(question.id, { files: [], url });
     };
 
@@ -116,6 +131,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
                                     disabled={files.length >= filesNumber}
                                     mapFiles={filesType === allTypes.image ? mapImages : mapVideos}
                                     onClear={onClear}
+                                    error={error}
                                 />
                             </Tab.Pane>
                     },

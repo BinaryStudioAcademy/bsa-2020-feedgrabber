@@ -1,12 +1,14 @@
 $container-height: 55vh
 
-.addFile
+.fileUpload
   display: grid
   grid-template-columns: 50% 50%
+  grid-template-rows: 90% 10%
   height: $container-height
 
 .Upload
   grid-column: 1
+  grid-row: 1
 
 .filesContainer
   grid-column: 2
@@ -20,14 +22,28 @@ $container-height: 55vh
 .filesContainer > img
   margin: 5px
 
+.wrap
+  grid-column: 2
+  grid-row: 2
+  display: grid
+  grid-template-columns: 80% 20%
+  margin: 10px 35px 0 10px
+
+.errorMessage
+  color: red
+  display: flex
+  align-items: center
+  justify-content: center
+  word-break: break-word
+  margin-right: 10px
+  overflow: hidden
+
 .clearButton
-  position: absolute
-  bottom: 10px
-  right: 30px
-  height: 40px
-  width: 100px
+  grid-column: 2
+  height: 2.5vw
+  width: 6vw
   padding: 5px !important
-  font-size: 16px
+  font-size: 1.2vw !important
   &:active
     background: #0000ab !important
 
@@ -43,6 +59,9 @@ $container-height: 55vh
   width: 100%
 
 .file
-  margin-top: 10px
-  margin-bottom: 10px
+  margin-top: 10px !important
+  margin-bottom: 10px !important
+
+.dropzone
+  grid-row: 1 / 3
 
