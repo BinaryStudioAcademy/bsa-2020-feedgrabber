@@ -31,7 +31,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                         isPreview={!answerHandler ? { question: question, close: handleSegmentClick } : {}} />
                 </div>
                 : <>
-                    <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
+                    {!answerHandler ? <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header> : <></>}
                     {TypeToResponseMap.get(type.toUpperCase())?.({ question, answerHandler })}
                 </>
             }

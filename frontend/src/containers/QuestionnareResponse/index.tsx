@@ -56,7 +56,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     handleComponentChange(state: IComponentState) {
         const { questions } = this.props;
         let updatedQuestions: IQuestion[];
-        if (state.isAnswered) {
+        if (state.isAnswered) { // doesn`t init when !isAnswered, line 66 throws error 
             updatedQuestions = questions.map(question => {
                 if (question.id === state.question.id) {
                     return state.question;
@@ -65,7 +65,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         }
         const completeStates = updatedQuestions.map(question => question.answer);
         this.setState({
-            isCompleted: !completeStates.includes(undefined)
+            isCompleted: !completeStates.includes(null)
         });
     }
 
@@ -102,7 +102,10 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                         <ul>
                             {questions.map(question => {
                                 return (
-                                    <UIListItem key={question.id} name={question.name}>
+                                    <UIListItem 
+                                    key={question.id} 
+                                    name={question.name} 
+                                    category={question.categoryTitle}>
                                         <ResponseQuestion question={question} answerHandler={(id, data) => {
                                             question["answer"] = data;
                                             this.handleComponentChange({
