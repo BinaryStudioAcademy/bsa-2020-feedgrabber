@@ -3,8 +3,9 @@ import { DateSelectionResponse } from "components/ResponseQuestion/DateSelection
 import { IQuestionResponse } from "models/IQuestionResponse";
 import RadioButtonResponse from "../../../components/ResponseQuestion/RadioButtonResponse";
 import React from "react";
-import {IRadioQuestion, IDateQuestion, ITextQuestion, ICheckboxQuestion} from "./IQuesion";
+import {IRadioQuestion, IDateQuestion, ITextQuestion, ICheckboxQuestion, IFileUploadQuestion} from "./IQuesion";
 import { CheckboxResponse } from "components/ResponseQuestion/CheckboxResponse";
+import FileUploadResponse from "../../../components/ResponseQuestion/FileUploadResponse";
 
 export default new Map<string, ({ question, answerHandler }: IQuestionResponse<any>) => any>([
     ['FREE_TEXT', ({ question, answerHandler }: IQuestionResponse<ITextQuestion>) => {
@@ -18,6 +19,9 @@ export default new Map<string, ({ question, answerHandler }: IQuestionResponse<a
     }],
     ['CHECKBOX', ({question, answerHandler}: IQuestionResponse<ICheckboxQuestion>) => {
         return <CheckboxResponse question={question} answerHandler={answerHandler}/>;
+    }],
+    ['FILE_UPLOAD', ({ question, answerHandler }: IQuestionResponse<IFileUploadQuestion>) => {
+        return <FileUploadResponse question={question} answerHandler={answerHandler} />;
     }]
     // ,['RADIO', ({ question, answerHandler }: IQuestionResponse) => {
     //    return <RadioResponse question={question} answerHandler={answerHandler} />;

@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -104,5 +105,20 @@ public class QuestionController {
     public void deleteOneByQuestionnaireAndID(@ApiParam(
             value = "IDs to delete one question from questionnaire", required = true) @RequestParam UUID id, @PathVariable UUID qId){
         questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
+    }
+
+    @ApiOperation(value = "Add new question to questionnaire")
+    @PostMapping("/questionnaires/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(@PathVariable UUID id)
+            throws QuestionnaireNotFoundException, CompanyNotFoundException {
+        questionService.create(QuestionCreateDto
+                .builder()
+                .name("New question")
+                .type(QuestionType.FREE_TEXT)
+                .questionnaireId(Optional.of(id))
+                .categoryTitle("sport")
+                .build());
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }
 }

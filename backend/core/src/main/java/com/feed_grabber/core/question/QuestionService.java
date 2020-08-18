@@ -94,7 +94,7 @@ public class QuestionService {
             );
         }
 
-        return question.build();
+        return quesRep.save(question.build());
     }
 
     @Transactional

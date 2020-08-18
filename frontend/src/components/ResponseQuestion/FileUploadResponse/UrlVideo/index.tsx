@@ -21,7 +21,7 @@ const VideoUrl = ({ url, onChange }) => {
               onChange={handleUrlChange}
           />
           {url && !error && <ReactPlayer onError={() => setError(true)} url={url} />}
-          {error && <div>Error</div>}
+          {error && <div>URL invalid</div>}
       </div>
   );
 };
