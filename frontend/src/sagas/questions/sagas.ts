@@ -100,23 +100,6 @@ function* getByQuestionnaireId(action) {
     }
 }
 
-function* getOneByQuestionnaireId(action) {
-    try {
-        const {id, qId} = action.payload;
-
-        if (id === 'empty') {
-            yield  put(saveQuestionToQuestionnaireRoutine.success(defaultQuestion));
-            return;
-        }
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.put, `/api/questions/questionnaires/${qId}`, id);
-
-        yield put(saveQuestionToQuestionnaireRoutine.success(res.data.data));
-    } catch (e) {
-        yield put(saveQuestionToQuestionnaireRoutine.failure(e.data.error));
-        toastr.error("Unable to add question");
-    }
-}
-
 function* deleteOneByQuestionnaireId(action) {
     try {
         const {id, qId} = action.payload;
@@ -136,7 +119,6 @@ export default function* questionSagas() {
         yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),
         yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId),
         yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
-        yield takeEvery(saveQuestionToQuestionnaireRoutine.TRIGGER, getOneByQuestionnaireId),
         yield takeEvery(deleteFromQuestionnaireRoutine.TRIGGER, deleteOneByQuestionnaireId)
     ]);
 }

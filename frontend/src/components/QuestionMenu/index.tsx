@@ -15,7 +15,7 @@ const QuestionMenu: FC<ContainerProps> = ({
 }) => {
     const handleAdd = (id: string) => {
         if(id === "new") {
-            addQuestion('empty');
+            addQuestion(null);
         }else {
             addQuestion(currentQuestion.id);
         }
