@@ -94,7 +94,9 @@ function* copyQuestionInQuestionnaire(action){
         const res: IGeneric<IQuestion[]> = yield call(apiClient.post,
             `/api/questions/questionnaires/${qId}`, question);
 
-        yield put(copyQuestionInQuestionnaireRoutine.success(res.data.data));
+        const questions = res.data.data.map(q => parseQuestion(q));
+
+        yield put(copyQuestionInQuestionnaireRoutine.success(questions));
 
     } catch (e) {
         yield put(copyQuestionInQuestionnaireRoutine.failure());
@@ -107,7 +109,9 @@ function* addNewQuestionInQuestionnaire(action){
         const {qId} = action.payload;
         const res: IGeneric<IQuestion[]> = yield call(apiClient.post, `/api/questions/questionnaires/${qId}`);
 
-        yield put(addNewQuestionToQuestionnaireRoutine.success(res.data.data));
+        const questions = res.data.data.map(q => parseQuestion(q));
+
+        yield put(addNewQuestionToQuestionnaireRoutine.success(questions));
 
     } catch (e) {
         yield put(addNewQuestionToQuestionnaireRoutine.failure());
