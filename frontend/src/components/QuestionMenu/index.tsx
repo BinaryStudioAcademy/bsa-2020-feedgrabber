@@ -4,22 +4,26 @@ import { IAppState } from "../../models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
 import {
-    saveQuestionToQuestionnaireRoutine,
-    deleteFromQuestionnaireRoutine
+    addNewQuestionToQuestionnaireRoutine,
+    deleteFromQuestionnaireRoutine, copyQuestionInQuestionnaireRoutine
 } from "sagas/questions/routines";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 import styles from "./styles.module.sass";
 
 const QuestionMenu: FC<ContainerProps> = ({
     deleteQuestion,
     addQuestion,
-    currentQuestion
+    copyQuestion,
+    currentQuestion,
+    currentQuestionnaireId
 }) => {
+
     const handleAdd = (id: string) => {
         if (id === "new") {
-            addQuestion(null);
+            addQuestion({qId: currentQuestionnaireId});
         } else {
-            addQuestion(id);
+            copyQuestion({qId: currentQuestionnaireId, question: currentQuestion});
         }
     };
 
@@ -52,12 +56,14 @@ const QuestionMenu: FC<ContainerProps> = ({
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestion: state.questions.current
+    currentQuestion: state.questions.current,
+    currentQuestionnaireId: state.questionnaires.current.get.id
 });
 
 const mapDispatch = {
     deleteQuestion: deleteFromQuestionnaireRoutine,
-    addQuestion: saveQuestionToQuestionnaireRoutine
+    addQuestion: addNewQuestionToQuestionnaireRoutine,
+    copyQuestion: copyQuestionInQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
