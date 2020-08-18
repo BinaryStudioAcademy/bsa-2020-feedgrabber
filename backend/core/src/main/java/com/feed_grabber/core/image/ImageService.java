@@ -20,7 +20,6 @@ public class ImageService {
 
     @Value(value = "${imgur.id}")
     private String IMGUR_ID;
-    @Value(value = "${imgur.endpoint}")
     private static final String IMGUR_URL = "https://api.imgur.com/3/image";
     @Autowired
     ImageRepository imageRepository;
