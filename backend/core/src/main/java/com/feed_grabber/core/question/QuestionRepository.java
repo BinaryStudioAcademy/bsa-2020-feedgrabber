@@ -15,7 +15,7 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     @Query("SELECT case when (COUNT(q) > 0) then true else false end " +
             "FROM Question q INNER JOIN q.questionnaires que " +
-            "WHERE q.text = :text AND que.questionnaire.id = :questionnaireId AND q.category.id = :categoryId order by que.index asc")
+            "WHERE q.text = :text AND que.questionnaire.id = :questionnaireId AND q.category.id = :categoryId")
     boolean existsByTextAndQuestionnaireIdAndCategoryId
             (@Param("text") String text, @Param("questionnaireId") UUID questionnaireId,
              @Param("categoryId") UUID categoryId);
