@@ -6,7 +6,7 @@ import lombok.Data
 @AllArgsConstructor
 @Data
 class MailEntity {
-    private val type: MailType = MailType.ACTIVATE
+    private val type: MailType = MailType.REGISTER
     private val message: String = ""
     private val emailTo: String = ""
 

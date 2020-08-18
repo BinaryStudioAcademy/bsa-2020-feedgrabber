@@ -44,14 +44,24 @@ class EmailSender(
         send(mail)
     }
 
+    fun sendResetPasswordMail(activationLink: String, toEmailAddress: String) {
+        val from = Email(fromEmail)
+        val subject = "Reset password"
+        val to = Email(toEmailAddress)
+        val content = mailContentBuilder.buildResetPasswordMail(activationLink)
+        val mail = Mail(from, subject, to, content)
+        send(mail)
+    }
+
     fun sendMail(mailEntity: MailEntity?) {
         if (mailEntity == null) {
             return
         }
         val messageType: MailType = mailEntity.getType()
-        if (messageType == MailType.ACTIVATE) {
-            println("ACTIVATE")
+        if (messageType == MailType.REGISTER) {
             sendAccountActivationMail(mailEntity.getMessage(), mailEntity.getEmailTo());
+        } else if (messageType == MailType.RESET) {
+            sendResetPasswordMail(mailEntity.getMessage(), mailEntity.getEmailTo());
         } else {
             println("BAD TYPE");
         }

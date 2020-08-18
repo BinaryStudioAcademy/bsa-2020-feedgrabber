@@ -17,4 +17,10 @@ class MailContentBuilder(
         return Content("text/html", templateEngine.process("activate_account", context))
     }
 
+    fun buildResetPasswordMail(link: String): Content {
+        val context = Context()
+        context.setVariable("link", link)
+        return Content("text/html", templateEngine.process("reset_password", context))
+    }
+
 }
