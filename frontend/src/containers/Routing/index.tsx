@@ -25,6 +25,7 @@ import QuestionnareResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
+import QuestionnaireOrderView from "../../components/QuestionnaireOrderDraggableView";
 
 export interface IRoutingProps {
   isLoading: boolean;
@@ -69,6 +70,7 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
           <PrivateRoute exact path="/employees" component={UserList} />
+          <PrivateRoute exact path="/drag" component={QuestionnaireOrderView} />
           <Route path="/*">
             <Redirect to="/layout"/>
           </Route>

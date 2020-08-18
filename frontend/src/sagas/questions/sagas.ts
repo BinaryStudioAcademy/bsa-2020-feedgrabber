@@ -4,7 +4,9 @@ import {
   loadQuestionByIdRoutine,
   loadQuestionnaireQuestionsRoutine,
   loadQuestionsRoutine,
-  saveQuestionToQuestionnaireRoutine
+  saveQuestionToQuestionnaireRoutine,
+  addNewQuestionToQuestionnaireRoutine,
+  indexQuestionsRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IGeneric} from 'models/IGeneric';
@@ -86,6 +88,18 @@ function* saveOrUpdateQuestion(action) {
   }
 }
 
+function* addNewQuestionToQuestionnaire(action) {
+  try {
+    const { questionnaireId, question } = action.payload;
+    const res: IGeneric<IQuestion> = yield call(apiClient.post, `/api/questions`, question);
+    const savedQuestion = parseQuestion(res.data.data);
+    yield call(addFromExisting, { payload: {questionnaireId, questions: [savedQuestion] }});
+  } catch(error) {
+    yield put(saveQuestionToQuestionnaireRoutine.failure());
+    toastr.error("Question wasn't saved");
+  }
+}
+
 function* getByQuestionnaireId(action) {
   try {
     const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/questionnaires/${action.payload}`);
@@ -100,12 +114,22 @@ function* getByQuestionnaireId(action) {
   }
 }
 
+function* orderQuestions(action) {
+  try {
+    yield call(apiClient.put, `/api/questions/index`, action.payload);
+  } catch {
+    toastr.error("Unable to index questionnaire");
+  }
+}
+
 export default function* questionSagas() {
   yield all([
     yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
     yield takeEvery(saveQuestionToQuestionnaireRoutine.TRIGGER, saveOrUpdateQuestion),
     yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),
     yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId),
-    yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting)
+    yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
+    yield takeEvery(addNewQuestionToQuestionnaireRoutine.TRIGGER, addNewQuestionToQuestionnaire),
+    yield takeEvery(indexQuestionsRoutine.TRIGGER, orderQuestions)
   ]);
 }

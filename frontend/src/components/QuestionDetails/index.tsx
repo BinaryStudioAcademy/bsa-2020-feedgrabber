@@ -17,7 +17,6 @@ import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
-
     onValueChange(state: IComponentState<IQuestion>): void;
 }
 

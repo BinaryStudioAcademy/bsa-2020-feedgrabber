@@ -113,8 +113,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
         case addSelectedQuestionsRoutine.FAILURE:
             return {
                 ...state,
-                isLoading: false,
-                questions: payload
+                isLoading: false
             };
         case loadOneQuestionnaireRoutine.FAILURE:
             return {
