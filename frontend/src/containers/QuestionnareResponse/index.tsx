@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, List, Button, Form} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
 import FreeTextQuestion from '../../components/ComponentsQuestionsResponse/FreeTextQuestion';
 import { history } from '../../helpers/history.helper';
@@ -14,8 +14,8 @@ import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
-import UIListItem from "components/UI/UIListItem";
-import UIListHeader from 'components/UI/UIListHeader';
+import UIListItem from "components/UI/UIQuestionItemCard";
+import UIListHeader from 'components/UI/UIQuestionListHeader';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -55,7 +55,6 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     handleComponentChange(state: IComponentState) { 
         const { questions } = this.props;
         let updatedQuestions: IQuestion[];
-        console.log(questions);
         if (state.isAnswered) {
             updatedQuestions = questions.map(question => {
                 if (question.id === state.question.id) {

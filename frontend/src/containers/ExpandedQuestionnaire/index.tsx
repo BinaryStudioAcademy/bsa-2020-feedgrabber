@@ -57,8 +57,7 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
       {questionnaire && (
         <div>
           <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
-          {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
-          <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} />
+          {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
           <QuestionnairePreview />
         </div>
       )}

@@ -10,7 +10,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
     const [answer, setAnswer] = useState(question.details.answerOptions[0]);
 
-    useEffect(() => answerHandler(question.id, answer), [answer, answerHandler, question.id]);
+    useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
 
     const handleChange = (event, value?) => {
         setAnswer(value?.value);
