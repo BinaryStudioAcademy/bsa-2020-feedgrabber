@@ -4,15 +4,14 @@ import { Header, Label, List, Segment } from "semantic-ui-react";
 
 export interface IUIListItemProps {
     name: string;
-    key: string;
     category?: string;
 }
 
-const UIListItem: FC<IUIListItemProps> = ({ name, children, key, category }) => {
+const UIListItem: FC<IUIListItemProps> = ({ name, children, category }) => {
     return (
-        <List.Item key={key}>
+        <List.Item>
             <div className={styles.listContainer}>
-                <Segment very padded>
+                <Segment padded>
                     <Header
                         as='h2'
                         className={styles.name}>{name}

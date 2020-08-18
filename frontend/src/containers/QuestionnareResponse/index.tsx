@@ -17,6 +17,7 @@ import UIButton from 'components/UI/UIButton';
 import UIListItem from "components/UI/UIListItem";
 import UIListHeader from 'components/UI/UIListHeader';
 import ResponseQuestion from 'components/ResponseQuestion';
+import question from 'models/forms/Questions/DefaultQuestion';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -55,8 +56,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 
     handleComponentChange(state: IComponentState) {
         const { questions } = this.props;
-        let updatedQuestions: IQuestion[];
-        if (state.isAnswered) { // doesn`t init when !isAnswered, line 66 throws error 
+        let updatedQuestions: IQuestion[] = questions;
+        if (state.isAnswered) {
             updatedQuestions = questions.map(question => {
                 if (question.id === state.question.id) {
                     return state.question;
@@ -67,6 +68,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         this.setState({
             isCompleted: !completeStates.includes(null)
         });
+        console.log(questions);
     }
 
     handleSubmit = () => {
@@ -120,9 +122,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                             })}
                         </ul>
                         <div className={styles.submit}>
-                            <UIButton title="Send"></UIButton>
+                            <UIButton title="Send" submit></UIButton>
                         </div>
-
                     </Form>)
                     }
                 </Formik>
