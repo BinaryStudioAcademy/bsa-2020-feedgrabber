@@ -6,10 +6,8 @@ import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundEx
 import com.feed_grabber.core.registration.model.VerificationToken;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,7 +29,8 @@ public class VerificationTokenService {
         var verificationToken = new VerificationToken(token, user, type);
 
         var verificationTokenStr = verificationTokenRepository.save(verificationToken).getToken();
-        emailSender.sendToProcessor("localhost:3000/token/" + type +"/" + verificationTokenStr,
+        emailSender.sendToProcessor(
+                "http://feedgrabber.com.localhost:3000/" + TokenType.tokenTypeToUrl(type) + verificationTokenStr,
                 user.getEmail(),
                 type.toString());
         return verificationTokenStr;
@@ -51,7 +50,11 @@ public class VerificationTokenService {
         User user = vToken.getUser();
         user.setIsEnabled(true);
 
-        verificationTokenRepository.delete(vToken);
+        try {
+			verificationTokenRepository.delete(vToken);
+		} catch (Exception ex) {
+			
+		}
         return userRepository.save(user);
     }
 

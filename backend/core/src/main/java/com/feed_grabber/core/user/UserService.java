@@ -107,7 +107,7 @@ public class UserService implements UserDetailsService {
                 .company(company)
                 .build()
         );
-        verificationTokenService.generateVerificationToken(user, TokenType.REGISTRATION);
+        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return company.getId();
     }
 
@@ -135,7 +135,7 @@ public class UserService implements UserDetailsService {
                 .company(company)
                 .build()
         );
-        verificationTokenService.generateVerificationToken(user, TokenType.REGISTRATION);
+        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return invitation.getCompany().getId();
     }
 

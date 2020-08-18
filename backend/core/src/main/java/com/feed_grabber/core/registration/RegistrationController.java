@@ -18,12 +18,12 @@ public class RegistrationController {
 
     @ApiOperation(value = "Verify user by token", notes = "Provide the token " +
             "to verify the registration of new user")
-    @PutMapping("/confirm")
+    @PostMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
     public ConfirmRegistrationResponseDto confirmRegistration(
             @RequestParam(name = "token") String token)
             throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
-        verificationTokenService.verifyUserByToken(token, TokenType.REGISTRATION);
+        verificationTokenService.verifyUserByToken(token, TokenType.REGISTER);
         return new ConfirmRegistrationResponseDto(true);
     }
 }
