@@ -1,4 +1,4 @@
-import FormEditorSelectedContainer from "../FormEditorSelectedComntainer";
+import QuestionDetailsPage from '../../containers/QuestionDeatilsPage';
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import { IAppState } from "models/IAppState";
 import { IQuestionResponse } from "models/IQuestionResponse";
@@ -23,7 +23,9 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                 onClick={handleSegmentClick} />
             {editor && (id === nowModifying.id) ?
                 <div className={styles.scaleTop}>
-                    <FormEditorSelectedContainer question={question} handleSegmentClick={handleSegmentClick}/>
+                    <QuestionDetailsPage
+                        match={{ params: { id: question.id } }}
+                        isPreview={{ question: question, close: handleSegmentClick }} />
                 </div>
                 : <>
                     <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
