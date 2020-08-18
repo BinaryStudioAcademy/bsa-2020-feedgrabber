@@ -25,9 +25,9 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
                     ? <Dimmer active inverted>
                         <Loader size="big" inverted/>
                     </Dimmer>
-                    : (questions.map(question => {
+                    : (questions.map((question, index) => {
                         return (
-                            <div key={question.id} className={styles.questionContainer}>
+                            <div key={index} className={styles.questionContainer}>
                                 <Card className={styles.question}
                                       link centered fluid
                                       description={question.name}
