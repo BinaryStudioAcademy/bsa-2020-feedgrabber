@@ -97,8 +97,9 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
     };
 
     const onClear = () => {
-       setFiles([]);
-       setImages([]);
+        setFiles([]);
+        setImages([]);
+        answerHandler(question.id, { files: [], url });
     };
 
     const getPanes = () => {
