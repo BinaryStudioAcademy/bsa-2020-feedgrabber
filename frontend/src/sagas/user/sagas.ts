@@ -15,6 +15,12 @@ function* getUser() {
     }
 }
 
+// function* uploadAvatar(action) {
+//   try{
+//     const image = yield call(apiClient.post, )
+//   }
+// }
+
 function* sendEmailPassReset(action) {
     try {
         // payload: {companyId, userEmail}

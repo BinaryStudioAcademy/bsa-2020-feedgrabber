@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {ChangeEvent, FC, useState} from 'react';
 import {Button, Form, Grid, Image} from "semantic-ui-react";
 import './styles.sass';
 import '../styles.sass';
@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../../models/IAppState";
 import {getUserRoutine} from "../../../sagas/auth/routines";
+import ImageCropModal from "../../ImageCropModal";
 
 const validationSchema = yup.object().shape({
     userName: yup
@@ -25,17 +26,50 @@ const validationSchema = yup.object().shape({
         .matches(/[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}/, "Please enter valid phone number 099-999-99-99")
 });
 
+const defaultAvatar =
+  "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
+
 const ProfileInfo: FC<ProfileInfoProps> = props => {
-        const {user, save, isLoading} = props;
+        const {user, save, uploadImage, isLoading} = props;
+
+        const [src, setSource] = useState<string | ArrayBuffer>(undefined);
+        const [fileName, setFileName] = useState('avatar');
+
+        const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
+          if (e.target.files && e.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.addEventListener(
+              'load',
+              () => setSource(reader.result),
+              false
+            );
+            const file = e.target.files[0];
+            setFileName(file.name);
+            reader.readAsDataURL(file);
+          }
+        };
 
         return (
                 <Grid container textAlign="center">
                     {!isLoading && user &&
                     <Grid.Column>
-                      <Image centered src={user.avatar}
+                      <Image centered src={user.avatar ?? defaultAvatar}
                              size={"small"} circular/>
                       <br/>
+                      <Button className="tertiary" as="label" style={{backgroundColor: '#f6f7f9'}}>
+                        Set Image
+                        <input name="image" type="file" onChange={onSelectFile} hidden />
+                      </Button>
                       <br/>
+                      <br/>
+                      {src && (
+                        <ImageCropModal
+                          close={() => setSource(undefined)}
+                          src={src}
+                          fileName={fileName}
+                          save={uploadImage}
+                        />
+                      )}
                       <Formik
                         enableReinitialize
                         initialValues={{
@@ -129,7 +163,8 @@ const mapState = (state: IAppState) => ({
 
 const mapDispatch = {
     pullUser: getUserRoutine,
-    save: undefined
+    save: undefined,
+    uploadImage: undefined
 };
 
 const connector = connect(mapState, mapDispatch);
