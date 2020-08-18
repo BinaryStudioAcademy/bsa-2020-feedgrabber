@@ -13,6 +13,7 @@ import { IGeneric } from 'models/IGeneric';
 import { toastr } from 'react-redux-toastr';
 import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 
 function parseQuestion(rawQuestion) {
     return {
@@ -90,7 +91,8 @@ function* saveOrUpdateQuestion(action) {
 function* copyQuestionInQuestionnaire(action){
     try {
         const {qId, question} = action.payload;
-        const res: IGeneric<IQuestion> = yield call(apiClient.post, `/api/questions/questionnaires/${qId}`, question);
+        const res: IGeneric<IQuestionnaire> = yield call(apiClient.post,
+            `/api/questions/questionnaires/${qId}`, question);
 
         yield put(copyQuestionInQuestionnaireRoutine.success(res.data.data));
 
@@ -103,7 +105,7 @@ function* copyQuestionInQuestionnaire(action){
 function* addNewQuestionInQuestionnaire(action){
     try {
         const {qId} = action.payload;
-        const res: IGeneric<IQuestion> = yield call(apiClient.post, `/api/questions/questionnaires/${qId}`);
+        const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `/api/questions/questionnaires/${qId}`);
 
         yield put(addNewQuestionToQuestionnaireRoutine.success(res.data.data));
 

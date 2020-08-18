@@ -45,7 +45,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                 loadQuestion({ id: match.params.id });
             loadCategories();
         }
-    }, [loadQuestion, match.params.id, loadCategories]);
+    }, [loadQuestion, match.params.id, loadCategories, isPreview]);
 
     useEffect(() => {
         setQuestion(currentQuestion);
