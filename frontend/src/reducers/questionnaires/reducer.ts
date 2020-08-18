@@ -10,7 +10,10 @@ import {
 } from '../../sagas/qustionnaires/routines';
 import { IAppState } from "../../models/IAppState";
 import { combineReducers } from "redux";
-import {addSelectedQuestionsRoutine, loadQuestionnaireQuestionsRoutine} from "../../sagas/questions/routines";
+import {
+    addSelectedQuestionsRoutine,
+    loadQuestionnaireQuestionsRoutine
+} from "../../sagas/questions/routines";
 import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
 
 const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {

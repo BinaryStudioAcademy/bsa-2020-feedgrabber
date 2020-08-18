@@ -27,6 +27,8 @@ const initialState: IAppState['questions'] = {
 
 const questionsReducer = (state: IQuestionsState = initialState, { type, payload }) => {
     switch (type) {
+        case copyQuestionInQuestionnaireRoutine.SUCCESS:
+        case addNewQuestionToQuestionnaireRoutine.SUCCESS:
         case loadQuestionsRoutine.SUCCESS:
             return {
                 ...state,
@@ -57,8 +59,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
                     isLoading: false
                 }
             };
-        case copyQuestionInQuestionnaireRoutine.SUCCESS:
-        case addNewQuestionToQuestionnaireRoutine.SUCCESS:
         case saveQuestionToQuestionnaireRoutine.SUCCESS:
         case loadQuestionByIdRoutine.SUCCESS:
         case deleteFromQuestionnaireRoutine.SUCCESS:
