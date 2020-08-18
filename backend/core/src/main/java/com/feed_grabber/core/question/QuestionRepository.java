@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
     @Query("SELECT q FROM Question q INNER JOIN q.questionnaires que " +
-            "WHERE que.questionnaire.id = :questionnaireId")
+            "WHERE que.questionnaire.id = :questionnaireId order by que.index asc")
     List<Question> findAllByQuestionnaireId(@Param("questionnaireId") UUID questionnaireId);
 
     @Query("SELECT case when (COUNT(q) > 0) then true else false end " +
