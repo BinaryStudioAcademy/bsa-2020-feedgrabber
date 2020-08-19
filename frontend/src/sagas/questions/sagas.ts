@@ -94,8 +94,7 @@ function* saveOrUpdateQuestion(action) {
 function* addNewQuestionToQuestionnaire(action) {
   try {
     const { questionnaireId } = action.payload;
-    const res: IGeneric<IQuestion> = yield call(apiClient.post, `/api/questions`, action.payload);
-    const savedQuestion = parseQuestion(res.data.data);
+    yield call(apiClient.post, `/api/questions`, action.payload);
     yield call(getByQuestionnaireId, { payload: questionnaireId });
   } catch(error) {
     yield put(saveQuestionToQuestionnaireRoutine.failure());
