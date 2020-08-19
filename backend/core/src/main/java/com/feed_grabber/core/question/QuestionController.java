@@ -102,9 +102,12 @@ public class QuestionController {
     @ApiOperation(value = "Delete the question by id and questionnaireId")
     @DeleteMapping("/questionnaires/{qId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteOneByQuestionnaireAndID(@ApiParam(
+    public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(@ApiParam(
             value = "IDs to delete one question from questionnaire", required = true) @RequestBody UUID id, @PathVariable UUID qId){
+
         questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
+
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(qId));
     }
 
     @ApiOperation(value = "Add new question to questionnaire")
@@ -117,7 +120,7 @@ public class QuestionController {
                 .name("New question")
                 .type(QuestionType.FREE_TEXT)
                 .questionnaireId(Optional.of(id))
-                .categoryTitle("sport")
+                .categoryTitle("Sport")
                 .build());
         return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }

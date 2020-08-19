@@ -59,7 +59,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
             };
         case saveQuestionToQuestionnaireRoutine.SUCCESS:
         case loadQuestionByIdRoutine.SUCCESS:
-        case deleteFromQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
                 current: payload,
@@ -69,7 +68,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
         case saveQuestionToQuestionnaireRoutine.TRIGGER:
         case loadQuestionsRoutine.TRIGGER:
         case loadQuestionByIdRoutine.TRIGGER:
-        case deleteFromQuestionnaireRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
@@ -77,7 +75,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
         case saveQuestionToQuestionnaireRoutine.FAILURE:
         case loadQuestionByIdRoutine.FAILURE:
         case loadQuestionsRoutine.FAILURE:
-        case deleteFromQuestionnaireRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false

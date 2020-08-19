@@ -135,9 +135,12 @@ function* getByQuestionnaireId(action) {
 
 function* deleteOneByQuestionnaireId(action) {
     try {
-        const { id, qId } = action.payload;
+        const { qId, id } = action.payload;
+
         const res: IGeneric<IQuestion[]> = yield call(apiClient.delete, `/api/questions/questionnaires/${qId}`, id);
+
         const questions = res.data.data.map(q => parseQuestion(q));
+
         yield put(deleteFromQuestionnaireRoutine.success(questions));
     } catch (e) {
         yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
