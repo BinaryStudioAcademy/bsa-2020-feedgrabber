@@ -14,7 +14,7 @@ const AccountVerificationPage = () => {
     if (result !== undefined) {
       return;
     }
-    apiClient.post(`http://localhost:5000/api/auth/register/confirm?token=${token}`)
+    apiClient.post(`/api/auth/register/confirm?token=${token}`)
       .then(res => {
         setResult(true);
       }).catch(err => {
