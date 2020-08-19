@@ -8,6 +8,7 @@ export interface IQuestionnairesState {
         questions?: IQuestion[];
         isLoading?: boolean;
     };
+    currentQuestion?: IQuestion;
 }
 
 export interface IQuestionnaire {

@@ -10,7 +10,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ questions }) => {
         <div className={styles.wrapper}>
             {questions.length ?
                 <>
-                    { questions.map(q => <ResponseQuestion question={q} />)}
+                    { questions.map(q => <ResponseQuestion question={q} key={q.id}/>)}
                     {/* Pass answerHandler to props if it is not preview */}
                 </>
                 : <Header as='h2'>
