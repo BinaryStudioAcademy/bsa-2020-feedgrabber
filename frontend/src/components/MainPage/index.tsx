@@ -36,7 +36,7 @@ const MainPage: FC<IMainPageProps> =
       if (!questionnaireList && !isLoading) {
           loadQuestionnaires();
       }
-    }, [questionnaireList, loadQuestionnaires]);
+    }, [questionnaireList, loadQuestionnaires, isLoading]);
 
     const handleClick = id => {
       history.push(`/response/${id}`);
