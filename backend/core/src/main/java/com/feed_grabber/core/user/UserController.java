@@ -62,7 +62,6 @@ public class UserController {
                 .orElseThrow(UserNotFoundException::new);
 
         var token = tokenService.generateVerificationToken(user, TokenType.RESET);
-        // TODO: Send email with token
     }
 
     @ApiOperation(value = "Update password")

@@ -12,6 +12,7 @@ public class SecurityConstants {
             "/api/user/reset",
             "/api/user/short*",
             "/api/auth/register",
+            "/api/auth/register/confirm",
             "/api/auth/invitation",
             "/api/auth/register/confirm",
             "/api/auth/renovate",

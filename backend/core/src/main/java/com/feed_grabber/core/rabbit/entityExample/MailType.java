@@ -1,5 +1,5 @@
 package com.feed_grabber.core.rabbit.entityExample;
 
-public enum EntityType {
-    REQUEST, RESPONSE
+public enum MailType {
+    RESET, REGISTER
 }
