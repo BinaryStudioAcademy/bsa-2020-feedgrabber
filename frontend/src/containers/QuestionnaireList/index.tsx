@@ -21,6 +21,8 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
+import {Icon} from "semantic-ui-react";
+import styles from './styles.module.sass';
 
 interface IQuestionnaireListProps {
   pagination?: IPaginationInfo<IQuestionnaire>;
@@ -65,33 +67,40 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
       <UICardBlock>
         <h3>{item.title}</h3>
       </UICardBlock>
+      <UICardBlock className={styles.cardIconWrapper}>
+        <Icon
+          name="plus"
+          onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
+          className={styles.cardIcon}
+        />
+        <Icon
+          name="chart bar"
+          onClick={() => {
+            clearQuestionnaireReport();
+            history.push(`/questionnaires/${item.id}/report`);
+          }}
+          className={styles.cardIcon}
+        />
+        <Icon
+          name="settings"
+          onClick={() => {
+            clearOneQuestionnaire();
+            history.push(`/questionnaires/${item.id}`);
+          }}
+          className={styles.cardIcon}
+        />
+        <Icon
+          name="edit"
+          onClick={() => showModal(item)}
+          className={styles.cardIcon}
+        />
+        <Icon
+          name="trash"
+          onClick={() => deleteQuestionnaire(item.id)}
+          className={styles.cardIcon}
+        />
+      </UICardBlock>
     </UICard>
-    // <PaginationListItem
-    //   key={item.id}
-    //   title={item.title}
-    //   description={item.companyName}
-    //   actions={[
-    //     {
-    //       icon: 'plus', callback: () => {
-    //         history.push(`/questionnaires/${item.id}/new-request`);
-    //       }
-    //     },
-    //     {
-    //       icon: 'chart bar', callback: () => {
-    //         clearQuestionnaireReport();
-    //         history.push(`/questionnaires/${item.id}/report`);
-    //       }
-    //     },
-    //     {
-    //       icon: 'settings', callback: () => {
-    //         clearOneQuestionnaire();
-    //         history.push(`/questionnaires/${item.id}`);
-    //       }
-    //     },
-    //     {icon: 'edit', callback: () => showModal(item)},
-    //     {icon: 'trash', callback: () => deleteQuestionnaire(item.id)}
-    //   ]}
-    // />
   );
 
   return (
@@ -105,7 +114,7 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
         updateQuestionnaire={updateQuestionnaire}
         modalError={modalError}
       />
-      <UIPageTitle title="Questionnaires" />
+      <UIPageTitle title="Questionnaires"/>
       <UIContent>
         <UIColumn>
           <UIButton
