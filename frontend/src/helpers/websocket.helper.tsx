@@ -1,6 +1,7 @@
 import 'react-notifications/lib/notifications.css';
 import {Client} from "@stomp/stompjs";
 import {useEffect, useState} from "react";
+import tokenProvider from "../security/tokenProvider";
 
 // const socket = new SockJS("/ws");
 // const stompClient = Stomp.over(socket);
@@ -11,6 +12,7 @@ import {useEffect, useState} from "react";
 
 const client = new Client({
     brokerURL: "ws://localhost:5000/ws",
+    connectHeaders: {auth: tokenProvider.getToken()},
     debug: str => console.log(str),
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,

@@ -1,7 +1,6 @@
 package com.feed_grabber.core.auth;
 
 import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
@@ -16,11 +15,8 @@ public class CustomHandshakeHandler extends DefaultHandshakeHandler {
             WebSocketHandler wsHandler,
             Map<String, Object> attributes
     ) {
+        var auth = request.getHeaders().get("auth");
         // Generate principal with UUID as name
-        return () -> {
-            var x = SecurityContextHolder.getContext().getAuthentication().getName();
-            System.out.println(x);
-            return x;
-        };
+        return () -> auth.get(0);
     }
 }
