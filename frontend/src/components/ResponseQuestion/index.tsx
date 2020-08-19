@@ -17,8 +17,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         const handleSegmentClick = () => {
             setEditor(!editor);
             const { top, right } = (ReactDOM.findDOMNode(detailsPage.current) as Element).getBoundingClientRect();
-            const { scrollTop } = (document.getElementById('root').firstChild.firstChild as HTMLElement);
-            loadCurrent({ id: question.id, top: top + scrollTop, right });
+            loadCurrent({ id: question.id, top: top, right });
         };
         return (
             <div ref={detailsPage}>

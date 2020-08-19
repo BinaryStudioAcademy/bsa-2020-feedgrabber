@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Button, Form, Popup } from "semantic-ui-react";
 import { IAppState } from "../../models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
@@ -10,6 +10,7 @@ import {
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 import styles from "./styles.module.sass";
+import { number } from "prop-types";
 
 const QuestionMenu: FC<ContainerProps> = ({
     deleteQuestion,
@@ -18,23 +19,37 @@ const QuestionMenu: FC<ContainerProps> = ({
     currentQuestion,
     currentQuestionnaireId
 }) => {
-
+    const [positions, setPositions] = useState({ scrollTop: 0, innerHeight: window.innerHeight });
+    useEffect(() => {
+        (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = (e: Event) => {
+            setPositions(
+                {
+                    scrollTop: (document.getElementById('root')?.firstChild?.firstChild as HTMLElement)?.scrollTop || 0,
+                    innerHeight: window.innerHeight
+                }
+            );
+        };
+    });
     const handleAdd = (id: string) => {
         if (id === "new") {
-            addQuestion({qId: currentQuestionnaireId});
+            addQuestion({ qId: currentQuestionnaireId });
         } else {
-            copyQuestion({qId: currentQuestionnaireId, question: currentQuestion});
+            copyQuestion({ qId: currentQuestionnaireId, question: currentQuestion });
         }
     };
 
     const handleDelete = () => {
-        deleteQuestion({qId: currentQuestionnaireId, id: currentQuestion.id});
+        deleteQuestion({ qId: currentQuestionnaireId, id: currentQuestion.id });
     };
 
+    const { scrollTop, innerHeight } = positions;
     return (
         <div style={{
             position: 'absolute',
-            top: currentQuestion.top,
+            top: (currentQuestion.top > innerHeight
+                || currentQuestion.top < 0
+                ? scrollTop + innerHeight / 2 - 40
+                : scrollTop + currentQuestion.top),
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Form className={styles.question_menu_container}>
