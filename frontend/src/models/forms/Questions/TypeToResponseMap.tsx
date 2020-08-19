@@ -4,14 +4,8 @@ import { ScaleQuestionResponse } from "components/ResponseQuestion/ScaleQuestion
 import { IQuestionResponse } from "models/IQuestionResponse";
 import RadioButtonResponse from "../../../components/ResponseQuestion/RadioButtonResponse";
 import React from "react";
-import {
-  IRadioQuestion,
-  IDateQuestion,
-  ITextQuestion,
-  ICheckboxQuestion,
-  IFileUploadQuestion,
-  IScaleQuestion
-} from "./IQuesion";
+import {IRadioQuestion, IDateQuestion, ITextQuestion, ICheckboxQuestion,
+    IFileUploadQuestion, IScaleQuestion} from "./IQuesion";
 import { CheckboxResponse } from "components/ResponseQuestion/CheckboxResponse";
 import FileUploadResponse from "../../../components/ResponseQuestion/FileUploadResponse";
 
