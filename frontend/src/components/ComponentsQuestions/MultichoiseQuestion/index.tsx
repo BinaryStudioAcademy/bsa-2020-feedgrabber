@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Form, Segment, Icon } from "semantic-ui-react";
+import { Form, Icon } from "semantic-ui-react";
 import {
   IGenericQuestionComponent,
   useInitValue,
@@ -34,7 +34,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
   useEffect(() => validate(value), [value]);
 
   return (
-    <Segment>
+    <div>
       <div>
         {value.answerOptions.map((answer, index) => (
           <div className="option-container" key={index}>
@@ -91,7 +91,7 @@ const MultichoiseQuestion: IGenericQuestionComponent<IMultiAnswerDetails> = ({
           </span>
         </div>
       </div>
-    </Segment>
+    </div>
   );
 };
 

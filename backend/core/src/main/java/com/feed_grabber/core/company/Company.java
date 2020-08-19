@@ -42,4 +42,7 @@ public class Company {
 
     @OneToMany(mappedBy = "company")
     private List<Questionnaire> questionnaires;
+
+    @Column(name = "subdomain_name")
+    private String subdomainName;
 }

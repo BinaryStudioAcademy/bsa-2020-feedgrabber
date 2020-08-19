@@ -185,4 +185,8 @@ public class QuestionService {
                 ? this.createModel(QuestionMapper.MAPPER.upsertDtoToCreateDto(question))
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
     }
+
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID id, UUID qId) {
+        quesRep.deleteByQuestionnaireId(qId, id);
+    }
 }

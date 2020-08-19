@@ -95,5 +95,11 @@ public class UserController {
         userService.removeCompany(id);
     }
 
-/*%%% dev*/
+    @GetMapping("/short")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<UserShortDto> getUserShortByEmailAndCompany(@RequestParam String email,
+                                                                   @RequestParam UUID companyId)
+                throws UserNotFoundException {
+        return new AppResponse<>(userService.getUserShortByEmailAndCompany(email, companyId));
+    }
 }
