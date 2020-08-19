@@ -4,13 +4,10 @@ import ReactPaginate from 'react-paginate';
 import styles from './styles.module.sass';
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import LoaderWrapper from "../LoaderWrapper";
-import PaginationButton, {IGenericButtonProps} from "./button";
 
 interface IGenericPaginationProps {
-  title: string;
   isLoading: boolean;
   pagination?: IPaginationInfo<any>;
-  buttons: IGenericButtonProps[];
 
   setPagination(pagination: IPaginationInfo<any>): void;
   mapItemToJSX(item: any): JSX.Element;
@@ -22,10 +19,8 @@ const defaultSize = 5;
 
 const GenericPagination: FC<IGenericPaginationProps> = (
   {
-    title,
     pagination,
     isLoading,
-    buttons,
     setPagination,
     mapItemToJSX,
     loadItems
@@ -60,11 +55,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
   });
 
   return (
-    <div className={styles.paginationWrapper}>
-      <h1 className={styles.paginationTitle}>{title}</h1>
-      <div className={styles.paginationButtonsWrapper}>
-        {buttons.map(b => <PaginationButton key={b.text} text={b.text} callback={b.callback}/>)}
-      </div>
+    <>
       {pagination?.total > 0 && (
         <div className={styles.paginationMetaWrapper}>
           <div>Total: {pagination.total}</div>
@@ -105,7 +96,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

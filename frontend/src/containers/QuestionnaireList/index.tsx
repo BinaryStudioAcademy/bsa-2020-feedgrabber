@@ -10,12 +10,17 @@ import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import QuestionnaireModal from "./questionnaireModal";
 import GenericPagination from "../../components/GenericPagination";
-import PaginationListItem from "../../components/GenericPagination/listItem";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {history} from '../../helpers/history.helper';
 import {clearOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {clearQuestionnaireReportRoutine} from "../../sagas/questionnaireReport/routines";
+import UICard from "../../components/UI/UICard";
+import UICardBlock from "../../components/UI/UICardBlock";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import UIContent from "../../components/UI/UIContent";
+import UIColumn from "../../components/UI/UIColumn";
+import UIButton from "../../components/UI/UIButton";
 
 interface IQuestionnaireListProps {
   pagination?: IPaginationInfo<IQuestionnaire>;
@@ -56,32 +61,37 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
   }
 ) => {
   const mapItemToJSX = (item: IQuestionnaire) => (
-    <PaginationListItem
-      key={item.id}
-      title={item.title}
-      description={item.companyName}
-      actions={[
-        {
-          icon: 'plus', callback: () => {
-            history.push(`/questionnaires/${item.id}/new-request`);
-          }
-        },
-        {
-          icon: 'chart bar', callback: () => {
-            clearQuestionnaireReport();
-            history.push(`/questionnaires/${item.id}/report`);
-          }
-        },
-        {
-          icon: 'settings', callback: () => {
-            clearOneQuestionnaire();
-            history.push(`/questionnaires/${item.id}`);
-          }
-        },
-        {icon: 'edit', callback: () => showModal(item)},
-        {icon: 'trash', callback: () => deleteQuestionnaire(item.id)}
-      ]}
-    />
+    <UICard>
+      <UICardBlock>
+        <h3>{item.title}</h3>
+      </UICardBlock>
+    </UICard>
+    // <PaginationListItem
+    //   key={item.id}
+    //   title={item.title}
+    //   description={item.companyName}
+    //   actions={[
+    //     {
+    //       icon: 'plus', callback: () => {
+    //         history.push(`/questionnaires/${item.id}/new-request`);
+    //       }
+    //     },
+    //     {
+    //       icon: 'chart bar', callback: () => {
+    //         clearQuestionnaireReport();
+    //         history.push(`/questionnaires/${item.id}/report`);
+    //       }
+    //     },
+    //     {
+    //       icon: 'settings', callback: () => {
+    //         clearOneQuestionnaire();
+    //         history.push(`/questionnaires/${item.id}`);
+    //       }
+    //     },
+    //     {icon: 'edit', callback: () => showModal(item)},
+    //     {icon: 'trash', callback: () => deleteQuestionnaire(item.id)}
+    //   ]}
+    // />
   );
 
   return (
@@ -95,15 +105,24 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
         updateQuestionnaire={updateQuestionnaire}
         modalError={modalError}
       />
-      <GenericPagination
-        title="Questionnaires"
-        isLoading={isLoading}
-        pagination={pagination}
-        setPagination={setPagination}
-        loadItems={loadQuestionnaires}
-        mapItemToJSX={mapItemToJSX}
-        buttons={[{text: "Add New", callback: () => showModal(undefined)}]}
-      />
+      <UIPageTitle title="Questionnaires" />
+      <UIContent>
+        <UIColumn>
+          <UIButton
+            title="Add Questionnaire"
+            onClick={() => showModal(undefined)}
+            center
+            primary
+          />
+          <GenericPagination
+            isLoading={isLoading}
+            pagination={pagination}
+            setPagination={setPagination}
+            loadItems={loadQuestionnaires}
+            mapItemToJSX={mapItemToJSX}
+          />
+        </UIColumn>
+      </UIContent>
     </>
   );
 };
