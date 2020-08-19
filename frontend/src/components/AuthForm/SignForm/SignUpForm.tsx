@@ -15,7 +15,8 @@ const schema = yup.object().shape({
         .required("Company name required")
         .min(3, "Company name too short!")
         .max(40, "Company name too long!")
-        .matches(/^\w[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`]+$/, "Company name must be valid"),
+        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+            "Company name must be valid"),
     email: yup
         .string()
         .email("Email must be valid")
@@ -36,7 +37,7 @@ const schema = yup.object().shape({
         .required("Username required")
         .min(5, "Username too short!")
         .max(15, "Username too long!")
-        .matches(/^\w[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`]+$/,
+        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
             "Username must be valid")
 });
 

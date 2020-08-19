@@ -16,13 +16,17 @@ const schema = yup.object().shape({
     password: yup
         .string()
         .required("Password required")
-        .min(6, "Password too short!")
-        .max(30, "Password too long!"),
+        .min(8, "Password too short!")
+        .max(16, "Password too long!")
+        .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
+            "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
     username: yup
         .string()
         .required("Username required")
         .min(5, "Username too short!")
         .max(15, "Username too long!")
+        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+            "Username must be valid")
 });
 
 const SignInForm: FC<SignInFormProps & { className: string }> = ({
