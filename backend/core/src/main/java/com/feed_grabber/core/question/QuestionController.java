@@ -4,6 +4,7 @@ package com.feed_grabber.core.question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
@@ -97,6 +98,13 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         questionService.delete(id);
+    }
+
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/index")
+    public void index(@RequestBody QuestionIndexDto dto) throws QuestionNotFoundException {
+        this.questionService.index(dto);
     }
 
     @ApiOperation(value = "Delete the question by id and questionnaireId")

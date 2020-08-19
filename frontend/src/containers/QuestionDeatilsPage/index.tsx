@@ -31,14 +31,10 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
-    // useEffect(() => {
-    //     loadQuestion('empty');
-    //     loadCategories();
-    // }, [loadCategories, loadQuestion]);
 
     useEffect(() => {
         if (match.params.id === 'new') {
-            loadQuestion('empty');
+            loadQuestion({id: 'empty'});
         }
         else {
             if (!isPreview)

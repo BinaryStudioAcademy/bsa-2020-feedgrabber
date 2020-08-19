@@ -18,7 +18,6 @@ import QuestionDetailsOptions from "./QuestionDetailsOptions";
 interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
-
     onValueChange(state: IComponentState<IQuestion>): void;
 }
 
