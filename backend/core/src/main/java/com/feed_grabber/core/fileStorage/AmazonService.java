@@ -2,7 +2,9 @@ package com.feed_grabber.core.fileStorage;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileMapper;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.dto.S3FileDetailsDto;
@@ -74,5 +76,12 @@ public class AmazonService {
     private void uploadFileTos3bucket(String fileName, File file) {
         s3client.putObject(new PutObjectRequest(BUCKET_NAME, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+    }
+
+    public void deleteFile(UUID fileId) throws NotFoundException {
+        var s3File = fIleRepository.findById(fileId).orElseThrow(NotFoundException::new);
+        var fileName = s3File.getLink().substring(s3File.getLink().lastIndexOf(BUCKET_NAME)+BUCKET_NAME.length()+1);
+        s3client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, fileName));
+        fIleRepository.deleteById(fileId);
     }
 }
