@@ -1,4 +1,4 @@
-package com.feed_grabber.core.register;
+package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;

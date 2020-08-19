@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
@@ -20,7 +20,6 @@ import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
-
 import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
@@ -29,20 +28,21 @@ import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportsPage from "../ReportPage";
 
 export interface IRoutingProps {
-  isLoading: boolean;
-  user?: IUserInfo;
+    isLoading: boolean;
+    user?: IUserInfo;
 
-  getUser(): void;
+    getUser(): void;
 }
 
-const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
-  const isLogged = useAuth();
+const Routing: FC<IRoutingProps> = ({isLoading, user, getUser}) => {
+    const isLogged = useAuth();
+    // useStomp("questions", m => console.log(m.body, m.headers, m.binaryBody));
 
-  useEffect(() => {
-    if (isLogged && !user){
-      getUser();
-    }
-  }, [isLogged, user, getUser]);
+    useEffect(() => {
+        if (isLogged && !user) {
+            getUser();
+        }
+    }, [isLogged, user, getUser]);
 
   return (
     <>
@@ -86,12 +86,12 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
 };
 
 const mapState = (state: IAppState) => ({
-  isLoading: state.isLoading,
-  user: state.user.info
+    isLoading: state.isLoading,
+    user: state.user.info
 });
 
 const mapDispatchToProps = {
-  getUser: getUserRoutine
+    getUser: getUserRoutine
 };
 
 export default connect(mapState, mapDispatchToProps)(Routing);
