@@ -7,6 +7,7 @@ import {IQuestionsState} from "../reducers/questions/reducer";
 import {IInvitationState} from "../reducers/invitation/reducer";
 import {IInvitationSignUpState} from "../reducers/invitationSignUp/reducer";
 import {ICompanyState} from '../reducers/companies/reducer';
+import {IQuestionnaireReportState} from "../reducers/questionnaireReport/reducer";
 import {INotificationsState} from "../reducers/notifications";
 
 export interface IAppState {
@@ -16,6 +17,7 @@ export interface IAppState {
     invitationSignUp: IInvitationSignUpState;
     users: IUsersState;
     questionnaires: IQuestionnairesState;
+    questionnaireReport: IQuestionnaireReportState;
     questions: IQuestionsState;
     app: IAdditionalState;
     teams: ITeamsState;
