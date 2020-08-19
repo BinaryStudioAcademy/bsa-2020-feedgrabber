@@ -24,4 +24,6 @@ public class S3File {
     )
     UUID id;
     String link;
+    @Column(name = "file_key")
+    String key;
 }

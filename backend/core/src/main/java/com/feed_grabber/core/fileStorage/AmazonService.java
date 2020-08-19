@@ -52,7 +52,7 @@ public class AmazonService {
 
             uploadFileTos3bucket(fileName, file);
 
-            var savedFile = fIleRepository.save(S3File.builder().link(fileUrl).build());
+            var savedFile = fIleRepository.save(S3File.builder().link(fileUrl).key(fileName).build());
             file.delete();
             return FileMapper.MAPPER.imageToImageDto(savedFile);
         } catch (IOException e) {
@@ -80,8 +80,7 @@ public class AmazonService {
 
     public void deleteFile(UUID fileId) throws NotFoundException {
         var s3File = fIleRepository.findById(fileId).orElseThrow(NotFoundException::new);
-        var fileName = s3File.getLink().substring(s3File.getLink().lastIndexOf(BUCKET_NAME)+BUCKET_NAME.length()+1);
-        s3client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, fileName));
+        s3client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, s3File.getKey()));
         fIleRepository.deleteById(fileId);
     }
 }
