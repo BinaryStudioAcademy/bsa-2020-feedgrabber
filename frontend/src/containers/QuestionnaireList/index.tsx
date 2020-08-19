@@ -15,6 +15,7 @@ import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {history} from '../../helpers/history.helper';
 import {clearOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
+import {clearQuestionnaireReportRoutine} from "../../sagas/questionnaireReport/routines";
 
 interface IQuestionnaireListProps {
   pagination?: IPaginationInfo<IQuestionnaire>;
@@ -32,6 +33,7 @@ interface IQuestionnaireListProps {
   hideModal(): void;
   setPagination(pagination: IPaginationInfo<IQuestionnaire>): void;
   clearOneQuestionnaire(): void;
+  clearQuestionnaireReport(): void;
 }
 
 const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
@@ -49,7 +51,8 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
     showModal,
     hideModal,
     setPagination,
-    clearOneQuestionnaire
+    clearOneQuestionnaire,
+    clearQuestionnaireReport
   }
 ) => {
   const mapItemToJSX = (item: IQuestionnaire) => (
@@ -58,8 +61,15 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
       title={item.title}
       description={item.companyName}
       actions={[
-        {icon: 'plus', callback: () => {
+        {
+          icon: 'plus', callback: () => {
             history.push(`/questionnaires/${item.id}/new-request`);
+          }
+        },
+        {
+          icon: 'chart bar', callback: () => {
+            clearQuestionnaireReport();
+            history.push(`/questionnaires/${item.id}/report`);
           }
         },
         {
@@ -115,7 +125,8 @@ const mapDispatchToProps = {
   showModal: showModalQuestionnaireRoutine,
   hideModal: hideModalQuestionnaireRoutine,
   setPagination: setQuestionnairePaginationRoutine,
-  clearOneQuestionnaire: clearOneQuestionnaireRoutine
+  clearOneQuestionnaire: clearOneQuestionnaireRoutine,
+  clearQuestionnaireReport: clearQuestionnaireReportRoutine
 };
 
 export default connect(

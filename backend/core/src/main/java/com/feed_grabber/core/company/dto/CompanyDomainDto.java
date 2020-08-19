@@ -8,4 +8,5 @@ import java.util.UUID;
 public class CompanyDomainDto {
     private UUID id;
     private String name;
+    private String subdomainName;
 }
