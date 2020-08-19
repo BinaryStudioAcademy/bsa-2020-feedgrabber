@@ -1,21 +1,27 @@
 package com.feed_grabber.core.config;
 
+import com.feed_grabber.core.auth.security.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.Objects;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocket implements WebSocketMessageBrokerConfigurer {
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -25,7 +31,7 @@ public class WebSocket implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("*");//.setHandshakeHandler(new CustomHandshakeHandler());
+        registry.addEndpoint("/ws").setAllowedOrigins("*");
     }
 
     @Override
@@ -34,8 +40,15 @@ public class WebSocket implements WebSocketMessageBrokerConfigurer {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 var accessor = StompHeaderAccessor.wrap(message);
+                if (!Objects.equals(accessor.getMessageType(), SimpMessageType.CONNECT)) {
+                    return message;
+                }
                 var token = accessor.getFirstNativeHeader("auth");
-                accessor.removeNativeHeader("auth");
+
+                var userId = tokenService.extractUserid(token);
+
+                accessor.setUser(() -> userId);
+                accessor.setLeaveMutable(true);
                 return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
             }
 

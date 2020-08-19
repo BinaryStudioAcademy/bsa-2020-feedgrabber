@@ -3,13 +3,6 @@ import {Client} from "@stomp/stompjs";
 import {useEffect, useState} from "react";
 import tokenProvider from "../security/tokenProvider";
 
-// const socket = new SockJS("/ws");
-// const stompClient = Stomp.over(socket);
-// stompClient.connect({}, () => stompClient.subscribe("/user/topic/questions", m
-// => console.log(m.binaryBody + "here")));
-// stompClient.connect({}, () => stompClient.subscribe("/user2/topic/questions", m
-// => console.log(m.binaryBody + "here")));
-
 const client = new Client({
     brokerURL: "ws://localhost:5000/ws",
     connectHeaders: {auth: tokenProvider.getToken()},
@@ -18,6 +11,7 @@ const client = new Client({
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000
 });
+
 client.activate();
 
 const useStomp = (
@@ -25,9 +19,13 @@ const useStomp = (
     callback: (payload: any) => void,
     forConcreteUser = false) => {
     const [isConnected, setConnected] = useState(client.connected);
+
     useEffect(() => {
         if (!isConnected) {
-            client.onConnect = () => setConnected(true);
+            client.onConnect = frame => {
+                frame.headers = {auth: tokenProvider.getToken()};
+                setConnected(true);
+            };
             return undefined;
         }
 
