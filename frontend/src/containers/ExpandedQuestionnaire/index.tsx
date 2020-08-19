@@ -39,7 +39,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         saveAndAddQuestion,
         deleteQuestion,
         copyQuestion,
-        currentQuestion
+        currentQuestion,
+        questions
     }
 ) => {
     useEffect(() => {
@@ -83,7 +84,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                         <QuestionnairePreview
                             indexQuestions={indexQuestionsRoutine}
                             qnId={match.params.id}
-                            questions={questionnaire.questions ?? []}
+                            questions={questions ?? []}
                         />
                         <QuestionMenu
                             addQuestion={() => setAddNew(!addNew)}
@@ -114,7 +115,8 @@ interface IRouterProps {
 const mapStateToProps = (rootState: IAppState) => ({
     currentQuestion: rootState.questions.current,
     questionnaire: rootState.questionnaires.current.get,
-    isLoading: rootState.questionnaires.current.isLoading
+    isLoading: rootState.questionnaires.current.isLoading,
+    questions: rootState.questionnaires.current.questions
 });
 
 const mapDispatchToProps = {

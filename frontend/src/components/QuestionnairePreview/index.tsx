@@ -52,6 +52,10 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
     indexQuestions({questionnaireId: qnId,  questions: rst});
   }; 
 
+  useEffect(() => {
+    setQuestionCards(questions);
+  }, [questions]);
+
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       const dragCard = questionCards[dragIndex];
