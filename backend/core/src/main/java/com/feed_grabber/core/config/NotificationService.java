@@ -1,7 +1,6 @@
 package com.feed_grabber.core.config;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +14,15 @@ public class NotificationService {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    public <T> void sendMessageToUser(String topic, T payload) {
-        var name = SecurityContextHolder.getContext().getAuthentication().getName();
-        simpMessagingTemplate.convertAndSend( "/topic/" + topic, payload);
+    public <T> void sendMessageToConcreteUser(String userId, String topic, T payload) {
+        simpMessagingTemplate.convertAndSendToUser(userId, "/queue/" + topic, payload);
     }
 
-    public <T> void sendMessageToUsers(List<String> userNames, String topic, T payload) {
-//        userNames.forEach(n -> sendMessageToUser(n, topic, payload));
+    public <T> void sendMessageToUsers(List<String> userIds, String topic, T payload) {
+        userIds.forEach(n -> sendMessageToConcreteUser(n, topic, payload));
+    }
+
+    public <T> void sendMessageToAllUsers(String topic, T payload) {
+        simpMessagingTemplate.convertAndSend("/topic/" + topic, payload);
     }
 }

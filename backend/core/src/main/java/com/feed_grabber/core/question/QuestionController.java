@@ -3,6 +3,7 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
@@ -38,7 +39,7 @@ public class QuestionController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAll() {
-        notificationService.sendMessageToUser( "questions", "heelllo");
+//        notificationService.sendMessageToAllUsers("questions", "lalollll");
         return new AppResponse<>(questionService.getAll());
     }
 

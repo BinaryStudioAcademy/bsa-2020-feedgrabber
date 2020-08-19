@@ -19,13 +19,11 @@ import GuestRoute from "../../components/GuestRoute";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
-
 import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
-import {useStomp} from "../../helpers/websocket.helper";
 
 export interface IRoutingProps {
     isLoading: boolean;
@@ -36,7 +34,7 @@ export interface IRoutingProps {
 
 const Routing: FC<IRoutingProps> = ({isLoading, user, getUser}) => {
     const isLogged = useAuth();
-    useStomp("questions", () => console.log("here"));
+    // useStomp("questions", m => console.log(m.body, m.headers, m.binaryBody));
 
     useEffect(() => {
         if (isLogged && !user) {
