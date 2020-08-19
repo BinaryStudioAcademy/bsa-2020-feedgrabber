@@ -7,4 +7,6 @@ export const saveQuestionToQuestionnaireRoutine = createRoutine('QUESTION:SAVE_T
 export const addSelectedQuestionsRoutine = createRoutine('QUESTION:ADD_SELECTED');
 export const loadQuestionByIdRoutine = createRoutine('QUESTION:LOAD_ONE');
 export const loadQuestionnaireQuestionsRoutine = createRoutine('QUESTION:LOAD_QUESTIONNAIRE');
+export const indexQuestionsRoutine = createRoutine('QUESTION:INDEX_QUESTIONS');
 export const deleteFromQuestionnaireRoutine = createRoutine('QUESTION:DELETE_QUESTION_FROM_QUESTIONNAIRE');
+
