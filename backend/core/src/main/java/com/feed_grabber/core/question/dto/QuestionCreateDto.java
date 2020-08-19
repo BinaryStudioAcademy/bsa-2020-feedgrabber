@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.feed_grabber.core.question.serializers.CustomDes;
 import com.feed_grabber.core.question.QuestionType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @JsonDeserialize(using = CustomDes.class)
 public class QuestionCreateDto {
     @NotBlank

@@ -188,9 +188,10 @@ public class QuestionService {
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
     }
 
+
     public void index(QuestionIndexDto dto) throws QuestionNotFoundException {
         List<QuestionnaireQuestion> binds = new ArrayList<>();
-        for(IndexDto question: dto.getQuestions()) {
+        for (IndexDto question : dto.getQuestions()) {
             var bindRow = this.qqRepo.findByQuestionIdAndQuestionnaireId(
                     question.getQuestionId(),
                     dto.getQuestionnaireId()
@@ -199,5 +200,9 @@ public class QuestionService {
             binds.add(bindRow);
         }
         qqRepo.saveAll(binds);
+    }
+
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID id, UUID qId) {
+        quesRep.deleteByQuestionnaireId(qId, id);
     }
 }

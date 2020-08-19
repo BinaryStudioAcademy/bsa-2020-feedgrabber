@@ -1,23 +1,29 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 import styles from "./styles.module.scss";
-import { List, Segment } from "semantic-ui-react";
+import { Header, Label, List, Segment } from "semantic-ui-react";
 
 export interface IUIListItemProps {
     name: string;
-    key: string;
+    category?: string;
 }
 
-const UIListItem: FC<IUIListItemProps> = ({name, children, key}) => {
+const UIListItem: FC<IUIListItemProps> = ({ name, children, category }) => {
     return (
-        <List.Item key={key}>
+        <List.Item>
             <div className={styles.listContainer}>
-                <Segment very padded>
-                    <h2 className={styles.name}>{name}</h2>
+                <Segment padded>
+                    <Header
+                        as='h2'
+                        className={styles.name}>{name}
+                        {category ?
+                            <Label>{category}</Label>
+                            : <></>}
+                    </Header>
                     {children}
                 </Segment>
             </div>
         </List.Item>
-        );
+    );
 };
 
 export default UIListItem;

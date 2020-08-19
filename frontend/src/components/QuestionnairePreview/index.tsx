@@ -112,9 +112,8 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
         </div>
         : <Header as='h2'>
           Urrr... Maybe nothing is modifying right now or you haven`t created any questions yet?
-                </Header>
+        </Header>
       }
-
     </div>);
 };
 

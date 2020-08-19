@@ -35,15 +35,17 @@ export interface IFileUploadAnswerDetails {
     filesSize: number;
 }
 
-export interface IQuestionBase<TDetails>{
-  id: string;
-  name: string;
-  index?: number;
-  categoryTitle: string;
-  type: QuestionType;
-  details: TDetails;
-  answer: any;
-  isReused: boolean;
+export interface IQuestionBase<TDetails> {
+    id: string;
+    name: string;
+    index?: number;
+    categoryTitle: string;
+    type: QuestionType;
+    details: TDetails;
+    answer: any;
+    isReused: boolean;
+    top?: number;
+    right?: number;
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {
@@ -94,5 +96,5 @@ export enum QuestionType {
 }
 
 export const DraggableItemTypes = {
-  QUESTION_CARD: 'question_card'
+    QUESTION_CARD: 'question_card'
 };

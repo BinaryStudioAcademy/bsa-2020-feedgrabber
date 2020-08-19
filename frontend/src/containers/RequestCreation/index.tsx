@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -20,6 +20,7 @@ import {IUserShort} from "../../models/user/types";
 import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
+import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -59,12 +60,13 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       return (
           <>
             <UIPageTitle title='Send Request'/>
-
             <UIContent>
               <UIColumn>
-                <UICard>
-                  questionnaire preview here
-                </UICard>
+                  <UICard>
+                    <UICardBlock>
+                        <ExpandedQuestionnaire match={match} isLoading={false} />
+                    </UICardBlock>
+                  </UICard>
               </UIColumn>
               <UIColumn>
                 <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
