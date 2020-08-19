@@ -14,8 +14,8 @@ interface IGenericPaginationProps {
   loadItems(): void;
 }
 
-const sizeOptions = [1, 5, 10];
-const defaultSize = 5;
+const sizeOptions = [10, 25, 50];
+const defaultSize = 10;
 
 const GenericPagination: FC<IGenericPaginationProps> = (
   {
