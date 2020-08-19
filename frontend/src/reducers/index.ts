@@ -3,6 +3,7 @@ import { reducer as toastr } from 'react-redux-toastr';
 import authAndProfileReducer from './auth/reducer';
 import questionsReducer from "./questions/reducer";
 import questionnairesReducer from "./questionnaires/reducer";
+import questionnaireReportReducer from "./questionnaireReport/reducer";
 import appReducer from "./app/reducer";
 import teamsReducer from "./teams/reducer";
 import usersReducer from "./users/reducer";
@@ -20,6 +21,7 @@ export default combineReducers({
   invitation: invitationReducer,
   invitationSignUp: invitationSignUpReducer,
   questionnaires: questionnairesReducer,
+  questionnaireReport: questionnaireReportReducer,
   questions: questionsReducer,
   teams: teamsReducer,
   expandedQuestionnaire: expandedQuestionnaireReducer,
