@@ -72,7 +72,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
       updCards.splice(hoverIndex, 0, dragCard);
       setQuestions(updCards);
     },
-    [questions]
+    [questions, setQuestions]
   );
 
   const drop = () => {

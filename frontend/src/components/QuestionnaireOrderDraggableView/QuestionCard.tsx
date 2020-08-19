@@ -58,11 +58,10 @@ export const QuestionCard: React.FC<ICardProps> = ({
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
       item.index = hoverIndex;
+    },
+    drop() {
+      onDropCard();
     }
-    // ,
-    // drop() {
-    //   onDropCard();
-    // }
   });
 
   const [{ isDragging }, drag] = useDrag({
