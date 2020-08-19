@@ -1,8 +1,14 @@
-import React, { createRef, RefObject, useState} from "react";
+import React, {createRef, FC, RefObject, useState} from "react";
 import "./styles.sass";
 import {Icon} from "semantic-ui-react";
 
-const Dropzone = ({ disabled, onFilesAdded }) => {
+interface IDropzoneProps {
+  disabled: boolean;
+  onFilesAdded: (files: any) => void;
+  className?: string;
+}
+
+const Dropzone: FC<IDropzoneProps> = ({ disabled, onFilesAdded, className }) => {
   const fileInputRef: RefObject<HTMLElement> = createRef();
   const [ highlight, setHighlight ] = useState(false);
 
@@ -50,23 +56,25 @@ const Dropzone = ({ disabled, onFilesAdded }) => {
   };
 
   return (
-      <div
-          className={`Dropzone ${highlight ? "Highlight" : ""}`}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
-          onClick={openFileDialog}
-          style={{ cursor: disabled ? "default" : "pointer" }}
-      >
-        <input
-            ref={fileInputRef as any}
-            className="FileInput"
-            type="file"
-            multiple
-            onChange={handleFilesAdded}
-        />
-        <Icon name="cloud upload" size="big" />
-        <span>Upload Files</span>
+      <div className={className}>
+        <div
+            className={`Dropzone ${highlight ? "Highlight" : ""}`}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            onClick={openFileDialog}
+            style={{ cursor: disabled ? "default" : "pointer" }}
+        >
+          <input
+              ref={fileInputRef as any}
+              className="FileInput"
+              type="file"
+              multiple
+              onChange={handleFilesAdded}
+          />
+          <Icon name="cloud upload" size="big" />
+          <span>Upload Files</span>
+        </div>
       </div>
   );
 };

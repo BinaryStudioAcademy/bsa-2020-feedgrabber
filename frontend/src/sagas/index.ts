@@ -12,6 +12,7 @@ import companiesSaga from "./companies/sagas";
 import answersSaga from './responseAnswers/sagas';
 import requestSaga from "./request/sagas";
 import questionnaireReportSagas from "./questionnaireReport/sagas";
+import notificationsSagas from "./notifications/sagas";
 
 export default function* rootSaga() {
   yield all([
@@ -27,6 +28,7 @@ export default function* rootSaga() {
     categorieSagas(),
     companiesSaga(),
     answersSaga(),
-    requestSaga()
+    requestSaga(),
+    notificationsSagas()
   ]);
 }

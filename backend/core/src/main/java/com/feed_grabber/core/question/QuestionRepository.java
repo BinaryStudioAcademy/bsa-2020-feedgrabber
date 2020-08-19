@@ -10,19 +10,19 @@ import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
     @Query("SELECT q FROM Question q INNER JOIN q.questionnaires que " +
-            "WHERE que.id = :questionnaireId")
+            "WHERE que.questionnaire.id = :questionnaireId")
     List<Question> findAllByQuestionnaireId(@Param("questionnaireId") UUID questionnaireId);
 
     @Query("SELECT case when (COUNT(q) > 0) then true else false end " +
             "FROM Question q INNER JOIN q.questionnaires que " +
-            "WHERE q.text = :text AND que.id = :questionnaireId AND q.category.id = :categoryId")
+            "WHERE q.text = :text AND que.questionnaire.id = :questionnaireId AND q.category.id = :categoryId")
     boolean existsByTextAndQuestionnaireIdAndCategoryId
             (@Param("text") String text, @Param("questionnaireId") UUID questionnaireId,
              @Param("categoryId") UUID categoryId);
 
     @Query("SELECT case when (COUNT(q) > 0) then true else false end " +
             "FROM Question q INNER JOIN q.questionnaires que " +
-            "WHERE q.text = :text AND que.id = :questionnaireId AND " +
+            "WHERE q.text = :text AND que.questionnaire.id = :questionnaireId AND " +
             "q.category.id = :categoryId AND q.id <> :id")
     boolean existsByTextAndQuestionnaireIdAndCategoryIdAndIdIsNot
             (@Param("text") String text, @Param("questionnaireId") UUID questionnaireId,

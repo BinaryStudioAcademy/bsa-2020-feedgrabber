@@ -33,6 +33,7 @@ const schema = yup.object().shape({
         .required("Username required")
         .min(5, "Username too short!")
         .max(15, "Username too long!")
+        .matches(/[^#]/ig, "this character does not allow # in the name field")
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
