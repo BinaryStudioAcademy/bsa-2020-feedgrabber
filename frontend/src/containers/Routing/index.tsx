@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
@@ -25,68 +25,68 @@ import QuestionnareResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
-import useStomp from "../../helpers/websocket.helper";
+import {useStomp} from "../../helpers/websocket.helper";
 
 export interface IRoutingProps {
-  isLoading: boolean;
-  user?: IUserInfo;
+    isLoading: boolean;
+    user?: IUserInfo;
 
-  getUser(): void;
+    getUser(): void;
 }
 
-const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
-  const isLogged = useAuth();
+const Routing: FC<IRoutingProps> = ({isLoading, user, getUser}) => {
+    const isLogged = useAuth();
     useStomp("questions", () => console.log("here"));
 
     useEffect(() => {
-    if (isLogged && !user){
-      getUser();
-    }
-  }, [isLogged, user, getUser]);
+        if (isLogged && !user) {
+            getUser();
+        }
+    }, [isLogged, user, getUser]);
 
-  return (
-    <>
-      <LoaderWrapper loading={isLoading}>
-        <Switch>
-          <GuestRoute exact path="/layout" component={Landing} />
-          <GuestRoute exact path="/auth" component={SignForm} />
-          <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
-          <GuestRoute exact path="/reset/:id" component={ResetPasswordForm} />
-          <PrivateRoute exact path="/" component={MainPage} />
-          <PrivateRoute exact path="/profile" component={Profile} />
-          <PrivateRoute exact path="/profile/settings" component={ProfileX} />
-          <PrivateRoute exact path="/requests" component={() => <span>Requests</span>} />
-          <PrivateRoute exact path="/help" component={() => <span>Help Center</span>} />
-          <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>} />
-          <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>} />
-          <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>} />
-          <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>} />
-          <PrivateRoute exact path="/teams" component={TeamsPage} />
-          <PrivateRoute exact path="/teams/:id" component={TeamDetailsPage} />
-          <PrivateRoute exact path="/questionnaires" component={QuestionnaireList} />
-          <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire} />
-          <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview} />
-          <PrivateRoute exact path="/questionnaires/:id/new-request" component={RequestCreation}/>
-          <PrivateRoute exact path="/response/:id" component={QuestionnareResponse} />
-          <PrivateRoute exact path="/questions" component={QuestionsList} />
-          <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
-          <PrivateRoute exact path="/employees" component={UserList} />
-          <Route path="/*">
-            <Redirect to="/layout"/>
-          </Route>
-        </Switch>
-      </LoaderWrapper>
-    </>
-  );
+    return (
+        <>
+            <LoaderWrapper loading={isLoading}>
+                <Switch>
+                    <GuestRoute exact path="/layout" component={Landing}/>
+                    <GuestRoute exact path="/auth" component={SignForm}/>
+                    <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
+                    <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
+                    <PrivateRoute exact path="/" component={MainPage}/>
+                    <PrivateRoute exact path="/profile" component={Profile}/>
+                    <PrivateRoute exact path="/profile/settings" component={ProfileX}/>
+                    <PrivateRoute exact path="/requests" component={() => <span>Requests</span>}/>
+                    <PrivateRoute exact path="/help" component={() => <span>Help Center</span>}/>
+                    <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>}/>
+                    <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
+                    <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
+                    <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>
+                    <PrivateRoute exact path="/teams" component={TeamsPage}/>
+                    <PrivateRoute exact path="/teams/:id" component={TeamDetailsPage}/>
+                    <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
+                    <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire}/>
+                    <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview}/>
+                    <PrivateRoute exact path="/questionnaires/:id/new-request" component={RequestCreation}/>
+                    <PrivateRoute exact path="/response/:id" component={QuestionnareResponse}/>
+                    <PrivateRoute exact path="/questions" component={QuestionsList}/>
+                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
+                    <PrivateRoute exact path="/employees" component={UserList}/>
+                    <Route path="/*">
+                        <Redirect to="/layout"/>
+                    </Route>
+                </Switch>
+            </LoaderWrapper>
+        </>
+    );
 };
 
 const mapState = (state: IAppState) => ({
-  isLoading: state.isLoading,
-  user: state.user.info
+    isLoading: state.isLoading,
+    user: state.user.info
 });
 
 const mapDispatchToProps = {
-  getUser: getUserRoutine
+    getUser: getUserRoutine
 };
 
 export default connect(mapState, mapDispatchToProps)(Routing);
