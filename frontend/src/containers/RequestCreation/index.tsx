@@ -21,6 +21,7 @@ import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
+import {RouteComponentProps} from "react-router-dom";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -42,7 +43,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        loadUsers,
        sendRequest,
        isLoadingUsers,
-       isLoadingTeams
+       isLoadingTeams,
+       domProps
      }) => {
 
       // load users
@@ -64,7 +66,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
               <UIColumn>
                   <UICard>
                     <UICardBlock>
-                        <ExpandedQuestionnaire match={match} isLoading={false} />
+                        <ExpandedQuestionnaire match={match}/>
                     </UICardBlock>
                   </UICard>
               </UIColumn>
@@ -261,7 +263,12 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       );
     };
 
-const mapStateToProps = (state: IAppState) => ({
+interface IRouterProps {
+    id: string;
+}
+
+const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
+  domProps: ownProps,
   teams: state.teams.teams,
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,

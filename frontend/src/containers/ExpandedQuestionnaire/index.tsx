@@ -1,58 +1,72 @@
-import React, {useEffect} from 'react';
-import {connect} from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {connect, ConnectedProps} from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
-import QuestionnaireOrderView from "../../components/QuestionnaireOrderDraggableView";
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IQuestionnaire} from 'models/forms/Questionnaires/types';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
+import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
+import QuestionD from "../../components/QuestionDetails";
+import { RouteComponentProps } from 'react-router-dom';
+import {
+    addNewQuestionToQuestionnaireRoutine,
+    copyQuestionInQuestionnaireRoutine,
+    saveQuestionToQuestionnaireRoutine,
+    deleteFromQuestionnaireRoutine,
+    loadQuestionnaireQuestionsRoutine,
+    indexQuestionsRoutine
+} from "sagas/questions/routines";
 
-const questions = [
-    {
-        id: "1",
-        name: "first",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    },
-    {
-        id: "2",
-        name: "second",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    },
-    {
-        id: "3",
-        name: "third",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    }
-] as IQuestion[];
+const newQuestion: IQuestion = {
+    type: QuestionType.freeText,
+    categoryTitle: "",
+    name: "",
+    answer: "",
+    id: "",
+    isReused: false,
+    details: {}
+};
 
-interface IExpandedQuestionnaireProps {
-    match: any;
-    isLoading: boolean;
-    questionnaire: IQuestionnaire;
-
-    loadOneQuestionnaire(id: string): void;
-}
-
-const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
+const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
         match,
         isLoading,
         questionnaire,
-        loadOneQuestionnaire
+        loadOneQuestionnaire,
+        saveAndAddQuestion,
+        deleteQuestion,
+        copyQuestion,
+        currentQuestion
     }
 ) => {
     useEffect(() => {
         loadOneQuestionnaire(match.params.id);
     }, [loadOneQuestionnaire, match.params.id]);
+
+    const [addNew, setAddNew] = useState(false);
+    const [question, setQuestion] = useState<IQuestion>(newQuestion);
+    const [isValid, setIsValid] = useState(false);
+
+    const handleOnValueChange = (state: IComponentState<IQuestion>) => {
+        setQuestion(state.value);
+        setIsValid(state.isCompleted);
+    };
+
+    const handleSaveQuestion = (question: IQuestion) => {
+        if (!isValid) {
+            return;
+        }
+        saveAndAddQuestion({...question, questionnaireId: match.params.id});
+        setAddNew(false);
+        setQuestion(question);
+    };
+
+    const handleDeleteQuestion = (question: IQuestion) => {
+        deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
+    };
 
     return (
         <LoaderWrapper loading={isLoading}>
@@ -61,8 +75,21 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
                     <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
                     <div className={styles.formPreview}>
-                    <QuestionnairePreview/>
-                    <QuestionMenu/>
+                        {addNew && <QuestionD onValueChange={handleOnValueChange}
+                                              categories={[]}
+                                              currentQuestion={question}
+                                              onSave={handleSaveQuestion}
+                                              onDelete={() => setAddNew(false)}/>}
+                        <QuestionnairePreview
+                            indexQuestions={indexQuestionsRoutine}
+                            qnId={match.params.id}
+                            questions={questionnaire.questions ?? []}
+                        />
+                        <QuestionMenu
+                            addQuestion={() => setAddNew(!addNew)}
+                            copyQuestion={copyQuestion}
+                            currentQuestion={currentQuestion}
+                        />
                     </div>
                 </div>
             )}
@@ -70,15 +97,36 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
     );
 };
 
+interface IRouterProps {
+    id: string;
+}
+
+// const mapState = (state: IAppState) => ({
+//
+// });
+//
+// const mapDispatch = {
+//     deleteQuestion: deleteFromQuestionnaireRoutine,
+//     addQuestion: addNewQuestionToQuestionnaireRoutine,
+//     copyQuestion: copyQuestionInQuestionnaireRoutine
+// };
+
 const mapStateToProps = (rootState: IAppState) => ({
-    questionnaire: rootState.questionnaires.current.get
+    currentQuestion: rootState.questions.current,
+    questionnaire: rootState.questionnaires.current.get,
+    isLoading: rootState.questionnaires.current.isLoading
 });
 
 const mapDispatchToProps = {
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
+    saveAndAddQuestion: saveQuestionToQuestionnaireRoutine,
+    deleteQuestion: deleteFromQuestionnaireRoutine,
+    addQuestion: addNewQuestionToQuestionnaireRoutine,
+    copyQuestion: copyQuestionInQuestionnaireRoutine
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ExpandedQuestionnaire);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ExpandedQuestionnaireProps = ConnectedProps<typeof connector>;
+
+export default connector(ExpandedQuestionnaire);

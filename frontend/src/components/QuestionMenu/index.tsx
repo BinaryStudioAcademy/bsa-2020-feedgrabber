@@ -1,25 +1,29 @@
-import React, { FC, useEffect, useState } from "react";
-import { Button, Form, Popup } from "semantic-ui-react";
-import { IAppState } from "../../models/IAppState";
-import { connect, ConnectedProps } from "react-redux";
+import React, {FC, useEffect, useState} from "react";
+import {Button, Form, Popup} from "semantic-ui-react";
+import {IAppState} from "../../models/IAppState";
+import {connect, ConnectedProps} from "react-redux";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
 import {
     addNewQuestionToQuestionnaireRoutine,
-    deleteFromQuestionnaireRoutine, copyQuestionInQuestionnaireRoutine
+    copyQuestionInQuestionnaireRoutine,
+    deleteFromQuestionnaireRoutine
 } from "sagas/questions/routines";
-import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 import styles from "./styles.module.sass";
-import { number } from "prop-types";
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 
-const QuestionMenu: FC<ContainerProps> = ({
-    deleteQuestion,
+interface IQuestionMenuProps {
+    addQuestion(): void;
+    copyQuestion(): void;
+    currentQuestion: IQuestion;
+}
+const QuestionMenu: FC<IQuestionMenuProps> = ({
     addQuestion,
     copyQuestion,
-    currentQuestion,
-    currentQuestionnaireId
+    currentQuestion
 }) => {
     const [positions, setPositions] = useState({ scrollTop: 0, innerHeight: window.innerHeight });
+
     useEffect(() => {
         (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = (e: Event) => {
             setPositions(
@@ -30,17 +34,17 @@ const QuestionMenu: FC<ContainerProps> = ({
             );
         };
     });
+
     const handleAdd = (id: string) => {
         if (id === "new") {
-            addQuestion({ qId: currentQuestionnaireId });
+            addQuestion();
         } else {
-            copyQuestion({ qId: currentQuestionnaireId, question: currentQuestion });
+            copyQuestion();
         }
     };
 
     const handleDelete = () => {
-        console.log(currentQuestionnaireId);
-        deleteQuestion({ qId: currentQuestionnaireId, id: currentQuestion.id });
+        return;
     };
 
     const { scrollTop, innerHeight } = positions;
@@ -71,19 +75,20 @@ const QuestionMenu: FC<ContainerProps> = ({
     );
 };
 
-const mapState = (state: IAppState) => ({
-    currentQuestion: state.questions.current,
-    currentQuestionnaireId: state.questionnaires.current.get.id
-});
+export default QuestionMenu;
+// const mapState = (state: IAppState) => ({
+//     currentQuestion: state.questions.current,
+//     currentQuestionnaireId: state.questionnaires.current.get.id
+// });
+//
+// const mapDispatch = {
+//     deleteQuestion: deleteFromQuestionnaireRoutine,
+//     addQuestion: addNewQuestionToQuestionnaireRoutine,
+//     copyQuestion: copyQuestionInQuestionnaireRoutine
+// };
+//
+// const connector = connect(mapState, mapDispatch);
+//
+// type ContainerProps = ConnectedProps<typeof connector>;
 
-const mapDispatch = {
-    deleteQuestion: deleteFromQuestionnaireRoutine,
-    addQuestion: addNewQuestionToQuestionnaireRoutine,
-    copyQuestion: copyQuestionInQuestionnaireRoutine
-};
-
-const connector = connect(mapState, mapDispatch);
-
-type ContainerProps = ConnectedProps<typeof connector>;
-
-export default connector(QuestionMenu);
+// export default connector(QuestionMenu);

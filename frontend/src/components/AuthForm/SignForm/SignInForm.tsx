@@ -16,11 +16,11 @@ import LoaderWrapper from "../../LoaderWrapper";
 const schema = yup.object().shape({
     password: yup
         .string()
-        .required("Password required")
-        .min(8, "Password too short!")
-        .max(16, "Password too long!")
-        .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
-            "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
+        .required("Password required"),
+        // .min(5, "Password too short!")
+        // .max(16, "Password too long!")
+        // .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
+        //     "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
     username: yup
         .string()
         .required("Username required")
