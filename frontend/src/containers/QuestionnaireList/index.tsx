@@ -33,13 +33,21 @@ interface IQuestionnaireListProps {
   modalError: string;
 
   loadQuestionnaires(): void;
+
   deleteQuestionnaire(id: string): void;
+
   addQuestionnaire(questionnaire: ICreateQuestionnaire): void;
+
   updateQuestionnaire(questionnaire: IUpdateQuestionnaire): void;
+
   showModal(questionnaire?: IQuestionnaire): void;
+
   hideModal(): void;
+
   setPagination(pagination: IPaginationInfo<IQuestionnaire>): void;
+
   clearOneQuestionnaire(): void;
+
   clearQuestionnaireReport(): void;
 }
 
@@ -64,41 +72,41 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
 ) => {
   const mapItemToJSX = (item: IQuestionnaire) => (
     <UICard>
-      <UICardBlock>
+      <UICardBlock className={styles.cardBlockWrapper}>
         <h3>{item.title}</h3>
-      </UICardBlock>
-      <UICardBlock className={styles.cardIconWrapper}>
-        <Icon
-          name="plus"
-          onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
-          className={styles.cardIcon}
-        />
-        <Icon
-          name="chart bar"
-          onClick={() => {
-            clearQuestionnaireReport();
-            history.push(`/questionnaires/${item.id}/report`);
-          }}
-          className={styles.cardIcon}
-        />
-        <Icon
-          name="settings"
-          onClick={() => {
-            clearOneQuestionnaire();
-            history.push(`/questionnaires/${item.id}`);
-          }}
-          className={styles.cardIcon}
-        />
-        <Icon
-          name="edit"
-          onClick={() => showModal(item)}
-          className={styles.cardIcon}
-        />
-        <Icon
-          name="trash"
-          onClick={() => deleteQuestionnaire(item.id)}
-          className={styles.cardIcon}
-        />
+        <div className={styles.cardIconWrapper}>
+          <Icon
+            name="plus"
+            onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="chart bar"
+            onClick={() => {
+              clearQuestionnaireReport();
+              history.push(`/questionnaires/${item.id}/report`);
+            }}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="settings"
+            onClick={() => {
+              clearOneQuestionnaire();
+              history.push(`/questionnaires/${item.id}`);
+            }}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="edit"
+            onClick={() => showModal(item)}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="trash"
+            onClick={() => deleteQuestionnaire(item.id)}
+            className={styles.cardIcon}
+          />
+        </div>
       </UICardBlock>
     </UICard>
   );
@@ -116,7 +124,7 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
       />
       <UIPageTitle title="Questionnaires"/>
       <UIContent>
-        <UIColumn>
+        <UIColumn wide>
           <UIButton
             title="Add Questionnaire"
             onClick={() => showModal(undefined)}
