@@ -27,20 +27,21 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
-        const {isCompleted, value} = state;
+        const { isCompleted, value } = state;
         setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
-    useEffect(() => {
-        loadQuestion('empty');
-        loadCategories();
-    }, [loadCategories, loadQuestion]);
 
     useEffect(() => {
-        match.params.id === 'new'
-            ? loadQuestion('empty')
-            : loadQuestion(match.params.id);
-    }, [loadQuestion, match.params.id]);
+        if (match.params.id === 'new') {
+            loadQuestion({id: 'empty'});
+        }
+        else {
+            if (!isPreview)
+                loadQuestion({ id: match.params.id });
+            loadCategories();
+        }
+    }, [loadQuestion, match.params.id, loadCategories, isPreview]);
 
     useEffect(() => {
         setQuestion(currentQuestion);
@@ -57,7 +58,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                 questionnaireId
             });
         }
-        history.goBack();
+        isPreview ? isPreview.close() : history.goBack();
     };
 
     return (

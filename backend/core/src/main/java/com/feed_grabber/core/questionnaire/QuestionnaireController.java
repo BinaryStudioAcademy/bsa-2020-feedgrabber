@@ -5,23 +5,23 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.question.QuestionService;
+import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.response.DataList;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,6 +74,15 @@ public class QuestionnaireController {
         );
     }
 
+    @ApiOperation("Get requested questionnaires for current user")
+    @GetMapping("/requested")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<QuestionnaireDto>> getPending(Principal principal) {
+        return new AppResponse<>(
+                questionnaireService.getAllByRespondentId(UUID.fromString(principal.getName()))
+        );
+    }
+
     @ApiOperation("Create a questionnaire")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -99,7 +108,7 @@ public class QuestionnaireController {
         questionnaireService.delete(id);
     }
 
-    
+
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     public void updateQuestionnaireQuestions(QuestionnaireOrderedDto dto)

@@ -3,11 +3,7 @@ package com.feed_grabber.core.question;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
-import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.dto.QuestionUpdateDto;
-import com.feed_grabber.core.question.dto.QuestionUpsertDto;
+import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
@@ -15,6 +11,7 @@ import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.questionnaire2question.QuestionQuestionnaireRepository;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,15 +27,17 @@ public class QuestionService {
     private final QuestionnaireRepository anketRep;
     private final QuestionCategoryRepository quesCategRep;
     private final CompanyRepository companyRep;
+    private final QuestionQuestionnaireRepository qqRepo;
 
     @Autowired
     public QuestionService(QuestionRepository quesRep,
                            QuestionnaireRepository anketRep,
-                           QuestionCategoryRepository quesCategRep, CompanyRepository companyRep) {
+                           QuestionCategoryRepository quesCategRep, CompanyRepository companyRep, QuestionQuestionnaireRepository qqRepo) {
         this.quesRep = quesRep;
         this.anketRep = anketRep;
         this.quesCategRep = quesCategRep;
         this.companyRep = companyRep;
+        this.qqRepo = qqRepo;
     }
 
     public List<QuestionDto> getAll() {
@@ -84,17 +83,17 @@ public class QuestionService {
                 .type(dto.getType())
                 .company(company);
 
+        var savedQuestion = quesRep.save(question.build());
         if (dto.getQuestionnaireId().isPresent()) {
             var questionnaire =  anketRep.findById(dto.getQuestionnaireId().get())
                     .orElseThrow(QuestionnaireNotFoundException::new);
 
-            var bindRow = QuestionnaireQuestion.getFromEntities(question.build(), questionnaire, dto.getIndex());
-            question.questionnaires(
-                    List.of(bindRow)
-            );
+            var bindRow = QuestionnaireQuestion.getFromEntities(savedQuestion, questionnaire, dto.getIndex());
+            this.qqRepo.save(bindRow);
+
         }
 
-        return question.build();
+        return savedQuestion;
     }
 
     @Transactional
@@ -106,7 +105,10 @@ public class QuestionService {
                 .orElseThrow(QuestionnaireNotFoundException::new);
 
         var bindRows = dto.getQuestions().stream()
-                .map(q -> QuestionnaireQuestion.getFromEntities(q, questionnaire, Integer.MAX_VALUE))
+                .map(q -> QuestionnaireQuestion.getFromEntities(
+                        this.quesRep.findById(q.getId()).orElseThrow(),
+                        questionnaire,
+                        q.getIndex()))
                 .collect(Collectors.toList());
 
         questionnaire.getQuestions().addAll(bindRows);
@@ -120,7 +122,7 @@ public class QuestionService {
         return questionnaire
                 .getQuestions()
                 .stream()
-                .filter(bindRow -> dto.getQuestions().contains(bindRow.getQuestion()))
+                .filter(bindRows::contains)
                 .map(QuestionnaireQuestion::getQuestion)
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
@@ -184,5 +186,23 @@ public class QuestionService {
         return question.getId() == null
                 ? this.createModel(QuestionMapper.MAPPER.upsertDtoToCreateDto(question))
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
+    }
+
+
+    public void index(QuestionIndexDto dto) throws QuestionNotFoundException {
+        List<QuestionnaireQuestion> binds = new ArrayList<>();
+        for (IndexDto question : dto.getQuestions()) {
+            var bindRow = this.qqRepo.findByQuestionIdAndQuestionnaireId(
+                    question.getQuestionId(),
+                    dto.getQuestionnaireId()
+            ).orElseThrow(QuestionNotFoundException::new);
+            bindRow.setIndex(question.getIndex());
+            binds.add(bindRow);
+        }
+        qqRepo.saveAll(binds);
+    }
+
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID id, UUID qId) {
+        quesRep.deleteByQuestionnaireId(qId, id);
     }
 }

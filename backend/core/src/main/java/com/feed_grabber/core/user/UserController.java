@@ -62,7 +62,6 @@ public class UserController {
                 .orElseThrow(UserNotFoundException::new);
 
         var token = tokenService.generateVerificationToken(user, TokenType.RESET);
-        // TODO: Send email with token
     }
 
     @ApiOperation(value = "Update password")
@@ -96,5 +95,11 @@ public class UserController {
         userService.removeCompany(id);
     }
 
-/*%%% dev*/
+    @GetMapping("/short")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<UserShortDto> getUserShortByEmailAndCompany(@RequestParam String email,
+                                                                   @RequestParam UUID companyId)
+                throws UserNotFoundException {
+        return new AppResponse<>(userService.getUserShortByEmailAndCompany(email, companyId));
+    }
 }

@@ -6,9 +6,12 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
+import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
+import com.feed_grabber.core.question.exceptions.QuestionTypeNotExistsException;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
@@ -25,13 +28,24 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
             throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
         var id = UUID.fromString((node.get("id")).asText());
-        String payload = node.get("details").toString();
+        String payload = this.getDetails(node);
         String category = node.get("categoryTitle").asText();
         String text = node.get("name").asText();
-        Integer index = node.hasNonNull("index")
-                ? node.get("index").asInt(Integer.MAX_VALUE)
-                : Integer.MAX_VALUE;
+        Integer index = this.getIndex(node);
 
         return new QuestionUpdateDto(id, text, category, payload, index);
     }
+
+    private Integer getIndex(JsonNode node) {
+        return node.hasNonNull("index")
+                ? node.get("index").asInt(Integer.MAX_VALUE)
+                : Integer.MAX_VALUE;
+    }
+
+    private String getDetails(JsonNode node) {
+        return node.hasNonNull("details")
+                ? node.get("details").toString()
+                : "";
+    }
+
 }

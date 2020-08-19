@@ -8,17 +8,17 @@ import {unmountComponentAtNode} from "react-dom";
 
 const SubdomainRouter: React.FC<SubdomainRouterProps> = ({company, fetchCompany, children}) => {
     const isLogged = useAuth();
-    useEffect(() => {
-        if(isLogged && !company) {
-            fetchCompany();
-            return;
-        }
-        if (isLogged) {
-            redirectToCompany(company);
-        } else {
-            redirectToMain();
-        }
-    });
+    // useEffect(() => {
+    //     if(isLogged && !company) {
+    //         fetchCompany();
+    //         return;
+    //     }
+    //     if (isLogged) {
+    //         redirectToCompany(company);
+    //     } else {
+    //         redirectToMain();
+    //     }
+    // }, [fetchCompany, company, isLogged]);
     return (
         <>
             {children}

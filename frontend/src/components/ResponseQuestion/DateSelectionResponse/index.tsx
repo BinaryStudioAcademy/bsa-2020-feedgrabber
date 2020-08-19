@@ -12,7 +12,7 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ qu
     if (!newDate) {
       setError('Cannot be blank');
       return;
-	}
+    }
     setError('');
     answerHandler?.(question.id, !error ? value : null);
   };
