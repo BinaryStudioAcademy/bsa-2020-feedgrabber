@@ -1,4 +1,10 @@
-import {getUserRoutine, loginRoutine, logoutRoutine, registerRoutine} from "../../sagas/auth/routines";
+import {
+    getUserRoutine,
+    getUserShortRoutine,
+    loginRoutine,
+    logoutRoutine,
+    registerRoutine
+} from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
 
 const initialState = {
@@ -61,6 +67,27 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             info: {...state.info, email: payload}
         };
     }
+    if(type === getUserShortRoutine.TRIGGER) {
+        return {
+            ...state,
+            isLoading: true
+        };
+    }
+    if(type === getUserShortRoutine.SUCCESS) {
+        return {
+          ...state,
+          isLoading: false,
+          shortInfo: payload
+        };
+    }
+    if(type === getUserShortRoutine.FAILURE) {
+        return {
+            ...state,
+            isLoading: false,
+            error: {...state.error, getUser: payload}
+        };
+    }
+
     return state;
 };
 

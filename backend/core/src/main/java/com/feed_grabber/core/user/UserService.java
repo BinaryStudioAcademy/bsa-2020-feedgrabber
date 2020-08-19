@@ -18,6 +18,7 @@ import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserShortDto;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -247,4 +248,10 @@ public class UserService implements UserDetailsService {
         return userRepository.countAllByCompanyId(companyId);
     }
 
+    public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {
+        return UserMapper.MAPPER.shortFromUser(
+                userRepository
+                        .findByCompanyIdAndEmail(companyId, email)
+                        .orElseThrow(UserNotFoundException::new));
+    }
 }
