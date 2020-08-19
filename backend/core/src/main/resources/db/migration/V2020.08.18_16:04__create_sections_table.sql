@@ -9,5 +9,6 @@ create table sections (
 );
 
 alter table questions
-add column section_id uuid,
-foreign key(section_id) references sections(id);
+add column section_id uuid not null,
+add foreign key (section_id) references sections (id);
+
