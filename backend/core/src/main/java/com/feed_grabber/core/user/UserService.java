@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,9 @@ public class UserService implements UserDetailsService {
     private final InvitationRepository invitationRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenService verificationTokenService;
+
+    private static final Random random = new Random();
+    private static final Long RANDOM_MAX = 36L*36L*36L*36L*36L*36L;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -69,7 +73,7 @@ public class UserService implements UserDetailsService {
         if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
             throw new CompanyAlreadyExistsException();
         }
-        if (userRegisterDTO.getCompanyName().length() > 63) {
+        if (userRegisterDTO.getCompanyName().length() > 56) {
             throw new WrongCompanyNameException("Too long company name(more than 63)");
         }
         if (!userRegisterDTO.getCompanyName()
@@ -78,10 +82,13 @@ public class UserService implements UserDetailsService {
                     " have more than one space in sequence. Company name should contain latin letters and numbers ");
         }
 
+
+        String domain = generateRandomDomainFromCompanyName(userRegisterDTO.getCompanyName());
+
         var company = companyRepository.save(
                 Company.builder()
                         .name(userRegisterDTO.getCompanyName())
-                        .subdomainName(userRegisterDTO.getCompanyName().replaceAll("([ ])", "-"))
+                        .subdomainName(domain)
                         .build());
 
         var roles = roleRepository.saveAll(
@@ -258,4 +265,10 @@ public class UserService implements UserDetailsService {
                         .findByCompanyIdAndEmail(companyId, email)
                         .orElseThrow(UserNotFoundException::new));
     }
+
+    private String generateRandomDomainFromCompanyName(String companyName) {
+        var name = companyName.toLowerCase().replaceAll("([ ])","-");
+        return name + "-" + Long.toString(random.nextLong()%RANDOM_MAX, 36);
+    }
 }
+
