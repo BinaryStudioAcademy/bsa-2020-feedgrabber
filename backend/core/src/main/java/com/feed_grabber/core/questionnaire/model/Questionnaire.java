@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ public class Questionnaire {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<QuestionnaireQuestion> questions;
+    private List<QuestionnaireQuestion> questions = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private Company company;
