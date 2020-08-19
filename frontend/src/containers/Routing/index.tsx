@@ -16,6 +16,7 @@ import {IUserInfo} from "../../models/user/types";
 import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
 import GuestRoute from "../../components/GuestRoute";
+import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
@@ -50,6 +51,9 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <GuestRoute exact path="/auth" component={SignForm} />
           <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
           <GuestRoute exact path="/reset/:id" component={ResetPasswordForm} />
+          <Route exact path="/verify-registration/:id">
+            <AccountVerificationPage />
+          </Route>
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/profile/settings" component={ProfileX} />
