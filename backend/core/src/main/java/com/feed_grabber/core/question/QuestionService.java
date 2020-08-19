@@ -94,7 +94,7 @@ public class QuestionService {
             );
         }
 
-        return question.build();
+        return quesRep.save(question.build());
     }
 
     @Transactional
@@ -184,5 +184,9 @@ public class QuestionService {
         return question.getId() == null
                 ? this.createModel(QuestionMapper.MAPPER.upsertDtoToCreateDto(question))
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
+    }
+
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID id, UUID qId) {
+        quesRep.deleteByQuestionnaireId(qId, id);
     }
 }

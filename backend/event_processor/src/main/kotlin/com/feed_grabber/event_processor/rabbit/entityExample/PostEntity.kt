@@ -7,5 +7,5 @@ import java.util.*
 @Data
 class PostEntity: Serializable{
     var entityID: UUID? = null
-    var type: EntityType? = null
+    var type: MailType? = null
 }
