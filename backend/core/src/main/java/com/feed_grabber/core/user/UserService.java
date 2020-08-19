@@ -8,6 +8,7 @@ import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
+import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.role.Role;
@@ -54,7 +55,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UUID createDefault(UserRegisterDTO userRegisterDTO) {
+    public UUID createDefault(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException {
 
 //        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
 //                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
@@ -64,9 +65,20 @@ public class UserService implements UserDetailsService {
         if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
             throw new CompanyAlreadyExistsException();
         }
+        if (userRegisterDTO.getCompanyName().length() > 63) {
+            throw new WrongCompanyNameException("Too long company name(more than 63)");
+        }
+        if (!userRegisterDTO.getCompanyName()
+                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*([a-zA-Z0-9])")) {
+            throw new WrongCompanyNameException("Company name should not start/end with space," +
+                    " have more than one space in sequence. Company name should contain latin letters and numbers ");
+        }
 
         var company = companyRepository.save(
-                Company.builder().name(userRegisterDTO.getCompanyName()).build());
+                Company.builder()
+                        .name(userRegisterDTO.getCompanyName())
+                        .subdomainName(userRegisterDTO.getCompanyName().replaceAll("([ ])", "-"))
+                        .build());
 
         var roles = roleRepository.saveAll(
                 List.of(Role
@@ -207,7 +219,7 @@ public class UserService implements UserDetailsService {
         return usernameAndCompanyId.substring(0, index);
     }
 
-    private UUID extractCompanyId (String usernameAndCompanyId) {
+    private UUID extractCompanyId(String usernameAndCompanyId) {
         var startIndex = this.getDividerIndex(usernameAndCompanyId) + 1;
         var companyId = usernameAndCompanyId.substring(startIndex, usernameAndCompanyId.length());
         return UUID.fromString(companyId);
