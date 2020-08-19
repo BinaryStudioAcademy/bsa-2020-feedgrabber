@@ -2,6 +2,7 @@ package com.feed_grabber.core.image;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.dto.ImageDto;
 import com.feed_grabber.core.image.dto.ImageUploadDto;
 import com.feed_grabber.core.image.dto.ImgurResponse;
@@ -20,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class ImageService {
@@ -81,5 +83,21 @@ public class ImageService {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", outputStream);
         return outputStream.toByteArray();
+    }
+
+    public void delete(UUID id) throws NotFoundException {
+        var image = imageRepository.findById(id).orElseThrow(NotFoundException::new);
+        deleteFromImgur(image.getDeleteHash());
+        imageRepository.deleteById(id);
+    }
+
+    private void deleteFromImgur(String deleteHash){
+        var headers = new HttpHeaders();
+        headers.add("Authorization", "Client-ID " + IMGUR_ID);
+
+        var requestEntity = new HttpEntity<>(headers);
+
+        var restTemplate = new RestTemplate();
+        restTemplate.delete(IMGUR_URL+"/"+deleteHash, requestEntity);
     }
 }
