@@ -9,22 +9,52 @@ html, body
     background-color: transparent
 
 .question_form
-    border: 5px solid hsla(0,0%,80%,.58)
+    //border: 5px solid hsla(0,0%,80%,.58)
     border-radius: 10px
     padding: 20px
     height: fit-content
     width: 50vw
-    backdrop-filter: blur(10px)
+    //backdrop-filter: blur(10px)
 
 .question_header
     width: 100%
     align-items: center
-
-.question_form_answers
-    backdrop-filter: blur(10px)
 
 .question_default
     vertical-align: top
     font-size: 1.5rem
     letter-spacing: 3px
     line-height: 2.3rem
+
+.question_input_type
+    display: flex
+    justify-content: space-between
+
+.question_details_dropdown
+    display: inline-block
+    position: relative
+
+.question_details_dropdown > *
+    border: 1.5px solid #00F !important
+    color: #00F !important
+
+.question_input
+    display: inline-block
+    width: 60%
+
+.option
+    color: #00F
+
+.actions
+    color: #00F
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    & > *
+        margin: 0 5px
+    & > .icon
+        border-radius: 50%
+        padding: 6px 0 6px 4px
+    & > .icon:hover
+        background: #EFEFEF
+        cursor: pointer
