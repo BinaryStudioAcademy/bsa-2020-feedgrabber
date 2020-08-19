@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.feed_grabber.core.file.FileMapper;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.dto.S3FileDetailsDto;
+import com.feed_grabber.core.fileStorage.exceptions.BadFileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,8 @@ public class AmazonService {
     @Value("${amazon.question.files.path}")
     private String QUESTION_FILES_PATH;
 
-    private AmazonS3Client s3client;
-    private FileRepository fIleRepository;
+    private final AmazonS3Client s3client;
+    private final FileRepository fIleRepository;
 
     @Autowired
     public AmazonService(AmazonS3Client s3client, FileRepository fileRepository) {
@@ -37,25 +38,33 @@ public class AmazonService {
         this.fIleRepository = fileRepository;
     }
 
-    public S3FileDetailsDto uploadQuestionFile(MultipartFile multipartFile, UUID questionId) throws IOException {
+    public S3FileDetailsDto uploadResponseFile(MultipartFile multipartFile) throws BadFileException {
+        return uploadFile(multipartFile, QUESTION_FILES_PATH);
+    }
+
+    private S3FileDetailsDto uploadFile(MultipartFile multipartFile, String filePathPrefix) throws BadFileException {
         try {
             var file = convertMultiPartToFile(multipartFile);
-            var fileName = QUESTION_FILES_PATH + questionId + "/" + generateFileName(multipartFile);
+            var fileName = filePathPrefix + generateFileName(multipartFile);
             var fileUrl = ENDPOINT_URL + BUCKET_NAME + "/" + fileName;
+
             uploadFileTos3bucket(fileName, file);
+
             var savedFile = fIleRepository.save(S3File.builder().link(fileUrl).build());
+            file.delete();
             return FileMapper.MAPPER.imageToImageDto(savedFile);
         } catch (IOException e) {
-            throw e;
+            throw new BadFileException("Can not read file");
         }
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
+        String name = file.getOriginalFilename() != null ? file.getOriginalFilename() : UUID.randomUUID() + "-file";
+        var resFile = new File(name);
+        FileOutputStream fos = new FileOutputStream(resFile);
         fos.write(file.getBytes());
         fos.close();
-        return convFile;
+        return resFile;
     }
 
     private String generateFileName(MultipartFile multiPart) {
