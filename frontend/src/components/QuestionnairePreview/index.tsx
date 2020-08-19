@@ -1,6 +1,6 @@
 import ResponseQuestion from "components/ResponseQuestion";
 import { IAppState } from "models/IAppState";
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Header, Button, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
@@ -50,7 +50,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
     if (!isValid) {
       return;
     }
-    saveAndAddQuestion({ questionnaireId: qnId, question: question });
+    saveAndAddQuestion({ ...question, questionnaireId: qnId });
     setAddNew(false);
     setQuestion(newQuestion);
   };
@@ -58,7 +58,11 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const indexQuestionsHandler = () => {
     const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
     indexQuestions({questionnaireId: qnId,  questions: rst});
-  };
+  }; 
+
+  // const orderIndeces = useEffect(() => {
+  //   indexQuestionsHandler();
+  // },[questions.length]);
 
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
@@ -90,8 +94,10 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <SelectQuestionsFromExisting />
-      <Button onClick={() => setAddNew(true)}>Add New</Button>
+      <div className={styles.addButtonsBlock}>
+        <SelectQuestionsFromExisting />
+        <Button onClick={() => setAddNew(true)}>Add New</Button>
+      </div>
       {addNew &&
         <Segment>
           <QuestionD onValueChange={handleOnValueChange} categories={[]} currentQuestion={question} />

@@ -51,10 +51,6 @@ export const QuestionCard: React.FC<ICardProps> = ({
         return;
       }
 
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
       moveCard(dragIndex, hoverIndex);
 
       // Note: we're mutating the monitor item here!
@@ -62,10 +58,11 @@ export const QuestionCard: React.FC<ICardProps> = ({
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
       item.index = hoverIndex;
-    },
-    drop() {
-      onDropCard();
     }
+    // ,
+    // drop() {
+    //   onDropCard();
+    // }
   });
 
   const [{ isDragging }, drag] = useDrag({
@@ -77,6 +74,7 @@ export const QuestionCard: React.FC<ICardProps> = ({
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
+  
   return (
     <div ref={ref}  style={{ opacity }} className={styles.question} >
       <ResponseQuestion question={question} />

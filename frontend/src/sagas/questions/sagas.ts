@@ -16,10 +16,13 @@ import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import question from '../../models/forms/Questions/DefaultQuestion';
 
 function parseQuestion(rawQuestion) {
+  const details = rawQuestion.details 
+    ? JSON.parse(rawQuestion.details as string)
+    : {};
   return {
     ...rawQuestion,
     type: rawQuestion.type.toLowerCase(),
-    details: JSON.parse(rawQuestion.details as string)
+    details
   };
 }
 
@@ -90,10 +93,10 @@ function* saveOrUpdateQuestion(action) {
 
 function* addNewQuestionToQuestionnaire(action) {
   try {
-    const { questionnaireId, question } = action.payload;
-    const res: IGeneric<IQuestion> = yield call(apiClient.post, `/api/questions`, question);
+    const { questionnaireId } = action.payload;
+    const res: IGeneric<IQuestion> = yield call(apiClient.post, `/api/questions`, action.payload);
     const savedQuestion = parseQuestion(res.data.data);
-    yield call(addFromExisting, { payload: {questionnaireId, questions: [savedQuestion] }});
+    yield call(getByQuestionnaireId, { payload: questionnaireId });
   } catch(error) {
     yield put(saveQuestionToQuestionnaireRoutine.failure());
     toastr.error("Question wasn't saved");

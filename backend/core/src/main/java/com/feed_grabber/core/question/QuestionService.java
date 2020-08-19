@@ -83,17 +83,17 @@ public class QuestionService {
                 .type(dto.getType())
                 .company(company);
 
+        var savedQuestion = quesRep.save(question.build());
         if (dto.getQuestionnaireId().isPresent()) {
             var questionnaire =  anketRep.findById(dto.getQuestionnaireId().get())
                     .orElseThrow(QuestionnaireNotFoundException::new);
 
-            var bindRow = QuestionnaireQuestion.getFromEntities(question.build(), questionnaire, dto.getIndex());
-            question.questionnaires(
-                    List.of(bindRow)
-            );
+            var bindRow = QuestionnaireQuestion.getFromEntities(savedQuestion, questionnaire, dto.getIndex());
+            this.qqRepo.save(bindRow);
+
         }
 
-        return quesRep.save(question.build());
+        return savedQuestion;
     }
 
     @Transactional
@@ -119,14 +119,13 @@ public class QuestionService {
             throw new QuestionNotFoundException();
         }
 
-        var result = questionnaire
+        return questionnaire
                 .getQuestions()
                 .stream()
                 .filter(bindRows::contains)
                 .map(QuestionnaireQuestion::getQuestion)
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
-        return result;
     }
 
     public QuestionDto update(QuestionUpdateDto dto)
