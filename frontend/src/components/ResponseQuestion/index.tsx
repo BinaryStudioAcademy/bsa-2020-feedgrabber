@@ -22,10 +22,13 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         return (
             <div ref={detailsPage}>
                 <Segment
-                    className={styles.container}>
-                    <Icon name='code'
-                        className={styles.edit}
-                        onClick={handleSegmentClick} />
+                className={styles.container}>
+                {!answerHandler ?
+                  <Icon name='code'
+                    className={styles.edit}
+                    onClick={handleSegmentClick} />
+                    : <></>
+                    }
                     {editor && (id === nowModifying.id) ?
                         <div className={styles.scaleTop}>
                             <QuestionDetailsPage
@@ -33,7 +36,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                                 isPreview={{ question: question, close: handleSegmentClick }} />
                         </div>
                         : <>
-                            <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
+                            {!answerHandler ? <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header> : <></>}
                             {TypeToResponseMap.get(type.toUpperCase())?.({ question, answerHandler })}
                         </>
                     }

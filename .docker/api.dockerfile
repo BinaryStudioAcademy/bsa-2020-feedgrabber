@@ -4,7 +4,7 @@ WORKDIR /builder
 
 # copy project dir and run build
 ADD ./backend/core /builder
-RUN gradle build
+RUN gradle assemble
 
 # used alpine linux for small disk size
 FROM openjdk:13-alpine
