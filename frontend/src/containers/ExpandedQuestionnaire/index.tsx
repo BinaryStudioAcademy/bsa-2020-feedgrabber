@@ -69,7 +69,15 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     };
 
     const handleDeleteQuestion = () => {
+        if (!isValid) {
+            return;
+        }
         deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
+    };
+
+    const addNewQuestion = () => {
+        setQuestion(newQuestion);
+        setAddNew(!addNew);
     };
 
     const copyQuestion = () => {
@@ -105,7 +113,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                             />
                         </div>
                         <QuestionMenu
-                            addQuestion={() => setAddNew(!addNew)}
+                            addQuestion={addNewQuestion}
                             copyQuestion={copyQuestion}
                             currentQuestion={currentQuestion}
                             onDelete={handleDeleteQuestion}

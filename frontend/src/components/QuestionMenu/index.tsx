@@ -79,19 +79,3 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
 };
 
 export default QuestionMenu;
-// const mapState = (state: IAppState) => ({
-//     currentQuestion: state.questions.current,
-//     currentQuestionnaireId: state.questionnaires.current.get.id
-// });
-//
-// const mapDispatch = {
-//     deleteQuestion: deleteFromQuestionnaireRoutine,
-//     addQuestion: addNewQuestionToQuestionnaireRoutine,
-//     copyQuestion: copyQuestionInQuestionnaireRoutine
-// };
-//
-// const connector = connect(mapState, mapDispatch);
-//
-// type ContainerProps = ConnectedProps<typeof connector>;
-
-// export default connector(QuestionMenu);
