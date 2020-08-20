@@ -63,8 +63,9 @@ public class RequestService {
         respondents.addAll(respondentsFromTeams);
         respondents = respondents.stream().distinct().collect(Collectors.toList());
 
-        if (!dto.getIncludeTargetUser()) {
-            respondents.removeIf(user -> user.getId().equals(dto.getTargetUserId()));
+        respondents.removeIf(user -> user.getId().equals(dto.getTargetUserId()));
+        if (dto.getIncludeTargetUser()) {
+            respondents.add(request.getTargetUser());
         }
 
         request.setRespondents(respondents);
