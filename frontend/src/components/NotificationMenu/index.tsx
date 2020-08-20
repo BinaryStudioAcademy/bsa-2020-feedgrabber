@@ -1,12 +1,20 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import styles from './styles.module.sass';
-import {deleteNotificationRoutine} from "../../sagas/notifications/routines";
+import {
+  deleteNotificationRoutine,
+  loadNotificationsRoutine,
+  receiveNotificationRoutine
+} from "../../sagas/notifications/routines";
 import LoaderWrapper from "../LoaderWrapper";
+import {useStomp} from "../../helpers/websocket.helper";
+import {toastr} from 'react-redux-toastr';
+import useOutsideAlerter from "../../helpers/outsideClick.hook";
 
 interface INotificationMenuProps {
   shown?: boolean;
+  callback: () => void;
 }
 
 const NotificationMenu: React.FC<INotificationMenuProps & INotificationMenuConnectedProps> = (
@@ -14,10 +22,27 @@ const NotificationMenu: React.FC<INotificationMenuProps & INotificationMenuConne
       shown,
       isLoading,
       notifications,
-      deleteNotification
+      deleteNotification,
+      loadNotifications,
+      receiveNotification,
+      callback
     }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  useOutsideAlerter(ref, callback);
+
+  useStomp("alert", m => {
+    toastr.success(m.body);
+    console.log(m.body, m.headers, m.binaryBody);
+    receiveNotification(m.body);
+  }, true);
+
   return (
-      <>
+      <div ref={ref}>
         {shown &&
         <div className={styles.notificationsContainer}>
           <div className={styles.header}><h4>Notifications</h4></div>
@@ -55,7 +80,7 @@ const NotificationMenu: React.FC<INotificationMenuProps & INotificationMenuConne
           </LoaderWrapper>
         </div>
         }
-      </>
+      </div>
   );
 };
 
@@ -65,7 +90,9 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-  deleteNotification: deleteNotificationRoutine
+  deleteNotification: deleteNotificationRoutine,
+  loadNotifications: loadNotificationsRoutine,
+  receiveNotification: receiveNotificationRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

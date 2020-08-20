@@ -41,7 +41,7 @@ public class QuestionController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAll() {
-//        notificationService.sendMessageToAllUsers("questions", "lalollll");
+        notificationService.sendMessageToAllUsers("questions", "lalollll");
         return new AppResponse<>(questionService.getAll());
     }
 

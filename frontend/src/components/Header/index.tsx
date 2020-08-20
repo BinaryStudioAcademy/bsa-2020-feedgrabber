@@ -45,11 +45,13 @@ const Header: FC<IHeaderProps> = ({user, logout, countNotifications}) => {
             <Icon className={styles.headerSearchIcon} name="search" size="small"/>
             <input className={styles.headerSearch} placeholder="Search"/>
           </div>
-          <div className={styles.headerBellWrapper} onClick={()=>setShowNotifications(!showNotifications)}>
+          <div className={styles.headerBellWrapper}
+               onClick={()=> setShowNotifications(true)}>
             <Icon className={styles.headerBellIcon} name="bell outline" size="large"/>
             <div className={styles.headerBellMessages}>{countNotifications > 9 ? '9+' : countNotifications}</div>
           </div>
-          <NotificationMenu shown={showNotifications}/>
+          <NotificationMenu shown={showNotifications}
+                            callback={() => setShowNotifications(false)}/>
           <Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>
           <div>
             <Dropdown

@@ -1,5 +1,6 @@
 package com.feed_grabber.core.request.model;
 
+import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.user.model.User;
 import lombok.Data;
@@ -58,4 +59,7 @@ public class Request {
             inverseJoinColumns = {@JoinColumn(name = "respondent_id")}
     )
     private List<User> respondents;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "request")
+    private UserNotification userNotification;
 }

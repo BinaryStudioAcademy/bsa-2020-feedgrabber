@@ -1,5 +1,6 @@
 package com.feed_grabber.core.request;
 
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.request.dto.RequestCreationRequestDto;
 import com.feed_grabber.core.response.AppResponse;
@@ -20,7 +21,7 @@ public class RequestController {
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UUID> createNewRequest(@RequestBody RequestCreationRequestDto dto)
-            throws UserNotFoundException, QuestionCategoryNotFoundException {
+            throws NotFoundException {
         System.out.println(dto);
         return new AppResponse<>(requestService.createNew(dto));
     }
