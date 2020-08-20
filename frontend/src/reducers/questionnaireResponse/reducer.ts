@@ -31,7 +31,7 @@ const responseReducer = (state: IAppState['questionnaireResponse'] = {isLoading:
                 isLoading: false,
                 current: {
                     ...state.current,
-                    responseId: payload
+                    id: payload
                 }
             };
         case createResponseRoutine.FAILURE:

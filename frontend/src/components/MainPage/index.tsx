@@ -37,13 +37,12 @@ interface IMainPageProps {
   user: IUserShort;
 
   loadQuestionnaires(): void;
-  loadClickedQuestionnaire(id: string): void;
   createResponse(response: ICreateResponse): void;
 }
 
 const MainPage: FC<IMainPageProps> =
   ({questionnaireList, reportsList = [], newsList = [], isLoading, user,
-     loadQuestionnaires, loadClickedQuestionnaire, createResponse}) => {
+     loadQuestionnaires, createResponse}) => {
 
     useEffect(() => {
       if (!questionnaireList && !isLoading) {
@@ -56,9 +55,8 @@ const MainPage: FC<IMainPageProps> =
         requestId: requestId,
         respondentId: user.id
       };
-      loadClickedQuestionnaire(questionnaireId);
       createResponse(response);
-      history.push(`/response/${requestId}`);
+      history.push(`/response/${questionnaireId}`);
     };
 
     return (
@@ -126,7 +124,6 @@ const MapStateToProps = (state: IAppState) => ({
 
 const MapDispatchToProps = {
   loadQuestionnaires: loadRequestedQuestionnairesRoutine,
-  loadClickedQuestionnaire: loadOneQuestionnaireRoutine,
   createResponse: createResponseRoutine
 };
 

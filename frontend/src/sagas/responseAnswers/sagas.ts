@@ -7,10 +7,8 @@ import { saveAnswersRoutine } from './routines';
 
 function* saveAll(action: any) {
     try {
-      console.log(action.payload);
         const res: IGeneric<IAnswer<any>> = yield call(apiClient.post,
            `http://localhost:5000/api/answers/list`, action.payload);
-        console.log(res.data.data);
         yield put(saveAnswersRoutine.success(res.data.data));
       } catch (error) {
         yield put(saveAnswersRoutine.failure());

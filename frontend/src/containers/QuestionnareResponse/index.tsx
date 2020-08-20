@@ -32,7 +32,7 @@ interface IQuestionnaireResponseProps {
     description: string;
     questions: IQuestion[];
     isLoading: boolean;
-    loadQuestions(id: string): void;
+    loadQuestionnaire(id: string): void;
     saveResponseAnswers(answers: IAnswer<any>[]): void;
 }
 
@@ -65,15 +65,21 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         console.log(questions);
     }
 
+    componentDidMount() {
+        const {match, loadQuestionnaire} = this.props;
+        loadQuestionnaire(match.params.id);
+    }
+
     handleSubmit = () => {
         if (this.state.isCompleted) {
             const answers: IAnswer<any>[] = this.props.questions.map(question => {
                 return {
                     questionId: question.id,
                     text: question.answer,
-                    responseQuestionnaireId: this.props.response.responseId
+                    responseId: this.props.response.id
                 };
             });
+            console.log(answers);
             this.props.saveResponseAnswers(answers);
             history.goBack();
         } else {
@@ -134,6 +140,7 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     loadQuestions: loadQuestionnaireQuestionsRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
     saveResponseAnswers: saveAnswersRoutine
 };
 

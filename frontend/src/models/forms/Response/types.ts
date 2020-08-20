@@ -3,12 +3,12 @@ import { IQuestionnaire } from "../Questionnaires/types";
 export interface IAnswer<T> {
     questionId: string;
     text: T;
-    responseQuestionnaireId: string;
+    responseId: string;
 }
 
 export interface IQuestionnaireResponse {
     requestId: string;
-    responseId?: string;
+    id?: string;
     questionnaire: IQuestionnaire;
 }
 
