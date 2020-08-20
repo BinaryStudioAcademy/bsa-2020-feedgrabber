@@ -67,8 +67,6 @@ public class RequestService {
             respondents.removeIf(user -> user.getId().equals(dto.getTargetUserId()));
         }
 
-        request.setRespondents(respondents);
-
         return requestRepository.save(request).getId();
     }
 }
