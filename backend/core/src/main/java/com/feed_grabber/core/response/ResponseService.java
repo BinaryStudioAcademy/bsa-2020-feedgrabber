@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ResponseService {
-
     private final ResponseRepository responseRepository;
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
@@ -22,6 +21,7 @@ public class ResponseService {
     public void save(ResponseDto dto) throws NotFoundException {
         var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new NotFoundException("User not found"));
+
         var request = requestRepository.findById(dto.getRequestId())
                 .orElseThrow(() -> new NotFoundException("Request not found"));
 

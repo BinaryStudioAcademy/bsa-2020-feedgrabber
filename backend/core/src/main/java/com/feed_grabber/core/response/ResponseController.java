@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/response")
 public class ResponseController {
-
     @Autowired
     ResponseService service;
 
