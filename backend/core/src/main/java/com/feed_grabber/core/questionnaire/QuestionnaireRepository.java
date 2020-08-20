@@ -17,7 +17,7 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
     boolean existsByTitleAndCompanyIdAndIdIsNot(String title, UUID CompanyId, UUID id);
     boolean existsByTitleAndCompanyId(String title, UUID CompanyId);
 
-    @Query("select q from Questionnaire q join Request r on q = r.questionnaire" +
-            " join User u on u.id = :id")
+    @Query("select distinct q from Questionnaire q join Request r on q = r.questionnaire" +
+            " join r.respondents u on u.id = :id")
     List<Questionnaire> findAllByRespondentId(UUID id);
 }

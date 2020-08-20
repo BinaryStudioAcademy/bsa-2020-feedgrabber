@@ -13,6 +13,7 @@ import invitationSignUpReducer from './invitationSignUp/reducer';
 import companyReducer from "./companies/reducer";
 import answersReduser from './responseAnswers/reducer';
 import notificationReducer from "./notifications";
+import responseReducer from "./questionnaireResponse/reducer";
 
 export default combineReducers({
   toastr,
@@ -23,6 +24,7 @@ export default combineReducers({
   questionnaires: questionnairesReducer,
   questionnaireReport: questionnaireReportReducer,
   questions: questionsReducer,
+  questionnaireResponse: responseReducer,
   teams: teamsReducer,
   expandedQuestionnaire: expandedQuestionnaireReducer,
   app:appReducer,

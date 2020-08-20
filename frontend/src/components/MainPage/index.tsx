@@ -8,10 +8,14 @@ import UICardBlock from "../UI/UICardBlock";
 import UIColumn from "../UI/UIColumn";
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { loadRequestedQuestionnairesRoutine } from 'sagas/qustionnaires/routines';
-import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import { loadRequestedQuestionnairesRoutine } from 'sagas/request/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import { history } from '../../helpers/history.helper';
+import { IQuestionnaireResponse } from 'models/forms/Response/types';
+import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import { createResponseRoutine } from 'sagas/questionnaireResponse/routines';
+import { IUserShort } from 'models/user/types';
+import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 
 interface IItem {
   id: string;
@@ -20,17 +24,26 @@ interface IItem {
   author?: string;
 }
 
+interface ICreateResponse {
+  requestId: string;
+  respondentId: string;
+}
+
 interface IMainPageProps {
-  questionnaireList: IQuestionnaire[];
+  questionnaireList: IQuestionnaireResponse[];
   reportsList?: IItem[];
   newsList?: IItem[];
   isLoading: boolean;
+  user: IUserShort;
 
   loadQuestionnaires(): void;
+  loadClickedQuestionnaire(id: string): void;
+  createResponse(response: ICreateResponse): void;
 }
 
 const MainPage: FC<IMainPageProps> =
-  ({questionnaireList, reportsList = [], newsList = [], isLoading, loadQuestionnaires}) => {
+  ({questionnaireList, reportsList = [], newsList = [], isLoading, user,
+     loadQuestionnaires, loadClickedQuestionnaire, createResponse}) => {
 
     useEffect(() => {
       if (!questionnaireList && !isLoading) {
@@ -38,8 +51,14 @@ const MainPage: FC<IMainPageProps> =
       }
     }, [questionnaireList, loadQuestionnaires, isLoading]);
 
-    const handleClick = id => {
-      history.push(`/response/${id}`);
+    const handleAnswerClick = (requestId, questionnaireId) => {
+      const response = {
+        requestId: requestId,
+        respondentId: user.id
+      };
+      loadClickedQuestionnaire(questionnaireId);
+      createResponse(response);
+      history.push(`/response/${requestId}`);
     };
 
     return (
@@ -52,12 +71,13 @@ const MainPage: FC<IMainPageProps> =
               <h3>Pending Questionnaires</h3>
             </UICardBlock>
             <LoaderWrapper loading={isLoading}>
-              {questionnaireList && questionnaireList.map(questionnaire => (
-                <UICardBlock key={questionnaire.id}>
-                  {questionnaire.title && <h4>{questionnaire.title}</h4>}
-                  {questionnaire.description && <p>{questionnaire.description}</p>}
-                  {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
-                  <UIButton title="Answer" onClick={() => handleClick(questionnaire.id)}/>
+              {console.log(questionnaireList)}
+              {questionnaireList && questionnaireList.map(item => (
+                <UICardBlock key={item.requestId}>
+                  {item.questionnaire.title && <h4>{item.questionnaire.title}</h4>}
+                  {item.questionnaire.description && <p>{item.questionnaire.description}</p>}
+                  {item.questionnaire.companyName && <p><b>{item.questionnaire.companyName}</b></p>}
+                  <UIButton title="Answer" onClick={() => handleAnswerClick(item.requestId, item.questionnaire.id)}/>
                 </UICardBlock>
               ))}
             </LoaderWrapper>
@@ -99,12 +119,15 @@ const MainPage: FC<IMainPageProps> =
   );};
 
 const MapStateToProps = (state: IAppState) => ({
-  questionnaireList: state.questionnaires.list.questionnaires,
-  isLoading: state.questionnaires.list.isLoading
+  questionnaireList: state.questionnaireResponse.list,
+  isLoading: state.questionnaireResponse.isLoading,
+  user: state.user.shortInfo
 });
 
 const MapDispatchToProps = {
-  loadQuestionnaires: loadRequestedQuestionnairesRoutine
+  loadQuestionnaires: loadRequestedQuestionnairesRoutine,
+  loadClickedQuestionnaire: loadOneQuestionnaireRoutine,
+  createResponse: createResponseRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps) (MainPage);

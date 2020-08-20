@@ -6,8 +6,7 @@ import {
     loadQuestionnairesRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
-    updateQuestionnaireRoutine,
-    loadRequestedQuestionnairesRoutine
+    updateQuestionnaireRoutine
 } from '../../sagas/qustionnaires/routines';
 import { IAppState } from "../../models/IAppState";
 import { combineReducers } from "redux";
@@ -27,7 +26,6 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
             };
         case loadQuestionnairesRoutine.TRIGGER:
         case deleteQuestionnaireRoutine.TRIGGER:
-        case loadRequestedQuestionnairesRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
@@ -35,7 +33,6 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
         case loadQuestionnairesRoutine.FAILURE:
         case deleteQuestionnaireRoutine.SUCCESS:
         case deleteQuestionnaireRoutine.FAILURE:
-        case loadRequestedQuestionnairesRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false
@@ -44,12 +41,6 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
             return {
                 ...state,
                 pagination: action.payload,
-                isLoading: false
-            };
-        case loadRequestedQuestionnairesRoutine.SUCCESS:
-            return {
-                ...state,
-                questionnaires: action.payload,
                 isLoading: false
             };
         case addQuestionnaireRoutine.TRIGGER:

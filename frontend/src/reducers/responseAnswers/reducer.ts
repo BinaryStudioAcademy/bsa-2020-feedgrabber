@@ -1,4 +1,4 @@
-import { IAnswer } from "models/forms/responseAnswers/types";
+import { IAnswer } from "models/forms/Response/types";
 import { saveAnswersRoutine } from "sagas/responseAnswers/routines";
 
 interface IResponseAnswersState<T> {

@@ -6,8 +6,7 @@ import {
   hideModalQuestionnaireRoutine,
   loadOneQuestionnaireRoutine,
   loadQuestionnairesRoutine,
-  updateQuestionnaireRoutine,
-  loadRequestedQuestionnairesRoutine
+  updateQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
@@ -79,23 +78,12 @@ function* deleteQuestionnaire(action) {
   }
 }
 
-function* loadRequestedQuestionnaires() {
-  try {
-    const result = yield call(apiClient.get, `/api/questionnaires/requested`);
-    yield put(loadRequestedQuestionnairesRoutine.success(result.data.data));
-  } catch (error) {
-    yield put(loadRequestedQuestionnairesRoutine.failure());
-    toastr.error("Couldn't load pending questionnaires");
-  }
-}
-
 export default function* questionnairesSagas() {
   yield all([
     yield takeEvery(loadQuestionnairesRoutine.TRIGGER, loadQuestionnairesList),
     yield takeEvery(addQuestionnaireRoutine.TRIGGER, addQuestionnaire),
     yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
     yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
-    yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
-    yield takeEvery(loadRequestedQuestionnairesRoutine.TRIGGER, loadRequestedQuestionnaires)
+    yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire)
   ]);
 }
