@@ -35,6 +35,5 @@ public class RequestController {
         return new AppResponse<>(
                 requestService.getAllByUserId(UUID.fromString(principal.getName()))
         );
-
     }
 }

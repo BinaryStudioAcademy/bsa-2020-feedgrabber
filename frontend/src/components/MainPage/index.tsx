@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 
 import UIPageTitle from "../UI/UIPageTitle";
 import UIButton from "../UI/UIButton";
@@ -45,10 +45,10 @@ const MainPage: FC<IMainPageProps> =
      loadQuestionnaires, createResponse}) => {
 
     useEffect(() => {
-      if (!questionnaireList && !isLoading) {
-          loadQuestionnaires();
+      if(!questionnaireList && !isLoading){
+        loadQuestionnaires();
       }
-    }, [questionnaireList, loadQuestionnaires, isLoading]);
+    }, [questionnaireList, loadQuestionnaires]);
 
     const handleAnswerClick = (requestId, questionnaireId) => {
       const response = {
@@ -69,7 +69,6 @@ const MainPage: FC<IMainPageProps> =
               <h3>Pending Questionnaires</h3>
             </UICardBlock>
             <LoaderWrapper loading={isLoading}>
-              {console.log(questionnaireList)}
               {questionnaireList && questionnaireList.map(item => (
                 <UICardBlock key={item.requestId}>
                   {item.questionnaire.title && <h4>{item.questionnaire.title}</h4>}

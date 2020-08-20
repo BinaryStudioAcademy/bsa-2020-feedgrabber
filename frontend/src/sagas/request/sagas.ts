@@ -16,7 +16,6 @@ function* saveRequest(action) {
 function* loadRequestedQuestionnaires() {
   try {
     const result = yield call(apiClient.get, `/api/request/respondent`);
-    console.log(result);
     yield put(loadRequestedQuestionnairesRoutine.success(result.data.data));
   } catch (error) {
     yield put(loadRequestedQuestionnairesRoutine.failure());

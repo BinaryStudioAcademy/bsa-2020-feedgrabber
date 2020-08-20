@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
-import FreeTextQuestion from '../../components/ComponentsQuestionsResponse/FreeTextQuestion';
 import { history } from '../../helpers/history.helper';
 import styles from './styles.module.scss';
 import { Formik } from 'formik';
@@ -14,7 +13,6 @@ import { IAnswer, IQuestionnaireResponse } from 'models/forms/Response/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
-import question from 'models/forms/Questions/DefaultQuestion';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
@@ -26,7 +24,6 @@ interface IQuestionnaireResponseState {
 
 interface IQuestionnaireResponseProps {
     match: any; // requestId
-    questionnaireId: string;
     response: IQuestionnaireResponse;
     title: string;
     description: string;
@@ -62,7 +59,6 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         this.setState({
             isCompleted: !completeStates.includes(null)
         });
-        console.log(questions);
     }
 
     componentDidMount() {
@@ -79,7 +75,6 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                     responseId: this.props.response.id
                 };
             });
-            console.log(answers);
             this.props.saveResponseAnswers(answers);
             history.goBack();
         } else {
