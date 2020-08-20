@@ -8,6 +8,19 @@ const mockReport: IQuestionnaireReport = {
   questionnaireTitle: "Awesome Questionnaire",
   questions: [
     {
+      id: "00000",
+      title: "Multichoice question",
+      type: QuestionType.multichoice,
+      answers: 18,
+      data: {
+        options: [
+          {title: "First Option", amount: 8},
+          {title: "Second Option", amount: 16},
+          {title: "Third Option", amount: 3}
+        ]
+      }
+    },
+    {
       id: "11111",
       title: "Radio question",
       type: QuestionType.radio,

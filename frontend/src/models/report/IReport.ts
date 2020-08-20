@@ -10,7 +10,11 @@ export interface IQuestionReport {
   title: string;
   type: QuestionType;
   answers: number;
-  data: IQuestionReportRadioData | IQuestionReportFreeTextData; // serialized from JSON
+  data: IQuestionReportRadioData | IQuestionReportFreeTextData | IQuestionReportMultichoiceData; // serialized from JSON
+}
+
+export interface IQuestionReportMultichoiceData {
+  options: {title: string; amount: number}[];
 }
 
 export interface IQuestionReportRadioData {
