@@ -4,9 +4,20 @@ import { IScaleQuestion } from "../../../models/forms/Questions/IQuesion";
 import { Form, Radio } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
-export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> =
-  ({ question= { id: '23',  details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good'} },
-     answerHandler = null }) => {
+export interface IScaleAnswer {
+  id?: string;
+  response?: number;
+}
+
+export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScaleAnswer> = (
+  {
+    question= {
+      id: '23',
+      details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good'},
+      answer: 4
+    },
+    answerHandler = null
+  }) => {
   const handleClick = (e, value) => {
     answerHandler?.(question.id, value);
   };
@@ -18,7 +29,10 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> =
       variants.push(
         <Form.Field className={styles.scale_question_response_variant} key={i}>
           <span>{i}</span>
-          <Radio value={i} name={group} onChange={handleClick} />
+          <Radio value={i} name={group}
+                 onChange={handleClick}
+                 disabled={!!question.answer}
+                 checked={i === question.answer} />
         </Form.Field>
       );
     }
