@@ -5,20 +5,20 @@ import styles from './styles.module.sass';
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
-import {IQuestionnaire} from 'models/forms/Questionnaires/types';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import QuestionD from "../../components/QuestionDetails";
-import { RouteComponentProps } from 'react-router-dom';
+
 import {
-    addNewQuestionToQuestionnaireRoutine,
-    copyQuestionInQuestionnaireRoutine,
-    saveQuestionToQuestionnaireRoutine,
-    deleteFromQuestionnaireRoutine,
-    loadQuestionnaireQuestionsRoutine,
-    indexQuestionsRoutine
+  addNewQuestionToQuestionnaireRoutine,
+  copyQuestionInQuestionnaireRoutine,
+  deleteFromQuestionnaireRoutine,
+  indexQuestionsRoutine, loadQuestionByIdRoutine
 } from "sagas/questions/routines";
+import UICard from "../../components/UI/UICard";
+import UIColumn from "../../components/UI/UIColumn";
+import UIContent from "../../components/UI/UIContent";
 
 const newQuestion: IQuestion = {
     type: QuestionType.freeText,
@@ -38,7 +38,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         loadOneQuestionnaire,
         saveAndAddQuestion,
         deleteQuestion,
-        copyQuestion,
         currentQuestion,
         questions
     }
@@ -48,8 +47,12 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     }, [loadOneQuestionnaire, match.params.id]);
 
     const [addNew, setAddNew] = useState(false);
-    const [question, setQuestion] = useState<IQuestion>(newQuestion);
+    const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [isValid, setIsValid] = useState(false);
+
+    useEffect(() => {
+      setQuestion(currentQuestion);
+    }, [currentQuestion]);
 
     const handleOnValueChange = (state: IComponentState<IQuestion>) => {
         setQuestion(state.value);
@@ -65,8 +68,20 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         setQuestion(question);
     };
 
-    const handleDeleteQuestion = (question: IQuestion) => {
+    const handleDeleteQuestion = () => {
         deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
+    };
+
+    const copyQuestion = () => {
+      if(!question.id) {
+        return;
+      }
+      saveAndAddQuestion({
+        ...question,
+        id: "",
+        name: `${question.name} (copy)`,
+        questionnaireId: match.params.id
+      });
     };
 
     return (
@@ -75,23 +90,27 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                 <div className={styles.formDetails}>
                     <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
-                    <div className={styles.formPreview}>
-                        {addNew && <QuestionD onValueChange={handleOnValueChange}
-                                              categories={[]}
-                                              currentQuestion={question}
-                                              onSave={handleSaveQuestion}
-                                              onDelete={() => setAddNew(false)}/>}
-                        <QuestionnairePreview
-                            indexQuestions={indexQuestionsRoutine}
-                            qnId={match.params.id}
-                            questions={questions ?? []}
-                        />
+                    <UIContent>
+                        <div className={styles.questions_container}>
+                            {addNew && <UICard><QuestionD onValueChange={handleOnValueChange}
+                                                  categories={[]}
+                                                  currentQuestion={question}
+                                                  onSave={handleSaveQuestion}
+                                                  onDelete={() => setAddNew(false)}/>
+                                        </UICard>}
+                            <QuestionnairePreview
+                                indexQuestions={indexQuestionsRoutine}
+                                qnId={match.params.id}
+                                questions={questions ?? []}
+                            />
+                        </div>
                         <QuestionMenu
                             addQuestion={() => setAddNew(!addNew)}
                             copyQuestion={copyQuestion}
                             currentQuestion={currentQuestion}
+                            onDelete={handleDeleteQuestion}
                         />
-                    </div>
+                    </UIContent>
                 </div>
             )}
         </LoaderWrapper>
@@ -121,9 +140,8 @@ const mapStateToProps = (rootState: IAppState) => ({
 
 const mapDispatchToProps = {
     loadOneQuestionnaire: loadOneQuestionnaireRoutine,
-    saveAndAddQuestion: saveQuestionToQuestionnaireRoutine,
+    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
-    addQuestion: addNewQuestionToQuestionnaireRoutine,
     copyQuestion: copyQuestionInQuestionnaireRoutine
 };
 

@@ -89,7 +89,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
       {questions.length ?
         <div>
           {/* {questions.map(q => <ResponseQuestion question={q} key={q.id} />)} */}
-          {questions.map((q, i) => renderCard(q, i))}
+          {questionCards.map((q, i) => renderCard(q, i))}
         </div>
         : <Header as='h2'>
           Urrr... Maybe nothing is modifying right now or you haven`t created any questions yet?

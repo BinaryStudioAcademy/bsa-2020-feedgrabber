@@ -10,46 +10,46 @@ import styles from "./styles.module.sass";
 import ReactDOM from "react-dom";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
-    ({ question, answerHandler, loadCurrent, nowModifying }) => {
-        const { name, categoryTitle, type, id } = question;
-        const [editor, setEditor] = useState(false);
-        const detailsPage = useRef(null);
-        const handleSegmentClick = () => {
-            setEditor(!editor);
-            const { top, right } = (ReactDOM.findDOMNode(detailsPage.current) as Element).getBoundingClientRect();
-            loadCurrent({ id: question.id, top: top, right });
-        };
-        return (
-            <div ref={detailsPage}>
-                <Segment
-                className={styles.container}>
-                {!answerHandler ?
-                  <Icon name='code'
-                    className={styles.edit}
-                    onClick={handleSegmentClick} />
-                    : <></>
-                    }
-                    {editor && (id === nowModifying.id) ?
-                        <div className={styles.scaleTop}>
-                            <QuestionDetailsPage
-                                match={{ params: { id: question.id } }}
-                                isPreview={{ question: question, close: handleSegmentClick }} />
-                        </div>
-                        : <>
-                            {!answerHandler ? <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header> : <></>}
-                            {TypeToResponseMap.get(type.toUpperCase())?.({ question, answerHandler })}
-                        </>
-                    }
-                </Segment>
-            </div>);
+  ({ question, answerHandler, loadCurrent, nowModifying }) => {
+    const { name, categoryTitle, type, id } = question;
+    const [editor, setEditor] = useState(false);
+    const detailsPage = useRef(null);
+    const handleSegmentClick = () => {
+      setEditor(!editor);
+      const { top, right } = (ReactDOM.findDOMNode(detailsPage.current) as Element).getBoundingClientRect();
+      loadCurrent({ id: question.id, top: top, right });
     };
+    return (
+      <div ref={detailsPage}>
+        <Segment
+          className={styles.container}>
+          {!answerHandler ?
+            <Icon name='code'
+                  className={styles.edit}
+                  onClick={handleSegmentClick} />
+            : <></>
+          }
+          {editor && (id === nowModifying.id) ?
+            <div className={styles.scaleTop}>
+              <QuestionDetailsPage
+                match={{ params: { id: question.id } }}
+                isPreview={{ question: question, close: handleSegmentClick }} />
+            </div>
+            : <>
+              {!answerHandler ? <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header> : <></>}
+              {TypeToResponseMap.get(type.toUpperCase())?.({ question, answerHandler })}
+            </>
+          }
+        </Segment>
+      </div>);
+  };
 
 const mapState = (state: IAppState) => ({
-    nowModifying: state.questions.current
+  nowModifying: state.questions.current
 });
 
 const mapDispatch = {
-    loadCurrent: loadQuestionByIdRoutine
+  loadCurrent: loadQuestionByIdRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
@@ -57,3 +57,4 @@ const connector = connect(mapState, mapDispatch);
 type ResponseQuestionProps = ConnectedProps<typeof connector>;
 
 export default connector(ResponseQuestion);
+

@@ -36,4 +36,5 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
     @Modifying
     @Query("delete from Question where id in (select q.id from Question q inner join q.questionnaires que on (q.id = ?2 and que.questionnaire.id = ?1))")
     void deleteByQuestionnaireId(UUID qId, UUID id);
+
 }

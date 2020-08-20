@@ -15,12 +15,14 @@ import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 interface IQuestionMenuProps {
     addQuestion(): void;
     copyQuestion(): void;
+    onDelete(): void;
     currentQuestion: IQuestion;
 }
 const QuestionMenu: FC<IQuestionMenuProps> = ({
     addQuestion,
     copyQuestion,
-    currentQuestion
+    currentQuestion,
+    onDelete
 }) => {
     const [positions, setPositions] = useState({ scrollTop: 0, innerHeight: window.innerHeight });
 
@@ -43,9 +45,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
         }
     };
 
-    const handleDelete = () => {
-        return;
-    };
+    const button = <Button icon={'external'} />;
 
     const { scrollTop, innerHeight } = positions;
     return (
@@ -55,6 +55,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                 || currentQuestion.top < 0
                 ? scrollTop + innerHeight / 2 - 40
                 : scrollTop + currentQuestion.top),
+            left: '20%',
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Form className={styles.question_menu_container}>
@@ -62,12 +63,14 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                     <Popup content='New question'
                         trigger={<Button icon="plus circle" onClick={() => handleAdd("new")} />}
                         position='right center' />
-                    <SelectQuestionsFromExisting />
+                    <Popup content='Add from existing questions'
+                         trigger={<SelectQuestionsFromExisting button={button} />}
+                         position='right center' />
                     <Popup content='Copy'
                         trigger={<Button icon="copy" onClick={() => handleAdd(currentQuestion.id)} />}
                         position='right center' />
                     <Popup content='Delete'
-                        trigger={<Button icon="remove" onClick={() => handleDelete()} />}
+                        trigger={<Button icon="remove" onClick={onDelete} />}
                         position='right center' />
                 </Button.Group>
             </Form>

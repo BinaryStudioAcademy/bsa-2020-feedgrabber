@@ -40,11 +40,11 @@ public class CustomDes extends StdDeserializer<QuestionCreateDto> {
         var typeText = node.hasNonNull("type")
                 ? node.get("type").asText()
                 : null;
-        return typeText != null
-                ? QuestionType
-                .fromString(typeText)
-                .orElseThrow(() -> new QuestionTypeNotExistsException("This type of question does not exists " + typeText))
-                : null;
+        if (typeText == null) {
+            throw new QuestionTypeNotExistsException("null type");
+        }
+        return QuestionType.fromString(typeText)
+                .orElseThrow(() -> new QuestionTypeNotExistsException("This type of question does not exists " + typeText));
     }
 
     private Integer getIndex(JsonNode node) {

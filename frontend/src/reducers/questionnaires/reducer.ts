@@ -102,11 +102,16 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
             };
         case deleteFromQuestionnaireRoutine.SUCCESS:
         case copyQuestionInQuestionnaireRoutine.SUCCESS:
-        case addNewQuestionToQuestionnaireRoutine.SUCCESS:
         case loadQuestionnaireQuestionsRoutine.SUCCESS:
             return {
                 ...state,
                 questions: payload,
+                isLoading: false
+            };
+        case addNewQuestionToQuestionnaireRoutine.SUCCESS:
+            return {
+                ...state,
+                questions: [payload, ...state.questions],
                 isLoading: false
             };
         case deleteFromQuestionnaireRoutine.TRIGGER:

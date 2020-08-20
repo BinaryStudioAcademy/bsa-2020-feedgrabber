@@ -4,6 +4,7 @@ import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,6 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
     @Query("select q from Questionnaire q join Request r on q = r.questionnaire" +
             " join User u on u.id = :id")
     List<Questionnaire> findAllByRespondentId(UUID id);
+
+
 }

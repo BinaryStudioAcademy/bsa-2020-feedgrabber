@@ -219,20 +219,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                         <Icon name="trash alternate outline" size="large" onClick={handleDelete}/>
                                     </span>
                                 }
-                                <Radio toggle/>
-                                <Dropdown
-                                    className={styles.icon}
-                                    text=" "
-                                    icon="ellipsis vertical"
-                                    options={[
-                                        {
-                                            text: "option1"
-                                        },
-                                        {
-                                            text: "option2"
-                                        }
-                                    ]}
-                                />
                             </div>
                         </Segment>
                     </Form>
