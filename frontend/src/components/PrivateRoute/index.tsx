@@ -8,38 +8,38 @@ import {connect} from "react-redux";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null, ...rest}) => {
-  const isLogged = useAuth();
+    const isLogged = useAuth();
 
-  return (
-    <Route
-      {...rest}
-      render={props => {
-        if (!isLogged) {
-          return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
-        }
+    return (
+        <Route
+            {...rest}
+            render={props => {
+                if (!isLogged) {
+                    return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
+                }
 
-        return (
-          <>
-            <Header/>
-            <div className={styles.sideBarWrapper}>
-              <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
-            </div>
-            <div className={styles.appContent}>
-              <Component {...props} />
-            </div>
-          </>
-        );
-      }}
-    />
-  );
+                return (
+                    <>
+                        <Header/>
+                        <div className={styles.sideBarWrapper}>
+                            <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
+                        </div>
+                        <div className={styles.appContent}>
+                            <Component {...props} />
+                        </div>
+                    </>
+                );
+            }}
+        />
+    );
 };
 
 const mapStateToProps = state => ({
-  showMenu: state.app.showMenu
+    showMenu: state.app.showMenu
 });
 
 const mapDispatchToProps = {
-  toggleMenu: toggleMenuRoutine
+    toggleMenu: toggleMenuRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);

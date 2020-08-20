@@ -5,12 +5,11 @@ import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice

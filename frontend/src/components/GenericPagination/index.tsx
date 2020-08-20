@@ -4,28 +4,23 @@ import ReactPaginate from 'react-paginate';
 import styles from './styles.module.sass';
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import LoaderWrapper from "../LoaderWrapper";
-import PaginationButton, {IGenericButtonProps} from "./button";
 
 interface IGenericPaginationProps {
-  title: string;
   isLoading: boolean;
   pagination?: IPaginationInfo<any>;
-  buttons: IGenericButtonProps[];
 
   setPagination(pagination: IPaginationInfo<any>): void;
   mapItemToJSX(item: any): JSX.Element;
   loadItems(): void;
 }
 
-const sizeOptions = [1, 5, 10];
-const defaultSize = 5;
+const sizeOptions = [10, 25, 50];
+const defaultSize = 10;
 
 const GenericPagination: FC<IGenericPaginationProps> = (
   {
-    title,
     pagination,
     isLoading,
-    buttons,
     setPagination,
     mapItemToJSX,
     loadItems
@@ -60,16 +55,15 @@ const GenericPagination: FC<IGenericPaginationProps> = (
   });
 
   return (
-    <div className={styles.paginationWrapper}>
-      <h1 className={styles.paginationTitle}>{title}</h1>
-      <div className={styles.paginationButtonsWrapper}>
-        {buttons.map(b => <PaginationButton key={b.text} text={b.text} callback={b.callback}/>)}
-      </div>
+    <>
       {pagination?.total > 0 && (
         <div className={styles.paginationMetaWrapper}>
-          <div>Total: {pagination.total}</div>
+          <div>Total: <strong>{pagination.total}</strong></div>
           <div>
-            <select onChange={e => handleChangeAmountPerPage(e.target.value)} defaultValue={defaultSize}>
+            <select
+              onChange={e => handleChangeAmountPerPage(e.target.value)}
+              defaultValue={pagination?.size || defaultSize}
+            >
               {sizeOptions.map(o => <option key={o}>{o}</option>)}
             </select>
             &nbsp;items per page
@@ -105,7 +99,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

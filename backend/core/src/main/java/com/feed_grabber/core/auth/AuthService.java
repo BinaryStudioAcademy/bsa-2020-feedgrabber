@@ -13,12 +13,14 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AuthService {
     private final TokenService tokenService;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
-
+    public final static String LOGIN_DIVIDER = "#";
 
     public AuthService(TokenService tokenService, UserRepository userRepository, AuthenticationManager authenticationManager) {
         this.tokenService = tokenService;
@@ -32,7 +34,8 @@ public class AuthService {
 
     public AuthUserResponseDTO login(UserLoginDTO dto) {
         try {
-            var upa = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+            var username = this.generateUserName(dto.getUsername(), dto.getCompanyId());
+            var upa = new UsernamePasswordAuthenticationToken(username, dto.getPassword());
 
             authenticationManager.authenticate(upa);
 
@@ -41,7 +44,7 @@ public class AuthService {
         }
 
         var user = userRepository
-                .findByUsername(dto.getUsername())
+                .findByUsernameAndCompanyId(dto.getUsername(), dto.getCompanyId())
                 .map(UserMapper.MAPPER::responseFromUser).get();
 
         if(dto.getCompanyId() != null && !dto.getCompanyId().equals(user.getCompany().getId()) ) {
@@ -54,4 +57,8 @@ public class AuthService {
                 tokenService.generateRefreshToken(tokenDto), user);
     }
 
+    private String generateUserName(String username, UUID companyId) {
+        return username + LOGIN_DIVIDER + companyId.toString();
+    }
 }
+

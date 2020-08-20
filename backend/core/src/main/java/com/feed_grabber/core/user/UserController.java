@@ -5,9 +5,14 @@ import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
-import com.feed_grabber.core.response.DataList;
 import com.feed_grabber.core.user.dto.*;
+
+import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.apiContract.DataList;
+import com.feed_grabber.core.user.dto.ResetPassDto;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
+import com.feed_grabber.core.user.dto.UserInfoToResetPassDto;
+import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -59,7 +64,6 @@ public class UserController {
                 .orElseThrow(UserNotFoundException::new);
 
         var token = tokenService.generateVerificationToken(user, TokenType.RESET);
-        // TODO: Send email with token
     }
 
     @ApiOperation(value = "Update password")
@@ -99,4 +103,11 @@ public class UserController {
         this.userService.editUserProfile(dto);
     }
 
+    @GetMapping("/short")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<UserShortDto> getUserShortByEmailAndCompany(@RequestParam String email,
+                                                                   @RequestParam UUID companyId)
+                throws UserNotFoundException {
+        return new AppResponse<>(userService.getUserShortByEmailAndCompany(email, companyId));
+    }
 }

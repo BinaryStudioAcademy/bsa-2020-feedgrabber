@@ -5,7 +5,7 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
