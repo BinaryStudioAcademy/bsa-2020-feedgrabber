@@ -1,5 +1,6 @@
 package com.feed_grabber.core.auth.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,10 +50,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        if (token == null) {
+        var tokenString = token.replace(TOKEN_PREFIX, "");
+
+        try {
+            tokenService.isTokenExpired(tokenString);
+        } catch (ExpiredJwtException e) {
             return null;
         }
-        var tokenString = token.replace(TOKEN_PREFIX, "");
 
         var user = tokenService.extractUserid(tokenString);
         var authority = new SimpleGrantedAuthority(tokenService.extractRoleName(tokenString));
@@ -61,10 +65,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         details.put(COMPANY_ID_KEY, tokenService.extractCompanyId(tokenString).toString());
         details.put(AUTHORITIES_KEY, tokenService.extractRoleName(tokenString));
 
-        if (user != null && !tokenService.isTokenExpired(tokenString)) {
-            return new UsernamePasswordAuthenticationToken(user, details, List.of(authority));
-        }
-
-        return null;
+        return new UsernamePasswordAuthenticationToken(user, details, List.of(authority));
     }
 }
