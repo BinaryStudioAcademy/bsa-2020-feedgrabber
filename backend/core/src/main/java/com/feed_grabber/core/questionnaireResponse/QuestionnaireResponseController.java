@@ -5,12 +5,15 @@ import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.questionnaireResponse.dto.QuestionnaireResponseCreateDto;
 import com.feed_grabber.core.questionnaireResponse.dto.QuestionnaireResponseDto;
 import com.feed_grabber.core.questionnaireResponse.exceptions.QuestionnaireResponseNotFoundException;
+import com.feed_grabber.core.questionnaireResponse.model.QuestionnaireResponse;
 import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +55,7 @@ public class QuestionnaireResponseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<QuestionnaireResponseDto> create(@RequestBody QuestionnaireResponseCreateDto createDto)
+    public AppResponse<UUID> create(@RequestBody QuestionnaireResponseCreateDto createDto)
             throws UserNotFoundException, AlreadyExistsException {
         return new AppResponse<>(
                 responseService.create(createDto)

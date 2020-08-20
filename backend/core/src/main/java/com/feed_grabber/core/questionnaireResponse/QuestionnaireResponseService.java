@@ -49,7 +49,7 @@ public class QuestionnaireResponseService {
         responseRepository.deleteById(id);
     }
 
-    public QuestionnaireResponseDto create(QuestionnaireResponseCreateDto createDto)
+    public UUID create(QuestionnaireResponseCreateDto createDto)
             throws UserNotFoundException, AlreadyExistsException {
 
         if (responseRepository.findByRequestAndRespondentId(createDto.getRequestId(), createDto.getRespondentId()).isPresent()) {
@@ -62,8 +62,7 @@ public class QuestionnaireResponseService {
         QuestionnaireResponse questionnaireResponse = QuestionnaireResponseMapper.MAPPER
                 .questionnaireResponseCreateDtoToModel(createDto, respondent);
 
-        return QuestionnaireResponseMapper.MAPPER
-                .questionnaireResponseToQuestionnaireResponseDto(responseRepository.save(questionnaireResponse));
+        return responseRepository.save(questionnaireResponse).getId();
     }
 
 }

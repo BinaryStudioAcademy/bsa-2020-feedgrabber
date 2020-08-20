@@ -3,13 +3,16 @@ package com.feed_grabber.core.request;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.questionnaire.QuestionnaireService;
 import com.feed_grabber.core.request.dto.RequestCreationRequestDto;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,14 +26,18 @@ public class RequestService {
     UserRepository userRepository;
     TeamRepository teamRepository;
 
+    QuestionnaireService questionnaireService;
+
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
                           UserRepository userRepository,
-                          TeamRepository teamRepository) {
+                          TeamRepository teamRepository,
+                          QuestionnaireService questionnaireService) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.questionnaireService = questionnaireService;
     }
 
     public UUID createNew(RequestCreationRequestDto dto) throws QuestionCategoryNotFoundException,
@@ -70,5 +77,13 @@ public class RequestService {
         request.setRespondents(respondents);
 
         return requestRepository.save(request).getId();
+    }
+
+    public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
+        return requestRepository.findAllByRespondentId(id)
+                .stream()
+                .map(request -> RequestMapper.MAPPER.
+                        requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
+                .collect(Collectors.toList());
     }
 }

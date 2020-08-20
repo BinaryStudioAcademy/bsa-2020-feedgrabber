@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
-import FreeTextQuestion from '../../components/ComponentsQuestionsResponse/FreeTextQuestion';
 import { history } from '../../helpers/history.helper';
 import styles from './styles.module.scss';
 import { Formik } from 'formik';
@@ -10,11 +9,10 @@ import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
 import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
 import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
-import { IAnswer } from 'models/forms/responseAnswers/types';
+import { IAnswer, IQuestionnaireResponse } from 'models/forms/Response/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
-import question from 'models/forms/Questions/DefaultQuestion';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
@@ -25,13 +23,12 @@ interface IQuestionnaireResponseState {
 }
 
 interface IQuestionnaireResponseProps {
-    match: any;
-    responseId: string;
+    match: any; // requestId
+    response: IQuestionnaireResponse;
     title: string;
     description: string;
     questions: IQuestion[];
     isLoading: boolean;
-    loadQuestions(id: string): void;
     loadQuestionnaire(id: string): void;
     saveResponseAnswers(answers: IAnswer<any>[]): void;
 }
@@ -48,12 +45,6 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidMount() {
-        const { loadQuestions, loadQuestionnaire, match } = this.props;
-        loadQuestionnaire(match.params.id);
-        loadQuestions(match.params.id);
-    }
-
     handleComponentChange(state: IComponentState) {
         const { questions } = this.props;
         let updatedQuestions: IQuestion[] = questions;
@@ -68,7 +59,11 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         this.setState({
             isCompleted: !completeStates.includes(null)
         });
-        console.log(questions);
+    }
+
+    componentDidMount() {
+        const {match, loadQuestionnaire} = this.props;
+        loadQuestionnaire(match.params.id);
     }
 
     handleSubmit = () => {
@@ -77,11 +72,11 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                 return {
                     questionId: question.id,
                     text: question.answer,
-                    responseQuestionnaireId: this.props.responseId
+                    responseId: this.props.response.id
                 };
             });
             this.props.saveResponseAnswers(answers);
-            history.push("/questionnaires");
+            history.goBack();
         } else {
             this.setState({
                 showErrors: true
@@ -135,12 +130,12 @@ const mapStateToProps = (state: IAppState) => ({
     questions: state.questionnaires.current.questions,
     title: state.questionnaires.current.get.title,
     description: state.questionnaires.current.get.description,
-    responseId: state.questionnaires.current.get.id // should be id of response
+    response: state.questionnaireResponse.current
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadOneQuestionnaireRoutine,
     loadQuestions: loadQuestionnaireQuestionsRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
     saveResponseAnswers: saveAnswersRoutine
 };
 
