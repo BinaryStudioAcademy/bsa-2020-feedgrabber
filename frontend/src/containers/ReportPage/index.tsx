@@ -1,16 +1,17 @@
-import React, {useEffect} from 'react';
-import {connect, ConnectedProps} from "react-redux";
+import React, { useEffect } from 'react';
+import { connect, ConnectedProps } from "react-redux";
 
-import {IAppState} from 'models/IAppState';
-import {loadQuestionnaireReportRoutine} from "../../sagas/questionnaireReport/routines";
+import { IAppState } from 'models/IAppState';
+import { loadQuestionnaireReportRoutine } from "../../sagas/questionnaireReport/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import {IQuestionReport} from "../../models/report/IReport";
-import {QuestionType} from "../../models/forms/Questions/IQuesion";
+import { Tab } from 'semantic-ui-react';
+import { IQuestionReport } from "../../models/report/IReport";
+import { QuestionType } from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
@@ -40,10 +41,10 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     }
   };
 
-  return (
-    <>
-      <UIPageTitle title="Report"/>
-      <UIContent>
+  const panes = [
+    {
+      menuItem: 'General',
+      render: () => (
         <LoaderWrapper loading={isLoading}>
           <UIColumn>
             {report && (
@@ -64,6 +65,19 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
             )}
           </UIColumn>
         </LoaderWrapper>
+      )
+    },
+    {
+      menuItem: 'Respondents',
+      render: () => <span>Report for each respondent</span>
+    }
+  ];
+
+  return (
+    <>
+      <UIPageTitle title="Report"/>
+      <UIContent>
+        <Tab panes={panes} />
       </UIContent>
     </>
   );
