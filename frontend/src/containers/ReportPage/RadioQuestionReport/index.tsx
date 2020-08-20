@@ -14,11 +14,11 @@ const RadioQuestionReport: FC<IRadioQuestionReportProps> = ({data}) => {
     });
   };
 
-  const radioOptions = data.options.map(o => (
-    {value: o.amount, title: o.title, color: getRandomColor()}
-  ));
-
-  return <PieChartTemplate data={radioOptions} />;
+  return <PieChartTemplate
+    data={data.options.map(o => o.amount)}
+    labels={data.options.map(o => o.title)}
+    backgroundColor={data.options.map(o => getRandomColor())}
+  />;
 };
 
 export default RadioQuestionReport;
