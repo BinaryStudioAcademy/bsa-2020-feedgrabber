@@ -1,9 +1,8 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
-import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;

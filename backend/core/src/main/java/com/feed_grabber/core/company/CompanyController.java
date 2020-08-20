@@ -4,7 +4,7 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.dto.CompanyDomainDto;
 import com.feed_grabber.core.company.dto.CompanyDto;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
