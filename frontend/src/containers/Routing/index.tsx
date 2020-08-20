@@ -1,5 +1,5 @@
 import React, {FC, useEffect} from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import LoaderWrapper from 'components/LoaderWrapper';
 import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
@@ -16,10 +16,10 @@ import {IUserInfo} from "../../models/user/types";
 import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
 import GuestRoute from "../../components/GuestRoute";
+import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
-
 import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnareResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
@@ -28,20 +28,21 @@ import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportsPage from "../ReportPage";
 
 export interface IRoutingProps {
-  isLoading: boolean;
-  user?: IUserInfo;
+    isLoading: boolean;
+    user?: IUserInfo;
 
-  getUser(): void;
+    getUser(): void;
 }
 
-const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
-  const isLogged = useAuth();
+const Routing: FC<IRoutingProps> = ({isLoading, user, getUser}) => {
+    const isLogged = useAuth();
+    // useStomp("questions", m => console.log(m.body, m.headers, m.binaryBody));
 
-  useEffect(() => {
-    if (isLogged && !user){
-      getUser();
-    }
-  }, [isLogged, user, getUser]);
+    useEffect(() => {
+        if (isLogged && !user) {
+            getUser();
+        }
+    }, [isLogged, user, getUser]);
 
   return (
     <>
@@ -51,6 +52,9 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
           <GuestRoute exact path="/auth" component={SignForm} />
           <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
           <GuestRoute exact path="/reset/:id" component={ResetPasswordForm} />
+          <Route exact path="/verify-registration/:id">
+            <AccountVerificationPage />
+          </Route>
           <PrivateRoute exact path="/" component={MainPage} />
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/profile/settings" component={ProfileX} />
@@ -82,12 +86,12 @@ const Routing: FC<IRoutingProps> = ({ isLoading, user, getUser }) => {
 };
 
 const mapState = (state: IAppState) => ({
-  isLoading: state.isLoading,
-  user: state.user.info
+    isLoading: state.isLoading,
+    user: state.user.info
 });
 
 const mapDispatchToProps = {
-  getUser: getUserRoutine
+    getUser: getUserRoutine
 };
 
 export default connect(mapState, mapDispatchToProps)(Routing);

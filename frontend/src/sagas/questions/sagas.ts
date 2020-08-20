@@ -17,7 +17,7 @@ import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 function parseQuestion(rawQuestion) {
-  const details = rawQuestion.details 
+  const details = rawQuestion.details
     ? JSON.parse(rawQuestion.details as string)
     : {};
   return {

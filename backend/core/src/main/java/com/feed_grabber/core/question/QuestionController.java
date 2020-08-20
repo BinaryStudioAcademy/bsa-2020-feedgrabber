@@ -3,7 +3,9 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
@@ -27,16 +29,19 @@ import java.util.UUID;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, NotificationService notificationService) {
         this.questionService = questionService;
+        this.notificationService = notificationService;
     }
 
     @ApiOperation(value = "Get all questions from repo")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAll() {
+//        notificationService.sendMessageToAllUsers("questions", "lalollll");
         return new AppResponse<>(questionService.getAll());
     }
 

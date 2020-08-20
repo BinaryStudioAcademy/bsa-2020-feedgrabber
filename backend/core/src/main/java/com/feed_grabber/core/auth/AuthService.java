@@ -60,5 +60,5 @@ public class AuthService {
     private String generateUserName(String username, UUID companyId) {
         return username + LOGIN_DIVIDER + companyId.toString();
     }
-
 }
+

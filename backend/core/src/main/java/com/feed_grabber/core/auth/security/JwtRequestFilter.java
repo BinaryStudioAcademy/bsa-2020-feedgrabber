@@ -1,7 +1,6 @@
 package com.feed_grabber.core.auth.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,8 +12,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.feed_grabber.core.auth.security.SecurityConstants.*;
 
@@ -34,22 +34,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        final String header = request.getHeader(AUTH_HEADER_STRING);
+        var header = request.getHeader(AUTH_HEADER_STRING);
 
-        var authentication = getAuthentication(header);
-
-        var sec = SecurityContextHolder.getContext();
-        sec.setAuthentication(authentication);
-
-        AbstractAuthenticationToken auth = (AbstractAuthenticationToken)sec.getAuthentication();
-        if (auth != null) {
-            HashMap<String, Object> info = new HashMap<String, Object>();
-            var companyId = getCompanyId(header);
-            var role = getRoleName(header);
-            info.put(COMPANY_ID_KEY, companyId.toString());
-            info.put(AUTHORITIES_KEY, role);
-            auth.setDetails(info);
+        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+            chain.doFilter(request, response);
+            return;
         }
+
+        var auth = getAuthentication(header);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
         chain.doFilter(request, response);
     }
@@ -58,45 +52,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (token == null) {
             return null;
         }
-
         var tokenString = token.replace(TOKEN_PREFIX, "");
-        String user = tokenService.extractUserid(tokenString);
 
+        var user = tokenService.extractUserid(tokenString);
         var authority = new SimpleGrantedAuthority(tokenService.extractRoleName(tokenString));
-        var authorities = List.of(authority);
+        var details = new HashMap<String, Object>();
+
+        details.put(COMPANY_ID_KEY, tokenService.extractCompanyId(tokenString).toString());
+        details.put(AUTHORITIES_KEY, tokenService.extractRoleName(tokenString));
 
         if (user != null && !tokenService.isTokenExpired(tokenString)) {
-            return new UsernamePasswordAuthenticationToken(user, null, authorities);
-        }
-
-        return null;
-    }
-
-    private UUID getCompanyId(String token) {
-        if (token == null) {
-            return null;
-        }
-
-        var tokenString = token.replace(TOKEN_PREFIX, "");
-        UUID companyId = tokenService.extractCompanyId(tokenString);
-
-        if (!tokenService.isTokenExpired(tokenString)) {
-            return companyId;
-        }
-
-        return null;
-    }
-
-    private String getRoleName(String token) {
-        if (token == null) {
-            return null;
-        }
-
-        var tokenString = token.replace(TOKEN_PREFIX, "");
-        String role = tokenService.extractRoleName(tokenString);
-
-        if (!tokenService.isTokenExpired(tokenString)) {
-            return role;
+            return new UsernamePasswordAuthenticationToken(user, details, List.of(authority));
         }
 
         return null;
