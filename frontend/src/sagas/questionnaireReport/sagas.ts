@@ -17,6 +17,21 @@ const mockReport: IQuestionnaireReport = {
       }
     },
     {
+      id: "33333",
+      title: "Scale question",
+      type: QuestionType.scale,
+      answers: 26,
+      data: {
+        options: [
+          {title: "1", amount: 3},
+          {title: "2", amount: 2},
+          {title: "3", amount: 6},
+          {title: "4", amount: 5},
+          {title: "5", amount: 10}
+        ]
+      }
+    },
+    {
       id: "22222",
       title: "Free Text question",
       type: QuestionType.freeText,
