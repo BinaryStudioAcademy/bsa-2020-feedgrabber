@@ -1,8 +1,8 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
+import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.register.RegisterService;
 import com.feed_grabber.core.response.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,9 +33,9 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
         var pass = dto.getPassword();
-        registerService.registerUser(dto);
+        var companyId = registerService.registerUser(dto);
 
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
         return login(loginDto);
     }
 
@@ -44,9 +44,9 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
         var pass = dto.getPassword();
-        registerService.registerUserByInvitation(dto);
+        var companyId = registerService.registerUserByInvitation(dto);
 
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), null);
+        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
         return login(loginDto);
     }
 
@@ -54,7 +54,8 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        return new AppResponse<>(authService.login(userLoginDTO));
+        var login = authService.login(userLoginDTO);
+        return new AppResponse<>(login);
 
     }
 

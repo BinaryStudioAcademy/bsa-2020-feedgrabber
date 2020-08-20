@@ -3,21 +3,25 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.question.dto.*;
+import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.response.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import com.feed_grabber.core.response.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -25,16 +29,19 @@ import java.util.UUID;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(QuestionService questionService, NotificationService notificationService) {
         this.questionService = questionService;
+        this.notificationService = notificationService;
     }
 
     @ApiOperation(value = "Get all questions from repo")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAll() {
+//        notificationService.sendMessageToAllUsers("questions", "lalollll");
         return new AppResponse<>(questionService.getAll());
     }
 
@@ -43,7 +50,6 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAllByQuestionnaire(@ApiParam(
             value = "ID to get the questions list questionnaire", required = true) @PathVariable UUID id) {
-
         return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }
 
@@ -92,12 +98,40 @@ public class QuestionController {
         return new AppResponse<>(questionService.addExistingQuestion(dto));
     }
 
-
-
     @ApiOperation(value = "Delete the question")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         questionService.delete(id);
+    }
+
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/index")
+    public void index(@RequestBody QuestionIndexDto dto) throws QuestionNotFoundException {
+        this.questionService.index(dto);
+    }
+
+    @ApiOperation(value = "Delete the question by id and questionnaireId")
+    @DeleteMapping("/questionnaires/{qId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteOneByQuestionnaireAndID(@ApiParam(
+            value = "IDs to delete one question from questionnaire", required = true) @RequestBody UUID id, @PathVariable UUID qId){
+        questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
+    }
+
+    @ApiOperation(value = "Add new question to questionnaire")
+    @PostMapping("/questionnaires/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(@PathVariable UUID id)
+            throws QuestionnaireNotFoundException, CompanyNotFoundException {
+        questionService.create(QuestionCreateDto
+                .builder()
+                .name("New question")
+                .type(QuestionType.FREE_TEXT)
+                .questionnaireId(Optional.of(id))
+                .categoryTitle("sport")
+                .build());
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }
 }

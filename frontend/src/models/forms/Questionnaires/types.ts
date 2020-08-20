@@ -8,6 +8,7 @@ export interface IQuestionnairesState {
         questions?: IQuestion[];
         isLoading?: boolean;
     };
+    currentQuestion?: IQuestion;
 }
 
 export interface IQuestionnaire {
@@ -34,4 +35,5 @@ export interface IQuestionnairesListState {
   modalQuestionnaire?: IQuestionnaire;
   modalLoading?: boolean;
   modalError?: string;
+  questionnaires?: IQuestionnaire[];
 }
