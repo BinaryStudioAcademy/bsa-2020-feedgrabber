@@ -12,10 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDto {
-    @NotNull
-    private UUID id;
-
+public class ResponseCreateDto {
     @NotNull
     private UUID requestId;
 

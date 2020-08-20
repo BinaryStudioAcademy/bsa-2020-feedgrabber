@@ -13,7 +13,7 @@ import LoaderWrapper from 'components/LoaderWrapper';
 import { history } from '../../helpers/history.helper';
 import { IQuestionnaireResponse } from 'models/forms/Response/types';
 import { IQuestionnaire } from 'models/forms/Questionnaires/types';
-import { createResponseRoutine } from 'sagas/questionnaireResponse/routines';
+import { getResponseRoutine, addRequestIdToCurrentResponseRoutine } from 'sagas/questionnaireResponse/routines';
 import { IUserShort } from 'models/user/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 
@@ -24,25 +24,20 @@ interface IItem {
   author?: string;
 }
 
-interface ICreateResponse {
-  requestId: string;
-  respondentId: string;
-}
-
 interface IMainPageProps {
   questionnaireList: IQuestionnaireResponse[];
   reportsList?: IItem[];
   newsList?: IItem[];
   isLoading: boolean;
-  user: IUserShort;
 
   loadQuestionnaires(): void;
-  createResponse(response: ICreateResponse): void;
+  getResponse(requestId: string): void;
+  addRequest(requestId: string): void;
 }
 
 const MainPage: FC<IMainPageProps> =
-  ({questionnaireList, reportsList = [], newsList = [], isLoading, user,
-     loadQuestionnaires, createResponse}) => {
+  ({questionnaireList, reportsList = [], newsList = [], isLoading,
+     loadQuestionnaires, getResponse, addRequest}) => {
 
     useEffect(() => {
       if(!questionnaireList && !isLoading){
@@ -51,11 +46,8 @@ const MainPage: FC<IMainPageProps> =
     }, [questionnaireList, loadQuestionnaires]);
 
     const handleAnswerClick = (requestId, questionnaireId) => {
-      const response = {
-        requestId: requestId,
-        respondentId: user.id
-      };
-      createResponse(response);
+      addRequest(requestId);
+      getResponse(requestId);
       history.push(`/response/${questionnaireId}`);
     };
 
@@ -123,7 +115,8 @@ const MapStateToProps = (state: IAppState) => ({
 
 const MapDispatchToProps = {
   loadQuestionnaires: loadRequestedQuestionnairesRoutine,
-  createResponse: createResponseRoutine
+  getResponse: getResponseRoutine,
+  addRequest: addRequestIdToCurrentResponseRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps) (MainPage);

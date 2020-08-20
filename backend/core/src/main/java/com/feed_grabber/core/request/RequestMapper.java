@@ -2,6 +2,7 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.user.model.User;
 import org.mapstruct.Mapper;
@@ -21,4 +22,8 @@ public interface RequestMapper {
                                              User targetUser,
                                              User requestMaker,
                                              LocalTime expirationDate);
+
+    @Mapping(target = "requestId", source = "request.id")
+    @Mapping(target = "questionnaire", source = "questionnaire")
+    RequestQuestionnaireDto requestAndQuestionnaireToDto(Request request, Questionnaire questionnaire);
 }

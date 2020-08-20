@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,5 +78,13 @@ public class RequestService {
         if (!responses.isEmpty()) responseRepository.saveAll(responses);
 
         return request.getId();
+    }
+
+    public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
+        return requestRepository.findAllUnansweredByRespondentId(id)
+                .stream()
+                .map(request -> RequestMapper.MAPPER.
+                        requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
+                .collect(Collectors.toList());
     }
 }
