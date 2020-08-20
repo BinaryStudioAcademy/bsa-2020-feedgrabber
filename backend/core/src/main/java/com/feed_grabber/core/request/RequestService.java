@@ -6,8 +6,10 @@ import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.rabbit.entityExample.MailType;
 import com.feed_grabber.core.registration.TokenType;
-import com.feed_grabber.core.request.dto.RequestCreationRequestDto;
+import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.model.Request;
+import com.feed_grabber.core.response.ResponseRepository;
+import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
@@ -17,11 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class RequestService {
@@ -30,6 +34,7 @@ public class RequestService {
     QuestionnaireRepository questionnaireRepository;
     UserRepository userRepository;
     TeamRepository teamRepository;
+    ResponseRepository responseRepository;
     ThreadPoolTaskScheduler threadPoolTaskScheduler;
     Sender emailSender;
 
@@ -37,6 +42,7 @@ public class RequestService {
                           QuestionnaireRepository questionnaireRepository,
                           UserRepository userRepository,
                           TeamRepository teamRepository,
+                          ResponseRepository responseRepository,
                           ThreadPoolTaskScheduler threadPoolTaskScheduler,
                           Sender emailSender) {
         this.requestRepository = requestRepository;
@@ -45,55 +51,55 @@ public class RequestService {
         this.teamRepository = teamRepository;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.emailSender = emailSender;
+        this.responseRepository = responseRepository;
     }
 
-    public UUID createNew(RequestCreationRequestDto dto) throws QuestionCategoryNotFoundException,
-            UserNotFoundException {
-        var request = RequestMapper.MAPPER.requestCreationRequestDtoToModel(dto);
-        request.setQuestionnaire(
-                questionnaireRepository.
-                        findById(dto.getQuestionnaireId()).
-                        orElseThrow(QuestionCategoryNotFoundException::new));
+    public UUID createNew(CreateRequestDto dto) throws QuestionCategoryNotFoundException, UserNotFoundException {
+        var questionnaire = questionnaireRepository
+                        .findById(dto.getQuestionnaireId())
+                        .orElseThrow(QuestionCategoryNotFoundException::new);
 
-        request.setTargetUser(
-                userRepository.
-                        findById(dto.getTargetUserId()).
-                        orElseThrow(() -> new UserNotFoundException("Target User Not Found")));
+        var currentUser = userRepository
+                        .findById(TokenService.getUserId())
+                        .orElseThrow(UserNotFoundException::new);
 
-        request.setRequestMaker(
-                userRepository.
-                        findById(TokenService.getUserId()).
-                        orElseThrow(UserNotFoundException::new));
+        var targetUser = dto.getTargetUserId() == null ? null :
+                        userRepository
+                        .findById(dto.getTargetUserId())
+                        .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
 
-        List<User> respondentsFromUser = userRepository
+        var date = LocalTime.now().plusSeconds(dto.getSecondsToDeadline());
+
+        var toSave = RequestMapper.MAPPER
+                .requestCreationRequestDtoToModel(dto, questionnaire, targetUser, currentUser, date);
+
+        var request =  requestRepository.save(toSave);
+
+        var users = userRepository
                 .findAllById(dto.getRespondentIds());
-        List<User> respondentsFromTeams = teamRepository
+
+        var usersFromTeams = teamRepository
                 .findAllById(dto.getTeamIds())
                 .stream()
                 .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
 
-        List<User> respondents = new ArrayList<>();
-        respondents.addAll(respondentsFromUser);
-        respondents.addAll(respondentsFromTeams);
-        respondents = respondents.stream().distinct().collect(Collectors.toList());
+        var responses = Stream
+                .concat(users.stream(), usersFromTeams.stream())
+                .distinct()
+                .map(u -> Response.builder().user(u).request(request).build())
+                .collect(Collectors.toList());
 
-        if (!dto.getIncludeTargetUser()) {
-            respondents.removeIf(user -> user.getId().equals(dto.getTargetUserId()));
-        }
+        if (!responses.isEmpty()) responseRepository.saveAll(responses);
 
-        request.setRespondents(respondents);
+//        threadPoolTaskScheduler.schedule(() -> {
+//            requestRepository.findById(id).map(Request::getRespondents).orElse(List.of()).forEach(user -> {
+//                emailSender.sendToProcessor(
+//                        "Hi, it`s almost deadline!",
+//                        user.getEmail(),
+//                        MailType.REGISTER.toString());// to be NOTIFY
+//            });
+//        }, new Date());
 
-        var id = requestRepository.save(request).getId();
-
-        threadPoolTaskScheduler.schedule(() -> {
-            requestRepository.findById(id).map(Request::getRespondents).orElse(List.of()).forEach(user -> {
-                emailSender.sendToProcessor(
-                        "Hi, it`s almost deadline!",
-                        user.getEmail(),
-                        MailType.REGISTER.toString());// to be NOTIFY
-            });
-        }, new Date());
-
-        return id;
+        return request.getId();
     }
 }

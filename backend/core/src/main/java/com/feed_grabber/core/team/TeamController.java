@@ -2,7 +2,7 @@ package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.team.dto.*;
 
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;

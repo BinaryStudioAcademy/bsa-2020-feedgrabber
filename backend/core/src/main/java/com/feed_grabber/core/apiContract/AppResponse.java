@@ -1,4 +1,4 @@
-package com.feed_grabber.core.response;
+package com.feed_grabber.core.apiContract;
 
 public class AppResponse<T> {
     public final T data;
