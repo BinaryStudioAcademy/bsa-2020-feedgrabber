@@ -8,11 +8,15 @@ export interface IQuestionnaireReport {
 export interface IQuestionReport {
   id: string;
   title: string;
-  type: QuestionType.radio;
+  type: QuestionType;
   answers: number;
-  data: IQuestionReportRadioData; // serialized from JSON
+  data: IQuestionReportRadioData | IQuestionReportFreeTextData; // serialized from JSON
 }
 
 export interface IQuestionReportRadioData {
   options: {title: string; amount: number}[];
+}
+
+export interface IQuestionReportFreeTextData {
+  values: string[];
 }
