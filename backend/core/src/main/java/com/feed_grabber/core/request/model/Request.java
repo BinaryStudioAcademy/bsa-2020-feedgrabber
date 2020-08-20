@@ -51,7 +51,8 @@ public class Request {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
-            })
+            },
+            fetch = FetchType.EAGER)
     @JoinTable(
             name = "respondents_requests",
             joinColumns = {@JoinColumn(name = "request_id")},

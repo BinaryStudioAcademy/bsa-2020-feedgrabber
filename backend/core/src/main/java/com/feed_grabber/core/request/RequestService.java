@@ -3,14 +3,22 @@ package com.feed_grabber.core.request;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.rabbit.Sender;
+import com.feed_grabber.core.rabbit.entityExample.MailType;
+import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.request.dto.RequestCreationRequestDto;
+import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,15 +30,21 @@ public class RequestService {
     QuestionnaireRepository questionnaireRepository;
     UserRepository userRepository;
     TeamRepository teamRepository;
+    ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    Sender emailSender;
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
                           UserRepository userRepository,
-                          TeamRepository teamRepository) {
+                          TeamRepository teamRepository,
+                          ThreadPoolTaskScheduler threadPoolTaskScheduler,
+                          Sender emailSender) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.threadPoolTaskScheduler = threadPoolTaskScheduler;
+        this.emailSender = emailSender;
     }
 
     public UUID createNew(RequestCreationRequestDto dto) throws QuestionCategoryNotFoundException,
@@ -69,6 +83,17 @@ public class RequestService {
 
         request.setRespondents(respondents);
 
-        return requestRepository.save(request).getId();
+        var id = requestRepository.save(request).getId();
+
+        threadPoolTaskScheduler.schedule(() -> {
+            requestRepository.findById(id).map(Request::getRespondents).orElse(List.of()).forEach(user -> {
+                emailSender.sendToProcessor(
+                        "Hi, it`s almost deadline!",
+                        user.getEmail(),
+                        MailType.REGISTER.toString());// to be NOTIFY
+            });
+        }, new Date());
+
+        return id;
     }
 }
