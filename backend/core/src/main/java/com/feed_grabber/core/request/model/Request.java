@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Request {
     @JoinColumn(name = "request_maker_id", nullable = false)
     private User requestMaker;
 
-    @OneToMany(mappedBy = "request", cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "request", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private List<Response> responses;
 
     @Column(name = "creation_date")
@@ -43,7 +44,7 @@ public class Request {
     private Date creationDate;
 
     @Column(name = "expiration_date")
-    private LocalTime expirationDate;
+    private LocalDateTime expirationDate;
 
     @Column(name = "notify_users")
     private Boolean notifyUsers;
