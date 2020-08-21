@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
+import com.feed_grabber.core.notification.exceptions.UnableToDeleteNotificationException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,12 @@ public class Handler extends ResponseEntityExceptionHandler {
     public ResponseEntity<AppResponse<Object>> handleInsertionException(InsertionException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(exception));
+    }
+    @ExceptionHandler(value = UnableToDeleteNotificationException.class)
+    public ResponseEntity<AppResponse<Object>> handleUnableToDeleteNotification(InsertionException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(new AppResponse<>(exception));
     }
 

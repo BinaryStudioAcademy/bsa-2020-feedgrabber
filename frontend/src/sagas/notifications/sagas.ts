@@ -5,8 +5,12 @@ import {INotification} from "../../reducers/notifications";
 import {IGeneric} from "../../models/IGeneric";
 
 function* deleteNotification(action) {
-  // some request to api
-  yield put(deleteNotificationRoutine.success());
+  try {
+    yield call(apiClient.delete, `api/user-notifications/delete/${action.payload}`);
+    yield put(deleteNotificationRoutine.success());
+  } catch (error) {
+    yield put(deleteNotificationRoutine.failure(error));
+  }
 }
 
 function* loadNotifications(action) {

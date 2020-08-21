@@ -74,7 +74,7 @@ public class RequestService {
 
         var request = requestRepository.save(toSave);
 
-        var users = userRepository
+        var usersFormUsers = userRepository
                 .findAllById(dto.getRespondentIds());
 
         var usersFromTeams = teamRepository
@@ -83,30 +83,39 @@ public class RequestService {
                 .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
 
         var usersStream = Stream
-                .concat(users.stream(), usersFromTeams.stream())
+                .concat(usersFormUsers.stream(), usersFromTeams.stream())
                 .distinct()
                 .filter(user -> !user.getId().equals(dto.getTargetUserId()));
         if (dto.getIncludeTargetUser()) {
             usersStream = Stream.concat(usersStream, Stream.of(targetUser));
         }
+        var users = usersStream.collect(Collectors.toList());
 
-        var responses = usersStream
+        var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
-
+        if(dto.getNotifyUsers()) {
+            responses = responses
+                    .stream()
+                    .peek(response -> response.setNotificationExists(true))
+                    .collect(Collectors.toList());
+        }
         if (!responses.isEmpty()) responseRepository.saveAll(responses);
 
         if (dto.getNotifyUsers()) {
-           var toSaveNotification = UserNotification
-                   .builder()
-                   .request(request)
-                   .text("You have new questionnaire request")
-                   .build();
+            var toSaveNotification = UserNotification
+                    .builder()
+                    .request(request)
+                    .text("You have new questionnaire request")
+                    .build();
 
-           var  = userNotificationRepository.save(notification);
+            var notification = userNotificationRepository.save(toSaveNotification);
 
-           var userIds = usersStream.map(user -> user.getId().toString()).collect(Collectors.toList());
-           notificationService.sendMessageToUsers(userIds, "alert", "");
+            var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
+            notificationService.sendMessageToUsers(
+                    userIds,
+                    "alert",
+                    UserNotificationMapper.MAPPER.notificationResponseDtoFromModel(notification));
         }
 
         return request.getId();

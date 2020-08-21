@@ -36,4 +36,7 @@ public class Response {
 
     @Column
     private String payload;
+
+    @Column(name="notification_exists")
+    private Boolean notificationExists = false;
 }

@@ -68,7 +68,7 @@ const NotificationMenu: React.FC<INotificationMenuProps & INotificationMenuConne
                     <div className={styles.button}
                          title='Delete'
                          onClick={() => {
-                           deleteNotification(notification.id);
+                           deleteNotification(notification.responseId);
                          }}
                     >
                       <div>

@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface UserNotificationMapper {
     UserNotificationMapper MAPPER = Mappers.getMapper(UserNotificationMapper.class);
 
-    @Mapping(target = "date", source = "userNotification.request.creationDate")
-    @Mapping(target = "requestId", source = "userNotification.request.id")
+//    @Mapping(target = "date", source = "userNotification.request.creationDate")
+//    @Mapping(target = "requestId", source = "userNotification.request.id")
     NotificationResponseDto notificationResponseDtoFromModel(UserNotification userNotification);
 }
