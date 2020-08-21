@@ -55,8 +55,7 @@ public class RequestService {
                         .findById(dto.getTargetUserId())
                         .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
 
-        var dtoDeadline = dto.getSecondsToDeadline();
-        var date = dtoDeadline == null ? null : LocalDateTime.now().plusSeconds(dtoDeadline);
+        var date = dto.getExpirationDate();
 
         var toSave = RequestMapper.MAPPER
                 .requestCreationRequestDtoToModel(dto, questionnaire, targetUser, currentUser, date);
@@ -71,9 +70,15 @@ public class RequestService {
                 .stream()
                 .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
 
-        var responses = Stream
+        var usersStream = Stream
                 .concat(users.stream(), usersFromTeams.stream())
                 .distinct()
+                .filter(user -> !user.getId().equals(dto.getTargetUserId()));
+        if(dto.getIncludeTargetUser()) {
+            usersStream = Stream.concat(usersStream, Stream.of(targetUser));
+        }
+
+        var responses = usersStream
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 

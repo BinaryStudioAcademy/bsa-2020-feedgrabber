@@ -9,8 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Date;
 
 @Mapper
 public interface RequestMapper {
@@ -22,7 +21,7 @@ public interface RequestMapper {
                                              Questionnaire questionnaire,
                                              User targetUser,
                                              User requestMaker,
-                                             LocalTime expirationDate);
+                                             Date expirationDate);
 
     @Mapping(target = "requestId", source = "request.id")
     RequestQuestionnaireDto requestAndQuestionnaireToDto(Request request, Questionnaire questionnaire);
