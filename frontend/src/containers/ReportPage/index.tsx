@@ -9,9 +9,10 @@ import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import {IQuestionReport} from "../../models/report/IReport";
+import {IQuestionReport, IQuestionReportFreeTextData, IQuestionReportRadioData} from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
+import FreeTextQuestionReport from "./FreeTextQuestionReport";
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
@@ -30,13 +31,16 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   const renderQuestionData = (question: IQuestionReport) => {
     switch (question.type) {
       case QuestionType.radio:
-        return <RadioQuestionReport data={question.data} />;
+        return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
       // case QuestionType.checkbox:
       // case QuestionType.date:
       // case QuestionType.fileUpload:
-      // case QuestionType.freeText:
+      case QuestionType.freeText:
+        return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
       // case QuestionType.multichoice:
       // case QuestionType.scale:
+      default:
+        return <div/>;
     }
   };
 
@@ -51,15 +55,13 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
                 <UICardBlock>
                   <h3>{report.questionnaireTitle}</h3>
                 </UICardBlock>
-                <UICardBlock>
-                  {report.questions.map(q => (
-                    <>
-                      <h4>{q.title}</h4>
-                      <p><b>{q.answers} answers</b></p>
-                      {renderQuestionData(q)}
-                    </>
-                  ))}
-                </UICardBlock>
+                {report.questions.map(q => (
+                  <UICardBlock>
+                    <h4>{q.title}</h4>
+                    <p><b>{q.answers} answers</b></p>
+                    {renderQuestionData(q)}
+                  </UICardBlock>
+                ))}
               </UICard>
             )}
           </UIColumn>
