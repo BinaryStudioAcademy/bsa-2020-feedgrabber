@@ -4,6 +4,9 @@ import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
+import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +37,13 @@ public class InvitationController {
 //        return new AppResponse<>(invitationService.getByCompanyId(companyId));
 //    }
 
-//    @PostMapping
-//    public AppResponse<UUID> generate() throws CompanyNotFoundException {
-//        assertCompanyOwner();
-//        var companyId = TokenService.getCompanyId();
-//        return new AppResponse<>(invitationService.generate(companyId));
-//    }
+    @PostMapping
+    public AppResponse<InvitationGenerateResponseDto> generate(@RequestBody InvitationGenerateRequestDto dto)
+            throws CompanyNotFoundException, InvitationAlreadyExistsException {
+        assertCompanyOwner();
+        dto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse<>(invitationService.generate(dto));
+    }
 
 //    @DeleteMapping
 //    public void delete() {
@@ -49,7 +53,7 @@ public class InvitationController {
 //    }
 
     private void assertCompanyOwner() {
-        if (!TokenService.getRoleName().equals("company_owner")){
+        if (!TokenService.getRoleName().equals("company_owner")) {
             throw new JwtTokenException("Only company owner could manage invitations");
         }
     }

@@ -4,6 +4,9 @@ import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
+import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +39,24 @@ public class InvitationService {
 //                .map(Invitation::getId)
 //                .orElse(null);
 //    }
-//
-//    public UUID generate(UUID companyId) throws CompanyNotFoundException {
-//        var company = companyRepository.findById(companyId)
-//                .orElseThrow(CompanyNotFoundException::new);
-//        invitationRepository.deleteByCompanyId(companyId);
-//
-//        var invitation = new Invitation(null, company);
-//        invitation = invitationRepository.save(invitation);
-//        return invitation.getId();
-//    }
-//
+
+    public InvitationGenerateResponseDto generate(InvitationGenerateRequestDto dto)
+            throws CompanyNotFoundException, InvitationAlreadyExistsException {
+
+        var company = companyRepository.findById(dto.getCompanyId())
+                .orElseThrow(CompanyNotFoundException::new);
+        var existing = invitationRepository.findByCompanyIdAndEmail(
+                dto.getCompanyId(), dto.getEmail()
+        );
+        if (existing.isPresent()) {
+            throw new InvitationAlreadyExistsException();
+        }
+
+        var invitation = InvitationMapper.MAPPER.invitationDtoToModel(dto);
+        invitation = invitationRepository.save(invitation);
+        return InvitationMapper.MAPPER.invitationToDto(invitation);
+    }
+
 //    public void deleteByCompanyId(UUID companyId) {
 //        invitationRepository.deleteByCompanyId(companyId);
 //    }

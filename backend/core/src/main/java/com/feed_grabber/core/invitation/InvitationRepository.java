@@ -10,8 +10,10 @@ import java.util.UUID;
 
 public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
 //    Optional<Invitation> findByCompanyId(UUID companyId);
-//
-//    @Transactional
-//    @Modifying
-//    void deleteByCompanyId(UUID companyId);
+
+    Optional<Invitation> findByCompanyIdAndEmail(UUID companyId, String email);
+
+    @Transactional
+    @Modifying
+    void deleteByCompanyIdAndEmail(UUID companyId, String email);
 }

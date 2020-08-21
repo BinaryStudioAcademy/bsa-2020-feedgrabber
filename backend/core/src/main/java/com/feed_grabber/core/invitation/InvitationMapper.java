@@ -1,6 +1,8 @@
 package com.feed_grabber.core.invitation;
 
 import com.feed_grabber.core.invitation.dto.InvitationDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
 import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
@@ -19,4 +21,9 @@ public abstract class InvitationMapper {
 
 //    @Mapping(source = "company.name", target = "companyName")
 //    public abstract InvitationDto invitationToInvitationDto(Invitation question);
+
+    @Mapping(source = "companyId", target = "company.id")
+    public abstract Invitation invitationDtoToModel(InvitationGenerateRequestDto dto);
+
+    public abstract InvitationGenerateResponseDto invitationToDto(Invitation invitation);
 }

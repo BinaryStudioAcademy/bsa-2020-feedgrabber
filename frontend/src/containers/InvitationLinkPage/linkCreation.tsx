@@ -7,7 +7,8 @@ import {Formik} from "formik";
 import UIButton from "../../components/UI/UIButton";
 
 interface IInvitationBlockProps {
-  isLoading: boolean;
+  isLoading?: boolean;
+  responseError?: string;
 
   sendInvitation(email: string): void;
 }
@@ -22,6 +23,7 @@ const validationSchema = yup.object().shape({
 const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = (
   {
     isLoading,
+    responseError,
     sendInvitation
   }
 ) => {
@@ -48,7 +50,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
                 handleBlur,
                 handleSubmit
               }) => {
-              const error = errors.email;
+              const error = errors.email || responseError;
               return (
                 <form onSubmit={handleSubmit}>
                   <label>Email</label>

@@ -1,31 +1,29 @@
-// import {
-//   deleteInvitationRoutine,
-//   generateInvitationRoutine,
-//   loadInvitationRoutine
-// } from "../../sagas/invitation/routines";
+import {
+  sendInvitationRoutine
+} from "../../sagas/invitation/routines";
 import {logoutRoutine} from "../../sagas/auth/routines";
 
 export interface IInvitationState {
-  isLoading?: boolean;
-  link?: string | null;
+  isLoadingGeneration?: boolean;
+  errorGeneration?: string;
 }
 
 export default (state: IInvitationState = {}, action): IInvitationState => {
   switch (action.type) {
     // case deleteInvitationRoutine.TRIGGER:
-    // case generateInvitationRoutine.TRIGGER:
+    case sendInvitationRoutine.TRIGGER:
     // case loadInvitationRoutine.TRIGGER:
-    //   return {
-    //     ...state,
-    //     isLoading: true
-    //   };
-    // case generateInvitationRoutine.SUCCESS:
+      return {
+        ...state,
+        isLoadingGeneration: true,
+        errorGeneration: undefined
+      };
+    case sendInvitationRoutine.SUCCESS:
     // case loadInvitationRoutine.SUCCESS:
-    //   return {
-    //     ...state,
-    //     link: action.payload,
-    //     isLoading: false
-    //   };
+      return {
+        ...state,
+        isLoadingGeneration: false
+      };
     // case logoutRoutine.TRIGGER:
     //   return {
     //     ...state,
@@ -39,12 +37,13 @@ export default (state: IInvitationState = {}, action): IInvitationState => {
     //     isLoading: false
     //   };
     // case deleteInvitationRoutine.FAILURE:
-    // case generateInvitationRoutine.FAILURE:
+    case sendInvitationRoutine.FAILURE:
     // case loadInvitationRoutine.FAILURE:
-    //   return {
-    //     ...state,
-    //     isLoading: false
-    //   };
+      return {
+        ...state,
+        isLoadingGeneration: false,
+        errorGeneration: action.payload
+      };
     default:
       return state;
   }
