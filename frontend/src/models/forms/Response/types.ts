@@ -1,7 +1,7 @@
 import {IQuestionnaire} from "../Questionnaires/types";
 import {QuestionType} from "../Questions/IQuesion";
 
-export interface IAnswer<T> {
+export interface IAnswer<T extends IAnswerBody> {
     questionId: string;
     type: QuestionType;
     body: T;
@@ -12,9 +12,7 @@ type BodyBase = {
 };
 
 type FreeTextAnswer = BodyBase & {
-    value: {
-        text: string;
-    };
+    value: string;
     type: QuestionType.freeText;
 }
 
@@ -37,24 +35,18 @@ type RadioAnswer = BodyBase & {
 
 // urls to imgur
 type FileAnswer = BodyBase & {
-    value: {
-        urls: string[];
-    };
+    value: string[];
     type: QuestionType.fileUpload;
 }
 
 // date in utc
 type DateAnswer = BodyBase & {
-    value: {
-        date: string;
-    };
+    value: string;
     type: QuestionType.date;
 }
 
 type ScaleAnswer = BodyBase & {
-    value: {
-        number: number;
-    };
+    value: number;
     type: QuestionType.scale;
 }
 
