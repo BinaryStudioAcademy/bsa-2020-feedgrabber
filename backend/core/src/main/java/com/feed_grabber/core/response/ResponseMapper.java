@@ -1,5 +1,7 @@
 package com.feed_grabber.core.response;
 
+import com.feed_grabber.core.questionnaire.model.Questionnaire;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.dto.ResponseCreateDto;
 import com.feed_grabber.core.response.dto.ResponseDto;

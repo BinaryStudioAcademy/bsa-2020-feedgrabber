@@ -1,6 +1,8 @@
 import { IAppState } from "models/IAppState";
 import { loadRequestedQuestionnairesRoutine } from "sagas/request/routines";
-import { getResponseRoutine, addRequestIdToCurrentResponseRoutine } from "sagas/questionnaireResponse/routines";
+import { getResponseRoutine,
+        addRequestIdToCurrentResponseRoutine,
+        saveResponseRoutine } from "sagas/questionnaireResponse/routines";
 import { access } from "fs";
 
 const responseReducer = (state: IAppState['questionnaireResponse'] = {isLoading: false}, {type, payload}) => {
@@ -44,6 +46,12 @@ const responseReducer = (state: IAppState['questionnaireResponse'] = {isLoading:
             return {
                 ...state,
                 isLoading: false
+            };
+        case saveResponseRoutine.FAILURE:
+        case saveResponseRoutine.SUCCESS:
+            return {
+                ...state,
+                current: payload
             };
         default:
             return state;

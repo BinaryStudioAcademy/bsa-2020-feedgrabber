@@ -16,9 +16,6 @@ public class ResponseUpdateDto {
     @NotNull
     private UUID id;
 
-    @NotNull
-    private UUID requestId;
-
     @JsonDeserialize(using = KeepAsJsonDeserializer.class)
     private String payload;
 }

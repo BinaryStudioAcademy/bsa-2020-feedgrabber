@@ -4,6 +4,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.dto.ResponseCreateDto;
 import com.feed_grabber.core.response.dto.ResponseDto;
+import com.feed_grabber.core.response.dto.ResponseUpdateDto;
 import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +24,19 @@ public class ResponseController {
     @ResponseStatus(HttpStatus.OK)
     public void saveResponse(@RequestBody ResponseCreateDto dto) { service.save(dto); }
 
-    @GetMapping("/request")
+    @GetMapping("/request/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> getOneByRequestAndUser(@RequestParam UUID requestId, Principal principal) throws ResponseNotFoundException {
+    public AppResponse<ResponseDto> getOneByRequestAndUser(@PathVariable UUID id) throws ResponseNotFoundException {
+        UUID userId = TokenService.getUserId();
         return new AppResponse<>(
-                service.getOneByRequestAndUser(requestId, UUID.fromString(principal.getName()))
+                service.getOneByRequestAndUser(id, userId)
                         .orElseThrow(ResponseNotFoundException::new)
         );
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> update(@RequestBody ResponseDto dto) throws UserNotFoundException, ResponseNotFoundException {
+    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws UserNotFoundException, ResponseNotFoundException {
         UUID userId = TokenService.getUserId();
         return new AppResponse<>(
                 service.update(dto, userId).orElseThrow(ResponseNotFoundException::new)

@@ -16,10 +16,17 @@ import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
+import { saveResponseRoutine } from 'sagas/questionnaireResponse/routines';
+import question from 'models/forms/Questions/DefaultQuestion';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
     showErrors: boolean;
+}
+
+interface IQuestionnaireResponseAnswers {
+    id: string;
+    payload: IAnswer<any>[];
 }
 
 interface IQuestionnaireResponseProps {
@@ -30,7 +37,7 @@ interface IQuestionnaireResponseProps {
     questions: IQuestion[];
     isLoading: boolean;
     loadQuestionnaire(id: string): void;
-    saveResponseAnswers(answers: IAnswer<any>[]): void;
+    saveResponseAnswers(answers: IQuestionnaireResponseAnswers): void;
 }
 
 class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps, IQuestionnaireResponseState> {
@@ -57,7 +64,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         }
         const completeStates = updatedQuestions.map(question => question.answer);
         this.setState({
-            isCompleted: !completeStates.includes(null)
+            isCompleted: !completeStates.includes(undefined)
         });
     }
 
@@ -71,11 +78,14 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             const answers: IAnswer<any>[] = this.props.questions.map(question => {
                 return {
                     questionId: question.id,
-                    text: question.answer,
-                    responseId: this.props.response.id
+                    body: question.answer
                 };
             });
-            this.props.saveResponseAnswers(answers);
+            const payload = {
+                id: this.props.response.id,
+                payload: answers
+            };
+            this.props.saveResponseAnswers(payload);
             history.goBack();
         } else {
             this.setState({
@@ -136,7 +146,7 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestions: loadQuestionnaireQuestionsRoutine,
     loadQuestionnaire: loadOneQuestionnaireRoutine,
-    saveResponseAnswers: saveAnswersRoutine
+    saveResponseAnswers: saveResponseRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireResponse);

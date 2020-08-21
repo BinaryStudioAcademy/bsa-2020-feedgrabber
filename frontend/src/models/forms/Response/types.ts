@@ -2,7 +2,7 @@ import { IQuestionnaire } from "../Questionnaires/types";
 
 export interface IAnswer<T> {
     questionId: string;
-    text: T;
+    body: T;
 }
 
 export interface IQuestionnaireResponse {

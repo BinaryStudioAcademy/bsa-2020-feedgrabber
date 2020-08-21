@@ -32,12 +32,11 @@ interface IMainPageProps {
 
   loadQuestionnaires(): void;
   getResponse(requestId: string): void;
-  addRequest(requestId: string): void;
 }
 
 const MainPage: FC<IMainPageProps> =
   ({questionnaireList, reportsList = [], newsList = [], isLoading,
-     loadQuestionnaires, getResponse, addRequest}) => {
+     loadQuestionnaires, getResponse}) => {
 
     useEffect(() => {
       if(!questionnaireList && !isLoading){
@@ -46,7 +45,6 @@ const MainPage: FC<IMainPageProps> =
     }, [questionnaireList, loadQuestionnaires]);
 
     const handleAnswerClick = (requestId, questionnaireId) => {
-      addRequest(requestId);
       getResponse(requestId);
       history.push(`/response/${questionnaireId}`);
     };
@@ -115,8 +113,7 @@ const MapStateToProps = (state: IAppState) => ({
 
 const MapDispatchToProps = {
   loadQuestionnaires: loadRequestedQuestionnairesRoutine,
-  getResponse: getResponseRoutine,
-  addRequest: addRequestIdToCurrentResponseRoutine
+  getResponse: getResponseRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps) (MainPage);

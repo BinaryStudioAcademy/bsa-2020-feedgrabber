@@ -11,7 +11,8 @@ import java.util.UUID;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, UUID> {
     @Query("select r from Request r " +
-            "join r.responses responses on responses.user.id = :id where " +
-            "responses.payload is NULL or responses.payload = ''")
+            "join Response responses on responses.request.id = r.id where " +
+            "responses.user.id = :id and " +
+            "(responses.payload is NULL or responses.payload = '')")
     List<Request> findAllUnansweredByRespondentId(UUID id);
 }
