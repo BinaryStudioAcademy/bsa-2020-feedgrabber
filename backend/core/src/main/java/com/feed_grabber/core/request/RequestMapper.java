@@ -30,7 +30,7 @@ public interface RequestMapper {
             ".getResponses()" +
             ".stream()" +
             ".filter(r->r.getUser()" +
-            ".getId()==userId)" +
+            ".getId().equals(userId))" +
             ".findAny()" +
             ".map(r->r.getPayload())" +
             ".isPresent())")
