@@ -3,13 +3,16 @@ import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
-import { loadQuestionByIdRoutine, saveQuestionToQuestionnaireRoutine } from "../../sagas/questions/routines";
+import {
+    addNewQuestionToQuestionnaireRoutine,
+    loadQuestionByIdRoutine,
+    saveQuestionToQuestionnaireRoutine
+} from "../../sagas/questions/routines";
 import { useHistory } from "react-router-dom";
 import QuestionDetails from "../../components/QuestionDetails";
 import { Button, Loader } from "semantic-ui-react";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
-import { toastr } from 'react-redux-toastr';
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
@@ -21,7 +24,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         questionnaireId,
         categories,
         match,
-        isPreview
+        isPreview,
+        saveAndAddQuestion
     }) => {
     const history = useHistory();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
@@ -68,11 +72,18 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                 ...question,
                 id: null
             };
-            saveQuestion({
-                ...questionCopy,
-                questionnaireId
-            });
-            toastr.success("Question copied");
+
+            if (questionnaireId) {
+                saveAndAddQuestion({
+                    ...questionCopy,
+                    questionnaireId
+                });
+            } else {
+                saveQuestion({
+                    ...questionCopy
+                });
+            }
+            isPreview ? isPreview.close() : history.goBack();
         }
     };
 
@@ -118,7 +129,8 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     saveQuestion: saveQuestionToQuestionnaireRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine
+    loadCategories: loadCategoriesRoutine,
+    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
