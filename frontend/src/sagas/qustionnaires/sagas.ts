@@ -10,8 +10,9 @@ import {
   loadRequestedQuestionnairesRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
-import { IQuestionnaire } from "../../models/forms/Questionnaires/types";
-import {loadQuestionnaireQuestionsRoutine} from "../questions/routines";
+import { IQuestionnaire, IRequest } from "../../models/forms/Questionnaires/types";
+import { loadQuestionnaireQuestionsRoutine } from "../questions/routines";
+import { IGeneric } from 'models/IGeneric';
 
 function* loadQuestionnairesList() {
   try {
@@ -81,7 +82,9 @@ function* deleteQuestionnaire(action) {
 
 function* loadRequestedQuestionnaires() {
   try {
-    const result = yield call(apiClient.get, `/api/questionnaires/requested`);
+    const result: IGeneric<IRequest[]> = yield call(apiClient.get, `/api/request/pending`);
+    result.data.data.forEach(req => req['expirationDate'] = req.expirationDate
+      ? new Date(req.expirationDate) : null);
     yield put(loadRequestedQuestionnairesRoutine.success(result.data.data));
   } catch (error) {
     yield put(loadRequestedQuestionnairesRoutine.failure());
