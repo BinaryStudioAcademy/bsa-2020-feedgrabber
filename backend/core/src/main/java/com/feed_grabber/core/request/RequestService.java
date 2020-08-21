@@ -63,20 +63,16 @@ public class RequestService {
         var users = userRepository
                 .findAllById(dto.getRespondentIds());
 
+        if (dto.getIncludeTargetUser() && targetUser != null) users.add(targetUser);
+
         var usersFromTeams = teamRepository
                 .findAllById(dto.getTeamIds())
                 .stream()
-                .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
+                .flatMap(team -> team.getUsers().stream());
 
-        var usersStream = Stream
-                .concat(users.stream(), usersFromTeams.stream())
+        var responses = Stream
+                .concat(users.stream(), usersFromTeams)
                 .distinct()
-                .filter(user -> !user.getId().equals(dto.getTargetUserId()));
-        if(dto.getIncludeTargetUser()) {
-            usersStream = Stream.concat(usersStream, Stream.of(targetUser));
-        }
-
-        var responses = usersStream
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
