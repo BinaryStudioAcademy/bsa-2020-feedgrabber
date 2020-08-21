@@ -7,8 +7,6 @@ import { Formik } from 'formik';
 import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { loadQuestionnaireQuestionsRoutine } from "../../sagas/questions/routines";
-import { saveAnswersRoutine } from 'sagas/responseAnswers/routines';
 import { IAnswer, IQuestionnaireResponse } from 'models/forms/Response/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
@@ -17,7 +15,6 @@ import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import { saveResponseRoutine } from 'sagas/questionnaireResponse/routines';
-import question from 'models/forms/Questions/DefaultQuestion';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -130,8 +127,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                         <div className={styles.submit}>
                             <UIButton title="Send" submit></UIButton>
                         </div>
-                    </Form>)
-                    }
+                    </Form>)}
                 </Formik>
             </div>);
     }
@@ -145,7 +141,6 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadQuestions: loadQuestionnaireQuestionsRoutine,
     loadQuestionnaire: loadOneQuestionnaireRoutine,
     saveResponseAnswers: saveResponseRoutine
 };

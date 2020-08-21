@@ -2,8 +2,6 @@ import { call, put, takeEvery, all } from 'redux-saga/effects';
 import apiClient from 'helpers/apiClient';
 import { getResponseRoutine, saveResponseRoutine } from './routines';
 import { toastr } from 'react-redux-toastr';
-import { IGeneric } from 'models/IGeneric';
-import { IQuestionnaireResponse } from 'models/forms/Response/types';
 import { loadRequestedQuestionnairesRoutine } from 'sagas/request/routines';
 
 function* getResponse(action) {

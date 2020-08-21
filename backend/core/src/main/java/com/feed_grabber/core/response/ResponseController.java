@@ -37,9 +37,8 @@ public class ResponseController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws UserNotFoundException, ResponseNotFoundException {
-        UUID userId = TokenService.getUserId();
         return new AppResponse<>(
-                service.update(dto, userId).orElseThrow(ResponseNotFoundException::new)
+                service.update(dto).orElseThrow(ResponseNotFoundException::new)
         );
     }
 }

@@ -43,14 +43,10 @@ public class ResponseService {
                         responseRepository.findByRequestAndUser(requestId, userId)));
     }
 
-    public Optional<ResponseDto> update(ResponseUpdateDto dto, UUID userId) throws ResponseNotFoundException, UserNotFoundException {
+    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException, UserNotFoundException {
        var response = responseRepository.findById(dto.getId())
                .orElseThrow(ResponseNotFoundException::new);
 
-       var user = userRepository.findById(userId)
-               .orElseThrow(UserNotFoundException::new);
-
-       response.setUser(user);
        response.setPayload(dto.getPayload());
 
        return Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));
