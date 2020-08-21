@@ -1,10 +1,9 @@
 package com.feed_grabber.core.report;
 
+import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.report.dto.ReportDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -12,11 +11,12 @@ import java.util.UUID;
 @RequestMapping("/api/report")
 public class ReportController {
 
-    private final ReportService reportService;
-
     @Autowired
-    public ReportController(ReportService reportService) {
-        this.reportService = reportService;
+    private ReportService reportService;
+
+    @GetMapping
+    public ReportDetailsDto getReport(@RequestParam UUID requestId) throws NotFoundException {
+        return reportService.getReport(requestId);
     }
 
     @PostMapping("/generate")
