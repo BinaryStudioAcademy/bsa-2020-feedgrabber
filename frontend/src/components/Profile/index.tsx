@@ -5,8 +5,9 @@ import {NavLink} from 'react-router-dom';
 import ProfileInfo from "./ProfileInfo";
 import ProfileSettings from "./ProfileSettings";
 import Avatar from "./AvatarSettings";
+import ProfileInvitation from "./ProfileInvitation";
 
-type IProfileMode = { mode: 'profile' | 'settings' | 'set avatar' }
+type IProfileMode = { mode: 'profile' | 'settings' | 'set avatar' | 'invitation' }
 
 const ProfilePage: FC<IProfileMode> =
     ({mode}) => {
@@ -17,6 +18,8 @@ const ProfilePage: FC<IProfileMode> =
                 case 'set avatar' :
                   // eslint-disable-next-line @typescript-eslint/no-empty-function
                     return <Avatar save={() => {}} />;
+                case 'invitation' :
+                    return <ProfileInvitation/>;
                 default:
                     return <ProfileSettings settings={undefined}/>;
             }
@@ -31,6 +34,7 @@ const ProfilePage: FC<IProfileMode> =
                             <Menu.Item exact as={NavLink} to='/profile' name={'profile'}/>
                             <Menu.Item exact as={NavLink} to='/profile/settings' name={'settings'}/>
                             <Menu.Item exact as={NavLink} to='/profile/avatar' name={'set avatar'}/>
+                            <Menu.Item exact as={NavLink} to='/profile/invitation' name={'invitation'}/>
                         </Menu>
                     </Grid.Column>
 
@@ -47,3 +51,5 @@ export const Profile = () => <ProfilePage mode="profile"/>;
 export const ProfileX = () => <ProfilePage mode="settings"/>;
 
 export const AvatarSettings = () => <ProfilePage mode={'set avatar'}/>;
+
+export const InvitationSettings = () => <ProfilePage mode={'invitation'}/>;

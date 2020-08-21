@@ -5,7 +5,7 @@ import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
-import {Profile, ProfileX, AvatarSettings} from "../../components/Profile";
+import {Profile, ProfileX, AvatarSettings, InvitationSettings} from "../../components/Profile";
 import QuestionsList from "../QuestionsList";
 import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
@@ -59,6 +59,7 @@ const Routing: FC<IRoutingProps> = ({isLoading, user, getUser}) => {
           <PrivateRoute exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/profile/settings" component={ProfileX} />
           <PrivateRoute exact path="/profile/avatar" component={AvatarSettings} />
+          <PrivateRoute exact path="/profile/invitation" component={InvitationSettings} />
           <PrivateRoute exact path="/requests" component={() => <span>Requests</span>} />
           <PrivateRoute exact path="/help" component={() => <span>Help Center</span>} />
           <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>} />
