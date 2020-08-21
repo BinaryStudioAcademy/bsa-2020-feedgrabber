@@ -17,6 +17,6 @@ import org.mapstruct.factory.Mappers;
 public abstract class InvitationMapper {
     public static InvitationMapper MAPPER = Mappers.getMapper(InvitationMapper.class);
 
-    @Mapping(source = "company.name", target = "companyName")
-    public abstract InvitationDto invitationToInvitationDto(Invitation question);
+//    @Mapping(source = "company.name", target = "companyName")
+//    public abstract InvitationDto invitationToInvitationDto(Invitation question);
 }

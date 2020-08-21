@@ -23,31 +23,31 @@ public class InvitationService {
         this.companyRepository = companyRepository;
     }
 
-    public InvitationDto getById(UUID id) throws InvitationNotFoundException {
-        var invitation = invitationRepository.findById(id)
-                .orElseThrow(InvitationNotFoundException::new);
-
-        return InvitationMapper.MAPPER.invitationToInvitationDto(invitation);
-    }
-
-    public UUID getByCompanyId(UUID companyId) {
-        return invitationRepository
-                .findByCompanyId(companyId)
-                .map(Invitation::getId)
-                .orElse(null);
-    }
-
-    public UUID generate(UUID companyId) throws CompanyNotFoundException {
-        var company = companyRepository.findById(companyId)
-                .orElseThrow(CompanyNotFoundException::new);
-        invitationRepository.deleteByCompanyId(companyId);
-
-        var invitation = new Invitation(null, company);
-        invitation = invitationRepository.save(invitation);
-        return invitation.getId();
-    }
-
-    public void deleteByCompanyId(UUID companyId) {
-        invitationRepository.deleteByCompanyId(companyId);
-    }
+//    public InvitationDto getById(UUID id) throws InvitationNotFoundException {
+//        var invitation = invitationRepository.findById(id)
+//                .orElseThrow(InvitationNotFoundException::new);
+//
+//        return InvitationMapper.MAPPER.invitationToInvitationDto(invitation);
+//    }
+//
+//    public UUID getByCompanyId(UUID companyId) {
+//        return invitationRepository
+//                .findByCompanyId(companyId)
+//                .map(Invitation::getId)
+//                .orElse(null);
+//    }
+//
+//    public UUID generate(UUID companyId) throws CompanyNotFoundException {
+//        var company = companyRepository.findById(companyId)
+//                .orElseThrow(CompanyNotFoundException::new);
+//        invitationRepository.deleteByCompanyId(companyId);
+//
+//        var invitation = new Invitation(null, company);
+//        invitation = invitationRepository.save(invitation);
+//        return invitation.getId();
+//    }
+//
+//    public void deleteByCompanyId(UUID companyId) {
+//        invitationRepository.deleteByCompanyId(companyId);
+//    }
 }

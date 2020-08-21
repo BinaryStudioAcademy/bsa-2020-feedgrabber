@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
-    Optional<Invitation> findByCompanyId(UUID companyId);
-
-    @Transactional
-    @Modifying
-    void deleteByCompanyId(UUID companyId);
+//    Optional<Invitation> findByCompanyId(UUID companyId);
+//
+//    @Transactional
+//    @Modifying
+//    void deleteByCompanyId(UUID companyId);
 }

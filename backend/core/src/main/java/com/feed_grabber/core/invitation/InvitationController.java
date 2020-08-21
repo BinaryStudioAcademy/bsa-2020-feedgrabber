@@ -22,31 +22,31 @@ public class InvitationController {
         this.invitationService = invitationService;
     }
 
-    @GetMapping("/sign-up/{id}")
-    public AppResponse<InvitationDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
-        return new AppResponse<>(invitationService.getById(id));
-    }
+//    @GetMapping("/sign-up/{id}")
+//    public AppResponse<InvitationDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
+//        return new AppResponse<>(invitationService.getById(id));
+//    }
 
-    @GetMapping
-    public AppResponse<UUID> getByCompanyId() {
-        assertCompanyOwner();
-        var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(invitationService.getByCompanyId(companyId));
-    }
+//    @GetMapping
+//    public AppResponse<UUID> getByCompanyId() {
+//        assertCompanyOwner();
+//        var companyId = TokenService.getCompanyId();
+//        return new AppResponse<>(invitationService.getByCompanyId(companyId));
+//    }
 
-    @PostMapping
-    public AppResponse<UUID> generate() throws CompanyNotFoundException {
-        assertCompanyOwner();
-        var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(invitationService.generate(companyId));
-    }
+//    @PostMapping
+//    public AppResponse<UUID> generate() throws CompanyNotFoundException {
+//        assertCompanyOwner();
+//        var companyId = TokenService.getCompanyId();
+//        return new AppResponse<>(invitationService.generate(companyId));
+//    }
 
-    @DeleteMapping
-    public void delete() {
-        assertCompanyOwner();
-        var companyId = TokenService.getCompanyId();
-        invitationService.deleteByCompanyId(companyId);
-    }
+//    @DeleteMapping
+//    public void delete() {
+//        assertCompanyOwner();
+//        var companyId = TokenService.getCompanyId();
+//        invitationService.deleteByCompanyId(companyId);
+//    }
 
     private void assertCompanyOwner() {
         if (!TokenService.getRoleName().equals("company_owner")){
