@@ -1,6 +1,6 @@
 import ResponseQuestion from "components/ResponseQuestion";
 import { IAppState } from "models/IAppState";
-import React, { FC, useState, useCallback, useEffect } from "react";
+import React, { FC, useState, useCallback } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Header, Button, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
@@ -79,17 +79,6 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
     indexQuestionsHandler();
   };
 
-  const handleCopy = () => {
-    if (!isValid)
-      return;
-
-    const questionCopy = {
-        ...question,
-        id: null
-    };
-    saveAndAddQuestion({ ...questionCopy, questionnaireId: qnId });
-  };
-
   const renderCard = (q: IQuestion, index: number) => {
     return (
       <QuestionCard
@@ -115,7 +104,6 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
               onValueChange={handleOnValueChange}
               categories={[]}
               currentQuestion={question}
-              onCopy={handleCopy}
           />
           <Button floated="right" onClick={handleNewQuestionSave} color="green">Save</Button>
           <Button floated="right" onClick={handleCancel}>Cancel</Button>

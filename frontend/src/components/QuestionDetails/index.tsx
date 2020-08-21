@@ -19,7 +19,7 @@ interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
     onValueChange(state: IComponentState<IQuestion>): void;
-    onCopy(): void;
+    onCopy?(): void;
 }
 
 const QuestionD: React.FC<IQuestionProps> = ({
