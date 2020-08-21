@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Divider, Dropdown, Form, Icon, Radio, Segment} from "semantic-ui-react";
+import {Divider, Dropdown, Form, Icon, Popup, Radio, Segment} from "semantic-ui-react";
 import {Formik} from "formik";
 import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
@@ -19,12 +19,14 @@ interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
     onValueChange(state: IComponentState<IQuestion>): void;
+    onCopy(): void;
 }
 
 const QuestionD: React.FC<IQuestionProps> = ({
                                                  currentQuestion,
                                                  categories,
-                                                 onValueChange
+                                                 onValueChange,
+                                                 onCopy
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
@@ -190,6 +192,15 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <span className={styles.icon}>
                                     <Icon name="plus square outline" size="large" />
                                 </span>
+                                {currentQuestion?.id &&
+                                <Popup content={"Copy"}
+                                       trigger={(
+                                           <span className={styles.icon} onClick={onCopy}>
+                                               <Icon name="clone outline" size="large" />
+                                           </span>
+                                       )}
+                                />
+                                }
                                 <span className={styles.icon}>
                                     <Icon name="trash alternate outline" size="large" />
                                 </span>

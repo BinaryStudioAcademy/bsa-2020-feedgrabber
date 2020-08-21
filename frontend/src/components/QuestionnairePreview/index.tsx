@@ -8,10 +8,10 @@ import SelectQuestionsFromExisting from "components/SelectQuestionsFromExisting"
 import QuestionD from "components/QuestionDetails";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { IComponentState } from "../ComponentsQuestions/IQuestionInputContract";
-import { 
+import {
   addNewQuestionToQuestionnaireRoutine,
   loadQuestionnaireQuestionsRoutine,
-  indexQuestionsRoutine 
+  indexQuestionsRoutine
 } from "sagas/questions/routines";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
 
@@ -25,7 +25,7 @@ const newQuestion: IQuestion = {
   details: {}
 };
 
-const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ 
+const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   questions,
   saveAndAddQuestion,
   qnId,
@@ -58,7 +58,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const indexQuestionsHandler = () => {
     const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
     indexQuestions({questionnaireId: qnId,  questions: rst});
-  }; 
+  };
 
   // const orderIndeces = useEffect(() => {
   //   indexQuestionsHandler();
@@ -78,7 +78,18 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const drop = () => {
     indexQuestionsHandler();
   };
-  
+
+  const handleCopy = () => {
+    if (!isValid)
+      return;
+
+    const questionCopy = {
+        ...question,
+        id: null
+    };
+    saveAndAddQuestion({ ...questionCopy, questionnaireId: qnId });
+  };
+
   const renderCard = (q: IQuestion, index: number) => {
     return (
       <QuestionCard
@@ -100,7 +111,12 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
       </div>
       {addNew &&
         <Segment>
-          <QuestionD onValueChange={handleOnValueChange} categories={[]} currentQuestion={question} />
+          <QuestionD
+              onValueChange={handleOnValueChange}
+              categories={[]}
+              currentQuestion={question}
+              onCopy={handleCopy}
+          />
           <Button floated="right" onClick={handleNewQuestionSave} color="green">Save</Button>
           <Button floated="right" onClick={handleCancel}>Cancel</Button>
         </Segment>}

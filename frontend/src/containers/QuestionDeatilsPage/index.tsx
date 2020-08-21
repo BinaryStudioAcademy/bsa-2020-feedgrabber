@@ -9,6 +9,7 @@ import QuestionDetails from "../../components/QuestionDetails";
 import { Button, Loader } from "semantic-ui-react";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
+import { toastr } from 'react-redux-toastr';
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
@@ -61,6 +62,20 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         isPreview ? isPreview.close() : history.goBack();
     };
 
+    const onCopy = () => {
+        if (isQuestionDetailsValid) {
+            const questionCopy: IQuestion = {
+                ...question,
+                id: null
+            };
+            saveQuestion({
+                ...questionCopy,
+                questionnaireId
+            });
+            toastr.success("Question copied");
+        }
+    };
+
     return (
         <div className={`${styles.question_container} ${isPreview ? styles.question_container_preview : ''}`}>
             {isLoading && (
@@ -73,6 +88,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                         currentQuestion={currentQuestion}
                         categories={categories}
                         onValueChange={handleQuestionDetailsUpdate}
+                        onCopy={onCopy}
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
                         <Button className="ui button" color="red" onClick={onClose}>
