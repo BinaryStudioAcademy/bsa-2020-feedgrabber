@@ -1,5 +1,7 @@
 export const getRandomColor = () => {
-  return "#000000".replace(/0/g, function () {
-    return (~~(Math.random() * 16)).toString(16);
-  });
+  const hex = Array.from({length: 6})
+    .map(() => (Math.random() * 16) | 0)
+    .map(n => n.toString(16))
+    .join('');
+  return '#' + hex;
 };
