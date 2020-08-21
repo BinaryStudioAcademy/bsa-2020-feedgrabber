@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -12,8 +13,10 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,7 +55,7 @@ public class RequestService {
                         .findById(dto.getTargetUserId())
                         .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
 
-        var date = LocalTime.now().plusSeconds(dto.getSecondsToDeadline());
+        var date = dto.getExpirationDate();
 
         var toSave = RequestMapper.MAPPER
                 .requestCreationRequestDtoToModel(dto, questionnaire, targetUser, currentUser, date);
@@ -67,14 +70,28 @@ public class RequestService {
                 .stream()
                 .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
 
-        var responses = Stream
+        var usersStream = Stream
                 .concat(users.stream(), usersFromTeams.stream())
                 .distinct()
+                .filter(user -> !user.getId().equals(dto.getTargetUserId()));
+        if(dto.getIncludeTargetUser()) {
+            usersStream = Stream.concat(usersStream, Stream.of(targetUser));
+        }
+
+        var responses = usersStream
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
         if (!responses.isEmpty()) responseRepository.saveAll(responses);
 
         return request.getId();
+    }
+
+    public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
+        return requestRepository.findAllUnansweredByRespondentId(id)
+                .stream()
+                .map(request -> RequestMapper.MAPPER.
+                        requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
+                .collect(Collectors.toList());
     }
 }

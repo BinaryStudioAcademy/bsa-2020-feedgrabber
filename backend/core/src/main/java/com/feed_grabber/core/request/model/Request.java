@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Request {
     private Date creationDate;
 
     @Column(name = "expiration_date")
-    private LocalTime expirationDate;
+    private LocalDateTime expirationDate;
 
     @Column(name = "notify_users")
     private Boolean notifyUsers;

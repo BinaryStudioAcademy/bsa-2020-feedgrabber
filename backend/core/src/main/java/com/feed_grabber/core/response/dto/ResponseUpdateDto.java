@@ -10,17 +10,11 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDto {
+@AllArgsConstructor
+public class ResponseUpdateDto {
     @NotNull
     private UUID id;
-
-    @NotNull
-    private UUID requestId;
-
-    @NotNull
-    private UUID userId;
 
     @JsonDeserialize(using = KeepAsJsonDeserializer.class)
     private String payload;
