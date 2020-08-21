@@ -20,6 +20,7 @@ public class RequestController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UUID> createNewRequest(@RequestBody CreateRequestDto dto)
             throws UserNotFoundException, QuestionCategoryNotFoundException {
+        System.out.println(dto);
         return new AppResponse<>(requestService.createNew(dto));
     }
 }

@@ -21,7 +21,9 @@ public class CreateRequestDto {
 
     private UUID targetUserId;
 
-    private Long secondsToDeadline;
+    private Boolean includeTargetUser;
+
+    private Date expirationDate;
 
     private List<UUID> respondentIds = new LinkedList<>();
 
