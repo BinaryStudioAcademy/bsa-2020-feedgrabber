@@ -1,11 +1,9 @@
 package com.feed_grabber.core.report;
 
 import com.feed_grabber.core.exceptions.NotFoundException;
-import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
 import com.feed_grabber.core.request.RequestRepository;
-import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

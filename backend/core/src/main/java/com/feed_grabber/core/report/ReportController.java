@@ -21,11 +21,6 @@ public class ReportController {
 
     @PostMapping("/generate")
     public void generateReport(@RequestParam UUID requestId) {
-        try {
-            reportService.sendExcelReportGenerationRequest(requestId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        reportService.sendExcelReportGenerationRequest(requestId);
     }
 }
