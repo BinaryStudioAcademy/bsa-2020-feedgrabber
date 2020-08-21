@@ -33,7 +33,7 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.queue.report}")
     private lateinit var reportQueue: String
 
-    @Value("\${rabbitmq.routing-key-report}")
+    @Value("\${rabbitmq.routing-key-report-excel}")
     private val reportRoutingKey: String? = null
 
     @Bean
