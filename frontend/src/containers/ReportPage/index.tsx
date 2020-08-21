@@ -18,6 +18,10 @@ import { IQuestion, IScaleQuestion, QuestionType } from "../../models/forms/Ques
 import RadioQuestionReport from "./RadioQuestionReport";
 import ReportSwitcher from "./ReportSwitcher";
 import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
+import { CheckboxResponse } from "../../components/ResponseQuestion/CheckboxResponse";
+import { DateSelectionResponse } from "../../components/ResponseQuestion/DateSelectionResponse";
+import { FreeTextResponse } from "../../components/ResponseQuestion/FreeTextResponse";
+import RadioButtonResponse from "../../components/ResponseQuestion/RadioButtonResponse";
 
 import styles from './styles.module.sass';
 
@@ -63,6 +67,14 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     switch (question.type) {
       case QuestionType.scale:
         return <ScaleQuestionResponse question={question} response={question.answer} />;
+      case QuestionType.date:
+        return <DateSelectionResponse question={question} />;
+      case QuestionType.radio:
+        return <RadioButtonResponse question={question} />;
+      case QuestionType.checkbox:
+        return <CheckboxResponse question={question} />;
+      case QuestionType.freeText:
+        return <FreeTextResponse question={question} />;
       default:
         return <span>Error</span>;
       // case QuestionType.checkbox:

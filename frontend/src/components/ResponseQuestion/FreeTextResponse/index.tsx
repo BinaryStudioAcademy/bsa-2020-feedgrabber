@@ -19,6 +19,8 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ questio
     return <Input
         onChange={handleChange}
         placeholder='Answer field'
+        disabled={!!question.answer}
+        defaultValue={question.answer}
         error={!!invalidMessage}
         className={styles.input}
     />;

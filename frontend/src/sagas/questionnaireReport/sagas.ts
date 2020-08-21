@@ -5,7 +5,15 @@ import {
   loadRespondentReportsRoutine
 } from "./routines";
 import { IQuestionnaireReport, IRespondentReport } from "../../models/report/IReport";
-import { IQuestion, IScaleQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
+import {
+  IQuestion,
+  IScaleQuestion,
+  ICheckboxQuestion,
+  IDateQuestion,
+  QuestionType,
+  IRadioQuestion,
+  ITextQuestion
+} from "../../models/forms/Questions/IQuesion";
 
 function* loadReport(action: any) {
   try {
@@ -45,7 +53,7 @@ function* loadRespondentReports(action: any) {
           {
             id: '1',
             type: QuestionType.scale,
-            name: 'Some name1',
+            name: 'Rate your job:',
             answer: 3,
             categoryTitle: 'qkation',
             isReused: false,
@@ -53,6 +61,31 @@ function* loadRespondentReports(action: any) {
           } as IScaleQuestion,
           {
             id: '2',
+            type: QuestionType.date,
+            name: 'Birthday?',
+            answer: '2001-07-10',
+            categoryTitle: 'qkation',
+            isReused: false
+          } as IDateQuestion,
+          {
+            id: '9',
+            type: QuestionType.freeText,
+            name: 'Enter your specialization:',
+            answer: 'Java',
+            categoryTitle: 'qkation',
+            isReused: false
+          } as ITextQuestion,
+          {
+            id: '3',
+            type: QuestionType.radio,
+            name: 'some question?',
+            answer: 'laptop',
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: false, answerOptions: ['laptop', 'headphones', 'mouse'] }
+          } as IRadioQuestion,
+          {
+            id: '4',
             type: QuestionType.scale,
             name: 'Some name2',
             answer: 6,
@@ -75,6 +108,15 @@ function* loadRespondentReports(action: any) {
           } as IScaleQuestion,
           {
             id: '5',
+            type: QuestionType.checkbox,
+            name: 'Select what you want to eat:',
+            answer: ['apple', 'bread'],
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: false, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
+          } as ICheckboxQuestion,
+          {
+            id: '6',
             type: QuestionType.scale,
             name: 'Some name3',
             answer: 2,
