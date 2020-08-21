@@ -53,7 +53,8 @@ public class RequestService {
                         .findById(dto.getTargetUserId())
                         .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
 
-        var date = LocalDateTime.now().plusSeconds(dto.getSecondsToDeadline());
+        var dtoDeadline = dto.getSecondsToDeadline();
+        var date = dtoDeadline == null ? null : LocalDateTime.now().plusSeconds(dtoDeadline);
 
         var toSave = RequestMapper.MAPPER
                 .requestCreationRequestDtoToModel(dto, questionnaire, targetUser, currentUser, date);
