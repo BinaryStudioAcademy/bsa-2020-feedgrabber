@@ -3,19 +3,12 @@ package com.feed_grabber.core.questionnaire;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
-import com.feed_grabber.core.question.QuestionRepository;
-import com.feed_grabber.core.question.QuestionService;
-import com.feed_grabber.core.question.dto.QuestionUpsertDto;
-import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
-import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
-import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestionId;
+import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,14 +23,9 @@ public class QuestionnaireService {
     private final CompanyRepository companyRepository;
 
     @Autowired
-    QuestionRepository questionRepository;
-
-    @Autowired
-    QuestionService questionService;
-
-    @Autowired
     public QuestionnaireService(QuestionnaireRepository questionnaireRepository,
-                                CompanyRepository companyRepository) {
+                                CompanyRepository companyRepository,
+                                UserRepository userRepository) {
         this.questionnaireRepository = questionnaireRepository;
         this.companyRepository = companyRepository;
     }
@@ -60,6 +48,14 @@ public class QuestionnaireService {
                 .collect(Collectors.toList());
     }
 
+    public List<QuestionnaireDto> getAllByRespondentId(UUID id) {
+        return questionnaireRepository
+                .findAllByRespondentId(id)
+                .stream()
+                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
+                .collect(Collectors.toList());
+    }
+
     public Long getCountByCompanyId(UUID companyId) {
         return questionnaireRepository.countAllByCompanyId(companyId);
     }
@@ -71,7 +67,7 @@ public class QuestionnaireService {
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId)
             throws CompanyNotFoundException, AlreadyExistsException {
-        if(questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)){
+        if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)) {
             throw new AlreadyExistsException("Such questionnair already exists in this company");
         }
 

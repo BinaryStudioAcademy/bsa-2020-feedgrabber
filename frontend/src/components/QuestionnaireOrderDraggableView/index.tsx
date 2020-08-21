@@ -10,12 +10,42 @@ export interface IQuestionnaireOrderViewProps {
   save(questions: IQuestion[]): void;
 }
 
+const propQuest = [
+{
+  answer: undefined,
+  categoryTitle: "title",
+  details: undefined,
+  id: "0",
+  isReused: true,
+  name: "first",
+  type: undefined
+},
+  {
+    answer: undefined,
+    categoryTitle: "title2",
+    details: undefined,
+    id: "1",
+    isReused: true,
+    name: "second",
+    type: undefined
+  },
+  {
+    answer: undefined,
+    categoryTitle: "title 3",
+    details: undefined,
+    id: "2",
+    isReused: true,
+    name: "333",
+    type: undefined
+  }
+] as IQuestion[];
+
 export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
                                                                                  questions,
                                                                                  isLoading,
                                                                                  save
 }) => {
-    const [cards, setCards] = useState<IQuestion[]>(questions);
+  const [cards, setCards] = useState<IQuestion[]>(propQuest);
 
     const handleSaveButton = () => {
       const questions = cards.map((card, i) => { return {...card, index: i}; });
@@ -33,14 +63,18 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
       [cards]
     );
 
+    const drop = () => {
+      console.log('dropped');
+    };
+
     const renderCard = (card: IQuestion, index: number) => {
       return (
         <QuestionCard
+          onDropCard={drop}
           key={card.id}
           index={index}
           id={card.id}
-          questionText={card.name}
-          categoryTitle={card.categoryTitle}
+          question={card}
           moveCard={moveCard}
         />
       );

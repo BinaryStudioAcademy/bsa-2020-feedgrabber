@@ -2,6 +2,7 @@ export interface IUserState {
     isLoading?: boolean;
     info?: IUserInfo;
     error?: IUserErrors;
+    shortInfo?: IUserShort;
 }
 
 export interface IUserInfo {

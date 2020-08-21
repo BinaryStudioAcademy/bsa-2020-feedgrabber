@@ -77,8 +77,8 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
             {value.includeOther && (
                 <div className={"option-container unselected"}>
                     <div>
-                        <Icon name={"circle outline"}/>
-                        <span className="action">Other...</span>
+                        <Icon className="action" name={"circle outline"}/>
+                        <span>Other...</span>
                     </div>
                     <Icon className={"close-icon"} name={"x"} onClick={() => {
                         onValueChange(
@@ -91,10 +91,12 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                     }/>
                 </div>
             )}
+            {(value.answerOptions.length!==10 || !value.includeOther)&&
             <div className={"option-container unselected left-grouped"}>
-                <Icon name={"circle outline"}/>
+                <Icon className="action" name={"circle outline"}/>
                 <span>
-                    <span className="unselected action" onClick={() => {
+                    {value.answerOptions.length!==10 &&
+                    <span onClick={() => {
                         onValueChange(
                             validState({
                                 answerOptions: value.answerOptions.concat(""),
@@ -102,10 +104,10 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                             })
                         );
                         setIsFieldTouched(isFieldTouched.concat(false));
-                    }}>Add new answer</span>
+                    }}>Add new answer</span>}
                     {!value.includeOther && (
                         <span>
-                           <span> or </span>
+                            {value.answerOptions.length!==10 && <span> or </span>}
                            <span className="other" onClick={() => {
                                onValueChange(
                                    validState({
@@ -119,7 +121,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                         </span>
                     )}
                 </span>
-            </div>
+            </div>}
         </div>
 
     );

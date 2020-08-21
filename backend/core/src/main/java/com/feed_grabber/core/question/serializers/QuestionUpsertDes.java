@@ -47,7 +47,7 @@ public class QuestionUpsertDes extends StdDeserializer<QuestionUpsertDto> {
     }
 
     private QuestionType getType(JsonNode node) {
-        var typeText = node.hasNonNull("type") ? node.get("name").asText() : null;
+        var typeText = node.hasNonNull("type") ? node.get("type").asText() : null;
         return typeText != null
                 ? QuestionType
                     .fromString(typeText)

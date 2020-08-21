@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
+import {getDomainSuffix} from "../helpers/subdomain.helper";
 
-const domain = window.location.hostname.endsWith('localhost') ? '.feedgrabber.com.localhost' : '.feedgrabber.com';
+const domain = getDomainSuffix();
 
 const createTokenProvider = () => {
   let _token: { accessToken: string; refreshToken: string } | null =

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, List, Button, Form} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
 import FreeTextQuestion from '../../components/ComponentsQuestionsResponse/FreeTextQuestion';
 import { history } from '../../helpers/history.helper';
@@ -14,8 +14,10 @@ import { IAnswer } from 'models/forms/responseAnswers/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
-import UIListItem from "components/UI/UIListItem";
-import UIListHeader from 'components/UI/UIListHeader';
+import question from 'models/forms/Questions/DefaultQuestion';
+import UIListHeader from 'components/UI/UIQuestionListHeader';
+import UIListItem from 'components/UI/UIQuestionItemCard';
+import ResponseQuestion from 'components/ResponseQuestion';
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -47,15 +49,14 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const { loadQuestions, loadQuestionnaire, match} = this.props;
+        const { loadQuestions, loadQuestionnaire, match } = this.props;
         loadQuestionnaire(match.params.id);
         loadQuestions(match.params.id);
     }
 
-    handleComponentChange(state: IComponentState) { 
+    handleComponentChange(state: IComponentState) {
         const { questions } = this.props;
-        let updatedQuestions: IQuestion[];
-        console.log(questions);
+        let updatedQuestions: IQuestion[] = questions;
         if (state.isAnswered) {
             updatedQuestions = questions.map(question => {
                 if (question.id === state.question.id) {
@@ -65,39 +66,21 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         }
         const completeStates = updatedQuestions.map(question => question.answer);
         this.setState({
-            isCompleted: !completeStates.includes(undefined)
+            isCompleted: !completeStates.includes(null)
         });
-    }
-
-    getQuestionForm(question: IQuestion) {
-        const type = question.type.toLowerCase();
-        switch(type) {
-            case QuestionType.radio:
-                return <span>radio</span>;
-            case QuestionType.checkbox:
-                return <span>checkbox</span>;
-            case QuestionType.multichoice:
-                return <span>multichoice</span>;
-            case QuestionType.scale:
-                return <span>scale</span>;
-            case QuestionType.freeText:
-                return <FreeTextQuestion question={question} 
-                                        handleChange={this.handleComponentChange}/> ;
-            case QuestionType.date:
-                return <span>date</span>;
-            default:
-                return <div>Something went wrong:(</div>; // error
-        }
+        console.log(questions);
     }
 
     handleSubmit = () => {
         if (this.state.isCompleted) {
-            const answers: IAnswer<any>[] = this.props.questions.map(question => { return {
-                questionId: question.id,
-                text: question.answer,
-                responseQuestionnaireId: this.props.responseId
-            };});
-            this.props.saveResponseAnswers(answers); 
+            const answers: IAnswer<any>[] = this.props.questions.map(question => {
+                return {
+                    questionId: question.id,
+                    text: question.answer,
+                    responseQuestionnaireId: this.props.responseId
+                };
+            });
+            this.props.saveResponseAnswers(answers);
             history.push("/questionnaires");
         } else {
             this.setState({
@@ -106,37 +89,45 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         }
     }
 
-    render(){
+    render() {
         const { title, questions, description } = this.props;
         const { showErrors } = this.state;
         return (
-        <div className={styles.response_container}>
-            <UIPageTitle title="Response"/>
-            <UIListHeader title={title} description={description}></UIListHeader>
-            <Formik
-                initialValues = {this.state}
-                onSubmit = {this.handleSubmit}
-            >{formik => (
-            <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
-                    <ul>
-                        {questions.map(question => {
-                            return (
-                                <UIListItem key={question.id} name={question.name}>
-                                    {this.getQuestionForm(question)}
-                                    {showErrors && !question.answer? 
-                                        <div className={styles.error_message}>
-                                            Please, fill the question</div> : null}
-                                </UIListItem>);
-                        })}
-                    </ul>
-                    <div className={styles.submit}> 
-                        <UIButton title="Send"></UIButton>
-                    </div>
-                    
-                </Form>)
-            }
-            </Formik>
-        </div>);
+            <div className={styles.response_container}>
+                <UIPageTitle title="Response" />
+                <UIListHeader title={title} description={description}></UIListHeader>
+                <Formik
+                    initialValues={this.state}
+                    onSubmit={this.handleSubmit}
+                >{formik => (
+                    <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
+                        <ul>
+                            {questions.map(question => {
+                                return (
+                                    <UIListItem 
+                                    key={question.id} 
+                                    name={question.name} 
+                                    category={question.categoryTitle}>
+                                        <ResponseQuestion question={question} answerHandler={(id, data) => {
+                                            question["answer"] = data;
+                                            this.handleComponentChange({
+                                                question,
+                                                isAnswered: !!data
+                                            });
+                                        }} />
+                                        {showErrors && !question.answer ?
+                                            <div className={styles.error_message}>
+                                                Please, fill the question</div> : null}
+                                    </UIListItem>);
+                            })}
+                        </ul>
+                        <div className={styles.submit}>
+                            <UIButton title="Send" submit></UIButton>
+                        </div>
+                    </Form>)
+                    }
+                </Formik>
+            </div>);
     }
 }
 
@@ -153,4 +144,4 @@ const mapDispatchToProps = {
     saveResponseAnswers: saveAnswersRoutine
 };
 
-export default connect(mapStateToProps, mapDispatchToProps) (QuestionnaireResponse);
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireResponse);

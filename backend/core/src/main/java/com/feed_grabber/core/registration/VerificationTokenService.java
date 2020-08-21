@@ -1,35 +1,39 @@
 package com.feed_grabber.core.registration;
 
+import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
 import com.feed_grabber.core.registration.model.VerificationToken;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class VerificationTokenService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final UserRepository userRepository;
+    private final Sender emailSender;
 
-    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository, UserRepository userRepository) {
+    public VerificationTokenService(VerificationTokenRepository verificationTokenRepository,
+                                    UserRepository userRepository,
+                                    Sender emailSender) {
         this.verificationTokenRepository = verificationTokenRepository;
         this.userRepository = userRepository;
+        this.emailSender = emailSender;
     }
 
     public String generateVerificationToken(User user, TokenType type) {
         String token = UUID.randomUUID().toString();
         var verificationToken = new VerificationToken(token, user, type);
 
-        return verificationTokenRepository.save(verificationToken).getToken();
-
-//TODO:  send request to email service
-//        var dto = SendVerificationEmailDto.builder().email(user.getEmail()).url(UrlPrefix + token)
-//        emailService.sendEmail(dto);
+        var verificationTokenStr = verificationTokenRepository.save(verificationToken).getToken();
+        emailSender.sendToProcessor(
+                "http://feedgrabber.com.localhost:3000/" + TokenType.tokenTypeToUrl(type) + verificationTokenStr,
+                user.getEmail(),
+                type.toString());
+        return verificationTokenStr;
     }
 
     public User verifyUserByToken(String token, TokenType type)
@@ -46,7 +50,11 @@ public class VerificationTokenService {
         User user = vToken.getUser();
         user.setIsEnabled(true);
 
-        verificationTokenRepository.delete(vToken);
+        try {
+			verificationTokenRepository.delete(vToken);
+		} catch (Exception ex) {
+			
+		}
         return userRepository.save(user);
     }
 

@@ -10,11 +10,19 @@ import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import QuestionnaireModal from "./questionnaireModal";
 import GenericPagination from "../../components/GenericPagination";
-import PaginationListItem from "../../components/GenericPagination/listItem";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {history} from '../../helpers/history.helper';
 import {clearOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
+import {clearQuestionnaireReportRoutine} from "../../sagas/questionnaireReport/routines";
+import UICard from "../../components/UI/UICard";
+import UICardBlock from "../../components/UI/UICardBlock";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import UIContent from "../../components/UI/UIContent";
+import UIColumn from "../../components/UI/UIColumn";
+import UIButton from "../../components/UI/UIButton";
+import {Icon} from "semantic-ui-react";
+import styles from './styles.module.sass';
 
 interface IQuestionnaireListProps {
   pagination?: IPaginationInfo<IQuestionnaire>;
@@ -25,13 +33,22 @@ interface IQuestionnaireListProps {
   modalError: string;
 
   loadQuestionnaires(): void;
+
   deleteQuestionnaire(id: string): void;
+
   addQuestionnaire(questionnaire: ICreateQuestionnaire): void;
+
   updateQuestionnaire(questionnaire: IUpdateQuestionnaire): void;
+
   showModal(questionnaire?: IQuestionnaire): void;
+
   hideModal(): void;
+
   setPagination(pagination: IPaginationInfo<IQuestionnaire>): void;
+
   clearOneQuestionnaire(): void;
+
+  clearQuestionnaireReport(): void;
 }
 
 const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
@@ -49,29 +66,49 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
     showModal,
     hideModal,
     setPagination,
-    clearOneQuestionnaire
+    clearOneQuestionnaire,
+    clearQuestionnaireReport
   }
 ) => {
   const mapItemToJSX = (item: IQuestionnaire) => (
-    <PaginationListItem
-      key={item.id}
-      title={item.title}
-      description={item.companyName}
-      actions={[
-        {icon: 'plus', callback: () => {
-            history.push(`/questionnaires/${item.id}/new-request`);
-          }
-        },
-        {
-          icon: 'settings', callback: () => {
-            clearOneQuestionnaire();
-            history.push(`/questionnaires/${item.id}`);
-          }
-        },
-        {icon: 'edit', callback: () => showModal(item)},
-        {icon: 'trash', callback: () => deleteQuestionnaire(item.id)}
-      ]}
-    />
+    <UICard>
+      <UICardBlock className={styles.cardBlockWrapper}>
+        <h3>{item.title}</h3>
+        <div className={styles.cardIconWrapper}>
+          <Icon
+            name="plus"
+            onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="chart bar"
+            onClick={() => {
+              clearQuestionnaireReport();
+              history.push(`/questionnaires/${item.id}/report`);
+            }}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="settings"
+            onClick={() => {
+              clearOneQuestionnaire();
+              history.push(`/questionnaires/${item.id}`);
+            }}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="edit"
+            onClick={() => showModal(item)}
+            className={styles.cardIcon}
+          />
+          <Icon
+            name="trash"
+            onClick={() => deleteQuestionnaire(item.id)}
+            className={styles.cardIcon}
+          />
+        </div>
+      </UICardBlock>
+    </UICard>
   );
 
   return (
@@ -85,15 +122,24 @@ const QuestionnaireList: React.FC<IQuestionnaireListProps> = (
         updateQuestionnaire={updateQuestionnaire}
         modalError={modalError}
       />
-      <GenericPagination
-        title="Questionnaires"
-        isLoading={isLoading}
-        pagination={pagination}
-        setPagination={setPagination}
-        loadItems={loadQuestionnaires}
-        mapItemToJSX={mapItemToJSX}
-        buttons={[{text: "Add New", callback: () => showModal(undefined)}]}
-      />
+      <UIPageTitle title="Questionnaires"/>
+      <UIContent>
+        <UIColumn wide>
+          <UIButton
+            title="Add Questionnaire"
+            onClick={() => showModal(undefined)}
+            center
+            primary
+          />
+          <GenericPagination
+            isLoading={isLoading}
+            pagination={pagination}
+            setPagination={setPagination}
+            loadItems={loadQuestionnaires}
+            mapItemToJSX={mapItemToJSX}
+          />
+        </UIColumn>
+      </UIContent>
     </>
   );
 };
@@ -115,7 +161,8 @@ const mapDispatchToProps = {
   showModal: showModalQuestionnaireRoutine,
   hideModal: hideModalQuestionnaireRoutine,
   setPagination: setQuestionnairePaginationRoutine,
-  clearOneQuestionnaire: clearOneQuestionnaireRoutine
+  clearOneQuestionnaire: clearOneQuestionnaireRoutine,
+  clearQuestionnaireReport: clearQuestionnaireReportRoutine
 };
 
 export default connect(

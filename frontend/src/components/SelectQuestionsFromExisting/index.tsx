@@ -34,7 +34,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
             selected.forEach(q => q.isReused = true);
             addQuestions({questionnaireId: qnId, questions: selected});
         }
-        addQuestions();
+        setSelected([]);
         setOpen(false);
     };
 
@@ -53,7 +53,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
             className={styles.questionModal}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            trigger={<Button content="Add From Existing" disabled={!display.length}/>}
+            trigger={<Button icon="external" content="Add From Existing" />}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>

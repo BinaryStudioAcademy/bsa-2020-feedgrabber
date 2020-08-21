@@ -11,6 +11,6 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class AddExistingQuestionsDto {
-    private Set<Question> questions;
+    private Set<QuestionUpdateDto> questions;
     private UUID questionnaireId;
 }
