@@ -87,6 +87,15 @@ const mockReport: IQuestionnaireReport = {
           "Suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam."
         ]
       }
+    },
+    {
+      id: "55555",
+      title: "Checkbox question",
+      type: QuestionType.checkbox,
+      answers: 15,
+      data: {
+        options: [{title: "English", amount:8}, {title: "Ukrainian", amount:13}]
+      }
     }
   ]
 };

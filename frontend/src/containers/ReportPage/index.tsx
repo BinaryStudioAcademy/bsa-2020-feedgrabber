@@ -11,6 +11,7 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {
   IQuestionReport,
+  IQuestionReportCheckboxData,
   IQuestionReportFreeTextData,
   IQuestionReportMultichoiceData,
   IQuestionReportRadioData,
@@ -19,6 +20,7 @@ import {
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
 import FreeTextQuestionReport from "./FreeTextQuestionReport";
+import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import MultichoiceQuestionReport from "./MultichoiceQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 
@@ -40,7 +42,8 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     switch (question.type) {
       case QuestionType.radio:
         return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
-      // case QuestionType.checkbox:
+      case QuestionType.checkbox:
+        return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
       // case QuestionType.date:
       // case QuestionType.fileUpload:
       case QuestionType.freeText:

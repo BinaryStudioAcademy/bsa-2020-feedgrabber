@@ -28,3 +28,7 @@ export interface IQuestionReportScaleData {
 export interface IQuestionReportFreeTextData {
   values: string[];
 }
+
+export interface IQuestionReportCheckboxData {
+  options: {title: string; amount: number}[];
+}
