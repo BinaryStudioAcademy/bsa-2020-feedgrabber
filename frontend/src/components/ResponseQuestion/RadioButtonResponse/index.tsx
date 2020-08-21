@@ -62,8 +62,9 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
                         className={styles.answer_input}
                         fluid
                         transparent
+                        defaultValue={other}
                         placeholder="Or enter your variant here..."
-                        error={answer === other && !!otherIsInvalid}
+                        error={answer === other && !!otherIsInvalid && !question.answer}
                         onChange={event => {
                             handleOther(event.target.value);
                         }
