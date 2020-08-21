@@ -12,8 +12,9 @@ export interface IQuestionnairesState {
 }
 
 export interface IRequest {
+    id: string;
     questionnaire: IQuestionnaire;
-    expireAt: Date;
+    expirationDate: Date;
     alreadyAnswered: boolean;
 }
 

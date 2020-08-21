@@ -5,6 +5,7 @@ import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoun
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
+import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -81,5 +82,13 @@ public class RequestService {
         if (!responses.isEmpty()) responseRepository.saveAll(responses);
 
         return request.getId();
+    }
+
+    public List<PendingRequestDto> getPending(UUID userId) {
+        return requestRepository
+                .findAllByResponsesUserId(userId)
+                .stream()
+                .map(r->RequestMapper.MAPPER.toPendingDtoFromModel(r,userId))
+                .collect(Collectors.toList());
     }
 }
