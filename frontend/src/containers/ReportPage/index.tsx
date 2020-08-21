@@ -12,12 +12,14 @@ import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import { Tab } from 'semantic-ui-react';
+import { Tab, Segment, Header } from 'semantic-ui-react';
 import { IQuestionReport } from "../../models/report/IReport";
 import { IQuestion, IScaleQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
 import ReportSwitcher from "./ReportSwitcher";
 import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
+
+import styles from './styles.module.sass';
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
@@ -39,9 +41,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   }, [report, isLoadingReport, loadQuestionnaireReport, match]);
 
   useEffect(() => {
-    console.log('use Effect');
     if (!respondentReports && !isLoadingRespondentReports) {
-      console.log('loadRespondentReports');
       loadRespondentReports(match.params.id);
     }
   }, [respondentReports, isLoadingRespondentReports, loadRespondentReports, match]);
@@ -75,17 +75,15 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   };
 
   const renderRespondentReport = () => {
-    // reportData - some instance of derived IQuestionBase class. It has `answer` field
-    console.log(respondentReports);
     const reportData = respondentReports[currentReport - 1];
     return (
-      <div style={{ width: "100%" }}>
-        <span>{reportData.respondent}</span>
+      <div className={styles.report_page_block}>
+        <Header as='h4'>Respondent: {reportData.respondent}</Header>
         {reportData.answers.map(question => (
-          <UICard>
-            <span>{question.name}</span>
+          <Segment key={question.id}>
+            <Header as='h4'>{question.name}</Header>
             {renderQuestionResponse(question)}
-          </UICard>
+          </Segment>
         ))}
       </div>
     );
@@ -96,7 +94,6 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
       menuItem: 'General',
       render: () => (
         <Tab.Pane>
-          <span>Just text Example</span>
           <LoaderWrapper loading={isLoadingReport}>
             <UIColumn>
               {report && (
@@ -115,7 +112,6 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
                   </UICardBlock>
                 </UICard>
               )}
-              <span>Whole report</span>
             </UIColumn>
           </LoaderWrapper>
         </Tab.Pane>
@@ -128,7 +124,8 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
           <LoaderWrapper loading={isLoadingRespondentReports}>
             {respondentReports && (
               <UIColumn wide>
-                <ReportSwitcher from={1} to={respondentReports.length}
+                <ReportSwitcher from={1}
+                                to={respondentReports.length}
                                 setIndex={setCurrentReport} />
                 {renderRespondentReport()}
               </UIColumn>
