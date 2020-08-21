@@ -1,5 +1,5 @@
-import { IQuestionnaire } from "../Questionnaires/types";
-import { QuestionType } from "../Questions/IQuesion";
+import {IQuestionnaire} from "../Questionnaires/types";
+import {QuestionType} from "../Questions/IQuesion";
 
 export interface IAnswer<T> {
     questionId: string;
@@ -11,14 +11,29 @@ type BodyBase = {
     questionId: string;
 };
 
-type FreeTextAnswer = BodyBase & {value: string}
-type CheckBoxAnswer = BodyBase & {value: number[]} // numbers of answer option starting from 0
-type RadioAnswer = BodyBase & {value: number}
-type FileAnswer = BodyBase & {value: string[]} // urls to imgur
-type DateAnswer = BodyBase & {value: string} // date in utc
-type ScaleAnswer = BodyBase & {value: number}
+type FreeTextAnswer = BodyBase & { value: string; type: QuestionType.freeText }
+// numbers of answer option starting from 0
+type CheckBoxAnswer = BodyBase & {
+    value: {
+        selected: number[];
+        other: string;
+    };
+    type: QuestionType.checkbox;
+}
 
-export type IAnswerBody = FreeTextAnswer|CheckBoxAnswer|FileAnswer|DateAnswer|ScaleAnswer|RadioAnswer;
+type RadioAnswer = BodyBase & {
+    value: {
+        selected: number;
+        other: string;
+    };
+    type: QuestionType.radio;
+}
+
+type FileAnswer = BodyBase & { value: string[]; type: QuestionType.fileUpload } // urls to imgur
+type DateAnswer = BodyBase & { value: string; type: QuestionType.date } // date in utc
+type ScaleAnswer = BodyBase & { value: number; type: QuestionType.scale }
+
+export type IAnswerBody = FreeTextAnswer | CheckBoxAnswer | FileAnswer | DateAnswer | ScaleAnswer | RadioAnswer;
 
 export interface IQuestionnaireResponse {
     id?: string;

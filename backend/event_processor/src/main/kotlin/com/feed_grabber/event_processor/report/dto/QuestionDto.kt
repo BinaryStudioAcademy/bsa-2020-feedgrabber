@@ -1,8 +1,8 @@
-package com.feed_grabber.event_processor.report.excel.model
+package com.feed_grabber.event_processor.report.dto
 
 import java.util.*
 
-data class Question(
+data class QuestionDto(
         val categoryTitle: String,
         val details: String,
         val id: UUID,
