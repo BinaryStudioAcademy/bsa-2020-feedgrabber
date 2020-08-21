@@ -21,7 +21,7 @@ public class CreateRequestDto {
 
     private UUID targetUserId;
 
-    private Long secondsToDeadline = Long.MAX_VALUE;
+    private Long secondsToDeadline;
 
     private List<UUID> respondentIds = new LinkedList<>();
 

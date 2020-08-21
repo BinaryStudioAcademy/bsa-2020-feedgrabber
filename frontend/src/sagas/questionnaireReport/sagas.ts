@@ -8,12 +8,40 @@ const mockReport: IQuestionnaireReport = {
   questionnaireTitle: "Awesome Questionnaire",
   questions: [
     {
+      id: "00000",
+      title: "Multichoice question",
+      type: QuestionType.multichoice,
+      answers: 18,
+      data: {
+        options: [
+          {title: "First Option", amount: 8},
+          {title: "Second Option", amount: 16},
+          {title: "Third Option", amount: 3}
+        ]
+      }
+    },
+    {
       id: "11111",
       title: "Radio question",
       type: QuestionType.radio,
       answers: 24,
       data: {
         options: [{title: "First Option", amount: 8}, {title: "Other Option", amount: 16}]
+      }
+    },
+    {
+      id: "33333",
+      title: "Scale question",
+      type: QuestionType.scale,
+      answers: 26,
+      data: {
+        options: [
+          {title: "1", amount: 3},
+          {title: "2", amount: 2},
+          {title: "3", amount: 6},
+          {title: "4", amount: 5},
+          {title: "5", amount: 10}
+        ]
       }
     },
     {
@@ -58,6 +86,15 @@ const mockReport: IQuestionnaireReport = {
           "Vitae proin sagittis nisl rhoncus mattis rhoncus urna.\n\n" +
           "Suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam."
         ]
+      }
+    },
+    {
+      id: "55555",
+      title: "Checkbox question",
+      type: QuestionType.checkbox,
+      answers: 15,
+      data: {
+        options: [{title: "English", amount:8}, {title: "Ukrainian", amount:13}]
       }
     }
   ]
