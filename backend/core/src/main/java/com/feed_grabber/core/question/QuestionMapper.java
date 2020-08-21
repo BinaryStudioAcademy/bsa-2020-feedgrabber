@@ -15,6 +15,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import java.util.UUID;
+
 @Mapper
 public abstract class QuestionMapper {
     public static QuestionMapper MAPPER = Mappers.getMapper(QuestionMapper.class);
@@ -23,6 +25,13 @@ public abstract class QuestionMapper {
     @Mapping(source = "text", target = "name")
     @Mapping(source = "payload", target = "details")
     public abstract QuestionDto questionToQuestionDto(Question question);
+
+    @Mapping(source = "question.category.title", target = "categoryTitle")
+    @Mapping(source = "question.text", target = "name")
+    @Mapping(source = "question.payload", target = "details")
+    @Mapping(source = "question.type", target = "type")
+    @Mapping(source = "question.id", target = "id")
+    public abstract QuestionDto questionQuestionToQuestionDto(QuestionnaireQuestion question);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "category", target = "category")
