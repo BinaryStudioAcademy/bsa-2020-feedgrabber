@@ -12,7 +12,8 @@ import {
   IDateQuestion,
   QuestionType,
   IRadioQuestion,
-  ITextQuestion
+  ITextQuestion,
+  IMultichoiceQuestion
 } from "../../models/forms/Questions/IQuesion";
 
 function* loadReport(action: any) {
@@ -115,6 +116,24 @@ function* loadRespondentReports(action: any) {
             isReused: false,
             details: { includeOther: false, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
           } as ICheckboxQuestion,
+          {
+            id: '7',
+            type: QuestionType.checkbox,
+            name: 'Select what you want to eat:',
+            answer: ['apple', 'bread', 'pizza'],
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: true, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
+          } as ICheckboxQuestion,
+          {
+            id: '0',
+            type: QuestionType.radio,
+            name: 'some question?',
+            answer: 'keyboard',
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: true, answerOptions: ['laptop', 'headphones', 'mouse'] }
+          } as IRadioQuestion,
           {
             id: '6',
             type: QuestionType.scale,

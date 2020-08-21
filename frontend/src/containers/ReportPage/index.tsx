@@ -19,6 +19,7 @@ import RadioQuestionReport from "./RadioQuestionReport";
 import ReportSwitcher from "./ReportSwitcher";
 import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
 import { CheckboxResponse } from "../../components/ResponseQuestion/CheckboxResponse";
+import { MultiChoiceResponse } from "../../components/ResponseQuestion/MultiChoiceResponse";
 import { DateSelectionResponse } from "../../components/ResponseQuestion/DateSelectionResponse";
 import { FreeTextResponse } from "../../components/ResponseQuestion/FreeTextResponse";
 import RadioButtonResponse from "../../components/ResponseQuestion/RadioButtonResponse";
@@ -75,6 +76,8 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
         return <CheckboxResponse question={question} />;
       case QuestionType.freeText:
         return <FreeTextResponse question={question} />;
+      // case QuestionType.multichoice:
+      //   return <MultiChoiceResponse question={question} />;
       default:
         return <span>Error</span>;
       // case QuestionType.checkbox:
