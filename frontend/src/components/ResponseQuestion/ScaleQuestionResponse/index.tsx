@@ -4,12 +4,7 @@ import { IScaleQuestion } from "../../../models/forms/Questions/IQuesion";
 import { Form, Radio } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
-export interface IScaleAnswer {
-  id?: string;
-  response?: number;
-}
-
-export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScaleAnswer> = (
+export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> = (
   {
     question= {
       id: '23',

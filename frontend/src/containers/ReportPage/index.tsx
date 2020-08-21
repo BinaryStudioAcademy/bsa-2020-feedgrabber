@@ -11,10 +11,11 @@ import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
+import UITab from "../../components/UI/UITab";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import { Tab, Segment, Header } from 'semantic-ui-react';
 import { IQuestionReport } from "../../models/report/IReport";
-import { IQuestion, IScaleQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
+import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
 import ReportSwitcher from "./ReportSwitcher";
 import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
@@ -67,7 +68,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   const renderQuestionResponse = (question: IQuestion) => {
     switch (question.type) {
       case QuestionType.scale:
-        return <ScaleQuestionResponse question={question} response={question.answer} />;
+        return <ScaleQuestionResponse question={question} />;
       case QuestionType.date:
         return <DateSelectionResponse question={question} />;
       case QuestionType.radio:
@@ -80,12 +81,6 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
       //   return <MultiChoiceResponse question={question} />;
       default:
         return <span>Error</span>;
-      // case QuestionType.checkbox:
-      // case QuestionType.date:
-      // case QuestionType.fileUpload:
-      // case QuestionType.freeText:
-      // case QuestionType.multichoice:
-      // case QuestionType.scale:
     }
   };
 
@@ -155,7 +150,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     <>
       <UIPageTitle title="Report"/>
       <UIContent>
-        <Tab panes={panes} menuPosition="left" />
+        <UITab panes={panes} menuPosition="left" />
       </UIContent>
     </>
   );
