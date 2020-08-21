@@ -78,6 +78,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             const answers: IAnswer<any>[] = this.props.questions.map(question => {
                 return {
                     questionId: question.id,
+                    type: question.type,
                     body: question.answer
                 };
             });

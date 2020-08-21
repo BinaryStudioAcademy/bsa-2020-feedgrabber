@@ -1,7 +1,9 @@
 import { IQuestionnaire } from "../Questionnaires/types";
+import { QuestionType } from "../Questions/IQuesion";
 
 export interface IAnswer<T> {
     questionId: string;
+    type: QuestionType;
     body: T;
 }
 
