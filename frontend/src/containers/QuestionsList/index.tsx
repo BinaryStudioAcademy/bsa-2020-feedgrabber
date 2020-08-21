@@ -5,6 +5,7 @@ import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
+import UIButton from 'components/UI/UIButton';
 
 const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions}) => {
     const history = useHistory();
@@ -41,7 +42,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
                         );
                     }))}
                 <div className={styles.addNewButton}>
-                    <Button onClick={() => handleClick("new")}>Add new</Button>
+                    <UIButton title="Add new" onClick={() => handleClick("new")}/>
                 </div>
             </div>
         </div>

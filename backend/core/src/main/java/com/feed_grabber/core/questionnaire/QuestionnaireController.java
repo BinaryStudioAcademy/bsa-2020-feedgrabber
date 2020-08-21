@@ -72,15 +72,6 @@ public class QuestionnaireController {
         );
     }
 
-    @ApiOperation("Get requested questionnaires for current user")
-    @GetMapping("/requested")
-    @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<QuestionnaireDto>> getPending(Principal principal) {
-        return new AppResponse<>(
-                questionnaireService.getAllByRespondentId(UUID.fromString(principal.getName()))
-        );
-    }
-
     @ApiOperation("Create a questionnaire")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
