@@ -9,9 +9,10 @@ import invitationSagas from "./invitation/sagas";
 import invitationSignUpSagas from "./invitationSignUp/sagas";
 import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
-import answersSaga from './responseAnswers/sagas';
 import requestSaga from "./request/sagas";
+import questionnaireReportSagas from "./questionnaireReport/sagas";
 import notificationsSagas from "./notifications/sagas";
+import responseSagas from './questionnaireResponse/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -20,13 +21,14 @@ export default function* rootSaga() {
     questionSagas(),
     teamsSagas(),
     questionnairesSagas(),
+    questionnaireReportSagas(),
     usersSagas(),
     invitationSagas(),
     invitationSignUpSagas(),
     categorieSagas(),
     companiesSaga(),
-    answersSaga(),
     requestSaga(),
-    notificationsSagas()
+    notificationsSagas(),
+    responseSagas()
   ]);
 }

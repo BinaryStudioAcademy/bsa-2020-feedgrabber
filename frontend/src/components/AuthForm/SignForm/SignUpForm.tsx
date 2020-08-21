@@ -13,8 +13,10 @@ const schema = yup.object().shape({
     companyName: yup
         .string()
         .required("Company name required")
-        .min(6, "Company name too short!")
-        .max(20, "Company name too long!"),
+        .min(3, "Company name too short!")
+        .max(40, "Company name too long!")
+        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+            "Company name must be valid"),
     email: yup
         .string()
         .email("Email must be valid")
@@ -22,8 +24,10 @@ const schema = yup.object().shape({
     password: yup
         .string()
         .required("Password required")
-        .min(6, "Password too short!")
-        .max(30, "Password too long!"),
+        .min(8, "Password too short!")
+        .max(16, "Password too long!")
+        .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
+            "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
     passwordRepeat: yup
         .string()
         .required("Repeat password")
@@ -33,7 +37,8 @@ const schema = yup.object().shape({
         .required("Username required")
         .min(5, "Username too short!")
         .max(15, "Username too long!")
-        .matches(/[^#]/ig, "this character does not allow # in the name field")
+        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+            "Username must be valid")
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {

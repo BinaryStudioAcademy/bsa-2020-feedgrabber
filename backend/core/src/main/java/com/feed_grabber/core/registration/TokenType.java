@@ -1,5 +1,15 @@
 package com.feed_grabber.core.registration;
 
 public enum TokenType {
-    REGISTRATION, RESET
+    REGISTER, RESET;
+    public static String tokenTypeToUrl(TokenType type) {
+        switch (type) {
+            case RESET:
+                return "reset/";
+			case REGISTER:
+                return "verify-registration/";
+            default:
+                return "/";
+        }
+    };
 }

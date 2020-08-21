@@ -31,7 +31,7 @@ onValueChange
 
     const buttons = (
         <div className={[styles.centerContent, styles.buttonContainer].join(' ')}>
-            <button type='button'
+            {value.answerOptions.length!==10 &&<button type='button'
                     onClick={() => {
                         onValueChange(
                             invalidState({...value, answerOptions: value.answerOptions.concat("")})
@@ -39,7 +39,7 @@ onValueChange
                     }}
             >
                 'Add new option'
-            </button>
+            </button>}
 
             <button type={'button'}
                     disabled={value.includeOther}

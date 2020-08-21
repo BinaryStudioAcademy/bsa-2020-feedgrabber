@@ -1,10 +1,10 @@
 import React from "react";
 import {ErrorMessage, useField} from "formik";
-import {Input, Label} from "semantic-ui-react";
+import {Input} from "semantic-ui-react";
 import styles from "../styles.module.sass";
 
 interface IQuestionFieldProps {
-    label: string;
+    text: string;
     name: string;
     type: string;
     inputProps?: any;
@@ -16,7 +16,7 @@ const QuestionField: React.FC<IQuestionFieldProps> = data => {
     const [field] = useField(data.name);
     return (
         <div className={styles.questionField}>
-            <Label className={styles.label}>{data.label}</Label>
+            <span className={styles.description}>{data.text}</span>
             <Input className={styles.inputField}
                    type={data.type} {...field} {...data.inputProps}
                    value={data.value} onChange={data.onChange}

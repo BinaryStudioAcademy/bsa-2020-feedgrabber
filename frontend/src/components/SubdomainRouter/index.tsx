@@ -4,7 +4,6 @@ import {redirectToCompany, redirectToMain} from "../../helpers/subdomain.helper"
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {fetchCompanyRoutine} from "../../sagas/companies/routines";
-import {unmountComponentAtNode} from "react-dom";
 
 const SubdomainRouter: React.FC<SubdomainRouterProps> = ({company, fetchCompany, children}) => {
     const isLogged = useAuth();
@@ -18,7 +17,7 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> = ({company, fetchCompany,
         } else {
             redirectToMain();
         }
-    });
+    }, [isLogged, company, fetchCompany]);
     return (
         <>
             {children}
