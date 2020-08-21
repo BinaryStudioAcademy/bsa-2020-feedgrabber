@@ -1,6 +1,7 @@
 package com.feed_grabber.core.notification.model;
 
 import com.feed_grabber.core.request.model.Request;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Builder
 @Table(name = "user_notifications")
 public class UserNotification {
 

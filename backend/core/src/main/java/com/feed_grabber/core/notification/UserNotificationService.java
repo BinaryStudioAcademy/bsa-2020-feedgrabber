@@ -20,21 +20,21 @@ public class UserNotificationService {
     @Autowired
     UserRepository userRepository;
 
-    public List<NotificationResponseDto> getAllByUser(UUID userId) throws UserNotFoundException {
-        return userRepository
-                .findById(userId)
-                .orElseThrow(UserNotFoundException::new)
-                .getRequests()
-                .stream()
-                .map(request -> {
-                    if (request.getUserNotification() == null) {
-                        return null;
-                    } else {
-                        return UserNotificationMapper.MAPPER.
-                                notificationResponseDtoFromModel(request.getUserNotification());
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
+//    public List<NotificationResponseDto> getAllByUser(UUID userId) throws UserNotFoundException {
+//        return userRepository
+//                .findById(userId)
+//                .orElseThrow(UserNotFoundException::new)
+//                .getRequests()
+//                .stream()
+//                .map(request -> {
+//                    if (request.getUserNotification() == null) {
+//                        return null;
+//                    } else {
+//                        return UserNotificationMapper.MAPPER.
+//                                notificationResponseDtoFromModel(request.getUserNotification());
+//                    }
+//                })
+//                .filter(Objects::nonNull)
+//                .collect(Collectors.toList());
+//    }
 }

@@ -1,8 +1,8 @@
 package com.feed_grabber.core.notification;
 
+import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.notification.dto.NotificationResponseDto;
-import com.feed_grabber.core.response.AppResponse;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +21,15 @@ public class UserNotificationController {
     private UserNotificationService userNotificationService;
 
 
+//    @GetMapping("/all")
+//    public AppResponse<List<NotificationResponseDto>> getAllByUser() throws UserNotFoundException {
+//        UUID userId = TokenService.getUserId();
+//        return new AppResponse<>(userNotificationService.getAllByUser(userId));
+//    }
+
     @GetMapping("/all")
-    public AppResponse<List<NotificationResponseDto>> getAllByUser() throws UserNotFoundException {
+    public AppResponse<UUID> getAllByUser() throws UserNotFoundException {
         UUID userId = TokenService.getUserId();
-        return new AppResponse<>(userNotificationService.getAllByUser(userId));
+        return new AppResponse<>(userId);
     }
 }
