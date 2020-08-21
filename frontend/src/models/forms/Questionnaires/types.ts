@@ -11,6 +11,12 @@ export interface IQuestionnairesState {
     currentQuestion?: IQuestion;
 }
 
+export interface IRequest {
+    questionnaire: IQuestionnaire;
+    expireAt: Date;
+    alreadyAnswered: boolean;
+}
+
 export interface IQuestionnaire {
     id?: string;
     title: string;

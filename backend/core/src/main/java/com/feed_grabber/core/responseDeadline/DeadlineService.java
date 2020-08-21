@@ -23,7 +23,7 @@ public class DeadlineService {
                                 .stream()
                 ).forEach(response -> {
             emailSender.sendToProcessor(
-                    "Hi,"
+                    "Hi, "
                             + response.getUser().getUsername()
                             + " it`s almost deadline for http://feedgrabber.com.localhost:3000/response/"
                             + response.getRequest().getQuestionnaire().getId(),
