@@ -10,8 +10,7 @@ import java.util.*
 
 @Component
 class Receiver(
-	@Autowired val emailSender: EmailSender,
-	@Autowired val excelReportCreator: ExcelReportCreator
+	@Autowired val emailSender: EmailSender
 ) {
     @RabbitListener(queues = ["\${rabbitmq.queue}"])
     fun receive(mailEntity: MailEntity?) {
@@ -22,6 +21,6 @@ class Receiver(
 
 	@RabbitListener(queues = ["\${rabbitmq.queue.report}"])
 	fun receiveExcelGenerationRequest(requestId: UUID) {
-	excelReportCreator.create(requestId);
+		//TODO: process request id
 	}
 }
