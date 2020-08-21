@@ -1,18 +1,17 @@
 import React, {FunctionComponent} from "react";
-import {Header, Icon} from "semantic-ui-react";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
-import UIColumn from "../../components/UI/UIColumn";
+import InvitationCreationBlock from "./linkCreation";
 
 const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = () => {
   return (
     <>
       <UIPageTitle title="Invitations" />
       <UIContent>
-        <UIColumn wide>
-        </UIColumn>
+        {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+        <InvitationCreationBlock sendInvitation={() => {}} isLoading={false} />
       </UIContent>
     </>
   );
