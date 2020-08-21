@@ -9,13 +9,13 @@ import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,23 +60,24 @@ public class RequestService {
 
         var request =  requestRepository.save(toSave);
 
-        var users = userRepository
-                .findAllById(dto.getRespondentIds());
+        var users = new HashSet<>(userRepository.findAllById(dto.getRespondentIds()));
 
-        if (dto.getIncludeTargetUser() && targetUser != null) users.add(targetUser);
-
-        var usersFromTeams = teamRepository
+        users.addAll(teamRepository
                 .findAllById(dto.getTeamIds())
                 .stream()
-                .flatMap(team -> team.getUsers().stream());
+                .flatMap(team -> team.getUsers().stream())
+                .collect(Collectors.toSet()));
 
-        var responses = Stream
-                .concat(users.stream(), usersFromTeams)
-                .distinct()
+        if (targetUser != null) {
+            if (dto.getIncludeTargetUser()) users.add(targetUser);
+            else users.remove(targetUser);
+        }
+
+        var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
-        if (!responses.isEmpty()) responseRepository.saveAll(responses);
+        responseRepository.saveAll(responses);
 
         return request.getId();
     }
