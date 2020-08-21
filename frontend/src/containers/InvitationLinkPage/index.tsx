@@ -4,13 +4,19 @@ import {connect, ConnectedProps} from "react-redux";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import InvitationCreationBlock from "./linkCreation";
-import {sendInvitationRoutine} from "../../sagas/invitation/routines";
+import {loadInvitationsListRoutine, sendInvitationRoutine} from "../../sagas/invitation/routines";
+import InvitationsListBlock from "./linksList";
 
 const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
   {
-    sendInvitation,
+    invitationsList,
     errorGeneration,
-    isLoadingGeneration
+    isLoadingGeneration,
+    isLoadingList,
+    errorLoadingList,
+
+    loadInvitations,
+    sendInvitation
   }
 ) => {
   return (
@@ -22,6 +28,12 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
           sendInvitation={sendInvitation}
           isLoading={isLoadingGeneration}
         />
+        <InvitationsListBlock
+          loadInvitations={loadInvitations}
+          invitationsList={invitationsList}
+          loadingList={isLoadingList}
+          errorLoading={errorLoadingList}
+        />
       </UIContent>
     </>
   );
@@ -29,10 +41,14 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
 
 const mapState = (state: IAppState) => ({
   isLoadingGeneration: state.invitation.isLoadingGeneration,
-  errorGeneration: state.invitation.errorGeneration
+  errorGeneration: state.invitation.errorGeneration,
+  invitationsList: state.invitation.list,
+  isLoadingList: state.invitation.isLoadingList,
+  errorLoadingList: state.invitation.errorLoadingList
 });
 
 const mapDispatch = {
+  loadInvitations: loadInvitationsListRoutine,
   sendInvitation: sendInvitationRoutine
 };
 

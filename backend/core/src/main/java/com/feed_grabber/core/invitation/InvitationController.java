@@ -12,6 +12,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,12 +31,12 @@ public class InvitationController {
 //        return new AppResponse<>(invitationService.getById(id));
 //    }
 
-//    @GetMapping
-//    public AppResponse<UUID> getByCompanyId() {
-//        assertCompanyOwner();
-//        var companyId = TokenService.getCompanyId();
-//        return new AppResponse<>(invitationService.getByCompanyId(companyId));
-//    }
+    @GetMapping
+    public AppResponse<List<InvitationDto>> getByCompanyId() {
+        assertCompanyOwner();
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<>(invitationService.getByCompanyId(companyId));
+    }
 
     @PostMapping
     public AppResponse<InvitationGenerateResponseDto> generate(@RequestBody InvitationGenerateRequestDto dto)

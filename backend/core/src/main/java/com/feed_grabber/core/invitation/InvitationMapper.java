@@ -25,5 +25,7 @@ public abstract class InvitationMapper {
     @Mapping(source = "companyId", target = "company.id")
     public abstract Invitation invitationDtoToModel(InvitationGenerateRequestDto dto);
 
-    public abstract InvitationGenerateResponseDto invitationToDto(Invitation invitation);
+    public abstract InvitationGenerateResponseDto invitationToGenerateDto(Invitation invitation);
+
+    public abstract InvitationDto invitationToDto(Invitation invitation);
 }

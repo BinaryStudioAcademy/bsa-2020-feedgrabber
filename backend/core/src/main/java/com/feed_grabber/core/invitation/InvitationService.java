@@ -2,17 +2,17 @@ package com.feed_grabber.core.invitation;
 
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
 import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
 import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
-import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class InvitationService {
@@ -33,12 +33,13 @@ public class InvitationService {
 //        return InvitationMapper.MAPPER.invitationToInvitationDto(invitation);
 //    }
 //
-//    public UUID getByCompanyId(UUID companyId) {
-//        return invitationRepository
-//                .findByCompanyId(companyId)
-//                .map(Invitation::getId)
-//                .orElse(null);
-//    }
+    public List<InvitationDto> getByCompanyId(UUID companyId) {
+        return invitationRepository
+                .findByCompanyIdOrderByCreatedAtDesc(companyId)
+                .stream()
+                .map(InvitationMapper.MAPPER::invitationToDto)
+                .collect(Collectors.toList());
+    }
 
     public InvitationGenerateResponseDto generate(InvitationGenerateRequestDto dto)
             throws CompanyNotFoundException, InvitationAlreadyExistsException {
@@ -54,7 +55,7 @@ public class InvitationService {
 
         var invitation = InvitationMapper.MAPPER.invitationDtoToModel(dto);
         invitation = invitationRepository.save(invitation);
-        return InvitationMapper.MAPPER.invitationToDto(invitation);
+        return InvitationMapper.MAPPER.invitationToGenerateDto(invitation);
     }
 
 //    public void deleteByCompanyId(UUID companyId) {

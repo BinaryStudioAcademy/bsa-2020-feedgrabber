@@ -1,26 +1,28 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import apiClient from '../../helpers/apiClient';
-import {sendInvitationRoutine} from "./routines";
+import {loadInvitationsListRoutine, sendInvitationRoutine} from "./routines";
+import {IInvitation} from "../../models/invitation/IInvitation";
 
-// function* loadInvitation() {
-//   try {
-//     const res = yield call(apiClient.get, `http://localhost:5000/api/invitations`);
-//     const id = res.data.data;
-//
-//     yield put(loadInvitationRoutine.success(id));
-//   } catch (error) {
-//     yield put(loadInvitationRoutine.failure());
-//     toastr.error("Unable to load link");
-//   }
-// }
-//
+function* loadInvitations() {
+  try {
+    const res = yield call(apiClient.get, `http://localhost:5000/api/invitations`);
+    const list: IInvitation[] = res.data.data;
+
+    yield put(loadInvitationsListRoutine.success(list));
+  } catch (error) {
+    yield put(loadInvitationsListRoutine.failure());
+    toastr.error("Unable to load invitations");
+  }
+}
+
 function* generateInvitation(action: any) {
   try {
     const email: string = action.payload;
     yield call(apiClient.post, `/api/invitations`, {email});
 
     yield put(sendInvitationRoutine.success());
+    yield put(loadInvitationsListRoutine.trigger());
     toastr.success("New link generated");
   } catch (error) {
     yield put(sendInvitationRoutine.failure(error.data?.error || 'No response'));
@@ -42,7 +44,7 @@ function* generateInvitation(action: any) {
 
 export default function* invitationSagas() {
   yield all([
-    // yield takeEvery(loadInvitationRoutine.TRIGGER, loadInvitation),
+    yield takeEvery(loadInvitationsListRoutine.TRIGGER, loadInvitations),
     yield takeEvery(sendInvitationRoutine.TRIGGER, generateInvitation)
     // yield takeEvery(deleteInvitationRoutine.TRIGGER, deleteInvitation)
   ]);

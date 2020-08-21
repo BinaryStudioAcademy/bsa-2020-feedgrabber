@@ -1,49 +1,63 @@
 import {
+  loadInvitationsListRoutine,
   sendInvitationRoutine
 } from "../../sagas/invitation/routines";
 import {logoutRoutine} from "../../sagas/auth/routines";
+import {IInvitation} from "../../models/invitation/IInvitation";
 
 export interface IInvitationState {
   isLoadingGeneration?: boolean;
   errorGeneration?: string;
+  list?: IInvitation[];
+  isLoadingList?: boolean;
+  errorLoadingList?: boolean;
 }
 
 export default (state: IInvitationState = {}, action): IInvitationState => {
   switch (action.type) {
-    // case deleteInvitationRoutine.TRIGGER:
+    case loadInvitationsListRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoadingList: true,
+        errorLoadingList: undefined
+      };
+    case loadInvitationsListRoutine.SUCCESS:
+      return {
+        ...state,
+        isLoadingList: false,
+        list: action.payload
+      };
+    case loadInvitationsListRoutine.FAILURE:
+      return {
+        ...state,
+        isLoadingList: false,
+        errorLoadingList: true
+      };
+
     case sendInvitationRoutine.TRIGGER:
-    // case loadInvitationRoutine.TRIGGER:
       return {
         ...state,
         isLoadingGeneration: true,
         errorGeneration: undefined
       };
     case sendInvitationRoutine.SUCCESS:
-    // case loadInvitationRoutine.SUCCESS:
       return {
         ...state,
         isLoadingGeneration: false
       };
-    // case logoutRoutine.TRIGGER:
-    //   return {
-    //     ...state,
-    //     link: undefined,
-    //     isLoading: false
-    //   };
-    // case deleteInvitationRoutine.SUCCESS:
-    //   return {
-    //     ...state,
-    //     link: null,
-    //     isLoading: false
-    //   };
-    // case deleteInvitationRoutine.FAILURE:
     case sendInvitationRoutine.FAILURE:
-    // case loadInvitationRoutine.FAILURE:
       return {
         ...state,
         isLoadingGeneration: false,
         errorGeneration: action.payload
       };
+
+    case logoutRoutine.TRIGGER:
+      return {
+        ...state,
+        list: undefined
+      };
+
     default:
       return state;
   }
