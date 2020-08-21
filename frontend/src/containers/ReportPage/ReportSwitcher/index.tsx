@@ -29,12 +29,13 @@ const ReportSwitcher: React.FC<IRCProps> = ({ from, to, setIndex }) => {
 
   return (
     <div className={styles.report_switcher}>
-      <Button icon onClick={() => handleClick(-1)}>
+      <Button icon onClick={() => handleClick(-1)} size="mini">
         <Icon name="angle left" />
       </Button>
-      <input value={curIndex} />
+      <input value={curIndex} size={('' + curIndex).length}
+             onChange={e => handleIndexChange(+e.target.value)}/>
       <span> / {to}</span>
-      <Button icon onClick={() => handleClick(1)}>
+      <Button icon onClick={() => handleClick(1)} size="mini">
         <Icon name="angle right" />
       </Button>
     </div>
