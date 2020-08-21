@@ -1,5 +1,6 @@
 package com.feed_grabber.core.image;
 
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.dto.ImageDto;
 import com.feed_grabber.core.image.dto.ImageUploadDto;
 import com.feed_grabber.core.image.exceptions.BadCropParamsException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/image")
@@ -25,7 +27,7 @@ public class ImageController {
     }
 
     @ApiOperation(value = "Upload new image to imgur and save link to database",
-            notes = "Provide image file an optionally x, y, wifth and height if you want to crop image ")
+            notes = "Provide image file an optionally x, y, wifth and height if you want to crop image")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ImageDto upload(
@@ -48,4 +50,11 @@ public class ImageController {
         return imageService.upload(new ImageUploadDto(file, x, y, width, height));
     }
 
+    @ApiOperation(value = "Delete image from imgur and link its link from database",
+            notes = "Provide Id of image link to delete")
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestParam @ApiParam(value = "Id of image link to delete", required = true) UUID id) throws NotFoundException {
+        imageService.delete(id);
+    }
 }

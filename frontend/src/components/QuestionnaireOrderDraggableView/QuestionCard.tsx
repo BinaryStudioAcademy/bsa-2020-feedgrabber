@@ -3,14 +3,15 @@ import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styles from "../../containers/QuestionsList/styles.module.sass";
 import {Card} from "semantic-ui-react";
-import {DraggableItemTypes} from "../../models/forms/Questions/IQuesion";
+import {DraggableItemTypes, IQuestion} from "../../models/forms/Questions/IQuesion";
+import ResponseQuestion from "components/ResponseQuestion";
 
 export interface ICardProps {
   id: string;
-  questionText: string;
-  categoryTitle: string;
+  question: IQuestion;
   index: number;
-  moveCard: (dragIndex: number, hoverIndex: number) => void;
+  moveCard(dragIndex: number, hoverIndex: number): void;
+  onDropCard(): void;
 }
 
 interface IDragItem {
@@ -19,11 +20,10 @@ interface IDragItem {
   type: string;
 }
 export const QuestionCard: React.FC<ICardProps> = ({
-  id,
-  questionText,
-  categoryTitle,
   index,
-  moveCard
+  moveCard,
+  onDropCard,
+  question
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop({
@@ -58,11 +58,14 @@ export const QuestionCard: React.FC<ICardProps> = ({
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
       item.index = hoverIndex;
+    },
+    drop() {
+      onDropCard();
     }
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type: DraggableItemTypes.QUESTION_CARD, id, index },
+    item: { type: DraggableItemTypes.QUESTION_CARD, id: question.id, index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging()
     })
@@ -70,13 +73,15 @@ export const QuestionCard: React.FC<ICardProps> = ({
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
+  
   return (
     <div ref={ref}  style={{ opacity }} className={styles.question} >
-      <Card className={styles.question}
+      <ResponseQuestion question={question} />
+      {/* <Card className={styles.question}
         link centered fluid
-        description={questionText}
-        meta={categoryTitle}
-      />
+        description={question.name}
+        meta={question.categoryTitle}
+      />  */}
     </div>
   );
 };

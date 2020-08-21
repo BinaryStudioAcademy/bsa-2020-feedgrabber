@@ -2,8 +2,7 @@ package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.register.RegisterService;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
@@ -54,7 +53,8 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<AuthUserResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        return new AppResponse<>(authService.login(userLoginDTO));
+        var login = authService.login(userLoginDTO);
+        return new AppResponse<>(login);
 
     }
 

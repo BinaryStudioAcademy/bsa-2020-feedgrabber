@@ -10,6 +10,9 @@ import {
   removeUserFromCompanyRoutine,
   setUsersPaginationRoutine
 } from "../../sagas/users/routines";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import UIContent from "../../components/UI/UIContent";
+import UIColumn from "../../components/UI/UIColumn";
 
 interface ICompanyUsersListProps {
   pagination?: IPaginationInfo<IUserInfo>;
@@ -45,15 +48,18 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 
   return (
     <>
-      <GenericPagination
-        title="Users"
-        isLoading={isLoading}
-        pagination={pagination}
-        setPagination={setPagination}
-        loadItems={loadUsers}
-        mapItemToJSX={mapItemToJSX}
-        buttons={[]}
-      />
+      <UIPageTitle title="Users" />
+      <UIContent>
+        <UIColumn>
+          <GenericPagination
+            isLoading={isLoading}
+            pagination={pagination}
+            setPagination={setPagination}
+            loadItems={loadUsers}
+            mapItemToJSX={mapItemToJSX}
+          />
+        </UIColumn>
+      </UIContent>
     </>
   );
 };

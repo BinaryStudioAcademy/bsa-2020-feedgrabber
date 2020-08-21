@@ -1,9 +1,14 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import apiClient from '../../helpers/apiClient';
-import {IUserInfo} from "../../models/user/types";
+import {IUserInfo, IUserShort} from "../../models/user/types";
 import {IGeneric} from "../../models/IGeneric";
 import {toastr} from 'react-redux-toastr';
-import {getUserRoutine, resetPasswordRoutine, sendEmailToResetPasswordRoutine} from "../auth/routines";
+import {
+    getUserRoutine,
+    getUserShortRoutine,
+    resetPasswordRoutine,
+    sendEmailToResetPasswordRoutine
+} from "../auth/routines";
 import {history} from "../../helpers/history.helper";
 
 function* getUser() {
@@ -13,6 +18,18 @@ function* getUser() {
     } catch (error) {
         yield put(getUserRoutine.failure(error));
     }
+}
+
+function* getUserShort(action) {
+    try {
+        const res: IGeneric<IUserShort> =
+            yield call(apiClient.get,
+                `/api/user/short?email=${action.payload.email}&companyId=${action.payload.companyId}`);
+        yield put(getUserShortRoutine.success(res.data.data));
+    }catch(error) {
+        yield put(getUserShortRoutine.failure(error));
+    }
+
 }
 
 function* sendEmailPassReset(action) {
@@ -42,6 +59,7 @@ export default function* userSagas() {
     yield all([
         yield takeEvery(getUserRoutine.TRIGGER, getUser),
         yield takeEvery(sendEmailToResetPasswordRoutine.TRIGGER, sendEmailPassReset),
-        yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset)
+        yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset),
+        yield takeEvery(getUserShortRoutine.TRIGGER, getUserShort)
     ]);
 }

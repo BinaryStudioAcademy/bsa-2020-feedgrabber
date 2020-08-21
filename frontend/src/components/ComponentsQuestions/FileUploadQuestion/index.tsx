@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import QuestionField from "./QuestionField";
-import {Dropdown, Label} from "semantic-ui-react";
+import {Dropdown} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {ErrorMessage} from "formik";
 import {IGenericQuestionComponent, invalidState, useInitValue, validState} from "../IQuestionInputContract";
@@ -39,7 +39,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
         return (
             <div className={styles.fileUploadQuestion}>
             <div className={styles.questionField}>
-                <Label className={styles.label}>Type of files</Label>
+                <span className={styles.description}>Type of files</span>
                 <Dropdown
                     error={!values.filesType}
                     className={styles.inputField} name="filesType" selection placeholder="Choose file type"
@@ -56,7 +56,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 </div>
             </div>
             <QuestionField
-                label={"Maximum number of files"} name={"filesNumber"} type={"number"}
+                text={"Maximum number of files"} name={"filesNumber"} type={"number"}
                 inputProps={{min: 1, max: 10}} value={values.filesNumber}
                 onChange={(e, data) => {
                     check({
@@ -66,7 +66,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 }}
             />
             <QuestionField
-                label={"Maximum files size, MB"} name={"filesSize"} type={"number"}
+                text={"Maximum files size, MB"} name={"filesSize"} type={"number"}
                 inputProps={{min: 1}}
                 value={values.filesSize}
                 onChange={(e, data) => {

@@ -8,8 +8,11 @@ import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
+import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.registration.TokenType;
+import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
@@ -17,18 +20,19 @@ import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserShortDto;
+import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -39,22 +43,27 @@ public class UserService implements UserDetailsService {
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenService verificationTokenService;
 
+    private static final Random random = new Random();
+    private static final Long RANDOM_MAX = 36L*36L*36L*36L*36L*36L;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenService = verificationTokenService;
     }
 
     @Transactional
-    public UUID createDefault(UserRegisterDTO userRegisterDTO) {
+    public UUID createDefault(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException {
 
 //        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
 //                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
@@ -64,9 +73,23 @@ public class UserService implements UserDetailsService {
         if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
             throw new CompanyAlreadyExistsException();
         }
+        if (userRegisterDTO.getCompanyName().length() > 56) {
+            throw new WrongCompanyNameException("Too long company name(more than 63)");
+        }
+        if (!userRegisterDTO.getCompanyName()
+                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*([a-zA-Z0-9])")) {
+            throw new WrongCompanyNameException("Company name should not start/end with space," +
+                    " have more than one space in sequence. Company name should contain latin letters and numbers ");
+        }
+
+
+        String domain = generateRandomDomainFromCompanyName(userRegisterDTO.getCompanyName());
 
         var company = companyRepository.save(
-                Company.builder().name(userRegisterDTO.getCompanyName()).build());
+                Company.builder()
+                        .name(userRegisterDTO.getCompanyName())
+                        .subdomainName(domain)
+                        .build());
 
         var roles = roleRepository.saveAll(
                 List.of(Role
@@ -96,7 +119,7 @@ public class UserService implements UserDetailsService {
             throw new InsertionException(roles.toString());
         }
 
-        userRepository.save(User.builder()
+        var user = userRepository.save(User.builder()
                 .email(userRegisterDTO.getEmail())
                 .username(userRegisterDTO.getUsername())
                 .password(userRegisterDTO.getPassword())
@@ -104,7 +127,7 @@ public class UserService implements UserDetailsService {
                 .company(company)
                 .build()
         );
-
+        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return company.getId();
     }
 
@@ -124,7 +147,7 @@ public class UserService implements UserDetailsService {
         var role = roleRepository.findByCompanyIdAndSystemRole(company.getId(), SystemRole.employee)
                 .orElseThrow();
 
-        userRepository.save(User.builder()
+        var user = userRepository.save(User.builder()
                 .email(registerDto.getEmail())
                 .username(registerDto.getUsername())
                 .password(registerDto.getPassword())
@@ -132,6 +155,7 @@ public class UserService implements UserDetailsService {
                 .company(company)
                 .build()
         );
+        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return invitation.getCompany().getId();
     }
 
@@ -207,7 +231,7 @@ public class UserService implements UserDetailsService {
         return usernameAndCompanyId.substring(0, index);
     }
 
-    private UUID extractCompanyId (String usernameAndCompanyId) {
+    private UUID extractCompanyId(String usernameAndCompanyId) {
         var startIndex = this.getDividerIndex(usernameAndCompanyId) + 1;
         var companyId = usernameAndCompanyId.substring(startIndex, usernameAndCompanyId.length());
         return UUID.fromString(companyId);
@@ -235,4 +259,16 @@ public class UserService implements UserDetailsService {
         return userRepository.countAllByCompanyId(companyId);
     }
 
+    public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {
+        return UserMapper.MAPPER.shortFromUser(
+                userRepository
+                        .findByCompanyIdAndEmail(companyId, email)
+                        .orElseThrow(UserNotFoundException::new));
+    }
+
+    private String generateRandomDomainFromCompanyName(String companyName) {
+        var name = companyName.toLowerCase().replaceAll("([ ])","-");
+        return name + "-" + Long.toString(random.nextLong()%RANDOM_MAX, 36);
+    }
 }
+

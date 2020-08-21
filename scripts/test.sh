@@ -8,6 +8,12 @@ cd ./backend/core
 cd ../../
 echo "Done backend testing"
 
+echo "Checking event processor"
+cd ./backend/event_processor
+./gradlew assemble || exit 1
+cd ../../
+echo "Done event processor testing"
+
 echo "Checking frontend"
 cd frontend
 npm i
