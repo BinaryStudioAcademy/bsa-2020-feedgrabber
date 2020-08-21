@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Mapper
@@ -20,5 +21,5 @@ public interface RequestMapper {
                                              Questionnaire questionnaire,
                                              User targetUser,
                                              User requestMaker,
-                                             LocalTime expirationDate);
+                                             LocalDateTime expirationDate);
 }

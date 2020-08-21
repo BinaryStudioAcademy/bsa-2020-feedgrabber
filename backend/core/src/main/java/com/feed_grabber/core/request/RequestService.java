@@ -12,6 +12,7 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class RequestService {
                         .findById(dto.getTargetUserId())
                         .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
 
-        var date = LocalTime.now().plusSeconds(dto.getSecondsToDeadline());
+        var date = LocalDateTime.now().plusSeconds(dto.getSecondsToDeadline());
 
         var toSave = RequestMapper.MAPPER
                 .requestCreationRequestDtoToModel(dto, questionnaire, targetUser, currentUser, date);
