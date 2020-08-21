@@ -8,9 +8,17 @@ export interface IQuestionnaireReport {
 export interface IQuestionReport {
   id: string;
   title: string;
-  type: QuestionType.radio;
+  type: QuestionType;
   answers: number;
-  data: IQuestionReportRadioData; // serialized from JSON
+  data:  // serialized from JSON
+    IQuestionReportRadioData |
+    IQuestionReportFreeTextData |
+    IQuestionReportMultichoiceData |
+    IQuestionReportScaleData;
+}
+
+export interface IQuestionReportMultichoiceData {
+  options: {title: string; amount: number}[];
 }
 
 export interface IQuestionReportRadioData {
@@ -22,6 +30,15 @@ export interface IRespondentReport {
   answers: IQuestion[];
 }
 
-// export interface IRespondentReports {
-//   respondentReports: IRespondentReport[];
-// }
+export interface IQuestionReportScaleData {
+  options: {title: string; amount: number}[];
+}
+
+export interface IQuestionReportFreeTextData {
+  values: string[];
+}
+
+export interface IQuestionReportCheckboxData {
+  options: {title: string; amount: number}[];
+}
+

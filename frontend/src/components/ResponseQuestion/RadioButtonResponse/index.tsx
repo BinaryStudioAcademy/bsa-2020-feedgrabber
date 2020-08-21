@@ -21,7 +21,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         return question.details.answerOptions.find(answer => answer === answ) ? '' : answ;
     });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
-    const [answer, setAnswer] = useState(response || question.details.answerOptions[0]);
+    const [answer, setAnswer] = useState(response || null);
 
     // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
 
@@ -31,7 +31,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     };
 
     const handleOther = (value: string) => {
-        if (value.trim().length === 0 || value.trim().length > 200) {
+        if (value?.trim().length === 0 || value.trim()?.length > 200) {
             setOther(null);
             setAnswer(null);
             setOtherIsInvalid(true);
@@ -62,7 +62,8 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                         disabled={!!response}
                         checked={answer === other}
                         name='radioGroup'
-                        onChange={handleChange}
+                        value={other}
+                        onChange={() => handleOther(other)}
                     />
                     <Input
                         disabled={!!response}

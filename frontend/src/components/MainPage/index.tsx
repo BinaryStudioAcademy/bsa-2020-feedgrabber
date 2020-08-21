@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 
 import UIPageTitle from "../UI/UIPageTitle";
 import UIButton from "../UI/UIButton";
@@ -8,10 +8,14 @@ import UICardBlock from "../UI/UICardBlock";
 import UIColumn from "../UI/UIColumn";
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { loadRequestedQuestionnairesRoutine } from 'sagas/qustionnaires/routines';
-import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import { loadRequestedQuestionnairesRoutine } from 'sagas/request/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import { history } from '../../helpers/history.helper';
+import { IQuestionnaireResponse } from 'models/forms/Response/types';
+import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import { getResponseRoutine, addRequestIdToCurrentResponseRoutine } from 'sagas/questionnaireResponse/routines';
+import { IUserShort } from 'models/user/types';
+import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 
 interface IItem {
   id: string;
@@ -21,25 +25,28 @@ interface IItem {
 }
 
 interface IMainPageProps {
-  questionnaireList: IQuestionnaire[];
+  questionnaireList: IQuestionnaireResponse[];
   reportsList?: IItem[];
   newsList?: IItem[];
   isLoading: boolean;
 
   loadQuestionnaires(): void;
+  getResponse(requestId: string): void;
 }
 
 const MainPage: FC<IMainPageProps> =
-  ({questionnaireList, reportsList = [], newsList = [], isLoading, loadQuestionnaires}) => {
+  ({questionnaireList, reportsList = [], newsList = [], isLoading,
+     loadQuestionnaires, getResponse}) => {
 
     useEffect(() => {
-      if (!questionnaireList && !isLoading) {
-          loadQuestionnaires();
+      if(!questionnaireList && !isLoading){
+        loadQuestionnaires();
       }
-    }, [questionnaireList, loadQuestionnaires, isLoading]);
+    }, [questionnaireList, loadQuestionnaires]);
 
-    const handleClick = id => {
-      history.push(`/response/${id}`);
+    const handleAnswerClick = (requestId, questionnaireId) => {
+      getResponse(requestId);
+      history.push(`/response/${questionnaireId}`);
     };
 
     return (
@@ -52,12 +59,12 @@ const MainPage: FC<IMainPageProps> =
               <h3>Pending Questionnaires</h3>
             </UICardBlock>
             <LoaderWrapper loading={isLoading}>
-              {questionnaireList && questionnaireList.map(questionnaire => (
-                <UICardBlock key={questionnaire.id}>
-                  {questionnaire.title && <h4>{questionnaire.title}</h4>}
-                  {questionnaire.description && <p>{questionnaire.description}</p>}
-                  {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
-                  <UIButton title="Answer" onClick={() => handleClick(questionnaire.id)}/>
+              {questionnaireList && questionnaireList.map(item => (
+                <UICardBlock key={item.requestId}>
+                  {item.questionnaire.title && <h4>{item.questionnaire.title}</h4>}
+                  {item.questionnaire.description && <p>{item.questionnaire.description}</p>}
+                  {item.questionnaire.companyName && <p><b>{item.questionnaire.companyName}</b></p>}
+                  <UIButton title="Answer" onClick={() => handleAnswerClick(item.requestId, item.questionnaire.id)}/>
                 </UICardBlock>
               ))}
             </LoaderWrapper>
@@ -99,12 +106,14 @@ const MainPage: FC<IMainPageProps> =
   );};
 
 const MapStateToProps = (state: IAppState) => ({
-  questionnaireList: state.questionnaires.list.questionnaires,
-  isLoading: state.questionnaires.list.isLoading
+  questionnaireList: state.questionnaireResponse.list,
+  isLoading: state.questionnaireResponse.isLoading,
+  user: state.user.shortInfo
 });
 
 const MapDispatchToProps = {
-  loadQuestionnaires: loadRequestedQuestionnairesRoutine
+  loadQuestionnaires: loadRequestedQuestionnairesRoutine,
+  getResponse: getResponseRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps) (MainPage);

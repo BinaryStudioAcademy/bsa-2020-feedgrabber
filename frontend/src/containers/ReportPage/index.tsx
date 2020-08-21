@@ -14,9 +14,7 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import UITab from "../../components/UI/UITab";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import { Tab, Segment, Header } from 'semantic-ui-react';
-import { IQuestionReport } from "../../models/report/IReport";
 import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
-import RadioQuestionReport from "./RadioQuestionReport";
 import ReportSwitcher from "./ReportSwitcher";
 import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
 import { CheckboxResponse } from "../../components/ResponseQuestion/CheckboxResponse";
@@ -24,6 +22,20 @@ import { MultiChoiceResponse } from "../../components/ResponseQuestion/MultiChoi
 import { DateSelectionResponse } from "../../components/ResponseQuestion/DateSelectionResponse";
 import { FreeTextResponse } from "../../components/ResponseQuestion/FreeTextResponse";
 import RadioButtonResponse from "../../components/ResponseQuestion/RadioButtonResponse";
+import {
+  IQuestionReport,
+  IQuestionReportCheckboxData,
+  IQuestionReportFreeTextData,
+  IQuestionReportMultichoiceData,
+  IQuestionReportRadioData,
+  IQuestionReportScaleData
+} from "../../models/report/IReport";
+import RadioQuestionReport from "./RadioQuestionReport";
+import FreeTextQuestionReport from "./FreeTextQuestionReport";
+import CheckboxQuestionReport from "./CheckboxQuestionReport";
+import MultichoiceQuestionReport from "./MultichoiceQuestionReport";
+import ScaleQuestionReport from "./ScaleQuestionReport";
+
 
 import styles from './styles.module.sass';
 
@@ -55,13 +67,19 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   const renderQuestionData = (question: IQuestionReport) => {
     switch (question.type) {
       case QuestionType.radio:
-        return <RadioQuestionReport data={question.data} />;
-      // case QuestionType.checkbox:
+        return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
+      case QuestionType.checkbox:
+        return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
       // case QuestionType.date:
       // case QuestionType.fileUpload:
-      // case QuestionType.freeText:
-      // case QuestionType.multichoice:
-      // case QuestionType.scale:
+      case QuestionType.freeText:
+        return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
+      case QuestionType.multichoice:
+        return <MultichoiceQuestionReport data={question.data as IQuestionReportMultichoiceData}/>;
+      case QuestionType.scale:
+        return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
+      default:
+        return <div/>;
     }
   };
 
@@ -111,15 +129,13 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
                   <UICardBlock>
                     <h3>{report.questionnaireTitle}</h3>
                   </UICardBlock>
-                  <UICardBlock>
-                    {report.questions.map(q => (
-                      <>
-                        <h4>{q.title}</h4>
-                        <p><b>{q.answers} answers</b></p>
-                        {renderQuestionData(q)}
-                      </>
-                    ))}
-                  </UICardBlock>
+                  {report.questions.map(q => (
+                    <UICardBlock>
+                      <h4>{q.title}</h4>
+                      <p><b>{q.answers} answers</b></p>
+                      {renderQuestionData(q)}
+                    </UICardBlock>
+                  ))}
                 </UICard>
               )}
             </UIColumn>

@@ -3,7 +3,6 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.question.dto.*;
@@ -13,7 +12,7 @@ import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
