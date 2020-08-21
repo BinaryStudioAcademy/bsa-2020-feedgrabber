@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -80,5 +81,13 @@ public class RequestService {
         responseRepository.saveAll(responses);
 
         return request.getId();
+    }
+
+    public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
+        return requestRepository.findAllUnansweredByRespondentId(id)
+                .stream()
+                .map(request -> RequestMapper.MAPPER.
+                        requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
+                .collect(Collectors.toList());
     }
 }
