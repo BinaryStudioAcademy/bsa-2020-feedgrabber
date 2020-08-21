@@ -3,16 +3,11 @@ package com.feed_grabber.core.questionnaire;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
-import com.feed_grabber.core.question.QuestionService;
-import com.feed_grabber.core.question.QuestionType;
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
-import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.questionnaireResponse.QuestionnaireResponseService;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,19 +21,13 @@ public class QuestionnaireService {
 
     private final QuestionnaireRepository questionnaireRepository;
     private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
-
-    private final QuestionnaireResponseService questionnaireResponseService;
 
     @Autowired
     public QuestionnaireService(QuestionnaireRepository questionnaireRepository,
                                 CompanyRepository companyRepository,
-                                UserRepository userRepository,
-                                QuestionnaireResponseService questionnaireResponseService) {
+                                UserRepository userRepository) {
         this.questionnaireRepository = questionnaireRepository;
         this.companyRepository = companyRepository;
-        this.userRepository = userRepository;
-        this.questionnaireResponseService = questionnaireResponseService;
     }
 
 //    public List<QuestionnaireDto> getAll(Integer page, Integer size) {

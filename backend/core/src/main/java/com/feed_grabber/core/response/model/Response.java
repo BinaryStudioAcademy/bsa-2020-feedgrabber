@@ -1,5 +1,6 @@
-package com.feed_grabber.core.questionnaireResponse.model;
+package com.feed_grabber.core.response.model;
 
+import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,13 +11,13 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "response")
-public class QuestionnaireResponse {
+@Entity
+@Table(name = "responses")
+public class Response {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -26,11 +27,13 @@ public class QuestionnaireResponse {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    // the request model does not exist yet. that is why we pass null value in this column.
-    @Column(name = "request_id")
-    private UUID request;
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    private Request request;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "respondent_id")
-    private User respondent;
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column
+    private String payload;
 }
