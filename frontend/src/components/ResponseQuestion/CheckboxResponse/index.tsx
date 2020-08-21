@@ -5,7 +5,15 @@ import { Checkbox, Icon, Input } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {replaceAtIndex} from "../../../helpers/array.helper";
 
-export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ question, answerHandler }) => {
+export  interface ICheckboxResponse {
+  response?: string[];
+}
+
+export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckboxResponse> = ({
+  question,
+  answerHandler,
+  response
+}) => {
   const isAnswer = (field: string, options: string[]): boolean => {
     if (!options) {
       return false;
@@ -27,13 +35,13 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
   const [boxes, setBoxes]
     = useState([...question.details.answerOptions.map(v => {
       return {
-        checked: isAnswer(v, question.answer),
+        checked: isAnswer(v, response),
         value: v
       };
     })
     , {
-        checked: (question.answer && question.details.includeOther),
-        value: findOther(question.answer, question.details.answerOptions)
+        checked: (response && question.details.includeOther),
+        value: findOther(response, question.details.answerOptions)
       }]);
 
   const handleAnswer = () => {
@@ -45,7 +53,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
     {boxes.map((v, i) => {
       return (i === boxes.length - 1 && question.details.includeOther)
         ? <div className={styles.other}>
-          <Checkbox disabled={!!question.answer}
+          <Checkbox disabled={!!response}
                     checked={boxes[i].checked}
                     onChange={() => {
                       setBoxes(() => {
@@ -56,7 +64,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                     }
                     } />
           <Input
-            disabled={!!question.answer}
+            disabled={!!response}
             className={styles.otherInput}
             defaultValue={boxes[i].value}
             placeholder='Other option...'
@@ -70,7 +78,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
           />
         </div>
         : <Checkbox
-            disabled={!!question.answer}
+            disabled={!!response}
             label={v.value}
             checked={boxes[i].checked}
             onChange={() => {

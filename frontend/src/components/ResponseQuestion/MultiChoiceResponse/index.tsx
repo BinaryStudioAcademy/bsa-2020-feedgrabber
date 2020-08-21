@@ -4,9 +4,14 @@ import {ICheckboxQuestion} from "../../../models/forms/Questions/IQuesion";
 import {FC, useState} from "react";
 import {Checkbox} from "semantic-ui-react";
 
-export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({
+export interface IMultiChoiceResponse {
+    response?: string[];
+}
+
+export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion> & IMultiChoiceResponse> = ({
   question,
-  answerHandler
+  answerHandler,
+  response
 }) => {
     const isAnswer = (field: string, options: string[]): boolean => {
         if (!options) {
@@ -21,10 +26,10 @@ export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({
     };
     return <>
         {question.details.answerOptions?.map((v, i) => {
-            setBoxes([...boxes, { checked: isAnswer(v, question.answer), value: v }]);
+            setBoxes([...boxes, { checked: isAnswer(v, response), value: v }]);
             console.log(boxes);
             return <Checkbox
-                disabled={!!question.answer}
+                disabled={!!response}
                 label={v}
                 checked={boxes[i].checked}
                 onChange={() => {

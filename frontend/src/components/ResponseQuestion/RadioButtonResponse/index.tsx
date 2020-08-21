@@ -1,20 +1,27 @@
 import React, {FC, useEffect, useState} from "react";
 import { Input, Radio } from "semantic-ui-react";
-
 import styles from './styles.module.sass';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
 import { IRadioQuestion } from "../../../models/forms/Questions/IQuesion";
 
-const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, answerHandler}) => {
+export interface IRadioResponse {
+    response?: string;
+}
+
+const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse> = ({
+    question,
+    answerHandler,
+    response
+}) => {
     const [other, setOther] = useState(() => {
-        if (!question.answer) {
+        if (!response) {
             return '';
         }
-        const answ = question.answer;
+        const answ = response;
         return question.details.answerOptions.find(answer => answer === answ) ? '' : answ;
     });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
-    const [answer, setAnswer] = useState(question.answer || question.details.answerOptions[0]);
+    const [answer, setAnswer] = useState(response || question.details.answerOptions[0]);
 
     // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
 
@@ -40,7 +47,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
             {question.details.answerOptions.map((option, index) => (
                 <div className={styles.option_container} key={index}>
                     <Radio
-                        disabled={!!question.answer}
+                        disabled={!!response}
                         checked={answer === option}
                         name='radioGroup'
                         value={option}
@@ -52,19 +59,19 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
             {question.details.includeOther && (
                 <div className={styles.option_container}>
                     <Radio
-                        disabled={!!question.answer}
+                        disabled={!!response}
                         checked={answer === other}
                         name='radioGroup'
                         onChange={handleChange}
                     />
                     <Input
-                        disabled={!!question.answer}
+                        disabled={!!response}
                         className={styles.answer_input}
                         fluid
                         transparent
                         defaultValue={other}
                         placeholder="Or enter your variant here..."
-                        error={answer === other && !!otherIsInvalid && !question.answer}
+                        error={answer === other && !!otherIsInvalid && !response}
                         onChange={event => {
                             handleOther(event.target.value);
                         }

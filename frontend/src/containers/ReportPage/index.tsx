@@ -68,15 +68,15 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   const renderQuestionResponse = (question: IQuestion) => {
     switch (question.type) {
       case QuestionType.scale:
-        return <ScaleQuestionResponse question={question} />;
+        return <ScaleQuestionResponse question={question} response={question.answer} />;
       case QuestionType.date:
-        return <DateSelectionResponse question={question} />;
+        return <DateSelectionResponse question={question} response={question.answer} />;
       case QuestionType.radio:
-        return <RadioButtonResponse question={question} />;
+        return <RadioButtonResponse question={question} response={question.answer} />;
       case QuestionType.checkbox:
-        return <CheckboxResponse question={question} />;
+        return <CheckboxResponse question={question} response={question.answer} />;
       case QuestionType.freeText:
-        return <FreeTextResponse question={question} />;
+        return <FreeTextResponse question={question} response={question.answer} />;
       // case QuestionType.multichoice:
       //   return <MultiChoiceResponse question={question} />;
       default:

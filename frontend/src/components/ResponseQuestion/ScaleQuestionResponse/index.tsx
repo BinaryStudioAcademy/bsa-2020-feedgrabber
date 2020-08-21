@@ -1,20 +1,30 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
 import { IScaleQuestion } from "../../../models/forms/Questions/IQuesion";
 import { Form, Radio } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
-export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> = (
+export interface IScaleResponse {
+  response?: number;
+}
+
+export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScaleResponse> = (
   {
     question= {
       id: '23',
       details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good'},
       answer: 4
     },
-    answerHandler = null
+    answerHandler = null,
+    response
   }) => {
+  const [answer, setAnswer] = useState<number>(response || question.answer);
+
   const handleClick = (e, value) => {
-    answerHandler?.(question.id, value);
+    console.log(value.value);
+    setAnswer(value.value);
+    answerHandler?.(question.id, value.value);
+    console.log(answer);
   };
 
   const getVariants = (min: number, max: number) => {
@@ -24,10 +34,11 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> = (
       variants.push(
         <Form.Field className={styles.scale_question_response_variant} key={i}>
           <span>{i}</span>
-          <Radio value={i} name={group}
+          <Radio value={i}
+                 name={group}
                  onChange={handleClick}
-                 disabled={!!question.answer}
-                 checked={i === question.answer} />
+                 disabled={!!response}
+                 checked={i === answer} />
         </Form.Field>
       );
     }

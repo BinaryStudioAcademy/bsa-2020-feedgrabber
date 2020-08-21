@@ -4,7 +4,15 @@ import React, { FC, useState } from "react";
 import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
-export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ question, answerHandler }) => {
+export interface IFreeTextResponse {
+    response?: string;
+}
+
+export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextResponse> = ({
+    question,
+    answerHandler,
+    response
+}) => {
     const [invalidMessage, setInvalidMessage] = useState('');
 
     const validate = (value: string) => {
@@ -19,8 +27,8 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ questio
     return <Input
         onChange={handleChange}
         placeholder='Answer field'
-        disabled={!!question.answer}
-        defaultValue={question.answer}
+        disabled={!!response}
+        defaultValue={response}
         error={!!invalidMessage}
         className={styles.input}
     />;
