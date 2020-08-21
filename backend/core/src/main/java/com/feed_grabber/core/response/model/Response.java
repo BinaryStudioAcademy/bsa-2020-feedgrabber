@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -37,4 +38,7 @@ public class Response {
 
     @Column
     private String payload;
+
+    @Column(name = "answered_at")
+    private LocalDateTime answeredAt;
 }
