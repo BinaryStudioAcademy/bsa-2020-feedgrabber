@@ -11,7 +11,13 @@ type BodyBase = {
     questionId: string;
 };
 
-type FreeTextAnswer = BodyBase & { value: string; type: QuestionType.freeText }
+type FreeTextAnswer = BodyBase & {
+    value: {
+        text: string;
+    };
+    type: QuestionType.freeText;
+}
+
 // numbers of answer option starting from 0
 type CheckBoxAnswer = BodyBase & {
     value: {
@@ -29,9 +35,28 @@ type RadioAnswer = BodyBase & {
     type: QuestionType.radio;
 }
 
-type FileAnswer = BodyBase & { value: string[]; type: QuestionType.fileUpload } // urls to imgur
-type DateAnswer = BodyBase & { value: string; type: QuestionType.date } // date in utc
-type ScaleAnswer = BodyBase & { value: number; type: QuestionType.scale }
+// urls to imgur
+type FileAnswer = BodyBase & {
+    value: {
+        urls: string[];
+    };
+    type: QuestionType.fileUpload;
+}
+
+// date in utc
+type DateAnswer = BodyBase & {
+    value: {
+        date: string;
+    };
+    type: QuestionType.date;
+}
+
+type ScaleAnswer = BodyBase & {
+    value: {
+        number: number;
+    };
+    type: QuestionType.scale;
+}
 
 export type IAnswerBody = FreeTextAnswer | CheckBoxAnswer | FileAnswer | DateAnswer | ScaleAnswer | RadioAnswer;
 
