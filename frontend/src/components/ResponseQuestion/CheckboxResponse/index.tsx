@@ -1,13 +1,13 @@
-import { ICheckboxQuestion, ITextQuestion } from "models/forms/Questions/IQuesion";
+import { ICheckboxQuestion } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
-import { Checkbox, Icon, Input } from "semantic-ui-react";
+import { Checkbox, Input } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {replaceAtIndex} from "../../../helpers/array.helper";
 
 export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ question, answerHandler }) => {
     const [boxes, setBoxes]
-        = useState([...question.details.answerOptions.map(v => { return { checked: false, value: v }; })
+        = useState(() => [...question.details.answerOptions.map(v => ({ checked: false, value: v }))
             , { checked: false, value: '' }]);
 
     const handleAnswer = () => {
