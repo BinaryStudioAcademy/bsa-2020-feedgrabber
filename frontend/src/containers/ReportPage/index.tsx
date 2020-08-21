@@ -9,10 +9,20 @@ import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import {IQuestionReport, IQuestionReportFreeTextData, IQuestionReportRadioData} from "../../models/report/IReport";
+import {
+  IQuestionReport,
+  IQuestionReportCheckboxData,
+  IQuestionReportFreeTextData,
+  IQuestionReportMultichoiceData,
+  IQuestionReportRadioData,
+  IQuestionReportScaleData
+} from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
 import FreeTextQuestionReport from "./FreeTextQuestionReport";
+import CheckboxQuestionReport from "./CheckboxQuestionReport";
+import MultichoiceQuestionReport from "./MultichoiceQuestionReport";
+import ScaleQuestionReport from "./ScaleQuestionReport";
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
@@ -32,13 +42,16 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     switch (question.type) {
       case QuestionType.radio:
         return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
-      // case QuestionType.checkbox:
+      case QuestionType.checkbox:
+        return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
       // case QuestionType.date:
       // case QuestionType.fileUpload:
       case QuestionType.freeText:
         return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
-      // case QuestionType.multichoice:
-      // case QuestionType.scale:
+      case QuestionType.multichoice:
+        return <MultichoiceQuestionReport data={question.data as IQuestionReportMultichoiceData}/>;
+      case QuestionType.scale:
+        return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
       default:
         return <div/>;
     }

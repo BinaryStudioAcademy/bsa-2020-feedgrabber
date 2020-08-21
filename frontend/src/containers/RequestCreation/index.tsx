@@ -21,6 +21,8 @@ import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
+import UISwitch from "../../components/UI/UIInputs/UISwitch";
+import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -129,22 +131,24 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Include target user to request?
-                                  <input type='checkbox'
+                                  <span>
+                                  <UISwitch
                                          name='includeTargetUser'
                                          checked={formik.values.includeTargetUser}
                                          onChange={formik.handleChange}
-                                  />
+                                  /></span>
                                 </h4>
                                 <p>If yes, this user will also receive request</p>
                               </UICardBlock>
 
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Set Deadline for this request?
-                                  <input type='checkbox'
+                                  <span>
+                                  <UISwitch
                                          name='withDeadline'
                                          checked={formik.values.withDeadline}
                                          onChange={formik.handleChange}
-                                  />
+                                  /></span>
                                 </h4>
                                 <p>Users will be notified before the deadline</p>
 
@@ -166,22 +170,24 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Notify Users?
-                                  <input type='checkbox'
+                                  <span>
+                                  <UISwitch
                                          name='notifyUsers'
                                          checked={formik.values.notifyUsers}
                                          onChange={formik.handleChange}
-                                  />
+                                  /></span>
                                 </h4>
                                 <p>Users will be notified after sending the request</p>
                               </UICardBlock>
 
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Automatically Generate Report?
-                                  <input type='checkbox'
+                                  <span>
+                                  <UISwitch
                                          name='generateReport'
                                          checked={formik.values.generateReport}
                                          onChange={formik.handleChange}
-                                  />
+                                  /></span>
                                 </h4>
                               </UICardBlock>
 
