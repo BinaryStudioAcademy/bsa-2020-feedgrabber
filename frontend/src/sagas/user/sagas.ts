@@ -24,8 +24,11 @@ function* getUser() {
 
 function* uploadAvatar(action) {
   try {
-    const image = yield call(apiClient.post, '/api/image', action.payload);
-    yield put(uploadUserAvatarRoutine.success(image.data.data.url));
+    const formData = new FormData();
+    formData.append('image', action.payload);
+
+    const image = yield call(apiClient.post, '/api/image', formData);
+    yield put(uploadUserAvatarRoutine.success(image.data.link));
   } catch (e) {
     yield put(uploadUserAvatarRoutine.failure(e));
   }

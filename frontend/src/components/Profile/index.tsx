@@ -26,7 +26,6 @@ const ProfilePage: FC<IProfileMode> =
                         <Menu fluid vertical tabular>
                             <Menu.Item exact as={NavLink} to='/profile' name={'profile'}/>
                             <Menu.Item exact as={NavLink} to='/profile/settings' name={'settings'}/>
-                            <Menu.Item exact as={NavLink} to='/profile/avatar' name={'set avatar'}/>
                         </Menu>
                     </Grid.Column>
 

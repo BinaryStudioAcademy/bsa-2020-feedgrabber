@@ -26,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "firstName", source = "userProfile.firstName")
     @Mapping(target = "lastName", source = "userProfile.lastName")
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
+    @Mapping(target = "avatar", source = "userProfile.avatar")
     @Mapping(target = "role", source = "role.systemRole")
     UserDetailsResponseDTO detailedFromUser(User user);
 

@@ -269,17 +269,14 @@ public class UserService implements UserDetailsService {
         var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
         if (user.getUserProfile() == null) {
-            user.setUserProfile(new UserProfile());
+            var savedProfile = profileRepository.save(new UserProfile(user));
+            user.setUserProfile(savedProfile);
         }
-        var profile = UserProfile.builder()
-                .avatar(dto.getAvatar())
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .phoneNumber(dto.getPhoneNumber())
-                .user(user)
-                .build();
-        var savedProfile = profileRepository.save(profile);
-        user.setUserProfile(savedProfile);
+        var profile = user.getUserProfile();
+        profile.setAvatar(dto.getAvatar());
+        profile.setFirstName(dto.getFirstName());
+        profile.setLastName(dto.getLastName());
+        profile.setPhoneNumber(dto.getPhoneNumber());
         user.setUsername(dto.getUserName());
         userRepository.save(user);
     }

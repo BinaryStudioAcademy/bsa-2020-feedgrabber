@@ -97,7 +97,6 @@ const ProfileInfo: FC<ProfileInfoProps> = props => {
                                 handleChange,
                                 handleBlur,
                                 handleSubmit,
-                                isSubmitting,
                                 isValid,
                                 touched
                             }) => (
@@ -144,7 +143,7 @@ const ProfileInfo: FC<ProfileInfoProps> = props => {
                                   />
                                   <br/>
                                   <div>
-                                      <Button disabled={isSubmitting || !isValid} primary
+                                      <Button disabled={!isValid} primary
                                               type="submit">Save</Button>
                                   </div>
                               </Form>

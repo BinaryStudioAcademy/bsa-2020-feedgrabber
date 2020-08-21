@@ -50,7 +50,8 @@ const ImageCropModal: React.FC<IImageCropModalProps> = ({ close, save, src, file
           reject(new Error('Canvas is empty'));
           return;
         }
-        resolve({...blob, name: fileName});
+        
+        resolve(blob);
       }, 'image/jpeg', 1);
     });
   };
@@ -58,6 +59,7 @@ const ImageCropModal: React.FC<IImageCropModalProps> = ({ close, save, src, file
   const saveImage = async () => {
     const croppedImage = await getCroppedImg(imgRef, crop);
     save(croppedImage);
+    close();
   };
 
   return (

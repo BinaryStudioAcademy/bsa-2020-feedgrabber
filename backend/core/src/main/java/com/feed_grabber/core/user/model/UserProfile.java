@@ -40,4 +40,8 @@ public class UserProfile {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public UserProfile(User user) {
+        this.user = user;
+    }
 }
