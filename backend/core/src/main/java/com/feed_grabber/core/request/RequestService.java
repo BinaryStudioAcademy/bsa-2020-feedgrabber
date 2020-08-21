@@ -2,10 +2,8 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
-import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
-import com.feed_grabber.core.notification.dto.NotificationResponseDto;
 import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
@@ -15,14 +13,13 @@ import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,33 +71,25 @@ public class RequestService {
 
         var request = requestRepository.save(toSave);
 
-        var usersFormUsers = userRepository
-                .findAllById(dto.getRespondentIds());
+        var users = new HashSet<>(userRepository.findAllById(dto.getRespondentIds()));
 
-        var usersFromTeams = teamRepository
+        users.addAll(teamRepository
                 .findAllById(dto.getTeamIds())
                 .stream()
-                .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
+                .flatMap(team -> team.getUsers().stream())
+                .collect(Collectors.toSet()));
 
-        var usersStream = Stream
-                .concat(usersFormUsers.stream(), usersFromTeams.stream())
-                .distinct()
-                .filter(user -> !user.getId().equals(dto.getTargetUserId()));
-        if (dto.getIncludeTargetUser()) {
-            usersStream = Stream.concat(usersStream, Stream.of(targetUser));
+        if (targetUser != null) {
+            if (dto.getIncludeTargetUser()) users.add(targetUser);
+            else users.remove(targetUser);
         }
-        var users = usersStream.collect(Collectors.toList());
 
+        var notificationExists = dto.getNotifyUsers();
         var responses = users.stream()
-                .map(u -> Response.builder().user(u).request(request).build())
+                .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
                 .collect(Collectors.toList());
-        if(dto.getNotifyUsers()) {
-            responses = responses
-                    .stream()
-                    .peek(response -> response.setNotificationExists(true))
-                    .collect(Collectors.toList());
-        }
-        if (!responses.isEmpty()) responseRepository.saveAll(responses);
+
+        responseRepository.saveAll(responses);
 
         if (dto.getNotifyUsers()) {
             var toSaveNotification = UserNotification
@@ -114,8 +103,8 @@ public class RequestService {
             var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
             notificationService.sendMessageToUsers(
                     userIds,
-                    "alert",
-                    UserNotificationMapper.MAPPER.notificationResponseDtoFromModel(notification));
+                    "notify",
+                    "You have a new notification");
         }
 
         return request.getId();

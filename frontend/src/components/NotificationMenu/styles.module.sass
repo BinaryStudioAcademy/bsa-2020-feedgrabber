@@ -33,7 +33,9 @@
 .text
   padding: 10px
   font-size: 1.2rem
-  word-break: break-all
+  hyphens: auto
+  position: relative
+
 
 .button
   justify-self: center
@@ -56,3 +58,25 @@
     box-shadow: 0 0 1px 1px rgba(0,0,0,0.25)
     background-color: #b62b49
     cursor: pointer
+
+.headerBellIcon
+  color: #fff
+
+.headerBellMessages
+  position: absolute
+  top: 0
+  right: 0
+  font-size: 0.8em
+  height: 1.3em
+  width: 1.3em
+  text-align: center
+  padding-top: 2px
+  color: #000
+  font-weight: bold
+  background-color: #ff5176
+  border-radius: 50%
+.date
+  position: absolute
+  bottom: 2px
+  color: #979797
+  font-size: 1rem

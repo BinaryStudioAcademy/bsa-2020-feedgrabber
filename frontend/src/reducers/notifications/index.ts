@@ -10,6 +10,7 @@ export interface INotification {
   text: string;
   date: Date;
   responseId: string;
+  questionnaireId: string;
 }
 
 export interface INotificationsState {

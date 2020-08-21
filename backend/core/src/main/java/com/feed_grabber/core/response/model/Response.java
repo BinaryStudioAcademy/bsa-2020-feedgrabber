@@ -38,5 +38,6 @@ public class Response {
     private String payload;
 
     @Column(name="notification_exists")
+    @Builder.Default
     private Boolean notificationExists = false;
 }
