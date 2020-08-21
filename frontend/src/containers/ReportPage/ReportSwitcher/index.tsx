@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 
-import styles from './style.module.sass';
+import styles from './styles.module.sass';
 
 export interface IRCProps {
   from: number;
@@ -32,7 +32,7 @@ const ReportSwitcher: React.FC<IRCProps> = ({ from, to, setIndex }) => {
       <Button icon onClick={() => handleClick(-1)}>
         <Icon name="angle left" />
       </Button>
-      <input/>
+      <input value={curIndex} />
       <span> / {to}</span>
       <Button icon onClick={() => handleClick(1)}>
         <Icon name="angle right" />

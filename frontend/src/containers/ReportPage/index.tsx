@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from "react-redux";
 
 import { IAppState } from 'models/IAppState';
-import { loadQuestionnaireReportRoutine } from "../../sagas/questionnaireReport/routines";
+import {
+  loadQuestionnaireReportRoutine,
+  loadRespondentReportsRoutine
+} from "../../sagas/questionnaireReport/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -11,22 +14,37 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import { Tab } from 'semantic-ui-react';
 import { IQuestionReport } from "../../models/report/IReport";
-import { QuestionType } from "../../models/forms/Questions/IQuesion";
+import { IQuestion, IScaleQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
+import ReportSwitcher from "./ReportSwitcher";
+import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
     match,
     report,
-    isLoading,
-    loadQuestionnaireReport
+    isLoadingReport,
+    respondentReports,
+    isLoadingRespondentReports,
+    loadQuestionnaireReport,
+    loadRespondentReports
   }
 ) => {
+  const [currentReport, setCurrentReport] = useState<number>(1);
+
   useEffect(() => {
-    if (!report && !isLoading) {
+    if (!report && !isLoadingReport) {
       loadQuestionnaireReport(match.params.id);
     }
-  }, [report, isLoading, loadQuestionnaireReport, match]);
+  }, [report, isLoadingReport, loadQuestionnaireReport, match]);
+
+  useEffect(() => {
+    console.log('use Effect');
+    if (!respondentReports && !isLoadingRespondentReports) {
+      console.log('loadRespondentReports');
+      loadRespondentReports(match.params.id);
+    }
+  }, [respondentReports, isLoadingRespondentReports, loadRespondentReports, match]);
 
   const renderQuestionData = (question: IQuestionReport) => {
     switch (question.type) {
@@ -41,35 +59,83 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     }
   };
 
+  const renderQuestionResponse = (question: IQuestion) => {
+    switch (question.type) {
+      case QuestionType.scale:
+        return <ScaleQuestionResponse question={question} response={question.answer} />;
+      default:
+        return <span>Error</span>;
+      // case QuestionType.checkbox:
+      // case QuestionType.date:
+      // case QuestionType.fileUpload:
+      // case QuestionType.freeText:
+      // case QuestionType.multichoice:
+      // case QuestionType.scale:
+    }
+  };
+
+  const renderRespondentReport = () => {
+    // reportData - some instance of derived IQuestionBase class. It has `answer` field
+    console.log(respondentReports);
+    const reportData = respondentReports[currentReport - 1];
+    return (
+      <div style={{ width: "100%" }}>
+        <span>{reportData.respondent}</span>
+        {reportData.answers.map(question => (
+          <UICard>
+            <span>{question.name}</span>
+            {renderQuestionResponse(question)}
+          </UICard>
+        ))}
+      </div>
+    );
+  };
+
   const panes = [
     {
       menuItem: 'General',
       render: () => (
-        <LoaderWrapper loading={isLoading}>
-          <UIColumn>
-            {report && (
-              <UICard>
-                <UICardBlock>
-                  <h3>{report.questionnaireTitle}</h3>
-                </UICardBlock>
-                <UICardBlock>
-                  {report.questions.map(q => (
-                    <>
-                      <h4>{q.title}</h4>
-                      <p><b>{q.answers} answers</b></p>
-                      {renderQuestionData(q)}
-                    </>
-                  ))}
-                </UICardBlock>
-              </UICard>
-            )}
-          </UIColumn>
-        </LoaderWrapper>
+        <Tab.Pane>
+          <span>Just text Example</span>
+          <LoaderWrapper loading={isLoadingReport}>
+            <UIColumn>
+              {report && (
+                <UICard>
+                  <UICardBlock>
+                    <h3>{report.questionnaireTitle}</h3>
+                  </UICardBlock>
+                  <UICardBlock>
+                    {report.questions.map(q => (
+                      <>
+                        <h4>{q.title}</h4>
+                        <p><b>{q.answers} answers</b></p>
+                        {renderQuestionData(q)}
+                      </>
+                    ))}
+                  </UICardBlock>
+                </UICard>
+              )}
+              <span>Whole report</span>
+            </UIColumn>
+          </LoaderWrapper>
+        </Tab.Pane>
       )
     },
     {
       menuItem: 'Respondents',
-      render: () => <span>Report for each respondent</span>
+      render: () => (
+        <Tab.Pane>
+          <LoaderWrapper loading={isLoadingRespondentReports}>
+            {respondentReports && (
+              <UIColumn wide>
+                <ReportSwitcher from={1} to={respondentReports.length}
+                                setIndex={setCurrentReport} />
+                {renderRespondentReport()}
+              </UIColumn>
+            )}
+          </LoaderWrapper>
+        </Tab.Pane>
+      )
     }
   ];
 
@@ -77,7 +143,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
     <>
       <UIPageTitle title="Report"/>
       <UIContent>
-        <Tab panes={panes} />
+        <Tab panes={panes} menuPosition="left" />
       </UIContent>
     </>
   );
@@ -85,11 +151,14 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
 
 const mapStateToProps = (rootState: IAppState) => ({
   report: rootState.questionnaireReport.report,
-  isLoading: rootState.questionnaireReport.isLoading
+  isLoadingReport: rootState.questionnaireReport.isLoading,
+  respondentReports: rootState.questionnaireReport.respondentReports,
+  isLoadingRespondentReports: rootState.questionnaireReport.isLoadingRespondentReports
 });
 
 const mapDispatchToProps = {
-  loadQuestionnaireReport: loadQuestionnaireReportRoutine
+  loadQuestionnaireReport: loadQuestionnaireReportRoutine,
+  loadRespondentReports: loadRespondentReportsRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
