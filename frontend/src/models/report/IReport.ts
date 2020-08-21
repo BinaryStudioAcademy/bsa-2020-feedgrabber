@@ -1,4 +1,4 @@
-import {QuestionType} from "../forms/Questions/IQuesion";
+import {IQuestion, QuestionType} from "../forms/Questions/IQuesion";
 
 export interface IQuestionnaireReport {
   questionnaireTitle: string;
@@ -16,3 +16,12 @@ export interface IQuestionReport {
 export interface IQuestionReportRadioData {
   options: {title: string; amount: number}[];
 }
+
+export interface IRespondentReport {
+  respondent: string;
+  answers: IQuestion[];
+}
+
+// export interface IRespondentReports {
+//   respondentReports: IRespondentReport[];
+// }

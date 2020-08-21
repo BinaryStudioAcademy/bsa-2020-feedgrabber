@@ -1,12 +1,15 @@
-import {IQuestionnaireReport} from "../../models/report/IReport";
+import { IQuestionnaireReport, IRespondentReport } from "../../models/report/IReport";
 import {
   clearQuestionnaireReportRoutine,
-  loadQuestionnaireReportRoutine
+  loadQuestionnaireReportRoutine,
+  loadRespondentReportsRoutine
 } from "../../sagas/questionnaireReport/routines";
 
 export interface IQuestionnaireReportState {
   report?: IQuestionnaireReport;
   isLoading?: boolean;
+  respondentReports?: IRespondentReport[];
+  isLoadingRespondentReports?: boolean;
 }
 
 export default (state: IQuestionnaireReportState = {}, action): IQuestionnaireReportState => {
@@ -33,7 +36,22 @@ export default (state: IQuestionnaireReportState = {}, action): IQuestionnaireRe
         ...state,
         isLoading: false
       };
-
+    case loadRespondentReportsRoutine.TRIGGER:
+      return {
+        ...state,
+        isLoadingRespondentReports: true
+      };
+    case loadRespondentReportsRoutine.SUCCESS:
+      return {
+        ...state,
+        isLoadingRespondentReports: false,
+        respondentReports: action.payload
+      };
+    case loadRespondentReportsRoutine.FAILURE:
+      return {
+        ...state,
+        isLoadingRespondentReports: false
+      };
     default:
       return state;
   }
