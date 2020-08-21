@@ -46,12 +46,12 @@ public class InvitationController {
         return new AppResponse<>(invitationService.generate(dto));
     }
 
-//    @DeleteMapping
-//    public void delete() {
-//        assertCompanyOwner();
-//        var companyId = TokenService.getCompanyId();
-//        invitationService.deleteByCompanyId(companyId);
-//    }
+    @DeleteMapping
+    public void delete(@RequestParam String email) {
+        assertCompanyOwner();
+        var companyId = TokenService.getCompanyId();
+        invitationService.deleteByCompanyIdAndEmail(companyId, email);
+    }
 
     private void assertCompanyOwner() {
         if (!TokenService.getRoleName().equals("company_owner")) {

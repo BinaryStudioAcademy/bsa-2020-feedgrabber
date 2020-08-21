@@ -58,7 +58,7 @@ public class InvitationService {
         return InvitationMapper.MAPPER.invitationToGenerateDto(invitation);
     }
 
-//    public void deleteByCompanyId(UUID companyId) {
-//        invitationRepository.deleteByCompanyId(companyId);
-//    }
+    public void deleteByCompanyIdAndEmail(UUID companyId, String email) {
+        invitationRepository.deleteByCompanyIdAndEmail(companyId, email);
+    }
 }

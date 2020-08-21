@@ -4,7 +4,11 @@ import {connect, ConnectedProps} from "react-redux";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import InvitationCreationBlock from "./linkCreation";
-import {loadInvitationsListRoutine, sendInvitationRoutine} from "../../sagas/invitation/routines";
+import {
+  deleteInvitationRoutine,
+  loadInvitationsListRoutine,
+  sendInvitationRoutine
+} from "../../sagas/invitation/routines";
 import InvitationsListBlock from "./linksList";
 
 const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
@@ -16,7 +20,8 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
     errorLoadingList,
 
     loadInvitations,
-    sendInvitation
+    sendInvitation,
+    deleteInvitation
   }
 ) => {
   return (
@@ -33,6 +38,7 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
           invitationsList={invitationsList}
           loadingList={isLoadingList}
           errorLoading={errorLoadingList}
+          deleteInvitation={deleteInvitation}
         />
       </UIContent>
     </>
@@ -49,7 +55,8 @@ const mapState = (state: IAppState) => ({
 
 const mapDispatch = {
   loadInvitations: loadInvitationsListRoutine,
-  sendInvitation: sendInvitationRoutine
+  sendInvitation: sendInvitationRoutine,
+  deleteInvitation: deleteInvitationRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

@@ -1,7 +1,7 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import apiClient from '../../helpers/apiClient';
-import {loadInvitationsListRoutine, sendInvitationRoutine} from "./routines";
+import {deleteInvitationRoutine, loadInvitationsListRoutine, sendInvitationRoutine} from "./routines";
 import {IInvitation} from "../../models/invitation/IInvitation";
 
 function* loadInvitations() {
@@ -29,23 +29,25 @@ function* generateInvitation(action: any) {
     toastr.error("Unable to generate link");
   }
 }
-//
-// function* deleteInvitation() {
-//   try {
-//     yield call(apiClient.delete, `http://localhost:5000/api/invitations`);
-//
-//     yield put(deleteInvitationRoutine.success());
-//     toastr.success("Invitation link deleted");
-//   } catch (error) {
-//     yield put(deleteInvitationRoutine.failure());
-//     toastr.error("Unable to delete link");
-//   }
-// }
+
+function* deleteInvitation(action: any) {
+  try {
+    const email: string = action.payload;
+    yield call(apiClient.delete, `http://localhost:5000/api/invitations?email=${email}`);
+
+    yield put(deleteInvitationRoutine.success());
+    yield put(loadInvitationsListRoutine.trigger());
+    toastr.success("Invitation link deleted");
+  } catch (error) {
+    yield put(deleteInvitationRoutine.failure());
+    toastr.error("Unable to delete link");
+  }
+}
 
 export default function* invitationSagas() {
   yield all([
     yield takeEvery(loadInvitationsListRoutine.TRIGGER, loadInvitations),
-    yield takeEvery(sendInvitationRoutine.TRIGGER, generateInvitation)
-    // yield takeEvery(deleteInvitationRoutine.TRIGGER, deleteInvitation)
+    yield takeEvery(sendInvitationRoutine.TRIGGER, generateInvitation),
+    yield takeEvery(deleteInvitationRoutine.TRIGGER, deleteInvitation)
   ]);
 }
