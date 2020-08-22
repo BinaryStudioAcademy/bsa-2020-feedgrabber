@@ -1,11 +1,5 @@
 import {
-    CheckBoxAnswer,
-    DateAnswer,
-    FileAnswer,
-    FreeTextAnswer,
-    IAnswerBody,
-    RadioAnswer,
-    ScaleAnswer
+    IAnswerBody
 } from "../Response/types";
 
 // export interface IMultiAnswerDetails {

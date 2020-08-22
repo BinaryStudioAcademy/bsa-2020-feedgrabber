@@ -1,24 +1,47 @@
 import { IQuestionnaire } from "../Questionnaires/types";
 import { QuestionType } from "../Questions/IQuesion";
 
-export interface IAnswer<T> {
+export interface IAnswer<T extends IAnswerBody> {
     questionId: string;
     type: QuestionType;
     body: T;
 }
 
-type BodyBase = {
-    questionId: string;
-};
+type BodyBase = { questionId: string; type: QuestionType }
 
-export type FreeTextAnswer = BodyBase & {value: string}
-export type CheckBoxAnswer = BodyBase & {value: string[]} // numbers of answer option starting from 0
-export type RadioAnswer = BodyBase & {value: string}
-export type FileAnswer = BodyBase & {value: string[]} // urls to imgur
-export type DateAnswer = BodyBase & {value: string} // date in utc
-export type ScaleAnswer = BodyBase & {value: number}
+type FreeTextAnswer = BodyBase & {
+    body: string;
+}
 
-export type IAnswerBody = FreeTextAnswer|CheckBoxAnswer|FileAnswer|DateAnswer|ScaleAnswer|RadioAnswer;
+type CheckBoxAnswer = BodyBase & {
+    body: {
+        selected: string[];
+        other: string;
+    };
+}
+
+type RadioAnswer = BodyBase & {
+    body: {
+        selected: string;
+        other: string;
+    };
+}
+
+// urls to imgur
+type FileAnswer = BodyBase & {
+    body: string[];
+}
+
+// date in utc
+type DateAnswer = BodyBase & {
+    body: string;
+}
+
+type ScaleAnswer = BodyBase & {
+    body: number;
+}
+
+export type IAnswerBody = FreeTextAnswer | CheckBoxAnswer | FileAnswer | DateAnswer | ScaleAnswer | RadioAnswer;
 
 export interface IQuestionnaireResponse {
     id?: string;

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IScaleQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IScaleQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 import { Form, Radio } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 
@@ -8,7 +8,11 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> =
   ({ question = { id: '23', details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good' } },
     answerHandler = null }) => {
     const handleClick = (e, value) => {
-      answerHandler?.(value ? { questionId: question.id, value } : null);
+      answerHandler?.(value ? {
+        questionId: question.id,
+        body: value,
+        type: QuestionType.scale
+      } : null);
     };
 
     const getVariants = (min: number, max: number) => {

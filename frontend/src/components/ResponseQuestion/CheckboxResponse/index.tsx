@@ -1,4 +1,4 @@
-import { ICheckboxQuestion, IQuestion } from "models/forms/Questions/IQuesion";
+import { ICheckboxQuestion, IQuestion, QuestionType } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useEffect, useState } from "react";
 import { Checkbox, Input } from "semantic-ui-react";
@@ -7,18 +7,24 @@ import { replaceAtIndex } from "../../../helpers/array.helper";
 
 export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ question, answerHandler }) => {
     const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
-    // const [other, setOther] = useState({ checked: false, value: null });
+    const [other, setOther] = useState({ checked: false, value: null });
 
     useEffect(() => {
-        setBoxes([...question.details.answerOptions.map(v => ({ checked: false, value: v }))
-            , question.details.includeOther && { checked: false, value: '' }]);
+        setBoxes(question.details.answerOptions.map(v => ({ checked: false, value: v })));
     }, [setBoxes]);
 
     const handleAnswer = () => {
         const boxesChecked = boxes.filter(v => v.checked && v.value);
         answerHandler
             ?.(boxesChecked.length
-                ? { questionId: question.id, value: boxesChecked.map(v => v.value) }
+                ? {
+                    questionId: question.id,
+                    body: {
+                        selected: boxesChecked.map(v => v.value),
+                        other: other.value || null
+                    }
+                    , type: QuestionType.checkbox
+                }
                 : null
             );
     };
@@ -46,11 +52,11 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
             <div
                 className={styles.other}>
                 < Checkbox
-                    checked={boxes[boxes.length - 1]?.checked}
+                    checked={other.checked}
                     onChange={() => {
-                        setBoxes(() => {
-                            const { checked, value } = boxes?.[boxes.length - 1];
-                            return replaceAtIndex(boxes, { checked: !checked, value }, boxes?.length - 1);
+                        setOther(() => {
+                            const { checked, value } = other;
+                            return ({ checked: !checked, value });
                         });
                         handleAnswer();
                     }
@@ -58,11 +64,11 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                 <Input
                     className={styles.otherInput}
                     placeholder='Other option...'
-                    error={boxes?.[boxes.length - 1]?.checked && !boxes?.[boxes.length - 1].value}
+                    error={other.checked && !other.value}
                     onChange={(e, { value }) => {
-                        setBoxes(() => {
-                            const { checked } = boxes?.[boxes.length - 1];
-                            return replaceAtIndex(boxes, { checked, value }, boxes.length - 1);
+                        setOther(() => {
+                            const { checked } = other;
+                            return ({ checked, value });
                         });
                     }}
                 />

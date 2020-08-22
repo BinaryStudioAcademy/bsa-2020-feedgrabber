@@ -4,7 +4,7 @@ import styles from "./styles.module.sass";
 import ImageUrl from "./ImageUrl";
 import InternalStorageUpload from "./InternalStorageUpload";
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IFileUploadQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IFileUploadQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 import { fileTypes as allTypes } from "../../ComponentsQuestions/FileUploadQuestion/types";
 import VideoUrl from "./UrlVideo";
 
@@ -36,7 +36,11 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
             setFiles(files.concat(newFiles));
 
             // answerHandler(question.id, { files, url });
-            answerHandler?.({ questionId: question.id, value: files });
+            answerHandler?.({
+                questionId: question.id,
+                body: files,
+                type: QuestionType.fileUpload
+            });
             // needs to add url and else
         };
 

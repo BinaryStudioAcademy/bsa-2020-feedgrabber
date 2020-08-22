@@ -3,7 +3,7 @@ import { Input, Radio } from "semantic-ui-react";
 
 import styles from './styles.module.sass';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IRadioQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 
 const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, answerHandler }) => {
     const [other, setOther] = useState("");
@@ -14,7 +14,14 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, 
 
     const handleChange = (event, value?) => {
         setAnswer(value?.value);
-        answerHandler?.({ questionId: question.id, value: answer });
+        answerHandler?.({
+            questionId: question.id,
+            body: {
+                selected: answer,
+                other
+            },
+            type: QuestionType.radio
+        });
     };
 
     const handleOther = (value: string) => {
