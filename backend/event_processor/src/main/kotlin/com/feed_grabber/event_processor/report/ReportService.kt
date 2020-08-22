@@ -7,7 +7,7 @@ import java.util.*
 
 @Service
 class ReportService {
-    fun parseQuestion(dto: QuestionResponseDto): Any {
+    fun parseQuestion(dto: QuestionResponseDto): AnswerValues {
         dto.apply {
             return when (type) {
                 checkbox -> CheckBoxValue(

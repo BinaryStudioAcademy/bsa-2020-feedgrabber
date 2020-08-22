@@ -1,5 +1,5 @@
-import {IQuestionnaire} from "../Questionnaires/types";
-import {QuestionType} from "../Questions/IQuesion";
+import { IQuestionnaire } from "../Questionnaires/types";
+import { QuestionType } from "../Questions/IQuesion";
 
 export interface IAnswer<T extends IAnswerBody> {
     questionId: string;
@@ -7,11 +7,10 @@ export interface IAnswer<T extends IAnswerBody> {
     body: T;
 }
 
-type BodyBase = { questionId: string }
+type BodyBase = { questionId: string; type: QuestionType }
 
 type FreeTextAnswer = BodyBase & {
     body: string;
-    type: QuestionType.freeText;
 }
 
 type CheckBoxAnswer = BodyBase & {
@@ -19,7 +18,6 @@ type CheckBoxAnswer = BodyBase & {
         selected: string[];
         other: string;
     };
-    type: QuestionType.checkbox;
 }
 
 type RadioAnswer = BodyBase & {
@@ -27,24 +25,20 @@ type RadioAnswer = BodyBase & {
         selected: string;
         other: string;
     };
-    type: QuestionType.radio;
 }
 
 // urls to imgur
 type FileAnswer = BodyBase & {
     body: string[];
-    type: QuestionType.fileUpload;
 }
 
 // date in utc
 type DateAnswer = BodyBase & {
     body: string;
-    type: QuestionType.date;
 }
 
 type ScaleAnswer = BodyBase & {
     body: number;
-    type: QuestionType.scale;
 }
 
 export type IAnswerBody = FreeTextAnswer | CheckBoxAnswer | FileAnswer | DateAnswer | ScaleAnswer | RadioAnswer;

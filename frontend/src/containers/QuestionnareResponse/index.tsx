@@ -4,7 +4,6 @@ import { IQuestion } from '../../models/forms/Questions/IQuesion';
 import { history } from '../../helpers/history.helper';
 import styles from './styles.module.scss';
 import { Formik } from 'formik';
-import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
 import {IAnswer, IAnswerBody, IQuestionnaireResponse} from 'models/forms/Response/types';
@@ -16,6 +15,15 @@ import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import { saveResponseRoutine } from 'sagas/questionnaireResponse/routines';
 
+interface IComponentState {
+    question: IQuestion;
+    isAnswered: boolean;
+}
+
+interface IComponentProps {
+    question: IQuestion;
+    handleChange(state: IComponentState): void;
+}
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
     showErrors: boolean;
@@ -111,7 +119,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                     key={question.id}
                                     name={question.name}
                                     category={question.categoryTitle}>
-                                        <ResponseQuestion question={question} answerHandler={(id, data) => {
+                                        <ResponseQuestion question={question} answerHandler={(data: IAnswerBody) => {
                                             question["answer"] = data;
                                             this.handleComponentChange({
                                                 question,
