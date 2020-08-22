@@ -9,18 +9,18 @@ class ReportService {
     fun parseQuestion(dto: QuestionResponseDto): Any =
             dto.apply {
                 return when (type) {
-                    CHECKBOX -> CheckBoxValue(
-                            value.get("selected").asIterable().map { it.asInt() },
-                            value.get("other")?.asText()
+                    checkbox -> CheckBoxValue(
+                            body.get("selected").asIterable().map { it.asInt() },
+                            body.get("other")?.asText()
                     )
-                    RADIO -> RadioValue(
-                            value.get("selected").asInt(),
-                            value.get("other")?.asText()
+                    radio -> RadioValue(
+                            body.get("selected").asInt(),
+                            body.get("other")?.asText()
                     )
-                    FILE_UPLOAD -> FileValue(value.asIterable().map { it.asText() })
-                    FREE_TEXT -> FreeTextValue(value.asText())
-                    SCALE -> ScaleValue(value.asInt())
-                    DATE -> DateValue(Date(value.asText()))
+                    fileUpload -> FileValue(body.asIterable().map { it.asText() })
+                    freeText -> FreeTextValue(body.asText())
+                    scale -> ScaleValue(body.asInt())
+                    date -> DateValue(Date(body.asText()))
                 }
             }
 }
