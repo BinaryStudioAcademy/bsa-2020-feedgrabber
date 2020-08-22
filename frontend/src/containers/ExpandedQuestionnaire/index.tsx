@@ -59,7 +59,9 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
                     {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
                     <div className={styles.formPreview}>
                     <QuestionnairePreview/>
+                    {questionnaire.isEditingEnabled &&
                     <QuestionMenu/>
+                    }
                     </div>
                 </div>
             )}

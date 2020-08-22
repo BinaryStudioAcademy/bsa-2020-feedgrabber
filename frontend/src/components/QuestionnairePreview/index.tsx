@@ -8,10 +8,10 @@ import SelectQuestionsFromExisting from "components/SelectQuestionsFromExisting"
 import QuestionD from "components/QuestionDetails";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { IComponentState } from "../ComponentsQuestions/IQuestionInputContract";
-import { 
+import {
   addNewQuestionToQuestionnaireRoutine,
   loadQuestionnaireQuestionsRoutine,
-  indexQuestionsRoutine 
+  indexQuestionsRoutine
 } from "sagas/questions/routines";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
 
@@ -25,12 +25,13 @@ const newQuestion: IQuestion = {
   details: {}
 };
 
-const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ 
+const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   questions,
   saveAndAddQuestion,
   qnId,
   indexQuestions,
-  setQuestions
+  setQuestions,
+  isEditingEnabled
 }) => {
   const [addNew, setAddNew] = useState(false);
   const [question, setQuestion] = useState<IQuestion>(newQuestion);
@@ -58,7 +59,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const indexQuestionsHandler = () => {
     const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
     indexQuestions({questionnaireId: qnId,  questions: rst});
-  }; 
+  };
 
   // const orderIndeces = useEffect(() => {
   //   indexQuestionsHandler();
@@ -78,7 +79,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const drop = () => {
     indexQuestionsHandler();
   };
-  
+
   const renderCard = (q: IQuestion, index: number) => {
     return (
       <QuestionCard
@@ -94,10 +95,12 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.addButtonsBlock}>
-        <SelectQuestionsFromExisting />
-        <Button onClick={() => setAddNew(true)}>Add New</Button>
-      </div>
+      { isEditingEnabled &&
+        <div className={styles.addButtonsBlock}>
+          <SelectQuestionsFromExisting />
+          <Button onClick={() => setAddNew(true)}>Add New</Button>
+        </div>
+      }
       {addNew &&
         <Segment>
           <QuestionD onValueChange={handleOnValueChange} categories={[]} currentQuestion={question} />
@@ -119,6 +122,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
 
 const mapState = (state: IAppState) => ({
   qnId: state.questionnaires.current.get.id,
+  isEditingEnabled: state.questionnaires.current.get.isEditingEnabled,
   questions: state.questionnaires.current.questions
 });
 

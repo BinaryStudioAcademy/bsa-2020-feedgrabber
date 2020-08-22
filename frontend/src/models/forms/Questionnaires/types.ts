@@ -14,9 +14,10 @@ export interface IQuestionnairesState {
 export interface IQuestionnaire {
     id?: string;
     title: string;
-    description?: string; 
+    description?: string;
     companyName?: string;
     questions?: IQuestion[];
+    isEditingEnabled: boolean;
 }
 
 export interface ICreateQuestionnaire {

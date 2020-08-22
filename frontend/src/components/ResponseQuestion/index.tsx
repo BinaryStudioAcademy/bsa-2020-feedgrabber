@@ -9,7 +9,7 @@ import {Header, Icon, Label, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
-    ({question, answerHandler, loadCurrent, nowModifying}) => {
+    ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
         const {name, categoryTitle, type, id} = question;
         const [editor, setEditor] = useState(false);
         const detailsPage = useRef(null);
@@ -24,7 +24,9 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
             <div ref={detailsPage}>
                 <Segment
                     className={styles.container}>
-                    {!answerHandler && <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>}
+                    {!answerHandler && isModifyingEnabled &&
+                        <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>
+                    }
                     {editor && (id === nowModifying.id)
                         ?
                         <div className={styles.scaleTop}>
@@ -43,7 +45,8 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     };
 
 const mapState = (state: IAppState) => ({
-    nowModifying: state.questions.current
+    nowModifying: state.questions.current,
+    isModifyingEnabled: state.questionnaires.current.get.isEditingEnabled
 });
 
 const mapDispatch = {
