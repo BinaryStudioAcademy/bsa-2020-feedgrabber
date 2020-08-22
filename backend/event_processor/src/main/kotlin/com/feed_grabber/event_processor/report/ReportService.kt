@@ -8,25 +8,6 @@ import java.util.*
 
 @Service
 class ReportService {
-    fun parseQuestion(dto: QuestionResponseDto): AnswerValues {
-        dto.apply {
-            return when (type) {
-                checkbox -> CheckBoxValue(
-                        body.get("selected").asIterable().map { it.asText() },
-                        body.get("other")?.asText()
-                )
-                radio -> RadioValue(
-                        body.get("selected").asText(),
-                        body.get("other")?.asText()
-                )
-                fileUpload -> FileValue(body.asIterable().map { it.asText() })
-                freeText -> FreeTextValue(body.asText())
-                scale -> ScaleValue(body.asInt())
-                date -> DateValue(Date(body.asText()))
-            }
-        }
-    }
-
     fun parseIncomingData(dto: DataForReport): Report {
         val map = HashMap<UUID, MutableList<Pair<AnswerValues, UserDto>>>()
 
@@ -46,6 +27,26 @@ class ReportService {
         }
 
     }
+
+    fun parseQuestion(dto: QuestionResponseDto): AnswerValues {
+        dto.apply {
+            return when (type) {
+                checkbox -> CheckBoxValue(
+                        body.get("selected").asIterable().map { it.asText() },
+                        body.get("other")?.asText()
+                )
+                radio -> RadioValue(
+                        body.get("selected").asText(),
+                        body.get("other")?.asText()
+                )
+                fileUpload -> FileValue(body.asIterable().map { it.asText() })
+                freeText -> FreeTextValue(body.asText())
+                scale -> ScaleValue(body.asInt())
+                date -> DateValue(Date(body.asText()))
+            }
+        }
+    }
+
 
     @Suppress("UNCHECKED_CAST")
     fun parseAnswers(answers: MutableList<Pair<AnswerValues, UserDto>>?): QuestionAnswersDB? =
