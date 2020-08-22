@@ -1,5 +1,6 @@
 package com.feed_grabber.event_processor.report
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.feed_grabber.event_processor.report.dto.DataForReport
@@ -10,15 +11,13 @@ import org.springframework.web.client.getForObject
 import java.util.*
 
 @Service
-class ReportApiHelper {
-    val JSON = jacksonObjectMapper()
+class ReportApiHelper(val JSON: ObjectMapper = jacksonObjectMapper()) {
+    var URL = "http://localhost:5000/api/report?requestId="
 
-    fun getReportByRequestId(requestId: UUID): DataForReport {
-        var report = getReportById(requestId)
-        report.responses.stream().forEach { r -> r.payloadList = JSON.readValue<List<QuestionResponseDto>>(r.payload?:r.payload.toString()) }
-        return report
+    fun fetchReportData(requestId: UUID): DataForReport {
+        val result: DataForReport = RestTemplate().getForObject(URL.plus(requestId), DataForReport::class)
+        result.responses.forEach { it.payloadList = it.payload?.let { p -> JSON.readValue(p) } }
+        return result
     }
-
-    fun getReportById(requestId: UUID): DataForReport = RestTemplate().getForObject("http://localhost:5000/api/report?requestId=$requestId", DataForReport::class)
 
 }
