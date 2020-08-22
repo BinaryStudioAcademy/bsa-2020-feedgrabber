@@ -4,8 +4,6 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.notification.dto.NotificationResponseDto;
-import com.feed_grabber.core.notification.exceptions.UnableToDeleteNotificationException;
-import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
