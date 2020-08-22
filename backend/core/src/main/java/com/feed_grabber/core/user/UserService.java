@@ -136,9 +136,10 @@ public class UserService implements UserDetailsService {
         var invitation = invitationRepository.findById(registerDto.getInvitationId())
                 .orElseThrow(InvitationNotFoundException::new);
         var company = invitation.getCompany();
+        var email = invitation.getEmail();
 
         var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
-                registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
+                registerDto.getUsername(), company.getId(), email, company.getId()
         );
         if (existing.isPresent()) {
             throw new UserAlreadyExistsException();
@@ -148,7 +149,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow();
 
         var user = userRepository.save(User.builder()
-                .email(registerDto.getEmail())
+                .email(email)
                 .username(registerDto.getUsername())
                 .password(registerDto.getPassword())
                 .role(role)
@@ -156,6 +157,7 @@ public class UserService implements UserDetailsService {
                 .build()
         );
         verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
+        invitationRepository.acceptById(registerDto.getInvitationId());
         return invitation.getCompany().getId();
     }
 

@@ -40,6 +40,9 @@ public class Invitation {
     @CreationTimestamp
     private Date createdAt;
 
+    @Column(nullable = false)
+    private Boolean accepted;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;

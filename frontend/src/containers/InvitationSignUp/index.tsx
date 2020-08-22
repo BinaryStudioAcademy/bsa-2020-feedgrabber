@@ -23,10 +23,6 @@ interface IInvitationSignUpProps {
 }
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Email must be valid")
-    .required("Email must be valid"),
   password: yup
     .string()
     .required("Password required")
@@ -63,59 +59,59 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
         <LoaderWrapper loading={isLoading}>
           {invitationData && (
             <>
-              <h1 className={styles.pageTitle}>Welcome to<br/>{invitationData.companyName}</h1>
+              <h1 className={styles.pageTitle}>
+                Welcome to<br/>{invitationData.companyName},<br/>{invitationData.email}
+              </h1>
               <div className={styles.formWrapper}>
                 <div className={styles.formContent}>
-                  <Formik
-                    initialValues={{email: '', password: '', companyName: '', username: ''}}
-                    validationSchema={schema}
-                    onSubmit={values => {
-                      registerByInvitation({
-                        email: values.email,
-                        password: values.password,
-                        invitationId: match.params.id,
-                        username: values.username
-                      });
-                    }
-                    }
-                  >
-                    {({
-                        errors,
-                        values,
-                        handleChange,
-                        handleBlur,
-                        handleSubmit
-                      }) => {
-                      const errorText = errors.username || errors.email || errors.companyName
-                        || errors.password || error;
+                  {invitationData.accepted
+                    ? (<div className={styles.acceptedMessage}>You have already registered</div>)
+                    : (<Formik
+                      initialValues={{password: '', username: ''}}
+                      validationSchema={schema}
+                      onSubmit={values => {
+                        registerByInvitation({
+                          password: values.password,
+                          invitationId: match.params.id,
+                          username: values.username
+                        });
+                      }
+                      }
+                    >
+                      {({
+                          errors,
+                          values,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit
+                        }) => {
+                        const errorText = errors.username || errors.password || error;
 
-                      return (
-                        <form onSubmit={handleSubmit} autoComplete="off">
-                          <Input name="username" placeholder="Username" value={values.username}
-                                 onChange={handleChange} onBlur={handleBlur} fluid
-                          />
-                          <Input name="email" placeholder="Email" value={values.email}
-                                 onChange={handleChange} onBlur={handleBlur} fluid
-                          />
-                          <Input name="password" type="password" placeholder="Password" value={values.password}
-                                 onChange={handleChange} onBlur={handleBlur} fluid
-                          />
-                          {
-                            errorText && <Message className={styles.errorMessage} attached="top" error
-                                                  size="small" content={errorText}/>
-                          }
-                          <Button
-                            className={styles.submitButton}
-                            loading={registerLoading}
-                            disabled={!!errorText && errorText !== error || registerLoading}
-                            primary
-                            type="submit"
-                          >
-                            Sign Up
-                          </Button>
-                        </form>);
-                    }}
-                  </Formik>
+                        return (
+                          <form onSubmit={handleSubmit} autoComplete="off">
+                            <Input name="username" placeholder="Username" value={values.username}
+                                   onChange={handleChange} onBlur={handleBlur} fluid
+                            />
+                            <Input name="password" type="password" placeholder="Password" value={values.password}
+                                   onChange={handleChange} onBlur={handleBlur} fluid
+                            />
+                            {
+                              errorText && <Message className={styles.errorMessage} attached="top" error
+                                                    size="small" content={errorText}/>
+                            }
+                            <Button
+                              className={styles.submitButton}
+                              loading={registerLoading}
+                              disabled={!!errorText && errorText !== error || registerLoading}
+                              primary
+                              type="submit"
+                            >
+                              Sign Up
+                            </Button>
+                          </form>);
+                      }}
+                    </Formik>)
+                  }
                 </div>
               </div>
             </>

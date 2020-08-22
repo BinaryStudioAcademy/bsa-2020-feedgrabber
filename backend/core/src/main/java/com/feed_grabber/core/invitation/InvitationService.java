@@ -5,7 +5,9 @@ import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
 import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
 import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
+import com.feed_grabber.core.invitation.dto.InvitationSignUpDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
+import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,13 +28,13 @@ public class InvitationService {
         this.companyRepository = companyRepository;
     }
 
-//    public InvitationDto getById(UUID id) throws InvitationNotFoundException {
-//        var invitation = invitationRepository.findById(id)
-//                .orElseThrow(InvitationNotFoundException::new);
-//
-//        return InvitationMapper.MAPPER.invitationToInvitationDto(invitation);
-//    }
-//
+    public InvitationSignUpDto getById(UUID id) throws InvitationNotFoundException {
+        var invitation = invitationRepository.findById(id)
+                .orElseThrow(InvitationNotFoundException::new);
+
+        return InvitationMapper.MAPPER.invitationToInvitationSignUpDto(invitation);
+    }
+
     public List<InvitationDto> getByCompanyId(UUID companyId) {
         return invitationRepository
                 .findByCompanyIdOrderByCreatedAtDesc(companyId)

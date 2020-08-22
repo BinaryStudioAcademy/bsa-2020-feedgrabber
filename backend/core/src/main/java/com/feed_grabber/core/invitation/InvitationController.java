@@ -6,6 +6,7 @@ import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
 import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
 import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
+import com.feed_grabber.core.invitation.dto.InvitationSignUpDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
@@ -26,10 +27,10 @@ public class InvitationController {
         this.invitationService = invitationService;
     }
 
-//    @GetMapping("/sign-up/{id}")
-//    public AppResponse<InvitationDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
-//        return new AppResponse<>(invitationService.getById(id));
-//    }
+    @GetMapping("/sign-up/{id}")
+    public AppResponse<InvitationSignUpDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
+        return new AppResponse<>(invitationService.getById(id));
+    }
 
     @GetMapping
     public AppResponse<List<InvitationDto>> getByCompanyId() {

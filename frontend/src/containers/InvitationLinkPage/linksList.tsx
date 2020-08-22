@@ -6,6 +6,7 @@ import {IInvitation} from "../../models/invitation/IInvitation";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import UIButton from "../../components/UI/UIButton";
+import {Icon} from "semantic-ui-react";
 
 interface IInvitationsListBlockProps {
   invitationsList?: IInvitation[];
@@ -42,10 +43,15 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
           {invitationsList && invitationsList.map(i => (
             <UICardBlock className={styles.sentInvitationWrapper}>
               <div>
-                <h4>{i.email}</h4>
+                <h4>
+                  <Icon name="check" className={i.accepted ? styles.activeCheck : styles.check} />
+                  {i.email}
+                </h4>
               </div>
               <div>
-                <UIButton title="Delete" secondary onClick={() => deleteInvitation(i.email)}/>
+                {!i.accepted &&
+                  (<UIButton title="Delete" secondary onClick={() => deleteInvitation(i.email)}/>)
+                }
               </div>
             </UICardBlock>
           ))}

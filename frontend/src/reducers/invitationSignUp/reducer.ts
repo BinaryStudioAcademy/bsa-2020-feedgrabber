@@ -1,11 +1,13 @@
 import {loadInvitationSingUpRoutine, registerInvitationSingUpRoutine} from "../../sagas/invitationSignUp/routines";
 
 export interface IInvitationSignUpData {
+  email: string;
+  createdAt: string;
   companyName: string;
+  accepted: boolean;
 }
 
 export interface IRegisterInvitationSignUpData {
-  email: string;
   password: string;
   username: string;
   invitationId: string;
@@ -38,6 +40,7 @@ export default (state: IInvitationSignUpState = {}, action): IInvitationSignUpSt
         loadFailed: true,
         isLoading: false
       };
+
     case registerInvitationSingUpRoutine.TRIGGER:
       return {
         ...state,
