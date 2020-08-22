@@ -6,5 +6,5 @@ import java.util.*
 data class QuestionResponseDto(
         val questionId: UUID,
         val type: QuestionTypes,
-        val value: JsonNode
+        val body: JsonNode
 )
