@@ -1,23 +1,13 @@
 import React from 'react';
-import { IQuestionReportDateSelection } from "../../../models/report/IReport";
+import { IQuestionReportDateData } from "../../../models/report/IReport";
 
 import styles from './styles.module.sass';
 
 export interface IDateSelectionReportProps {
-  dates?: IQuestionReportDateSelection;
+  data?: IQuestionReportDateData;
 }
 
-const datesMock ={
-  options: [
-    { title: '2001-07-10', amount: 40 },
-    { title: '2002-11-21', amount: 15 },
-    { title: '2005-06-06', amount: 1 },
-    { title: '1971-10-27', amount: 2 },
-    { title: '1980-04-2', amount: 1 }
-  ]
-} as IQuestionReportDateSelection;
-
-const DateSelectionReport: React.FC<IDateSelectionReportProps> = ({ dates= datesMock }) => {
+const DateSelectionReport: React.FC<IDateSelectionReportProps> = ({ data }) => {
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
@@ -56,7 +46,7 @@ const DateSelectionReport: React.FC<IDateSelectionReportProps> = ({ dates= dates
 
   return (
     <div className={styles.date_report}>
-      {getLabels(sortDates(dates.options))}
+      {getLabels(sortDates(data.options))}
     </div>
   );
 };
