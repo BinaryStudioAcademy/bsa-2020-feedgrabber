@@ -23,6 +23,7 @@ import FreeTextQuestionReport from "./FreeTextQuestionReport";
 import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import MultichoiceQuestionReport from "./MultichoiceQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
+import DateSelectionReport from "./DateSelectionReport";
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
@@ -68,6 +69,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
                 <UICardBlock>
                   <h3>{report.questionnaireTitle}</h3>
                 </UICardBlock>
+                <DateSelectionReport />
                 {report.questions.map(q => (
                   <UICardBlock>
                     <h4>{q.title}</h4>
