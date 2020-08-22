@@ -6,7 +6,7 @@ import { loadRequestedQuestionnairesRoutine } from 'sagas/request/routines';
 
 function* getResponse(action) {
     try {
-        const result = yield call(apiClient.get, `http://localhost:5000/api/response/request/${action.payload}`);
+        const result = yield call(apiClient.get, `/api/response/request/${action.payload}`);
         const response = result.data.data;
         yield put(getResponseRoutine.success(response));
     } catch(error) {
@@ -17,7 +17,7 @@ function* getResponse(action) {
 
 function* saveResponse(action) {
     try {
-        yield call(apiClient.put, `http://localhost:5000/api/response`, action.payload);
+        yield call(apiClient.put, `/api/response`, action.payload);
         yield put(saveResponseRoutine.success());
         yield put(loadRequestedQuestionnairesRoutine.trigger());
         toastr.success("Response was saved");

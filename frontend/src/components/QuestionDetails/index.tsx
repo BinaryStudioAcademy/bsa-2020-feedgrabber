@@ -5,7 +5,7 @@ import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IComponentState} from "../ComponentsQuestions/IQuestionInputContract";
 import CheckboxQuestion from "../ComponentsQuestions/CheckboxQuestion";
-import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
+// import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
 import DateSelectionQuestionUI from "../ComponentsQuestions/DateSelectionQuestionUI";
 import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
@@ -77,13 +77,13 @@ const QuestionD: React.FC<IQuestionProps> = ({
                         value={question.details}
                     />
                 );
-            case QuestionType.multichoice:
-                return (
-                    <MultichoiseQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
+            // case QuestionType.multichoice:
+            //     return (
+            //         <MultichoiseQuestion
+            //             onValueChange={handleQuestionDetailsUpdate}
+            //             value={question.details}
+            //         />
+            //     );
             case QuestionType.scale:
                 return (
                     <ScaleQuestion

@@ -13,8 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
-    @Query("SELECT q FROM Question q INNER JOIN q.questionnaires que " +
-            "WHERE que.questionnaire.id = :questionnaireId")
+    @Query("SELECT q FROM Question q " +
+            "INNER JOIN QuestionnaireQuestion qq ON q = qq.question " +
+            "INNER JOIN Questionnaire que ON que = qq.questionnaire " +
+            "WHERE que.id = :questionnaireId " +
+            "ORDER BY qq.index")
     List<Question> findAllByQuestionnaireId(@Param("questionnaireId") UUID questionnaireId);
 
     @Query("SELECT case when (COUNT(q) > 0) then true else false end " +

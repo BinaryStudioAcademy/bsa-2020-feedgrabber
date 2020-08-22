@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,7 +84,7 @@ public class RequestService {
             if (dto.getIncludeTargetUser()) users.add(targetUser);
             else users.remove(targetUser);
         }
-
+      
         var notificationExists = dto.getNotifyUsers();
         var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
