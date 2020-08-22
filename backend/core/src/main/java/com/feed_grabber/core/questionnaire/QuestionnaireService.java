@@ -48,14 +48,6 @@ public class QuestionnaireService {
                 .collect(Collectors.toList());
     }
 
-    public List<QuestionnaireDto> getAllByRespondentId(UUID id) {
-        return questionnaireRepository
-                .findAllByRespondentId(id)
-                .stream()
-                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
-                .collect(Collectors.toList());
-    }
-
     public Long getCountByCompanyId(UUID companyId) {
         return questionnaireRepository.countAllByCompanyId(companyId);
     }

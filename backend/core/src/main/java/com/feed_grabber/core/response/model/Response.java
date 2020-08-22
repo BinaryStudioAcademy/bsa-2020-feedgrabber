@@ -28,6 +28,7 @@ public class Response {
     private UUID id;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "request_id")
     private Request request;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
