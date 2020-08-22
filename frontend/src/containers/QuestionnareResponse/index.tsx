@@ -1,13 +1,12 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
-import { IQuestion, QuestionType } from '../../models/forms/Questions/IQuesion';
+import { IQuestion } from '../../models/forms/Questions/IQuesion';
 import { history } from '../../helpers/history.helper';
 import styles from './styles.module.scss';
 import { Formik } from 'formik';
-import { IComponentState } from 'components/ComponentsQuestionsResponse/IComponentProps';
 import { IAppState } from 'models/IAppState';
 import { connect } from "react-redux";
-import { IAnswer, IQuestionnaireResponse } from 'models/forms/Response/types';
+import {IAnswer, IAnswerBody, IQuestionnaireResponse} from 'models/forms/Response/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
@@ -16,6 +15,15 @@ import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import { saveResponseRoutine } from 'sagas/questionnaireResponse/routines';
 
+interface IComponentState {
+    question: IQuestion;
+    isAnswered: boolean;
+}
+
+interface IComponentProps {
+    question: IQuestion;
+    handleChange(state: IComponentState): void;
+}
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
     showErrors: boolean;
@@ -72,7 +80,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 
     handleSubmit = () => {
         if (this.state.isCompleted) {
-            const answers: IAnswer<any>[] = this.props.questions.map(question => {
+            const answers: IAnswer<IAnswerBody>[] = this.props.questions.map(question => {
                 return {
                     questionId: question.id,
                     type: question.type,
@@ -98,7 +106,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         return (
             <div className={styles.response_container}>
                 <UIPageTitle title="Response" />
-                <UIListHeader title={title} description={description}></UIListHeader>
+                <UIListHeader title={title} description={description}/>
                 <Formik
                     initialValues={this.state}
                     onSubmit={this.handleSubmit}
@@ -107,11 +115,11 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                         <ul>
                             {questions.map(question => {
                                 return (
-                                    <UIListItem 
-                                    key={question.id} 
-                                    name={question.name} 
+                                    <UIListItem
+                                    key={question.id}
+                                    name={question.name}
                                     category={question.categoryTitle}>
-                                        <ResponseQuestion question={question} answerHandler={(id, data) => {
+                                        <ResponseQuestion question={question} answerHandler={(data: IAnswerBody) => {
                                             question["answer"] = data;
                                             this.handleComponentChange({
                                                 question,
@@ -125,7 +133,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                             })}
                         </ul>
                         <div className={styles.submit}>
-                            <UIButton title="Send" submit></UIButton>
+                            <UIButton title="Send" submit/>
                         </div>
                     </Form>)}
                 </Formik>

@@ -1,11 +1,11 @@
-import React, {FC, useEffect, useState} from "react";
-import {Input, Radio} from "semantic-ui-react";
+import React, { FC, useEffect, useState } from "react";
+import { Input, Radio } from "semantic-ui-react";
 
 import styles from './styles.module.sass';
-import {IQuestionResponse} from "../../../models/IQuestionResponse";
-import {IRadioQuestion} from "../../../models/forms/Questions/IQuesion";
+import { IQuestionResponse } from "../../../models/IQuestionResponse";
+import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 
-const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, answerHandler}) => {
+const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, answerHandler }) => {
     const [other, setOther] = useState("");
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
     const [answer, setAnswer] = useState(null);
@@ -14,7 +14,14 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
 
     const handleChange = (event, value?) => {
         setAnswer(value?.value);
-        answerHandler?.(question.id, answer);
+        answerHandler?.({
+            questionId: question.id,
+            body: {
+                selected: answer,
+                other
+            },
+            type: QuestionType.radio
+        });
     };
 
     const handleOther = (value: string) => {
@@ -39,7 +46,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
                         value={option}
                         onChange={handleChange}
                     />
-                    <Input disabled transparent fluid className={styles.answer_input} value={option}/>
+                    <Input disabled transparent fluid className={styles.answer_input} value={option} />
                 </div>
             ))}
             {question.details.includeOther && (
@@ -59,7 +66,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({question, a
                         onChange={event => {
                             handleOther(event.target.value);
                         }
-                        }/>
+                        } />
                 </div>
             )}
         </div>

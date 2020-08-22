@@ -14,11 +14,11 @@ const questionTypeOptions = [
         text: <span className={styles.option}><Icon name="check square" />CheckBoxes</span>,
         value: QuestionType.checkbox
     },
-    {
-        key: "Multichoice",
-        text: <span className={styles.option}><Icon name="check square outline" />Multichoice</span>,
-        value: QuestionType.multichoice
-    },
+    // {
+    //     key: "Multichoice",
+    //     text: <span className={styles.option}><Icon name="check square outline" />Multichoice</span>,
+    //     value: QuestionType.multichoice
+    // },
     {
         key: "TextArea",
         text: <span className={styles.option}><Icon name="align left" />TextArea</span>, // bars, content

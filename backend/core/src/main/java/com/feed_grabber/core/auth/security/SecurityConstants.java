@@ -13,6 +13,7 @@ public class SecurityConstants {
             "/api/auth/register",
             "/api/auth/register/confirm",
             "/api/auth/invitation",
+            "/api/report",
             "/api/auth/register/confirm",
             "/api/auth/renovate",
             "/api/invitations/sign-up/**",
@@ -25,7 +26,8 @@ public class SecurityConstants {
             "/swagger-ui.html",
             "/webjars/**",
             "/webjars",
-            "/swagger-resources"
+            "/swagger-resources",
+            "/api/report/**"
     };
     public static final String AUTHORITIES_KEY = "role";
     public static final String COMPANY_ID_KEY = "companyId";
