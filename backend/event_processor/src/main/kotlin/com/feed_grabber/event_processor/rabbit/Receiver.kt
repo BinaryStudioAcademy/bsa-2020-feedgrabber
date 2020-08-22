@@ -9,17 +9,19 @@ import java.util.*
 
 @Component
 class Receiver(
-	@Autowired val emailSender: EmailSender
+        @Autowired val emailSender: EmailSender,
+        @Autowired val excelReportCreator: ExcelReportCreator
 ) {
     @RabbitListener(queues = ["\${rabbitmq.queue}"])
     fun receive(mailEntity: MailEntity?) {
-		println(mailEntity?.getType())
-		println(mailEntity?.getMessage())
-		emailSender.sendMail(mailEntity)
+       println(mailEntity?.getType())
+       println(mailEntity?.getMessage())
+       emailSender.sendMail(mailEntity)
     }
 
-	@RabbitListener(queues = ["\${rabbitmq.queue.report}"])
-	fun receiveExcelGenerationRequest(requestId: UUID) {
-		//TODO: process request id
-	}
+    @RabbitListener(queues = ["\${rabbitmq.queue.report}"])
+    fun receiveExcelGenerationRequest(requestId: UUID) {
+        //TODO: process request id
+        excelReportCreator.create(requestId)
+    }
 }

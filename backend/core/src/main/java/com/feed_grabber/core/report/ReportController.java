@@ -20,7 +20,7 @@ public class ReportController {
         return reportService.getReport(requestId);
     }
 
-    @PostMapping("/generate")
+    @PostMapping("/excel")
     public void generateReport(@RequestParam UUID requestId) {
         reportService.sendExcelReportGenerationRequest(requestId);
     }
