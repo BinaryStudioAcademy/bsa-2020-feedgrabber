@@ -12,9 +12,9 @@ class EventProcessorApplication
 fun main(args: Array<String>) {
     runApplication<EventProcessorApplication>(*args)
 
-    val service = ReportApiHelper()
-    val res = service.fetchReportData(UUID.fromString("23acfbc5-ba8d-42d7-9cfa-cb5f348284a6"))
-    print(res)
-    val report = ReportService().parseIncomingData(res)
-    print(report)
+//    val service = ReportApiHelper()
+//    val res = service.fetchReportData(UUID.fromString("88d9d895-5cd4-47fc-807b-809cb73ffd74"))
+//    println(res)
+//    val report = ReportService().parseIncomingData(res)
+//    println(report)
 }

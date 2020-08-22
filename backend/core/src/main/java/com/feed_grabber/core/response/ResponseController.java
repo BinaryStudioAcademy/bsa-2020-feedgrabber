@@ -36,7 +36,7 @@ public class ResponseController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws UserNotFoundException, ResponseNotFoundException {
+    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws ResponseNotFoundException {
         return new AppResponse<>(
                 service.update(dto).orElseThrow(ResponseNotFoundException::new)
         );
