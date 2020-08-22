@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Divider, Dropdown, Form, Icon, Radio, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Dropdown, Form, Icon, Popup, Segment} from "semantic-ui-react";
 import {Formik} from "formik";
 import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
@@ -124,7 +124,11 @@ const QuestionD: React.FC<IQuestionProps> = ({
     return (
         <Formik
             enableReinitialize
-            initialValues={{name: question.name, categoryTitle: question.categoryTitle}}
+            initialValues={{
+                name: question.name,
+                categoryTitle: question.categoryTitle,
+                isRequired: question.isRequired
+            }}
             validationSchema={mainSchema}
             onSubmit={() => console.log()}
         >
@@ -193,7 +197,17 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <span className={styles.icon}>
                                     <Icon name="trash alternate outline" size="large" />
                                 </span>
-                                <Radio toggle />
+                                <Popup
+                                    content="Required"
+                                    trigger={
+                                        <Checkbox
+                                            toggle
+                                            name="isRequired"
+                                            checked={formik.values.isRequired}
+                                            onChange={(e, value ) =>
+                                                setQuestion({ ...question, isRequired: value.checked })}
+                                        />}
+                                />
                                 <Dropdown
                                     className={styles.icon}
                                     text=" "

@@ -8,10 +8,10 @@ import SelectQuestionsFromExisting from "components/SelectQuestionsFromExisting"
 import QuestionD from "components/QuestionDetails";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { IComponentState } from "../ComponentsQuestions/IQuestionInputContract";
-import { 
+import {
   addNewQuestionToQuestionnaireRoutine,
   loadQuestionnaireQuestionsRoutine,
-  indexQuestionsRoutine 
+  indexQuestionsRoutine
 } from "sagas/questions/routines";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
 
@@ -22,10 +22,11 @@ const newQuestion: IQuestion = {
   answer: "",
   id: "",
   isReused: false,
-  details: {}
+  details: {},
+  isRequired: false
 };
 
-const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ 
+const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   questions,
   saveAndAddQuestion,
   qnId,
@@ -58,7 +59,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const indexQuestionsHandler = () => {
     const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
     indexQuestions({questionnaireId: qnId,  questions: rst});
-  }; 
+  };
 
   // const orderIndeces = useEffect(() => {
   //   indexQuestionsHandler();
@@ -78,7 +79,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
   const drop = () => {
     indexQuestionsHandler();
   };
-  
+
   const renderCard = (q: IQuestion, index: number) => {
     return (
       <QuestionCard
