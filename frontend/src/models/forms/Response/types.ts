@@ -10,12 +10,12 @@ export interface IAnswer<T extends IAnswerBody> {
 type BodyBase = { questionId: string }
 
 type FreeTextAnswer = BodyBase & {
-    value: string;
+    body: string;
     type: QuestionType.freeText;
 }
 
 type CheckBoxAnswer = BodyBase & {
-    value: {
+    body: {
         selected: string[];
         other: string;
     };
@@ -23,7 +23,7 @@ type CheckBoxAnswer = BodyBase & {
 }
 
 type RadioAnswer = BodyBase & {
-    value: {
+    body: {
         selected: string;
         other: string;
     };
@@ -32,18 +32,18 @@ type RadioAnswer = BodyBase & {
 
 // urls to imgur
 type FileAnswer = BodyBase & {
-    value: string[];
+    body: string[];
     type: QuestionType.fileUpload;
 }
 
 // date in utc
 type DateAnswer = BodyBase & {
-    value: string;
+    body: string;
     type: QuestionType.date;
 }
 
 type ScaleAnswer = BodyBase & {
-    value: number;
+    body: number;
     type: QuestionType.scale;
 }
 

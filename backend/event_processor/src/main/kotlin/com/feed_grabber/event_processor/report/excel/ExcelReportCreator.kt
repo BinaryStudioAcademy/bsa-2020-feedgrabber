@@ -10,7 +10,7 @@ import java.util.*
 class ExcelReportCreator(@Autowired private val apiHelper: ReportApiHelper) {
 
     fun create(requestId: UUID) {
-        var report = apiHelper.getReportByRequestId(requestId);
+//        var report = apiHelper.getReportByRequestId(requestId)
         //TODO: process report enttity
     }
 }

@@ -19,6 +19,6 @@ class ReportApiHelper {
         return report
     }
 
-    fun getReportById(requestId: UUID): DataForReport = RestTemplate().getForObject<DataForReport>("http://localhost:5000/api/report/get?requestId=$requestId", DataForReport::class)
+    fun getReportById(requestId: UUID): DataForReport = RestTemplate().getForObject("http://localhost:5000/api/report?requestId=$requestId", DataForReport::class)
 
 }

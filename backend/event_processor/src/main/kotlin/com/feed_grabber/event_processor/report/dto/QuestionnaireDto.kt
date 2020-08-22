@@ -5,6 +5,6 @@ import java.util.*
 data class QuestionnaireDto(
         val companyName: String,
         val id: UUID,
-        val questions: Map<UUID, QuestionDto>,
+        val questions: List<QuestionDto>,
         val title: String
 )
