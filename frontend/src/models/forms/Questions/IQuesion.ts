@@ -90,13 +90,13 @@ export type IQuestion =
     | IFileUploadQuestion;
 
 export enum QuestionType {
-    freeText = "free_text",
+    freeText = "freeText",
     radio = "radio",
     scale = "scale",
     checkbox = "checkbox",
     // multichoice = "multi_choice",
     date = "date",
-    fileUpload = "file_upload"
+    fileUpload = "fileUpload"
 }
 
 export const DraggableItemTypes = {

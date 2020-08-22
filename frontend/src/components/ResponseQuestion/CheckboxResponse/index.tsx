@@ -1,4 +1,4 @@
-import { ICheckboxQuestion, IQuestion, QuestionType } from "models/forms/Questions/IQuesion";
+import { ICheckboxQuestion, QuestionType } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useEffect, useState } from "react";
 import { Checkbox, Input } from "semantic-ui-react";
@@ -11,7 +11,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
 
     useEffect(() => {
         setBoxes(question.details.answerOptions.map(v => ({ checked: false, value: v })));
-    }, [setBoxes]);
+    }, [question]);
 
     const handleAnswer = () => {
         const boxesChecked = boxes.filter(v => v.checked && v.value);

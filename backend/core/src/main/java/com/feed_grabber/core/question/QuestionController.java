@@ -127,7 +127,7 @@ public class QuestionController {
         questionService.create(QuestionCreateDto
                 .builder()
                 .name("New question")
-                .type(QuestionType.FREE_TEXT)
+                .type(QuestionType.freeText)
                 .questionnaireId(Optional.of(id))
                 .categoryTitle("sport")
                 .build());
