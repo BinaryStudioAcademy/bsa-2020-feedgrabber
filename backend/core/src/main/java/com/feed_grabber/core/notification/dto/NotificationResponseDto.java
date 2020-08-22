@@ -14,6 +14,6 @@ public class NotificationResponseDto {
     private UUID id;
     private String text;
     private Date date;
-    private UUID responseId;
+    private UUID requestId;
     private UUID questionnaireId;
 }

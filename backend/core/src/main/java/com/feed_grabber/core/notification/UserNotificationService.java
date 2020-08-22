@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,16 +31,10 @@ public class UserNotificationService {
         return userNotificationRepository.findAllActiveNotificationsByUser(userId);
     }
 
-    public void deleteNotificationByResponseIdAndUserId(UUID responseId, UUID userId) throws NotFoundException,
-            UnableToDeleteNotificationException {
-        var response = responseRepository
-                .findById(responseId)
+    public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
+        var response = Optional.of(responseRepository
+                .findByRequestAndUser(requestId, userId))
                 .orElseThrow(() -> new NotFoundException("Response Not Found"));
-        System.out.println(responseId);
-        System.out.println(userId);
-        if(!userId.equals(response.getUser().getId())) {
-            throw new UnableToDeleteNotificationException();
-        }
 
         response.setNotificationExists(false);
         responseRepository.save(response);

@@ -11,7 +11,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
 
     useEffect(() => {
         setBoxes(question.details.answerOptions.map(v => ({ checked: false, value: v })));
-    }, [setBoxes]);
+    }, [question.details.answerOptions, setBoxes]);
 
     const handleAnswer = () => {
         const boxesChecked = boxes.filter(v => v.checked && v.value);

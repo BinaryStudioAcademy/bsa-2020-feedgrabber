@@ -14,6 +14,8 @@ import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
+import {history} from "../../helpers/history.helper";
+import {getResponseRoutine} from "../../sagas/questionnaireResponse/routines";
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
@@ -21,7 +23,8 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
       notifications,
       deleteNotification,
       loadNotifications,
-      countNotifications
+      countNotifications,
+      getResponse
     }) => {
   const [shown, setShown] = useState(false);
 
@@ -41,7 +44,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
 
   return (
       <div ref={ref}>
-        <div onClick={() =>setShown(!shown)}>
+        <div onClick={() => setShown(!shown)}>
           <Icon className={styles.headerBellIcon} name="bell outline" size="large"/>
           <div className={styles.headerBellMessages}>{countNotifications > 9 ? '9+' : countNotifications}</div>
         </div>
@@ -62,9 +65,10 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                        className={styles.notification}>
                     <div className={styles.text}
                          onClick={() => {
+                           getResponse(notification.requestId);
                            history.push(`/response/${notification.questionnaireId}`);
+                           deleteNotification(notification.requestId);
                            setShown(false);
-                           deleteNotification(notification.responseId);
                          }}>
                       <div>{notification.text?.substr(0, 54)}</div>
                       <div className={styles.date}>{moment(notification.date).fromNow()}</div>
@@ -72,7 +76,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     <div className={styles.button}
                          title='Delete'
                          onClick={() => {
-                           deleteNotification(notification.responseId);
+                           deleteNotification(notification.requestId);
                          }}
                     >
                       <div>
@@ -98,7 +102,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
   deleteNotification: deleteNotificationRoutine,
   loadNotifications: loadNotificationsRoutine,
-  receiveNotification: receiveNotificationRoutine
+  receiveNotification: receiveNotificationRoutine,
+  getResponse: getResponseRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

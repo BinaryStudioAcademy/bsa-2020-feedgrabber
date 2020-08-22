@@ -12,7 +12,7 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
     @Query(
             value = "SELECT " +
                     "new com.feed_grabber.core.notification.dto.NotificationResponseDto(" +
-                    "un.id, un.text, un.request.creationDate, res.id, q.id) " +
+                    "un.id, un.text, un.request.creationDate, un.request.id, q.id) " +
                     "from UserNotification un, Response res, User u, Questionnaire q " +
                     "WHERE " +
                     "un.request.id = res.request.id and " +

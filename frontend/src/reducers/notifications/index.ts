@@ -9,7 +9,7 @@ export interface INotification {
   id: string;
   text: string;
   date: Date;
-  responseId: string;
+  requestId: string;
   questionnaireId: string;
 }
 
@@ -47,7 +47,7 @@ const notificationReducer = (state: IAppState['notifications'] = initialState, {
     case(deleteNotificationRoutine.TRIGGER):
       return {
         ...state,
-        notifications: state.notifications.filter(notification => notification.responseId !== payload)
+        notifications: state.notifications.filter(notification => notification.requestId !== payload)
       };
     case(receiveNotificationRoutine.TRIGGER):
       return {

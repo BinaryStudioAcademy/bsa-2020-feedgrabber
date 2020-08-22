@@ -47,6 +47,9 @@ public class ResponseService {
                .orElseThrow(ResponseNotFoundException::new);
 
        response.setPayload(dto.getPayload());
+       if (dto.getPayload() != null) {
+        response.setNotificationExists(false);
+       }
        response.setAnsweredAt(LocalDateTime.now());
 
        return Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));

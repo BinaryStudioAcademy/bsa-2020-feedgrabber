@@ -25,18 +25,17 @@ public class UserNotificationController {
     @ApiOperation("Get all notifications for user from token")
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<NotificationResponseDto>> getAllByUser() throws UserNotFoundException {
+    public AppResponse<List<NotificationResponseDto>> getAllByUser() {
         UUID userId = TokenService.getUserId();
         return new AppResponse<>(userNotificationService.getAllByUser(userId));
     }
 
-    @ApiOperation("Delete notification for user from token by responseId")
-    @DeleteMapping("/delete/{responseId}")
+    @ApiOperation("Delete notification for user from token by requestId")
+    @DeleteMapping("/delete/{requestId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteNotification(@PathVariable UUID responseId) throws NotFoundException,
-            UnableToDeleteNotificationException {
+    public void deleteNotification(@PathVariable UUID requestId) throws NotFoundException {
         UUID userId = TokenService.getUserId();
-        userNotificationService.deleteNotificationByResponseIdAndUserId(responseId, userId);
+        userNotificationService.deleteNotificationByRequestIdAndUserId(requestId, userId);
     }
 
 }
