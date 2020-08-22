@@ -13,6 +13,7 @@ public class SecurityConstants {
             "/api/auth/register",
             "/api/auth/register/confirm",
             "/api/auth/invitation",
+            "/api/report",
             "/api/auth/register/confirm",
             "/api/auth/renovate",
             "/api/invitations/sign-up/**",

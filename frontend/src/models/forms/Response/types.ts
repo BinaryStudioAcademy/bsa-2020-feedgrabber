@@ -7,19 +7,16 @@ export interface IAnswer<T extends IAnswerBody> {
     body: T;
 }
 
-type BodyBase = {
-    questionId: string;
-};
+type BodyBase = { questionId: string }
 
 type FreeTextAnswer = BodyBase & {
     value: string;
     type: QuestionType.freeText;
 }
 
-// numbers of answer option starting from 0
 type CheckBoxAnswer = BodyBase & {
     value: {
-        selected: number[];
+        selected: string[];
         other: string;
     };
     type: QuestionType.checkbox;
@@ -27,7 +24,7 @@ type CheckBoxAnswer = BodyBase & {
 
 type RadioAnswer = BodyBase & {
     value: {
-        selected: number;
+        selected: string;
         other: string;
     };
     type: QuestionType.radio;
