@@ -14,12 +14,12 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @GetMapping
+    @GetMapping("/get")
     public ReportDetailsDto getReport(@RequestParam UUID requestId) throws NotFoundException {
         return reportService.getReport(requestId);
     }
 
-    @PostMapping("/generate")
+    @PostMapping("/excel")
     public void generateReport(@RequestParam UUID requestId) {
         reportService.sendExcelReportGenerationRequest(requestId);
     }

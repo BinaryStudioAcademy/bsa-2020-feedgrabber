@@ -19,6 +19,6 @@ public class ReportDetailsDto {
     UserDetailsReportDTO targetUser;
     UserDetailsReportDTO requestMaker;
     List<ResponseDetailsDto> responses;
-    private Date requestCreationDate;
+    private LocalDateTime requestCreationDate;
     private LocalDateTime requestExpirationDate;
 }
