@@ -30,9 +30,20 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.queue}")
     private val queue: String? = null
 
+    @Value("\${rabbitmq.queue.report}")
+    private lateinit var reportQueue: String
+
+    @Value("\${rabbitmq.routing-key-report-excel}")
+    private val reportRoutingKey: String? = null
+
     @Bean
     fun queue(): Queue? {
         return Queue(queue, true)
+    }
+
+    @Bean
+    fun reportQueue(): Queue? {
+        return Queue(reportQueue, true)
     }
 
     @Bean
@@ -43,6 +54,11 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Bean
     fun binding(queue: Queue?, exchange: TopicExchange?): Binding? {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
+    }
+
+    @Bean
+    fun reportQueueBinding(reportQueue: Queue?, exchange: TopicExchange?): Binding? {
+        return BindingBuilder.bind(reportQueue).to(exchange).with(reportRoutingKey)
     }
 
     @Bean

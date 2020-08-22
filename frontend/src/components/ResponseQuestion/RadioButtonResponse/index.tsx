@@ -1,11 +1,12 @@
-import React, {FC, useEffect, useState} from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Input, Radio } from "semantic-ui-react";
 import styles from './styles.module.sass';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IRadioQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IAnswerBody } from '../../../models/forms/Response/types';
 
 export interface IRadioResponse {
-    response?: string;
+    response?: IAnswerBody;
 }
 
 const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse> = ({
@@ -13,21 +14,25 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     answerHandler,
     response
 }) => {
-    const [other, setOther] = useState(() => {
+    const [other, setOther] = useState<string>(() => {
         if (!response) {
             return '';
         }
-        const answ = response;
-        return question.details.answerOptions.find(answer => answer === answ) ? '' : answ;
+        const answer = response.body as { selected?: string; other?: string };
+        return answer.other || '';
     });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
-    const [answer, setAnswer] = useState(response || null);
+    const [answer, setAnswer] = useState(response?.body as { selected?: string; other?: string } || null);
 
     // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
 
     const handleChange = (event, value?) => {
-        setAnswer(value?.value);
-        answerHandler?.(question.id, answer);
+        setAnswer({ ...answer, selected: value?.value });
+        answerHandler?.({
+            questionId: question.id,
+            body: answer.other, // ATTENTION: can be error
+            type: QuestionType.radio
+        });
     };
 
     const handleOther = (value: string) => {
@@ -39,7 +44,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         }
         setOtherIsInvalid(false);
         setOther(value);
-        setAnswer(value);
+        setAnswer({ ...answer, other: value});
     };
 
     return (
@@ -48,19 +53,19 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                 <div className={styles.option_container} key={index}>
                     <Radio
                         disabled={!!response}
-                        checked={answer === option}
+                        checked={answer?.selected === option}
                         name='radioGroup'
                         value={option}
                         onChange={handleChange}
                     />
-                    <Input disabled transparent fluid className={styles.answer_input} value={option}/>
+                    <Input disabled transparent fluid className={styles.answer_input} value={option} />
                 </div>
             ))}
             {question.details.includeOther && (
                 <div className={styles.option_container}>
                     <Radio
                         disabled={!!response}
-                        checked={answer === other}
+                        checked={answer?.other === other}
                         name='radioGroup'
                         value={other}
                         onChange={() => handleOther(other)}
@@ -73,10 +78,8 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                         defaultValue={other}
                         placeholder="Or enter your variant here..."
                         error={answer === other && !!otherIsInvalid && !response}
-                        onChange={event => {
-                            handleOther(event.target.value);
-                        }
-                        }/>
+                        onChange={event => handleOther(event.target.value)}
+                    />
                 </div>
             )}
         </div>

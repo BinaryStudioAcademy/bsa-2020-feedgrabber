@@ -1,11 +1,12 @@
-import React from "react";
+import React, {FC, useState} from "react";
 import {IQuestionResponse} from "../../../models/IQuestionResponse";
-import {ICheckboxQuestion} from "../../../models/forms/Questions/IQuesion";
-import {FC, useState} from "react";
+import {ICheckboxQuestion, QuestionType} from "../../../models/forms/Questions/IQuesion";
 import {Checkbox} from "semantic-ui-react";
+import {IAnswerBody} from '../../../models/forms/Response/types';
 
+// <<<<<<< HEAD
 export interface IMultiChoiceResponse {
-    response?: string[];
+    response?: IAnswerBody;
 }
 
 export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion> & IMultiChoiceResponse> = ({
@@ -22,11 +23,15 @@ export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion> & IMul
     const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
     const handleAnswer = () => {
         const boxesChecked = boxes.filter(v => v.checked);
-        answerHandler(question.id, boxesChecked.length ? boxesChecked.map(v => v.value) : null);
+        answerHandler({
+            questionId: question.id,
+            body: boxesChecked.length ? boxesChecked.map(v => v.value) : null,
+            type: QuestionType.checkbox // multichoise
+        });
     };
     return <>
         {question.details.answerOptions?.map((v, i) => {
-            setBoxes([...boxes, { checked: isAnswer(v, response), value: v }]);
+            setBoxes([...boxes, { checked: isAnswer(v, response.body as string[]), value: v }]);
             console.log(boxes);
             return <Checkbox
                 disabled={!!response}
@@ -45,3 +50,31 @@ export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion> & IMul
         })}
     </>;
 };
+// =======
+// export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ question, answerHandler }) => {
+//     const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
+//     const handleAnswer = () => {
+//         const boxesChecked = boxes.filter(v => v.checked);
+//         answerHandler(question.id, boxesChecked.length ? boxesChecked.map(v => v.value) : null);
+//     };
+//     return <>
+//         {question.details.answerOptions?.map((v, i) => {
+//             setBoxes([...boxes, { checked: false, value: v }]);
+//             console.log(boxes);
+//             return <Checkbox
+//                 label={v}
+//                 checked={boxes[i].checked}
+//                 onChange={() => {
+//                     setBoxes(() => {
+//                         const { checked, value } = boxes[i];
+//                         const ret = boxes.slice(0);
+//                         ret[i] = { checked, value };
+//                         return ret;
+//                     });
+//                     handleAnswer();
+//                 }
+//                 } />;
+//         })}
+//     </>;
+// };
+// >>>>>>> ebcccacb5ccf3baaf3c5a8bae9dcd46e648769c1

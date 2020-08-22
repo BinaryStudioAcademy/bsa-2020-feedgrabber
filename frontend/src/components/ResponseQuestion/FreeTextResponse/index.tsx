@@ -1,11 +1,12 @@
-import { ITextQuestion } from "models/forms/Questions/IQuesion";
+import { ITextQuestion, QuestionType } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
 import { Input, InputOnChangeData } from "semantic-ui-react";
+import { IAnswerBody } from '../../../models/forms/Response/types';
 import styles from "./styles.module.sass";
 
 export interface IFreeTextResponse {
-    response?: string;
+    response?: IAnswerBody;
 }
 
 export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextResponse> = ({
@@ -22,13 +23,17 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextRe
     const handleChange = (e, v: InputOnChangeData) => {
         const { value } = v;
         validate(value);
-        answerHandler?.(question.id, !invalidMessage ? value : null);
+        answerHandler?.(!invalidMessage ? {
+            questionId: question.id,
+            body: value,
+            type: QuestionType.freeText
+        } : null);
     };
     return <Input
         onChange={handleChange}
         placeholder='Answer field'
         disabled={!!response}
-        defaultValue={response}
+        defaultValue={response ? response.body : ''}
         error={!!invalidMessage}
         className={styles.input}
     />;

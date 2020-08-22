@@ -2,10 +2,11 @@ import React, { FC, useState } from 'react';
 import { IQuestionResponse } from '../../../models/IQuestionResponse';
 import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from '../FreeTextResponse/styles.module.sass';
-import { IDateQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IDateQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IAnswerBody } from '../../../models/forms/Response/types';
 
 export interface IDateSelectionResponse {
-  response?: string;
+  response?: IAnswerBody;
 }
 
 export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion> & IDateSelectionResponse> = ({
@@ -22,11 +23,15 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion> & IDateS
       return;
     }
     setError('');
-    answerHandler?.(question.id, !error ? value : null);
+    answerHandler?.(!error ? {
+      questionId: question.id,
+      body: newDate,
+      type: QuestionType.date
+    } : null);
   };
 
   return (
     <Input type='date' onChange={handleChange} className={styles.input} error={!!error}
-           disabled={!!response} defaultValue={response}/>
+           disabled={!!response} defaultValue={response ? response.body : ''}/>
   );
 };

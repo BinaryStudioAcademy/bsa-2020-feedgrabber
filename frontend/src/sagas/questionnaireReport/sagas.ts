@@ -1,37 +1,33 @@
-import { all, put, takeEvery } from 'redux-saga/effects';
-import { toastr } from 'react-redux-toastr';
+import {all, put, takeEvery} from 'redux-saga/effects';
+import {toastr} from 'react-redux-toastr';
+import {loadQuestionnaireReportRoutine, loadRespondentReportsRoutine} from "./routines";
+import {IQuestionnaireReport, IRespondentReport} from "../../models/report/IReport";
 import {
-  loadQuestionnaireReportRoutine,
-  loadRespondentReportsRoutine
-} from "./routines";
-import { IQuestionnaireReport, IRespondentReport } from "../../models/report/IReport";
-import {
-  IQuestion,
-  IScaleQuestion,
   ICheckboxQuestion,
   IDateQuestion,
-  QuestionType,
+  IQuestion,
   IRadioQuestion,
+  IScaleQuestion,
   ITextQuestion,
-  IMultichoiceQuestion
+  QuestionType
 } from "../../models/forms/Questions/IQuesion";
 
 const mockReport: IQuestionnaireReport = {
   questionnaireTitle: "Awesome Questionnaire",
   questions: [
-    {
-      id: "00000",
-      title: "Multichoice question",
-      type: QuestionType.multichoice,
-      answers: 18,
-      data: {
-        options: [
-          {title: "First Option", amount: 8},
-          {title: "Second Option", amount: 16},
-          {title: "Third Option", amount: 3}
-        ]
-      }
-    },
+    // {
+    //   id: "00000",
+    //   title: "Multichoice question",
+    //   type: QuestionType.multichoice,
+    //   answers: 18,
+    //   data: {
+    //     options: [
+    //       {title: "First Option", amount: 8},
+    //       {title: "Second Option", amount: 16},
+    //       {title: "Third Option", amount: 3}
+    //     ]
+    //   }
+    // },
     {
       id: "11111",
       title: "Radio question",
@@ -138,7 +134,11 @@ function* loadRespondentReports(action: any) {
             id: '1',
             type: QuestionType.scale,
             name: 'Rate your job:',
-            answer: 3,
+            answer: {
+              questionId: '1',
+              type: QuestionType.scale,
+              body: 3
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
@@ -147,7 +147,11 @@ function* loadRespondentReports(action: any) {
             id: '2',
             type: QuestionType.date,
             name: 'Birthday?',
-            answer: '2001-07-10',
+            answer: {
+              questionId: '2',
+              type: QuestionType.date,
+              body: '2001-07-10'
+            },
             categoryTitle: 'qkation',
             isReused: false
           } as IDateQuestion,
@@ -155,7 +159,11 @@ function* loadRespondentReports(action: any) {
             id: '9',
             type: QuestionType.freeText,
             name: 'Enter your specialization:',
-            answer: 'Java',
+            answer: {
+              questionId: '9',
+              type: QuestionType.freeText,
+              body: 'Java'
+            },
             categoryTitle: 'qkation',
             isReused: false
           } as ITextQuestion,
@@ -163,7 +171,14 @@ function* loadRespondentReports(action: any) {
             id: '3',
             type: QuestionType.radio,
             name: 'some question?',
-            answer: 'laptop',
+            answer: {
+              questionId: '3',
+              type: QuestionType.radio,
+              body: {
+                selected: 'laptop',
+                other: ''
+              }
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { includeOther: false, answerOptions: ['laptop', 'headphones', 'mouse'] }
@@ -172,7 +187,11 @@ function* loadRespondentReports(action: any) {
             id: '4',
             type: QuestionType.scale,
             name: 'Some name2',
-            answer: 6,
+            answer: {
+              questionId: '4',
+              type: QuestionType.scale,
+              body: 6
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
@@ -185,7 +204,11 @@ function* loadRespondentReports(action: any) {
             id: '4',
             type: QuestionType.scale,
             name: 'Some name1',
-            answer: 5,
+            answer: {
+              questionId: '4',
+              type: QuestionType.scale,
+              body: 5
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
@@ -194,7 +217,14 @@ function* loadRespondentReports(action: any) {
             id: '5',
             type: QuestionType.checkbox,
             name: 'Select what you want to eat:',
-            answer: ['apple', 'bread'],
+            answer: {
+              questionId: '5',
+              type: QuestionType.checkbox,
+              body: {
+                selected: ['apple', 'bread'],
+                other: ''
+              }
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { includeOther: false, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
@@ -203,7 +233,14 @@ function* loadRespondentReports(action: any) {
             id: '7',
             type: QuestionType.checkbox,
             name: 'Select what you want to eat:',
-            answer: ['apple', 'bread', 'pizza'],
+            answer: {
+              questionId: '7',
+              type: QuestionType.checkbox,
+              body: {
+                selected: ['apple', 'bread'],
+                other: 'pizza'
+              }
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { includeOther: true, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
@@ -212,7 +249,14 @@ function* loadRespondentReports(action: any) {
             id: '0',
             type: QuestionType.radio,
             name: 'some question?',
-            answer: 'keyboard',
+            answer: {
+              questionId: '0',
+              type: QuestionType.radio,
+              body: {
+                selected: '',
+                other: 'keyboard'
+              }
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { includeOther: true, answerOptions: ['laptop', 'headphones', 'mouse'] }
@@ -221,7 +265,11 @@ function* loadRespondentReports(action: any) {
             id: '6',
             type: QuestionType.scale,
             name: 'Some name3',
-            answer: 2,
+            answer: {
+              questionId: '6',
+              type: QuestionType.scale,
+              body: 2
+            },
             categoryTitle: 'qkation',
             isReused: false,
             details: { min: 1, minDescription: 'madara', max: 8, maxDescription: 'hashirama' }

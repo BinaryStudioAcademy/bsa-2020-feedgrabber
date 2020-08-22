@@ -1,12 +1,13 @@
-import { ICheckboxQuestion, ITextQuestion } from "models/forms/Questions/IQuesion";
+import { ICheckboxQuestion, IQuestion, QuestionType } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
-import React, { FC, useState } from "react";
-import { Checkbox, Icon, Input } from "semantic-ui-react";
+import React, { FC, useEffect, useState } from "react";
+import { Checkbox, Input } from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import {replaceAtIndex} from "../../../helpers/array.helper";
+import { replaceAtIndex } from "../../../helpers/array.helper";
+import { IAnswerBody } from '../../../models/forms/Response/types';
 
 export  interface ICheckboxResponse {
-  response?: string[];
+  response?: IAnswerBody;
 }
 
 export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckboxResponse> = ({
@@ -15,81 +16,87 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
   response
 }) => {
   const isAnswer = (field: string, options: string[]): boolean => {
+    console.log(options);
     if (!options) {
       return false;
     }
     return !!options.find(option => option === field);
   };
-  const findOther = (answers: string[], options: string[]): string => {
-    if (!answers) {
-      return '';
-    }
-    for (const str of answers) {
-      if (!isAnswer(str, options)) {
-        return str;
-      }
-    }
-    return '';
-  };
+  const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
+  useEffect(() => {
+    setBoxes(question.details.answerOptions.map(v => ({
+      checked: isAnswer(v, (response?.body as { selected: string[]; other: string })?.selected),
+      value: v
+    })));
+  }, [setBoxes]);
 
-  const [boxes, setBoxes]
-    = useState([...question.details.answerOptions.map(v => {
-      return {
-        checked: isAnswer(v, response),
-        value: v
-      };
-    })
-    , {
-        checked: (response && question.details.includeOther),
-        value: findOther(response, question.details.answerOptions)
-      }]);
+  const [other, setOther] = useState({
+    checked: (response && question.details.includeOther),
+    value: (response?.body as { selected: string[]; other: string })?.other || ''
+  });
 
   const handleAnswer = () => {
-    const boxesChecked = boxes.filter(v => v.checked && v.value);
-    answerHandler?.(question.id, boxesChecked.length ? boxesChecked.map(v => v.value) : null);
+  const boxesChecked = boxes.filter(v => v.checked && v.value);
+  answerHandler
+    ?.(boxesChecked.length
+      ? {
+          questionId: question.id,
+          body: {
+            selected: boxesChecked.map(v => v.value),
+            other: other.value || null
+          },
+          type: QuestionType.checkbox
+        }
+        : null
+      );
   };
 
-  return <div className={styles.boxes}>
-    {boxes.map((v, i) => {
-      return (i === boxes.length - 1 && question.details.includeOther)
-        ? <div className={styles.other}>
-          <Checkbox disabled={!!response}
-                    checked={boxes[i].checked}
-                    onChange={() => {
-                      setBoxes(() => {
-                        const { checked, value } = boxes[i];
-                        return replaceAtIndex(boxes, { checked: !checked, value }, i);
-                      });
-                      handleAnswer();
-                    }
-                    } />
+  return (
+    <div className={styles.boxes}>
+      {boxes.map((v, i) => {
+        return (i !== (boxes.length - 1) &&
+          <div className={styles.other}>
+            <Checkbox disabled={!!response}
+                      label={v.value}
+                      checked={boxes[i].checked}
+                      onChange={() => {
+                        setBoxes(() => {
+                          const {checked, value} = boxes[i];
+                          return replaceAtIndex(boxes, {checked: !checked, value}, i);
+                        });
+                        handleAnswer();
+                      }
+                      }/>
+          </div>);
+      })}
+      {question.details.includeOther && (
+        <div className={styles.other}>
+          <Checkbox
+            disabled={!!response}
+            checked={other.checked}
+            onChange={() => {
+              setOther(() => {
+                const {checked, value} = other;
+                return ({checked: !checked, value});
+              });
+              handleAnswer();
+            }
+            }/>
           <Input
             disabled={!!response}
             className={styles.otherInput}
-            defaultValue={boxes[i].value}
+            defaultValue={other.value}
             placeholder='Other option...'
-            error={boxes[i].checked && !boxes[i].value}
-            onChange={(e, { value }) => {
-              setBoxes(() => {
-                const { checked } = boxes[i];
-                return replaceAtIndex(boxes, { checked, value }, i);
+            error={other.checked && !other.value}
+            onChange={(e, {value}) => {
+              setOther(() => {
+                const {checked} = other;
+                return ({checked, value});
               });
             }}
           />
         </div>
-        : <Checkbox
-            disabled={!!response}
-            label={v.value}
-            checked={boxes[i].checked}
-            onChange={() => {
-              setBoxes(() => {
-                const { checked, value } = boxes[i];
-                return replaceAtIndex(boxes, { checked: !checked, value }, i);
-              });
-              handleAnswer();
-            }
-            }/>;
-    })
-    }
-  </div>;
+      )}
+      </div>
+  );
 };

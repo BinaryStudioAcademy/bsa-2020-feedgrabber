@@ -1,15 +1,15 @@
 package com.feed_grabber.core.request.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.model.User;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -40,11 +40,10 @@ public class Request {
     private List<Response> responses;
 
     @Column(name = "creation_date")
-    @CreationTimestamp
     private Date creationDate;
 
     @Column(name = "expiration_date")
-    private LocalDateTime expirationDate;
+    private Date expirationDate;
 
     @Column(name = "notify_users")
     private Boolean notifyUsers;
