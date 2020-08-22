@@ -7,5 +7,7 @@ import org.springframework.boot.runApplication
 class EventProcessorApplication
 
 fun main(args: Array<String>) {
-	runApplication<EventProcessorApplication>(*args)
+    runApplication<EventProcessorApplication>(*args)
+//    val service = ReportApiHelper()
+//    print(service.getReportById(UUID.fromString("cda8c5b9-d18e-4868-a218-1db3308c3c45")))
 }

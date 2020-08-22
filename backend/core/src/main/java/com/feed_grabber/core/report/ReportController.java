@@ -14,7 +14,8 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @GetMapping("/get")
+    @CrossOrigin(origins = "http://localhost")
+    @GetMapping
     public ReportDetailsDto getReport(@RequestParam UUID requestId) throws NotFoundException {
         return reportService.getReport(requestId);
     }

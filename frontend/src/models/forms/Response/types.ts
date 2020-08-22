@@ -7,27 +7,24 @@ export interface IAnswer<T extends IAnswerBody> {
     body: T;
 }
 
-type BodyBase = {
-    questionId: string;
-};
+type BodyBase = { questionId: string }
 
 type FreeTextAnswer = BodyBase & {
-    value: string;
+    body: string;
     type: QuestionType.freeText;
 }
 
-// numbers of answer option starting from 0
 type CheckBoxAnswer = BodyBase & {
-    value: {
-        selected: number[];
+    body: {
+        selected: string[];
         other: string;
     };
     type: QuestionType.checkbox;
 }
 
 type RadioAnswer = BodyBase & {
-    value: {
-        selected: number;
+    body: {
+        selected: string;
         other: string;
     };
     type: QuestionType.radio;
@@ -35,18 +32,18 @@ type RadioAnswer = BodyBase & {
 
 // urls to imgur
 type FileAnswer = BodyBase & {
-    value: string[];
+    body: string[];
     type: QuestionType.fileUpload;
 }
 
 // date in utc
 type DateAnswer = BodyBase & {
-    value: string;
+    body: string;
     type: QuestionType.date;
 }
 
 type ScaleAnswer = BodyBase & {
-    value: number;
+    body: number;
     type: QuestionType.scale;
 }
 

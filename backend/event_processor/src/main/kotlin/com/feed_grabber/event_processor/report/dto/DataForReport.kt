@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 data class DataForReport(
         val questionnaire: QuestionnaireDto,
-        private val requestCreationDate: LocalDateTime,
-        val requestExpirationDate: LocalDateTime,
+        val requestCreationDate: LocalDateTime,
+        val requestExpirationDate: LocalDateTime?,
         val requestMaker: UserDto,
         val responses: List<ResponseDto>,
         val targetUser: UserDto
