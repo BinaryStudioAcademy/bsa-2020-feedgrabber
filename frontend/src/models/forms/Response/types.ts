@@ -11,12 +11,12 @@ type BodyBase = {
     questionId: string;
 };
 
-type FreeTextAnswer = BodyBase & {value: string}
-type CheckBoxAnswer = BodyBase & {value: number[]} // numbers of answer option starting from 0
-type RadioAnswer = BodyBase & {value: number}
-type FileAnswer = BodyBase & {value: string[]} // urls to imgur
-type DateAnswer = BodyBase & {value: string} // date in utc
-type ScaleAnswer = BodyBase & {value: number}
+export type FreeTextAnswer = BodyBase & {value: string}
+export type CheckBoxAnswer = BodyBase & {value: string[]} // numbers of answer option starting from 0
+export type RadioAnswer = BodyBase & {value: string}
+export type FileAnswer = BodyBase & {value: string[]} // urls to imgur
+export type DateAnswer = BodyBase & {value: string} // date in utc
+export type ScaleAnswer = BodyBase & {value: number}
 
 export type IAnswerBody = FreeTextAnswer|CheckBoxAnswer|FileAnswer|DateAnswer|ScaleAnswer|RadioAnswer;
 

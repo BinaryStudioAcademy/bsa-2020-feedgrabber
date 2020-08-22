@@ -14,10 +14,10 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ qu
       return;
     }
     setError('');
-    answerHandler?.(question.id, !error ? newDate : null);
+    answerHandler?.(!error ? { questionId: question.id, value: newDate } : null);
   };
 
   return (
-    <Input type='date' onChange={handleChange} className={styles.input} error={!!error}/>
+    <Input type='date' onChange={handleChange} className={styles.input} error={!!error} />
   );
 };

@@ -19,7 +19,7 @@ const newQuestion: IQuestion = {
   type: undefined,
   categoryTitle: "",
   name: "",
-  answer: "",
+  answer: {} as any,
   id: "",
   isReused: false,
   details: {}

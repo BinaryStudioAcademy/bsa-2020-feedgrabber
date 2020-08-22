@@ -11,27 +11,24 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 
 const questions = [
-    {
-        id: "1",
-        name: "first",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    },
-    {
-        id: "2",
-        name: "second",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    },
-    {
-        id: "3",
-        name: "third",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    }
+    // {
+    //     id: "1",
+    //     name: "first",
+    //     categoryTitle: "sdf",
+    //     details: {answerOptions: []}
+    // },
+    // {
+    //     id: "2",
+    //     name: "second",
+    //     categoryTitle: "sdf",
+    //     details: {answerOptions: []}
+    // },
+    // {
+    //     id: "3",
+    //     name: "third",
+    //     categoryTitle: "sdf",
+    //     details: {answerOptions: []}
+    // }
 ] as IQuestion[];
 
 interface IExpandedQuestionnaireProps {
