@@ -6,17 +6,28 @@ import java.util.*
 
 sealed class QuestionAnswersDB
 
-data class QuestionAnswersWithOptions(
-        val options: Map<String, List<UserDto>>,
-        val other: Map<String, List<UserDto>>?
+data class QAWithOptions(
+        val options: MutableMap<UserDto, List<String>> = mutableMapOf(),
+        val other: MutableMap<String?, MutableList<UserDto>> = mutableMapOf()
 ) : QuestionAnswersDB()
 
-data class QuestionAnswersWithOutOptions(val values: Map<UserDto, String>) : QuestionAnswersDB()
+data class QAWithOption(
+        val options: MutableMap<UserDto, String> = mutableMapOf(),
+        val other: MutableMap<String?, MutableList<UserDto>> = mutableMapOf()
+) : QuestionAnswersDB()
+
+data class QAWithValue(
+        val values: MutableMap<UserDto, String> = mutableMapOf()
+) : QuestionAnswersDB()
+
+data class QAWithValues(
+        val values: MutableMap<UserDto, List<String>> = mutableMapOf()
+) : QuestionAnswersDB()
 
 data class QuestionDB(
         val id: UUID,
         val title: String,
         val categoryTitle: String,
         val type: QuestionTypes,
-        val answers: QuestionAnswersDB
+        val answers: QuestionAnswersDB?
 )
