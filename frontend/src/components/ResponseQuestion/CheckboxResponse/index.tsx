@@ -28,7 +28,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
       checked: isAnswer(v, (response?.body as { selected: string[]; other: string })?.selected),
       value: v
     })));
-  }, [setBoxes]);
+  }, [question.details.answerOptions, response, setBoxes]);
 
   const [other, setOther] = useState({
     checked: (response && question.details.includeOther),
