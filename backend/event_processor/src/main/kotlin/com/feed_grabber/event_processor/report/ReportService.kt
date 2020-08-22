@@ -2,7 +2,6 @@ package com.feed_grabber.event_processor.report
 
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.dto.QuestionTypes.*
-import com.feed_grabber.event_processor.report.dto.answervalues.*
 import org.springframework.stereotype.Service
 import java.util.*
 
