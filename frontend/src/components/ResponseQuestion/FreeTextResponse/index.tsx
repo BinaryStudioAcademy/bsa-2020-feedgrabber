@@ -14,11 +14,7 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ questio
     const handleChange = (e, v: InputOnChangeData) => {
         const { value } = v;
         validate(value);
-        answerHandler?.(!invalidMessage ? {
-            questionId: question.id,
-            body: value,
-            type: QuestionType.freeText
-        } : null);
+        answerHandler?.(!invalidMessage ? value : null);
     };
     return <Input
         onChange={handleChange}

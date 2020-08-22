@@ -18,12 +18,8 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
         answerHandler
             ?.(boxesChecked.length
                 ? {
-                    questionId: question.id,
-                    body: {
-                        selected: boxesChecked.map(v => v.value),
-                        other: other.value || null
-                    }
-                    , type: QuestionType.checkbox
+                    selected: boxesChecked.map(v => v.value),
+                    other: other.value || null
                 }
                 : null
             );
@@ -32,18 +28,17 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
     return <div
         className={styles.boxes}>
         {boxes.map((v, i) => {
-            return (i !== boxes.length - 1) &&
-                < Checkbox
-                    label={v.value}
-                    checked={boxes[i].checked}
-                    onChange={() => {
-                        setBoxes(() => {
-                            const { checked, value } = boxes[i];
-                            return replaceAtIndex(boxes, { checked: !checked, value }, i);
-                        });
-                        handleAnswer();
-                    }
-                    } />
+            return < Checkbox
+                label={v.value}
+                checked={boxes[i].checked}
+                onChange={() => {
+                    setBoxes(() => {
+                        const { checked, value } = boxes[i];
+                        return replaceAtIndex(boxes, { checked: !checked, value }, i);
+                    });
+                    handleAnswer();
+                }
+                } />
                 ;
 
         })

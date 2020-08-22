@@ -8,11 +8,7 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion>> =
   ({ question = { id: '23', details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good' } },
     answerHandler = null }) => {
     const handleClick = (e, value) => {
-      answerHandler?.(value ? {
-        questionId: question.id,
-        body: value,
-        type: QuestionType.scale
-      } : null);
+      answerHandler?.(value ? value : null);
     };
 
     const getVariants = (min: number, max: number) => {
