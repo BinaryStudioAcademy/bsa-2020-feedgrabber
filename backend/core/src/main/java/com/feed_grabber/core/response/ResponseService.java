@@ -42,12 +42,14 @@ public class ResponseService {
                         responseRepository.findByRequestAndUser(requestId, userId)));
     }
 
-    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException, UserNotFoundException {
+    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException {
        var response = responseRepository.findById(dto.getId())
                .orElseThrow(ResponseNotFoundException::new);
+        System.out.println(response.getPayload());
 
-       response.setPayload(dto.getPayload());
-       response.setAnsweredAt(LocalDateTime.now());
+        response.setPayload(dto.getPayload());
+        System.out.println(response.getPayload());
+        response.setAnsweredAt(LocalDateTime.now());
 
        return Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));
     }

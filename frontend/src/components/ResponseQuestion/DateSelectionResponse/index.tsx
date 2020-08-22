@@ -23,15 +23,13 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion> & IDateS
       return;
     }
     setError('');
-    answerHandler?.(!error ? {
-      questionId: question.id,
-      body: newDate,
-      type: QuestionType.date
-    } : null);
+    answerHandler?.(!error ?
+      newDate
+      : null);
   };
 
   return (
     <Input type='date' onChange={handleChange} className={styles.input} error={!!error}
-           disabled={!!response} defaultValue={response ? response.body : ''}/>
+           disabled={!!response} defaultValue={response || ''}/>
   );
 };

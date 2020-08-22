@@ -1,4 +1,4 @@
-import { ICheckboxQuestion, IQuestion, QuestionType } from "models/forms/Questions/IQuesion";
+import { ICheckboxQuestion, QuestionType } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useEffect, useState } from "react";
 import { Checkbox, Input } from "semantic-ui-react";
@@ -25,27 +25,23 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
   const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
   useEffect(() => {
     setBoxes(question.details.answerOptions.map(v => ({
-      checked: isAnswer(v, (response?.body as { selected: string[]; other: string })?.selected),
+      checked: isAnswer(v, (response as { selected: string[]; other: string })?.selected),
       value: v
     })));
-  }, [question.details.answerOptions, response, setBoxes]);
+  }, [question.details.answerOptions, response, setBoxes]); // in dev only [question]
 
   const [other, setOther] = useState({
     checked: (response && question.details.includeOther),
-    value: (response?.body as { selected: string[]; other: string })?.other || ''
+    value: (response as { selected: string[]; other: string })?.other || ''
   });
 
   const handleAnswer = () => {
-  const boxesChecked = boxes.filter(v => v.checked && v.value);
-  answerHandler
-    ?.(boxesChecked.length
-      ? {
-          questionId: question.id,
-          body: {
-            selected: boxesChecked.map(v => v.value),
-            other: other.value || null
-          },
-          type: QuestionType.checkbox
+    const boxesChecked = boxes.filter(v => v.checked && v.value);
+    answerHandler
+      ?.(boxesChecked.length
+        ? {
+          selected: boxesChecked.map(v => v.value),
+          other: other.value || null
         }
         : null
       );
@@ -55,7 +51,6 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
     <div className={styles.boxes}>
       {boxes.map((v, i) => {
         return (i !== (boxes.length - 1) &&
-          <div className={styles.other}>
             <Checkbox disabled={!!response}
                       label={v.value}
                       checked={boxes[i].checked}
@@ -66,8 +61,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
                         });
                         handleAnswer();
                       }
-                      }/>
-          </div>);
+                      }/>);
       })}
       {question.details.includeOther && (
         <div className={styles.other}>

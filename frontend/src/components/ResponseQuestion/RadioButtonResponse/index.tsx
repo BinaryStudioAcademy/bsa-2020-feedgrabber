@@ -18,20 +18,19 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         if (!response) {
             return '';
         }
-        const answer = response.body as { selected?: string; other?: string };
+        const answer = response as { selected?: string; other?: string };
         return answer.other || '';
     });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
-    const [answer, setAnswer] = useState(response?.body as { selected?: string; other?: string } || null);
+    const [answer, setAnswer] = useState(response as { selected?: string; other?: string } || null);
 
     // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
 
     const handleChange = (event, value?) => {
         setAnswer({ ...answer, selected: value?.value });
         answerHandler?.({
-            questionId: question.id,
-            body: answer.other, // ATTENTION: can be error
-            type: QuestionType.radio
+            selected: answer.selected,
+            other: answer.other
         });
     };
 

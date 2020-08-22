@@ -17,18 +17,13 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScal
       details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good'},
       answer: 4
     },
-    answerHandler = null,
+    answerHandler,
     response
   }) => {
   // const [answer, setAnswer] = useState(response.body || question.answer);
 
   const handleClick = (e, value) => {
-    // setAnswer(value.value);
-    answerHandler?.(value ? {
-      questionId: question.id,
-      body: value.value,
-      type: QuestionType.scale
-    } : null);
+    answerHandler?.(value ? value : null);
   };
 
   const getVariants = (min: number, max: number) => {
@@ -42,7 +37,7 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScal
                  name={group}
                  onChange={handleClick}
                  disabled={!!response}
-                 checked={!!response && response.body === i} />
+                 checked={!!response && response === i} />
         </Form.Field>
       );
     }

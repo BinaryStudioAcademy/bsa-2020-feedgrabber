@@ -16,5 +16,6 @@ public interface ReportMapper {
     @Mapping(source = "questionnaire", target = "questionnaire")
     @Mapping(source = "expirationDate", target = "requestExpirationDate")
     @Mapping(source = "creationDate", target = "requestCreationDate")
+    @Mapping(source = "id", target = "requestId")
     ReportDetailsDto requestToReportDetails(Request request);
 }

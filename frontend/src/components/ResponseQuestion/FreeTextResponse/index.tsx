@@ -23,17 +23,13 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextRe
     const handleChange = (e, v: InputOnChangeData) => {
         const { value } = v;
         validate(value);
-        answerHandler?.(!invalidMessage ? {
-            questionId: question.id,
-            body: value,
-            type: QuestionType.freeText
-        } : null);
+        answerHandler?.(!invalidMessage ? value : null);
     };
     return <Input
         onChange={handleChange}
         placeholder='Answer field'
         disabled={!!response}
-        defaultValue={response ? response.body : ''}
+        defaultValue={response || ''}
         error={!!invalidMessage}
         className={styles.input}
     />;

@@ -36,11 +36,9 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
             setFiles(files.concat(newFiles));
 
             // answerHandler(question.id, { files, url });
-            answerHandler?.({
-                questionId: question.id,
-                body: files,
-                type: QuestionType.fileUpload
-            });
+            answerHandler?.(
+                files
+            );
             // needs to add url and else
         };
 

@@ -40,6 +40,7 @@ public class Request {
     private List<Response> responses;
 
     @Column(name = "creation_date")
+    @CreationTimestamp
     private Date creationDate;
 
     @Column(name = "expiration_date")

@@ -21,17 +21,25 @@ export const MultiChoiceResponse: FC<IQuestionResponse<ICheckboxQuestion> & IMul
         return !!options.find(option => option === field);
     };
     const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
+
     const handleAnswer = () => {
-        const boxesChecked = boxes.filter(v => v.checked);
-        answerHandler({
-            questionId: question.id,
-            body: boxesChecked.length ? boxesChecked.map(v => v.value) : null,
-            type: QuestionType.checkbox // multichoise
-        });
+        const boxesChecked = boxes.filter(v => v.checked && v.value);
+        answerHandler
+            ?.(boxesChecked.length
+                ? {
+                    selected: boxesChecked.map(v => v.value),
+                    other: ''
+                }
+                : null
+            );
     };
+
     return <>
         {question.details.answerOptions?.map((v, i) => {
-            setBoxes([...boxes, { checked: isAnswer(v, response.body as string[]), value: v }]);
+            setBoxes([...boxes, {
+              checked: isAnswer(v, (response as { selected: string[]; other: string })?.selected),
+              value: v
+            }]);
             console.log(boxes);
             return <Checkbox
                 disabled={!!response}
