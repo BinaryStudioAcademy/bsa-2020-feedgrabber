@@ -8,6 +8,6 @@ data class DataForReport(
         val requestExpirationDate: LocalDateTime?,
         val requestMaker: UserDto,
         val responses: List<ResponseDto>,
-        val targetUser: UserDto
+        val targetUser: UserDto?
 )
 
