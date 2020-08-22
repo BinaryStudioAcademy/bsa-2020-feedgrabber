@@ -6,12 +6,13 @@ import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
+import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -57,29 +58,31 @@ public class RequestService {
                         .findById(dto.getTargetUserId())
                         .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
 
-        var dtoDeadline = dto.getSecondsToDeadline();
-        var date = dtoDeadline == null ? null : LocalDateTime.now().plusSeconds(dtoDeadline);
+        var date = dto.getExpirationDate();
 
         var toSave = RequestMapper.MAPPER
                 .requestCreationRequestDtoToModel(dto, questionnaire, targetUser, currentUser, date);
 
         var request = requestRepository.save(toSave);
 
-        var users = userRepository
-                .findAllById(dto.getRespondentIds());
+        var users = new HashSet<>(userRepository.findAllById(dto.getRespondentIds()));
 
-        var usersFromTeams = teamRepository
+        users.addAll(teamRepository
                 .findAllById(dto.getTeamIds())
                 .stream()
-                .flatMap(team -> team.getUsers().stream()).collect(Collectors.toList());
+                .flatMap(team -> team.getUsers().stream())
+                .collect(Collectors.toSet()));
 
-        var responses = Stream
-                .concat(users.stream(), usersFromTeams.stream())
-                .distinct()
+        if (targetUser != null) {
+            if (dto.getIncludeTargetUser()) users.add(targetUser);
+            else users.remove(targetUser);
+        }
+
+        var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
-        if (!responses.isEmpty()) responseRepository.saveAll(responses);
+        responseRepository.saveAll(responses);
 
         return request.getId();
     }
@@ -89,6 +92,14 @@ public class RequestService {
                 .findAllByResponsesUserId(userId)
                 .stream()
                 .map(r->RequestMapper.MAPPER.toPendingDtoFromModel(r,userId))
+                .collect(Collectors.toList());
+    }
+    
+    public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
+        return requestRepository.findAllUnansweredByRespondentId(id)
+                .stream()
+                .map(request -> RequestMapper.MAPPER.
+                        requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
                 .collect(Collectors.toList());
     }
 }
