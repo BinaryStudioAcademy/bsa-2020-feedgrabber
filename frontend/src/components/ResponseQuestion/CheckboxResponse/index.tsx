@@ -16,7 +16,6 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
   response
 }) => {
   const isAnswer = (field: string, options: string[]): boolean => {
-    console.log(options);
     if (!options) {
       return false;
     }
@@ -50,18 +49,17 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
   return (
     <div className={styles.boxes}>
       {boxes.map((v, i) => {
-        return (i !== (boxes.length - 1) &&
-            <Checkbox disabled={!!response}
-                      label={v.value}
-                      checked={boxes[i].checked}
-                      onChange={() => {
-                        setBoxes(() => {
-                          const {checked, value} = boxes[i];
-                          return replaceAtIndex(boxes, {checked: !checked, value}, i);
-                        });
-                        handleAnswer();
-                      }
-                      }/>);
+        return <Checkbox disabled={!!response}
+                  label={v.value}
+                  checked={boxes[i].checked}
+                  onChange={() => {
+                  setBoxes(() => {
+                    const {checked, value} = boxes[i];
+                    return replaceAtIndex(boxes, {checked: !checked, value}, i);
+                  });
+                  handleAnswer();
+                  }
+                  }/>;
       })}
       {question.details.includeOther && (
         <div className={styles.other}>

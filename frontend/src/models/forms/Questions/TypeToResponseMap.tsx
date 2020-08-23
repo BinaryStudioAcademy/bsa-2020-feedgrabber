@@ -10,7 +10,7 @@ import { CheckboxResponse } from "components/ResponseQuestion/CheckboxResponse";
 import FileUploadResponse from "../../../components/ResponseQuestion/FileUploadResponse";
 
 export default new Map<string, ({ question, answerHandler }: IQuestionResponse<any>) => any>([
-    ['FREE_TEXT', ({ question, answerHandler }: IQuestionResponse<ITextQuestion>) => {
+    ['FREETEXT', ({ question, answerHandler }: IQuestionResponse<ITextQuestion>) => {
         return <FreeTextResponse question={question} answerHandler={answerHandler} />;
     }],
     ['DATE', ({ question, answerHandler }: IQuestionResponse<IDateQuestion>) => {
