@@ -104,6 +104,21 @@ const mockReport: IQuestionnaireReport = {
       data: {
         options: [{title: "English", amount:8}, {title: "Ukrainian", amount:13}]
       }
+    },
+    {
+      id: "66666",
+      title: "Data selection question",
+      type: QuestionType.date,
+      answers: 59,
+      data: {
+        options: [
+          { title: '2001-07-10', amount: 40 },
+          { title: '2002-11-21', amount: 15 },
+          { title: '2005-06-06', amount: 1 },
+          { title: '1971-10-27', amount: 2 },
+          { title: '1980-04-2', amount: 1 }
+        ]
+      }
     }
   ]
 };

@@ -42,3 +42,7 @@ export interface IQuestionReportCheckboxData {
   options: {title: string; amount: number}[];
 }
 
+export interface IQuestionReportDateData {
+  options: { title: string; amount: number }[];
+}
+
