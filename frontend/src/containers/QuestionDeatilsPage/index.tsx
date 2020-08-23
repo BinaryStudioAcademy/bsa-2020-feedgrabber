@@ -18,6 +18,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         saveQuestion,
         loadCategories,
         questionnaireId,
+        questionnaireQuesitons,
         categories,
         match,
         isPreview
@@ -55,7 +56,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         if (isQuestionDetailsValid) {
             saveQuestion({
                 ...question,
-                questionnaireId
+                questionnaireId,
+                questionnaireQuesitons
             });
         }
         isPreview ? isPreview.close() : history.goBack();
@@ -96,7 +98,8 @@ const mapState = (state: IAppState) => ({
     currentQuestion: state.questions.current,
     isLoading: state.questions.categories.isLoading,
     categories: state.questions.categories.list,
-    questionnaireId: state.questionnaires.current.get.id
+    questionnaireId: state.questionnaires.current.get.id,
+    questionnaireQuesitons: state.questionnaires.current.questions
 });
 
 const mapDispatch = {
