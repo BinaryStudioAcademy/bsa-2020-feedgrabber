@@ -9,6 +9,7 @@ import com.feed_grabber.core.invitation.dto.InvitationSignUpDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
+import com.feed_grabber.core.rabbit.Sender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,15 @@ import java.util.stream.Collectors;
 public class InvitationService {
     private final InvitationRepository invitationRepository;
     private final CompanyRepository companyRepository;
+    private final Sender emailSender;
 
     @Autowired
     public InvitationService(InvitationRepository invitationRepository,
-                             CompanyRepository companyRepository) {
+                             CompanyRepository companyRepository,
+                             Sender emailSender) {
         this.invitationRepository = invitationRepository;
         this.companyRepository = companyRepository;
+        this.emailSender = emailSender;
     }
 
     public InvitationSignUpDto getById(UUID id) throws InvitationNotFoundException {
@@ -57,6 +61,11 @@ public class InvitationService {
 
         var invitation = InvitationMapper.MAPPER.invitationDtoToModel(dto);
         invitation = invitationRepository.save(invitation);
+        emailSender.sendToProcessor(
+                "http://feedgrabber.com.localhost:3000/sign-up/" + invitation.getId().toString(),
+                invitation.getEmail(),
+                "INVITE"
+        );
         return InvitationMapper.MAPPER.invitationToGenerateDto(invitation);
     }
 

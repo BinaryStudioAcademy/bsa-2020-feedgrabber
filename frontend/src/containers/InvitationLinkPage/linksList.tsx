@@ -41,7 +41,7 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
         </UICardBlock>
         <LoaderWrapper loading={loadingList}>
           {invitationsList && invitationsList.map(i => (
-            <UICardBlock className={styles.sentInvitationWrapper}>
+            <UICardBlock className={styles.sentInvitationWrapper} key={i.email}>
               <div>
                 <h4>
                   <Icon name="check" className={i.accepted ? styles.activeCheck : styles.check} />

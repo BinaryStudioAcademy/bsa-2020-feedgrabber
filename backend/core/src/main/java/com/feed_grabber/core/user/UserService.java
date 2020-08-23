@@ -156,7 +156,6 @@ public class UserService implements UserDetailsService {
                 .company(company)
                 .build()
         );
-        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         invitationRepository.acceptById(registerDto.getInvitationId());
         return invitation.getCompany().getId();
     }
