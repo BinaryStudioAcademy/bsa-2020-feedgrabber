@@ -11,7 +11,6 @@ const responseErrorHandler = e => {
     const originalRequest = e.config;
 
     if (status !== 403) return Promise.reject(e.response);
-    console.log("here");
 
     if (originalRequest._retry) {
         history.push('/auth');
