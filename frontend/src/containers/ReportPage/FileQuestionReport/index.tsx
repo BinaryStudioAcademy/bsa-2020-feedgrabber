@@ -13,17 +13,19 @@ export const FileQuestionReport: FC<IFileQuestionReportProps> = ({ data }) => {
         labels={data.options.map(o => o.type)}
         options={{
             tooltips: {
-                custom: function(tooltip) {
+                custom: function (tooltip) {
                     if (!tooltip) return;
                     tooltip.displayColors = false;
-                  },
+                },
                 callbacks: {
                     label: function (tooltipItem, chartData) {
-                        const _data = chartData.datasets[tooltipItem.datasetIndex];
                         const type = chartData.labels[tooltipItem.index];
                         const initial = data.options.find(option => option.type === type);
-                        return [`${type}: ${initial?.amount}`, `average size: ${Math.round(initial?.sizes
-                            .reduce((o1, o2) => o2 += o1) / initial?.sizes.length)} Mb`];
+                        return [
+                            `${type}: ${initial?.amount}`,
+                            `average size: ${Math.round(initial?.sizes
+                                .reduce((o1, o2) => o2 += o1) / initial?.sizes.length)} Mb`
+                        ];
                     }
                 }
             }
