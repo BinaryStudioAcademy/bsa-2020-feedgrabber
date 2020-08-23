@@ -10,7 +10,7 @@ const apiProxy = proxy(['/api', '/ws'], {
 const api2Proxy = proxy('/2api', {
   target: 'http://localhost:5001',
   logLevel: 'debug',
-  changeOrigin: true,
+  changeOrigin: true
 })
 
 module.exports = function (app) {

@@ -1,6 +1,5 @@
 import {IQuestionnaireReport, IRequestShort} from "../../models/report/IReport";
 import {
-    clearQuestionnaireReportRoutine,
     loadQuestionnaireRequestsRoutine,
     loadReportRoutine
 } from "../../sagas/questionnaireReport/routines";
@@ -11,13 +10,14 @@ export interface IQuestionnaireReportsState {
     isLoading?: boolean;
 }
 
-export default (state: IQuestionnaireReportsState = {}, action): IQuestionnaireReportsState => {
+const defaultValues = {
+    current: {} as IQuestionnaireReport,
+    list: [] as IRequestShort[],
+    isLoading: false
+};
+
+export default (state: IQuestionnaireReportsState = defaultValues, action): IQuestionnaireReportsState => {
     switch (action.type) {
-        case clearQuestionnaireReportRoutine.TRIGGER:
-            return {
-                ...state,
-                current: undefined
-            };
         case loadReportRoutine.TRIGGER:
         case loadQuestionnaireRequestsRoutine.TRIGGER:
             return {
@@ -42,7 +42,6 @@ export default (state: IQuestionnaireReportsState = {}, action): IQuestionnaireR
                 ...state,
                 isLoading: false
             };
-
         default:
             return state;
     }

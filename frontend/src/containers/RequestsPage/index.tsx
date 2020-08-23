@@ -26,10 +26,9 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
                 <UICard>
                 {
                     requests.map(r => (
-                        <UICardBlock onClick={() => handleClick(r.requestId)}>
-                            <h3>Made by {r.requestMaker}</h3>
-                            <h4>Created at {r.creationDate}</h4>
-                            <h5>Deadline {r.expirationDate}</h5>
+                        <UICardBlock key={r.requestId} onClick={() => handleClick(r.requestId)}>
+                            <h3>Made by {r.requestMaker.username}</h3>
+                            <h4>Created at {r.creationDate.substr(0, 19)}</h4>
                             <h5>{r.generateReport && "Report will be generated automatic"}</h5>
                         </UICardBlock>
                     ))

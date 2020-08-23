@@ -24,14 +24,14 @@ import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 import DateSelectionReport from "./DateSelectionReport";
 
-const ReportPage: FC<ConnectedReportPageProps & { requestId: string }> = (
+const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     {
-        report, isLoading, loadReport, requestId
+        report, isLoading, loadReport, match
     }
 ) => {
     useEffect(() => {
-        loadReport(requestId);
-    }, [loadReport, requestId]);
+        loadReport(match.params.id);
+    }, [loadReport, match.params.id]);
 
     const renderQuestionData = (question: IQuestionReport) => {
         switch (question.type) {
@@ -57,13 +57,13 @@ const ReportPage: FC<ConnectedReportPageProps & { requestId: string }> = (
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn>
-                        {report && (
+                        {report?.questions && (
                             <UICard>
                                 <UICardBlock>
                                     <h3>{report.questionnaireTitle}</h3>
                                 </UICardBlock>
                                 {report.questions.map(q => (
-                                    <UICardBlock>
+                                    <UICardBlock key={q.id}>
                                         <h4>{q.title}</h4>
                                         <p><b>{q.answers} answers</b></p>
                                         {renderQuestionData(q)}
