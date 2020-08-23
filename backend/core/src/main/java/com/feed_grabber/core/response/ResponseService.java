@@ -42,7 +42,7 @@ public class ResponseService {
                         responseRepository.findByRequestAndUser(requestId, userId)));
     }
 
-    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException, UserNotFoundException {
+    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException {
        var response = responseRepository.findById(dto.getId())
                .orElseThrow(ResponseNotFoundException::new);
 

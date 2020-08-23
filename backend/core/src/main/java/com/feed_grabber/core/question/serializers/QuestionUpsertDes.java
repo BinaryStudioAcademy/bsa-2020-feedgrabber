@@ -47,12 +47,11 @@ public class QuestionUpsertDes extends StdDeserializer<QuestionUpsertDto> {
     }
 
     private QuestionType getType(JsonNode node) {
-        var typeText = node.hasNonNull("type") ? node.get("type").asText() : null;
-        return typeText != null
-                ? QuestionType
-                    .fromString(typeText)
-                    .orElseThrow(() -> new QuestionTypeNotExistsException("This type of question does not exists " + typeText))
-                : null;
+        try {
+            return QuestionType.valueOf(node.get("type").asText());
+        } catch (IllegalArgumentException e) {
+            throw new QuestionTypeNotExistsException ("This type of question does not exists");
+        }
     }
 
     private UUID getId(JsonNode node) {

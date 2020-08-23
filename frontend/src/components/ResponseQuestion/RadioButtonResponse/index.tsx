@@ -15,12 +15,8 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, 
     const handleChange = (event, value?) => {
         setAnswer(value?.value);
         answerHandler?.({
-            questionId: question.id,
-            body: {
-                selected: answer,
-                other
-            },
-            type: QuestionType.radio
+            selected: answer,
+            other
         });
     };
 
