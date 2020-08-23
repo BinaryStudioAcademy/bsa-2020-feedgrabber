@@ -4,6 +4,7 @@ import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoun
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
+import com.feed_grabber.core.request.dto.RequestShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,7 @@ public class RequestController {
 
     @ApiOperation("Get all requests by questionnaireId")
     @GetMapping
-    public AppResponse<List<RequestQuestionnaireDto>> getAllByQuestionnaireId(@RequestParam("questionnaireId") UUID id) {
-        return new AppResponse<>(
-                requestService.getAllByQuestionnaire(id)
-        );
+    public AppResponse<List<RequestShortDto>> getAllByQuestionnaireId(@RequestParam("questionnaireId") UUID id) {
+        return new AppResponse<>(requestService.getAllByQuestionnaire(id));
     }
 }

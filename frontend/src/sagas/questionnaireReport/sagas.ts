@@ -1,7 +1,7 @@
 import {all, put, takeEvery, call} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
-import {loadQuestionnaireReportRoutine} from "./routines";
-import {IQuestionnaireReport} from "../../models/report/IReport";
+import {loadQuestionnaireRequestsRoutine, loadReportRoutine} from "./routines";
+import {IQuestionnaireReport, IRequestShort} from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IGeneric} from "../../models/IGeneric";
 import apiClient from "../../helpers/apiClient";
@@ -117,19 +117,31 @@ const mockReport: IQuestionnaireReport = {
   ]
 };
 
-function* loadReport(action: any) {
+function* loadReport(action) {
   try {
     // here also check if JSON response.questions[].statistics is valid - serialize it
-    const response: IGeneric<IQuestionnaireReport> = yield call(apiClient.get, `/2api/report/${action.payload}`);
-    yield put(loadQuestionnaireReportRoutine.success(response.data.data));
+    const res: IGeneric<IQuestionnaireReport> = yield call(apiClient.get, `/2api/report/${action.payload}`);
+    yield put(loadReportRoutine.success(res.data.data));
   } catch (e) {
-    yield put(loadQuestionnaireReportRoutine.failure());
-    toastr.error("Unable to load questionnaire report");
+    yield put(loadReportRoutine.failure());
+    toastr.error("Unable to load report");
   }
+}
+
+function* loadReportsBaseInfo(action) {
+    try {
+        const res: IGeneric<IRequestShort> = yield call(apiClient.get,
+            `/api/request?questionnaireId=${action.payload}`);
+        yield put(loadQuestionnaireRequestsRoutine.success(res.data.data));
+    } catch(e) {
+        yield put(loadQuestionnaireRequestsRoutine.failure());
+        toastr.error("Unable to load reports");
+    }
 }
 
 export default function* questionnaireReportSagas() {
   yield all([
-    yield takeEvery(loadQuestionnaireReportRoutine.TRIGGER, loadReport)
+    yield takeEvery(loadQuestionnaireRequestsRoutine.TRIGGER, loadReportsBaseInfo),
+    yield takeEvery(loadReportRoutine.TRIGGER, loadReport)
   ]);
 }

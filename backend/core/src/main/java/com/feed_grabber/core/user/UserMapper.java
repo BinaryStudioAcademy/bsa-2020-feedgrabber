@@ -33,5 +33,4 @@ public interface UserMapper {
     UserDetailsResponseDTO detailedFromUser(User user);
 
     UserShortDto shortFromUser(User user);
-
 }

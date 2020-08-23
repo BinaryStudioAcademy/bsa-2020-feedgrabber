@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 
 import {IAppState} from 'models/IAppState';
-import {loadQuestionnaireReportRoutine} from "../../sagas/questionnaireReport/routines";
+import {loadReportRoutine} from "../../sagas/questionnaireReport/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -10,12 +10,12 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {
-  IQuestionReport,
-  IQuestionReportCheckboxData,
-  IQuestionReportFreeTextData,
-  IQuestionReportRadioData,
-  IQuestionReportScaleData,
-  IQuestionReportDateData
+    IQuestionReport,
+    IQuestionReportCheckboxData,
+    IQuestionReportDateData,
+    IQuestionReportFreeTextData,
+    IQuestionReportRadioData,
+    IQuestionReportScaleData
 } from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
@@ -24,72 +24,67 @@ import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 import DateSelectionReport from "./DateSelectionReport";
 
-const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
-  {
-    match,
-    report,
-    isLoading,
-    loadQuestionnaireReport
-  }
-) => {
-  useEffect(() => {
-      loadQuestionnaireReport(match.params.id);
-  }, [loadQuestionnaireReport, match]);
-
-  const renderQuestionData = (question: IQuestionReport) => {
-    switch (question.type) {
-      case QuestionType.radio:
-        return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
-      case QuestionType.checkbox:
-        return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
-      case QuestionType.date:
-        return <DateSelectionReport data={question.data as IQuestionReportDateData}/>;
-      // case QuestionType.fileUpload:
-      case QuestionType.freeText:
-        return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
-      // case QuestionType.multichoice:
-      //   return <MultichoiceQuestionReport data={question.data as IQuestionReportMultichoiceData}/>;
-      case QuestionType.scale:
-        return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
-      default:
-        return <div/>;
+const ReportPage: FC<ConnectedReportPageProps & { requestId: string }> = (
+    {
+        report, isLoading, loadReport, requestId
     }
-  };
+) => {
+    useEffect(() => {
+        loadReport(requestId);
+    }, [loadReport, requestId]);
 
-  return (
-    <>
-      <UIPageTitle title="Report"/>
-      <UIContent>
-        <LoaderWrapper loading={isLoading}>
-          <UIColumn>
-            {report && (
-              <UICard>
-                <UICardBlock>
-                  <h3>{report.questionnaireTitle}</h3>
-                </UICardBlock>
-                {report.questions.map(q => (
-                  <UICardBlock>
-                    <h4>{q.title}</h4>
-                    <p><b>{q.answers} answers</b></p>
-                    {renderQuestionData(q)}
-                  </UICardBlock>
-                ))}
-              </UICard>
-            )}
-          </UIColumn>
-        </LoaderWrapper>
-      </UIContent>
-    </>
-  );
+    const renderQuestionData = (question: IQuestionReport) => {
+        switch (question.type) {
+            case QuestionType.radio:
+                return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
+            case QuestionType.checkbox:
+                return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
+            case QuestionType.date:
+                return <DateSelectionReport data={question.data as IQuestionReportDateData}/>;
+            // case QuestionType.fileUpload:
+            case QuestionType.freeText:
+                return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
+            case QuestionType.scale:
+                return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
+            default:
+                return <div/>;
+        }
+    };
+
+    return (
+        <>
+            <UIPageTitle title="Report"/>
+            <UIContent>
+                <LoaderWrapper loading={isLoading}>
+                    <UIColumn>
+                        {report && (
+                            <UICard>
+                                <UICardBlock>
+                                    <h3>{report.questionnaireTitle}</h3>
+                                </UICardBlock>
+                                {report.questions.map(q => (
+                                    <UICardBlock>
+                                        <h4>{q.title}</h4>
+                                        <p><b>{q.answers} answers</b></p>
+                                        {renderQuestionData(q)}
+                                    </UICardBlock>
+                                ))}
+                            </UICard>
+                        )}
+                    </UIColumn>
+                </LoaderWrapper>
+            </UIContent>
+        </>
+    );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  report: rootState.questionnaireReport.report,
-  isLoading: rootState.questionnaireReport.isLoading
+    report: rootState.questionnaireReports.current,
+    isLoading: rootState.questionnaireReports.isLoading
 });
 
 const mapDispatchToProps = {
-  loadQuestionnaireReport: loadQuestionnaireReportRoutine
+    loadReport: loadReportRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

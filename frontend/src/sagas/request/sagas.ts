@@ -13,14 +13,6 @@ function* saveRequest(action) {
   }
 }
 
-function* getRequestForQuestionnaire(action) {
-    try {
-        const res = yield call(apiClient.get, `/api/request?questionnaireId=${action.payload}`)
-    } catch (e) {
-        toastr('Failed loading requests');
-    }
-}
-
 function* loadRequestedQuestionnaires() {
   try {
     const result = yield call(apiClient.get, `/api/request/respondent`);

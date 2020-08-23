@@ -3,7 +3,6 @@ import { loadRequestedQuestionnairesRoutine } from "sagas/request/routines";
 import { getResponseRoutine,
         addRequestIdToCurrentResponseRoutine,
         saveResponseRoutine } from "sagas/questionnaireResponse/routines";
-import { access } from "fs";
 
 const responseReducer = (state: IAppState['questionnaireResponse'] = {isLoading: false}, {type, payload}) => {
     switch(type) {

@@ -5,6 +5,7 @@ import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoun
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
+import com.feed_grabber.core.request.dto.RequestShortDto;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
@@ -85,16 +86,18 @@ public class RequestService {
     }
 
     public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
-        return entityListToDto(requestRepository.findAllUnansweredByRespondentId(id));
-    }
-
-    public List<RequestQuestionnaireDto> getAllByQuestionnaire(UUID id) {
-        return entityListToDto(requestRepository.findAllByQuestionnaireId(id));
-    }
-
-    private List<RequestQuestionnaireDto> entityListToDto(List<Request> list) {
-        return list.stream().map(r -> RequestMapper.MAPPER.
-                requestAndQuestionnaireToDto(r, r.getQuestionnaire()))
+        return requestRepository.findAllUnansweredByRespondentId(id)
+                .stream()
+                .map(request -> RequestMapper.MAPPER.
+                        requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
                 .collect(Collectors.toList());
     }
+
+    public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
+        return requestRepository.findAllByQuestionnaireId(id)
+                .stream()
+                .map(RequestMapper.MAPPER::requestToShortDto)
+                .collect(Collectors.toList());
+    }
+
 }

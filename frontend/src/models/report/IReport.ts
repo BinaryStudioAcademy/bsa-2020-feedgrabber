@@ -5,6 +5,22 @@ export interface IQuestionnaireReport {
   questions: IQuestionReport[];
 }
 
+type UserShortDto = {
+    id: string;
+    username: string;
+    // TODO avatar: string;
+}
+
+export interface IRequestShort {
+    requestId: string;
+    targetUser: UserShortDto;
+    requestMaker: UserShortDto;
+    creationDate: string;
+    expirationDate: string;
+    generateReport: boolean;
+    notifyUsers: boolean;
+}
+
 export interface IQuestionReport {
   id: string;
   title: string;
