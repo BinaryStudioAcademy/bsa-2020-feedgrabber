@@ -14,14 +14,21 @@ import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class InvitationService {
+
+    @Value("${invitation.duration.days}")
+    private Integer INVITATION_DURATION_DAYS;
+
     private final InvitationRepository invitationRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
@@ -42,7 +49,9 @@ public class InvitationService {
         var invitation = invitationRepository.findById(id)
                 .orElseThrow(InvitationNotFoundException::new);
 
-        return InvitationMapper.MAPPER.invitationToInvitationSignUpDto(invitation);
+        var dto = InvitationMapper.MAPPER.invitationToInvitationSignUpDto(invitation);
+        dto.setExpired(isExpired(invitation));
+        return dto;
     }
 
     public List<InvitationDto> getByCompanyId(UUID companyId) {
@@ -82,5 +91,13 @@ public class InvitationService {
 
     public void deleteByCompanyIdAndEmail(UUID companyId, String email) {
         invitationRepository.deleteByCompanyIdAndEmail(companyId, email);
+    }
+
+    public boolean isExpired(Invitation invitation) {
+        var calendar = Calendar.getInstance();
+        calendar.setTime(invitation.getCreatedAt());
+        calendar.add(Calendar.DAY_OF_MONTH, INVITATION_DURATION_DAYS);
+
+        return calendar.getTime().before(new Date());
     }
 }

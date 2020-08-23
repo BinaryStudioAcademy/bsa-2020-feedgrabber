@@ -11,5 +11,6 @@ public class InvitationSignUpDto {
     private String email;
     private String companyName;
     private Date createdAt;
+    private Boolean expired;
     private Boolean accepted;
 }

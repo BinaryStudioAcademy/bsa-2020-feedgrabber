@@ -21,6 +21,7 @@ public abstract class InvitationMapper {
     public static InvitationMapper MAPPER = Mappers.getMapper(InvitationMapper.class);
 
     @Mapping(source = "company.name", target = "companyName")
+    @Mapping(ignore = true, target = "expired")
     public abstract InvitationSignUpDto invitationToInvitationSignUpDto(Invitation invitation);
 
     @Mapping(source = "companyId", target = "company.id")

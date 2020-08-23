@@ -5,6 +5,7 @@ export interface IInvitationSignUpData {
   createdAt: string;
   companyName: string;
   accepted: boolean;
+  expired: boolean;
 }
 
 export interface IRegisterInvitationSignUpData {

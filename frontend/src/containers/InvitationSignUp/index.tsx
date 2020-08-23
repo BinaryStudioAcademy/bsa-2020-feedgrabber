@@ -19,6 +19,7 @@ interface IInvitationSignUpProps {
   registerLoading?: boolean;
 
   loadInvitationData(id: string): void;
+
   registerByInvitation(request: IRegisterInvitationSignUpData): void;
 }
 
@@ -60,8 +61,11 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
           {invitationData && (
             <>
               <h1 className={styles.pageTitle}>
-                Welcome to<br/>{invitationData.companyName},<br/>{invitationData.email}
+                {invitationData.expired
+                  ? <>Unfortunately,<br/>this link has been expired</>
+                  : <>Welcome to<br/>{invitationData.companyName},<br/>{invitationData.email}</>}
               </h1>
+              {!invitationData.expired && (
               <div className={styles.formWrapper}>
                 <div className={styles.formContent}>
                   {invitationData.accepted
@@ -114,6 +118,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                   }
                 </div>
               </div>
+              )}
             </>
           )}
           {loadFailed && (

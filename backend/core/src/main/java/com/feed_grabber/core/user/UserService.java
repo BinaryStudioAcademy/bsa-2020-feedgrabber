@@ -11,6 +11,7 @@ import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.invitation.InvitationRepository;
+import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.registration.TokenType;
@@ -38,14 +39,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-
-    @Value("${invitation.duration.days}")
-    private Integer INVITATION_DURATION_DAYS;
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
+    private final InvitationService invitationService;
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenService verificationTokenService;
 
@@ -56,12 +54,14 @@ public class UserService implements UserDetailsService {
                        RoleRepository roleRepository,
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
+                       InvitationService invitationService,
                        PasswordEncoder passwordEncoder,
                        VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
+        this.invitationService = invitationService;
         this.passwordEncoder = passwordEncoder;
         this.verificationTokenService = verificationTokenService;
     }
@@ -139,7 +139,9 @@ public class UserService implements UserDetailsService {
 
         var invitation = invitationRepository.findById(registerDto.getInvitationId())
                 .orElseThrow(InvitationNotFoundException::new);
-        assertInvitationRelevant(invitation);
+        if (invitationService.isExpired(invitation)) {
+            throw new InvitationExpiredException();
+        }
 
         var company = invitation.getCompany();
         var email = invitation.getEmail();
@@ -164,17 +166,6 @@ public class UserService implements UserDetailsService {
         );
         invitationRepository.acceptById(registerDto.getInvitationId());
         return invitation.getCompany().getId();
-    }
-
-    private void assertInvitationRelevant(Invitation invitation) throws InvitationExpiredException {
-
-        var calendar = Calendar.getInstance();
-        calendar.setTime(invitation.getCreatedAt());
-        calendar.add(Calendar.DAY_OF_MONTH, INVITATION_DURATION_DAYS);
-
-        if (calendar.getTime().before(new Date())) {
-            throw new InvitationExpiredException();
-        }
     }
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
