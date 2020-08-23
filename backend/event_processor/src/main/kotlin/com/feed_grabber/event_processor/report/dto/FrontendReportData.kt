@@ -15,7 +15,7 @@ data class QuestionInfo(
         val id: UUID,
         val title: String,
         val type: QuestionTypes,
-        val answers: Int?,
+        val answers: Int,
         val data: QuestionReportData?
 )
 

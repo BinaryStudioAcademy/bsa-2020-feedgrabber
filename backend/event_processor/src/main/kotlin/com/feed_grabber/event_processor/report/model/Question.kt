@@ -7,12 +7,12 @@ sealed class QuestionAnswersDB
 
 data class QAWithOptions(
         val options: MutableMap<UUID, List<String>> = mutableMapOf(),
-        val other: MutableMap<String?, MutableList<UUID>> = mutableMapOf()
+        val other: MutableMap<String, MutableList<UUID>> = mutableMapOf()
 ) : QuestionAnswersDB()
 
 data class QAWithOption(
         val options: MutableMap<UUID, String> = mutableMapOf(),
-        val other: MutableMap<String?, MutableList<UUID>> = mutableMapOf()
+        val other: MutableMap<String, MutableList<UUID>> = mutableMapOf()
 ) : QuestionAnswersDB()
 
 data class QAWithValue(
@@ -28,5 +28,5 @@ data class QuestionDB(
         val title: String,
         val categoryTitle: String,
         val type: QuestionTypes,
-        val answers: QuestionAnswersDB?
+        val answers: QuestionAnswersDB
 )

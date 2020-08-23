@@ -13,18 +13,20 @@ class ReportService(val repository: ReportRepository) {
     fun getFrontendData(requestId: UUID) = parseReportForFrontend(repository.findById(requestId))
 
     fun parseIncomingData(dto: DataForReport): Report {
-        val map = HashMap<UUID, MutableList<Pair<AnswerValues, UserDto>>>()
+        val map = HashMap<UUID, MutableList<Pair<AnswerValues, UUID>>>()
 
         dto.responses.forEach { r ->
             r.payloadList?.forEach {
-                map.getOrPut(it.questionId) { mutableListOf() }.add(Pair(parseQuestion(it), r.user))
+                map.getOrPut(it.questionId) { mutableListOf() }.add(Pair(this.parseQuestion(it), r.user.id))
             }
         }
         val questions = dto.questionnaire.questions.map {
-            QuestionDB(it.id, it.name, it.categoryTitle, it.type, parseAnswers(map[it.id]))
+            val answers = this.parseAnswers(map[it.id])
+            if (answers == null) null
+            else QuestionDB(it.id, it.name, it.categoryTitle, it.type, answers)
         }
         dto.apply {
-            return Report(requestId, questions, questionnaire,
+            return Report(requestId, questions.filterNotNull(), questionnaire,
                     requestCreationDate, requestExpirationDate,
                     requestMaker, targetUser, "", "")
         }
@@ -98,49 +100,50 @@ class ReportService(val repository: ReportRepository) {
 
 
     @Suppress("UNCHECKED_CAST")
-    fun parseAnswers(answers: MutableList<Pair<AnswerValues, UserDto>>?): QuestionAnswersDB? =
-            when (answers?.get(0)?.first) {
-                is FreeTextValue -> {
-                    QAWithValue().apply {
-                        for (a in answers as List<Pair<FreeTextValue, UserDto>>)
-                            values[a.second.id] = a.first.text
-                    }
+    fun parseAnswers(answers: MutableList<Pair<AnswerValues, UUID>>?): QuestionAnswersDB? {
+        if (answers == null) return null;
+        return when (answers[0].first) {
+            is FreeTextValue -> {
+                QAWithValue().apply {
+                    for (a in answers as List<Pair<FreeTextValue, UUID>>)
+                        values[a.second] = a.first.text
                 }
-                is DateValue -> {
-                    QAWithValue().apply {
-                        for (a in answers as List<Pair<DateValue, UserDto>>)
-                            values[a.second.id] = a.first.date.toString()
-                    }
-                }
-                is ScaleValue -> {
-                    QAWithValue().apply {
-                        for (a in answers as List<Pair<ScaleValue, UserDto>>)
-                            values[a.second.id] = a.first.number.toString()
-                    }
-                }
-                is FileValue -> {
-                    QAWithValues().apply {
-                        for (a in answers as List<Pair<FileValue, UserDto>>)
-                            values[a.second.id] = a.first.urls
-                    }
-                }
-                is CheckBoxValue -> {
-                    QAWithOptions().apply {
-                        for (a in answers as List<Pair<CheckBoxValue, UserDto>>) {
-                            options[a.second.id] = a.first.selected
-                            other.getOrPut(a.first.other) { mutableListOf() }.add(a.second.id)
-                        }
-                    }
-                }
-                is RadioValue -> {
-                    QAWithOption().apply {
-                        for (a in answers as List<Pair<RadioValue, UserDto>>) {
-                            options[a.second.id] = a.first.selected
-                            other.getOrPut(a.first.other) { mutableListOf() }.add(a.second.id)
-                        }
-                    }
-                }
-                else -> null
             }
+            is DateValue -> {
+                QAWithValue().apply {
+                    for (a in answers as List<Pair<DateValue, UUID>>)
+                        values[a.second] = a.first.date.toString()
+                }
+            }
+            is ScaleValue -> {
+                QAWithValue().apply {
+                    for (a in answers as List<Pair<ScaleValue, UUID>>)
+                        values[a.second] = a.first.number.toString()
+                }
+            }
+            is FileValue -> {
+                QAWithValues().apply {
+                    for (a in answers as List<Pair<FileValue, UUID>>)
+                        values[a.second] = a.first.urls
+                }
+            }
+            is CheckBoxValue -> {
+                QAWithOptions().apply {
+                    for (a in answers as List<Pair<CheckBoxValue, UUID>>) {
+                        if (a.first.selected != null) options[a.second] = a.first.selected!!
+                        if (a.first.other != null) other.getOrPut(a.first.other!!) { mutableListOf() }.add(a.second)
+                    }
+                }
+            }
+            is RadioValue -> {
+                QAWithOption().apply {
+                    for (a in answers as List<Pair<RadioValue, UUID>>) {
+                        if (a.first.selected != null) options[a.second] = a.first.selected!!
+                        if (a.first.other != null) other.getOrPut(a.first.other!!) { mutableListOf() }.add(a.second)
+                    }
+                }
+            }
+        }
+    }
 }
 
