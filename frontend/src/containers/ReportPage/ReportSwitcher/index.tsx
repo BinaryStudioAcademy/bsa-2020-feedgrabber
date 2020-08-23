@@ -6,11 +6,12 @@ import styles from './styles.module.sass';
 export interface IRCProps {
   from: number;
   to: number;
+  startIndex: number;
   setIndex: (index: number) => void;
 }
 
-const ReportSwitcher: React.FC<IRCProps> = ({ from, to, setIndex }) => {
-  const [curIndex, setCurIndex] = useState(from);
+const ReportSwitcher: React.FC<IRCProps> = ({ from, to, setIndex, startIndex }) => {
+  const [curIndex, setCurIndex] = useState(startIndex);
 
   const handleIndexChange = (index: number) => {
     const newIndex = index % to;

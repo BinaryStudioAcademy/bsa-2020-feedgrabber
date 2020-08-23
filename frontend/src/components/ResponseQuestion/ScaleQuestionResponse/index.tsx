@@ -12,18 +12,14 @@ export interface IScaleResponse {
 
 export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScaleResponse> = (
   {
-    question= {
-      id: '23',
-      details: { min: 1, max: 8, minDescription: 'bad', maxDescription: 'good'},
-      answer: 4
-    },
+    question,
     answerHandler,
     response
   }) => {
-  // const [answer, setAnswer] = useState(response.body || question.answer);
-
+  const [answer, setAnswer] = useState(response || question.answer);
   const handleClick = (e, value) => {
-    answerHandler?.(value ? value : null);
+    setAnswer(value?.value);
+    answerHandler?.(value?.value || null);
   };
 
   const getVariants = (min: number, max: number) => {
@@ -37,7 +33,7 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScal
                  name={group}
                  onChange={handleClick}
                  disabled={!!response}
-                 checked={!!response && response === i} />
+                 checked={answer === i} />
         </Form.Field>
       );
     }

@@ -154,6 +154,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
               <UIColumn wide>
                 <ReportSwitcher from={1}
                                 to={respondentReports.length}
+                                startIndex={currentReport}
                                 setIndex={setCurrentReport} />
                 {renderRespondentReport()}
               </UIColumn>
