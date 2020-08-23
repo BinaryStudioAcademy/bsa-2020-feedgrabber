@@ -43,6 +43,6 @@ public class Questionnaire {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private Company company;
 
-    @OneToMany(mappedBy = "section")
+    @OneToMany(mappedBy = "questionnaire")
     private List<Section> sections;
 }

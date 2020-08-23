@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Table(name = "sections")
 public class Section {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -35,6 +36,6 @@ public class Section {
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "section")
     private List<Question> questions;
 }

@@ -55,6 +55,6 @@ public class Question {
     private Company company;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @Column(name = "section_id")
+    @JoinColumn(name = "section_id")
     private Section section;
 }
