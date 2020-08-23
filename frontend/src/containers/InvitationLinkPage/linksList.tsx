@@ -14,8 +14,8 @@ interface IInvitationsListBlockProps {
   errorLoading?: boolean;
 
   loadInvitations(): void;
-
   deleteInvitation(email: string): void;
+  resendInvitation(email: string): void;
 }
 
 const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> = (
@@ -24,6 +24,7 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
     loadingList,
     errorLoading,
     loadInvitations,
+    resendInvitation,
     deleteInvitation
   }
 ) => {
@@ -52,9 +53,21 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
                 </h4>
               </div>
               <div>
-                {!i.accepted &&
-                (<UIButton title="Delete" secondary onClick={() => deleteInvitation(i.email)}/>)
-                }
+                {i.expired && (
+                  <UIButton
+                    title="Resend"
+                    onClick={() => resendInvitation(i.email)}
+                    loading={i.isResending}
+                    disabled={i.isResending}
+                  />)}
+                {!i.accepted && (
+                  <UIButton
+                    title="Delete"
+                    secondary
+                    onClick={() => deleteInvitation(i.email)}
+                    loading={i.isDeleting}
+                    disabled={i.isDeleting}
+                  />)}
               </div>
             </UICardBlock>
           ))}

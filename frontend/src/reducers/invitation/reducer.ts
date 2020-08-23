@@ -1,6 +1,6 @@
 import {
   deleteInvitationRoutine,
-  loadInvitationsListRoutine,
+  loadInvitationsListRoutine, resendInvitationRoutine,
   sendInvitationRoutine
 } from "../../sagas/invitation/routines";
 import {logoutRoutine} from "../../sagas/auth/routines";
@@ -63,6 +63,18 @@ export default (state: IInvitationState = {}, action): IInvitationState => {
       return {
         ...state,
         list: (state.list || []).map(i => i.email === action.payload ? {...i, isDeleting: false} : i)
+      };
+
+    case resendInvitationRoutine.TRIGGER:
+      return {
+        ...state,
+        list: (state.list || []).map(i => i.email === action.payload ? {...i, isResending: true} : i)
+      };
+    case resendInvitationRoutine.SUCCESS:
+    case resendInvitationRoutine.FAILURE:
+      return {
+        ...state,
+        list: (state.list || []).map(i => i.email === action.payload ? {...i, isResending: false} : i)
       };
 
     case logoutRoutine.TRIGGER:

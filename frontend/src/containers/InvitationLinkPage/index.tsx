@@ -6,7 +6,7 @@ import UIContent from "../../components/UI/UIContent";
 import InvitationCreationBlock from "./linkCreation";
 import {
   deleteInvitationRoutine,
-  loadInvitationsListRoutine,
+  loadInvitationsListRoutine, resendInvitationRoutine,
   sendInvitationRoutine
 } from "../../sagas/invitation/routines";
 import InvitationsListBlock from "./linksList";
@@ -21,6 +21,7 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
 
     loadInvitations,
     sendInvitation,
+    resendInvitation,
     deleteInvitation
   }
 ) => {
@@ -39,6 +40,7 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
           loadingList={isLoadingList}
           errorLoading={errorLoadingList}
           deleteInvitation={deleteInvitation}
+          resendInvitation={resendInvitation}
         />
       </UIContent>
     </>
@@ -56,6 +58,7 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
   loadInvitations: loadInvitationsListRoutine,
   sendInvitation: sendInvitationRoutine,
+  resendInvitation: resendInvitationRoutine,
   deleteInvitation: deleteInvitationRoutine
 };
 
