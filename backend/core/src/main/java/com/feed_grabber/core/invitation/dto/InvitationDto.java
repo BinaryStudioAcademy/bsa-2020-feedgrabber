@@ -10,6 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class InvitationDto {
     private Boolean accepted;
+    private Boolean expired;
     private String email;
     private Date createdAt;
 }

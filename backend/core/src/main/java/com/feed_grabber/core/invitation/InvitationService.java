@@ -1,6 +1,5 @@
 package com.feed_grabber.core.invitation;
 
-import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
@@ -56,9 +55,9 @@ public class InvitationService {
 
     public List<InvitationDto> getByCompanyId(UUID companyId) {
         return invitationRepository
-                .findByCompanyIdOrderByCreatedAtDesc(companyId)
+                .findByCompanyIdOrderByAcceptedAscCreatedAtDesc(companyId)
                 .stream()
-                .map(InvitationMapper.MAPPER::invitationToDto)
+                .map(i -> InvitationMapper.MAPPER.invitationToDto(i, isExpired(i)))
                 .collect(Collectors.toList());
     }
 

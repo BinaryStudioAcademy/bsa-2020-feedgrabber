@@ -18,7 +18,7 @@ public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
             "WHERE i.id = :id")
     void acceptById(UUID id);
 
-    List<Invitation> findByCompanyIdOrderByCreatedAtDesc(UUID companyId);
+    List<Invitation> findByCompanyIdOrderByAcceptedAscCreatedAtDesc(UUID companyId);
 
     Optional<Invitation> findByCompanyIdAndEmail(UUID companyId, String email);
 

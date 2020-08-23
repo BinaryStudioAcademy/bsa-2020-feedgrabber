@@ -3,4 +3,5 @@ export interface IInvitation {
   createdAt: string;
   isDeleting?: boolean;
   accepted: boolean;
+  expired: boolean;
 }

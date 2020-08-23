@@ -44,13 +44,16 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
             <UICardBlock className={styles.sentInvitationWrapper} key={i.email}>
               <div>
                 <h4>
-                  <Icon name="check" className={i.accepted ? styles.activeCheck : styles.check} />
+                  {i.expired
+                    ? <Icon name="exclamation circle" className={styles.exclamation}/>
+                    : <Icon name="check" className={i.accepted ? styles.activeCheck : styles.check}/>
+                  }
                   {i.email}
                 </h4>
               </div>
               <div>
                 {!i.accepted &&
-                  (<UIButton title="Delete" secondary onClick={() => deleteInvitation(i.email)}/>)
+                (<UIButton title="Delete" secondary onClick={() => deleteInvitation(i.email)}/>)
                 }
               </div>
             </UICardBlock>

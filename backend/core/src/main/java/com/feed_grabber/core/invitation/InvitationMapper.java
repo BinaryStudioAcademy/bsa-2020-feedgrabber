@@ -30,5 +30,9 @@ public abstract class InvitationMapper {
 
     public abstract InvitationGenerateResponseDto invitationToGenerateDto(Invitation invitation);
 
-    public abstract InvitationDto invitationToDto(Invitation invitation);
+    @Mapping(source = "invitation.accepted", target = "accepted")
+    @Mapping(source = "invitation.email", target = "email")
+    @Mapping(source = "invitation.createdAt", target = "createdAt")
+    @Mapping(source = "expired", target = "expired")
+    public abstract InvitationDto invitationToDto(Invitation invitation, Boolean expired);
 }
