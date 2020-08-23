@@ -19,6 +19,17 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  mongo-db:
+      image: mongo
+      container_name: 'mongo-db'
+      command: mongod --auth
+      env_file:
+        - ../.env/mongo-db.env
+      volumes:
+        - mongodbdata:/data/db
+      ports:
+      - '27017:27017'
+
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
@@ -34,7 +45,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        
+
   # api
   api:
     image: 'feedgrabber2020/fg-core:latest'
@@ -97,4 +108,6 @@ volumes:
   pglog_core:
     driver: local
   shared:
+    driver: local
+  mongodbdata:
     driver: local

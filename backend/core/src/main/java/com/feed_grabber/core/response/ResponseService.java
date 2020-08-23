@@ -1,7 +1,6 @@
 package com.feed_grabber.core.response;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.feed_grabber.core.request.RequestMapper;
 import com.feed_grabber.core.request.RequestRepository;
 import com.feed_grabber.core.response.dto.ResponseCreateDto;
 import com.feed_grabber.core.response.dto.ResponseDto;
@@ -11,9 +10,9 @@ import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ResponseService {
@@ -43,11 +42,14 @@ public class ResponseService {
                         responseRepository.findByRequestAndUser(requestId, userId)));
     }
 
-    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException, UserNotFoundException {
+    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException {
        var response = responseRepository.findById(dto.getId())
                .orElseThrow(ResponseNotFoundException::new);
+        System.out.println(response.getPayload());
 
-       response.setPayload(dto.getPayload());
+        response.setPayload(dto.getPayload());
+        System.out.println(response.getPayload());
+        response.setAnsweredAt(LocalDateTime.now());
 
        return Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));
     }

@@ -1,4 +1,4 @@
-import { ITextQuestion } from "models/forms/Questions/IQuesion";
+import { ITextQuestion, QuestionType } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
 import { Input, InputOnChangeData } from "semantic-ui-react";
@@ -14,7 +14,7 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion>> = ({ questio
     const handleChange = (e, v: InputOnChangeData) => {
         const { value } = v;
         validate(value);
-        answerHandler?.(question.id, !invalidMessage ? value : null);
+        answerHandler?.(!invalidMessage ? value : null);
     };
     return <Input
         onChange={handleChange}
