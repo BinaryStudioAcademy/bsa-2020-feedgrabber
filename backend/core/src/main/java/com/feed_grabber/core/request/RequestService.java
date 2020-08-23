@@ -100,4 +100,8 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
+    public void closeRequest(UUID id) {
+        requestRepository.closeRequest(id);
+    }
+
 }

@@ -7,6 +7,7 @@ import UIContent from "../../components/UI/UIContent";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {history} from "../../helpers/history.helper";
+import { toastr } from 'react-redux-toastr';
 
 const RequestsPage: FC<RequestPageProps & { match }> = (
     {loadRequests, match, requests}) => {
@@ -15,8 +16,9 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
         loadRequests(match.params.id);
     }, [loadRequests, match.params.id]);
 
-    function handleClick(id: string) {
-        history.push(`/report/${id}`);
+    function handleClick(id: string, isClosed: boolean) {
+        !isClosed && history.push(`/report/${id}`);
+        isClosed && toastr.warning("This request is Closed");
     }
 
     return (
@@ -26,7 +28,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
                 <UICard>
                 {
                     requests.map(r => (
-                        <UICardBlock key={r.requestId} onClick={() => handleClick(r.requestId)}>
+                        <UICardBlock key={r.requestId} onClick={() => handleClick(r.requestId, r.isClosed)}>
                             <h3>Made by {r.requestMaker.username}</h3>
                             <h4>Created at {r.creationDate.substr(0, 19)}</h4>
                             <h5>{r.generateReport && "Report will be generated automatic"}</h5>

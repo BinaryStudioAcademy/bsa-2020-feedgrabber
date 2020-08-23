@@ -19,6 +19,7 @@ export interface IRequestShort {
     expirationDate: string;
     generateReport: boolean;
     notifyUsers: boolean;
+    isClosed: boolean;
 }
 
 export interface IQuestionReport {

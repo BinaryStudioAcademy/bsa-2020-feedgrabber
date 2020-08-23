@@ -49,4 +49,7 @@ public class Request {
 
     @Column(name = "generate_report")
     private Boolean generateReport;
+
+    @Column
+    private Boolean isClosed;
 }
