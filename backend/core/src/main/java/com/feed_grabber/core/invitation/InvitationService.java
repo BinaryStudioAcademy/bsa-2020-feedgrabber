@@ -88,6 +88,13 @@ public class InvitationService {
         return InvitationMapper.MAPPER.invitationToGenerateDto(invitation);
     }
 
+    public InvitationGenerateResponseDto reGenerate(InvitationGenerateRequestDto dto)
+            throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
+
+        deleteByCompanyIdAndEmail(dto.getCompanyId(), dto.getEmail());
+        return generate(dto);
+    }
+
     public void deleteByCompanyIdAndEmail(UUID companyId, String email) {
         invitationRepository.deleteByCompanyIdAndEmail(companyId, email);
     }

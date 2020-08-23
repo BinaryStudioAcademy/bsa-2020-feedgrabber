@@ -48,6 +48,14 @@ public class InvitationController {
         return new AppResponse<>(invitationService.generate(dto));
     }
 
+    @PostMapping("/resend")
+    public AppResponse<InvitationGenerateResponseDto> reGenerate(@RequestBody InvitationGenerateRequestDto dto)
+            throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
+        assertCompanyOwner();
+        dto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse<>(invitationService.reGenerate(dto));
+    }
+
     @DeleteMapping
     public void delete(@RequestParam String email) {
         assertCompanyOwner();
