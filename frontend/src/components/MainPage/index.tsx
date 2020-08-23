@@ -84,25 +84,6 @@ const MainPage: FC<IMainPageProps> =
               </LoaderWrapper>
             </UICard>
           </UIColumn>
-          {/* <UIColumn>*/}
-          {/*  <UICard>*/}
-          {/*    <UICardBlock>*/}
-          {/*      <h3>Pending Questionnaires</h3>*/}
-          {/*    </UICardBlock>*/}
-          {/*    <LoaderWrapper loading={isLoading}>*/}
-          {/*      {questionnaireList && questionnaireList.map(item => (*/}
-          {/*        <UICardBlock key={item.requestId}>*/}
-          {/*          {item.questionnaire.title && <h4>{item.questionnaire.title}</h4>}*/}
-          {/*          {item.questionnaire.description && <p>{item.questionnaire.description}</p>}*/}
-          {/*          {item.questionnaire.companyName && <p><b>{item.questionnaire.companyName}</b></p>}*/}
-          {/*          <UIButton title="Answer"
-          onClick={() => handleAnswerClick(item.requestId, item.questionnaire.id)} />*/}
-          {/*        </UICardBlock>*/}
-          {/*      ))}*/}
-          {/*    </LoaderWrapper>*/}
-          {/*  </UICard>*/}
-          {/* </UIColumn>*/}
-
           <UIColumn>
             <UICard>
               <UICardBlock>
