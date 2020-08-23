@@ -35,4 +35,12 @@ public class RequestController {
                 requestService.getAllByUserId(UUID.fromString(principal.getName()))
         );
     }
+
+    @ApiOperation("Get all requests by questionnaireId")
+    @GetMapping
+    public AppResponse<List<RequestQuestionnaireDto>> getAllByQuestionnaireId(@RequestParam("questionnaireId") UUID id) {
+        return new AppResponse<>(
+                requestService.getAllByQuestionnaire(id)
+        );
+    }
 }

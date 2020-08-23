@@ -15,4 +15,6 @@ public interface RequestRepository extends JpaRepository<Request, UUID> {
             "responses.user.id = :id and " +
             "(responses.payload is NULL or responses.payload = '')")
     List<Request> findAllUnansweredByRespondentId(UUID id);
+
+    List<Request> findAllByQuestionnaireId(UUID id);
 }
