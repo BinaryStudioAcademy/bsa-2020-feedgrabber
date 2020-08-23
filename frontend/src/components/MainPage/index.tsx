@@ -52,13 +52,18 @@ const MainPage: FC<IMainPageProps> =
       <>
         <UIPageTitle title="Home" />
         <UIContent>
-          {/* <UIColumn>
+          <UIColumn>
             <UICard>
               <UICardBlock>
                 <h3>Pending Questionnaires</h3>
               </UICardBlock>
               <LoaderWrapper loading={isLoading}>
-                {pendingList && pendingList.map(({ questionnaire, expirationDate, alreadyAnswered }) => (
+                {questionnaireList && questionnaireList.map(
+                    (
+                        {   requestId,
+                            questionnaire,
+                            expirationDate,
+                            alreadyAnswered }) => (
                   <UICardBlock key={questionnaire.id}
                     className={(expirationDate?.valueOf() < new Date().valueOf() || alreadyAnswered)
                       && styles.container}>
@@ -70,16 +75,33 @@ const MainPage: FC<IMainPageProps> =
                     {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
                     {(expirationDate?.valueOf() > new Date().valueOf() || !expirationDate)
                       ? !alreadyAnswered ? <UIButton title="Answer"
-                        onClick={() => handleAnswerClick(null, questionnaire.id)} />
+                        onClick={() => handleAnswerClick(requestId, questionnaire.id)} />
                         : <p>Your answer has been accepted!</p>
                       : <p>Expired {new Date(new Date().valueOf()
                         - expirationDate?.valueOf()).getHours()} hours ago</p>}
-
                   </UICardBlock>
                 ))}
               </LoaderWrapper>
             </UICard>
-          </UIColumn> */}
+          </UIColumn>
+          {/* <UIColumn>*/}
+          {/*  <UICard>*/}
+          {/*    <UICardBlock>*/}
+          {/*      <h3>Pending Questionnaires</h3>*/}
+          {/*    </UICardBlock>*/}
+          {/*    <LoaderWrapper loading={isLoading}>*/}
+          {/*      {questionnaireList && questionnaireList.map(item => (*/}
+          {/*        <UICardBlock key={item.requestId}>*/}
+          {/*          {item.questionnaire.title && <h4>{item.questionnaire.title}</h4>}*/}
+          {/*          {item.questionnaire.description && <p>{item.questionnaire.description}</p>}*/}
+          {/*          {item.questionnaire.companyName && <p><b>{item.questionnaire.companyName}</b></p>}*/}
+          {/*          <UIButton title="Answer"
+          onClick={() => handleAnswerClick(item.requestId, item.questionnaire.id)} />*/}
+          {/*        </UICardBlock>*/}
+          {/*      ))}*/}
+          {/*    </LoaderWrapper>*/}
+          {/*  </UICard>*/}
+          {/* </UIColumn>*/}
 
           <UIColumn>
             <UICard>

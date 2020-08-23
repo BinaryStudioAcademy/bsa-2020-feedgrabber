@@ -28,6 +28,7 @@ public interface RequestMapper {
                                              User requestMaker,
                                              Date expirationDate);
 
+    @Mapping(target = "requestId", source = "request.id")
     @Mapping(target = "alreadyAnswered", expression = "java(request" +
             ".getResponses()" +
             ".stream()" +

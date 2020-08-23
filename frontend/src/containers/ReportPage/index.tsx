@@ -48,8 +48,8 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
       // case QuestionType.fileUpload:
       case QuestionType.freeText:
         return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
-      case QuestionType.multichoice:
-        return <MultichoiceQuestionReport data={question.data as IQuestionReportMultichoiceData}/>;
+      // case QuestionType.multichoice:
+      //   return <MultichoiceQuestionReport data={question.data as IQuestionReportMultichoiceData}/>;
       case QuestionType.scale:
         return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
       default:

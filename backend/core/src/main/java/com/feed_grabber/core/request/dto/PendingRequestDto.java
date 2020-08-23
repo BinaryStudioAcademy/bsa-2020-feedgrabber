@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PendingRequestDto {
-    private UUID id;
+    private UUID requestId;
     private QuestionnaireDto questionnaire;
     private LocalDateTime expirationDate;
     private boolean alreadyAnswered;

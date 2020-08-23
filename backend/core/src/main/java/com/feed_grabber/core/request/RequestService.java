@@ -92,6 +92,7 @@ public class RequestService {
                 .findAllByResponsesUserId(userId)
                 .stream()
                 .map(r->RequestMapper.MAPPER.toPendingDtoFromModel(r,userId))
+                .sorted(Comparator.comparing(PendingRequestDto::getExpirationDate).reversed())
                 .collect(Collectors.toList());
     }
     
