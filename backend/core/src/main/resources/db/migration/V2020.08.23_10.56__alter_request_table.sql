@@ -1,2 +1,2 @@
 alter table requests
-    add column isClosed boolean;
+    add column is_closed boolean;
