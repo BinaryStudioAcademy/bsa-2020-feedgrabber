@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ReportService {
+class ReportService(val repository: ReportRepository) {
     fun parseIncomingData(dto: DataForReport): Report {
         val map = HashMap<UUID, MutableList<Pair<AnswerValues, UserDto>>>()
 
@@ -26,6 +26,53 @@ class ReportService {
                     requestMaker, targetUser, "", "")
         }
 
+    }
+
+    fun parseReportForFrontend(report: FrontProjection): FrontendReportData = FrontendReportData(
+            report.getQuestionnaireTitle(),
+            report.getQuestions().map {
+                QuestionInfo(it.id, it.title, it.type,
+                        countAnswers(it.type, it.answers),
+                        mapAnswers(it.type, it.answers))
+            })
+
+
+    fun mapAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): QuestionReportData? {
+        if (dbAnswers == null) return null
+        return when (type) {
+            freeText, scale, date -> QuestionWithValues((dbAnswers as QAWithValue).values.values.toList())
+            fileUpload -> QuestionWithValues((dbAnswers as QAWithValues).values.values.flatten())
+            checkbox -> {
+                val (options, other) = (dbAnswers as QAWithOptions)
+                val list = options.values.flatten().groupingBy { it }.eachCount()
+                        .toList().map { OptionInfo(it.first, it.second) }
+                        .plus(OptionInfo("other", other.size))
+                QuestionWithOptions(list)
+            }
+            radio -> {
+                val (options, other) = (dbAnswers as QAWithOption)
+                val list = options.values.groupingBy { it }.eachCount()
+                        .toList().map { OptionInfo(it.first, it.second) }
+                        .plus(OptionInfo("other", other.size))
+                QuestionWithOptions(list)
+            }
+        }
+    }
+
+    fun countAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): Int {
+        if (dbAnswers == null) return 0
+        return when (type) {
+            freeText, scale, date -> (dbAnswers as QAWithValue).values.size
+            fileUpload -> (dbAnswers as QAWithValues).values.size
+            checkbox -> {
+                val (options, other) = (dbAnswers as QAWithOptions)
+                options.size + other.values.flatten().size
+            }
+            radio -> {
+                val (options, other) = (dbAnswers as QAWithOption)
+                options.size + other.values.flatten().size
+            }
+        }
     }
 
     fun parseQuestion(dto: QuestionResponseDto): AnswerValues {
@@ -54,32 +101,32 @@ class ReportService {
                 is FreeTextValue -> {
                     QAWithValue().apply {
                         for (a in answers as List<Pair<FreeTextValue, UserDto>>)
-                            this.values[a.second] = a.first.text
+                            values[a.second] = a.first.text
                     }
                 }
                 is DateValue -> {
                     QAWithValue().apply {
                         for (a in answers as List<Pair<DateValue, UserDto>>)
-                            this.values[a.second] = a.first.date.toString()
+                            values[a.second] = a.first.date.toString()
                     }
                 }
                 is ScaleValue -> {
                     QAWithValue().apply {
                         for (a in answers as List<Pair<ScaleValue, UserDto>>)
-                            this.values[a.second] = a.first.number.toString()
+                            values[a.second] = a.first.number.toString()
                     }
                 }
                 is FileValue -> {
                     QAWithValues().apply {
                         for (a in answers as List<Pair<FileValue, UserDto>>)
-                            this.values[a.second] = a.first.urls
+                            values[a.second] = a.first.urls
                     }
                 }
                 is CheckBoxValue -> {
                     QAWithOptions().apply {
                         for (a in answers as List<Pair<CheckBoxValue, UserDto>>) {
-                            this.options[a.second] = a.first.selected
-                            this.other.getOrPut(a.first.other) { mutableListOf() }.add(a.second)
+                            options[a.second] = a.first.selected
+                            other.getOrPut(a.first.other) { mutableListOf() }.add(a.second)
                         }
                     }
                 }
