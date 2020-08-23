@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.AuthService;
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
+import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
@@ -11,6 +12,7 @@ import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.Role;
@@ -22,6 +24,7 @@ import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,14 +33,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
+
+    @Value("${invitation.duration.days}")
+    private Integer INVITATION_DURATION_DAYS;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
@@ -131,10 +135,12 @@ public class UserService implements UserDetailsService {
         return company.getId();
     }
 
-    public UUID createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException {
+    public UUID createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException, InvitationExpiredException {
 
         var invitation = invitationRepository.findById(registerDto.getInvitationId())
                 .orElseThrow(InvitationNotFoundException::new);
+        assertInvitationRelevant(invitation);
+
         var company = invitation.getCompany();
         var email = invitation.getEmail();
 
@@ -158,6 +164,17 @@ public class UserService implements UserDetailsService {
         );
         invitationRepository.acceptById(registerDto.getInvitationId());
         return invitation.getCompany().getId();
+    }
+
+    private void assertInvitationRelevant(Invitation invitation) throws InvitationExpiredException {
+
+        var calendar = Calendar.getInstance();
+        calendar.setTime(invitation.getCreatedAt());
+        calendar.add(Calendar.DAY_OF_MONTH, INVITATION_DURATION_DAYS);
+
+        if (calendar.getTime().before(new Date())) {
+            throw new InvitationExpiredException();
+        }
     }
 
     public Optional<UUID> createUser(UserCreateDto userDto) {
