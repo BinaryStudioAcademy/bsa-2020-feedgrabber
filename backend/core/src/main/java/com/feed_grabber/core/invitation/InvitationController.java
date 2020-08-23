@@ -10,6 +10,7 @@ import com.feed_grabber.core.invitation.dto.InvitationSignUpDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.invitation.exceptions.InvitationUserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class InvitationController {
 
     @PostMapping
     public AppResponse<InvitationGenerateResponseDto> generate(@RequestBody InvitationGenerateRequestDto dto)
-            throws CompanyNotFoundException, InvitationAlreadyExistsException {
+            throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
         assertCompanyOwner();
         dto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(invitationService.generate(dto));

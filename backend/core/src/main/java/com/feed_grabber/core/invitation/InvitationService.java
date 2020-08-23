@@ -1,5 +1,6 @@
 package com.feed_grabber.core.invitation;
 
+import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
@@ -8,8 +9,10 @@ import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
 import com.feed_grabber.core.invitation.dto.InvitationSignUpDto;
 import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.invitation.exceptions.InvitationUserAlreadyExistsException;
 import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.rabbit.Sender;
+import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +24,17 @@ import java.util.stream.Collectors;
 public class InvitationService {
     private final InvitationRepository invitationRepository;
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
     private final Sender emailSender;
 
     @Autowired
     public InvitationService(InvitationRepository invitationRepository,
                              CompanyRepository companyRepository,
+                             UserRepository userRepository,
                              Sender emailSender) {
         this.invitationRepository = invitationRepository;
         this.companyRepository = companyRepository;
+        this.userRepository =userRepository;
         this.emailSender = emailSender;
     }
 
@@ -48,15 +54,20 @@ public class InvitationService {
     }
 
     public InvitationGenerateResponseDto generate(InvitationGenerateRequestDto dto)
-            throws CompanyNotFoundException, InvitationAlreadyExistsException {
+            throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
 
         var company = companyRepository.findById(dto.getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
-        var existing = invitationRepository.findByCompanyIdAndEmail(
+        var existingInvitation = invitationRepository.findByCompanyIdAndEmail(
                 dto.getCompanyId(), dto.getEmail()
         );
-        if (existing.isPresent()) {
+        if (existingInvitation.isPresent()) {
             throw new InvitationAlreadyExistsException();
+        }
+
+        var existingUser = userRepository.findByCompanyIdAndEmail(company.getId(), dto.getEmail());
+        if (existingUser.isPresent()) {
+            throw new InvitationUserAlreadyExistsException();
         }
 
         var invitation = InvitationMapper.MAPPER.invitationDtoToModel(dto);
