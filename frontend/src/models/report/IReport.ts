@@ -43,5 +43,5 @@ export interface IQuestionReportDateData {
 }
 
 export interface IQuestionReportFileData {
-  options: { type: string; amount: number, sizes: number[] }[];
+  options: { type: string; amount: number; sizes: number[] }[];
 }
