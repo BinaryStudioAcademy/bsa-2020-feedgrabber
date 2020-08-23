@@ -28,8 +28,8 @@ public class AmazonService {
     private String ENDPOINT_URL;
     @Value("${amazon.bucketName}")
     private String BUCKET_NAME;
-    @Value("${amazon.question.files.path}")
-    private String QUESTION_FILES_PATH;
+    @Value("${amazon.response.files.path}")
+    private String RESPONSE_FILES_PATH;
 
     private final AmazonS3Client s3client;
     private final FileRepository fIleRepository;
@@ -41,7 +41,7 @@ public class AmazonService {
     }
 
     public S3FileDetailsDto uploadResponseFile(MultipartFile multipartFile) throws BadFileException {
-        return uploadFile(multipartFile, QUESTION_FILES_PATH);
+        return uploadFile(multipartFile, RESPONSE_FILES_PATH);
     }
 
     private S3FileDetailsDto uploadFile(MultipartFile multipartFile, String filePathPrefix) throws BadFileException {

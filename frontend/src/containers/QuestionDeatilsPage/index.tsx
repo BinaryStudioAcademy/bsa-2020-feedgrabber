@@ -31,20 +31,17 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
-    // useEffect(() => {
-    //     loadQuestion('empty');
-    //     loadCategories();
-    // }, [loadCategories, loadQuestion]);
 
     useEffect(() => {
         if (match.params.id === 'new') {
-            loadQuestion('empty');
+            loadQuestion({id: 'empty'});
         }
         else {
-            loadQuestion(match.params.id);
+            if (!isPreview)
+                loadQuestion({ id: match.params.id });
             loadCategories();
         }
-    }, [loadQuestion, match.params.id, loadCategories]);
+    }, [loadQuestion, match.params.id, loadCategories, isPreview]);
 
     useEffect(() => {
         setQuestion(currentQuestion);

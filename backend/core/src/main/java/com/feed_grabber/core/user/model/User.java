@@ -71,14 +71,4 @@ public class User {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id")
     private Company company;
-
-    @ManyToMany(
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "respondents")
-    @Builder.Default
-    private List<Request> requests = new ArrayList<>();
-
 }

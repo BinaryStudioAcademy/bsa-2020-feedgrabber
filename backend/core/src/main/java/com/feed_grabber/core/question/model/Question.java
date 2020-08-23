@@ -43,7 +43,7 @@ public class Question {
 
     @OneToMany(
             mappedBy = "question",
-            cascade = CascadeType.REFRESH
+            cascade = {CascadeType.REFRESH, CascadeType.PERSIST}
     )
     private List<QuestionnaireQuestion> questionnaires;
 

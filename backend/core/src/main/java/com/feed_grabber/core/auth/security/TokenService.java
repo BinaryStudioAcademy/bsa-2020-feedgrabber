@@ -54,7 +54,7 @@ public class TokenService {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+        var claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
@@ -107,26 +107,18 @@ public class TokenService {
     }
 
     public static UUID getUserId() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        var currentUserId = (String)auth.getPrincipal();
-        return  UUID.fromString(currentUserId);
+        var currentUserId = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return UUID.fromString(currentUserId);
     }
 
     public static UUID getCompanyId() {
-        Map<String, Object> info = (Map<String, Object>)SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getDetails();
-        var companyId = (String)info.get(COMPANY_ID_KEY);
-        return UUID.fromString(companyId);
+        var info = (Map)SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        return UUID.fromString((String)info.get(COMPANY_ID_KEY));
     }
 
     public static String getRoleName() {
-        Map<String, Object> info = (Map<String, Object>)SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getDetails();
-        return  (String)info.get(AUTHORITIES_KEY);
+        var info = (Map)SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        return (String)info.get(AUTHORITIES_KEY);
     }
 
 }

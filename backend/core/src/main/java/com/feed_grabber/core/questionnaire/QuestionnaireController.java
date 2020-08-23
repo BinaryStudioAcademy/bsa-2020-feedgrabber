@@ -12,9 +12,8 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
-import com.feed_grabber.core.response.DataList;
-import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.apiContract.DataList;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,15 +69,6 @@ public class QuestionnaireController {
         return new AppResponse<>(
                 questionnaireService.getOne(id)
                         .orElseThrow(QuestionnaireNotFoundException::new)
-        );
-    }
-
-    @ApiOperation("Get requested questionnaires for current user")
-    @GetMapping("/requested")
-    @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<QuestionnaireDto>> getPending(Principal principal) {
-        return new AppResponse<>(
-                questionnaireService.getAllByRespondentId(UUID.fromString(principal.getName()))
         );
     }
 

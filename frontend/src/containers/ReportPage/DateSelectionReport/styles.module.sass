@@ -1,0 +1,39 @@
+
+.date_report
+  width: 100%
+  display: grid
+  grid-template-columns: 40% 60%
+
+.date_selection_report_date
+  border-right: 1px solid #666666
+  grid-column: 1 / span 1
+  padding: 0.5em 1em 0.5em 0
+  text-align: right
+  display: inline-flex
+  align-items: center
+  justify-content: flex-end
+
+.date_amount
+  grid-column: 2 / span 1
+  padding-left: 1em
+  display: inline-flex
+  align-items: center
+  justify-content: flex-start
+
+  & div
+    height: 80%
+    padding: 0.25em 0 0.25em 0
+    border-radius: 0.5em
+    background: #dbdbdb
+    padding-left: 0.5em
+    padding-right: 0.5em
+    display: inline-flex
+    align-items: center
+    justify-content: flex-start
+
+  & div .date_report_date_amount
+    margin-left: 0.25em
+    padding: 0.5em
+    background: #95a8ba
+    height: 100%
+    text-align: center
