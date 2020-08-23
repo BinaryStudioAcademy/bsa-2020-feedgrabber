@@ -13,7 +13,6 @@ import {
   IQuestionReport,
   IQuestionReportCheckboxData,
   IQuestionReportFreeTextData,
-  IQuestionReportMultichoiceData,
   IQuestionReportRadioData,
   IQuestionReportScaleData,
   IQuestionReportDateData
@@ -22,7 +21,6 @@ import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
 import FreeTextQuestionReport from "./FreeTextQuestionReport";
 import CheckboxQuestionReport from "./CheckboxQuestionReport";
-import MultichoiceQuestionReport from "./MultichoiceQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 import DateSelectionReport from "./DateSelectionReport";
 
@@ -35,10 +33,8 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   }
 ) => {
   useEffect(() => {
-    if (!report && !isLoading) {
       loadQuestionnaireReport(match.params.id);
-    }
-  }, [report, isLoading, loadQuestionnaireReport, match]);
+  }, [loadQuestionnaireReport, match]);
 
   const renderQuestionData = (question: IQuestionReport) => {
     switch (question.type) {
@@ -47,7 +43,7 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
       case QuestionType.checkbox:
         return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
       case QuestionType.date:
-        return <DateSelectionReport data={question.data as IQuestionReportDateData}/>; 
+        return <DateSelectionReport data={question.data as IQuestionReportDateData}/>;
       // case QuestionType.fileUpload:
       case QuestionType.freeText:
         return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;

@@ -1,8 +1,10 @@
-import {all, put, takeEvery} from 'redux-saga/effects';
+import {all, put, takeEvery, call} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {loadQuestionnaireReportRoutine} from "./routines";
 import {IQuestionnaireReport} from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
+import {IGeneric} from "../../models/IGeneric";
+import apiClient from "../../helpers/apiClient";
 
 const mockReport: IQuestionnaireReport = {
   questionnaireTitle: "Awesome Questionnaire",
@@ -117,11 +119,9 @@ const mockReport: IQuestionnaireReport = {
 
 function* loadReport(action: any) {
   try {
-    const id: string = action.payload;
-    // here will be API call
     // here also check if JSON response.questions[].statistics is valid - serialize it
-    const report: IQuestionnaireReport = mockReport;
-    yield put(loadQuestionnaireReportRoutine.success(report));
+    const response: IGeneric<IQuestionnaireReport> = yield call(apiClient.get, `/2api/report/${action.payload}`);
+    yield put(loadQuestionnaireReportRoutine.success(response.data.data));
   } catch (e) {
     yield put(loadQuestionnaireReportRoutine.failure());
     toastr.error("Unable to load questionnaire report");
