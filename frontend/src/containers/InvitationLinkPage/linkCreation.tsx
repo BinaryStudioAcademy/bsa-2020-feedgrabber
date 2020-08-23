@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import * as yup from 'yup';
 import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
@@ -27,8 +27,11 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
     sendInvitation
   }
 ) => {
+  const emailInput = useRef(null);
+
   const onSubmit = values => {
     sendInvitation(values.email);
+    values.email = '';
   };
 
   return (
@@ -62,6 +65,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.email}
+                    ref={emailInput}
                   />
                   {error && <div>{error}<br/><br/></div>}
                   <UIButton
