@@ -8,6 +8,10 @@ import java.util.*
 
 @Service
 class ReportService(val repository: ReportRepository) {
+    fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
+
+    fun getFrontendData(requestId: UUID) = parseReportForFrontend(repository.findById(requestId))
+
     fun parseIncomingData(dto: DataForReport): Report {
         val map = HashMap<UUID, MutableList<Pair<AnswerValues, UserDto>>>()
 
@@ -19,13 +23,11 @@ class ReportService(val repository: ReportRepository) {
         val questions = dto.questionnaire.questions.map {
             QuestionDB(it.id, it.name, it.categoryTitle, it.type, parseAnswers(map[it.id]))
         }
-
         dto.apply {
             return Report(requestId, questions, questionnaire,
                     requestCreationDate, requestExpirationDate,
                     requestMaker, targetUser, "", "")
         }
-
     }
 
     fun parseReportForFrontend(report: FrontProjection): FrontendReportData = FrontendReportData(
@@ -79,11 +81,11 @@ class ReportService(val repository: ReportRepository) {
         dto.apply {
             return when (type) {
                 checkbox -> CheckBoxValue(
-                        body.get("selected").asIterable().map { it.asText() },
+                        body.get("selected")?.asIterable()?.map { it.asText() },
                         body.get("other")?.asText()
                 )
                 radio -> RadioValue(
-                        body.get("selected").asText(),
+                        body.get("selected")?.asText(),
                         body.get("other")?.asText()
                 )
                 fileUpload -> FileValue(body.asIterable().map { it.asText() })
@@ -101,41 +103,40 @@ class ReportService(val repository: ReportRepository) {
                 is FreeTextValue -> {
                     QAWithValue().apply {
                         for (a in answers as List<Pair<FreeTextValue, UserDto>>)
-                            values[a.second] = a.first.text
+                            values[a.second.id] = a.first.text
                     }
                 }
                 is DateValue -> {
                     QAWithValue().apply {
                         for (a in answers as List<Pair<DateValue, UserDto>>)
-                            values[a.second] = a.first.date.toString()
+                            values[a.second.id] = a.first.date.toString()
                     }
                 }
                 is ScaleValue -> {
                     QAWithValue().apply {
                         for (a in answers as List<Pair<ScaleValue, UserDto>>)
-                            values[a.second] = a.first.number.toString()
+                            values[a.second.id] = a.first.number.toString()
                     }
                 }
                 is FileValue -> {
                     QAWithValues().apply {
                         for (a in answers as List<Pair<FileValue, UserDto>>)
-                            values[a.second] = a.first.urls
+                            values[a.second.id] = a.first.urls
                     }
                 }
                 is CheckBoxValue -> {
                     QAWithOptions().apply {
                         for (a in answers as List<Pair<CheckBoxValue, UserDto>>) {
-                            options[a.second] = a.first.selected
-                            other.getOrPut(a.first.other) { mutableListOf() }.add(a.second)
+                            options[a.second.id] = a.first.selected
+                            other.getOrPut(a.first.other) { mutableListOf() }.add(a.second.id)
                         }
                     }
                 }
-
                 is RadioValue -> {
                     QAWithOption().apply {
                         for (a in answers as List<Pair<RadioValue, UserDto>>) {
-                            this.options[a.second] = a.first.selected
-                            this.other.getOrPut(a.first.other) { mutableListOf() }.add(a.second)
+                            options[a.second.id] = a.first.selected
+                            other.getOrPut(a.first.other) { mutableListOf() }.add(a.second.id)
                         }
                     }
                 }
