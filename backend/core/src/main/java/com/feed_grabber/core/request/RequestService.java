@@ -1,6 +1,7 @@
 package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.rabbit.Sender;
@@ -102,5 +103,13 @@ public class RequestService {
                 .map(request -> RequestMapper.MAPPER.
                         requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
                 .collect(Collectors.toList());
+    }
+
+    public Date closeNow(UUID requestId) throws NotFoundException {
+        var request = requestRepository
+                .findById(requestId)
+                .orElseThrow(()->new NotFoundException("Request not found"));
+        request.setExpirationDate(new Date());
+        return requestRepository.save(request).getExpirationDate();
     }
 }
