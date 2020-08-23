@@ -4,6 +4,7 @@ import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.dto.QuestionTypes.*
 import com.feed_grabber.event_processor.report.model.*
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.*
 
 @Service
@@ -93,7 +94,7 @@ class ReportService(val repository: ReportRepository) {
                 fileUpload -> FileValue(body.asIterable().map { it.asText() })
                 freeText -> FreeTextValue(body.asText())
                 scale -> ScaleValue(body.asInt())
-                date -> DateValue(Date(body.asText()))
+                date -> DateValue(LocalDate.parse(body.asText()))
             }
         }
     }
