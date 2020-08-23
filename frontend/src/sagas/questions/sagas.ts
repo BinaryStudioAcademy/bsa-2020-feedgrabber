@@ -84,15 +84,15 @@ function* saveOrUpdateQuestion(action) {
             : yield call(apiClient.post, `/api/questions`, action.payload || {});
 		const question: IQuestion = parseQuestion(res.data.data);
         yield put(saveQuestionToQuestionnaireRoutine.success(question));
-		const questions = action.payload?.questionnaireQuesitons;
-		if (!questions) {
-           return;
+        const questions = action.payload?.questionnaireQuesitons;
+        if (!questions) {
+          return;
         }
-		const newQuestions = questions.map(q => q.id === question.id
+        const newQuestions = questions.map(q => q.id === question.id
           ? question
           : q
         );
-		yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
+        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
      } catch (e) {
         yield put(saveQuestionToQuestionnaireRoutine.failure());
         toastr.error("Question wasn't saved");

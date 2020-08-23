@@ -53,7 +53,6 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     };
 
     const onSubmit = () => {
-        console.log('create/update question [onSubmit in QuestionDetailsPage]');
         if (isQuestionDetailsValid) {
             saveQuestion({
                 ...question,
