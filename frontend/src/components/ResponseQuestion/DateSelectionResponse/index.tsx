@@ -14,11 +14,9 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ qu
       return;
     }
     setError('');
-    answerHandler?.(!error ? {
-      questionId: question.id,
-      body: newDate,
-      type: QuestionType.date
-    } : null);
+    answerHandler?.(!error ?
+      newDate
+      : null);
   };
 
   return (
