@@ -61,16 +61,16 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
           {invitationData && (
             <>
               <h1 className={styles.pageTitle}>
-                {invitationData.expired
-                  ? <>Unfortunately,<br/>this link has been expired</>
-                  : <>Welcome to<br/>{invitationData.companyName},<br/>{invitationData.email}</>}
+                {invitationData.expired && <>Unfortunately,<br/>this link has been expired</>}
+                {invitationData.accepted && <>You have already registered<br/>using this link</>}
+                {!invitationData.expired && !invitationData.accepted && (
+                  <>Welcome to<br/>{invitationData.companyName},<br/>{invitationData.email}</>
+                )}
               </h1>
-              {!invitationData.expired && (
-              <div className={styles.formWrapper}>
-                <div className={styles.formContent}>
-                  {invitationData.accepted
-                    ? (<div className={styles.acceptedMessage}>You have already registered</div>)
-                    : (<Formik
+              {!invitationData.expired && !invitationData.accepted && (
+                <div className={styles.formWrapper}>
+                  <div className={styles.formContent}>
+                    <Formik
                       initialValues={{password: '', username: ''}}
                       validationSchema={schema}
                       onSubmit={values => {
@@ -114,10 +114,9 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                             </Button>
                           </form>);
                       }}
-                    </Formik>)
-                  }
+                    </Formik>
+                  </div>
                 </div>
-              </div>
               )}
             </>
           )}
