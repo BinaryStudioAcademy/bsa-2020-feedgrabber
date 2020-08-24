@@ -1,6 +1,7 @@
 package com.feed_grabber.event_processor.report.excel
 
 import com.feed_grabber.event_processor.fileStorage.AmazonS3ClientService
+import com.feed_grabber.event_processor.rabbit.Sender
 import com.feed_grabber.event_processor.report.ReportApiHelper
 import com.feed_grabber.event_processor.report.ReportService
 import com.feed_grabber.event_processor.report.dto.*
@@ -25,7 +26,8 @@ import java.util.stream.Collectors
 @Service
 class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
                            @Autowired private val service: ReportService,
-                           @Autowired private val client: AmazonS3ClientService) {
+                           @Autowired private val client: AmazonS3ClientService,
+                           @Autowired private val sender: Sender) {
 
     private val VERTICAL_INDENT = 1
     private val HORIZONTAL_INDENT = 1
@@ -185,7 +187,7 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
             fileOut.close()
             workbook.close()
             val fileLink = client.uploadReport(file)
-            //TODO: send to core
+            sender.sendUploadedReportURL(fileLink)
             file.delete()
         }
     }

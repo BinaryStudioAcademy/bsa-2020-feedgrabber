@@ -13,6 +13,8 @@ class Sender {
 
     @Value("\${rabbitmq.routing-key-response}")
     private val routingKey: String? = null
+    @Value("\${rabbitmq.routing-key-report-excel-link}")
+    private val excelLinkRoutingKey: String? = null
 
     @Autowired
     private val template: RabbitTemplate? = null
@@ -21,6 +23,12 @@ class Sender {
         println(" [x] Sending...")
         template!!.convertAndSend(exchange!!, routingKey!!, text!!)
         println(" [x] Sent $text")
+    }
+
+    fun sendUploadedReportURL(url: String) {
+        println(" [x] Sending...")
+        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, url)
+        println(" [x] Link on excel report sent $url")
     }
 
 }

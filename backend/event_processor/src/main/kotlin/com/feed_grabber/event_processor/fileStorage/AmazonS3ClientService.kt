@@ -34,7 +34,7 @@ class AmazonS3ClientService(private val s3Client: S3Client) {
         val request = PutObjectRequest.builder().bucket(BUCKET_NAME).key(key).acl(ObjectCannedACL.PUBLIC_READ).build()
         val multiFile: MultipartFile = MockMultipartFile("report.xlsx", "report.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file.readBytes())
         val requestBody = RequestBody.fromInputStream(multiFile.resource.inputStream, file.length())
-        s3Client.putObject(request, requestBody)
+      //  s3Client.putObject(request, requestBody)
         return "$ENDPOINT$BUCKET_NAME/$key"
     }
 
