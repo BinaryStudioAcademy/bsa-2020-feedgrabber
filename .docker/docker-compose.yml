@@ -48,7 +48,7 @@ services:
 
   # api
   api:
-    image: 'fg-core:latest'
+    image: 'feedgrabber2020/fg-core:latest'
     container_name: 'fg-core'
     depends_on:
       - core-db
@@ -66,7 +66,7 @@ services:
 
   # event-processor
   event-processor:
-    image: 'fg-event-processor:latest'
+    image: 'feedgrabber2020/fg-event-processor:latest'
     container_name: 'fg-event-processor'
     depends_on:
       - rabbitmq
@@ -83,7 +83,7 @@ services:
 
   # Frontend
   client:
-    image: 'fg-client:latest'
+    image: 'feedgrabber2020/fg-client:latest'
     container_name: 'fg-client'
     depends_on:
       - api

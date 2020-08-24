@@ -4,7 +4,7 @@ WORKDIR /builder
 
 # copy project dir and run build
 ADD ./backend/event_processor /builder
-RUN gradle build
+RUN gradle assemble
 
 # used alpine linux for small disk size
 FROM openjdk:11
