@@ -12,6 +12,8 @@ before_install:
     - nvm install $NODE_VERSION
     - node --version
     - npm --version
+    - sudo apt-get update -y
+    - sudo apt-get install -y expect
 
 before_cache:
     - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
