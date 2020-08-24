@@ -14,6 +14,8 @@ import {mainSchema} from "./schemas";
 import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI";
 import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
+import {defaultQuestionValues} from "./defaultValues";
+import {string} from "prop-types";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
@@ -171,7 +173,13 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                         setNameIsValid(value.length > 0);
                                         handleQuestionUpdate({...question, name: value as string});
                                     }}
-                                    onBlur={formik.handleBlur}
+                                    onBlur={e => {
+                                      if(e.currentTarget.value.length === 0 ) {
+                                        handleQuestionUpdate({...question, name: defaultQuestionValues.name});
+                                        setNameIsValid(true);
+                                      }
+                                      formik.handleBlur(e);
+                                    }}
                                 />
                                 <QuestionDetailsOptions question={question} setQuestionType={setQuestionType}/>
                             </div>
