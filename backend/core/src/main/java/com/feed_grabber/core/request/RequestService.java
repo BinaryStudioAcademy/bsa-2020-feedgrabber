@@ -107,23 +107,20 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
-//    public Date closeNow(UUID requestId) throws NotFoundException {
-//        var request = requestRepository
-//                .findById(requestId)
-//                .orElseThrow(()->new NotFoundException("Request not found"));
-//        request.setExpirationDate(new Date());
-//        return requestRepository.save(request).getExpirationDate();
-//    }
+    public Date closeNow(UUID requestId) throws NotFoundException {
+        var request = requestRepository
+                .findById(requestId)
+                .orElseThrow(()->new NotFoundException("Request not found"));
+
+        request.setCloseDate(new Date());
+        return requestRepository.save(request).getCloseDate();
+    }
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
         return requestRepository.findAllByQuestionnaireId(id)
                 .stream()
                 .map(RequestMapper.MAPPER::requestToShortDto)
                 .collect(Collectors.toList());
-    }
-
-    public void closeRequest(UUID id) {
-        requestRepository.closeRequest(id);
     }
 
 }

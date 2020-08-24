@@ -19,5 +19,5 @@ public class RequestShortDto {
     private Date expirationDate;
     private Boolean generateReport;
     private Boolean notifyUsers;
-    private Boolean isClosed;
+    private Date closeDate;
 }

@@ -27,7 +27,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
 
     useEffect(() => {
         setDivided({ closed: [], open: [] });
-        requests.map(r => {
+        requests.forEach(r => {
             if (!r.isClosed) {
                 setDivided({ open: [...divided.open, r], closed: divided.closed });
             } else {
