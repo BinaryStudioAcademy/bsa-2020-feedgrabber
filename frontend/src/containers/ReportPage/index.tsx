@@ -108,11 +108,11 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  report: rootState.questionnaireReports.current,
+  report: rootState.questionnaireReports.currentFullReport,
   isLoadingReport: rootState.questionnaireReports.isLoading,
   currentUserReport: rootState.questionnaireReports.currentUserReport,
-  currentUsersReports: rootState.questionnaireReports.currentUsersReports,
-  isLoadingUsersReports: rootState.questionnaireReports.isLoadingUsersReports
+  currentUsersReports: rootState.questionnaireReports.responsesPreview,
+  isLoadingUsersReports: rootState.questionnaireReports.isLoadingPreviews
 });
 
 const mapDispatchToProps = {

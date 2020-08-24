@@ -12,22 +12,22 @@ import {
 } from "../../sagas/report/routines";
 
 export interface IQuestionnaireReportsState {
-    current?: IQuestionnaireReport;
-    list?: IRequestShort[];
-    isLoading?: boolean;
+    currentFullReport?: IQuestionnaireReport;
+    requests?: IRequestShort[];
+    responsesPreview: IRespondentReportPreview[];
     currentUserReport: IRespondentReport;
+    isLoading?: boolean;
+    isLoadingPreviews?: boolean;
     isLoadingUserReport?: boolean;
-    currentUsersReports: IRespondentReportPreview[];
-    isLoadingUsersReports?: boolean;
 }
 
 const defaultValues = {
-    current: {} as IQuestionnaireReport,
-    list: [] as IRequestShort[],
+    currentFullReport: {} as IQuestionnaireReport,
+    requests: [] as IRequestShort[],
     currentUserReport: {} as IRespondentReport,
-    currentUsersReports: [] as IRespondentReportPreview[],
-    isLoadingUsersReports: false,
-    isLoadingRespondentReports: false,
+    responsesPreview: [] as IRespondentReportPreview[],
+    isLoadingUserReport: false,
+    isLoadingPreviews: false,
     isLoading: false
 };
 
@@ -43,13 +43,13 @@ export default (state: IQuestionnaireReportsState = defaultValues, {type, payloa
             return {
                 ...state,
                 isLoading: false,
-                list: payload
+                requests: payload
             };
         case loadReportRoutine.SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                current: payload
+                currentFullReport: payload
             };
         case loadReportRoutine.FAILURE:
         case loadQuestionnaireRequestsRoutine.FAILURE:
@@ -76,18 +76,18 @@ export default (state: IQuestionnaireReportsState = defaultValues, {type, payloa
         case loadRespondentReportsRoutine.TRIGGER:
             return {
                 ...state,
-                isLoadingUsersReports: true
+                isLoadingPreviews: true
             };
         case loadRespondentReportsRoutine.FAILURE:
             return {
                 ...state,
-                isLoadingUsersReports: false
+                isLoadingPreviews: false
             };
         case loadRespondentReportsRoutine.SUCCESS:
             return {
               ...state,
-              isLoadingUsersReports: false,
-              currentUsersReports: payload
+              isLoadingPreviews: false,
+              responsesPreview: payload
             };
         default:
             return state;
