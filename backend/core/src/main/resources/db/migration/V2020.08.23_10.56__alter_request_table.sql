@@ -1,2 +1,2 @@
 alter table requests
-    add column is_closed boolean;
+    add column close_date timestamp;

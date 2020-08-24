@@ -1,5 +1,8 @@
 package com.feed_grabber.event_processor.report
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.dto.QuestionTypes.*
 import com.feed_grabber.event_processor.report.model.*
@@ -8,12 +11,13 @@ import java.time.LocalDate
 import java.util.*
 
 @Service
-class ReportService(val repository: ReportRepository) {
+class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = jacksonObjectMapper()) {
     fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
 
     fun getFrontendData(requestId: UUID) = parseReportForFrontend(repository.findById(requestId))
 
     fun parseIncomingData(dto: DataForReport): Report {
+        dto.responses.forEach { it.payloadList = it.payload?.let { p -> JSON.readValue(p) } }
         val map = HashMap<UUID, MutableList<Pair<AnswerValues, UUID>>>()
 
         dto.responses.forEach { r ->
@@ -36,6 +40,14 @@ class ReportService(val repository: ReportRepository) {
     fun parseReportForFrontend(report: FrontProjection): FrontendReportData = FrontendReportData(
             report.getQuestionnaireTitle(),
             report.getQuestions().map {
+                QuestionInfo(it.id, it.title, it.type,
+                        countAnswers(it.type, it.answers),
+                        mapAnswers(it.type, it.answers))
+            })
+
+    fun parseReportForFrontend(report: Report): FrontendReportData = FrontendReportData(
+            report.questionnaire.title,
+            report.questions?.map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))

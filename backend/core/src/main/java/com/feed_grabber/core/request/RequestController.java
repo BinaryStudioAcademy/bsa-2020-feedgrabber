@@ -32,11 +32,10 @@ public class RequestController {
         return new AppResponse<>(requestService.createNew(dto));
     }
 
-    // Force close feature
     @PostMapping("/close")
     @ResponseStatus(HttpStatus.OK)
-    public void closeRequest(@RequestBody UUID requestId)  {
-       requestService.closeRequest(requestId);
+    public AppResponse<Date> closeRequest(@RequestBody UUID requestId) throws NotFoundException {
+       return new AppResponse<>(requestService.closeNow(requestId));
     }
 
     @ApiOperation("Get all requests by questionnaireId")

@@ -26,7 +26,7 @@ public class ReportService {
         sender.sendExcelReportGenerationRequest(requestId);
     }
 
-    public ReportDetailsDto getReport(UUID requestId) throws NotFoundException {
+    public ReportDetailsDto getDataForReport(UUID requestId) throws NotFoundException {
         var request = requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
         return ReportMapper.MAPPER.requestToReportDetails(request);
     }

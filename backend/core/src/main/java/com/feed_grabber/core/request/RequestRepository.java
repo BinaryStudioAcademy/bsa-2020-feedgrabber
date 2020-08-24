@@ -13,18 +13,13 @@ import java.util.UUID;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findAllByResponsesUserId(UUID id);
-    
+
     @Query("select r from Request r " +
             "join Response responses on responses.request.id = r.id where " +
             "responses.user.id = :id and " +
             "responses.payload is NULL or responses.payload = '' " +
-            "and r.isClosed = false")
+            "and r.closeDate = null")
     List<Request> findAllUnansweredByRespondentId(UUID id);
 
     List<Request> findAllByQuestionnaireId(UUID id);
-
-    @Transactional
-    @Modifying
-    @Query("update Request r set r.isClosed = true where r.id = :id")
-    void closeRequest(UUID id);
 }

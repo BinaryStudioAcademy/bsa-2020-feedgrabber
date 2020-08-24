@@ -51,5 +51,5 @@ public class Request {
     private Boolean generateReport;
 
     @Column
-    private Boolean isClosed;
+    private Date closeDate;
 }

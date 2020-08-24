@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -40,5 +41,5 @@ public class Response {
     private String payload;
 
     @Column(name = "answered_at")
-    private LocalDateTime answeredAt;
+    private Date answeredAt;
 }
