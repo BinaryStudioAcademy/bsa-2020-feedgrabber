@@ -44,12 +44,10 @@ function* getAll() {
 function* getById(action) {
     try {
         const { id, top, right } = action.payload;
-
         if (id === 'empty') {
             yield put(loadQuestionByIdRoutine.success(defaultQuestion));
             return;
         }
-
         const res: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${id}`);
 
         const question: IQuestion = parseQuestion(res.data.data);
@@ -58,7 +56,6 @@ function* getById(action) {
             question['right'] = right;
         }
         yield put(loadQuestionByIdRoutine.success(question));
-
     } catch (e) {
         yield put(loadQuestionByIdRoutine.failure(e.data.error));
         toastr.error("Unable to load question");
@@ -94,17 +91,27 @@ function* addFromExisting(action) {
     }
 }
 
-// function* saveOrUpdateQuestion(action) {
-//     try {
-//         const res: IGeneric<IQuestion> = action.payload?.id
-//             ? yield call(apiClient.put, `/api/questions`, action.payload)
-//             : yield call(apiClient.post, `/api/questions`, action.payload || {});
-//          yield put(saveQuestionToQuestionnaireRoutine.success(res.data.data));
-//      } catch (e) {
-//         yield put(saveQuestionToQuestionnaireRoutine.failure());
-//         toastr.error("Question wasn't saved");
-//     }
-// }
+function* saveOrUpdateQuestion(action) {
+    try {
+        const res: IGeneric<IQuestion> = action.payload?.id
+            ? yield call(apiClient.put, `/api/questions`, action.payload)
+            : yield call(apiClient.post, `/api/questions`, action.payload || {});
+		const question: IQuestion = parseQuestion(res.data.data);
+        yield put(saveQuestionToQuestionnaireRoutine.success(question));
+        const questions = action.payload?.questionnaireQuesitons;
+        if (!questions) {
+          return;
+        }
+        const newQuestions = questions.map(q => q.id === question.id
+          ? question
+          : q
+        );
+        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
+     } catch (e) {
+        yield put(saveQuestionToQuestionnaireRoutine.failure());
+        toastr.error("Question wasn't saved");
+    }
+}
 
 function* copyQuestionInQuestionnaire(action){
     try {

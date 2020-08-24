@@ -21,6 +21,4 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
     @Query("select q from Questionnaire q join Request r on q = r.questionnaire" +
             " join User u on u.id = :id")
     List<Questionnaire> findAllByRespondentId(UUID id);
-
-
 }

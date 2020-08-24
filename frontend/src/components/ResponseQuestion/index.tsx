@@ -1,13 +1,12 @@
 import QuestionDetailsPage from "../../containers/QuestionDeatilsPage";
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
-import { IAppState } from "models/IAppState";
-import { IQuestionResponse } from "models/IQuestionResponse";
-import React, { FC, useRef, useState } from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { loadQuestionByIdRoutine } from "sagas/questions/routines";
-import { Header, Icon, Label, Segment } from "semantic-ui-react";
+import {IAppState} from "models/IAppState";
+import {IQuestionResponse} from "models/IQuestionResponse";
+import React, {FC, useRef, useState} from "react";
+import {connect, ConnectedProps} from "react-redux";
+import {loadQuestionByIdRoutine} from "sagas/questions/routines";
+import {Header, Icon, Label, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import ReactDOM from "react-dom";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
   ({ question, answerHandler, loadCurrent, nowModifying }) => {

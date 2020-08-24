@@ -9,7 +9,6 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import QuestionD from "../../components/QuestionDetails";
-
 import {
   addNewQuestionToQuestionnaireRoutine,
   copyQuestionInQuestionnaireRoutine,
@@ -19,6 +18,7 @@ import {
 import UICard from "../../components/UI/UICard";
 import UIColumn from "../../components/UI/UIColumn";
 import UIContent from "../../components/UI/UIContent";
+
 
 const newQuestion: IQuestion = {
     type: QuestionType.freeText,
@@ -128,17 +128,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 interface IRouterProps {
     id: string;
 }
-
-// const mapState = (state: IAppState) => ({
-//
-// });
-//
-// const mapDispatch = {
-//     deleteQuestion: deleteFromQuestionnaireRoutine,
-//     addQuestion: addNewQuestionToQuestionnaireRoutine,
-//     copyQuestion: copyQuestionInQuestionnaireRoutine
-// };
-
+    
 const mapStateToProps = (rootState: IAppState) => ({
     currentQuestion: rootState.questions.current,
     questionnaire: rootState.questionnaires.current.get,

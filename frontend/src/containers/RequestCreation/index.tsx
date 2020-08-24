@@ -25,6 +25,8 @@ import {RouteComponentProps} from "react-router-dom";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
+import UISwitch from "../../components/UI/UIInputs/UISwitch";
+import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -89,10 +91,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                     <Formik
                         initialValues={initialValues}
                         onSubmit={values => {
-                          if (!values.targetUserId) {
-                            setError('Select target user!');
-                            return;
-                          }
                           if (values.withDeadline && !values.expirationDate) {
                             setError('Select deadline date!');
                             return;
@@ -109,7 +107,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             notifyUsers: values.notifyUsers,
                             questionnaireId: match.params.id,
                             targetUserId: values.targetUserId,
-                            includeTargetUser: values.includeTargetUser,
+                            includeTargetUser: !!values.targetUserId && values.includeTargetUser,
                             respondentIds: values.chosenUsers.map(user => user.id),
                             teamIds: values.chosenTeams.map(team => team.id)
                           };
@@ -142,24 +140,26 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 </div>
                               </UICardBlock>
 
-                              <UICardBlock>
+                              {formik.values.targetUserId && (<UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Include target user to request?
-                                  <input type='checkbox'
-                                         name='includeTargetUser'
-                                         checked={formik.values.includeTargetUser}
-                                         onChange={formik.handleChange}
-                                  />
+                                  <span>
+                                  <UISwitch
+                                      name='includeTargetUser'
+                                      checked={formik.values.includeTargetUser}
+                                      onChange={formik.handleChange}
+                                  /></span>
                                 </h4>
                                 <p>If yes, this user will also receive request</p>
-                              </UICardBlock>
-
+                              </UICardBlock>)
+                              }
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Set Deadline for this request?
-                                  <input type='checkbox'
-                                         name='withDeadline'
-                                         checked={formik.values.withDeadline}
-                                         onChange={formik.handleChange}
-                                  />
+                                  <span>
+                                  <UISwitch
+                                      name='withDeadline'
+                                      checked={formik.values.withDeadline}
+                                      onChange={formik.handleChange}
+                                  /></span>
                                 </h4>
                                 <p>Users will be notified before the deadline</p>
 
@@ -181,22 +181,24 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Notify Users?
-                                  <input type='checkbox'
-                                         name='notifyUsers'
-                                         checked={formik.values.notifyUsers}
-                                         onChange={formik.handleChange}
-                                  />
+                                  <span>
+                                  <UISwitch
+                                      name='notifyUsers'
+                                      checked={formik.values.notifyUsers}
+                                      onChange={formik.handleChange}
+                                  /></span>
                                 </h4>
                                 <p>Users will be notified after sending the request</p>
                               </UICardBlock>
 
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Automatically Generate Report?
-                                  <input type='checkbox'
-                                         name='generateReport'
-                                         checked={formik.values.generateReport}
-                                         onChange={formik.handleChange}
-                                  />
+                                  <span>
+                                  <UISwitch
+                                      name='generateReport'
+                                      checked={formik.values.generateReport}
+                                      onChange={formik.handleChange}
+                                  /></span>
                                 </h4>
                               </UICardBlock>
 
