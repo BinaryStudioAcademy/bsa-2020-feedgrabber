@@ -19,8 +19,9 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
         if (questions.map(question => question.id === id &&
             question.isReused === false)) {
             history.push(`question/${id}`);
+        } else {
+            toastr.error("You can not modify this question. It is used in questionnaires or has responses.");
         }
-        toastr.error("You can not modify this question. It is used in questionnaires or has responses.");
     };
 
     return (

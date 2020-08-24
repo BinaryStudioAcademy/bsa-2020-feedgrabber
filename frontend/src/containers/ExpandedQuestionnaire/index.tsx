@@ -42,7 +42,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     useEffect(() => {
         loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire]);
+    }, [loadOneQuestionnaire, match.params.id]);
 
     const [addNew, setAddNew] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
@@ -50,7 +50,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     useEffect(() => {
       setQuestion(currentQuestion);
-    });
+    }, [currentQuestion]);
 
     const handleOnValueChange = (state: IComponentState<IQuestion>) => {
         setQuestion(state.value);
