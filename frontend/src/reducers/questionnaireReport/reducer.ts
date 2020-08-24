@@ -1,7 +1,6 @@
 import {
     IQuestionnaireReport,
     IRequestShort,
-    IRespondentReport,
     IRespondentReportPreview
 } from "../../models/report/IReport";
 import {
@@ -10,12 +9,13 @@ import {
     loadRespondentReportRoutine,
     loadRespondentReportsRoutine
 } from "../../sagas/report/routines";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 export interface IQuestionnaireReportsState {
     currentFullReport?: IQuestionnaireReport;
     requests?: IRequestShort[];
     responsesPreview: IRespondentReportPreview[];
-    currentUserReport: IRespondentReport;
+    currentUserReport: IQuestion[];
     isLoading?: boolean;
     isLoadingPreviews?: boolean;
     isLoadingUserReport?: boolean;
@@ -24,7 +24,7 @@ export interface IQuestionnaireReportsState {
 const defaultValues = {
     currentFullReport: {} as IQuestionnaireReport,
     requests: [] as IRequestShort[],
-    currentUserReport: {} as IRespondentReport,
+    currentUserReport: [] as IQuestion[],
     responsesPreview: [] as IRespondentReportPreview[],
     isLoadingUserReport: false,
     isLoadingPreviews: false,

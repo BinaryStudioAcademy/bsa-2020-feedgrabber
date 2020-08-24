@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import java.util.*
 
 data class FrontendReportData(
-        val questionnaireTitle: String,
+        val questionnaire: QuestionnaireDto,
         val questions: List<QuestionInfo>?
 )
 
@@ -28,6 +28,5 @@ data class QuestionWithValues(val values: List<String>) : QuestionReportData()
 interface FrontProjection {
     fun getQuestions(): List<QuestionDB>
 
-    @Value("#{target.questionnaire.title}")
-    fun getQuestionnaireTitle(): String
+    fun getQuestionnaire(): QuestionnaireDto
 }

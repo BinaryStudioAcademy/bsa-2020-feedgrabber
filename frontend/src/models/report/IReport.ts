@@ -1,8 +1,23 @@
-import {IQuestion, QuestionType} from "../forms/Questions/IQuesion";
+import {QuestionType} from "../forms/Questions/IQuesion";
 
 export interface IQuestionnaireReport {
-  questionnaireTitle: string;
+  questionnaire: IQuestionnaireDto;
   questions: IQuestionReport[];
+}
+
+type IQuestionnaireDto = {
+    companyName: string;
+    id: string;
+    questions: QuestionDto[];
+    title: string;
+}
+
+export type QuestionDto = {
+    id: string;
+    name: string;
+    categoryTitle: string;
+    details: any; // will be parsed to object from string
+    type: QuestionType;
 }
 
 type UserShortDto = {
@@ -50,11 +65,6 @@ export interface IRespondentReportPreview {
   firstName: string;
   lastName: string;
   answeredAt: string;
-}
-
-export interface IRespondentReport {
-  respondent: string;
-  answers: IQuestion[];
 }
 
 export interface IQuestionReportScaleData {

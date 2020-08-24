@@ -52,7 +52,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                     <LoaderWrapper loading={isLoadingReport}>
                         {report.questions && (
                             <>
-                                <h3>{report.questionnaireTitle}</h3>
+                                <h3>{report.questionnaire.title}</h3>
                                 {report.questions.map(q => (
                                     <UICardBlock>
                                         <h3>{q.title}</h3>

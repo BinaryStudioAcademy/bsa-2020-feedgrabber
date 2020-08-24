@@ -1,7 +1,5 @@
 package com.feed_grabber.event_processor.report
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.feed_grabber.event_processor.report.dto.DataForReport
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus

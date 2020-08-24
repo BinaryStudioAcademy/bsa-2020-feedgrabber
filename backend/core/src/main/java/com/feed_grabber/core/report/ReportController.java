@@ -36,11 +36,11 @@ public class ReportController {
         return new AppResponse<>(reportService.getDataForReport(requestId));
     }
 
-    @GetMapping("/{id}")
-    public AppResponse<String> getReport(@PathVariable UUID id)
+    @GetMapping("/{requestId}")
+    public AppResponse<String> getReport(@PathVariable UUID requestId)
             throws URISyntaxException, IOException, InterruptedException, NotFoundException {
 
-        var body = new ObjectMapper().writeValueAsString(reportService.getDataForReport(id));
+        var body = new ObjectMapper().writeValueAsString(reportService.getDataForReport(requestId));
 
         var request = HttpRequest.newBuilder(new URI(URI_EP))
                 .POST(HttpRequest.BodyPublishers.ofString(body))

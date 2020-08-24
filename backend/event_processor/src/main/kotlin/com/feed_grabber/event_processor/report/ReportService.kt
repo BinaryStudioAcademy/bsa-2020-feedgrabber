@@ -38,7 +38,7 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
     }
 
     fun parseReportForFrontend(report: FrontProjection): FrontendReportData = FrontendReportData(
-            report.getQuestionnaireTitle(),
+            report.getQuestionnaire(),
             report.getQuestions().map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
@@ -46,7 +46,7 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
             })
 
     fun parseReportForFrontend(report: Report): FrontendReportData = FrontendReportData(
-            report.questionnaire.title,
+            report.questionnaire,
             report.questions?.map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
