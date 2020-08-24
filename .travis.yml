@@ -4,6 +4,7 @@ jdk:
 addons:
   ssh_known_hosts: 
     - 23.97.183.10
+    - 51.136.6.40
 
 env:
     - NODE_VERSION="v12.18.0"
