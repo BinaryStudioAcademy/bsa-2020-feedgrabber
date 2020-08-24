@@ -21,7 +21,6 @@ interface IQuestionProps {
     onValueChange(state: IComponentState<IQuestion>): void;
     onSave?(question: IQuestion);
     onDelete?(question: IQuestion);
-    onValueChange?(state: IComponentState<IQuestion>): void;
     onCopy?(): void;
 }
 

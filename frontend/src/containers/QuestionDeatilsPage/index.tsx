@@ -6,8 +6,6 @@ import { loadCategoriesRoutine } from "sagas/categories/routines";
 import {
     addNewQuestionToQuestionnaireRoutine,
     loadQuestionByIdRoutine,
-    saveQuestionToQuestionnaireRoutine,
-    loadQuestionByIdRoutine,
     saveQuestionRoutine
 } from "../../sagas/questions/routines";
 import { useHistory } from "react-router-dom";
