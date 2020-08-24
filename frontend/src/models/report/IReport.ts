@@ -43,6 +43,13 @@ export interface IQuestionReportRadioData {
   options: { title: string; amount: number }[];
 }
 
+export interface IRespondentReportPreview {
+  id: string;
+  firstName: string;
+  lastName: string;
+  answeredAt: string;
+}
+
 export interface IRespondentReport {
   respondent: string;
   answers: IQuestion[];

@@ -1,7 +1,12 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {toastr} from 'react-redux-toastr';
-import {loadQuestionnaireRequestsRoutine, loadReportRoutine, loadRespondentReportRoutine} from "./routines";
-import { IRequestShort, IRespondentReport} from "../../models/report/IReport";
+import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { toastr } from 'react-redux-toastr';
+import {
+  loadQuestionnaireRequestsRoutine,
+  loadReportRoutine,
+  loadRespondentReportRoutine,
+  loadRespondentReportsRoutine
+} from "./routines";
+import { IRequestShort, IRespondentReport, IRespondentReportPreview } from "../../models/report/IReport";
 import {IGeneric} from "../../models/IGeneric";
 import apiClient from "../../helpers/apiClient";
 /* eslint-disable */
@@ -149,11 +154,11 @@ function* loadReportsBaseInfo(action) {
 
 function* loadRespondentReports(action: any) {
   try {
-    const id: string = action.payload;
-	// action.payload has next structure: { request, respondent }
+    const id: string = action.payload.respondent;
+	  // action.payload has next structure: { request, respondent }
     // here will be API call
     // yield put(loadRespondentReportRoutine.success( some report ));
-    /*const reportsMock = Array<IRespondentReport>(
+    const reportsMock = Array<IRespondentReport>(
       {
         respondent: 'pasha',
         answers: Array<IQuestion>(
@@ -264,10 +269,32 @@ function* loadRespondentReports(action: any) {
       } as IRespondentReport
     );
     yield put(loadRespondentReportRoutine.success(reportsMock[id]));
-    */
   } catch (error) {
     // yield put(loadRespondentReportsRoutine.failure());
     toastr.error("Unable to load respondent reports");
+  }
+}
+
+function* loadUsersReports(action) {
+  try {
+    // const reports = yield call(apiClient.get, "", action.payload);
+    // maybe I should to parse the data
+    const reportsPreviewMock = Array<IRespondentReportPreview>({
+      id: '1',
+      firstName: 'pavlo',
+      lastName: 'myroniuk',
+      answeredAt: new Date().toLocaleString()
+    } as IRespondentReportPreview,
+    {
+      id: '0',
+      firstName: 'asan',
+      lastName: 'leibyk',
+      answeredAt: new Date().toLocaleString()
+    }  as IRespondentReportPreview);
+    yield put(loadRespondentReportsRoutine.success(reportsPreviewMock));
+  } catch (err) {
+    yield put(loadRespondentReportsRoutine.failure());
+    toastr.error("Unable to load respondents reports");
   }
 }
 
@@ -275,6 +302,7 @@ export default function* questionnaireReportSagas() {
     yield all([
         yield takeEvery(loadQuestionnaireRequestsRoutine.TRIGGER, loadReportsBaseInfo),
         yield takeEvery(loadReportRoutine.TRIGGER, loadReport),
-        yield takeEvery(loadRespondentReportRoutine.TRIGGER, loadRespondentReports)
+        yield takeEvery(loadRespondentReportRoutine.TRIGGER, loadRespondentReports),
+        yield takeEvery(loadRespondentReportsRoutine.TRIGGER, loadUsersReports)
     ]);
 }

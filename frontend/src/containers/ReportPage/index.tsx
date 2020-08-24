@@ -2,8 +2,10 @@ import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import { IAppState } from 'models/IAppState';
 import {
-    loadQuestionnaireReportRoutine, loadReportRoutine,
-    loadRespondentReportRoutine
+    loadQuestionnaireReportRoutine,
+    loadReportRoutine,
+    loadRespondentReportRoutine,
+    loadRespondentReportsRoutine
 } from "../../sagas/report/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
@@ -14,18 +16,13 @@ import UITab from "../../components/UI/UITab";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import { Tab, Segment, Header } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
-import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
-import { CheckboxResponse } from "../../components/ResponseQuestion/CheckboxResponse";
-import { DateSelectionResponse } from "../../components/ResponseQuestion/DateSelectionResponse";
-import { FreeTextResponse } from "../../components/ResponseQuestion/FreeTextResponse";
-import RadioButtonResponse from "../../components/ResponseQuestion/RadioButtonResponse";
 import {
     IQuestionReport,
     IQuestionReportCheckboxData,
     IQuestionReportFreeTextData,
     IQuestionReportRadioData,
     IQuestionReportScaleData,
-    IQuestionReportDateData, IQuestionReportFileData, IRespondentReport
+    IQuestionReportDateData, IQuestionReportFileData, IRespondentReportPreview
 } from "../../models/report/IReport";
 import RadioQuestionReport from "./RadioQuestionReport";
 import FreeTextQuestionReport from "./FreeTextQuestionReport";
@@ -33,6 +30,7 @@ import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 import DateSelectionReport from "./DateSelectionReport";
 import { FileQuestionReport } from './FileQuestionReport';
+import { Link } from 'react-router-dom';
 import styles from './styles.module.sass';
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
@@ -40,15 +38,21 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     match,
     report,
     isLoadingReport,
-    currentUserReport,
-    isLoadingUserReport,
+    currentUsersReports,
+    isLoadingUsersReports,
     loadReport,
-    loadUserReport
+    loadUsersReports
   }
 ) => {
     useEffect(() => {
         loadReport(match.params.id);
     }, [loadReport, match.params.id]);
+
+  useEffect(() => {
+    loadUsersReports(match.params.id);
+  }, [loadUsersReports, match.params.id]);
+
+    console.log(currentUsersReports);
 
     const panes = [
     {
@@ -75,25 +79,22 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
           </LoaderWrapper>
         </Tab.Pane>
       )
+    },
+    {
+      menuItem: 'Respondents',
+      render: () => (
+        <Tab.Pane>
+          <LoaderWrapper loading={isLoadingUsersReports}>
+            <div className={styles.respondent_reports_container}>
+              {currentUsersReports &&
+                currentUsersReports.map(reportPreview =>
+                  renderUserReportPreview(reportPreview, match.params.id))
+              }
+            </div>
+          </LoaderWrapper>
+        </Tab.Pane>
+      )
     }
-    // {
-    //   menuItem: 'Respondents',
-    //   render: () => (
-    //     <Tab.Pane>
-    //       <LoaderWrapper loading={isLoadingUserReport}>
-    //         {respondentReports && (
-    //           <UIColumn wide>
-    //             <ReportSwitcher from={1}
-    //                             to={respondentReports.length}
-    //                             startIndex={currentReport}
-    //                             setIndex={setCurrentReport} />
-    //             {renderRespondentReport()}
-    //           </UIColumn>
-    //         )}
-    //       </LoaderWrapper>
-    //     </Tab.Pane>
-    //   )
-    // }
   ];
 
   return (
@@ -110,12 +111,13 @@ const mapStateToProps = (rootState: IAppState) => ({
   report: rootState.questionnaireReports.current,
   isLoadingReport: rootState.questionnaireReports.isLoading,
   currentUserReport: rootState.questionnaireReports.currentUserReport,
-  isLoadingUserReport: rootState.questionnaireReports.isLoadingUserReport
+  currentUsersReports: rootState.questionnaireReports.currentUsersReports,
+  isLoadingUsersReports: rootState.questionnaireReports.isLoadingUsersReports
 });
 
 const mapDispatchToProps = {
   loadReport: loadReportRoutine,
-  loadUserReport: loadRespondentReportRoutine
+  loadUsersReports: loadRespondentReportsRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -124,35 +126,15 @@ type ConnectedReportPageProps = ConnectedProps<typeof connector>;
 
 export default connector(ReportPage);
 
-function renderQuestionResponse(question: IQuestion) {
-    switch (question.type) {
-        case QuestionType.scale:
-            return <ScaleQuestionResponse question={question} response={question.answer} />;
-        case QuestionType.date:
-            return <DateSelectionResponse question={question} response={question.answer} />;
-        case QuestionType.radio:
-            return <RadioButtonResponse question={question} response={question.answer} />;
-        case QuestionType.checkbox:
-            return <CheckboxResponse question={question} response={question.answer} />;
-        case QuestionType.freeText:
-            return <FreeTextResponse question={question} response={question.answer} />;
-        default:
-            return undefined;
-    }
-}
-
-function renderUserReport(userReport: IRespondentReport) {
-    return (
-        <div className={styles.report_page_block}>
-            <Header as='h4'>Respondent: {userReport.respondent}</Header>
-            {userReport.answers.map(question => (
-                <Segment key={question.id}>
-                    <Header as='h4'>{question.name}</Header>
-                    {renderQuestionResponse(question)}
-                </Segment>
-            ))}
-        </div>
-    );
+function renderUserReportPreview(userReport: IRespondentReportPreview, id: string) {
+  return (
+    <Link to={`/report/${id}/${userReport.id}`} className={styles.respondent_report_preview}>
+      <Segment>
+        <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
+        <span>{userReport.answeredAt}</span>
+      </Segment>
+    </Link>
+  );
 }
 
 function renderQuestionData(question: IQuestionReport) {
