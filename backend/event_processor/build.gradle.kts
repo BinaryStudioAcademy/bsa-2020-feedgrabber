@@ -37,7 +37,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.3.2.RELEASE")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+	implementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 }
