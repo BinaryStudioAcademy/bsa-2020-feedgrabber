@@ -1,123 +1,113 @@
 import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
-import { IAppState } from 'models/IAppState';
-import {
-    loadQuestionnaireReportRoutine,
-    loadReportRoutine,
-    loadRespondentReportRoutine,
-    loadRespondentReportsRoutine
-} from "../../sagas/report/routines";
-import UIPageTitle from "../../components/UI/UIPageTitle";
-import UIContent from "../../components/UI/UIContent";
-import UIColumn from "../../components/UI/UIColumn";
-import UICard from "../../components/UI/UICard";
+import {IAppState} from 'models/IAppState';
+import {loadReportRoutine, loadRespondentReportsRoutine} from "../../sagas/report/routines";
 import UICardBlock from "../../components/UI/UICardBlock";
-import UITab from "../../components/UI/UITab";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import { Tab, Segment, Header } from 'semantic-ui-react';
-import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
+import {Container, Header, Segment, Tab} from 'semantic-ui-react';
+import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {
     IQuestionReport,
     IQuestionReportCheckboxData,
+    IQuestionReportDateData,
+    IQuestionReportFileData,
     IQuestionReportFreeTextData,
     IQuestionReportRadioData,
     IQuestionReportScaleData,
-    IQuestionReportDateData, IQuestionReportFileData, IRespondentReportPreview
+    IRespondentReportPreview
 } from "../../models/report/IReport";
 import RadioQuestionReport from "./RadioQuestionReport";
 import FreeTextQuestionReport from "./FreeTextQuestionReport";
 import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 import DateSelectionReport from "./DateSelectionReport";
-import { FileQuestionReport } from './FileQuestionReport';
-import { Link } from 'react-router-dom';
+import {FileQuestionReport} from './FileQuestionReport';
+import {Link} from 'react-router-dom';
 import styles from './styles.module.sass';
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
-  {
-    match,
-    report,
-    isLoadingReport,
-    currentUsersReports,
-    isLoadingUsersReports,
-    loadReport,
-    loadUsersReports
-  }
+    {
+        match,
+        report,
+        isLoadingReport,
+        currentUsersReports,
+        isLoadingUsersReports,
+        loadReport,
+        loadUsersReports
+    }
 ) => {
     useEffect(() => {
         loadReport(match.params.id);
     }, [loadReport, match.params.id]);
 
-  useEffect(() => {
-    loadUsersReports(match.params.id);
-  }, [loadUsersReports, match.params.id]);
-
-    console.log(currentUsersReports);
+    useEffect(() => {
+        loadUsersReports(match.params.id);
+    }, [loadUsersReports, match.params.id]);
 
     const panes = [
-    {
-      menuItem: 'General',
-      render: () => (
-        <Tab.Pane>
-          <LoaderWrapper loading={isLoadingReport}>
-            <UIColumn>
-              {report.questions && (
-                <UICard>
-                  <UICardBlock>
-                    <h3>{report.questionnaireTitle}</h3>
-                  </UICardBlock>
-                  {report.questions.map(q => (
-                    <UICardBlock>
-                      <h4>{q.title}</h4>
-                      <p><b>{q.answers} answers</b></p>
-                      {renderQuestionData(q)}
-                    </UICardBlock>
-                  ))}
-                </UICard>
-              )}
-            </UIColumn>
-          </LoaderWrapper>
-        </Tab.Pane>
-      )
-    },
-    {
-      menuItem: 'Respondents',
-      render: () => (
-        <Tab.Pane>
-          <LoaderWrapper loading={isLoadingUsersReports}>
-            <div className={styles.respondent_reports_container}>
-              {currentUsersReports &&
-                currentUsersReports.map(reportPreview =>
-                  renderUserReportPreview(reportPreview, match.params.id))
-              }
-            </div>
-          </LoaderWrapper>
-        </Tab.Pane>
-      )
-    }
-  ];
+        {
+            menuItem: 'Overall',
+            render: () => (
+                <Tab.Pane>
+                    <LoaderWrapper loading={isLoadingReport}>
+                        {report.questions && (
+                            <>
+                                <h3>{report.questionnaireTitle}</h3>
+                                {report.questions.map(q => (
+                                    <UICardBlock>
+                                        <h3>{q.title}</h3>
+                                        <p>
+                                            <b>{q.answers} answers</b>
+                                        </p>
+                                        {renderQuestionData(q)}
+                                    </UICardBlock>
+                                ))}
+                            </>
+                        )}
+                    </LoaderWrapper>
+                </Tab.Pane>
+            )
+        },
+        {
+            menuItem: 'Respondents',
+            render: () => (
+                <Tab.Pane>
+                    <LoaderWrapper loading={isLoadingUsersReports}>
+                        <div className={styles.respondent_reports_container}>
+                            {currentUsersReports &&
+                            currentUsersReports.map(reportPreview =>
+                                renderUserReportPreview(reportPreview, match.params.id))
+                            }
+                        </div>
+                    </LoaderWrapper>
+                </Tab.Pane>
+            )
+        }
+    ];
 
-  return (
-    <>
-      <UIPageTitle title="Report"/>
-      <UIContent>
-        <UITab panes={panes} menuPosition="left" />
-      </UIContent>
-    </>
-  );
+    return (
+        <Container textAlign="center" style={{width: "75%"}}>
+            <Header as='h1' dividing style={{padding: 20}}>
+                <Header.Content>
+                    View Report Info
+                </Header.Content>
+            </Header>
+            <Tab panes={panes}/>
+        </Container>
+    );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-  report: rootState.questionnaireReports.currentFullReport,
-  isLoadingReport: rootState.questionnaireReports.isLoading,
-  currentUserReport: rootState.questionnaireReports.currentUserReport,
-  currentUsersReports: rootState.questionnaireReports.responsesPreview,
-  isLoadingUsersReports: rootState.questionnaireReports.isLoadingPreviews
+    report: rootState.questionnaireReports.currentFullReport,
+    isLoadingReport: rootState.questionnaireReports.isLoading,
+    currentUserReport: rootState.questionnaireReports.currentUserReport,
+    currentUsersReports: rootState.questionnaireReports.responsesPreview,
+    isLoadingUsersReports: rootState.questionnaireReports.isLoadingPreviews
 });
 
 const mapDispatchToProps = {
-  loadReport: loadReportRoutine,
-  loadUsersReports: loadRespondentReportsRoutine
+    loadReport: loadReportRoutine,
+    loadUsersReports: loadRespondentReportsRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
