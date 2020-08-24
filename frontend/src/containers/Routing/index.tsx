@@ -65,6 +65,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/response/:id" component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
                     <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
+                    
                     <PrivateRoute exact path="/employees" component={UserList}/>
                     <Route path="/*">
                         <Redirect to="/layout"/>

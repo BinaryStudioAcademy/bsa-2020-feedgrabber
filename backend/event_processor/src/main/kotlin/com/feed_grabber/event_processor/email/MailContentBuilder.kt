@@ -23,4 +23,10 @@ class MailContentBuilder(
         return Content("text/html", templateEngine.process("reset_password", context))
     }
 
+    fun buildInvitationLinkMail(link: String): Content {
+        val context = Context()
+        context.setVariable("link", link)
+        return Content("text/html", templateEngine.process("invitation_link", context))
+    }
+
 }

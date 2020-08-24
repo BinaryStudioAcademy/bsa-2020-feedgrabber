@@ -4,13 +4,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class InvitationDto {
-    private Boolean accepted;
-    private Boolean expired;
+public class InvitationSignUpDto {
     private String email;
+    private String companyName;
     private Date createdAt;
+    private Boolean expired;
+    private Boolean accepted;
 }

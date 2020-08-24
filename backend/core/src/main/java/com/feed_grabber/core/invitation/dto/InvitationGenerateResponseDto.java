@@ -8,9 +8,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class InvitationDto {
-    private Boolean accepted;
-    private Boolean expired;
+public class InvitationGenerateResponseDto {
     private String email;
     private Date createdAt;
 }
