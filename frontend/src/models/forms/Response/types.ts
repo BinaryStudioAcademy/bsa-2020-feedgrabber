@@ -32,6 +32,8 @@ export interface IQuestionnaireResponse {
     id?: string;
     requestId: string;
     questionnaire: IQuestionnaire;
+    expirationDate: Date;
+    alreadyAnswered: boolean;
 }
 
 export interface IQuestionnaireResponseState {
