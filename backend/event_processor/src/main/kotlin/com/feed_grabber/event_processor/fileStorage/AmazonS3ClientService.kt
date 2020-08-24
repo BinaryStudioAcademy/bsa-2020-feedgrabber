@@ -25,26 +25,14 @@ class AmazonS3ClientService(private val s3Client: S3Client) {
     @Value("\${amazon.endpointUrl}")
     private lateinit var ENDPOINT: String
 
-    fun uploadReport(resource: Resource): String {
-        return putObject(resource, "reports/")
-    }
     fun uploadReport(resource: File): String {
         return putObject(resource, "reports/")
-    }
-
-    fun putObject(resource: Resource, prefix: String): String {
-        val key = prefix + LocalDateTime.now() + "-" + resource.filename?.replace(" ","_") ?: UUID.randomUUID().toString()
-        val request = PutObjectRequest.builder().bucket(BUCKET_NAME).key(key).acl(ObjectCannedACL.PUBLIC_READ).build()
-        val requestBody = RequestBody.fromInputStream(resource.inputStream, resource.contentLength())
-        s3Client.putObject(request, requestBody)
-        return "$ENDPOINT$BUCKET_NAME/$key"
     }
 
     fun putObject(file: File, prefix: String): String {
         val key = prefix + LocalDateTime.now() + "-" + file.name?.replace(" ","_") ?: UUID.randomUUID().toString()
         val request = PutObjectRequest.builder().bucket(BUCKET_NAME).key(key).acl(ObjectCannedACL.PUBLIC_READ).build()
-        println(file.length())
-        var multiFile: MultipartFile = MockMultipartFile("report.xlsx", "report.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file.readBytes())
+        val multiFile: MultipartFile = MockMultipartFile("report.xlsx", "report.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file.readBytes())
         val requestBody = RequestBody.fromInputStream(multiFile.resource.inputStream, file.length())
         s3Client.putObject(request, requestBody)
         return "$ENDPOINT$BUCKET_NAME/$key"
