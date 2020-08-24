@@ -1,7 +1,7 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {loadQuestionnaireRequestsRoutine, loadReportRoutine, loadRespondentReportRoutine} from "./routines";
-import {IQuestionnaireReport, IRequestShort, IRespondentReport} from "../../models/report/IReport";
+import { IRequestShort, IRespondentReport} from "../../models/report/IReport";
 import {IGeneric} from "../../models/IGeneric";
 import apiClient from "../../helpers/apiClient";
 /* eslint-disable */
@@ -129,8 +129,8 @@ import {
 function* loadReport(action) {
     try {
         // here also check if JSON response.questions[].statistics is valid - serialize it
-        const res: IGeneric<IQuestionnaireReport> = yield call(apiClient.get, `/2api/report/${action.payload}`);
-        yield put(loadReportRoutine.success(res.data));
+        const res: IGeneric<string> = yield call(apiClient.get, `/api/report/${action.payload}`);
+        yield put(loadReportRoutine.success(JSON.parse(res.data.data)));
     } catch (e) {
         yield put(loadReportRoutine.failure());
         toastr.error("Unable to load report");

@@ -38,9 +38,7 @@ const MainPage: FC<IMainPageProps> =
   ({ questionnaireList, reportsList = [], newsList = [], isLoading, loadQuestionnaires, getResponse }) => {
 
     useEffect(() => {
-      if (!questionnaireList && !isLoading) {
         loadQuestionnaires();
-      }
     }, [loadQuestionnaires]);
 
     const handleAnswerClick = (requestId, questionnaireId) => {

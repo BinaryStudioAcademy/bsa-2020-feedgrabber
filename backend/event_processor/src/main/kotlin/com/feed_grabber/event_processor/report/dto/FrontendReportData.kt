@@ -6,7 +6,7 @@ import java.util.*
 
 data class FrontendReportData(
         val questionnaireTitle: String,
-        val questions: List<QuestionInfo>
+        val questions: List<QuestionInfo>?
 )
 
 data class OptionInfo(val title: String, val amount: Int)
