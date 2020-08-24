@@ -6,22 +6,25 @@ import { IQuestionResponse } from "../../../models/IQuestionResponse";
 import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 
 const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, answerHandler }) => {
-    const [other, setOther] = useState("");
+    const [other, setOther] = useState('');
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
     const [answer, setAnswer] = useState(null);
 
-    // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
+    useEffect(() => answerHandler?.(
+        answer || other ? {
+            selected: other !== answer ? answer : null,
+            other
+        }
+            : null
+        // eslint-disable-next-line
+    ), [other, answer]);
 
     const handleChange = (event, value?) => {
         setAnswer(value?.value);
-        answerHandler?.({
-            selected: answer,
-            other
-        });
     };
 
     const handleOther = (value: string) => {
-        if (value?.trim().length === 0 || value.trim()?.length > 200) {
+        if (value?.trim().length === 0 || value?.trim()?.length > 200) {
             setOther(null);
             setAnswer(null);
             setOtherIsInvalid(true);

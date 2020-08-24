@@ -5,9 +5,12 @@ import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
+import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
@@ -21,6 +24,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -112,11 +116,28 @@ public class RequestService {
         return request.getId();
     }
 
+    public List<PendingRequestDto> getPending(UUID userId) {
+        return requestRepository
+                .findAllByResponsesUserId(userId)
+                .stream()
+                .map(r->RequestMapper.MAPPER.toPendingDtoFromModel(r,userId))
+                .sorted(Comparator.comparing(PendingRequestDto::getExpirationDate).reversed())
+                .collect(Collectors.toList());
+    }
+    
     public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
         return requestRepository.findAllUnansweredByRespondentId(id)
                 .stream()
                 .map(request -> RequestMapper.MAPPER.
                         requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
                 .collect(Collectors.toList());
+    }
+
+    public Date closeNow(UUID requestId) throws NotFoundException {
+        var request = requestRepository
+                .findById(requestId)
+                .orElseThrow(()->new NotFoundException("Request not found"));
+        request.setExpirationDate(new Date());
+        return requestRepository.save(request).getExpirationDate();
     }
 }

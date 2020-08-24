@@ -41,6 +41,10 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
           <Icon className={styles.menuItemIcon} name="user outline" />
           <span className={styles.menuItemTitle}>EMPLOYEES</span>
         </NavLink>
+        <NavLink to="/invitations" className={styles.menuItem} activeClassName={styles.menuItemActive}>
+          <Icon className={styles.menuItemIcon} name="pin" />
+          <span className={styles.menuItemTitle}>INVITATIONS</span>
+        </NavLink>
       </div>
     </div>
   );
