@@ -52,7 +52,7 @@ const notificationReducer = (state: IAppState['notifications'] = initialState, {
     case(receiveNotificationRoutine.TRIGGER):
       return {
         ...state,
-        notifications: [...state.notifications, payload]
+        notifications: [payload, ...state.notifications]
       };
     default:
       return state;

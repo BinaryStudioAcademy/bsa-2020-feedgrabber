@@ -14,8 +14,8 @@ import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
-import {history} from "../../helpers/history.helper";
 import {getResponseRoutine} from "../../sagas/questionnaireResponse/routines";
+import {INotification} from "../../reducers/notifications";
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
@@ -23,6 +23,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
       notifications,
       deleteNotification,
       loadNotifications,
+      receiveNotification,
       countNotifications,
       getResponse
     }) => {
@@ -36,8 +37,9 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
   }, [loadNotifications]);
 
   useStomp("notify", m => {
-    toastr.success(m.body);
-    loadNotifications();
+    const notification: INotification = JSON.parse(m.body);
+    receiveNotification(notification);
+    toastr.info(notification.text);
   }, true);
 
   const history = useHistory();

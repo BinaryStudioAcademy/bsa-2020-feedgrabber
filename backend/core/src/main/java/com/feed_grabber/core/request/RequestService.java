@@ -102,10 +102,11 @@ public class RequestService {
             var notification = userNotificationRepository.save(toSaveNotification);
 
             var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
+            var toSendNotification = userNotificationRepository.findNotificationById(notification.getId());
             notificationService.sendMessageToUsers(
                     userIds,
                     "notify",
-                    "You have a new notification");
+                    toSendNotification);
         }
 
         return request.getId();
