@@ -24,7 +24,7 @@ cache:
     npm: true
 
 script:
-    - if [[ $TRAVIS_EVENT_TYPE == "pull_request" && ($TRAVIS_PULL_REQUEST_BRANCH == "dev") || $TRAVIS_BRANCH == "infrastructure/ci_cd" ]] ; then bash scripts/test.sh ; fi
+    - if [[ $TRAVIS_EVENT_TYPE == "pull_request" && ($TRAVIS_PULL_REQUEST_BRANCH == "dev") ]] ; then bash scripts/test.sh ; fi
     - if [[ $TRAVIS_EVENT_TYPE == "push" && $TRAVIS_BRANCH == "dev" ]] ; then  bash scripts/build.sh && bash scripts/deploy.sh ; fi
 
 notifications:

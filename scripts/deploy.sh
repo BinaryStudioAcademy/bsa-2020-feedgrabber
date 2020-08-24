@@ -1,8 +1,23 @@
-#/bin/bash
+#!/usr/bin/expect -f
 
-# scp -r ./.docker/nginx $vm_user@$server_ip:~/.docker/nginx
-# scp ./.docker/docker-compose.yml $vm_user@$server_ip:~/.docker
+spawn ssh $env(vm_user)@$env(server_ip)
+expect "password: "
+send "$env(vm_password)\r"
+expect "$ "
 
-# ssh $vm_user@$server_ip "sudo docker pull feedgrabber2020/dockerhub:fg-core"
-# ssh $vm_user@$server_ip "sudo docker pull feedgrabber2020/dockerhub:fg-client"
-# ssh $vm_user@$server_ip "sudo docker-compose -f ~/.docker/docker-compose.yml up -d"
+send "sudo docker pull feedgrabber2020/fg-core:latest\r"
+expect "$ "
+
+send "sudo docker pull feedgrabber2020/fg-client:latest\r"
+expect "$ "
+
+send "sudo docker pull feedgrabber2020/fg-event-processor:latest\r"
+expect "$ "
+
+send "sudo docker-compose -f ~/.docker/docker-compose.yml down\r"
+expect "$ "
+
+send "sudo docker-compose -f ~/.docker/docker-compose.yml up -d\r"
+expect "$ "
+
+send "exit\r"
