@@ -10,7 +10,7 @@ import { CheckboxResponse } from "components/ResponseQuestion/CheckboxResponse";
 import FileUploadResponse from "../../../components/ResponseQuestion/FileUploadResponse";
 
 export default new Map<string, ({ question, answerHandler }: IQuestionResponse<any>) => any>([
-    ['FREE_TEXT', ({ question, answerHandler }: IQuestionResponse<ITextQuestion>) => {
+    ['FREETEXT', ({ question, answerHandler }: IQuestionResponse<ITextQuestion>) => {
         return <FreeTextResponse question={question} answerHandler={answerHandler} />;
     }],
     ['DATE', ({ question, answerHandler }: IQuestionResponse<IDateQuestion>) => {
@@ -25,7 +25,7 @@ export default new Map<string, ({ question, answerHandler }: IQuestionResponse<a
     ['CHECKBOX', ({question, answerHandler}: IQuestionResponse<ICheckboxQuestion>) => {
         return <CheckboxResponse question={question} answerHandler={answerHandler}/>;
     }],
-    ['FILE_UPLOAD', ({ question, answerHandler }: IQuestionResponse<IFileUploadQuestion>) => {
+    ['FILEUPLOAD', ({ question, answerHandler }: IQuestionResponse<IFileUploadQuestion>) => {
         return <FileUploadResponse question={question} answerHandler={answerHandler} />;
     }]
     // ,['RADIO', ({ question, answerHandler }: IQuestionResponse) => {

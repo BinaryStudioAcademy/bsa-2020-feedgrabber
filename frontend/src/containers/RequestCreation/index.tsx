@@ -21,6 +21,10 @@ import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
+import {RouteComponentProps} from "react-router-dom";
+import QuestionnairePreview from "../../components/QuestionnairePreview";
+import {indexQuestionsRoutine} from "../../sagas/questions/routines";
+import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
 
@@ -42,9 +46,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        users,
        loadTeams,
        loadUsers,
+       loadQuestionnaire,
        sendRequest,
        isLoadingUsers,
-       isLoadingTeams
+       isLoadingTeams,
+       questions
      }) => {
 
       // load users
@@ -57,6 +63,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         loadTeams();
       }, [loadTeams]);
 
+        // load teams
+        useEffect(() => {
+            loadQuestionnaire(match.params.id);
+        }, [loadQuestionnaire]);
+
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
       return (
@@ -64,11 +75,15 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
             <UIPageTitle title='Send Request'/>
             <UIContent>
               <UIColumn>
-                <UICard>
-                  <UICardBlock>
-                    <ExpandedQuestionnaire match={match} isLoading={false}/>
-                  </UICardBlock>
-                </UICard>
+                  <UICard>
+                    <UICardBlock>
+                        <QuestionnairePreview
+                            indexQuestions={indexQuestionsRoutine}
+                            qnId={match.params.id}
+                            questions={questions ?? []}
+                        />
+                    </UICardBlock>
+                  </UICard>
               </UIColumn>
               <UIColumn>
                 <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
@@ -263,17 +278,24 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       );
     };
 
-const mapStateToProps = (state: IAppState) => ({
+interface IRouterProps {
+    id: string;
+}
+
+const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
+  domProps: ownProps,
   teams: state.teams.teams,
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
-  isLoadingUsers: state.teams.isLoadingUsers
+  isLoadingUsers: state.teams.isLoadingUsers,
+  questions: state.questionnaires.current.questions
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
-  sendRequest: sendQuestionnaireRequestRoutine
+  sendRequest: sendQuestionnaireRequestRoutine,
+  loadQuestionnaire: loadOneQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

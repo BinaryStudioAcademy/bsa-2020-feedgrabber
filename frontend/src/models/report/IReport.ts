@@ -1,4 +1,4 @@
-import {QuestionType} from "../forms/Questions/IQuesion";
+import { QuestionType } from "../forms/Questions/IQuesion";
 
 export interface IQuestionnaireReport {
   questionnaireTitle: string;
@@ -11,22 +11,23 @@ export interface IQuestionReport {
   type: QuestionType;
   answers: number;
   data:  // serialized from JSON
-    IQuestionReportRadioData |
-    IQuestionReportFreeTextData |
-    IQuestionReportMultichoiceData |
-    IQuestionReportScaleData;
+  IQuestionReportRadioData |
+  IQuestionReportFreeTextData |
+  IQuestionReportMultichoiceData |
+  IQuestionReportScaleData |
+  IQuestionReportFileData;
 }
 
 export interface IQuestionReportMultichoiceData {
-  options: {title: string; amount: number}[];
+  options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportRadioData {
-  options: {title: string; amount: number}[];
+  options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportScaleData {
-  options: {title: string; amount: number}[];
+  options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportFreeTextData {
@@ -34,5 +35,13 @@ export interface IQuestionReportFreeTextData {
 }
 
 export interface IQuestionReportCheckboxData {
-  options: {title: string; amount: number}[];
+  options: { title: string; amount: number }[];
+}
+
+export interface IQuestionReportDateData {
+  options: { title: string; amount: number }[];
+}
+
+export interface IQuestionReportFileData {
+  options: { type: string; amount: number; sizes: number[] }[];
 }
