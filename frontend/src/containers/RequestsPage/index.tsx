@@ -51,7 +51,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
 };
 
 const mapState = (state: IAppState) => ({
-    requests: state.questionnaireReports.list
+    requests: state.questionnaireReports.requests
 });
 const mapDispatch = {
     loadRequests: loadQuestionnaireRequestsRoutine

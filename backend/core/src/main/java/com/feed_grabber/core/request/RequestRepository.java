@@ -1,6 +1,7 @@
 package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.request.model.Request;
+import com.feed_grabber.core.response.dto.UserResponseShortDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,7 @@ public interface RequestRepository extends JpaRepository<Request, UUID> {
             "join Response responses on responses.request.id = r.id where " +
             "responses.user.id = :id and " +
             "responses.payload is NULL or responses.payload = '' " +
-            "and r.closeDate = null")
+            "and r.closeDate is NULL")
     List<Request> findAllUnansweredByRespondentId(UUID id);
 
     List<Request> findAllByQuestionnaireId(UUID id);
