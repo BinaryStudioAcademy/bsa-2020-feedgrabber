@@ -18,12 +18,12 @@ import {
 import UICard from "../../components/UI/UICard";
 import UIColumn from "../../components/UI/UIColumn";
 import UIContent from "../../components/UI/UIContent";
-
+import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
 
 const newQuestion: IQuestion = {
     type: QuestionType.freeText,
-    categoryTitle: "",
-    name: "",
+    categoryTitle: defaultQuestionValues.categoryTitle,
+    name: defaultQuestionValues.name,
     answer: "",
     id: "",
     isReused: false,
