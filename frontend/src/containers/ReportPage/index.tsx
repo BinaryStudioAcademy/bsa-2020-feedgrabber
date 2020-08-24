@@ -10,12 +10,13 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {
-    IQuestionReport,
-    IQuestionReportCheckboxData,
-    IQuestionReportDateData,
-    IQuestionReportFreeTextData,
-    IQuestionReportRadioData,
-    IQuestionReportScaleData
+  IQuestionReport,
+  IQuestionReportCheckboxData,
+  IQuestionReportFreeTextData,
+  IQuestionReportMultichoiceData,
+  IQuestionReportRadioData,
+  IQuestionReportScaleData,
+  IQuestionReportDateData, IQuestionReportFileData
 } from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
@@ -23,6 +24,7 @@ import FreeTextQuestionReport from "./FreeTextQuestionReport";
 import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
 import DateSelectionReport from "./DateSelectionReport";
+import { FileQuestionReport } from './FileQuestionReport';
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     {
@@ -33,23 +35,26 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
         loadReport(match.params.id);
     }, [loadReport, match.params.id]);
 
-    const renderQuestionData = (question: IQuestionReport) => {
-        switch (question.type) {
-            case QuestionType.radio:
-                return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
-            case QuestionType.checkbox:
-                return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
-            case QuestionType.date:
-                return <DateSelectionReport data={question.data as IQuestionReportDateData}/>;
-            // case QuestionType.fileUpload:
-            case QuestionType.freeText:
-                return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
-            case QuestionType.scale:
-                return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
-            default:
-                return <div/>;
-        }
-    };
+  const renderQuestionData = (question: IQuestionReport) => {
+    switch (question.type) {
+      case QuestionType.radio:
+        return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
+      case QuestionType.checkbox:
+        return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
+      case QuestionType.date:
+        return <DateSelectionReport data={question.data as IQuestionReportDateData}/>; 
+      case QuestionType.fileUpload:
+        return <FileQuestionReport data={question.data as IQuestionReportFileData}/>; 
+      case QuestionType.freeText:
+        return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
+      // case QuestionType.multichoice:
+      //   return <MultichoiceQuestionReport data={question.data as IQuestionReportMultichoiceData}/>;
+      case QuestionType.scale:
+        return <ScaleQuestionReport data={question.data as IQuestionReportScaleData}/>;
+      default:
+        return <div/>;
+    }
+  };
 
     return (
         <>
