@@ -149,7 +149,6 @@ function* loadReportsBaseInfo(action) {
 
 function* loadRespondentReports(action: any) {
   try {
-    // id of the questionnaire
     const id: string = action.payload;
     // here will be API call
     const reportsMock = Array<IRespondentReport>(
@@ -262,7 +261,7 @@ function* loadRespondentReports(action: any) {
           } as IScaleQuestion)
       } as IRespondentReport
     );
-    yield put(loadRespondentReportRoutine.success(reportsMock));
+    yield put(loadRespondentReportRoutine.success(reportsMock[id]));
   } catch (error) {
     // yield put(loadRespondentReportsRoutine.failure());
     toastr.error("Unable to load respondent reports");

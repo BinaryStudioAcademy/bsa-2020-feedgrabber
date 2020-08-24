@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, FC} from 'react';
+import { connect, ConnectedProps } from "react-redux";
 import LoaderWrapper from "../../../components/LoaderWrapper";
 import { IRespondentReport } from '../../../models/report/IReport';
 import styles from "../styles.module.sass";
@@ -9,19 +10,28 @@ import { DateSelectionResponse } from "../../../components/ResponseQuestion/Date
 import RadioButtonResponse from "../../../components/ResponseQuestion/RadioButtonResponse";
 import { CheckboxResponse } from "../../../components/ResponseQuestion/CheckboxResponse";
 import { FreeTextResponse } from "../../../components/ResponseQuestion/FreeTextResponse";
+import { loadRespondentReportRoutine } from "../../../sagas/report/routines";
 
-const RespondentReport = ({ id, respondentReport }) => {
+const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
+  match,
+  respondentReport,
+  isLoading,
+  loadReport
+}) => {
   const [report, setReport] = useState(respondentReport);
+  console.log(respondentReport);
+  console.log(match);
 
   useEffect(() => {
-    setReport(respondentReport);
-  }, [respondentReport]);
+    console.log(match.params.respondent);
+    loadReport(match.params.respondent);
+  }, [match.params.respondent, loadReport]);
 
   return (
     <div>
-      <LoaderWrapper loading={!!report}>
-        {report &&
-          renderUserReport(report)
+      <LoaderWrapper loading={isLoading}>
+        {respondentReport.answers &&
+          renderUserReport(respondentReport)
         }
       </LoaderWrapper>
     </div>
@@ -59,4 +69,17 @@ function renderQuestionResponse(question: IQuestion) {
   }
 }
 
-export default RespondentReport;
+const mapStateToProps = rootState => ({
+  respondentReport: rootState.questionnaireReports.currentUserReport,
+  isLoading: rootState.questionnaireReports.isLoadingRespondentReports
+});
+
+const mapDispatchToProps = {
+  loadReport: loadRespondentReportRoutine
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ConnectedReportPageProps = ConnectedProps<typeof connector>;
+
+export default connector(RespondentReport);
