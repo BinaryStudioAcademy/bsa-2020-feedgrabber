@@ -45,6 +45,7 @@ export interface IQuestionReportRadioData {
 
 export interface IRespondentReportPreview {
   id: string;
+  username: string;
   firstName: string;
   lastName: string;
   answeredAt: string;

@@ -277,21 +277,12 @@ function* loadRespondentReports(action: any) {
 
 function* loadUsersReports(action) {
   try {
-    // const reports = yield call(apiClient.get, "", action.payload);
-    // maybe I should to parse the data
-    const reportsPreviewMock = Array<IRespondentReportPreview>({
-      id: '1',
-      firstName: 'pavlo',
-      lastName: 'myroniuk',
-      answeredAt: new Date().toLocaleString()
-    } as IRespondentReportPreview,
-    {
-      id: '0',
-      firstName: 'asan',
-      lastName: 'leibyk',
-      answeredAt: new Date().toLocaleString()
-    }  as IRespondentReportPreview);
-    yield put(loadRespondentReportsRoutine.success(reportsPreviewMock));
+	console.log('payload:');
+	console.log(action.payload);
+	const res = call(apiClient.get, `api/response/users?requestId=${action.payload}`);
+	console.log('res:');
+	console.log(res);
+    yield put(loadRespondentReportsRoutine.success(res));
   } catch (err) {
     yield put(loadRespondentReportsRoutine.failure());
     toastr.error("Unable to load respondents reports");
