@@ -79,8 +79,8 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
                     answers = service.mapAnswers(QuestionTypes.radio, question.answers) as QuestionWithOptions
                 val maxAmount = answers.options.map { it.amount }.max()
                 val minAmount = answers.options.map { it.amount }.min()
-                val mostCommon = answers.options.filter { a -> a.amount == maxAmount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
-                val leastCommon = answers.options.filter { a -> a.amount == minAmount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
+                val mostCommon = answers.options.filter { a -> a.amount == maxAmount }.sortedBy { it.amount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
+                val leastCommon = answers.options.filter { a -> a.amount == minAmount }.sortedBy { it.amount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
                 textCell(mostCommon, rows[0], cellPosition, cellStyle)
                 textCell(leastCommon, rows[1], cellPosition, cellStyle)
                 textCell("-", rows[2], cellPosition, cellStyle)
@@ -124,7 +124,7 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
     }
 
     @Throws(IOException::class)
-    fun generate(report: DataForReport, parsedQuestions: List<QuestionDB>?): Unit {
+    fun generate(report: DataForReport, parsedQuestions: List<QuestionDB>?) {
         if (parsedQuestions != null) {
 
             // #WORKBOOK
@@ -165,6 +165,8 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
 
             generateQuestionsPage(workbook, parsedQuestions, report)
 
+            generateInfoPage(workbook, report)
+
             // #WRITE_FILE
             val fileOut = FileOutputStream("report.xlsx")
             workbook.write(fileOut)
@@ -190,7 +192,7 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
         val sheetCF = sheet.sheetConditionalFormatting
         val responsesRule: XSSFConditionalFormattingRule = sheetCF.createConditionalFormattingRule("MOD(ROW(),2)=0")
         val responsesFormatingPattern = responsesRule.createPatternFormatting()
-        responsesFormatingPattern.fillBackgroundColor = IndexedColors.LIGHT_GREEN.index
+        responsesFormatingPattern.fillBackgroundColor = IndexedColors.GREY_25_PERCENT.index
         responsesFormatingPattern.fillPattern = PatternFormatting.SOLID_FOREGROUND
 
         val statsRule: XSSFConditionalFormattingRule = sheetCF.createConditionalFormattingRule("MOD(ROW(),2)=0")
@@ -218,15 +220,16 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
 
 
         // #RESPONSEs
-        for (row in report.responses.indices) {
+        val sortedResponses = report.responses.sortedBy { it.user.username }
+        for (row in sortedResponses.indices) {
             val responseRow: Row = sheet.createRow(row + 3)
 
             numericCell(row.toDouble() + 1, responseRow, 1, dataCellStyle)
 
-            textCell(report.responses[row].user.username, responseRow, 2, dataCellStyle)
-            if (report.responses[row].payloadList != null)
-                for (col in report.responses[row].payloadList!!.indices)
-                    answerCell(report.responses[row].payloadList!!.get(col), responseRow, col + 3, dataCellStyle)
+            textCell(sortedResponses[row].user.username, responseRow, 2, dataCellStyle)
+            if (sortedResponses[row].payloadList != null)
+                for (col in sortedResponses[row].payloadList!!.indices)
+                    answerCell(sortedResponses[row].payloadList!!.get(col), responseRow, col + 3, dataCellStyle)
             else
                 for (col in 0..questionsNumber)
                     errorCell(responseRow, col + 3, dataCellStyle)
@@ -236,6 +239,7 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
 
 
         val statisticHeaderRow: Row = sheet.createRow(statisticsStartRow)
+        statisticHeaderRow.heightInPoints = 20.toFloat()
         sheet.addMergedRegion(CellRangeAddress(statisticsStartRow, statisticsStartRow, HORIZONTAL_INDENT, 2))
         val frequentStatisticsRow: Row = sheet.createRow(statisticsStartRow + 2)
         val rearStatisticsRow: Row = sheet.createRow(statisticsStartRow + 3)
@@ -267,16 +271,151 @@ class ExcelReportGenerator(@Autowired private val service: ReportService) {
     }
 
     fun generateQuestionsPage(workbook: XSSFWorkbook, parsedQuestions: List<QuestionDB>, report: DataForReport) {
-        val questionsSheet = workbook.createSheet("Questions")
+        val headers = mutableListOf("questions", "question type", "answers", "selected")
 
-        questionsSheet.setColumnWidth(1, LETTER_WIDTH * 25)
-        questionsSheet.setColumnWidth(2, LETTER_WIDTH * 25)
-        questionsSheet.setColumnWidth(3, LETTER_WIDTH * 10)
+        val sheet = workbook.createSheet("Questions")
 
-        val titleRow: Row = questionsSheet.createRow(1)
+        sheet.setColumnWidth(1, LETTER_WIDTH * 25)
+        sheet.setColumnWidth(2, LETTER_WIDTH * 20)
+        sheet.setColumnWidth(3, LETTER_WIDTH * 25)
+        sheet.setColumnWidth(4, LETTER_WIDTH * 10)
+        sheet.isPrintGridlines = false;
+        sheet.isDisplayGridlines = false;
+
+        val titleRow: Row = sheet.createRow(1)
         titleRow.heightInPoints = 55.toFloat()
         textCell(report.questionnaire.title + " questionnaire report", titleRow, 1, titleCellStyle)
-        questionsSheet.addMergedRegion(CellRangeAddress(VERTICAL_INDENT, VERTICAL_INDENT, HORIZONTAL_INDENT, 3))
+        sheet.addMergedRegion(CellRangeAddress(VERTICAL_INDENT, VERTICAL_INDENT, HORIZONTAL_INDENT, 4))
+
+        val headerRow: Row = sheet.createRow(2)
+        for (col in headers.indices)
+            textCell(headers[col], headerRow, col + 1, headerCellStyle)
+
+        var rowLine = 3;
+
+        for (question in parsedQuestions) {
+            var questionTitleRow = sheet.createRow(rowLine)
+
+            when (question.type) {
+                QuestionTypes.checkbox, QuestionTypes.radio -> {
+                    val answers: QuestionWithOptions;
+                    if (question.type == QuestionTypes.checkbox)
+                        answers = service.mapAnswers(QuestionTypes.checkbox, question.answers) as QuestionWithOptions
+                    else
+                        answers = service.mapAnswers(QuestionTypes.radio, question.answers) as QuestionWithOptions
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.options.size, 1, 1))
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.options.size, 2, 2))
+
+                    for (answer in answers.options.sortedByDescending { it.amount }) {
+                        val row: Row = sheet.createRow(rowLine)
+                        textCell(question.title, row, 1, dataCellStyle)
+                        textCell(question.type.name, row, 2, dataCellStyle)
+                        textCell(answer.title, row, 3, dataCellStyle)
+                        textCell("${answer.amount} time(s)", row, 4, dataCellStyle)
+                        rowLine++
+                    }
+                }
+                QuestionTypes.scale, QuestionTypes.date -> {
+                    val answers: QuestionWithValues;
+                    if (question.type == QuestionTypes.date)
+                        answers = service.mapAnswers(QuestionTypes.date, question.answers) as QuestionWithValues
+                    else
+                        answers = service.mapAnswers(QuestionTypes.scale, question.answers) as QuestionWithValues
+                    val countedAnswers = countAnswersInQuestionWithValues(answers);
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + countedAnswers.size, 1, 1))
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + countedAnswers.size, 2, 2))
+                    for (answer in countedAnswers.toList().sortedByDescending { (_, value) -> value}.toMap()) {
+                        val row: Row = sheet.createRow(rowLine)
+                        textCell(question.title, row, 1, dataCellStyle)
+                        textCell(question.type.name, row, 2, dataCellStyle)
+                        textCell(answer.key, row, 3, dataCellStyle)
+                        textCell("${answer.value} time(s)", row, 4, dataCellStyle)
+                        rowLine++
+                    }
+                }
+                QuestionTypes.freeText, QuestionTypes.fileUpload -> {
+                    val answers: QuestionWithValues;
+                    if (question.type == QuestionTypes.date)
+                        answers = service.mapAnswers(QuestionTypes.freeText, question.answers) as QuestionWithValues
+                    else
+                        answers = service.mapAnswers(QuestionTypes.fileUpload, question.answers) as QuestionWithValues
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.values.size, 1, 1))
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.values.size, 2, 2))
+                    for (answer in answers.values) {
+                        val row: Row = sheet.createRow(rowLine)
+                        textCell(question.title, row, 1, dataCellStyle)
+                        textCell(question.type.name, row, 2, dataCellStyle)
+                        textCell(answer, row, 3, dataCellStyle)
+                        textCell("-", row, 4, dataCellStyle)
+                        rowLine++
+                    }
+                }
+            }
+            rowLine++
+        }
+
+        val sheetCF = sheet.sheetConditionalFormatting
+        val questionsRule: XSSFConditionalFormattingRule = sheetCF.createConditionalFormattingRule("MOD(ROW(),2)=0")
+        val questionsFormatingPattern = questionsRule.createPatternFormatting()
+        questionsFormatingPattern.fillBackgroundColor = IndexedColors.GREY_25_PERCENT.index
+        questionsFormatingPattern.fillPattern = PatternFormatting.SOLID_FOREGROUND
+        val cfRules = arrayOf<ConditionalFormattingRule>(questionsRule)
+        val regions = arrayOf(CellRangeAddress(3, rowLine, 3, 4))
+        sheetCF.addConditionalFormatting(regions, cfRules)
+        sheet.createFreezePane(0, 3)
+
     }
 
+    fun generateInfoPage(workbook: XSSFWorkbook, report: DataForReport) {
+        val headers = mutableListOf("questions", "question type", "answers", "selected")
+
+        val sheet = workbook.createSheet("Report info")
+
+        sheet.setColumnWidth(1, LETTER_WIDTH * 25)
+        sheet.setColumnWidth(2, LETTER_WIDTH * 25)
+        sheet.isPrintGridlines = false;
+        sheet.isDisplayGridlines = false;
+
+        val titleRow: Row = sheet.createRow(1)
+        titleRow.heightInPoints = 55.toFloat()
+        textCell("Report info", titleRow, 1, titleCellStyle)
+        sheet.addMergedRegion(CellRangeAddress(VERTICAL_INDENT, VERTICAL_INDENT, HORIZONTAL_INDENT, 2))
+
+        val nameRow: Row = sheet.createRow(3)
+        nameRow.heightInPoints = 20.toFloat()
+        textCell("Questionnaire name", nameRow, 1, dataCellStyle)
+        textCell(report.questionnaire.title, nameRow, 2, dataCellStyle)
+        val answersRow: Row = sheet.createRow(4)
+        answersRow.heightInPoints = 20.toFloat()
+        textCell("Answers", answersRow, 1, dataCellStyle)
+        numericCell(report.responses.size.toDouble(), answersRow, 2, dataCellStyle)
+        val creationDateRow: Row = sheet.createRow(5)
+        creationDateRow.heightInPoints = 20.toFloat()
+        textCell("Creation date", creationDateRow, 1, dataCellStyle)
+        textCell(report.requestCreationDate.toString(), creationDateRow, 2, dataCellStyle)
+        val expirationDateRow: Row = sheet.createRow(6)
+        expirationDateRow.heightInPoints = 20.toFloat()
+        textCell("Expiration date", expirationDateRow, 1, dataCellStyle)
+        textCell(report.requestExpirationDate.toString(), expirationDateRow, 2, dataCellStyle)
+        val makerUserRow: Row = sheet.createRow(7)
+        makerUserRow.heightInPoints = 20.toFloat()
+        textCell("Request maker", makerUserRow, 1, dataCellStyle)
+        textCell(report.requestMaker.username, makerUserRow, 2, dataCellStyle)
+        if (report.targetUser != null) {
+            val targetUserRow: Row = sheet.createRow(8)
+            targetUserRow.heightInPoints = 20.toFloat()
+            textCell("Target user", targetUserRow, 1, dataCellStyle)
+            textCell(report.targetUser.username, targetUserRow, 2, dataCellStyle)
+        }
+
+        val sheetCF = sheet.sheetConditionalFormatting
+        val questionsRule: XSSFConditionalFormattingRule = sheetCF.createConditionalFormattingRule("MOD(ROW(),2)=0")
+        val questionsFormatingPattern = questionsRule.createPatternFormatting()
+        questionsFormatingPattern.fillBackgroundColor = IndexedColors.GREY_25_PERCENT.index
+        questionsFormatingPattern.fillPattern = PatternFormatting.SOLID_FOREGROUND
+        val cfRules = arrayOf<ConditionalFormattingRule>(questionsRule)
+        val regions = arrayOf(CellRangeAddress(3, 8, 1, 2))
+        sheetCF.addConditionalFormatting(regions, cfRules)
+
+    }
 }
