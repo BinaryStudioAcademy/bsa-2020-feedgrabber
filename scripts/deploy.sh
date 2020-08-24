@@ -1,8 +1,11 @@
 #!/usr/bin/expect -f
 
 spawn ssh $env(vm_user)@$env(server_ip)
-expect "password: "
-send "$env(vm_password)\r"
+expect "yes/no" { 
+	send "yes\r"
+	expect "*?assword" { send "$env(vm_password)\r" }
+} "*?assword" { send "$env(vm_password)\r" }
+ 
 expect "$ "
 
 send "sudo docker pull feedgrabber2020/fg-core:latest\r"
