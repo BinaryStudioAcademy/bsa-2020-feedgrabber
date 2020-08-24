@@ -20,6 +20,7 @@ export interface IRequestShort {
     generateReport: boolean;
     notifyUsers: boolean;
     closeDate: string;
+    userCount: number;
 }
 
 export interface IQuestionReport {

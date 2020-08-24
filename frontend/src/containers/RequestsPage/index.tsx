@@ -2,16 +2,12 @@ import React, {FC, useEffect, useState} from "react";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionnaireRequestsRoutine} from "../../sagas/report/routines";
-import UICard from "../../components/UI/UICard";
-import UIContent from "../../components/UI/UIContent";
-import UIPageTitle from "../../components/UI/UIPageTitle";
 import {RequestItem} from "./RequestItem";
-import {Tab} from "semantic-ui-react";
+import {Card, Container, Header, Tab} from "semantic-ui-react";
 import {IRequestShort} from "models/report/IReport";
-import styles from './styles.module.sass';
 
 const RequestsPage: FC<RequestPageProps & { match }> = (
-    {loadRequests, match, requests}) => {
+    {loadRequests, match, requests, isLoading}) => {
 
     const [open, setOpen] = useState([] as IRequestShort[]);
     const [closed, setClosed] = useState([] as IRequestShort[]);
@@ -26,32 +22,41 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
     }, [requests]);
 
     const panes = [
-        open.length && {
-            menuItem: 'Pending requests',
-            render: () => <Tab.Pane attached={false}>{open.map(r => (
-                <RequestItem request={r}/>
-            ))}</Tab.Pane>
+        {
+            menuItem: {key: 'opened', icon: 'eye', content: 'Opened requests'},
+            render: () => <Tab.Pane loading={isLoading}>
+                <Card.Group itemsPerRow={2}>
+                    {open.map(r => (
+                        <RequestItem key={r.requestId} request={r}/>))}
+                </Card.Group>
+            </Tab.Pane>
         },
-        closed.length && {
-            menuItem: 'Expired requests',
-            render: () => <Tab.Pane attached={false}>{closed.map(r => (
-                <RequestItem request={r}/>
-            ))}</Tab.Pane>
+        {
+            menuItem: {key: 'closed', icon: 'lock', content: 'Closed requests'},
+            render: () => <Tab.Pane>
+                <Card.Group itemsPerRow={2}>
+                    {closed.map(r => (
+                        <RequestItem key={r.requestId} request={r}/>))}
+                </Card.Group>
+            </Tab.Pane>
         }
     ];
 
     return (
-        <>
-            <UIPageTitle title="Requests"/>
-                <UIContent>
-                    <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
-                </UIContent>
-        </>
+        <Container textAlign="center" style={{width: "70%"}}>
+            <Header as='h1' dividing style={{padding: 20}}>
+                <Header.Content>
+                    Track pending/closed requests
+                </Header.Content>
+            </Header>
+                <Tab panes={panes}/>
+        </Container>
     );
 };
 
 const mapState = (state: IAppState) => ({
-    requests: state.questionnaireReports.requests
+    requests: state.questionnaireReports.requests,
+    isLoading: state.questionnaireReports.isLoading
 });
 const mapDispatch = {
     loadRequests: loadQuestionnaireRequestsRoutine

@@ -45,5 +45,6 @@ public interface RequestMapper {
     RequestQuestionnaireDto requestAndQuestionnaireToDto(Request request, Questionnaire questionnaire);
 
     @Mapping(target = "requestId", source = "id")
+    @Mapping(target = "userCount", expression = "java(request.getResponses().size())")
     RequestShortDto requestToShortDto(Request request);
 }

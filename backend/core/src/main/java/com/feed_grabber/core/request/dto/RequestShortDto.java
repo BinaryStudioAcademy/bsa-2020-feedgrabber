@@ -20,4 +20,5 @@ public class RequestShortDto {
     private Boolean generateReport;
     private Boolean notifyUsers;
     private Date closeDate;
+    private Integer userCount;
 }
