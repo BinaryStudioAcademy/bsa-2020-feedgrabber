@@ -24,7 +24,7 @@ const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
 
   useEffect(() => {
     loadReport({ request: match.params.id, respondent: match.params.respondent });
-  }, [match.params.respondent, loadReport]);
+  }, [match.params.respondent, loadReport, match.params.id]);
 
   return (
     <UIContent>
