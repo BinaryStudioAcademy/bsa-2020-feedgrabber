@@ -20,8 +20,8 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
     }, [loadRequests, match.params.id]);
 
     useEffect(() => {
-        setOpen(requests.filter(r => !r.isClosed));
-        setClosed(requests.filter(r => r.isClosed));
+        setOpen(requests.filter(r => !r.closeDate));
+        setClosed(requests.filter(r => r.closeDate));
     }, [requests]);
 
     const panes = [
@@ -54,7 +54,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
 };
 
 const mapState = (state: IAppState) => ({
-    requests: state.questionnaireReports.list
+    requests: state.questionnaireReports.requests
 });
 const mapDispatch = {
     loadRequests: loadQuestionnaireRequestsRoutine
