@@ -1,5 +1,7 @@
 #/bin/bash
 
+docker login -u $docker_user -p $docker_pass
+
 docker build \
    -f ".docker/api.dockerfile" \
    -t "fg-core" \
