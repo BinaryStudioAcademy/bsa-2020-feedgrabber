@@ -7,7 +7,7 @@ import {
   loadRespondentReportsRoutine
 } from "./routines";
 import { IRequestShort, IRespondentReport, IRespondentReportPreview } from "../../models/report/IReport";
-import {IGeneric} from "../../models/IGeneric";
+import { IGeneric } from "../../models/IGeneric";
 import apiClient from "../../helpers/apiClient";
 /* eslint-disable */
 import {
@@ -154,137 +154,33 @@ function* loadReportsBaseInfo(action) {
 
 function* loadRespondentReports(action: any) {
   try {
-    const id: string = action.payload.respondent;
-	  // action.payload has next structure: { request, respondent }
-    // here will be API call
-    // yield put(loadRespondentReportRoutine.success( some report ));
-    const reportsMock = Array<IRespondentReport>(
-      {
-        respondent: 'pasha',
-        answers: Array<IQuestion>(
-          {
-            id: '1',
-            type: QuestionType.scale,
-            name: 'Rate your job:',
-            answer: 3,
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
-          } as IScaleQuestion,
-          {
-            id: '2',
-            type: QuestionType.date,
-            name: 'Birthday?',
-            answer: '2001-07-10',
-            categoryTitle: 'qkation',
-            isReused: false
-          } as IDateQuestion,
-          {
-            id: '9',
-            type: QuestionType.freeText,
-            name: 'Enter your specialization:',
-            answer: 'Java',
-            categoryTitle: 'qkation',
-            isReused: false
-          } as ITextQuestion,
-          {
-            id: '3',
-            type: QuestionType.radio,
-            name: 'some question?',
-            answer: {
-              selected: 'laptop',
-              other: ''
-            },
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { includeOther: false, answerOptions: ['laptop', 'headphones', 'mouse'] }
-          } as IRadioQuestion,
-          {
-            id: '4',
-            type: QuestionType.scale,
-            name: 'Some name2',
-            answer: 6,
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
-          } as IScaleQuestion)
-      } as IRespondentReport,
-      {
-        respondent: 'king of pacha land',
-        answers: Array<IQuestion>(
-          {
-            id: '4',
-            type: QuestionType.scale,
-            name: 'Some name1',
-            answer: 5,
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
-          } as IScaleQuestion,
-          {
-            id: '5',
-            type: QuestionType.checkbox,
-            name: 'Select what you want to eat:',
-            answer: {
-              selected: ['apple', 'bread'],
-              other: ''
-            },
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { includeOther: false, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
-          } as ICheckboxQuestion,
-          {
-            id: '7',
-            type: QuestionType.checkbox,
-            name: 'Select what you want to eat:',
-            answer: {
-              selected: ['apple', 'bread'],
-              other: 'pizza'
-            },
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { includeOther: true, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
-          } as ICheckboxQuestion,
-          {
-            id: '0',
-            type: QuestionType.radio,
-            name: 'some question?',
-            answer: {
-              selected: '',
-              other: 'keyboard'
-            },
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { includeOther: true, answerOptions: ['laptop', 'headphones', 'mouse'] }
-          } as IRadioQuestion,
-          {
-            id: '6',
-            type: QuestionType.scale,
-            name: 'Some name3',
-            answer: 2,
-            categoryTitle: 'qkation',
-            isReused: false,
-            details: { min: 1, minDescription: 'madara', max: 8, maxDescription: 'hashirama' }
-          } as IScaleQuestion)
-      } as IRespondentReport
-    );
-    yield put(loadRespondentReportRoutine.success(reportsMock[id]));
+	const res = yield call(apiClient.get, `/api/response?responseId=${action.payload}`);
+	const resData = JSON.parse(res.data.data.payload);
+	let newData = [];
+	for (const data of resData) {
+		const questionData = yield call(apiClient.get, `/api/questions/${data.questionId}`);
+		const parsed = { ...questionData.data.data, details: JSON.parse(questionData.data.data.details) };	
+		newData.push({
+			answer: data.body,
+			...parsed
+		} as IQuestion);
+	}
+	const finish = { answers: newData };
+    yield put(loadRespondentReportRoutine.success(finish));
   } catch (error) {
-    // yield put(loadRespondentReportsRoutine.failure());
+    yield put(loadRespondentReportsRoutine.failure());
+	console.log(error);
     toastr.error("Unable to load respondent reports");
   }
 }
 
 function* loadUsersReports(action) {
   try {
-	console.log('payload:');
-	console.log(action.payload);
-	const res = call(apiClient.get, `api/response/users?requestId=${action.payload}`);
-	console.log('res:');
-	console.log(res);
-    yield put(loadRespondentReportsRoutine.success(res));
+	const res = yield call(apiClient.get, `/api/response/users?requestId=${action.payload}`);
+    yield put(loadRespondentReportsRoutine.success(res.data.data));
   } catch (err) {
     yield put(loadRespondentReportsRoutine.failure());
+	console.log(err);
     toastr.error("Unable to load respondents reports");
   }
 }

@@ -128,10 +128,10 @@ export default connector(ReportPage);
 
 function renderUserReportPreview(userReport: IRespondentReportPreview, id: string) {
   return (
-    <Link to={`/report/${id}/${userReport.id}`} className={styles.respondent_report_preview}>
+    <Link to={`/report/${id}/${userReport.id}/${userReport.username}`} className={styles.respondent_report_preview}>
       <Segment>
         <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
-        <span>{userReport.username}</span>
+        <span>{userReport.username}</span><br />
         <span>{userReport.answeredAt}</span>
       </Segment>
     </Link>

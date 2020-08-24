@@ -64,7 +64,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/questionnaires/:id/new-request" component={RequestCreation}/>
                     <PrivateRoute exact path="/questionnaires/:id/requests" component={RequestsPage}/>
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>
-                    <PrivateRoute exact path="/report/:id/:respondent" component={RespondentReport}/>
+                    <PrivateRoute exact path="/report/:id/:respondent/:username" component={RespondentReport}/>
                     <PrivateRoute exact path="/response/:id" component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
                     <PrivateRoute exact path="/employees" component={UserList}/>

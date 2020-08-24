@@ -1,4 +1,4 @@
-import React, {useState, useEffect, FC} from 'react';
+import React, { useEffect, FC } from 'react';
 import { connect, ConnectedProps } from "react-redux";
 import LoaderWrapper from "../../../components/LoaderWrapper";
 import { IRespondentReport } from '../../../models/report/IReport';
@@ -20,18 +20,16 @@ const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
   isLoading,
   loadReport
 }) => {
-  const [report, setReport] = useState(respondentReport);
-
   useEffect(() => {
-    loadReport({ request: match.params.id, respondent: match.params.respondent });
-  }, [match.params.respondent, loadReport, match.params.id]);
+    loadReport(match.params.respondent);
+  }, [match.params.respondent, loadReport]);
 
   return (
     <UIContent>
       <UIColumn>
         <LoaderWrapper loading={isLoading}>
           {respondentReport.answers &&
-            renderUserReport(respondentReport)
+            renderUserReport(respondentReport, match.params.username)
           }
         </LoaderWrapper>
       </UIColumn>
@@ -39,10 +37,10 @@ const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
   );
 };
 
-function renderUserReport(userReport: IRespondentReport) {
+function renderUserReport(userReport: IRespondentReport, username: string) {
   return (
     <div className={styles.report_page_block}>
-      <Header as='h4'>Respondent: {userReport.respondent}</Header>
+      <Header as='h4'>Respondent: {username}</Header>
       {userReport.answers.map(question => (
         <Segment key={question.id}>
           <Header as='h4'>{question.name}</Header>
