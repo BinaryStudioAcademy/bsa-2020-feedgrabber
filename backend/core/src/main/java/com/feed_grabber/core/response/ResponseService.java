@@ -2,11 +2,13 @@ package com.feed_grabber.core.response;
 
 import com.feed_grabber.core.response.dto.ResponseDto;
 import com.feed_grabber.core.response.dto.ResponseUpdateDto;
+import com.feed_grabber.core.response.dto.UserResponseShortDto;
 import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
 import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,5 +38,15 @@ public class ResponseService {
         response.setAnsweredAt(new Date());
 
         return Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));
+    }
+
+    public ResponseDto getById(UUID responseId) throws ResponseNotFoundException {
+        return ResponseMapper
+                .MAPPER.responseToDto(responseRepository.findById(responseId)
+                        .orElseThrow(ResponseNotFoundException::new));
+    }
+
+    public List<UserResponseShortDto> getRespondents(UUID requestId) {
+        return responseRepository.findRespondentsByRequestId(requestId);
     }
 }
