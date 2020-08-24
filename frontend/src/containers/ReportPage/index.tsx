@@ -15,7 +15,8 @@ import {
   IQuestionReportFreeTextData,
   IQuestionReportMultichoiceData,
   IQuestionReportRadioData,
-  IQuestionReportScaleData
+  IQuestionReportScaleData,
+  IQuestionReportDateData, IQuestionReportFileData
 } from "../../models/report/IReport";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import RadioQuestionReport from "./RadioQuestionReport";
@@ -23,6 +24,8 @@ import FreeTextQuestionReport from "./FreeTextQuestionReport";
 import CheckboxQuestionReport from "./CheckboxQuestionReport";
 import MultichoiceQuestionReport from "./MultichoiceQuestionReport";
 import ScaleQuestionReport from "./ScaleQuestionReport";
+import DateSelectionReport from "./DateSelectionReport";
+import { FileQuestionReport } from './FileQuestionReport';
 
 const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
   {
@@ -44,8 +47,10 @@ const ReportPage: React.FC<ConnectedReportPageProps & { match }> = (
         return <RadioQuestionReport data={question.data as IQuestionReportRadioData}/>;
       case QuestionType.checkbox:
         return <CheckboxQuestionReport data={question.data as IQuestionReportCheckboxData}/>;
-      // case QuestionType.date:
-      // case QuestionType.fileUpload:
+      case QuestionType.date:
+        return <DateSelectionReport data={question.data as IQuestionReportDateData}/>; 
+      case QuestionType.fileUpload:
+        return <FileQuestionReport data={question.data as IQuestionReportFileData}/>; 
       case QuestionType.freeText:
         return <FreeTextQuestionReport data={question.data as IQuestionReportFreeTextData}/>;
       // case QuestionType.multichoice:
