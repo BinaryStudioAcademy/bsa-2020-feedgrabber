@@ -4,7 +4,6 @@ import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
 import {
-    addNewQuestionToQuestionnaireRoutine,
     loadQuestionByIdRoutine,
     saveQuestionRoutine
 } from "../../sagas/questions/routines";
@@ -25,8 +24,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         questionnaireQuesitons,
         categories,
         match,
-        isPreview,
-        saveAndAddQuestion
+        isPreview
     }) => {
     const history = useHistory();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
@@ -76,13 +74,9 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
             };
 
             if (questionnaireId) {
-                saveAndAddQuestion({
+                saveQuestion({
                     ...questionCopy,
                     questionnaireId
-                });
-            } else {
-                saveQuestion({
-                    ...questionCopy
                 });
             }
             isPreview ? isPreview.close() : history.goBack();
@@ -132,8 +126,7 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine,
-    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
+    loadCategories: loadCategoriesRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
