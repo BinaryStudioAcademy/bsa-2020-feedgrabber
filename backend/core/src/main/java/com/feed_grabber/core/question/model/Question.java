@@ -53,8 +53,4 @@ public class Question {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
-
-    @Column(name = "is_editing_enabled", nullable = false)
-    @ColumnDefault("true")
-    private boolean isEditingEnabled = true;
 }

@@ -43,8 +43,7 @@ interface IQuestionnairePreviewProps {
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   questions,
   qnId,
-  indexQuestions,
-  isEditingEnabled
+  indexQuestions
 }) => {
   const [questionCards, setQuestionCards] = useState<IQuestion[]>(questions);
 
