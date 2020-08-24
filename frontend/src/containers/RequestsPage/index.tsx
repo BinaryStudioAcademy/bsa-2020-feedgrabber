@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { IAppState } from "../../models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
-import { loadQuestionnaireRequestsRoutine } from "../../sagas/questionnaireReport/routines";
+import { loadQuestionnaireRequestsRoutine } from "../../sagas/report/routines";
 import UICard from "../../components/UI/UICard";
 import UIContent from "../../components/UI/UIContent";
 import UIPageTitle from "../../components/UI/UIPageTitle";

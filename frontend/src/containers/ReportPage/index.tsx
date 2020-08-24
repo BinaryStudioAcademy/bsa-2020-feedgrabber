@@ -1,10 +1,10 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import { IAppState } from 'models/IAppState';
 import {
-  loadQuestionnaireReportRoutine,
-  loadRespondentReportRoutine
-} from "../../sagas/questionnaireReport/routines";
+    loadQuestionnaireReportRoutine, loadReportRoutine,
+    loadRespondentReportRoutine
+} from "../../sagas/report/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -14,10 +14,8 @@ import UITab from "../../components/UI/UITab";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import { Tab, Segment, Header } from 'semantic-ui-react';
 import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
-import ReportSwitcher from "./ReportSwitcher";
 import { ScaleQuestionResponse } from "../../components/ResponseQuestion/ScaleQuestionResponse";
 import { CheckboxResponse } from "../../components/ResponseQuestion/CheckboxResponse";
-import { MultiChoiceResponse } from "../../components/ResponseQuestion/MultiChoiceResponse";
 import { DateSelectionResponse } from "../../components/ResponseQuestion/DateSelectionResponse";
 import { FreeTextResponse } from "../../components/ResponseQuestion/FreeTextResponse";
 import RadioButtonResponse from "../../components/ResponseQuestion/RadioButtonResponse";
@@ -25,7 +23,6 @@ import {
     IQuestionReport,
     IQuestionReportCheckboxData,
     IQuestionReportFreeTextData,
-    IQuestionReportMultichoiceData,
     IQuestionReportRadioData,
     IQuestionReportScaleData,
     IQuestionReportDateData, IQuestionReportFileData, IRespondentReport
@@ -53,14 +50,14 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
         loadReport(match.params.id);
     }, [loadReport, match.params.id]);
 
-  const panes = [
+    const panes = [
     {
       menuItem: 'General',
       render: () => (
         <Tab.Pane>
           <LoaderWrapper loading={isLoadingReport}>
             <UIColumn>
-              {report && (
+              {report.questions && (
                 <UICard>
                   <UICardBlock>
                     <h3>{report.questionnaireTitle}</h3>
@@ -117,7 +114,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-  loadReport: loadQuestionnaireReportRoutine,
+  loadReport: loadReportRoutine,
   loadUserReport: loadRespondentReportRoutine
 };
 

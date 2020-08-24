@@ -2,7 +2,7 @@ import {IQuestionnaireReport, IRequestShort, IRespondentReport} from "../../mode
 import {
     loadQuestionnaireRequestsRoutine,
     loadReportRoutine, loadRespondentReportRoutine
-} from "../../sagas/questionnaireReport/routines";
+} from "../../sagas/report/routines";
 
 export interface IQuestionnaireReportsState {
     current?: IQuestionnaireReport;

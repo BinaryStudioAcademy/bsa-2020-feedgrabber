@@ -7,7 +7,7 @@ import java.util.*
 @Component
 class Runner(val api: ReportApiHelper, val service: ReportService) : CommandLineRunner {
     override fun run(vararg args: String?) {
-//        val res = api.fetchReportData(UUID.fromString("e78c11bd-908a-4674-a6e6-aa3b8720db4e"))
+//        val res = api.fetchReportData(UUID.fromString("1ec7858e-ec0e-45e0-8d89-0217dbee3680"))
 //        println(res)
 //        val report = service.parseAndSaveReport(res)
 //        println(report)

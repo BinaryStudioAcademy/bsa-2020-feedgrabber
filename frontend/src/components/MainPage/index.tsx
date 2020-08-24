@@ -12,7 +12,7 @@ import LoaderWrapper from 'components/LoaderWrapper';
 import { history } from '../../helpers/history.helper';
 import { IQuestionnaireResponse } from 'models/forms/Response/types';
 import { IQuestionnaire, IRequest } from 'models/forms/Questionnaires/types';
-import { getResponseRoutine, addRequestIdToCurrentResponseRoutine } from 'sagas/questionnaireResponse/routines';
+import { getResponseRoutine, addRequestIdToCurrentResponseRoutine } from 'sagas/response/routines';
 import { IUserShort } from 'models/user/types';
 import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
 import styles from './styles.module.sass';
