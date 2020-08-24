@@ -13,12 +13,10 @@ import {
   addNewQuestionToQuestionnaireRoutine,
   copyQuestionInQuestionnaireRoutine,
   deleteFromQuestionnaireRoutine,
-  indexQuestionsRoutine, loadQuestionByIdRoutine
+  indexQuestionsRoutine
 } from "sagas/questions/routines";
 import UICard from "../../components/UI/UICard";
-import UIColumn from "../../components/UI/UIColumn";
 import UIContent from "../../components/UI/UIContent";
-
 
 const newQuestion: IQuestion = {
     type: QuestionType.freeText,
@@ -44,7 +42,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     useEffect(() => {
         loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire, match.params.id]);
+    }, [loadOneQuestionnaire]);
 
     const [addNew, setAddNew] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
@@ -52,7 +50,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     useEffect(() => {
       setQuestion(currentQuestion);
-    }, [currentQuestion]);
+    });
 
     const handleOnValueChange = (state: IComponentState<IQuestion>) => {
         setQuestion(state.value);
@@ -125,10 +123,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     );
 };
 
-interface IRouterProps {
-    id: string;
-}
-    
 const mapStateToProps = (rootState: IAppState) => ({
     currentQuestion: rootState.questions.current,
     questionnaire: rootState.questionnaires.current.get,

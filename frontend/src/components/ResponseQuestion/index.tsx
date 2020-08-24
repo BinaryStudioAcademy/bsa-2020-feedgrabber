@@ -11,11 +11,13 @@ import ReactDOM from "react-dom";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
   ({ question, answerHandler, loadCurrent, nowModifying }) => {
-    const { name, categoryTitle, type, id } = question;
+    const { name, categoryTitle, type, id, isReused } = question;
     const [editor, setEditor] = useState(false);
     const detailsPage = useRef(null);
     const handleSegmentClick = () => {
-      setEditor(!editor);
+      if(!isReused) {
+          setEditor(!editor);
+      }
       const { top, right } = (ReactDOM.findDOMNode(detailsPage.current) as Element).getBoundingClientRect();
       loadCurrent({ id: question.id, top: top, right });
     };

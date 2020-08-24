@@ -1,18 +1,7 @@
-import ResponseQuestion from "components/ResponseQuestion";
-import { IAppState } from "models/IAppState";
 import React, { FC, useState, useCallback, useEffect } from "react";
-import { connect, ConnectedProps } from "react-redux";
 import { Header, Button, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import SelectQuestionsFromExisting from "components/SelectQuestionsFromExisting";
-import QuestionD from "components/QuestionDetails";
 import { IQuestion } from "models/forms/Questions/IQuesion";
-import { IComponentState } from "../ComponentsQuestions/IQuestionInputContract";
-import { 
-  addNewQuestionToQuestionnaireRoutine,
-  loadQuestionnaireQuestionsRoutine,
-  indexQuestionsRoutine 
-} from "sagas/questions/routines";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
 
 const newQuestion: IQuestion = {
@@ -99,20 +88,3 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
 };
 
 export default QuestionnairePreview;
-
-// const mapState = (state: IAppState) => ({
-//   qnId: state.questionnaires.current.get.id,
-//   questions: state.questionnaires.current.questions
-// });
-//
-// const mapDispatch = {
-//   saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine,
-//   setQuestions: loadQuestionnaireQuestionsRoutine.success,
-//   indexQuestions: indexQuestionsRoutine
-// };
-//
-// const connector = connect(mapState, mapDispatch);
-//
-// type QuestionnairePreviewProps = ConnectedProps<typeof connector>;
-
-// export default connector(QuestionnairePreview);

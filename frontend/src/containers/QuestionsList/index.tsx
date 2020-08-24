@@ -6,6 +6,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
 import UIButton from 'components/UI/UIButton';
+import { toastr } from 'react-redux-toastr';
 
 const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions}) => {
     const history = useHistory();
@@ -15,7 +16,11 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
     }, [loadQuestions]);
 
     const handleClick = id => {
-        history.push(`question/${id}`);
+        if (questions.map(question => question.id === id &&
+            question.isReused === false)) {
+            history.push(`question/${id}`);
+        }
+        toastr.error("You can not modify this question. It is used in questionnaires or has responses.");
     };
 
     return (

@@ -47,6 +47,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
         return true;
     });
 
+    // TODO: add popup to this button
     return (
         <Modal
             open={open}
@@ -54,10 +55,10 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
             className={styles.questionModal}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            // trigger={button}
-            trigger={<Popup content='Add from existing questions'
-                             trigger={<Button icon="external"/>}
-                     position='right center' />}
+            trigger={button}
+            // trigger={<Popup content='Add from existing questions'
+            //                  trigger={<Button icon="external"/>}
+            //          position='right center' />}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>
