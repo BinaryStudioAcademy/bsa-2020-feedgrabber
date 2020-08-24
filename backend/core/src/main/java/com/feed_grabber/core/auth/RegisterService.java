@@ -2,6 +2,7 @@ package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
+import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.user.UserService;
@@ -31,7 +32,7 @@ public class RegisterService {
         }
     }
 
-    public UUID registerUserByInvitation(UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
+    public UUID registerUserByInvitation(UserRegisterInvitationDTO dto) throws InvitationNotFoundException, InvitationExpiredException {
         dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         return userService.createInCompany(dto);
     }

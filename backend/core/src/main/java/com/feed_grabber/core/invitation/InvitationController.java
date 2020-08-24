@@ -4,11 +4,17 @@ import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.invitation.dto.InvitationDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateRequestDto;
+import com.feed_grabber.core.invitation.dto.InvitationGenerateResponseDto;
+import com.feed_grabber.core.invitation.dto.InvitationSignUpDto;
+import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.invitation.exceptions.InvitationUserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,33 +29,42 @@ public class InvitationController {
     }
 
     @GetMapping("/sign-up/{id}")
-    public AppResponse<InvitationDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
+    public AppResponse<InvitationSignUpDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
         return new AppResponse<>(invitationService.getById(id));
     }
 
     @GetMapping
-    public AppResponse<UUID> getByCompanyId() {
+    public AppResponse<List<InvitationDto>> getByCompanyId() {
         assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(invitationService.getByCompanyId(companyId));
     }
 
     @PostMapping
-    public AppResponse<UUID> generate() throws CompanyNotFoundException {
+    public AppResponse<InvitationGenerateResponseDto> generate(@RequestBody InvitationGenerateRequestDto dto)
+            throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
         assertCompanyOwner();
-        var companyId = TokenService.getCompanyId();
-        return new AppResponse<>(invitationService.generate(companyId));
+        dto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse<>(invitationService.generate(dto));
+    }
+
+    @PostMapping("/resend")
+    public AppResponse<InvitationGenerateResponseDto> reGenerate(@RequestBody InvitationGenerateRequestDto dto)
+            throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
+        assertCompanyOwner();
+        dto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse<>(invitationService.reGenerate(dto));
     }
 
     @DeleteMapping
-    public void delete() {
+    public void delete(@RequestParam String email) {
         assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
-        invitationService.deleteByCompanyId(companyId);
+        invitationService.deleteByCompanyIdAndEmail(companyId, email);
     }
 
     private void assertCompanyOwner() {
-        if (!TokenService.getRoleName().equals("company_owner")){
+        if (!TokenService.getRoleName().equals("company_owner")) {
             throw new JwtTokenException("Only company owner could manage invitations");
         }
     }

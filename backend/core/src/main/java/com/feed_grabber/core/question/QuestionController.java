@@ -3,7 +3,6 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.question.dto.*;
@@ -12,8 +11,9 @@ import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.questionnaire.dto.QuestionDeleteDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,24 +113,31 @@ public class QuestionController {
     }
 
     @ApiOperation(value = "Delete the question by id and questionnaireId")
-    @DeleteMapping("/questionnaires/{qId}")
+    @DeleteMapping("/questionnaires/{questionId}/{questionnaireId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteOneByQuestionnaireAndID(@ApiParam(
-            value = "IDs to delete one question from questionnaire", required = true) @RequestBody UUID id, @PathVariable UUID qId){
-        questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
+    public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(
+            @PathVariable UUID questionId,
+            @PathVariable UUID questionnaireId
+    ){
+
+        questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
+
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(questionnaireId));
     }
 
     @ApiOperation(value = "Add new question to questionnaire")
-    @PostMapping("/questionnaires/{id}")
+    @PostMapping("/questionnaires/{qId}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(@PathVariable UUID id)
+    public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(
+            @RequestBody UUID id,
+            @PathVariable UUID qId)
             throws QuestionnaireNotFoundException, CompanyNotFoundException {
         questionService.create(QuestionCreateDto
                 .builder()
                 .name("New question")
-                .type(QuestionType.FREE_TEXT)
+                .type(QuestionType.freeText)
                 .questionnaireId(Optional.of(id))
-                .categoryTitle("sport")
+                .categoryTitle("Sport")
                 .build());
         return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }

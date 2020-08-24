@@ -5,7 +5,7 @@ import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IComponentState} from "../ComponentsQuestions/IQuestionInputContract";
 import CheckboxQuestion from "../ComponentsQuestions/CheckboxQuestion";
-import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
+// import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
 import DateSelectionQuestionUI from "../ComponentsQuestions/DateSelectionQuestionUI";
 import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
@@ -19,6 +19,9 @@ interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
     onValueChange(state: IComponentState<IQuestion>): void;
+    onSave?(question: IQuestion);
+    onDelete?(question: IQuestion);
+    onValueChange?(state: IComponentState<IQuestion>): void;
     onCopy?(): void;
 }
 
@@ -26,6 +29,8 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                                  currentQuestion,
                                                  categories,
                                                  onValueChange,
+                                                 onSave,
+                                                 onDelete,
                                                  onCopy
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
@@ -35,33 +40,39 @@ const QuestionD: React.FC<IQuestionProps> = ({
     const [addedCategories, setNewCategories] = useState([]);
 
     useEffect(() => {
-        onValueChange({value: question, isCompleted:
-                categoryIsValid &&
-                nameIsValid &&
-                innerFormIsValid &&
-                !!question.type
-        });
+        if(onValueChange) {
+            onValueChange({
+                value: question, isCompleted:
+                    categoryIsValid &&
+                    nameIsValid &&
+                    innerFormIsValid &&
+                    !!question.type
+            });
+        }
     }, [nameIsValid, categoryIsValid, onValueChange, question, innerFormIsValid]);
 
     const handleQuestionDetailsUpdate = (state: IComponentState<{}>) => {
         const {isCompleted, value} = state;
         setInnerFormIsValid(isCompleted);
         setQuestion({...question, details: value as any});
-        onValueChange({value: question, isCompleted:
+        onValueChange({
+            value: question, isCompleted:
                 nameIsValid &&
                 categoryIsValid &&
-                innerFormIsValid&&
+                innerFormIsValid &&
                 !!question.type
         });
     };
 
     const handleQuestionUpdate = (question: IQuestion) => {
         setQuestion(question);
-        onValueChange({value: question, isCompleted:
+        onValueChange({
+            value: question, isCompleted:
                 nameIsValid &&
                 categoryIsValid &&
                 innerFormIsValid &&
-                !!question.type});
+                !!question.type
+        });
     };
 
     const renderForm = () => {
@@ -79,13 +90,13 @@ const QuestionD: React.FC<IQuestionProps> = ({
                         value={question.details}
                     />
                 );
-            case QuestionType.multichoice:
-                return (
-                    <MultichoiseQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
+            // case QuestionType.multichoice:
+            //     return (
+            //         <MultichoiseQuestion
+            //             onValueChange={handleQuestionDetailsUpdate}
+            //             value={question.details}
+            //         />
+            //     );
             case QuestionType.scale:
                 return (
                     <ScaleQuestion
@@ -99,9 +110,9 @@ const QuestionD: React.FC<IQuestionProps> = ({
                 return <DateSelectionQuestionUI/>;
             case QuestionType.fileUpload:
                 return <FileUploadQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />;
+                    onValueChange={handleQuestionDetailsUpdate}
+                    value={question.details}
+                />;
             default:
                 return <span className={styles.question_default}>You should choose the type of the question :)</span>;
         }
@@ -121,6 +132,18 @@ const QuestionD: React.FC<IQuestionProps> = ({
                 text: cat
             };
         });
+    };
+
+    const handleSave = () => {
+        const isValid = categoryIsValid && nameIsValid && innerFormIsValid && !!question.type;
+        if (!isValid) {
+            return;
+        }
+        onSave(question);
+    };
+
+    const handleDelete = () => {
+        onDelete(question);
     };
 
     return (
@@ -153,7 +176,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                     }}
                                     onBlur={formik.handleBlur}
                                 />
-                                <QuestionDetailsOptions question={question} setQuestionType={setQuestionType} />
+                                <QuestionDetailsOptions question={question} setQuestionType={setQuestionType}/>
                             </div>
                             <Form.Dropdown
                                 placeholder='Choose category or type custom'
@@ -183,15 +206,22 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                     [...addedCategories, ...categories])}
                                 onBlur={formik.handleBlur}
                             />{' '}
-                            <Divider />
+                            <Divider/>
                             <div className={styles.question_form_answers}>
                                 {renderForm()}
                             </div>
-                            <Divider />
+                            <Divider/>
                             <div className={styles.actions}>
-                                <span className={styles.icon}>
-                                    <Icon name="plus square outline" size="large" />
-                                </span>
+                                { onSave &&
+                                    <span className={styles.icon}>
+                                        <Icon name="plus square outline" size="large" onClick={handleSave}/>
+                                    </span>
+                                }
+                                { onDelete &&
+                                    <span className={styles.icon}>
+                                        <Icon name="trash alternate outline" size="large" onClick={handleDelete}/>
+                                    </span>
+                                }
                                 {currentQuestion?.id &&
                                 <Popup content={"Copy"}
                                        trigger={(
@@ -201,23 +231,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                        )}
                                 />
                                 }
-                                <span className={styles.icon}>
-                                    <Icon name="trash alternate outline" size="large" />
-                                </span>
-                                <Radio toggle />
-                                <Dropdown
-                                    className={styles.icon}
-                                    text=" "
-                                    icon="ellipsis vertical"
-                                    options={[
-                                        {
-                                            text: "option1"
-                                        },
-                                        {
-                                            text: "option2"
-                                        }
-                                    ]}
-                                />
                             </div>
                         </Segment>
                     </Form>

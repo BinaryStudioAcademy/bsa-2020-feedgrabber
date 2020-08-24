@@ -1,9 +1,9 @@
 package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
-import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.response.AppResponse;
+import com.feed_grabber.core.apiContract.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
@@ -42,7 +42,7 @@ public class AuthController {
     @ApiOperation(value = "Register new user by invitation", notes = "Provide an email, username, invitationId and password to register")
     @PostMapping("/invitation")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException {
+    public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException, InvitationExpiredException {
         var pass = dto.getPassword();
         var companyId = registerService.registerUserByInvitation(dto);
 
