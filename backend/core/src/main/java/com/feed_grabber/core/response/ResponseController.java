@@ -4,6 +4,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.dto.ResponseCreateDto;
 import com.feed_grabber.core.response.dto.ResponseDto;
+import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
 import com.feed_grabber.core.response.dto.ResponseUpdateDto;
 import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
@@ -19,11 +20,7 @@ import java.util.UUID;
 public class ResponseController {
     @Autowired
     ResponseService service;
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void saveResponse(@RequestBody ResponseCreateDto dto) { service.save(dto); }
-
+    
     @GetMapping("/request/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<ResponseDto> getOneByRequestAndUser(@PathVariable UUID id) throws ResponseNotFoundException {
@@ -36,9 +33,11 @@ public class ResponseController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws UserNotFoundException, ResponseNotFoundException {
+    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws ResponseNotFoundException, DeadlineExpiredException {
         return new AppResponse<>(
                 service.update(dto).orElseThrow(ResponseNotFoundException::new)
         );
     }
+
+
 }

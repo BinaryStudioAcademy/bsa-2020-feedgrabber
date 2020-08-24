@@ -1,58 +1,96 @@
-import React, {useEffect} from 'react';
-import {connect} from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {connect, ConnectedProps} from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
-import QuestionnaireOrderView from "../../components/QuestionnaireOrderDraggableView";
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
-import {IQuestionnaire} from 'models/forms/Questionnaires/types';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
+import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
+import QuestionD from "../../components/QuestionDetails";
+import {
+  addNewQuestionToQuestionnaireRoutine,
+  copyQuestionInQuestionnaireRoutine,
+  deleteFromQuestionnaireRoutine,
+  indexQuestionsRoutine, loadQuestionByIdRoutine
+} from "sagas/questions/routines";
+import UICard from "../../components/UI/UICard";
+import UIColumn from "../../components/UI/UIColumn";
+import UIContent from "../../components/UI/UIContent";
 
-const questions = [
-    {
-        id: "1",
-        name: "first",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    },
-    {
-        id: "2",
-        name: "second",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    },
-    {
-        id: "3",
-        name: "third",
-        type: QuestionType.multichoice,
-        categoryTitle: "sdf",
-        details: {answerOptions: []}
-    }
-] as IQuestion[];
 
-interface IExpandedQuestionnaireProps {
-    match: any;
-    isLoading: boolean;
-    questionnaire: IQuestionnaire;
+const newQuestion: IQuestion = {
+    type: QuestionType.freeText,
+    categoryTitle: "",
+    name: "",
+    answer: "",
+    id: "",
+    isReused: false,
+    details: {}
+};
 
-    loadOneQuestionnaire(id: string): void;
-}
-
-const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
+const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
         match,
         isLoading,
         questionnaire,
-        loadOneQuestionnaire
+        loadOneQuestionnaire,
+        saveAndAddQuestion,
+        deleteQuestion,
+        currentQuestion,
+        questions
     }
 ) => {
     useEffect(() => {
         loadOneQuestionnaire(match.params.id);
     }, [loadOneQuestionnaire, match.params.id]);
+
+    const [addNew, setAddNew] = useState(false);
+    const [question, setQuestion] = useState<IQuestion>(currentQuestion);
+    const [isValid, setIsValid] = useState(false);
+
+    useEffect(() => {
+      setQuestion(currentQuestion);
+    }, [currentQuestion]);
+
+    const handleOnValueChange = (state: IComponentState<IQuestion>) => {
+        setQuestion(state.value);
+        setIsValid(state.isCompleted);
+    };
+
+    const handleSaveQuestion = (question: IQuestion) => {
+        if (!isValid) {
+            return;
+        }
+        saveAndAddQuestion({...question, questionnaireId: match.params.id});
+        setAddNew(false);
+        setQuestion(question);
+    };
+
+    const handleDeleteQuestion = () => {
+        if (!isValid) {
+            return;
+        }
+        deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
+    };
+
+    const addNewQuestion = () => {
+        setQuestion(newQuestion);
+        setAddNew(!addNew);
+    };
+
+    const copyQuestion = () => {
+      if(!question.id) {
+        return;
+      }
+      saveAndAddQuestion({
+        ...question,
+        id: "",
+        name: `${question.name} (copy)`,
+        questionnaireId: match.params.id
+      });
+    };
 
     return (
         <LoaderWrapper loading={isLoading}>
@@ -60,25 +98,53 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
                 <div className={styles.formDetails}>
                     <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
-                    <div className={styles.formPreview}>
-                    <QuestionnairePreview/>
-                    <QuestionMenu/>
-                    </div>
+                    <UIContent>
+                        <div className={styles.questions_container}>
+                            {addNew && <UICard><QuestionD onValueChange={handleOnValueChange}
+                                                  categories={[]}
+                                                  currentQuestion={question}
+                                                  onSave={handleSaveQuestion}
+                                                  onDelete={() => setAddNew(false)}/>
+                                        </UICard>}
+                            <QuestionnairePreview
+                                indexQuestions={indexQuestionsRoutine}
+                                qnId={match.params.id}
+                                questions={questions ?? []}
+                            />
+                        </div>
+                        <QuestionMenu
+                            addQuestion={addNewQuestion}
+                            copyQuestion={copyQuestion}
+                            currentQuestion={currentQuestion}
+                            onDelete={handleDeleteQuestion}
+                        />
+                    </UIContent>
                 </div>
             )}
         </LoaderWrapper>
     );
 };
 
+interface IRouterProps {
+    id: string;
+}
+    
 const mapStateToProps = (rootState: IAppState) => ({
-    questionnaire: rootState.questionnaires.current.get
+    currentQuestion: rootState.questions.current,
+    questionnaire: rootState.questionnaires.current.get,
+    isLoading: rootState.questionnaires.current.isLoading,
+    questions: rootState.questionnaires.current.questions
 });
 
 const mapDispatchToProps = {
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
+    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine,
+    deleteQuestion: deleteFromQuestionnaireRoutine,
+    copyQuestion: copyQuestionInQuestionnaireRoutine
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ExpandedQuestionnaire);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ExpandedQuestionnaireProps = ConnectedProps<typeof connector>;
+
+export default connector(ExpandedQuestionnaire);

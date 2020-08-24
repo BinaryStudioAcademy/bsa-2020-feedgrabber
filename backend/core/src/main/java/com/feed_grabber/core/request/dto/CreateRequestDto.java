@@ -21,7 +21,7 @@ public class CreateRequestDto {
 
     private UUID targetUserId;
 
-    private Boolean includeTargetUser;
+    private Boolean includeTargetUser = false;
 
     private Date expirationDate;
 

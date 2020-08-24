@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { IQuestionResponse } from '../../../models/IQuestionResponse';
 import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from '../FreeTextResponse/styles.module.sass';
-import { IDateQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IDateQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 
 export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ question, answerHandler }) => {
   const [error, setError] = useState('');
@@ -14,10 +14,12 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion>> = ({ qu
       return;
     }
     setError('');
-    answerHandler?.(question.id, !error ? value : null);
+    answerHandler?.(!error ?
+      newDate
+      : null);
   };
 
   return (
-    <Input type='date' onChange={handleChange} className={styles.input} error={!!error}/>
+    <Input type='date' onChange={handleChange} className={styles.input} error={!!error} />
   );
 };

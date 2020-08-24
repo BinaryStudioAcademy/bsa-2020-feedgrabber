@@ -11,11 +11,11 @@ export const questionTypeOptions = [
         text: "CheckBoxes",
         value: QuestionType.checkbox
     },
-    {
-        key: "Multichoice",
-        text: "Multichoice",
-        value: QuestionType.multichoice
-    },
+    // {
+    //     key: "Multichoice",
+    //     text: "Multichoice",
+    //     value: QuestionType.multichoice
+    // },
     {
         key: "TextArea",
         text: "TextArea",

@@ -91,7 +91,6 @@ public class QuestionService {
 
             var bindRow = QuestionnaireQuestion.getFromEntities(savedQuestion, questionnaire, dto.getIndex());
             this.qqRepo.save(bindRow);
-
         }
 
         return savedQuestion;
@@ -204,7 +203,7 @@ public class QuestionService {
         qqRepo.saveAll(binds);
     }
 
-    public void deleteOneByQuestionnaireIdAndQuestionId(UUID id, UUID qId) {
-        quesRep.deleteByQuestionnaireId(qId, id);
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) {
+        qqRepo.deleteByQuestionIdAndQuestionnaireId(questionId, qId);
     }
 }
