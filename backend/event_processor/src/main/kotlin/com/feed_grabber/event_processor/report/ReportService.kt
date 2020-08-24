@@ -45,7 +45,13 @@ class ReportService(val repository: ReportRepository) {
     fun mapAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): QuestionReportData? {
         if (dbAnswers == null) return null
         return when (type) {
-            freeText, scale, date -> QuestionWithValues((dbAnswers as QAWithValue).values.values.toList())
+            freeText -> QuestionWithValues((dbAnswers as QAWithValue).values.values.toList())
+            scale, date -> {
+                val (options) = (dbAnswers as QAWithOptionNoOther)
+                val list = options.values.groupingBy { it }.eachCount()
+                        .toList().map { OptionInfo(it.first, it.second) }
+                QuestionWithOptions(list)
+            }
             fileUpload -> QuestionWithValues((dbAnswers as QAWithValues).values.values.flatten())
             checkbox -> {
                 val (options, other) = (dbAnswers as QAWithOptions)
@@ -67,8 +73,9 @@ class ReportService(val repository: ReportRepository) {
     fun countAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): Int {
         if (dbAnswers == null) return 0
         return when (type) {
-            freeText, scale, date -> (dbAnswers as QAWithValue).values.size
-            fileUpload -> (dbAnswers as QAWithValues).values.size
+            freeText -> (dbAnswers as QAWithValue).values.size
+            scale, date -> (dbAnswers as QAWithOptionNoOther).options.size
+            fileUpload -> (dbAnswers as QAWithValues).values.values.flatten().size
             checkbox -> {
                 val (options, other) = (dbAnswers as QAWithOptions)
                 options.size + other.values.flatten().size
@@ -111,15 +118,15 @@ class ReportService(val repository: ReportRepository) {
                 }
             }
             is DateValue -> {
-                QAWithValue().apply {
+                QAWithOptionNoOther().apply {
                     for (a in answers as List<Pair<DateValue, UUID>>)
-                        values[a.second] = a.first.date.toString()
+                        options[a.second] = a.first.date.toString()
                 }
             }
             is ScaleValue -> {
-                QAWithValue().apply {
+                QAWithOptionNoOther().apply {
                     for (a in answers as List<Pair<ScaleValue, UUID>>)
-                        values[a.second] = a.first.number.toString()
+                        options[a.second] = a.first.number.toString()
                 }
             }
             is FileValue -> {
