@@ -4,12 +4,16 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.rabbit.entityExample.MailType;
 import com.feed_grabber.core.request.RequestRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class DeadlineService {
+
+    @Value("${client.host}")
+    private String clientHost;
 
     private final RequestRepository requestRepository;
     private final Sender emailSender;
@@ -28,7 +32,7 @@ public class DeadlineService {
             emailSender.sendToProcessor(
                     "Hi, "
                             + response.getUser().getUsername()
-                            + " it`s almost deadline for http://feedgrabber.com.localhost:3000/response/"
+                            + " it`s almost deadline for " + clientHost + "/response/"
                             + response.getRequest().getQuestionnaire().getId(),
                     response.getUser().getEmail(),
                     MailType.NOTIFY.toString());
@@ -43,7 +47,7 @@ public class DeadlineService {
                         emailSender.sendToProcessor(
                                 "Hi, "
                                         + response.getUser().getUsername()
-                                        + " it`s almost deadline for http://feedgrabber.com.localhost:3000/response/"
+                                        + " it`s almost deadline for " + clientHost + "/response/"
                                         + response.getRequest().getQuestionnaire().getId(),
                                 response.getUser().getEmail(),
                                 MailType.NOTIFY.toString())
