@@ -87,14 +87,14 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
         return when (type) {
             freeText -> (dbAnswers as QAWithValue).values.size
             scale, date -> (dbAnswers as QAWithOptionNoOther).options.size
-            fileUpload -> (dbAnswers as QAWithValues).values.values.flatten().size
+            fileUpload -> (dbAnswers as QAWithValues).values.size
             checkbox -> {
                 val (options, other) = (dbAnswers as QAWithOptions)
-                options.size + other.values.flatten().size
+                options.keys.plus(other.values.flatten()).size
             }
             radio -> {
                 val (options, other) = (dbAnswers as QAWithOption)
-                options.size + other.values.flatten().size
+                options.keys.plus(other.values.flatten()).size
             }
         }
     }
