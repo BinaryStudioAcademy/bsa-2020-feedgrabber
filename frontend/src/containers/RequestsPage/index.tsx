@@ -5,9 +5,6 @@ import { loadQuestionnaireRequestsRoutine } from "../../sagas/report/routines";
 import UICard from "../../components/UI/UICard";
 import UIContent from "../../components/UI/UIContent";
 import UIPageTitle from "../../components/UI/UIPageTitle";
-import UICardBlock from "../../components/UI/UICardBlock";
-import { history } from "../../helpers/history.helper";
-import { toastr } from 'react-redux-toastr';
 import { RequestItem } from "./RequestItem";
 import { Tab } from "semantic-ui-react";
 import { IRequestShort } from "models/report/IReport";
@@ -15,37 +12,28 @@ import { IRequestShort } from "models/report/IReport";
 const RequestsPage: FC<RequestPageProps & { match }> = (
     { loadRequests, match, requests }) => {
 
-    const [divided, setDivided] = useState(
-        {
-            closed: [] as IRequestShort[],
-            open: [] as IRequestShort[]
-        });
+    const [open, setOpen] = useState([] as IRequestShort[]);
+    const [closed, setClosed] = useState([] as IRequestShort[]);
 
     useEffect(() => {
         loadRequests(match.params.id);
     }, [loadRequests, match.params.id]);
 
     useEffect(() => {
-        setDivided({ closed: [], open: [] });
-        requests.forEach(r => {
-            if (!r.isClosed) {
-                setDivided({ open: [...divided.open, r], closed: divided.closed });
-            } else {
-                setDivided({ open: divided.open, closed: [...divided.closed, r] });
-            }
-        });
+        setOpen(requests.filter(r => !r.isClosed));
+        setClosed(requests.filter(r => r.isClosed));
     }, [requests]);
 
     const panes = [
         {
             menuItem: 'Pending requests',
-            render: () => <Tab.Pane attached={false}>{divided.open.map(r => (
+            render: () => <Tab.Pane attached={false}>{open.map(r => (
                 <RequestItem request={r} />
             ))}</Tab.Pane>
         },
         {
             menuItem: 'Expired requests',
-            render: () => <Tab.Pane attached={false}>{divided.closed.map(r => (
+            render: () => <Tab.Pane attached={false}>{closed.map(r => (
                 <RequestItem request={r} />
             ))}</Tab.Pane>
         }
