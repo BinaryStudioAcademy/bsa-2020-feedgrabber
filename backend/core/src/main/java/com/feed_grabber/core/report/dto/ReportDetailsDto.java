@@ -10,15 +10,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportDetailsDto {
-    QuestionnaireDetailsDto questionnaire;
-    UserDetailsReportDTO targetUser;
-    UserDetailsReportDTO requestMaker;
-    List<ResponseDetailsDto> responses;
+    private UUID requestId;
+    private QuestionnaireDetailsDto questionnaire;
+    private UserDetailsReportDTO targetUser;
+    private UserDetailsReportDTO requestMaker;
+    private List<ResponseDetailsDto> responses;
     private LocalDateTime requestCreationDate;
     private LocalDateTime requestExpirationDate;
 }

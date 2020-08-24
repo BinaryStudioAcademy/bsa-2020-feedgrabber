@@ -1,8 +1,8 @@
-import {all, put, takeEvery} from 'redux-saga/effects';
-import {toastr} from 'react-redux-toastr';
-import {loadQuestionnaireReportRoutine} from "./routines";
-import {IQuestionnaireReport} from "../../models/report/IReport";
-import {QuestionType} from "../../models/forms/Questions/IQuesion";
+import { all, put, takeEvery } from 'redux-saga/effects';
+import { toastr } from 'react-redux-toastr';
+import { loadQuestionnaireReportRoutine } from "./routines";
+import { IQuestionnaireReport } from "../../models/report/IReport";
+import { QuestionType } from "../../models/forms/Questions/IQuesion";
 
 const mockReport: IQuestionnaireReport = {
   questionnaireTitle: "Awesome Questionnaire",
@@ -26,7 +26,7 @@ const mockReport: IQuestionnaireReport = {
       type: QuestionType.radio,
       answers: 24,
       data: {
-        options: [{title: "First Option", amount: 8}, {title: "Other Option", amount: 16}]
+        options: [{ title: "First Option", amount: 8 }, { title: "Other Option", amount: 16 }]
       }
     },
     {
@@ -36,11 +36,11 @@ const mockReport: IQuestionnaireReport = {
       answers: 26,
       data: {
         options: [
-          {title: "1", amount: 3},
-          {title: "2", amount: 2},
-          {title: "3", amount: 6},
-          {title: "4", amount: 5},
-          {title: "5", amount: 10}
+          { title: "1", amount: 3 },
+          { title: "2", amount: 2 },
+          { title: "3", amount: 6 },
+          { title: "4", amount: 5 },
+          { title: "5", amount: 10 }
         ]
       }
     },
@@ -94,7 +94,35 @@ const mockReport: IQuestionnaireReport = {
       type: QuestionType.checkbox,
       answers: 15,
       data: {
-        options: [{title: "English", amount:8}, {title: "Ukrainian", amount:13}]
+        options: [{ title: "English", amount: 8 }, { title: "Ukrainian", amount: 13 }]
+      }
+    },
+    {
+      id: "66666",
+      title: "Data selection question",
+      type: QuestionType.date,
+      answers: 59,
+      data: {
+        options: [
+          { title: '2001-07-10', amount: 40 },
+          { title: '2002-11-21', amount: 15 },
+          { title: '2005-06-06', amount: 1 },
+          { title: '1971-10-27', amount: 2 },
+          { title: '1980-04-2', amount: 1 }
+        ]
+      }
+    },
+    {
+      id: "77777",
+      title: "File Upload question",
+      type: QuestionType.fileUpload,
+      answers: 17,
+      data: {
+        options: [
+          { type: "tar", amount: 8, sizes: [100, 1000, 3456] },
+          { type: "exe", amount: 11, sizes: [123, 10, 1212] },
+          { type: "deb", amount: 27, sizes: [8, 111, 128] }
+        ]
       }
     }
   ]

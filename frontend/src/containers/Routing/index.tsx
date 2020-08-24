@@ -26,6 +26,7 @@ import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportsPage from "../ReportPage";
+import InvitationLinkPage from "../InvitationLinkPage";
 
 export interface IRoutingProps {
     isLoading: boolean;
@@ -76,6 +77,7 @@ const Routing: FC<IRoutingProps> = ({isLoading, user, getUser}) => {
           <PrivateRoute exact path="/questions" component={QuestionsList} />
           <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
           <PrivateRoute exact path="/employees" component={UserList} />
+          <PrivateRoute exact path="/invitations" component={InvitationLinkPage} />
           <Route path="/*">
             <Redirect to="/layout"/>
           </Route>

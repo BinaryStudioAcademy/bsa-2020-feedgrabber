@@ -36,10 +36,11 @@ public class Request {
     @JoinColumn(name = "request_maker_id", nullable = false)
     private User requestMaker;
 
-    @OneToMany(mappedBy = "request", cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "request", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private List<Response> responses;
 
     @Column(name = "creation_date")
+    @CreationTimestamp
     private Date creationDate;
 
     @Column(name = "expiration_date")

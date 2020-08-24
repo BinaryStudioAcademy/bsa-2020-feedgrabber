@@ -3,13 +3,6 @@ import {Grid, Form, Header, Icon, Checkbox, Dropdown} from "semantic-ui-react";
 import './styles.sass';
 import {IAppState} from "../../../models/IAppState";
 import {connect} from "react-redux";
-import {IUserInfo} from "../../../models/user/types";
-import {
-  deleteInvitationRoutine,
-  generateInvitationRoutine,
-  loadInvitationRoutine
-} from "../../../sagas/invitation/routines";
-import InvitationLink from "../../InvitationLink";
 
 export interface IUserSettings {
   id: string;
@@ -19,13 +12,6 @@ export interface IUserSettings {
 
 interface IProfileSettingsProps {
   settings: IUserSettings;
-  user: IUserInfo;
-  invitationLoading?: boolean;
-  invitationLink?: string | null;
-
-  loadInvitation(): void;
-  generateInvitation(): void;
-  deleteInvitation(): void;
 }
 
 const languages = [
@@ -45,13 +31,7 @@ const languages = [
 
 const ProfileSettings: FunctionComponent<IProfileSettingsProps> = (
   {
-    settings,
-    user,
-    invitationLoading,
-    invitationLink,
-    loadInvitation,
-    generateInvitation,
-    deleteInvitation
+    settings
   }
 ) => {
   return (
@@ -78,16 +58,6 @@ const ProfileSettings: FunctionComponent<IProfileSettingsProps> = (
           </Header>
           <br/>
           <Checkbox checked={settings.enableNotifications} toggle label={"Turn on notifications"}/>
-          <br/>
-          {user?.role === "company_owner" && (
-            <InvitationLink
-              invitationLink={invitationLink}
-              invitationLoading={invitationLoading}
-              loadInvitation={loadInvitation}
-              generateInvitation={generateInvitation}
-              deleteInvitation={deleteInvitation}
-            />
-          )}
         </Form>
       </Grid.Column>
     </Grid>
@@ -103,15 +73,9 @@ ProfileSettings.defaultProps = {
 };
 
 const mapState = (state: IAppState) => ({
-  user: state.user.info,
-  invitationLoading: state.invitation.isLoading,
-  invitationLink: state.invitation.link
 });
 
 const mapDispatchToProps = {
-  loadInvitation: loadInvitationRoutine,
-  generateInvitation: generateInvitationRoutine,
-  deleteInvitation: deleteInvitationRoutine
 };
 
 export default connect(mapState, mapDispatchToProps)(ProfileSettings);

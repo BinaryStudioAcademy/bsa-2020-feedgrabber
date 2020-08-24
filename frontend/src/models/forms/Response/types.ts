@@ -1,45 +1,30 @@
-import { IQuestionnaire } from "../Questionnaires/types";
-import { QuestionType } from "../Questions/IQuesion";
+import {IQuestionnaire} from "../Questionnaires/types";
+import {QuestionType} from "../Questions/IQuesion";
 
 export interface IAnswer<T extends IAnswerBody> {
     questionId: string;
     type: QuestionType;
     body: T;
 }
+type FreeTextAnswer = string;
 
-type BodyBase = { questionId: string; type: QuestionType }
-
-type FreeTextAnswer = BodyBase & {
-    body: string;
+type CheckBoxAnswer = {
+    selected: string[];
+    other: string;
 }
 
-type CheckBoxAnswer = BodyBase & {
-    body: {
-        selected: string[];
-        other: string;
-    };
-}
-
-type RadioAnswer = BodyBase & {
-    body: {
-        selected: string;
-        other: string;
-    };
+type RadioAnswer = {
+    selected: string;
+    other: string;
 }
 
 // urls to imgur
-type FileAnswer = BodyBase & {
-    body: string[];
-}
+type FileAnswer = string[];
 
 // date in utc
-type DateAnswer = BodyBase & {
-    body: string;
-}
+type DateAnswer = string;
 
-type ScaleAnswer = BodyBase & {
-    body: number;
-}
+type ScaleAnswer = number;
 
 export type IAnswerBody = FreeTextAnswer | CheckBoxAnswer | FileAnswer | DateAnswer | ScaleAnswer | RadioAnswer;
 
@@ -47,6 +32,8 @@ export interface IQuestionnaireResponse {
     id?: string;
     requestId: string;
     questionnaire: IQuestionnaire;
+    expirationDate: Date;
+    alreadyAnswered: boolean;
 }
 
 export interface IQuestionnaireResponseState {
