@@ -8,7 +8,7 @@ export interface ITabProps {
 
 const UITab: React.FC<ITabProps> = ({ menuPosition, panes }) => {
   return (
-    <Tab menuPosition={menuPosition} panes={panes} />
+    <Tab menuPosition={menuPosition} panes={panes} style={{ "width": "100%" }}/>
   );
 };
 

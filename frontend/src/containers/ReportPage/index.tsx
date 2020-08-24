@@ -52,6 +52,8 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     loadUsersReports(match.params.id);
   }, [loadUsersReports, match.params.id]);
 
+    console.log(currentUsersReports);
+
     const panes = [
     {
       menuItem: 'General',
@@ -83,13 +85,12 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
       render: () => (
         <Tab.Pane>
           <LoaderWrapper loading={isLoadingUsersReports}>
-            {currentUsersReports &&
-              currentUsersReports.map(reportPreview => (
-                <UIColumn wide>
-                  {renderUserReportPreview(reportPreview, match.params.id)}
-                </UIColumn>
-              ))
-            }
+            <div className={styles.respondent_reports_container}>
+              {currentUsersReports &&
+                currentUsersReports.map(reportPreview =>
+                  renderUserReportPreview(reportPreview, match.params.id))
+              }
+            </div>
           </LoaderWrapper>
         </Tab.Pane>
       )
@@ -127,12 +128,11 @@ export default connector(ReportPage);
 
 function renderUserReportPreview(userReport: IRespondentReportPreview, id: string) {
   return (
-    <Link to={`/report/${id}/${userReport.id}`}>
-      <UICard>
-        <Header as="h4">{userReport.username}</Header>
+    <Link to={`/report/${id}/${userReport.id}`} className={styles.respondent_report_preview}>
+      <Segment>
+        <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
         <span>{userReport.answeredAt}</span>
-        <span>{userReport.team}</span>
-      </UICard>
+      </Segment>
     </Link>
   );
 }
