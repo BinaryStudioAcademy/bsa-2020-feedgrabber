@@ -15,7 +15,9 @@ function* saveRequest(action) {
 
 function* loadRequestedQuestionnaires() {
   try {
-    const result = yield call(apiClient.get, `/api/request/respondent`);
+    const result = yield call(apiClient.get, `/api/request/pending`);
+    result.data.data.forEach(req => req['expirationDate'] = req.expirationDate
+      ? new Date(req.expirationDate) : null);
     yield put(loadRequestedQuestionnairesRoutine.success(result.data.data));
   } catch (error) {
     yield put(loadRequestedQuestionnairesRoutine.failure());

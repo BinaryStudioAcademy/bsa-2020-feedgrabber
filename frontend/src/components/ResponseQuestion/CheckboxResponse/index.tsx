@@ -13,15 +13,18 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
         setBoxes(question.details.answerOptions.map(v => ({ checked: false, value: v })));
     }, [question]);
 
+    // eslint-disable-next-line
+    useEffect(() => { handleAnswer(); }, [boxes, other]);
+
     const handleAnswer = () => {
         const boxesChecked = boxes.filter(v => v.checked && v.value);
         answerHandler
-            ?.(boxesChecked.length
-                ? {
+            ?.(!boxesChecked.length || (other.checked && !other.value)
+                ? null
+                : {
                     selected: boxesChecked.map(v => v.value),
-                    other: other.value || null
+                    other: other.checked ? other.value : null
                 }
-                : null
             );
     };
 
@@ -36,7 +39,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                         const { checked, value } = boxes[i];
                         return replaceAtIndex(boxes, { checked: !checked, value }, i);
                     });
-                    handleAnswer();
+                    // handleAnswer();
                 }
                 } />
                 ;
@@ -53,7 +56,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion>> = ({ que
                             const { checked, value } = other;
                             return ({ checked: !checked, value });
                         });
-                        handleAnswer();
+                        // handleAnswer();
                     }
                     } />
                 <Input

@@ -12,6 +12,8 @@ import java.util.UUID;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, UUID> {
+    List<Request> findAllByResponsesUserId(UUID id);
+    
     @Query("select r from Request r " +
             "join Response responses on responses.request.id = r.id where " +
             "responses.user.id = :id and " +
