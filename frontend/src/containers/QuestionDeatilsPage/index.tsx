@@ -68,17 +68,11 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onCopy = () => {
         if (isQuestionDetailsValid) {
-            const questionCopy: IQuestion = {
+            saveQuestion({
                 ...question,
-                id: null
-            };
-
-            if (questionnaireId) {
-                saveQuestion({
-                    ...questionCopy,
-                    questionnaireId
-                });
-            }
+                id: null,
+                questionnaireId
+            });
             isPreview ? isPreview.close() : history.goBack();
         }
     };
