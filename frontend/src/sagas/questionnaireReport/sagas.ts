@@ -1,10 +1,19 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
-import {loadQuestionnaireRequestsRoutine, loadReportRoutine} from "./routines";
-import {IQuestionnaireReport, IRequestShort} from "../../models/report/IReport";
+import {loadQuestionnaireRequestsRoutine, loadReportRoutine, loadRespondentReportRoutine} from "./routines";
+import {IQuestionnaireReport, IRequestShort, IRespondentReport} from "../../models/report/IReport";
 import {IGeneric} from "../../models/IGeneric";
 import apiClient from "../../helpers/apiClient";
 /* eslint-disable */
+import {
+  ICheckboxQuestion,
+  IDateQuestion,
+  IQuestion,
+  IRadioQuestion,
+  IScaleQuestion,
+  ITextQuestion,
+  QuestionType
+} from "../../models/forms/Questions/IQuesion";
 
 // const mockReport: IQuestionnaireReport = {
 //     questionnaireTitle: "Awesome Questionnaire",
@@ -138,9 +147,132 @@ function* loadReportsBaseInfo(action) {
     }
 }
 
+function* loadRespondentReports(action: any) {
+  try {
+    // id of the questionnaire
+    const id: string = action.payload;
+    // here will be API call
+    const reportsMock = Array<IRespondentReport>(
+      {
+        respondent: 'pasha',
+        answers: Array<IQuestion>(
+          {
+            id: '1',
+            type: QuestionType.scale,
+            name: 'Rate your job:',
+            answer: 3,
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
+          } as IScaleQuestion,
+          {
+            id: '2',
+            type: QuestionType.date,
+            name: 'Birthday?',
+            answer: '2001-07-10',
+            categoryTitle: 'qkation',
+            isReused: false
+          } as IDateQuestion,
+          {
+            id: '9',
+            type: QuestionType.freeText,
+            name: 'Enter your specialization:',
+            answer: 'Java',
+            categoryTitle: 'qkation',
+            isReused: false
+          } as ITextQuestion,
+          {
+            id: '3',
+            type: QuestionType.radio,
+            name: 'some question?',
+            answer: {
+              selected: 'laptop',
+              other: ''
+            },
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: false, answerOptions: ['laptop', 'headphones', 'mouse'] }
+          } as IRadioQuestion,
+          {
+            id: '4',
+            type: QuestionType.scale,
+            name: 'Some name2',
+            answer: 6,
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
+          } as IScaleQuestion)
+      } as IRespondentReport,
+      {
+        respondent: 'king of pacha land',
+        answers: Array<IQuestion>(
+          {
+            id: '4',
+            type: QuestionType.scale,
+            name: 'Some name1',
+            answer: 5,
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { min: 1, minDescription: 'bad', max: 8, maxDescription: 'good' }
+          } as IScaleQuestion,
+          {
+            id: '5',
+            type: QuestionType.checkbox,
+            name: 'Select what you want to eat:',
+            answer: {
+              selected: ['apple', 'bread'],
+              other: ''
+            },
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: false, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
+          } as ICheckboxQuestion,
+          {
+            id: '7',
+            type: QuestionType.checkbox,
+            name: 'Select what you want to eat:',
+            answer: {
+              selected: ['apple', 'bread'],
+              other: 'pizza'
+            },
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: true, answerOptions: ['apple', 'bread', 'tomatoes', 'potatoes'] }
+          } as ICheckboxQuestion,
+          {
+            id: '0',
+            type: QuestionType.radio,
+            name: 'some question?',
+            answer: {
+              selected: '',
+              other: 'keyboard'
+            },
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { includeOther: true, answerOptions: ['laptop', 'headphones', 'mouse'] }
+          } as IRadioQuestion,
+          {
+            id: '6',
+            type: QuestionType.scale,
+            name: 'Some name3',
+            answer: 2,
+            categoryTitle: 'qkation',
+            isReused: false,
+            details: { min: 1, minDescription: 'madara', max: 8, maxDescription: 'hashirama' }
+          } as IScaleQuestion)
+      } as IRespondentReport
+    );
+    yield put(loadRespondentReportRoutine.success(reportsMock));
+  } catch (error) {
+    // yield put(loadRespondentReportsRoutine.failure());
+    toastr.error("Unable to load respondent reports");
+  }
+}
+
 export default function* questionnaireReportSagas() {
     yield all([
         yield takeEvery(loadQuestionnaireRequestsRoutine.TRIGGER, loadReportsBaseInfo),
-        yield takeEvery(loadReportRoutine.TRIGGER, loadReport)
+        yield takeEvery(loadReportRoutine.TRIGGER, loadReport),
+        yield takeEvery(loadRespondentReportRoutine.TRIGGER, loadRespondentReports)
     ]);
 }
