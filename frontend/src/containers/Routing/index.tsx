@@ -26,6 +26,7 @@ import QuestionnairePreview from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportPage from "../ReportPage";
 import RequestsPage from "../RequestsPage";
+import InvitationLinkPage from "../InvitationLinkPage";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
@@ -64,9 +65,9 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>
                     <PrivateRoute exact path="/response/:id" component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
-                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
-                    
                     <PrivateRoute exact path="/employees" component={UserList}/>
+                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
+                    <PrivateRoute exact path="/invitations" component={InvitationLinkPage} />
                     <Route path="/*">
                         <Redirect to="/layout"/>
                     </Route>

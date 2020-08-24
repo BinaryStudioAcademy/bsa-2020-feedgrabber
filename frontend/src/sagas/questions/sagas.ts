@@ -91,27 +91,27 @@ function* addFromExisting(action) {
     }
 }
 
-function* saveOrUpdateQuestion(action) {
-    try {
-        const res: IGeneric<IQuestion> = action.payload?.id
-            ? yield call(apiClient.put, `/api/questions`, action.payload)
-            : yield call(apiClient.post, `/api/questions`, action.payload || {});
-		const question: IQuestion = parseQuestion(res.data.data);
-        yield put(saveQuestionToQuestionnaireRoutine.success(question));
-        const questions = action.payload?.questionnaireQuesitons;
-        if (!questions) {
-          return;
-        }
-        const newQuestions = questions.map(q => q.id === question.id
-          ? question
-          : q
-        );
-        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
-     } catch (e) {
-        yield put(saveQuestionToQuestionnaireRoutine.failure());
-        toastr.error("Question wasn't saved");
-    }
-}
+// function* saveOrUpdateQuestion(action) {
+//     try {
+//         const res: IGeneric<IQuestion> = action.payload?.id
+//             ? yield call(apiClient.put, `/api/questions`, action.payload)
+//             : yield call(apiClient.post, `/api/questions`, action.payload || {});
+// 		const question: IQuestion = parseQuestion(res.data.data);
+//         yield put(saveQuestionToQuestionnaireRoutine.success(question));
+//         const questions = action.payload?.questionnaireQuesitons;
+//         if (!questions) {
+//           return;
+//         }
+//         const newQuestions = questions.map(q => q.id === question.id
+//           ? question
+//           : q
+//         );
+//         yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
+//      } catch (e) {
+//         yield put(saveQuestionRoutine.failure());
+//         toastr.error("Question wasn't saved");
+//     }
+// }
 
 function* copyQuestionInQuestionnaire(action){
     try {

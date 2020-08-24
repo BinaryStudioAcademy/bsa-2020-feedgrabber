@@ -29,10 +29,8 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
   }
 ) => {
   useEffect(() => {
-    if (!invitationsList && !loadingList && !errorLoading) {
       loadInvitations();
-    }
-  }, [invitationsList, loadingList, errorLoading, loadInvitations]);
+  }, [loadInvitations]);
 
   return (
     <UIColumn wide>

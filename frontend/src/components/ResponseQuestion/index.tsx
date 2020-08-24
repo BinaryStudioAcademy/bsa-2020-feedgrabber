@@ -15,7 +15,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     const detailsPage = useRef(null);
     const handleSegmentClick = () => {
       setEditor(!editor);
-      const { top, right } = (ReactDOM.findDOMNode(detailsPage.current) as Element).getBoundingClientRect();
+      const { top, right } = detailsPage.current.getBoundingClientRect();
       loadCurrent({ id: question.id, top: top, right });
     };
     return (
