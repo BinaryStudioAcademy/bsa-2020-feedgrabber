@@ -14,7 +14,7 @@ expect "$ "
 send "sudo docker pull feedgrabber2020/fg-event-processor:latest"
 expect "$ "
 
-send "sudo docker-compose down"
+send "sudo docker-compose -f ~/.docker/docker-compose.yml down"
 expect "$ "
 
 send "sudo docker-compose -f ~/.docker/docker-compose.yml up -d"
