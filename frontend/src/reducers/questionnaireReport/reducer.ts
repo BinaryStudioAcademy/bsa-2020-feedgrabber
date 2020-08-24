@@ -1,7 +1,14 @@
-import {IQuestionnaireReport, IRequestShort, IRespondentReport} from "../../models/report/IReport";
+import {
+    IQuestionnaireReport,
+    IRequestShort,
+    IRespondentReport,
+    IRespondentReportPreview
+} from "../../models/report/IReport";
 import {
     loadQuestionnaireRequestsRoutine,
-    loadReportRoutine, loadRespondentReportRoutine
+    loadReportRoutine,
+    loadRespondentReportRoutine,
+    loadRespondentReportsRoutine
 } from "../../sagas/report/routines";
 
 export interface IQuestionnaireReportsState {
@@ -10,12 +17,16 @@ export interface IQuestionnaireReportsState {
     isLoading?: boolean;
     currentUserReport: IRespondentReport;
     isLoadingUserReport?: boolean;
+    currentUsersReports: IRespondentReportPreview[];
+    isLoadingUsersReports?: boolean;
 }
 
 const defaultValues = {
     current: {} as IQuestionnaireReport,
     list: [] as IRequestShort[],
     currentUserReport: {} as IRespondentReport,
+    currentUsersReports: [] as IRespondentReportPreview[],
+    isLoadingUsersReports: false,
     isLoadingRespondentReports: false,
     isLoading: false
 };
@@ -61,6 +72,22 @@ export default (state: IQuestionnaireReportsState = defaultValues, {type, payloa
             return {
                 ...state,
                 isLoadingUserReport: false
+            };
+        case loadRespondentReportsRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoadingUsersReports: true
+            };
+        case loadRespondentReportsRoutine.FAILURE:
+            return {
+                ...state,
+                isLoadingUsersReports: false
+            };
+        case loadRespondentReportsRoutine.SUCCESS:
+            return {
+              ...state,
+              isLoadingUsersReports: false,
+              currentUsersReports: payload
             };
         default:
             return state;

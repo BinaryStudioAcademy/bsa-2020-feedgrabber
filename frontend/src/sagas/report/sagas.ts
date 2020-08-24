@@ -1,6 +1,11 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {toastr} from 'react-redux-toastr';
-import {loadQuestionnaireRequestsRoutine, loadReportRoutine, loadRespondentReportRoutine} from "./routines";
+import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { toastr } from 'react-redux-toastr';
+import {
+  loadQuestionnaireRequestsRoutine,
+  loadReportRoutine,
+  loadRespondentReportRoutine,
+  loadRespondentReportsRoutine
+} from "./routines";
 import { IRequestShort, IRespondentReport} from "../../models/report/IReport";
 import {IGeneric} from "../../models/IGeneric";
 import apiClient from "../../helpers/apiClient";
@@ -268,6 +273,17 @@ function* loadRespondentReports(action: any) {
   } catch (error) {
     // yield put(loadRespondentReportsRoutine.failure());
     toastr.error("Unable to load respondent reports");
+  }
+}
+
+function* loadUsersReports(action) {
+  try {
+    const reports = yield call(apiClient.get, "", action.payload);
+    // maybe I should to parse the data
+    yield put(loadRespondentReportsRoutine.success(reports));
+  } catch (err) {
+    yield put(loadRespondentReportsRoutine.failure());
+    toastr.error("Unable to load respondents reports");
   }
 }
 
