@@ -11,6 +11,8 @@ import RadioButtonResponse from "../../../components/ResponseQuestion/RadioButto
 import { CheckboxResponse } from "../../../components/ResponseQuestion/CheckboxResponse";
 import { FreeTextResponse } from "../../../components/ResponseQuestion/FreeTextResponse";
 import { loadRespondentReportRoutine } from "../../../sagas/report/routines";
+import UIContent from "../../../components/UI/UIContent";
+import UIColumn from "../../../components/UI/UIColumn";
 
 const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
   match,
@@ -19,22 +21,21 @@ const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
   loadReport
 }) => {
   const [report, setReport] = useState(respondentReport);
-  console.log(respondentReport);
-  console.log(match);
 
   useEffect(() => {
-    console.log(match.params.respondent);
-    loadReport(match.params.respondent);
+    loadReport({ request: match.params.id, respondent: match.params.respondent });
   }, [match.params.respondent, loadReport]);
 
   return (
-    <div>
-      <LoaderWrapper loading={isLoading}>
-        {respondentReport.answers &&
-          renderUserReport(respondentReport)
-        }
-      </LoaderWrapper>
-    </div>
+    <UIContent>
+      <UIColumn>
+        <LoaderWrapper loading={isLoading}>
+          {respondentReport.answers &&
+            renderUserReport(respondentReport)
+          }
+        </LoaderWrapper>
+      </UIColumn>
+    </UIContent>
   );
 };
 

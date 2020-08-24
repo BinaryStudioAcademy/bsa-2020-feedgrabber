@@ -150,8 +150,10 @@ function* loadReportsBaseInfo(action) {
 function* loadRespondentReports(action: any) {
   try {
     const id: string = action.payload;
+	// action.payload has next structure: { request, respondent }
     // here will be API call
-    const reportsMock = Array<IRespondentReport>(
+    // yield put(loadRespondentReportRoutine.success( some report ));
+    /*const reportsMock = Array<IRespondentReport>(
       {
         respondent: 'pasha',
         answers: Array<IQuestion>(
@@ -262,6 +264,7 @@ function* loadRespondentReports(action: any) {
       } as IRespondentReport
     );
     yield put(loadRespondentReportRoutine.success(reportsMock[id]));
+    */
   } catch (error) {
     // yield put(loadRespondentReportsRoutine.failure());
     toastr.error("Unable to load respondent reports");
