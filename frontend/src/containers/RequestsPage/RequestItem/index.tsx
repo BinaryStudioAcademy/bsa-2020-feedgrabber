@@ -19,7 +19,9 @@ export const RequestItem: FC<{ request: IRequestShort }> = ({request}) => {
                 </Card.Content>
                 <Card.Content extra>
                     <Progress active percent={calcDate(request.expirationDate)}
-                              label={`Deadline on ${request.expirationDate.substr(0, 10)}`}
+                              label={request.expirationDate
+                                       ? `Deadline on ${request.expirationDate?.substr(0, 10)}`
+                                       : 'Without expiration'}
                               color="blue"
                     />
                         <Icon name='user'/>

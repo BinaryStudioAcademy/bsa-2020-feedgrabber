@@ -121,7 +121,7 @@ function renderUserReportPreview(userReport: IRespondentReportPreview, id: strin
     <Link to={`/report/${id}/${userReport.id}/${userReport.username}`} className={styles.respondent_report_preview}>
       <Segment>
         <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
-        <span>{userReport.username}</span><br />
+        <Header as="h4">{userReport.username}</Header>
         <span>{userReport.answeredAt}</span>
       </Segment>
     </Link>
