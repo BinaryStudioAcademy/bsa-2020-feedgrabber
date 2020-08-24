@@ -1,23 +1,23 @@
 #!/usr/bin/expect -f
 
-spawn ssh $vm_user@$server_ip
+spawn ssh $env(vm_user)@$env(server_ip)
 expect "password: "
-send $vm_password
+send "$env(vm_password)\r"
 expect "$ "
 
-send "sudo docker pull feedgrabber2020/fg-core:latest"
+send "sudo docker pull feedgrabber2020/fg-core:latest\r"
 expect "$ "
 
-send "sudo docker pull feedgrabber2020/fg-client:latest"
+send "sudo docker pull feedgrabber2020/fg-client:latest\r"
 expect "$ "
 
-send "sudo docker pull feedgrabber2020/fg-event-processor:latest"
+send "sudo docker pull feedgrabber2020/fg-event-processor:latest\r"
 expect "$ "
 
-send "sudo docker-compose -f ~/.docker/docker-compose.yml down"
+send "sudo docker-compose -f ~/.docker/docker-compose.yml down\r"
 expect "$ "
 
-send "sudo docker-compose -f ~/.docker/docker-compose.yml up -d"
+send "sudo docker-compose -f ~/.docker/docker-compose.yml up -d\r"
 expect "$ "
 
 send "exit\r"
