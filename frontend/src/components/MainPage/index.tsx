@@ -58,7 +58,7 @@ const MainPage: FC<IMainPageProps> =
             setPanes([
                 {
                     menuItem: {key: 'opened', icon: 'eye', content: 'Pending requests'},
-                    render: () => <Tab.Pane loading={isLoading}>
+                    render: () => <Tab.Pane className={styles.tab_container} loading={isLoading}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => (!r.closeDate &&
                                 !r.alreadyAnswered &&
@@ -90,7 +90,7 @@ const MainPage: FC<IMainPageProps> =
                 },
                 {
                     menuItem: {key: 'closed', icon: 'lock', content: 'Closed requests'},
-                    render: () => <Tab.Pane>
+                    render: () => <Tab.Pane className={styles.tab_container}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => r.closeDate ||
                                 r.alreadyAnswered ||
@@ -104,6 +104,9 @@ const MainPage: FC<IMainPageProps> =
                                     }) => (
                                     <UICardBlock
                                         className={`${styles.container_all} ${styles.container}`}>
+                                        <p>{expirationDate
+                                            ? `Deadline on ${expirationDate.toUTCString()}`
+                                            : 'No deadline for this request'}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
@@ -111,15 +114,17 @@ const MainPage: FC<IMainPageProps> =
                                             ? <UIButton title="Change my answer"
                                                         onClick={() =>
                                                             handleAnswerClick(requestId, questionnaire.id)}/>
-                                            : <p>Expired {new Date(new Date().valueOf()
-                                                - expirationDate?.valueOf()).getHours()} hours ago</p>}
+                                            : (closeDate && new Date(closeDate).valueOf() !== expirationDate.valueOf())
+                                                ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
+                                                : <p>Expired {new Date(new Date().valueOf()
+                                                    - expirationDate?.valueOf()).getHours()} hours ago</p>}
                                     </UICardBlock>
                                 ))}
                         </LoaderWrapper>
                     </Tab.Pane>
                 }
             ]);
-        }, [handleAnswerClick, isLoading, questionnaireList]);
+        }, [questionnaireList]);
 
         return (
             <>
