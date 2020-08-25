@@ -19,7 +19,6 @@ import UICard from "../../components/UI/UICard";
 import UIColumn from "../../components/UI/UIColumn";
 import UIContent from "../../components/UI/UIContent";
 
-
 const newQuestion: IQuestion = {
     type: QuestionType.freeText,
     categoryTitle: "",
