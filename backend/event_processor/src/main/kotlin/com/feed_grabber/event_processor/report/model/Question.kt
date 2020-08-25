@@ -15,6 +15,10 @@ data class QAWithOption(
         val other: MutableMap<String, MutableList<UUID>> = mutableMapOf()
 ) : QuestionAnswersDB()
 
+data class QAWithOptionNoOther(
+        val options: MutableMap<UUID, String> = mutableMapOf()
+) : QuestionAnswersDB()
+
 data class QAWithValue(
         val values: MutableMap<UUID, String> = mutableMapOf()
 ) : QuestionAnswersDB()

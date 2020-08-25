@@ -21,7 +21,7 @@ export default combineReducers({
   invitation: invitationReducer,
   invitationSignUp: invitationSignUpReducer,
   questionnaires: questionnairesReducer,
-  questionnaireReport: questionnaireReportReducer,
+  questionnaireReports: questionnaireReportReducer,
   questions: questionsReducer,
   questionnaireResponse: responseReducer,
   teams: teamsReducer,

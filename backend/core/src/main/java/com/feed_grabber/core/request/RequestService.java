@@ -10,6 +10,8 @@ import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
+import com.feed_grabber.core.request.dto.RequestShortDto;
+import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -97,7 +99,7 @@ public class RequestService {
                 .sorted(Comparator.comparing(PendingRequestDto::getExpirationDate).reversed())
                 .collect(Collectors.toList());
     }
-    
+
     public List<RequestQuestionnaireDto> getAllByUserId(UUID id) {
         return requestRepository.findAllUnansweredByRespondentId(id)
                 .stream()
@@ -117,7 +119,16 @@ public class RequestService {
         var request = requestRepository
                 .findById(requestId)
                 .orElseThrow(()->new NotFoundException("Request not found"));
-        request.setExpirationDate(new Date());
-        return requestRepository.save(request).getExpirationDate();
+
+        request.setCloseDate(new Date());
+        return requestRepository.save(request).getCloseDate();
     }
+
+    public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
+        return requestRepository.findAllByQuestionnaireId(id)
+                .stream()
+                .map(RequestMapper.MAPPER::requestToShortDto)
+                .collect(Collectors.toList());
+    }
+
 }

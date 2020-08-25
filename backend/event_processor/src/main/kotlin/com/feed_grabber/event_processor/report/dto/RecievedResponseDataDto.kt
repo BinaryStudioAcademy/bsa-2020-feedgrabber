@@ -8,15 +8,15 @@ import java.util.*
 data class DataForReport(
         val requestId: UUID,
         val questionnaire: QuestionnaireDto,
-        val requestCreationDate: LocalDateTime,
-        val requestExpirationDate: LocalDateTime?,
+        val requestCreationDate: Date,
+        val requestExpirationDate: Date?,
         val requestMaker: UserDto,
         val responses: List<ResponseDto>,
         val targetUser: UserDto?
 )
 
 data class ResponseDto(
-        val answeredAt: LocalDateTime?,
+        val answeredAt: Date?,
         val id: UUID,
         val payload: String?,
         var payloadList: List<QuestionResponseDto>?,

@@ -51,6 +51,9 @@ public class Request {
     @Column(name = "generate_report")
     private Boolean generateReport;
 
+    @Column
+    private Date closeDate;
+
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "excel_report_id", referencedColumnName = "id")
     private S3File excelReport;
