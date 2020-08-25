@@ -44,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.abs;
+
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -56,8 +58,7 @@ public class UserService implements UserDetailsService {
     private final VerificationTokenService verificationTokenService;
     private final ImageRepository imageRepository;
     private static final Random random = new Random();
-    private static final Long RANDOM_MAX = 36L * 36L * 36L * 36L * 36L * 36L;
-
+    private static final Long RANDOM_MAX = 36L*36L*36L*36L* 36L*36L;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -307,8 +308,11 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
-        return name + "-" + Long.toString(random.nextLong() % RANDOM_MAX, 36);
+        var name = companyName.toLowerCase().replaceAll("([ ])","-");
+        var namepart = Long.toString(abs(random.nextLong())%RANDOM_MAX, 36);
+
+
+        return name + "-" + namepart;
     }
 }
 
