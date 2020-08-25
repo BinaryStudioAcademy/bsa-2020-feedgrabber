@@ -1,6 +1,6 @@
 import ResponseQuestion from "components/ResponseQuestion";
 import { IAppState } from "models/IAppState";
-import React, { FC, useState, useCallback, useEffect } from "react";
+import React, {FC, useState, useCallback, useEffect} from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Header, Button, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";

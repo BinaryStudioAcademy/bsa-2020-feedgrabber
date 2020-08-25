@@ -18,9 +18,10 @@ import QuestionDetailsOptions from "./QuestionDetailsOptions";
 interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
+    onValueChange(state: IComponentState<IQuestion>): void;
     onSave?(question: IQuestion);
     onDelete?(question: IQuestion);
-    onValueChange?(state: IComponentState<IQuestion>): void;
+    onCopy?(): void;
 }
 
 const QuestionD: React.FC<IQuestionProps> = ({
@@ -28,7 +29,8 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                                  categories,
                                                  onValueChange,
                                                  onSave,
-                                                 onDelete
+                                                 onDelete,
+                                                 onCopy
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
@@ -222,6 +224,15 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                     <span className={styles.icon}>
                                         <Icon name="trash alternate outline" size="large" onClick={handleDelete}/>
                                     </span>
+                                }
+                                {currentQuestion?.id &&
+                                <Popup content={"Copy"}
+                                       trigger={(
+                                           <span className={styles.icon} onClick={onCopy}>
+                                               <Icon name="clone outline" size="large" />
+                                           </span>
+                                       )}
+                                />
                                 }
                                 <Popup
                                     content="Required"
