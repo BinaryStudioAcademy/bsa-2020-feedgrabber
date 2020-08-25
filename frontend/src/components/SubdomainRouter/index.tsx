@@ -7,17 +7,17 @@ import {fetchCompanyRoutine} from "../../sagas/companies/routines";
 
 const SubdomainRouter: React.FC<SubdomainRouterProps> = ({company, fetchCompany, children}) => {
     const isLogged = useAuth();
-    // useEffect(() => {
-    //     if(isLogged && !company) {
-    //         fetchCompany();
-    //         return;
-    //     }
-    //     if (isLogged) {
-    //         redirectToCompany(company);
-    //     } else {
-    //         redirectToMain();
-    //     }
-    // }, [isLogged, company, fetchCompany]);
+    useEffect(() => {
+        if(isLogged && !company) {
+            fetchCompany();
+            return;
+        }
+        if (isLogged) {
+            redirectToCompany(company);
+        } else {
+            redirectToMain();
+        }
+    }, [isLogged, company, fetchCompany]);
     return (
         <>
             {children}
