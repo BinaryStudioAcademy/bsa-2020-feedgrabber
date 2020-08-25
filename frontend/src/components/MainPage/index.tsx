@@ -50,6 +50,11 @@ const MainPage: FC<IMainPageProps> =
             history.push(`/response/${questionnaireId}`);
         };
 
+        const handleModifyAnswerClick = (requestId, questionnaireId, responseId) => {
+            getResponse(requestId);
+            history.push(`/response/${questionnaireId}/modify/${responseId}/`);
+        };
+
         useEffect(() => {
             loadQuestionnaires();
         }, [loadQuestionnaires]);
@@ -98,6 +103,7 @@ const MainPage: FC<IMainPageProps> =
                                 (
                                     {
                                         requestId,
+                                        responseId,
                                         questionnaire,
                                         expirationDate,
                                         closeDate
@@ -113,7 +119,10 @@ const MainPage: FC<IMainPageProps> =
                                         {(expirationDate?.valueOf() > new Date().valueOf() && !closeDate)
                                             ? <UIButton title="Change my answer"
                                                         onClick={() =>
-                                                            handleAnswerClick(requestId, questionnaire.id)}/>
+                                                            handleModifyAnswerClick(
+                                                                requestId,
+                                                                questionnaire.id,
+                                                                responseId)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate.valueOf())
                                                 ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
                                                 : <p>Expired {new Date(new Date().valueOf()

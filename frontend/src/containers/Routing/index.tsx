@@ -45,7 +45,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <GuestRoute exact path="/auth" component={SignForm}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
-                    <Route exact path="/verify-registration/:id" component={AccountVerificationPage} />
+                    <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
                     <PrivateRoute exact path="/" component={MainPage}/>
                     <PrivateRoute exact path="/profile" component={Profile}/>
                     <PrivateRoute exact path="/profile/settings" component={ProfileX}/>
@@ -65,11 +65,12 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/questionnaires/:id/requests" component={RequestsPage}/>
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>
                     <PrivateRoute exact path="/report/:id/:respondent/:username" component={RespondentReport}/>
-                    <PrivateRoute exact path="/response/:id" component={QuestionnaireResponse}/>
+                    <PrivateRoute exact path={["/response/:id/", "/response/:id/modify/:responseId/"]}
+                                  component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
                     <PrivateRoute exact path="/employees" component={UserList}/>
-                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage} />
-                    <PrivateRoute exact path="/invitations" component={InvitationLinkPage} />
+                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
+                    <PrivateRoute exact path="/invitations" component={InvitationLinkPage}/>
                     <Route path="/*">
                         <Redirect to="/layout"/>
                     </Route>
