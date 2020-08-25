@@ -1,5 +1,6 @@
 package com.feed_grabber.event_processor.rabbit
 
+import com.feed_grabber.event_processor.report.dto.ReportFileCreationResponseDto
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,6 +14,7 @@ class Sender {
 
     @Value("\${rabbitmq.routing-key-response}")
     private val routingKey: String? = null
+
     @Value("\${rabbitmq.routing-key-report-excel-link}")
     private val excelLinkRoutingKey: String? = null
 
@@ -25,10 +27,9 @@ class Sender {
         println(" [x] Sent $text")
     }
 
-    fun sendUploadedReportURL(url: String) {
-        println(" [x] Sending...")
-        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, url)
-        println(" [x] Link on excel report sent $url")
+    fun sendUploadedReportURL(dto: ReportFileCreationResponseDto) {
+        println(" [x] Sending report generation response for request with id ${dto.requestId}")
+        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
     }
 
 }

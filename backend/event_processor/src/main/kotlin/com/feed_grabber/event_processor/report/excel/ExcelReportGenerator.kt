@@ -10,11 +10,7 @@ import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.io.FileSystemResource
-import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -186,8 +182,8 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
             workbook.write(fileOut)
             fileOut.close()
             workbook.close()
-            val fileLink = client.uploadReport(file)
-            sender.sendUploadedReportURL(fileLink)
+            val response = client.uploadReport(file, requestId)
+            sender.sendUploadedReportURL(response)
             file.delete()
         }
     }
