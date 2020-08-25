@@ -9,13 +9,13 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {
     deleteFromQuestionnaireRoutine,
-    indexQuestionsRoutine, saveQuestionRoutine
+    indexQuestionsRoutine, loadQuestionByIdRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 
 const newQuestion: IQuestion = {
     type: QuestionType.date,
-    categoryTitle: "",
+    categoryTitle: new Date().toString(),
     name: "New Question",
     answer: "",
     id: "",
@@ -38,7 +38,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     useEffect(() => {
         loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire, match.params.id]);
+    }, [loadOneQuestionnaire]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [isValid, setIsValid] = useState(false);
@@ -59,6 +59,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             questionnaireId: match.params.id,
             questionnaireQuestions
         });
+
     };
 
     const copyQuestion = () => {
