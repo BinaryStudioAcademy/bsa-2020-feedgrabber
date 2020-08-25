@@ -1,6 +1,7 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
@@ -99,7 +100,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/editProfile")
-    public void editProfile(@RequestBody UserProfileEditDto dto) {
+    public void editProfile(@RequestBody UserProfileEditDto dto) throws NotFoundException {
         this.userService.editUserProfile(dto);
     }
 
