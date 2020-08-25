@@ -30,7 +30,6 @@ public class Receiver {
 
     @RabbitListener(queues = "${rabbitmq.queue.report}")
     public void receive(S3FileCreationDto dto) throws NotFoundException {
-        System.out.println(dto.getLink());
         requestService.addExcelReport(dto);
     }
 }
