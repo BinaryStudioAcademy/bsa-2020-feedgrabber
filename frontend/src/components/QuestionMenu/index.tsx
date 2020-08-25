@@ -1,16 +1,8 @@
 import React, {FC, useEffect, useState} from "react";
 import {Button, Form, Popup} from "semantic-ui-react";
-import {IAppState} from "../../models/IAppState";
-import {connect, ConnectedProps} from "react-redux";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
-import {
-    addNewQuestionToQuestionnaireRoutine,
-    copyQuestionInQuestionnaireRoutine,
-    deleteFromQuestionnaireRoutine
-} from "sagas/questions/routines";
-
 import styles from "./styles.module.sass";
-import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
