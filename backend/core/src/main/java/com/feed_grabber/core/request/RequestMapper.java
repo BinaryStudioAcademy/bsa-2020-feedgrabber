@@ -7,6 +7,7 @@ import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.dto.RequestShortDto;
 import com.feed_grabber.core.request.model.Request;
+import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.model.User;
 import org.mapstruct.Mapper;
@@ -31,15 +32,11 @@ public interface RequestMapper {
                                              Date expirationDate);
 
     @Mapping(target = "requestId", source = "request.id")
-    @Mapping(target = "alreadyAnswered", expression = "java(request" +
-            ".getResponses()" +
-            ".stream()" +
-            ".filter(r->r.getUser()" +
-            ".getId().equals(userId))" +
-            ".findAny()" +
-            ".map(r->r.getPayload())" +
-            ".isPresent())")
-    PendingRequestDto toPendingDtoFromModel(Request request, UUID userId);
+    @Mapping(target = "responseId", source = "id")
+    @Mapping(target = "questionnaire", source = "request.questionnaire")
+    @Mapping(target = "expirationDate", source = "request.expirationDate")
+    @Mapping(target = "closeDate", source = "request.closeDate")
+    PendingRequestDto toPendingFromResponse(Response response);
 
     @Mapping(target = "requestId", source = "request.id")
     RequestQuestionnaireDto requestAndQuestionnaireToDto(Request request, Questionnaire questionnaire);

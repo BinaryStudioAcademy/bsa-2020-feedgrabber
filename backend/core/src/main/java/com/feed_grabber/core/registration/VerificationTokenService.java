@@ -15,7 +15,7 @@ import java.util.UUID;
 public class VerificationTokenService {
 
     @Value("${client.host}")
-    private Integer CLIENT_HOST;
+    private String CLIENT_HOST;
 
     private final VerificationTokenRepository verificationTokenRepository;
     private final UserRepository userRepository;

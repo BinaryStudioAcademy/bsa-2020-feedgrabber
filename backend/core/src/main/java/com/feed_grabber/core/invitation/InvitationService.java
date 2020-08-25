@@ -29,7 +29,7 @@ public class InvitationService {
     private Integer INVITATION_DURATION_DAYS;
 
     @Value("${client.host}")
-    private Integer CLIENT_HOST;
+    private String CLIENT_HOST;
 
     private final InvitationRepository invitationRepository;
     private final CompanyRepository companyRepository;
