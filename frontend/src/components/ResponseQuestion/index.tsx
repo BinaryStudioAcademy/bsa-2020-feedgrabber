@@ -7,7 +7,6 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
 import {Header, Icon, Label, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import ReactDOM from "react-dom";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {

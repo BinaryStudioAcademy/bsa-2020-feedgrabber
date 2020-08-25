@@ -1,5 +1,8 @@
 package com.feed_grabber.event_processor.report
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.dto.QuestionTypes.*
 import com.feed_grabber.event_processor.report.model.*
@@ -8,12 +11,13 @@ import java.time.LocalDate
 import java.util.*
 
 @Service
-class ReportService(val repository: ReportRepository) {
+class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = jacksonObjectMapper()) {
     fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
 
-    fun getFrontendData(requestId: UUID) = parseReportForFrontend(repository.findById(requestId))
+    fun getFrontendData(requestId: UUID): FrontendReportData = projectionToDto(repository.getProjection(requestId))
 
     fun parseIncomingData(dto: DataForReport): Report {
+        dto.responses.forEach { it.payloadList = it.payload?.let { p -> JSON.readValue(p) } }
         val map = HashMap<UUID, MutableList<Pair<AnswerValues, UUID>>>()
 
         dto.responses.forEach { r ->
@@ -33,9 +37,17 @@ class ReportService(val repository: ReportRepository) {
         }
     }
 
-    fun parseReportForFrontend(report: FrontProjection): FrontendReportData = FrontendReportData(
-            report.getQuestionnaireTitle(),
-            report.getQuestions().map {
+    fun projectionToDto(report: FrontendProjection): FrontendReportData = FrontendReportData(
+            report.questionnaire,
+            report.questions.map {
+                QuestionInfo(it.id, it.title, it.type,
+                        countAnswers(it.type, it.answers),
+                        mapAnswers(it.type, it.answers))
+            })
+
+    fun reportToDto(report: Report): FrontendReportData = FrontendReportData(
+            report.questionnaire,
+            report.questions?.map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))
@@ -45,7 +57,13 @@ class ReportService(val repository: ReportRepository) {
     fun mapAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): QuestionReportData? {
         if (dbAnswers == null) return null
         return when (type) {
-            freeText, scale, date -> QuestionWithValues((dbAnswers as QAWithValue).values.values.toList())
+            freeText -> QuestionWithValues((dbAnswers as QAWithValue).values.values.toList())
+            scale, date -> {
+                val (options) = (dbAnswers as QAWithOptionNoOther)
+                val list = options.values.groupingBy { it }.eachCount()
+                        .toList().map { OptionInfo(it.first, it.second) }
+                QuestionWithOptions(list)
+            }
             fileUpload -> QuestionWithValues((dbAnswers as QAWithValues).values.values.flatten())
             checkbox -> {
                 val (options, other) = (dbAnswers as QAWithOptions)
@@ -67,15 +85,16 @@ class ReportService(val repository: ReportRepository) {
     fun countAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): Int {
         if (dbAnswers == null) return 0
         return when (type) {
-            freeText, scale, date -> (dbAnswers as QAWithValue).values.size
+            freeText -> (dbAnswers as QAWithValue).values.size
+            scale, date -> (dbAnswers as QAWithOptionNoOther).options.size
             fileUpload -> (dbAnswers as QAWithValues).values.size
             checkbox -> {
                 val (options, other) = (dbAnswers as QAWithOptions)
-                options.size + other.values.flatten().size
+                options.keys.plus(other.values.flatten()).size
             }
             radio -> {
                 val (options, other) = (dbAnswers as QAWithOption)
-                options.size + other.values.flatten().size
+                options.keys.plus(other.values.flatten()).size
             }
         }
     }
@@ -111,15 +130,15 @@ class ReportService(val repository: ReportRepository) {
                 }
             }
             is DateValue -> {
-                QAWithValue().apply {
+                QAWithOptionNoOther().apply {
                     for (a in answers as List<Pair<DateValue, UUID>>)
-                        values[a.second] = a.first.date.toString()
+                        options[a.second] = a.first.date.toString()
                 }
             }
             is ScaleValue -> {
-                QAWithValue().apply {
+                QAWithOptionNoOther().apply {
                     for (a in answers as List<Pair<ScaleValue, UUID>>)
-                        values[a.second] = a.first.number.toString()
+                        options[a.second] = a.first.number.toString()
                 }
             }
             is FileValue -> {

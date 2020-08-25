@@ -66,7 +66,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         // load teams
         useEffect(() => {
             loadQuestionnaire(match.params.id);
-        }, [loadQuestionnaire]);
+        }, [loadQuestionnaire, match.params.id]);
 
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);

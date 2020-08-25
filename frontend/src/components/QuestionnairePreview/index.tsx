@@ -1,6 +1,6 @@
-
 import React, { FC, useState, useCallback, useEffect } from "react";
 import { Header} from "semantic-ui-react";
+import ResponseQuestion from "components/ResponseQuestion";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";

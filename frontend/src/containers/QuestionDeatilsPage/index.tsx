@@ -19,6 +19,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
+        saveAndAddQuestion,
         loadCategories,
         questionnaireId,
         questionnaireQuestions,
@@ -66,6 +67,17 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         isPreview ? isPreview.close() : history.goBack();
     };
 
+    const onCopy = () => {
+        if (isQuestionDetailsValid) {
+            saveAndAddQuestion({
+                ...question,
+                id: null,
+                questionnaireId
+            });
+            isPreview ? isPreview.close() : history.goBack();
+        }
+    };
+
     return (
         <div className={`${styles.question_container} ${isPreview ? styles.question_container_preview : ''}`}>
             {isLoading && (
@@ -78,6 +90,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                         currentQuestion={currentQuestion}
                         categories={categories}
                         onValueChange={handleQuestionDetailsUpdate}
+                        onCopy={onCopy}
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
                         <Button className="ui button" color="red" onClick={onClose}>
@@ -108,7 +121,8 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine
+    loadCategories: loadCategoriesRoutine,
+    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
