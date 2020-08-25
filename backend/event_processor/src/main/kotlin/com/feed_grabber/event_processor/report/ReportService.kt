@@ -83,7 +83,6 @@ class ReportService {
                         }
                     }
                 }
-
                 is RadioValue -> {
                     QAWithOption().apply {
                         for (a in answers as List<Pair<RadioValue, UserDto>>) {
