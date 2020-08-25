@@ -36,8 +36,6 @@ public class RequestService {
     private final UserNotificationRepository userNotificationRepository;
     private final NotificationService notificationService;
     private final FileRepository fileRepository;
-    private final ResponseRepository responseRepository;
-
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,

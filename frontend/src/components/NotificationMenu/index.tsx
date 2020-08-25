@@ -14,7 +14,7 @@ import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
-import {getResponseRoutine} from "../../sagas/questionnaireResponse/routines";
+import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
