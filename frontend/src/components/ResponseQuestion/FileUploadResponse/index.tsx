@@ -10,38 +10,52 @@ import VideoUrl from "./UrlVideo";
 
 const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
     ({ question, answerHandler }) => {
-        const [files, setFiles] = useState([]);
-        const [images, setImages] = useState([]);
-        const [url, setUrl] = useState('');
+        const [links, setLinks] = useState([]); // links to uploaded files
+        const [url, setUrl] = useState(''); // url to photo or video
+        const [files, setFiles] = useState(undefined); // files data
         const [error, setError] = useState('');
+
         const filesNumber = question.details.filesNumber;
         const maxFilesSize = question.details.filesSize * (1024 * 1024);
         const filesType = question.details.filesType;
 
         const onFilesAdded = async addedFiles => {
-            setError("");
+            setError('')
             let newFiles: any[];
             if (files.length + addedFiles.length <= filesNumber) {
                 newFiles = addedFiles;
             } else {
                 newFiles = addedFiles.slice(0, filesNumber - files.length);
                 setError(`Maximum number of files ${filesNumber}`);
+                return;
             }
-
             newFiles = checkFilesSize(deleteNotAllowedFiles(newFiles));
 
-            if (filesType === allTypes.image) {
-                loadImages(newFiles);
-            }
-            setFiles(files.concat(newFiles));
-
-            // answerHandler(question.id, { files, url });
+            await uploadFiles(addedFiles);
             answerHandler?.(
-                files
+                [ ...links, url ]
             );
-            // needs to add url and else
+            setFiles([ ...files, ...newFiles ]);
         };
 
+       const onUrlInsert = url => {
+         // setUrl(url);
+         setUrl(url);
+         answerHandler?.(
+           [ ...links, url ]
+         );
+       };
+
+        const uploadFiles = async files => {
+          const promises = [];
+          for (const file of files) {
+            // start sending files to the server
+            promises.push(new Promise(resolve => resolve('value2')));
+          }
+          const resultLinks = await Promise.all(promises);
+          setLinks([ ...links, ...resultLinks ]);
+        };
+        /*
         const loadImages = async newFiles => {
             const addedImages = [];
             const promises = [];
@@ -66,7 +80,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
                 reader.readAsDataURL(file);
             });
         };
-
+        */
         const checkFilesSize = checkedFiles => {
             let currentFilesSize = 0;
             for (const file of files) {
@@ -99,13 +113,13 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
             return result;
         };
 
-        const mapImages = () => {
+        const mapImages = images => {
             return images.map(image => {
                 return <img className="ui medium image" src={image} alt="File loaded successfully" />;
             });
         };
 
-        const mapVideos = () => {
+        const mapVideos = files => {
             return files.map(file => {
                 return <Label className={styles.file}>
                     {`${file.name} 
@@ -115,8 +129,9 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         };
 
         const onClear = () => {
-            setFiles([]);
-            setImages([]);
+            setFiles(undefined);
+            setLinks([]);
+            setUrl('');
             setError('');
             answerHandler?.(null);
         };
@@ -144,8 +159,8 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
                             render: () =>
                                 <Tab.Pane>
                                     {filesType === allTypes.image
-                                        ? <ImageUrl url={url} onChange={setUrl} />
-                                        : <VideoUrl url={url} onChange={setUrl} />
+                                        ? <ImageUrl url={url} onChange={onUrlInsert} />
+                                        : <VideoUrl url={url} onChange={onUrlInsert} />
                                     }
                                 </Tab.Pane>
                         }
