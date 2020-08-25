@@ -1,6 +1,6 @@
-
 import React, { FC, useState, useCallback, useEffect } from "react";
 import { Header} from "semantic-ui-react";
+import ResponseQuestion from "components/ResponseQuestion";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
@@ -20,6 +20,7 @@ interface IQuestionnairePreviewProps {
   qnId: string;
   indexQuestions(questions: IIndex): void;
 }
+
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   questions,
   qnId,
@@ -30,7 +31,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   const indexQuestionsHandler = () => {
     const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
     indexQuestions({questionnaireId: qnId,  questions: rst});
-  }; 
+  };
 
   useEffect(() => {
     setQuestionCards(questions);
@@ -50,7 +51,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   const drop = () => {
     indexQuestionsHandler();
   };
-  
+
   const renderCard = (q: IQuestion, index: number) => {
     return (
       <QuestionCard

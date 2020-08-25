@@ -22,7 +22,6 @@ services:
   mongo-db:
       image: mongo
       container_name: 'mongo-db'
-      command: mongod --auth
       env_file:
         - ../.env/mongo-db.env
       volumes:

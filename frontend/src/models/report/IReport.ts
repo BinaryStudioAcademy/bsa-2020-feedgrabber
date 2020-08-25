@@ -1,8 +1,41 @@
-import { QuestionType } from "../forms/Questions/IQuesion";
+import {QuestionType} from "../forms/Questions/IQuesion";
 
 export interface IQuestionnaireReport {
-  questionnaireTitle: string;
+  questionnaire: IQuestionnaireDto;
   questions: IQuestionReport[];
+}
+
+type IQuestionnaireDto = {
+    companyName: string;
+    id: string;
+    questions: QuestionDto[];
+    title: string;
+}
+
+export type QuestionDto = {
+    id: string;
+    name: string;
+    categoryTitle: string;
+    details: any; // will be parsed to object from string
+    type: QuestionType;
+}
+
+type UserShortDto = {
+    id: string;
+    username: string;
+    // TODO avatar: string;
+}
+
+export interface IRequestShort {
+    requestId: string;
+    targetUser: UserShortDto;
+    requestMaker: UserShortDto;
+    creationDate: string;
+    expirationDate: string;
+    generateReport: boolean;
+    notifyUsers: boolean;
+    closeDate: string;
+    userCount: number;
 }
 
 export interface IQuestionReport {
@@ -24,6 +57,14 @@ export interface IQuestionReportMultichoiceData {
 
 export interface IQuestionReportRadioData {
   options: { title: string; amount: number }[];
+}
+
+export interface IRespondentReportPreview {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  answeredAt: string;
 }
 
 export interface IQuestionReportScaleData {
