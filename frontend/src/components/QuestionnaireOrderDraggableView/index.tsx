@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { QuestionCard } from './QuestionCard';
+import QuestionCard from './QuestionCard';
 import {IQuestion} from "models/forms/Questions/IQuesion";
 import {Button, Dimmer, Loader} from 'semantic-ui-react';
 import styles from './styles.module.sass';
@@ -76,6 +76,7 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
           id={card.id}
           question={card}
           moveCard={moveCard}
+          prevSectionId={null}
         />
       );
     };

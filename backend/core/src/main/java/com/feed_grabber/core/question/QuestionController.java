@@ -13,6 +13,7 @@ import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public AppResponse<QuestionDto> create(@RequestBody String json)
-            throws QuestionnaireNotFoundException, JsonProcessingException, CompanyNotFoundException {
+            throws QuestionnaireNotFoundException, JsonProcessingException, CompanyNotFoundException, SectionNotFoundException {
 
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
@@ -123,7 +124,7 @@ public class QuestionController {
     @PostMapping("/questionnaires/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(@PathVariable UUID id)
-            throws QuestionnaireNotFoundException, CompanyNotFoundException {
+            throws QuestionnaireNotFoundException, CompanyNotFoundException, SectionNotFoundException {
         questionService.create(QuestionCreateDto
                 .builder()
                 .name("New question")
@@ -132,5 +133,11 @@ public class QuestionController {
                 .categoryTitle("sport")
                 .build());
         return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
+    }
+
+    @GetMapping("/sections/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<QuestionDto>> getAllBySection(@PathVariable UUID id) {
+        return new AppResponse<>(questionService.getAllBySection(id));
     }
 }

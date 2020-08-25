@@ -31,8 +31,9 @@ public class CustomDes extends StdDeserializer<QuestionCreateDto> {
         var payload = this.getDetails(node);
         var type = this.getType(node);
         var index = this.getIndex(node);
+        var sectionId = this.getSectionId(node);
 
-        return new QuestionCreateDto(text, category, type, anketId, payload, index);
+        return new QuestionCreateDto(text, category, type, anketId, sectionId, payload, index);
 
     }
 
@@ -62,5 +63,13 @@ public class CustomDes extends StdDeserializer<QuestionCreateDto> {
             anketId = Optional.of(UUID.fromString(node.get("questionnaireId").asText()));
         }
         return anketId;
+    }
+
+    private Optional<UUID> getSectionId(JsonNode node) {
+        Optional<UUID> sectionId = Optional.empty();
+        if (node.has("sectionId")) {
+            sectionId = Optional.of(UUID.fromString(node.get("sectionId").asText()));
+        }
+        return sectionId;
     }
 }

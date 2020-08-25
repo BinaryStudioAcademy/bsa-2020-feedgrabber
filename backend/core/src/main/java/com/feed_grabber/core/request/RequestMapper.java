@@ -1,5 +1,6 @@
 package com.feed_grabber.core.request;
 
+import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
@@ -11,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Date;
 
-@Mapper
+@Mapper(uses = {QuestionnaireMapper.class})
 public interface RequestMapper {
     RequestMapper MAPPER = Mappers.getMapper(RequestMapper.class);
 

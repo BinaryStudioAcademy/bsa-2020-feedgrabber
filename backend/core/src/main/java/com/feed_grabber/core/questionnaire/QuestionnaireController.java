@@ -14,6 +14,7 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsExcepti
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -101,7 +102,7 @@ public class QuestionnaireController {
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     public void updateQuestionnaireQuestions(QuestionnaireOrderedDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException {
+            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException, SectionNotFoundException {
         this.questionService.saveOrdered(dto);
     }
 }

@@ -11,13 +11,15 @@ import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 import styles from "./styles.module.sass";
 import { number } from "prop-types";
+import { createSectionRoutine } from "sagas/sections/routines";
 
 const QuestionMenu: FC<ContainerProps> = ({
     deleteQuestion,
     addQuestion,
     copyQuestion,
     currentQuestion,
-    currentQuestionnaireId
+    currentQuestionnaireId,
+    createSection
 }) => {
     const [positions, setPositions] = useState({ scrollTop: 0, innerHeight: window.innerHeight });
     useEffect(() => {
@@ -32,7 +34,7 @@ const QuestionMenu: FC<ContainerProps> = ({
     });
     const handleAdd = (id: string) => {
         if (id === "new") {
-            addQuestion({ qId: currentQuestionnaireId });
+            addQuestion({ qId: currentQuestionnaireId});
         } else {
             copyQuestion({ qId: currentQuestionnaireId, question: currentQuestion });
         }
@@ -40,6 +42,10 @@ const QuestionMenu: FC<ContainerProps> = ({
 
     const handleDelete = () => {
         deleteQuestion({ qId: currentQuestionnaireId, id: currentQuestion.id });
+    };
+
+    const handleAddSection = () => {
+        createSection({questionnaireId: currentQuestionnaireId});
     };
 
     const { scrollTop, innerHeight } = positions;
@@ -64,6 +70,9 @@ const QuestionMenu: FC<ContainerProps> = ({
                     <Popup content='Delete'
                         trigger={<Button icon="remove" onClick={() => handleDelete()} />}
                         position='right center' />
+                    <Popup content='Add section'
+                        trigger={<Button icon="plus square outline" onClick={() => handleAddSection()}/>}
+                        position='right center' />
                 </Button.Group>
             </Form>
         </div>
@@ -78,7 +87,8 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     deleteQuestion: deleteFromQuestionnaireRoutine,
     addQuestion: addNewQuestionToQuestionnaireRoutine,
-    copyQuestion: copyQuestionInQuestionnaireRoutine
+    copyQuestion: copyQuestionInQuestionnaireRoutine,
+    createSection: createSectionRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

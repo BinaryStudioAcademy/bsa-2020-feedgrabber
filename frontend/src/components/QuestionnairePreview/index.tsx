@@ -11,9 +11,16 @@ import { IComponentState } from "../ComponentsQuestions/IQuestionInputContract";
 import { 
   addNewQuestionToQuestionnaireRoutine,
   loadQuestionnaireQuestionsRoutine,
-  indexQuestionsRoutine 
+  indexQuestionsRoutine, 
+  loadQuestionsBySectionRoutine
 } from "sagas/questions/routines";
-import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
+import QuestionCard from "components/QuestionnaireOrderDraggableView/QuestionCard";
+import { ISection } from "models/forms/Sections/types";
+import UISection from "components/UI/UISectionCard";
+import SectionBlock from "components/SectionBlock";
+import { updateSectionsRoutine,
+   addQuestionToSectionRoutine,
+    deleteQuestionFromSectionRoutine } from "sagas/sections/routines";
 
 const newQuestion: IQuestion = {
   type: undefined,
@@ -25,16 +32,37 @@ const newQuestion: IQuestion = {
   details: {}
 };
 
+interface IQuestionnairePreviewProps {
+  sections: ISection[];
+  questions: IQuestion[];
+  qnId: string;
+  saveAndAddQuestion(action: {}): void;
+  indexQuestions(action: {}): void;
+  setQuestionnaireQuestions(action: {}): void;
+  updateSections(sections: ISection[]): void;
+  addQuestionToSection(sectionId: string, questionId: string): void;
+  deleteQuestionFromSection(sectionId: string, questionId: string): void;
+}
+
+interface ISectionState {
+  questions: IQuestion[];
+}
+
 const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({ 
+  qnId,
+  sections,
   questions,
   saveAndAddQuestion,
-  qnId,
   indexQuestions,
-  setQuestions
+  setQuestionnaireQuestions,
+  updateSections,
+  addQuestionToSection,
+  deleteQuestionFromSection
 }) => {
   const [addNew, setAddNew] = useState(false);
   const [question, setQuestion] = useState<IQuestion>(newQuestion);
   const [isValid, setIsValid] = useState(false);
+  const [sectionId, setSectionId] = useState(undefined);
 
   const handleCancel = () => {
     setAddNew(false);
@@ -50,7 +78,7 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
     if (!isValid) {
       return;
     }
-    saveAndAddQuestion({ ...question, questionnaireId: qnId });
+    saveAndAddQuestion({ ...question, questionnaireId: qnId}); 
     setAddNew(false);
     setQuestion(newQuestion);
   };
@@ -70,26 +98,48 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
       const updCards = questions.slice();
       updCards.splice(dragIndex, 1);
       updCards.splice(hoverIndex, 0, dragCard);
-      setQuestions(updCards);
+      setQuestionnaireQuestions(updCards);
     },
-    [questions, setQuestions]
+    [questions, setQuestionnaireQuestions]
   );
 
   const drop = () => {
     indexQuestionsHandler();
   };
   
-  const renderCard = (q: IQuestion, index: number) => {
-    return (
-      <QuestionCard
-        question={q}
-        key={index}
-        id={q.id}
-        index={index}
-        moveCard={moveCard}
-        onDropCard={drop}
-      />
-    );
+  const renderCard = (q: IQuestion, index: number, sectionId: string) => {
+      return (
+        <QuestionCard
+          question={q}
+          key={index}
+          id={q.id}
+          index={index}
+          moveCard={moveCard}
+          onDropCard={drop}
+          addQuestionToSection={moveQuestionToSection}
+          prevSectionId={sectionId}
+        />
+      );
+  };
+
+  const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
+    const updatedSections = sections.map(section => { 
+      if(section.id === sectionId) { 
+        return {...section, 
+          questions: [...section.questions, question]
+        };}
+      else if(section.id === prevSectionId) {
+        const updatedQuestions = section.questions.filter(q => question.id !== q.id);
+        return {
+          ...section,
+          questions: updatedQuestions
+        };
+      }
+      else { return section; }
+    });
+    updateSections(updatedSections);
+    addQuestionToSection({sectionId: sectionId, questionId: question.id});
+    deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
   };
 
   return (
@@ -104,28 +154,38 @@ const QuestionnairePreview: FC<QuestionnairePreviewProps> = ({
           <Button floated="right" onClick={handleNewQuestionSave} color="green">Save</Button>
           <Button floated="right" onClick={handleCancel}>Cancel</Button>
         </Segment>}
-      {questions.length ?
+        {console.log(sections)}
+      {sections && sections.map(section => <SectionBlock id={section.id}>
+      <UISection title={section.title} description={section.description}/>
+      {section.questions.length ?
         <div>
           {/* {questions.map(q => <ResponseQuestion question={q} key={q.id} />)} */}
-          {questions.map((q, i) => renderCard(q, i))}
+          {console.log(section)}
+          {section.questions.map((q, i) => renderCard(q, i, section.id))}
           {/* Pass answerHandler to props if it is not preview */}
         </div>
         : <Header as='h2'>
           Urrr... Maybe nothing is modifying right now or you haven`t created any questions yet?
-        </Header>
-      }
+        </Header>}
+        </SectionBlock>
+      )}
+      
     </div>);
 };
 
 const mapState = (state: IAppState) => ({
   qnId: state.questionnaires.current.get.id,
-  questions: state.questionnaires.current.questions
+  questions: state.questionnaires.current.questions,
+  sections: state.sections.list
 });
 
 const mapDispatch = {
   saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine,
-  setQuestions: loadQuestionnaireQuestionsRoutine.success,
-  indexQuestions: indexQuestionsRoutine
+  setQuestionnaireQuestions: loadQuestionnaireQuestionsRoutine.success,
+  indexQuestions: indexQuestionsRoutine,
+  updateSections: updateSectionsRoutine.success,
+  addQuestionToSection: addQuestionToSectionRoutine,
+  deleteQuestionFromSection: deleteQuestionFromSectionRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

@@ -66,7 +66,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
               <UIColumn>
                 <UICard>
                   <UICardBlock>
-                    <ExpandedQuestionnaire match={match} isLoading={false}/>
+                    <ExpandedQuestionnaire match={match}/>
                   </UICardBlock>
                 </UICard>
               </UIColumn>

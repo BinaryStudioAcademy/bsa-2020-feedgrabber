@@ -9,6 +9,8 @@ import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IQuestionnaire} from 'models/forms/Questionnaires/types';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
+import { getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { ISection } from 'models/forms/Sections/types';
 
 const questions = [
     // {
@@ -35,8 +37,10 @@ interface IExpandedQuestionnaireProps {
     match: any;
     isLoading: boolean;
     questionnaire: IQuestionnaire;
+    sections: ISection[];
 
     loadOneQuestionnaire(id: string): void;
+    loadSections(id: string): void;
 }
 
 const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
@@ -44,35 +48,42 @@ const ExpandedQuestionnaire: React.FC<IExpandedQuestionnaireProps> = (
         match,
         isLoading,
         questionnaire,
-        loadOneQuestionnaire
+        sections,
+        loadOneQuestionnaire,
+        loadSections
     }
 ) => {
     useEffect(() => {
+        console.log(match.params.id);
         loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire, match.params.id]);
+        loadSections(match.params.id);
+    }, [loadOneQuestionnaire, match.params.id, loadSections]);
 
     return (
         <LoaderWrapper loading={isLoading}>
             {questionnaire && (
                 <div className={styles.formDetails}>
-                    <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
-                    {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
                     <div className={styles.formPreview}>
                     <QuestionnairePreview/>
                     <QuestionMenu/>
                     </div>
+                    {/* <QuestionnaireOrderView questions={questions} isLoading={isLoading} save={() => {}} /> */}
                 </div>
             )}
+            
         </LoaderWrapper>
     );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-    questionnaire: rootState.questionnaires.current.get
+    questionnaire: rootState.questionnaires.current.get,
+    isLoading: rootState.sections.isLoading,
+    sections: rootState.sections.list
 });
 
 const mapDispatchToProps = {
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
+    loadSections: getSectionsByQuestionnaireRoutine
 };
 
 export default connect(
