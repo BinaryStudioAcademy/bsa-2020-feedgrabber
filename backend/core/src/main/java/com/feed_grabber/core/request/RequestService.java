@@ -50,6 +50,11 @@ public class RequestService {
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
 
+        if (questionnaire.isEditingEnabled()) {
+            questionnaire.setEditingEnabled(false);
+            questionnaireRepository.save(questionnaire);
+        }
+
         var currentUser = userRepository
                 .findById(TokenService.getUserId())
                 .orElseThrow(UserNotFoundException::new);
