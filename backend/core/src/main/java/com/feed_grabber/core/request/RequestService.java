@@ -2,9 +2,11 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.file.FileRepository;
+import com.feed_grabber.core.file.dto.S3FileCreationDto;
+import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
-import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
@@ -13,43 +15,42 @@ import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
-import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class RequestService {
-
     RequestRepository requestRepository;
     QuestionnaireRepository questionnaireRepository;
     UserRepository userRepository;
     TeamRepository teamRepository;
     ResponseRepository responseRepository;
+    FileRepository fileRepository;
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
                           UserRepository userRepository,
                           TeamRepository teamRepository,
-                          ResponseRepository responseRepository) {
+                          ResponseRepository responseRepository,
+                          FileRepository fileRepository) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.responseRepository = responseRepository;
+        this.fileRepository = fileRepository;
     }
 
     public UUID createNew(CreateRequestDto dto) throws QuestionCategoryNotFoundException, UserNotFoundException {
         var questionnaire = questionnaireRepository
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
-
+        if (questionnaire.isEditingEnabled()) {
+            questionnaire.setEditingEnabled(false);
+            questionnaireRepository.save(questionnaire);
+        }
         var currentUser = userRepository
                 .findById(TokenService.getUserId())
                 .orElseThrow(UserNotFoundException::new);
@@ -103,6 +104,13 @@ public class RequestService {
                 .map(request -> RequestMapper.MAPPER.
                         requestAndQuestionnaireToDto(request, request.getQuestionnaire()))
                 .collect(Collectors.toList());
+    }
+
+    public void addExcelReport(S3FileCreationDto dto) throws NotFoundException {
+        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
+        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
+        request.setExcelReport(report);
+        requestRepository.save(request);
     }
 
     public Date closeNow(UUID requestId) throws NotFoundException {

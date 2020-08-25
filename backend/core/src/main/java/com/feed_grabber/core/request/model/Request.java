@@ -1,13 +1,12 @@
 package com.feed_grabber.core.request.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.model.User;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -51,4 +50,12 @@ public class Request {
 
     @Column(name = "generate_report")
     private Boolean generateReport;
+
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "excel_report_id", referencedColumnName = "id")
+    private S3File excelReport;
+
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "powerpoint_report_id", referencedColumnName = "id")
+    private S3File powerPointReport;
 }
