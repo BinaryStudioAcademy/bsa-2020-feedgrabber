@@ -61,7 +61,7 @@ const MainPage: FC<IMainPageProps> =
                     render: () => <Tab.Pane className={styles.tab_container} loading={isLoading}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => (!r.closeDate &&
-                                !r.alreadyAnswered &&
+                                !r.answeredAt &&
                                 (r.expirationDate?.valueOf() || Number.MAX_VALUE) > Date.now().valueOf())).map(
                                 (
                                     {
@@ -93,7 +93,7 @@ const MainPage: FC<IMainPageProps> =
                     render: () => <Tab.Pane className={styles.tab_container}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => r.closeDate ||
-                                r.alreadyAnswered ||
+                                r.answeredAt ||
                                 (r.expirationDate?.valueOf() || Number.MAX_VALUE) <= Date.now().valueOf()).map(
                                 (
                                     {
@@ -124,7 +124,8 @@ const MainPage: FC<IMainPageProps> =
                     </Tab.Pane>
                 }
             ]);
-        }, [questionnaireList]);
+            // eslint-disable-next-line
+        }, [isLoading, questionnaireList]);
 
         return (
             <>

@@ -16,6 +16,7 @@ public class PendingRequestDto {
     private UUID requestId;
     private QuestionnaireDto questionnaire;
     private Date expirationDate;
-    private boolean alreadyAnswered;
+    private Date answeredAt;
     private Date closeDate;
+    private UUID responseId;
 }

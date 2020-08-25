@@ -92,10 +92,10 @@ public class RequestService {
     }
 
     public List<PendingRequestDto> getPending(UUID userId) {
-        return requestRepository
-                .findAllByResponsesUserId(userId)
+        return responseRepository
+                .findAllByUserId(userId)
                 .stream()
-                .map(r -> RequestMapper.MAPPER.toPendingDtoFromModel(r, userId))
+                .map(RequestMapper.MAPPER::toPendingFromResponse)
                 .sorted(
                         Comparator.comparing(PendingRequestDto::getExpirationDate
                                 , Comparator.nullsFirst(Comparator.naturalOrder())).reversed()

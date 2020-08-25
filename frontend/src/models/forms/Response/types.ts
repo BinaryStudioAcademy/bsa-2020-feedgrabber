@@ -34,7 +34,7 @@ export interface IQuestionnaireResponse {
     requestId: string;
     questionnaire: IQuestionnaire;
     expirationDate: Date;
-    alreadyAnswered: boolean;
+    answeredAt: string;
     closeDate: string;
 }
 
