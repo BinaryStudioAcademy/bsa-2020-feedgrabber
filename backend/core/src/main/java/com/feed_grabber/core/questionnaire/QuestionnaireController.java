@@ -72,12 +72,12 @@ public class QuestionnaireController {
         );
     }
 
-    @ApiOperation("Get requested questionnaires for current user")
-    @GetMapping("/requested")
+    @GetMapping("/requests/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<QuestionnaireDto>> getPending(Principal principal) {
+    public AppResponse<QuestionnaireDto> getRequests(@PathVariable UUID id) throws QuestionnaireNotFoundException {
         return new AppResponse<>(
-                questionnaireService.getAllByRespondentId(UUID.fromString(principal.getName()))
+                questionnaireService.getOne(id)
+                        .orElseThrow(QuestionnaireNotFoundException::new)
         );
     }
 

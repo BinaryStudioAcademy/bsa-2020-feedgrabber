@@ -40,3 +40,4 @@ const ProfilePage: FC<IProfileMode> =
 export const Profile = () => <ProfilePage mode="profile"/>;
 
 export const ProfileX = () => <ProfilePage mode="settings"/>;
+

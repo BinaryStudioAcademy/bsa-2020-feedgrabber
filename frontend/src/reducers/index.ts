@@ -11,8 +11,8 @@ import expandedQuestionnaireReducer from './expandedQuestionnaire/reducer';
 import invitationReducer from './invitation/reducer';
 import invitationSignUpReducer from './invitationSignUp/reducer';
 import companyReducer from "./companies/reducer";
-import answersReduser from './responseAnswers/reducer';
 import notificationReducer from "./notifications";
+import responseReducer from "./questionnaireResponse/reducer";
 
 export default combineReducers({
   toastr,
@@ -21,12 +21,12 @@ export default combineReducers({
   invitation: invitationReducer,
   invitationSignUp: invitationSignUpReducer,
   questionnaires: questionnairesReducer,
-  questionnaireReport: questionnaireReportReducer,
+  questionnaireReports: questionnaireReportReducer,
   questions: questionsReducer,
+  questionnaireResponse: responseReducer,
   teams: teamsReducer,
   expandedQuestionnaire: expandedQuestionnaireReducer,
   app:appReducer,
   company: companyReducer,
-  answers: answersReduser,
   notifications: notificationReducer
 });

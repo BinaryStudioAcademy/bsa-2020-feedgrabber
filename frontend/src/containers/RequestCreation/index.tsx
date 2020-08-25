@@ -21,6 +21,10 @@ import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
+import {RouteComponentProps} from "react-router-dom";
+import QuestionnairePreview from "../../components/QuestionnairePreview";
+import {indexQuestionsRoutine} from "../../sagas/questions/routines";
+import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
 
@@ -42,9 +46,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        users,
        loadTeams,
        loadUsers,
+       loadQuestionnaire,
        sendRequest,
        isLoadingUsers,
-       isLoadingTeams
+       isLoadingTeams,
+       questions
      }) => {
 
       // load users
@@ -57,6 +63,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         loadTeams();
       }, [loadTeams]);
 
+        // load teams
+        useEffect(() => {
+            loadQuestionnaire(match.params.id);
+        }, [loadQuestionnaire, match.params.id]);
+
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
       return (
@@ -66,7 +77,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
               <UIColumn>
                   <UICard>
                     <UICardBlock>
-                        <ExpandedQuestionnaire match={match} isLoading={false} />
+                        <QuestionnairePreview
+                            indexQuestions={indexQuestionsRoutine}
+                            qnId={match.params.id}
+                            questions={questions ?? []}
+                        />
                     </UICardBlock>
                   </UICard>
               </UIColumn>
@@ -76,10 +91,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                     <Formik
                         initialValues={initialValues}
                         onSubmit={values => {
-                          if (!values.targetUserId) {
-                            setError('Select target user!');
-                            return;
-                          }
                           if (values.withDeadline && !values.expirationDate) {
                             setError('Select deadline date!');
                             return;
@@ -96,7 +107,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             notifyUsers: values.notifyUsers,
                             questionnaireId: match.params.id,
                             targetUserId: values.targetUserId,
-                            includeTargetUser: values.includeTargetUser,
+                            includeTargetUser: !!values.targetUserId && values.includeTargetUser,
                             respondentIds: values.chosenUsers.map(user => user.id),
                             teamIds: values.chosenTeams.map(team => team.id)
                           };
@@ -129,25 +140,25 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 </div>
                               </UICardBlock>
 
-                              <UICardBlock>
+                              {formik.values.targetUserId && (<UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Include target user to request?
                                   <span>
                                   <UISwitch
-                                         name='includeTargetUser'
-                                         checked={formik.values.includeTargetUser}
-                                         onChange={formik.handleChange}
+                                      name='includeTargetUser'
+                                      checked={formik.values.includeTargetUser}
+                                      onChange={formik.handleChange}
                                   /></span>
                                 </h4>
                                 <p>If yes, this user will also receive request</p>
-                              </UICardBlock>
-
+                              </UICardBlock>)
+                              }
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Set Deadline for this request?
                                   <span>
                                   <UISwitch
-                                         name='withDeadline'
-                                         checked={formik.values.withDeadline}
-                                         onChange={formik.handleChange}
+                                      name='withDeadline'
+                                      checked={formik.values.withDeadline}
+                                      onChange={formik.handleChange}
                                   /></span>
                                 </h4>
                                 <p>Users will be notified before the deadline</p>
@@ -172,9 +183,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <h4 className={styles.yesNoHeader}>Notify Users?
                                   <span>
                                   <UISwitch
-                                         name='notifyUsers'
-                                         checked={formik.values.notifyUsers}
-                                         onChange={formik.handleChange}
+                                      name='notifyUsers'
+                                      checked={formik.values.notifyUsers}
+                                      onChange={formik.handleChange}
                                   /></span>
                                 </h4>
                                 <p>Users will be notified after sending the request</p>
@@ -184,9 +195,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <h4 className={styles.yesNoHeader}>Automatically Generate Report?
                                   <span>
                                   <UISwitch
-                                         name='generateReport'
-                                         checked={formik.values.generateReport}
-                                         onChange={formik.handleChange}
+                                      name='generateReport'
+                                      checked={formik.values.generateReport}
+                                      onChange={formik.handleChange}
                                   /></span>
                                 </h4>
                               </UICardBlock>
@@ -267,17 +278,24 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       );
     };
 
-const mapStateToProps = (state: IAppState) => ({
+interface IRouterProps {
+    id: string;
+}
+
+const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
+  domProps: ownProps,
   teams: state.teams.teams,
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
-  isLoadingUsers: state.teams.isLoadingUsers
+  isLoadingUsers: state.teams.isLoadingUsers,
+  questions: state.questionnaires.current.questions
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
-  sendRequest: sendQuestionnaireRequestRoutine
+  sendRequest: sendQuestionnaireRequestRoutine,
+  loadQuestionnaire: loadOneQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -14,6 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ResponseDto {
     @NotNull
+    private UUID id;
+
+    @NotNull
     private UUID requestId;
 
     @NotNull

@@ -12,12 +12,9 @@ const UIListItem: FC<IUIListItemProps> = ({ name, children, category }) => {
         <List.Item>
             <div className={styles.listContainer}>
                 <Segment padded>
-                    <Header
-                        as='h2'
-                        className={styles.name}>{name}
-                        {category ?
-                            <Label>{category}</Label>
-                            : <></>}
+                    <Header as='h4' className={styles.name}>
+                        {name}
+                        {category && <Label>{category}</Label>}
                     </Header>
                     {children}
                 </Segment>

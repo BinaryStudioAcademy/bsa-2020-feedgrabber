@@ -7,6 +7,7 @@ $toggle-menu-timing: ease-out
   padding-top: 6em
   background-color: #e1e8ee
   transition: width $toggle-menu-duration $toggle-menu-timing
+  z-index: 1
 
 .menuContent
   display: flex
@@ -18,10 +19,10 @@ $toggle-menu-timing: ease-out
   transition: padding-left $toggle-menu-duration $toggle-menu-timing, background-color 0.1s
 
   &:hover
-    background-color: #ffc7d2
+    background-color: rgba(253,198,178,0.94)
 
 .menuItemActive
-  background-color: #ff5077
+  background-color: #ee6f57
 
   .menuItemIcon
     color: #fff
@@ -30,10 +31,10 @@ $toggle-menu-timing: ease-out
     color: #fff
 
   &:hover
-    background-color: #ff5077
+    background-color: #ee6f57
 
 .menuItemIcon
-  color: #130eda
+  color: #145374
 
 .menuItemTitle
   transition: margin-left $toggle-menu-duration $toggle-menu-timing, color $toggle-menu-duration $toggle-menu-timing

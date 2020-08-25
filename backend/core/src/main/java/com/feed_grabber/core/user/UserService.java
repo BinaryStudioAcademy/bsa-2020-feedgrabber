@@ -4,13 +4,18 @@ import com.feed_grabber.core.auth.AuthService;
 import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
+import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.invitation.InvitationRepository;
+import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.invitation.model.Invitation;
+import com.feed_grabber.core.registration.TokenType;
+import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
@@ -24,6 +29,7 @@ import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import com.feed_grabber.core.user.model.UserProfile;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,10 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +47,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
+    private final InvitationService invitationService;
     private final PasswordEncoder passwordEncoder;
     private final UserProfileRepository profileRepository;
     private final VerificationTokenService verificationTokenService;
@@ -55,6 +59,7 @@ public class UserService implements UserDetailsService {
                        RoleRepository roleRepository,
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
+                       InvitationService invitationService,
                        PasswordEncoder passwordEncoder,
                        UserProfileRepository profileRepository,
                        VerificationTokenService verificationTokenService) {
@@ -62,6 +67,7 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
+        this.invitationService = invitationService;
         this.passwordEncoder = passwordEncoder;
         this.profileRepository = profileRepository;
         this.verificationTokenService = verificationTokenService;
@@ -136,14 +142,19 @@ public class UserService implements UserDetailsService {
         return company.getId();
     }
 
-    public UUID createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException {
+    public UUID createInCompany(UserRegisterInvitationDTO registerDto) throws InvitationNotFoundException, InvitationExpiredException {
 
         var invitation = invitationRepository.findById(registerDto.getInvitationId())
                 .orElseThrow(InvitationNotFoundException::new);
+        if (invitationService.isExpired(invitation)) {
+            throw new InvitationExpiredException();
+        }
+
         var company = invitation.getCompany();
+        var email = invitation.getEmail();
 
         var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
-                registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
+                registerDto.getUsername(), company.getId(), email, company.getId()
         );
         if (existing.isPresent()) {
             throw new UserAlreadyExistsException();
@@ -153,14 +164,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow();
 
         var user = userRepository.save(User.builder()
-                .email(registerDto.getEmail())
+                .email(email)
                 .username(registerDto.getUsername())
                 .password(registerDto.getPassword())
                 .role(role)
                 .company(company)
                 .build()
         );
-        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
+        invitationRepository.acceptById(registerDto.getInvitationId());
         return invitation.getCompany().getId();
     }
 

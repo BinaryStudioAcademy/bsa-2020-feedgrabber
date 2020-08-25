@@ -22,6 +22,9 @@ public interface UserMapper {
     @Mapping(target = "role", source = "role.systemRole")
     UserResponseAuthDetailsDTO responseFromUser(User user);
 
+    @Mapping(target = "role", source = "role.systemRole")
+    UserDetailsReportDTO reportDetailsFromUser(User user);
+
     @Mapping(target = "userName", source = "username")
     @Mapping(target = "firstName", source = "userProfile.firstName")
     @Mapping(target = "lastName", source = "userProfile.lastName")
@@ -31,5 +34,4 @@ public interface UserMapper {
     UserDetailsResponseDTO detailedFromUser(User user);
 
     UserShortDto shortFromUser(User user);
-
 }

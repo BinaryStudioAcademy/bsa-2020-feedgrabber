@@ -19,16 +19,21 @@ configurations {
 
 repositories {
 	mavenCentral()
+    maven("https://jcenter.bintray.com")
 }
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("software.amazon.awssdk:s3:2.9.14")
 	implementation("com.sendgrid:sendgrid-java:4.6.3")
+    implementation("khttp:khttp:1.0.0")
+	compileOnly ("org.apache.poi:poi:4.1.2")
+	compileOnly ("org.apache.poi:poi-ooxml:4.1.2")
 	compileOnly("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.3.2.RELEASE")
 	annotationProcessor("org.projectlombok:lombok")

@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -28,6 +30,7 @@ public class Response {
     private UUID id;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "request_id")
     private Request request;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
@@ -36,4 +39,7 @@ public class Response {
 
     @Column
     private String payload;
+
+    @Column(name = "answered_at")
+    private Date answeredAt;
 }

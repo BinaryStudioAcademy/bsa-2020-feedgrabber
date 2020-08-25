@@ -19,11 +19,21 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  mongo-db:
+      image: mongo
+      container_name: 'mongo-db'
+      env_file:
+        - ../.env/mongo-db.env
+      volumes:
+        - mongodbdata:/data/db
+      ports:
+      - '27017:27017'
+
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
+    hostname: "localhost"
     container_name: 'rabbitmq'
-    hostname: "rabbit"
     env_file:
       - ../.env/rabbitmq.env
     ports:
@@ -34,10 +44,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-        
+
   # api
   api:
-    image: 'fg-core:latest'
+    image: 'feedgrabber2020/fg-core:latest'
     container_name: 'fg-core'
     depends_on:
       - core-db
@@ -55,7 +65,7 @@ services:
 
   # event-processor
   event-processor:
-    image: 'fg-event-processor:latest'
+    image: 'feedgrabber2020/fg-event-processor:latest'
     container_name: 'fg-event-processor'
     depends_on:
       - rabbitmq
@@ -72,7 +82,7 @@ services:
 
   # Frontend
   client:
-    image: 'fg-client:latest'
+    image: 'feedgrabber2020/fg-client:latest'
     container_name: 'fg-client'
     depends_on:
       - api
@@ -97,4 +107,6 @@ volumes:
   pglog_core:
     driver: local
   shared:
+    driver: local
+  mongodbdata:
     driver: local

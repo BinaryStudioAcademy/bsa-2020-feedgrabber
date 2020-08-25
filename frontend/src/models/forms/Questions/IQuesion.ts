@@ -1,6 +1,10 @@
-export interface IMultiAnswerDetails {
-    answerOptions: string[];
-}
+import {
+    IAnswerBody
+} from "../Response/types";
+
+// export interface IMultiAnswerDetails {
+//     answerOptions: string[];
+// }
 export interface ICheckboxAnswerDetails {
     answerOptions: string[];
     includeOther: boolean;
@@ -42,10 +46,11 @@ export interface IQuestionBase<TDetails> {
     categoryTitle: string;
     type: QuestionType;
     details: TDetails;
-    answer: any;
+    answer: IAnswerBody;
     isReused: boolean;
     top?: number;
     right?: number;
+    isRequired: boolean;
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {
@@ -60,9 +65,9 @@ export interface ITextQuestion extends IQuestionBase<{}> {
     type: QuestionType.freeText;
 }
 
-export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails> {
-    type: QuestionType.multichoice;
-}
+// export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails> {
+//     type: QuestionType.multichoice;
+// }
 
 export interface ICheckboxQuestion extends IQuestionBase<ICheckboxAnswerDetails> {
     type: QuestionType.checkbox;
@@ -77,7 +82,7 @@ export interface IFileUploadQuestion extends IQuestionBase<IFileUploadAnswerDeta
 }
 
 export type IQuestion =
-    | IMultichoiceQuestion
+    // | IMultichoiceQuestion
     | ITextQuestion
     | IScaleQuestion
     | IRadioQuestion
@@ -86,13 +91,13 @@ export type IQuestion =
     | IFileUploadQuestion;
 
 export enum QuestionType {
-    freeText = "free_text",
+    freeText = "freeText",
     radio = "radio",
     scale = "scale",
     checkbox = "checkbox",
-    multichoice = "multi_choice",
+    // multichoice = "multi_choice",
     date = "date",
-    fileUpload = "file_upload"
+    fileUpload = "fileUpload"
 }
 
 export const DraggableItemTypes = {

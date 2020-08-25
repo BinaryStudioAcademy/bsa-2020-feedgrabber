@@ -1,5 +1,6 @@
 package com.feed_grabber.core.request.model;
 
+import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.model.User;
@@ -8,8 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +35,7 @@ public class Request {
     @JoinColumn(name = "request_maker_id", nullable = false)
     private User requestMaker;
 
-    @OneToMany(mappedBy = "request", cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "request", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private List<Response> responses;
 
     @Column(name = "creation_date")
@@ -44,11 +43,22 @@ public class Request {
     private Date creationDate;
 
     @Column(name = "expiration_date")
-    private LocalDateTime expirationDate;
+    private Date expirationDate;
 
     @Column(name = "notify_users")
     private Boolean notifyUsers;
 
     @Column(name = "generate_report")
     private Boolean generateReport;
+
+    @Column
+    private Date closeDate;
+
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "excel_report_id", referencedColumnName = "id")
+    private S3File excelReport;
+
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "powerpoint_report_id", referencedColumnName = "id")
+    private S3File powerPointReport;
 }

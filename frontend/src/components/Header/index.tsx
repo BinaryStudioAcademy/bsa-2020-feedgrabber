@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import {IUserInfo} from "../../models/user/types";
 import NotificationMenu from "../NotificationMenu";
-import {INotification} from "../../reducers/notifications";
+// import {INotification} from "../../reducers/notifications";
 
 export interface IHeaderProps {
   user: IUserInfo;

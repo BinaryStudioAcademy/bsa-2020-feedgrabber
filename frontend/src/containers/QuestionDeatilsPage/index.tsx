@@ -3,7 +3,11 @@ import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
-import { loadQuestionByIdRoutine, saveQuestionToQuestionnaireRoutine } from "../../sagas/questions/routines";
+import {
+    addNewQuestionToQuestionnaireRoutine,
+    loadQuestionByIdRoutine,
+    saveQuestionRoutine
+} from "../../sagas/questions/routines";
 import { useHistory } from "react-router-dom";
 import QuestionDetails from "../../components/QuestionDetails";
 import { Button, Loader } from "semantic-ui-react";
@@ -16,8 +20,10 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
+        saveAndAddQuestion,
         loadCategories,
         questionnaireId,
+        questionnaireQuesitons,
         categories,
         match,
         isPreview
@@ -55,10 +61,22 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         if (isQuestionDetailsValid) {
             saveQuestion({
                 ...question,
-                questionnaireId
+                questionnaireId,
+                questionnaireQuesitons
             });
         }
         isPreview ? isPreview.close() : history.goBack();
+    };
+
+    const onCopy = () => {
+        if (isQuestionDetailsValid) {
+            saveAndAddQuestion({
+                ...question,
+                id: null,
+                questionnaireId
+            });
+            isPreview ? isPreview.close() : history.goBack();
+        }
     };
 
     return (
@@ -73,6 +91,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                         currentQuestion={currentQuestion}
                         categories={categories}
                         onValueChange={handleQuestionDetailsUpdate}
+                        onCopy={onCopy}
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
                         <Button className="ui button" color="red" onClick={onClose}>
@@ -96,13 +115,15 @@ const mapState = (state: IAppState) => ({
     currentQuestion: state.questions.current,
     isLoading: state.questions.categories.isLoading,
     categories: state.questions.categories.list,
-    questionnaireId: state.questionnaires.current.get.id
+    questionnaireId: state.questionnaires.current.get.id,
+    questionnaireQuesitons: state.questionnaires.current.questions
 });
 
 const mapDispatch = {
-    saveQuestion: saveQuestionToQuestionnaireRoutine,
+    saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine
+    loadCategories: loadCategoriesRoutine,
+    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

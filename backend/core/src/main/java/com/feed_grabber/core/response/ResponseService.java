@@ -1,30 +1,52 @@
 package com.feed_grabber.core.response;
 
-import com.amazonaws.services.kms.model.NotFoundException;
-import com.feed_grabber.core.request.RequestRepository;
 import com.feed_grabber.core.response.dto.ResponseDto;
-import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.response.dto.ResponseUpdateDto;
+import com.feed_grabber.core.response.dto.UserResponseShortDto;
+import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
+import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ResponseService {
     private final ResponseRepository responseRepository;
-    private final UserRepository userRepository;
-    private final RequestRepository requestRepository;
 
-    public ResponseService(ResponseRepository responseRepository, UserRepository userRepository, RequestRepository requestRepository) {
+    public ResponseService(ResponseRepository responseRepository) {
         this.responseRepository = responseRepository;
-        this.userRepository = userRepository;
-        this.requestRepository = requestRepository;
     }
 
-    public void save(ResponseDto dto) throws NotFoundException {
-        var user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+    public Optional<ResponseDto> getOneByRequestAndUser(UUID requestId, UUID userId) {
+        return Optional
+                .of(ResponseMapper.MAPPER.responseToDto(responseRepository.findByRequestAndUser(requestId, userId)));
+    }
 
-        var request = requestRepository.findById(dto.getRequestId())
-                .orElseThrow(() -> new NotFoundException("Request not found"));
+    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException,
+            DeadlineExpiredException {
+        var response = responseRepository.findById(dto.getId()).orElseThrow(ResponseNotFoundException::new);
+        var request = response.getRequest();
 
-        responseRepository.save(ResponseMapper.MAPPER.responseFromDto(dto, user, request));
+        if (Optional.ofNullable(request.getExpirationDate()).isPresent()
+                && request.getExpirationDate().compareTo(new Date()) < 0) {
+            throw new DeadlineExpiredException(request.getExpirationDate().toString());
+        }
+        response.setPayload(dto.getPayload());
+        response.setAnsweredAt(new Date());
+
+        return Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));
+    }
+
+    public ResponseDto getById(UUID responseId) throws ResponseNotFoundException {
+        return ResponseMapper
+                .MAPPER.responseToDto(responseRepository.findById(responseId)
+                        .orElseThrow(ResponseNotFoundException::new));
+    }
+
+    public List<UserResponseShortDto> getRespondents(UUID requestId) {
+        return responseRepository.findRespondentsByRequestId(requestId);
     }
 }
