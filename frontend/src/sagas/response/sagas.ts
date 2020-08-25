@@ -4,7 +4,7 @@ import { getResponseRoutine, saveResponseRoutine } from './routines';
 import { toastr } from 'react-redux-toastr';
 import { loadRequestedQuestionnairesRoutine } from 'sagas/request/routines';
 
-function* getResponse(action) {
+function* getCurrentUserResponse(action) {
     try {
         const result = yield call(apiClient.get, `/api/response/request/${action.payload}`);
         const response = result.data.data;
@@ -29,7 +29,7 @@ function* saveResponse(action) {
 
 export default function* responseSagas() {
     yield all([
-        yield takeEvery(getResponseRoutine.trigger, getResponse),
+        yield takeEvery(getResponseRoutine.trigger, getCurrentUserResponse),
         yield takeEvery(saveResponseRoutine.trigger, saveResponse)
     ]);
 }

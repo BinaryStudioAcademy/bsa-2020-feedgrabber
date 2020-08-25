@@ -5,9 +5,7 @@ import {useAuth} from '../../security/authProvider';
 const GuestRoute = ({component: Component, ...rest}) => {
   const isLogged = useAuth();
 
-  if (isLogged) {
-    return <Redirect to="/"/>;
-  }
+  if (isLogged) return <Redirect to="/"/>;
 
   return <Route {...rest} component={Component} />;
 };

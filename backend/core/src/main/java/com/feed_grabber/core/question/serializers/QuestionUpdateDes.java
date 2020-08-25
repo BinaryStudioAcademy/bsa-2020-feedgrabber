@@ -32,8 +32,9 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
         String category = node.get("categoryTitle").asText();
         String text = node.get("name").asText();
         Integer index = this.getIndex(node);
+        boolean isRequired = this.isRequired(node);
 
-        return new QuestionUpdateDto(id, text, category, payload, index);
+        return new QuestionUpdateDto(id, text, category, payload, index, isRequired);
     }
 
     private Integer getIndex(JsonNode node) {
@@ -48,4 +49,8 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
                 : "";
     }
 
+    private boolean isRequired(JsonNode node) {
+        return node.hasNonNull("isRequired")
+                && Boolean.parseBoolean(node.get("isRequired").toString());
+    }
 }

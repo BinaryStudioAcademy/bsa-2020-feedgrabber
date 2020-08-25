@@ -1,6 +1,5 @@
 package com.feed_grabber.core.response.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
@@ -8,10 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -46,5 +45,5 @@ public class Response {
     private Boolean notificationExists = false;
 
     @Column(name = "answered_at")
-    private LocalDateTime answeredAt;
+    private Date answeredAt;
 }
