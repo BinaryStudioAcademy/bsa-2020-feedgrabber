@@ -41,7 +41,7 @@ const MainPage: FC<IMainPageProps> =
       if (!questionnaireList && !isLoading) {
         loadQuestionnaires();
       }
-    }, [loadQuestionnaires]);
+    }, [isLoading, loadQuestionnaires, questionnaireList]);
 
     const handleAnswerClick = (requestId, questionnaireId) => {
       getResponse(requestId);
