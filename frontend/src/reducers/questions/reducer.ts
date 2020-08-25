@@ -1,7 +1,6 @@
 import {
   loadQuestionsRoutine,
   loadQuestionByIdRoutine,
-  addNewQuestionToQuestionnaireRoutine,
   saveQuestionRoutine
 } from "sagas/questions/routines";
 import { IAppState } from "models/IAppState";
@@ -63,12 +62,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
             return {
                 ...state,
                 current: payload,
-                list: [...state.list, payload],
-                isLoading: false
-            };
-        case addNewQuestionToQuestionnaireRoutine.SUCCESS:
-            return {
-                ...state,
                 list: [...state.list, payload],
                 isLoading: false
             };
