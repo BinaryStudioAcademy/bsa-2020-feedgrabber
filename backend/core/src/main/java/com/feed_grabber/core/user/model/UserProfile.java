@@ -1,5 +1,6 @@
 package com.feed_grabber.core.user.model;
 
+import com.feed_grabber.core.image.model.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,8 +35,9 @@ public class UserProfile {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "avatar_url")
-    private String avatar;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "avatar_id", referencedColumnName = "id")
+    private Image avatar;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

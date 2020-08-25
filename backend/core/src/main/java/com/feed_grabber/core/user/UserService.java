@@ -10,6 +10,9 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
+import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.image.ImageRepository;
+import com.feed_grabber.core.image.ImageService;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
@@ -51,8 +54,9 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserProfileRepository profileRepository;
     private final VerificationTokenService verificationTokenService;
+    private final ImageRepository imageRepository;
     private static final Random random = new Random();
-    private static final Long RANDOM_MAX = 36L*36L*36L*36L*36L*36L;
+    private static final Long RANDOM_MAX = 36L * 36L * 36L * 36L * 36L * 36L;
 
 
     public UserService(UserRepository userRepository,
@@ -62,6 +66,7 @@ public class UserService implements UserDetailsService {
                        InvitationService invitationService,
                        PasswordEncoder passwordEncoder,
                        UserProfileRepository profileRepository,
+                       ImageRepository imageRepository,
                        VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -71,6 +76,7 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
         this.profileRepository = profileRepository;
         this.verificationTokenService = verificationTokenService;
+        this.imageRepository = imageRepository;
     }
 
     @Transactional
@@ -276,7 +282,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void editUserProfile(UserProfileEditDto dto) {
+    public void editUserProfile(UserProfileEditDto dto) throws NotFoundException {
         var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
         if (user.getUserProfile() == null) {
@@ -284,7 +290,8 @@ public class UserService implements UserDetailsService {
             user.setUserProfile(savedProfile);
         }
         var profile = user.getUserProfile();
-        profile.setAvatar(dto.getAvatar());
+        var avatar = imageRepository.findByLink(dto.getAvatar()).orElseThrow(NotFoundException::new);
+        profile.setAvatar(avatar);
         profile.setFirstName(dto.getFirstName());
         profile.setLastName(dto.getLastName());
         profile.setPhoneNumber(dto.getPhoneNumber());
@@ -300,8 +307,8 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])","-");
-        return name + "-" + Long.toString(random.nextLong()%RANDOM_MAX, 36);
+        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
+        return name + "-" + Long.toString(random.nextLong() % RANDOM_MAX, 36);
     }
 }
 
