@@ -5,12 +5,7 @@ export function replaceAtIndex<T>(arr: T[], val: T, index: number) {
 }
 
 export function updateQuestions(questions: IQuestion[], newQuestion: IQuestion) {
-    let isThereQuestion = false;
-    for (const question of questions) {
-        if (newQuestion.id === question.id) {
-            isThereQuestion = true;
-        }
-    }
+    const isThereQuestion = questions.some(question => question.id === newQuestion.id);
 
     if (isThereQuestion) {
         return questions.map(q => q.id === newQuestion.id ?
