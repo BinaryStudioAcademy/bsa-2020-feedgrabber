@@ -72,6 +72,15 @@ public class QuestionnaireController {
         );
     }
 
+    @GetMapping("/requests/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<QuestionnaireDto> getRequests(@PathVariable UUID id) throws QuestionnaireNotFoundException {
+        return new AppResponse<>(
+                questionnaireService.getOne(id)
+                        .orElseThrow(QuestionnaireNotFoundException::new)
+        );
+    }
+
     @ApiOperation("Create a questionnaire")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

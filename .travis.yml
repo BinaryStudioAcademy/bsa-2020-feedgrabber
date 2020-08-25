@@ -4,6 +4,7 @@ jdk:
 addons:
   ssh_known_hosts: 
     - 23.97.183.10
+    - 51.136.6.40
 
 env:
     - NODE_VERSION="v12.18.0"
@@ -12,6 +13,8 @@ before_install:
     - nvm install $NODE_VERSION
     - node --version
     - npm --version
+    - sudo apt-get update -y
+    - sudo apt-get install -y expect
 
 before_cache:
     - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -24,8 +27,8 @@ cache:
     npm: true
 
 script:
-    - if [[ $TRAVIS_EVENT_TYPE == "pull_request" && ($TRAVIS_PULL_REQUEST_BRANCH == "dev") || $TRAVIS_BRANCH == "infrastructure/ci_cd" ]] ; then bash scripts/test.sh ; fi
-    - if [[ $TRAVIS_EVENT_TYPE == "push" && $TRAVIS_BRANCH == "dev" ]] ; then  bash scripts/build.sh && bash scripts/deploy.sh ; fi
+    - if [[ $TRAVIS_EVENT_TYPE == "pull_request" && ($TRAVIS_PULL_REQUEST_BRANCH == "dev") ]] ; then bash scripts/test.sh ; fi
+    - if [[ $TRAVIS_EVENT_TYPE == "push" && $TRAVIS_BRANCH == "dev" ]] ; then  bash scripts/build.sh && expect scripts/deploy.sh ; fi
 
 notifications:
   slack:

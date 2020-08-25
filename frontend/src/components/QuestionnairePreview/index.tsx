@@ -1,6 +1,6 @@
 import ResponseQuestion from "components/ResponseQuestion";
 import { IAppState } from "models/IAppState";
-import React, { FC, useState, useCallback, useEffect } from "react";
+import React, {FC, useState, useCallback, useEffect} from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { Header, Button, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
@@ -8,10 +8,10 @@ import SelectQuestionsFromExisting from "components/SelectQuestionsFromExisting"
 import QuestionD from "components/QuestionDetails";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { IComponentState } from "../ComponentsQuestions/IQuestionInputContract";
-import { 
+import {
   addNewQuestionToQuestionnaireRoutine,
   loadQuestionnaireQuestionsRoutine,
-  indexQuestionsRoutine 
+  indexQuestionsRoutine
 } from "sagas/questions/routines";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
 
@@ -22,7 +22,8 @@ const newQuestion: IQuestion = {
   answer: {} as any,
   id: "",
   isReused: false,
-  details: {}
+  details: {},
+  isRequired: false
 };
 
 interface IIndex  {
@@ -40,6 +41,7 @@ interface IQuestionnairePreviewProps {
   qnId: string;
   indexQuestions(questions: IIndex): void;
 }
+
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   questions,
   qnId,
@@ -50,7 +52,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   const indexQuestionsHandler = () => {
     const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
     indexQuestions({questionnaireId: qnId,  questions: rst});
-  }; 
+  };
 
   useEffect(() => {
     setQuestionCards(questions);
@@ -70,7 +72,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   const drop = () => {
     indexQuestionsHandler();
   };
-  
+
   const renderCard = (q: IQuestion, index: number) => {
     return (
       <QuestionCard

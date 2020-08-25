@@ -28,4 +28,6 @@ public class QuestionUpdateDto {
     String details;
 
     Integer index;
+
+    boolean isRequired;
 }

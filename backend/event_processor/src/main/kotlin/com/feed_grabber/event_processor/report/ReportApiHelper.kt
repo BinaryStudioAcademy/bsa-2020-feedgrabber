@@ -16,7 +16,14 @@ class ReportApiHelper(val JSON: ObjectMapper = jacksonObjectMapper()) {
 
     fun fetchReportData(requestId: UUID): DataForReport {
         val result: DataForReport = RestTemplate().getForObject(URL.plus(requestId), DataForReport::class)
-        result.responses.forEach { it.payloadList = it.payload?.let { p -> JSON.readValue(p) } }
+        result.responses.forEach { t ->
+            run {
+                if (t.payload != "")
+                    t.payloadList = t.payload?.let { p -> JSON.readValue(p) }
+                else
+                    t.payloadList = null;
+            }
+        }
         return result
     }
 

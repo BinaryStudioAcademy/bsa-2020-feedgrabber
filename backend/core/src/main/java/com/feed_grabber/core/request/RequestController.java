@@ -1,17 +1,23 @@
 package com.feed_grabber.core.request;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
+import com.feed_grabber.core.report.ReportService;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
+import com.feed_grabber.core.request.dto.RequestShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 import java.util.Date;
@@ -24,6 +30,9 @@ public class RequestController {
     @Autowired
     RequestService requestService;
 
+    @Autowired
+    ReportService reportService;
+
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UUID> createNewRequest(@RequestBody CreateRequestDto dto)
@@ -31,12 +40,17 @@ public class RequestController {
         return new AppResponse<>(requestService.createNew(dto));
     }
 
-    // Force close feature
     @PostMapping("/close")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Date> closeRequest(@RequestBody UUID requestId)
-            throws NotFoundException {
+    public AppResponse<Date> closeRequest(@RequestParam UUID requestId) throws NotFoundException, JsonProcessingException {
+        reportService.generateReport(requestId);
         return new AppResponse<>(requestService.closeNow(requestId));
+    }
+
+    @ApiOperation("Get all requests by questionnaireId")
+    @GetMapping
+    public AppResponse<List<RequestShortDto>> getAllByQuestionnaireId(@RequestParam("questionnaireId") UUID id) {
+        return new AppResponse<>(requestService.getAllByQuestionnaire(id));
     }
 
     @GetMapping("/pending")

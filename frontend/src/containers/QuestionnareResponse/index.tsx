@@ -13,7 +13,7 @@ import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
-import { saveResponseRoutine } from 'sagas/questionnaireResponse/routines';
+import { saveResponseRoutine } from 'sagas/response/routines';
 
 interface IComponentState {
     question: IQuestion;

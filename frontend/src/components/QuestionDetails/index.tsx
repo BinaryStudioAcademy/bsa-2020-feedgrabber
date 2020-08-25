@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Divider, Dropdown, Form, Icon, Radio, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Dropdown, Form, Icon, Popup, Segment} from "semantic-ui-react";
 import {Formik} from "formik";
 import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
@@ -18,9 +18,10 @@ import QuestionDetailsOptions from "./QuestionDetailsOptions";
 interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
+    onValueChange(state: IComponentState<IQuestion>): void;
     onSave?(question: IQuestion);
     onDelete?(question: IQuestion);
-    onValueChange?(state: IComponentState<IQuestion>): void;
+    onCopy?(): void;
 }
 
 const QuestionD: React.FC<IQuestionProps> = ({
@@ -28,7 +29,8 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                                  categories,
                                                  onValueChange,
                                                  onSave,
-                                                 onDelete
+                                                 onDelete,
+                                                 onCopy
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
@@ -146,7 +148,11 @@ const QuestionD: React.FC<IQuestionProps> = ({
     return (
         <Formik
             enableReinitialize
-            initialValues={{name: question.name, categoryTitle: question.categoryTitle}}
+            initialValues={{
+                name: question.name,
+                categoryTitle: question.categoryTitle,
+                isRequired: question.isRequired
+            }}
             validationSchema={mainSchema}
             onSubmit={() => console.log()}
         >
@@ -219,6 +225,26 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                         <Icon name="trash alternate outline" size="large" onClick={handleDelete}/>
                                     </span>
                                 }
+                                {currentQuestion?.id &&
+                                <Popup content={"Copy"}
+                                       trigger={(
+                                           <span className={styles.icon} onClick={onCopy}>
+                                               <Icon name="clone outline" size="large" />
+                                           </span>
+                                       )}
+                                />
+                                }
+                                <Popup
+                                    content="Required"
+                                    trigger={
+                                        <Checkbox
+                                            toggle
+                                            name="isRequired"
+                                            checked={formik.values.isRequired}
+                                            onChange={(e, value ) =>
+                                                setQuestion({ ...question, isRequired: value.checked })}
+                                        />}
+                                />
                             </div>
                         </Segment>
                     </Form>
