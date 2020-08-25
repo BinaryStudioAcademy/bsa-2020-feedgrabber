@@ -19,12 +19,16 @@ import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
+import com.feed_grabber.core.user.dto.*;
+import com.feed_grabber.core.registration.TokenType;
+import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
+import com.feed_grabber.core.user.model.UserProfile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,10 +49,11 @@ public class UserService implements UserDetailsService {
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
     private final PasswordEncoder passwordEncoder;
+    private final UserProfileRepository profileRepository;
     private final VerificationTokenService verificationTokenService;
-
     private static final Random random = new Random();
     private static final Long RANDOM_MAX = 36L*36L*36L*36L*36L*36L;
+
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -56,6 +61,7 @@ public class UserService implements UserDetailsService {
                        InvitationRepository invitationRepository,
                        InvitationService invitationService,
                        PasswordEncoder passwordEncoder,
+                       UserProfileRepository profileRepository,
                        VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -63,6 +69,7 @@ public class UserService implements UserDetailsService {
         this.invitationRepository = invitationRepository;
         this.invitationService = invitationService;
         this.passwordEncoder = passwordEncoder;
+        this.profileRepository = profileRepository;
         this.verificationTokenService = verificationTokenService;
     }
 
@@ -266,6 +273,23 @@ public class UserService implements UserDetailsService {
 
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
+    }
+
+    @Transactional
+    public void editUserProfile(UserProfileEditDto dto) {
+        var user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
+        if (user.getUserProfile() == null) {
+            var savedProfile = profileRepository.save(new UserProfile(user));
+            user.setUserProfile(savedProfile);
+        }
+        var profile = user.getUserProfile();
+        profile.setAvatar(dto.getAvatar());
+        profile.setFirstName(dto.getFirstName());
+        profile.setLastName(dto.getLastName());
+        profile.setPhoneNumber(dto.getPhoneNumber());
+        user.setUsername(dto.getUserName());
+        userRepository.save(user);
     }
 
     public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {

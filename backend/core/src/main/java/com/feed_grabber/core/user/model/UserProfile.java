@@ -34,7 +34,14 @@ public class UserProfile {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "avatar_url")
+    private String avatar;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public UserProfile(User user) {
+        this.user = user;
+    }
 }
