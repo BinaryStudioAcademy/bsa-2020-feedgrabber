@@ -6,6 +6,7 @@ export interface IAnswer<T extends IAnswerBody> {
     type: QuestionType;
     body: T;
 }
+
 type FreeTextAnswer = string;
 
 type CheckBoxAnswer = {
@@ -34,6 +35,7 @@ export interface IQuestionnaireResponse {
     questionnaire: IQuestionnaire;
     expirationDate: Date;
     alreadyAnswered: boolean;
+    closeDate: string;
 }
 
 export interface IQuestionnaireResponseState {
