@@ -28,6 +28,9 @@ public class InvitationService {
     @Value("${invitation.duration.days}")
     private Integer INVITATION_DURATION_DAYS;
 
+    @Value("${client.host}")
+    private Integer CLIENT_HOST;
+
     private final InvitationRepository invitationRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
@@ -81,7 +84,7 @@ public class InvitationService {
         var invitation = InvitationMapper.MAPPER.invitationDtoToModel(dto);
         invitation = invitationRepository.save(invitation);
         emailSender.sendToProcessor(
-                "http://feedgrabber.com.localhost:3000/sign-up/" + invitation.getId().toString(),
+                CLIENT_HOST + "/sign-up/" + invitation.getId().toString(),
                 invitation.getEmail(),
                 "INVITE"
         );
