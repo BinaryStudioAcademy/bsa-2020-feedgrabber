@@ -4,6 +4,7 @@ import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
 import {
+    addNewQuestionToQuestionnaireRoutine,
     loadQuestionByIdRoutine,
     saveQuestionRoutine
 } from "../../sagas/questions/routines";
@@ -19,6 +20,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
+        saveAndAddQuestion,
         loadCategories,
         questionnaireId,
         questionnaireQuesitons,
@@ -68,7 +70,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onCopy = () => {
         if (isQuestionDetailsValid) {
-            saveQuestion({
+            saveAndAddQuestion({
                 ...question,
                 id: null,
                 questionnaireId
@@ -120,7 +122,8 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine
+    loadCategories: loadCategoriesRoutine,
+    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
