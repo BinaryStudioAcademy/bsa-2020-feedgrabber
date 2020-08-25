@@ -11,7 +11,7 @@ import {IInvitation} from "../../models/invitation/IInvitation";
 
 function* loadInvitations() {
   try {
-    const res = yield call(apiClient.get, `http://localhost:5000/api/invitations`);
+    const res = yield call(apiClient.get, `/api/invitations`);
     const list: IInvitation[] = res.data.data;
 
     yield put(loadInvitationsListRoutine.success(list));
@@ -38,7 +38,7 @@ function* generateInvitation(action: any) {
 function* deleteInvitation(action: any) {
   const email: string = action.payload;
   try {
-    yield call(apiClient.delete, `http://localhost:5000/api/invitations?email=${email}`);
+    yield call(apiClient.delete, `/api/invitations?email=${email}`);
 
     yield put(deleteInvitationRoutine.success(email));
     yield put(loadInvitationsListRoutine.trigger());

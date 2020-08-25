@@ -10,11 +10,10 @@ const responseErrorHandler = e => {
     const status = e.response.status;
     const originalRequest = e.config;
 
-    if ((status !== 403) || (status === 403 && originalRequest._retry)) {
-        if (status === 403) {
-            // redirect to /auth only if user are not logged (forbidden response status)
-            history.push('/auth');
-        }
+    if (status !== 403) return Promise.reject(e.response);
+
+    if (originalRequest._retry) {
+        history.push('/auth');
         return Promise.reject(e.response);
     }
 

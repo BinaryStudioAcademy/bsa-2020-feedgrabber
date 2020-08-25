@@ -9,10 +9,10 @@ import java.util.*
 data class Report(
         @Id
         val id: UUID,
-        val questions: List<QuestionDB>,
+        val questions: List<QuestionDB>?,
         val questionnaire: QuestionnaireDto,
-        val requestCreationDate: LocalDateTime,
-        val requestExpirationDate: LocalDateTime?,
+        val requestCreationDate: Date,
+        val requestExpirationDate: Date?,
         val requestMaker: UserDto,
         val targetUser: UserDto?,
         var excelLink: String,
