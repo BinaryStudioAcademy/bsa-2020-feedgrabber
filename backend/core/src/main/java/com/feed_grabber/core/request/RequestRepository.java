@@ -23,4 +23,6 @@ public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findAllUnansweredByRespondentId(UUID id);
 
     List<Request> findAllByQuestionnaireId(UUID id);
+
+    boolean existsByCloseDateIsNotNullAndId(UUID id);
 }

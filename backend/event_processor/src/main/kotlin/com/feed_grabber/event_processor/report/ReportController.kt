@@ -11,10 +11,10 @@ import java.util.*
 @RequestMapping("/ep/report")
 class ReportController(val service: ReportService) {
     @GetMapping("/{requestId}")
-    fun getReport(@PathVariable("requestId") requestId: UUID) = service.getFrontendData(requestId)
+    fun getReport(@PathVariable requestId: UUID) = service.getFrontendData(requestId)
 
     @PostMapping
-    fun generateReport(@RequestBody dto: DataForReport) = service.parseReportForFrontend(service.parseAndSaveReport(dto))
+    fun generateReport(@RequestBody dto: DataForReport) = service.reportToDto(service.parseAndSaveReport(dto))
 
     @ExceptionHandler(value = [(EmptyResultDataAccessException::class)])
     fun handleUserAlreadyExists(ex: EmptyResultDataAccessException) = ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)

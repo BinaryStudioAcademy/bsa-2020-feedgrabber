@@ -25,8 +25,4 @@ data class QuestionWithOptions(val options: List<OptionInfo>) : QuestionReportDa
 
 data class QuestionWithValues(val values: List<String>) : QuestionReportData()
 
-interface FrontProjection {
-    fun getQuestions(): List<QuestionDB>
-
-    fun getQuestionnaire(): QuestionnaireDto
-}
+data class FrontendProjection(val questions: List<QuestionDB>, val questionnaire: QuestionnaireDto)

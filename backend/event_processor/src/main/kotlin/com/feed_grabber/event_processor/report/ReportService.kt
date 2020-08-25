@@ -14,7 +14,7 @@ import java.util.*
 class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = jacksonObjectMapper()) {
     fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
 
-    fun getFrontendData(requestId: UUID) = parseReportForFrontend(repository.findById(requestId))
+    fun getFrontendData(requestId: UUID): FrontendReportData = projectionToDto(repository.getProjection(requestId))
 
     fun parseIncomingData(dto: DataForReport): Report {
         dto.responses.forEach { it.payloadList = it.payload?.let { p -> JSON.readValue(p) } }
@@ -37,15 +37,15 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
         }
     }
 
-    fun parseReportForFrontend(report: FrontProjection): FrontendReportData = FrontendReportData(
-            report.getQuestionnaire(),
-            report.getQuestions().map {
+    fun projectionToDto(report: FrontendProjection): FrontendReportData = FrontendReportData(
+            report.questionnaire,
+            report.questions.map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))
             })
 
-    fun parseReportForFrontend(report: Report): FrontendReportData = FrontendReportData(
+    fun reportToDto(report: Report): FrontendReportData = FrontendReportData(
             report.questionnaire,
             report.questions?.map {
                 QuestionInfo(it.id, it.title, it.type,
