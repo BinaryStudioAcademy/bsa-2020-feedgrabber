@@ -39,7 +39,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     useEffect(() => {
         loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire]);
+    }, [loadOneQuestionnaire, match.params.id]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [isValid, setIsValid] = useState(false);
