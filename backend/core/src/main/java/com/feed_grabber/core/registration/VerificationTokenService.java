@@ -55,11 +55,7 @@ public class VerificationTokenService {
         User user = vToken.getUser();
         user.setIsEnabled(true);
 
-        try {
-			verificationTokenRepository.delete(vToken);
-		} catch (Exception ex) {
-			
-		}
+        verificationTokenRepository.delete(vToken);
         return userRepository.save(user);
     }
 

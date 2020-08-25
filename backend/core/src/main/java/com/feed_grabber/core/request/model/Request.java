@@ -1,7 +1,5 @@
 package com.feed_grabber.core.request.model;
 
-import com.feed_grabber.core.notification.model.UserNotification;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.model.Response;
