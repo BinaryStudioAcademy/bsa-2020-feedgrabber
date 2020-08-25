@@ -19,7 +19,6 @@ import UICard from "../../components/UI/UICard";
 import UIColumn from "../../components/UI/UIColumn";
 import UIContent from "../../components/UI/UIContent";
 
-
 const newQuestion: IQuestion = {
     type: QuestionType.freeText,
     categoryTitle: "",
@@ -27,7 +26,8 @@ const newQuestion: IQuestion = {
     answer: "",
     id: "",
     isReused: false,
-    details: {}
+    details: {},
+    isRequired: false
 };
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
@@ -128,7 +128,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 interface IRouterProps {
     id: string;
 }
-    
+
 const mapStateToProps = (rootState: IAppState) => ({
     currentQuestion: rootState.questions.current,
     questionnaire: rootState.questionnaires.current.get,

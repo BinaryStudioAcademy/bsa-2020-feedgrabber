@@ -22,7 +22,8 @@ const newQuestion: IQuestion = {
   answer: {} as any,
   id: "",
   isReused: false,
-  details: {}
+  details: {},
+  isRequired: false
 };
 
 interface IIndex  {
@@ -40,6 +41,7 @@ interface IQuestionnairePreviewProps {
   qnId: string;
   indexQuestions(questions: IIndex): void;
 }
+
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   questions,
   qnId,
