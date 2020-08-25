@@ -29,4 +29,6 @@ public class QuestionUpsertDto {
     Integer index;
 
     QuestionType type;
+
+    boolean isRequired;
 }

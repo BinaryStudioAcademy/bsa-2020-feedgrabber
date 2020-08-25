@@ -50,7 +50,8 @@ function* loadRespondentReports(action) {
 
         const map = new Map<string, QuestionDto>(questions.map(q => [q.id, q]));
 
-        const result: IQuestion[] = answers.map(a => ({answer: a.body, ...map.get(a.questionId), isReused: false}));
+        const result: IQuestion[] = answers.map(a => (
+            {answer: a.body, ...map.get(a.questionId), isReused: false, isRequired: false}));
 
         yield put(loadRespondentReportRoutine.success(result));
     } catch (error) {

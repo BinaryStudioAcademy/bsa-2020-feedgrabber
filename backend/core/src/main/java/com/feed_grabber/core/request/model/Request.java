@@ -1,5 +1,6 @@
 package com.feed_grabber.core.request.model;
 
+import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.model.User;
@@ -52,4 +53,12 @@ public class Request {
 
     @Column
     private Date closeDate;
+
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "excel_report_id", referencedColumnName = "id")
+    private S3File excelReport;
+
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "powerpoint_report_id", referencedColumnName = "id")
+    private S3File powerPointReport;
 }

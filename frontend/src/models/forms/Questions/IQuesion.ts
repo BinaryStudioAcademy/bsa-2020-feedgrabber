@@ -50,6 +50,7 @@ export interface IQuestionBase<TDetails> {
     isReused: boolean;
     top?: number;
     right?: number;
+    isRequired: boolean;
 }
 
 export interface IRadioQuestion extends IQuestionBase<IRadioButtonAnswerDetails> {

@@ -26,12 +26,22 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Value("${rabbitmq.routing-key-response}")
     private String routingKey;
 
+    @Value("${rabbitmq.routing-key-report-excel-link}")
+    private String reportGenerationResponseRoutingKey;
+
     @Value("${rabbitmq.queue.response}")
     private String queue;
+
+    @Value("${rabbitmq.queue.report}")
+    private String reportQueue;
 
     @Bean
     public Queue queue() {
         return new Queue(queue, true);
+    }
+    @Bean
+    public Queue reportQueue() {
+        return new Queue(reportQueue, true);
     }
 
     @Bean
@@ -42,6 +52,11 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    }
+
+    @Bean
+    public Binding bindingReportResponseQueue(Queue reportQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(reportQueue).to(exchange).with(reportGenerationResponseRoutingKey);
     }
 
     @Bean
