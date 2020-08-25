@@ -63,10 +63,10 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         loadTeams();
       }, [loadTeams]);
 
-        // load teams
-        useEffect(() => {
-            loadQuestionnaire(match.params.id);
-        }, [loadQuestionnaire, match.params.id]);
+      // load questionnaire
+      useEffect(() => {
+        loadQuestionnaire(match.params.id);
+      }, [loadQuestionnaire, match.params.id]);
 
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
@@ -75,15 +75,15 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
             <UIPageTitle title='Send Request'/>
             <UIContent>
               <UIColumn>
-                  <UICard>
-                    <UICardBlock>
-                        <QuestionnairePreview
-                            indexQuestions={indexQuestionsRoutine}
-                            qnId={match.params.id}
-                            questions={questions ?? []}
-                        />
-                    </UICardBlock>
-                  </UICard>
+                <UICard>
+                  <UICardBlock>
+                    <QuestionnairePreview
+                        indexQuestions={indexQuestionsRoutine}
+                        qnId={match.params.id}
+                        questions={questions ?? []}
+                    />
+                  </UICardBlock>
+                </UICard>
               </UIColumn>
               <UIColumn>
                 <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
@@ -279,7 +279,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
     };
 
 interface IRouterProps {
-    id: string;
+  id: string;
 }
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({

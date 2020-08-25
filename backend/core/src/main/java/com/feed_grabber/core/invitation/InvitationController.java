@@ -12,10 +12,14 @@ import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.invitation.exceptions.InvitationUserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
 
 @RestController
 @RequestMapping("/api/invitations")
@@ -34,31 +38,31 @@ public class InvitationController {
     }
 
     @GetMapping
+    @PreAuthorize(IS_COMPANY_OWNER)
     public AppResponse<List<InvitationDto>> getByCompanyId() {
-        assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(invitationService.getByCompanyId(companyId));
     }
 
     @PostMapping
+    @PreAuthorize(IS_COMPANY_OWNER)
     public AppResponse<InvitationGenerateResponseDto> generate(@RequestBody InvitationGenerateRequestDto dto)
             throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
-        assertCompanyOwner();
         dto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(invitationService.generate(dto));
     }
 
     @PostMapping("/resend")
+    @PreAuthorize(IS_COMPANY_OWNER)
     public AppResponse<InvitationGenerateResponseDto> reGenerate(@RequestBody InvitationGenerateRequestDto dto)
             throws CompanyNotFoundException, InvitationAlreadyExistsException, InvitationUserAlreadyExistsException {
-        assertCompanyOwner();
         dto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(invitationService.reGenerate(dto));
     }
 
     @DeleteMapping
+    @PreAuthorize(IS_COMPANY_OWNER)
     public void delete(@RequestParam String email) {
-        assertCompanyOwner();
         var companyId = TokenService.getCompanyId();
         invitationService.deleteByCompanyIdAndEmail(companyId, email);
     }
