@@ -24,11 +24,12 @@ export interface IRequest {
 }
 
 export interface IQuestionnaire {
-  id?: string;
-  title: string;
-  description?: string;
-  companyName?: string;
-  questions?: IQuestion[];
+    id?: string;
+    title: string;
+    description?: string;
+    companyName?: string;
+    questions?: IQuestion[];
+    isEditingEnabled: boolean;
 }
 
 export interface ICreateQuestionnaire {

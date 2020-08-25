@@ -108,7 +108,7 @@ function* addFromExisting(action) {
 //         );
 //         yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
 //      } catch (e) {
-//         yield put(saveQuestionToQuestionnaireRoutine.failure());
+//         yield put(saveQuestionRoutine.failure());
 //         toastr.error("Question wasn't saved");
 //     }
 // }

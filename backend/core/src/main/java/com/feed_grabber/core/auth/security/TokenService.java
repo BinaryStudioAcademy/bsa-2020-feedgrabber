@@ -24,7 +24,7 @@ import static com.feed_grabber.core.auth.security.SecurityConstants.*;
 
 @Service
 public class TokenService {
-    @Value(value = "${auth0.secret-key}")
+    @Value("${auth0.secret-key}")
     private String SECRET_KEY;
 
     public String extractUserid(String token) {

@@ -33,4 +33,6 @@ public class QuestionCreateDto {
     String details;
 
     Integer index;
+
+    boolean isRequired;
 }

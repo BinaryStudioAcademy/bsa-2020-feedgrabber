@@ -25,7 +25,8 @@ const newQuestion: IQuestion = {
     answer: "",
     id: "",
     isReused: false,
-    details: {}
+    details: {},
+    isRequired: false
 };
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
