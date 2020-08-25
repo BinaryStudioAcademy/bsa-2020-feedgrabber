@@ -11,8 +11,7 @@ import {
 import { IAppState } from "../../models/IAppState";
 import { combineReducers } from "redux";
 import {
-    addNewQuestionToQuestionnaireRoutine,
-    addSelectedQuestionsRoutine, copyQuestionInQuestionnaireRoutine, deleteFromQuestionnaireRoutine,
+    addSelectedQuestionsRoutine, deleteFromQuestionnaireRoutine,
     loadQuestionnaireQuestionsRoutine
 } from "../../sagas/questions/routines";
 import { IQuestionnaire, IRequest } from "../../models/forms/Questionnaires/types";
@@ -116,22 +115,13 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 isLoading: false
             };
         case deleteFromQuestionnaireRoutine.SUCCESS:
-        case copyQuestionInQuestionnaireRoutine.SUCCESS:
         case loadQuestionnaireQuestionsRoutine.SUCCESS:
             return {
                 ...state,
                 questions: payload,
                 isLoading: false
             };
-        case addNewQuestionToQuestionnaireRoutine.SUCCESS:
-            return {
-                ...state,
-                questions: [payload, ...state.questions],
-                isLoading: false
-            };
         case deleteFromQuestionnaireRoutine.TRIGGER:
-        case copyQuestionInQuestionnaireRoutine.TRIGGER:
-        case addNewQuestionToQuestionnaireRoutine.TRIGGER:
         case loadOneQuestionnaireRoutine.TRIGGER:
         case loadQuestionnaireQuestionsRoutine.TRIGGER:
         case addSelectedQuestionsRoutine.TRIGGER:
@@ -140,8 +130,6 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 isLoading: true
             };
         case deleteFromQuestionnaireRoutine.FAILURE:
-        case copyQuestionInQuestionnaireRoutine.FAILURE:
-        case addNewQuestionToQuestionnaireRoutine.FAILURE:
         case loadQuestionnaireQuestionsRoutine.FAILURE:
         case addSelectedQuestionsRoutine.FAILURE:
             return {

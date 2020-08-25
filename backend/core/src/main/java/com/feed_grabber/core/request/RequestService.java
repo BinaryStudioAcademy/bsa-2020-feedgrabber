@@ -1,6 +1,10 @@
 package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.notification.UserNotificationMapper;
+import com.feed_grabber.core.notification.UserNotificationRepository;
+import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.dto.S3FileCreationDto;
@@ -24,24 +28,30 @@ import java.util.stream.Collectors;
 
 @Service
 public class RequestService {
-    RequestRepository requestRepository;
-    QuestionnaireRepository questionnaireRepository;
-    UserRepository userRepository;
-    TeamRepository teamRepository;
-    ResponseRepository responseRepository;
-    FileRepository fileRepository;
+    private final RequestRepository requestRepository;
+    private final QuestionnaireRepository questionnaireRepository;
+    private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
+    private final ResponseRepository responseRepository;
+    private final UserNotificationRepository userNotificationRepository;
+    private final NotificationService notificationService;
+    private final FileRepository fileRepository;
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
                           UserRepository userRepository,
                           TeamRepository teamRepository,
                           ResponseRepository responseRepository,
+                          UserNotificationRepository userNotificationRepository,
+                          NotificationService notificationService,
                           FileRepository fileRepository) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.responseRepository = responseRepository;
+        this.userNotificationRepository = userNotificationRepository;
+        this.notificationService = notificationService;
         this.fileRepository = fileRepository;
     }
 
@@ -49,10 +59,12 @@ public class RequestService {
         var questionnaire = questionnaireRepository
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
+
         if (questionnaire.isEditingEnabled()) {
             questionnaire.setEditingEnabled(false);
             questionnaireRepository.save(questionnaire);
         }
+
         var currentUser = userRepository
                 .findById(TokenService.getUserId())
                 .orElseThrow(UserNotFoundException::new);
@@ -81,12 +93,30 @@ public class RequestService {
             if (dto.getIncludeTargetUser()) users.add(targetUser);
             else users.remove(targetUser);
         }
-
+      
+        var notificationExists = dto.getNotifyUsers();
         var responses = users.stream()
-                .map(u -> Response.builder().user(u).request(request).build())
+                .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
+
+        if (dto.getNotifyUsers()) {
+            var toSaveNotification = UserNotification
+                    .builder()
+                    .request(request)
+                    .text("You have new questionnaire request")
+                    .build();
+
+            var notification = userNotificationRepository.save(toSaveNotification);
+
+            var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
+            var toSendNotification = userNotificationRepository.findNotificationById(notification.getId());
+            notificationService.sendMessageToUsers(
+                    userIds,
+                    "notify",
+                    toSendNotification);
+        }
 
         return request.getId();
     }

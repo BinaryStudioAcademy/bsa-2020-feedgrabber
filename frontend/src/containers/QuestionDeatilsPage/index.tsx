@@ -4,7 +4,6 @@ import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
 import {
-    addNewQuestionToQuestionnaireRoutine,
     loadQuestionByIdRoutine,
     saveQuestionRoutine
 } from "../../sagas/questions/routines";
@@ -20,10 +19,10 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
-        saveAndAddQuestion,
+        // saveAndAddQuestion,
         loadCategories,
         questionnaireId,
-        questionnaireQuesitons,
+        questionnaireQuestions,
         categories,
         match,
         isPreview
@@ -62,7 +61,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
             saveQuestion({
                 ...question,
                 questionnaireId,
-                questionnaireQuesitons
+                questionnaireQuestions
             });
         }
         isPreview ? isPreview.close() : history.goBack();
@@ -70,11 +69,11 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onCopy = () => {
         if (isQuestionDetailsValid) {
-            saveAndAddQuestion({
-                ...question,
-                id: null,
-                questionnaireId
-            });
+            // saveAndAddQuestion({
+            //     ...question,
+            //     id: null,
+            //     questionnaireId
+            // });
             isPreview ? isPreview.close() : history.goBack();
         }
     };
@@ -116,14 +115,14 @@ const mapState = (state: IAppState) => ({
     isLoading: state.questions.categories.isLoading,
     categories: state.questions.categories.list,
     questionnaireId: state.questionnaires.current.get.id,
-    questionnaireQuesitons: state.questionnaires.current.questions
+    questionnaireQuestions: state.questionnaires.current.questions
 });
 
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine,
-    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
+    loadCategories: loadCategoriesRoutine
+    // saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

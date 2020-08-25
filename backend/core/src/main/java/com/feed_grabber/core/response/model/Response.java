@@ -40,6 +40,10 @@ public class Response {
     @Column
     private String payload;
 
+    @Column(name="notification_exists")
+    @Builder.Default
+    private Boolean notificationExists = false;
+
     @Column(name = "answered_at")
     private Date answeredAt;
 }
