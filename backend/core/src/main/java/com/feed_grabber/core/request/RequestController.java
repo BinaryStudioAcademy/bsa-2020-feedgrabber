@@ -34,7 +34,7 @@ public class RequestController {
 
     @PostMapping("/close")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Date> closeRequest(@RequestBody UUID requestId) throws NotFoundException {
+    public AppResponse<Date> closeRequest(@RequestParam UUID requestId) throws NotFoundException {
        return new AppResponse<>(requestService.closeNow(requestId));
     }
 

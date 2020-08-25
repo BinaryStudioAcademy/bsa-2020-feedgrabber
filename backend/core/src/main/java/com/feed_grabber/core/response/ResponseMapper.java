@@ -4,7 +4,6 @@ import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.dto.ResponseCreateDto;
 import com.feed_grabber.core.response.dto.ResponseDetailsDto;
 import com.feed_grabber.core.response.dto.ResponseDto;
-import com.feed_grabber.core.response.dto.UserResponseShortDto;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.model.User;

@@ -5,16 +5,18 @@ import {loadQuestionnaireRequestsRoutine} from "../../sagas/report/routines";
 import {RequestItem} from "./RequestItem";
 import {Card, Container, Header, Tab} from "semantic-ui-react";
 import {IRequestShort} from "models/report/IReport";
+import {closeRequestRoutine} from "../../sagas/request/routines";
 
 const RequestsPage: FC<RequestPageProps & { match }> = (
-    {loadRequests, match, requests, isLoading}) => {
+    {loadRequests, match, requests, isLoading, closeRequest}) => {
 
     const [open, setOpen] = useState([] as IRequestShort[]);
     const [closed, setClosed] = useState([] as IRequestShort[]);
+    const qId = match.params.id;
 
     useEffect(() => {
-        loadRequests(match.params.id);
-    }, [loadRequests, match.params.id]);
+        loadRequests(qId);
+    }, [loadRequests, qId]);
 
     useEffect(() => {
         setOpen(requests.filter(r => !r.closeDate));
@@ -27,7 +29,9 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
             render: () => <Tab.Pane loading={isLoading}>
                 <Card.Group itemsPerRow={2}>
                     {open.map(r => (
-                        <RequestItem key={r.requestId} request={r}/>))}
+                        <RequestItem isClosed={false} closeRequest={closeRequest}
+                                     key={r.requestId} request={r} questionnaireId={qId}
+                        />))}
                 </Card.Group>
             </Tab.Pane>
         },
@@ -36,7 +40,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
             render: () => <Tab.Pane>
                 <Card.Group itemsPerRow={2}>
                     {closed.map(r => (
-                        <RequestItem key={r.requestId} request={r}/>))}
+                        <RequestItem isClosed key={r.requestId} request={r}/>))}
                 </Card.Group>
             </Tab.Pane>
         }
@@ -49,7 +53,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
                     Track pending/closed requests
                 </Header.Content>
             </Header>
-                <Tab panes={panes}/>
+            <Tab panes={panes}/>
         </Container>
     );
 };
@@ -59,7 +63,8 @@ const mapState = (state: IAppState) => ({
     isLoading: state.questionnaireReports.isLoading
 });
 const mapDispatch = {
-    loadRequests: loadQuestionnaireRequestsRoutine
+    loadRequests: loadQuestionnaireRequestsRoutine,
+    closeRequest: closeRequestRoutine
 };
 const connector = connect(mapState, mapDispatch);
 type RequestPageProps = ConnectedProps<typeof connector>;

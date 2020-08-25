@@ -30,7 +30,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
         match,
         report,
         isLoadingReport,
-        currentUsersReports,
+        responsesPreview,
         isLoadingUsersReports,
         loadReport,
         loadUsersReports
@@ -38,11 +38,8 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
 ) => {
     useEffect(() => {
         loadReport(match.params.id);
-    }, [loadReport, match.params.id]);
-
-    useEffect(() => {
         loadUsersReports(match.params.id);
-    }, [loadUsersReports, match.params.id]);
+    }, [loadReport, match.params.id, loadUsersReports]);
 
     const panes = [
         {
@@ -74,10 +71,8 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                 <Tab.Pane>
                     <LoaderWrapper loading={isLoadingUsersReports}>
                         <div className={styles.respondent_reports_container}>
-                            {currentUsersReports &&
-                            currentUsersReports.map(reportPreview =>
-                                renderUserReportPreview(reportPreview, match.params.id))
-                            }
+                            {responsesPreview && responsesPreview.map(reportPreview =>
+                                renderUserReportPreview(reportPreview, match.params.id))}
                         </div>
                     </LoaderWrapper>
                 </Tab.Pane>
@@ -101,7 +96,7 @@ const mapStateToProps = (rootState: IAppState) => ({
     report: rootState.questionnaireReports.currentFullReport,
     isLoadingReport: rootState.questionnaireReports.isLoading,
     currentUserReport: rootState.questionnaireReports.currentUserReport,
-    currentUsersReports: rootState.questionnaireReports.responsesPreview,
+    responsesPreview: rootState.questionnaireReports.responsesPreview,
     isLoadingUsersReports: rootState.questionnaireReports.isLoadingPreviews
 });
 

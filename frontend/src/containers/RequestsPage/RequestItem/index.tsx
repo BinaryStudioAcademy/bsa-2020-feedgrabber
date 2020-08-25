@@ -1,18 +1,40 @@
 import {IRequestShort} from "models/report/IReport";
-import React, {FC} from "react";
+import React, {FC, useState} from "react";
 import {history} from "../../../helpers/history.helper";
 import {toastr} from 'react-redux-toastr';
-import {Card, Icon, Progress} from "semantic-ui-react";
+import {Button, Card, Icon, Modal, Progress} from "semantic-ui-react";
+import Header from "semantic-ui-react/dist/commonjs/elements/Header";
+import {closeRequestRoutine} from "../../../sagas/request/routines";
 
-export const RequestItem: FC<{ request: IRequestShort }> = ({request}) => {
+type Props = {
+    request: IRequestShort;
+    closeRequest?: typeof closeRequestRoutine;
+    isClosed: boolean;
+    questionnaireId?: string;
+};
 
-    function handleClick(id: string, closeDate: string) {
-        !closeDate && history.push(`/report/${id}`);
-        closeDate && toastr.warning("This request is Closed");
+export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questionnaireId}) => {
+    const [open, setOpen] = useState(false);
+
+    function handleClick() {
+        if (isClosed) {
+            history.push(`/report/${request.requestId}`);
+        }
+        else {
+            toastr.info("Request is in progress");
+            setOpen(true);
+        }
+    }
+
+    function handleRequestClose() {
+        !isClosed &&
+        closeRequest({requestId: request.requestId, questionnaireId: questionnaireId});
+        setOpen(false);
     }
 
     return (
-            <Card fluid raised={true} onClick={() => handleClick(request.requestId, request.closeDate)} color="blue">
+        <>
+            <Card fluid raised={true} onClick={handleClick} color="blue">
                 <Card.Content textAlign="center">
                     <Card.Header>Created by {request.requestMaker.username}</Card.Header>
                     <Card.Meta>at {request.creationDate.substr(0, 10)}</Card.Meta>
@@ -28,6 +50,27 @@ export const RequestItem: FC<{ request: IRequestShort }> = ({request}) => {
                     {request.userCount} Attended
                 </Card.Content>
             </Card>
+            <Modal
+                closeIcon
+                open={open}
+                size="mini"
+                onClose={() => setOpen(false)}
+            >
+                <Header icon='archive' content='Close Request & View Report'/>
+                <Modal.Content as="h2">
+                    <p>Do you really want to close request?</p>
+                    Respondents won't be able to answer anymore.
+                </Modal.Content>
+                <Modal.Actions>
+                    <Button color='red' onClick={() => setOpen(false)}>
+                        <Icon name='remove' /> No
+                    </Button>
+                    <Button color='green' onClick={handleRequestClose}>
+                        <Icon name='checkmark' /> Yes
+                    </Button>
+                </Modal.Actions>
+            </Modal>
+    </>
     );
 };
 

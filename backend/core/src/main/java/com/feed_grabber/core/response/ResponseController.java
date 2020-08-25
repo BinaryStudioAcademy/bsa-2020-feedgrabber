@@ -22,7 +22,7 @@ public class ResponseController {
 
     @GetMapping("/request/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> getOneByRequestAndUser(@PathVariable UUID id) throws ResponseNotFoundException {
+    public AppResponse<ResponseDto> getCurrentUserResponse(@PathVariable UUID id) throws ResponseNotFoundException {
         UUID userId = TokenService.getUserId();
         return new AppResponse<>(
                 service.getOneByRequestAndUser(id, userId)
