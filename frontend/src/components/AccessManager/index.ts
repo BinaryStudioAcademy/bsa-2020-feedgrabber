@@ -5,13 +5,13 @@ import {FC} from "react";
 
 interface IAccessManagerProps {
     role: string;
-    perform: string;
+    credentials: string;
     data?: any;
     children: any;
     denied?(): any | null;
 }
 
-const AccessManager: FC<IAccessManagerProps>= ({ role, perform, data, children, denied }) => {
+const AccessManager: FC<IAccessManagerProps>= ({ role, credentials, data, children, denied }) => {
     const check = () => {
         const permissions = rolesRules[role];
         if (!permissions) {
@@ -20,14 +20,14 @@ const AccessManager: FC<IAccessManagerProps>= ({ role, perform, data, children, 
         }
 
         const staticPermissions = permissions.static;
-        if (staticPermissions && staticPermissions.includes(perform)) {
+        if (staticPermissions && staticPermissions.includes(credentials)) {
             // static rule not provided for action
             return true;
         }
 
         const dynamicPermissions = permissions.dynamic;
         if (dynamicPermissions) {
-            const permissionCondition = dynamicPermissions[perform];
+            const permissionCondition = dynamicPermissions[credentials];
             if (!permissionCondition) {
                 // dynamic rule not provided for action
                 return false;

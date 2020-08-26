@@ -27,7 +27,7 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
           <Icon className={styles.menuItemIcon} name="columns" />
           <span className={styles.menuItemTitle}>COMPANY DASHBOARD</span>
         </NavLink>
-        <AccessManager perform={Credentials.managingQuestionnaires}>
+        <AccessManager credentials={Credentials.managingQuestionnaires}>
           <NavLink to="/questionnaires" className={styles.menuItem} activeClassName={styles.menuItemActive}>
             <Icon className={styles.menuItemIcon} name="list alternate outline" />
             <span className={styles.menuItemTitle}>QUESTIONNAIRES</span>
@@ -37,19 +37,19 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
           <Icon className={styles.menuItemIcon} name="users" />
           <span className={styles.menuItemTitle}>TEAMS</span>
         </NavLink>
-        <AccessManager perform={Credentials.managingQuestions}>
+        <AccessManager credentials={Credentials.managingQuestions}>
           <NavLink to="/questions" className={styles.menuItem} activeClassName={styles.menuItemActive}>
             <Icon className={styles.menuItemIcon} name="question circle outline" />
             <span className={styles.menuItemTitle}>QUESTIONS</span>
           </NavLink>
         </AccessManager>
-        <AccessManager perform={Credentials.blockUserAccount}>
+        <AccessManager credentials={Credentials.blockUserAccount}>
           <NavLink to="/employees" className={styles.menuItem} activeClassName={styles.menuItemActive}>
             <Icon className={styles.menuItemIcon} name="user outline" />
             <span className={styles.menuItemTitle}>EMPLOYEES</span>
           </NavLink>
         </AccessManager>
-        <AccessManager perform={Credentials.generateInviteLinks}>
+        <AccessManager credentials={Credentials.generateInviteLinks}>
           <NavLink to="/invitations" className={styles.menuItem} activeClassName={styles.menuItemActive}>
             <Icon className={styles.menuItemIcon} name="pin" />
             <span className={styles.menuItemTitle}>INVITATIONS</span>

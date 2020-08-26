@@ -46,7 +46,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
       <UIContent>
         <LoaderWrapper loading={isLoading}>
           <UIColumn wide>
-            <AccessManager perform={Credentials.createTeams}>
+            <AccessManager credentials={Credentials.createTeams}>
                 <UIButton
                   title="Add Team"
                   onClick={() => handleRedirect("new")}
@@ -65,7 +65,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                 <UICardBlock>
                   <Icon name="users"/>{team.membersAmount} Member(s)
                 </UICardBlock>
-                <AccessManager perform={Credentials.manageTeams}>
+                <AccessManager credentials={Credentials.manageTeams}>
                     <UICardBlock>
                       <UIButton title="Manage" onClick={() => handleRedirect(team.id)}/>
                       <UIButton title="Delete" secondary loading={team.deleteLoading}
