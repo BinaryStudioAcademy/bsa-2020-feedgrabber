@@ -11,11 +11,48 @@ export enum Credentials {
     blockUserAccount = "Block user account"
 }
 
-const employee = {
-    static:[]
+export interface IRole {
+    endpoints: string[];
+    static: string[];
+    dynamic: any[];
+}
+
+const employee: IRole = {
+    endpoints: [
+        "/layout",
+        "/auth",
+        "/sign-up/:id",
+        "/reset/:id",
+        "/",
+        "/profile",
+        "/profile/settings",
+        "/requests",
+        "/help",
+        "/editor",
+        "/assign",
+        "/pending",
+        "/company",
+        "/teams",
+        "/teams/:id",
+        "/report/:id",
+        "/report/:id/:respondent/:username",
+        "/response/:id"
+    ],
+    static: [],
+    dynamic: []
 };
 
-const hr = {
+const hr: IRole = {
+    endpoints: [
+        ...employee.endpoints,
+        "/questionnaires",
+        "/questionnaires/:id",
+        "/questionnaires/:id/preview",
+        "/questionnaires/:id/new-request",
+        "/questionnaires/:id/requests",
+        "/questions",
+        "/question/:id"
+    ],
     static: [
         ...employee.static,
         Credentials.managingQuestions,
@@ -24,21 +61,31 @@ const hr = {
         Credentials.createPostsAndPolls,
         Credentials.createTeams,
         Credentials.manageTeams
-    ]
+    ],
+    dynamic: []
 };
 
-const companyOwner = {
+const companyOwner: IRole = {
+    endpoints: [
+        ...hr.endpoints,
+        "/employees",
+        "/invitations"
+    ],
     static: [
         ...hr.static,
         Credentials.manageCompanySettings,
         Credentials.signUpViaCorporateEmail,
         Credentials.generateInviteLinks,
         Credentials.blockUserAccount
-    ]
+    ],
+    dynamic: []
 };
 
-export const rolesRules = {
+const rolesRules = {
     employee,
     hr,
     "company_owner": companyOwner
 };
+
+const getRolesRules = () => rolesRules;
+export default getRolesRules;
