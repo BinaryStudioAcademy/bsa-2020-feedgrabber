@@ -39,7 +39,6 @@ public class TeamController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<TeamDetailsDto> getOne(@PathVariable UUID id) throws TeamNotFoundException {
         var companyId = TokenService.getCompanyId();
         var team = service.getOne(companyId, id);
