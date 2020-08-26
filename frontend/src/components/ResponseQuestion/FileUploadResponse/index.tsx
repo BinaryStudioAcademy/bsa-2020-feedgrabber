@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { Label, Tab } from "semantic-ui-react";
+import { Label, Tab, Button } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import InternalStorageUpload from "./InternalStorageUpload";
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
@@ -13,7 +13,8 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
   ({question = { details: { filesNumber: 3, filesSize: 3, filesType: allTypes.image } }, answerHandler}) => {
     const [links, setLinks] = useState([]); // links to uploaded files
     const [url, setUrl] = useState(''); // url to photo or video
-    const [files, setFiles] = useState([]); // files data
+    const [files, setFiles] = useState([ {id:'1',name:'file1',ling:'some link'},
+{id:'2',name:'file2',ling:'some link'} ]); // files data
     const [error, setError] = useState('');
     const [isUploading, setIsUploading] = useState(false);
 
@@ -32,13 +33,13 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         setError(`Maximum number of files ${filesNumber}`);
         return;
       }
-      newFiles = checkFilesSize(deleteNotAllowedFiles(newFiles));
+      // newFiles = checkFilesSize(deleteNotAllowedFiles(newFiles));
 
       await uploadFiles(addedFiles);
       answerHandler?.(
         [...links, url]
       );
-      setFiles([...files, ...newFiles]);
+      // setFiles([...files, ...newFiles]);
       setIsUploading(false);
     };
 
@@ -52,27 +53,38 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
       );
     };
 
-    const uploadFiles = async files => {
+    const uploadFiles = async newFiles => {
       const promises = [];
-      for (const file of files) {
+      for (const file of newFiles) {
         // start sending files to the server
         promises.push(uploadFile(file));
       }
-      const resultLinks = (await Promise.all(promises))
+      (await Promise.all(promises))
         .map(res => {
-          console.log(res.data);
-          return res.data.link;
+          console.log(res);
+          setFiles([...files, res]);
         });
-      setLinks([...links, ...resultLinks]);
+      updateLinks();
     };
+
+   const updateLinks = () => setLinks(files.map(file => file.id));
 
     const uploadFile = file => {
       const formData = new FormData();
       formData.append('file', file, file.name);
-      return apiClient.post('/api/files/response', formData);
+      try {
+        return apiClient.post('/api/files/response', formData).then(res => ({
+            id: res.data.id,
+            link: res.data.link,
+            name: file.name
+          }));
+      } catch (err) {
+        console.log(err);
+        return new Promise((resolve, reject) => reject('error'));
+      }
     };
 
-    const checkFilesSize = checkedFiles => {
+    /* const checkFilesSize = (checkedFiles, files) => {
       let currentFilesSize = 0;
       for (const file of files) {
         currentFilesSize += file.size;
@@ -89,7 +101,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
       });
 
       return result;
-    };
+    };*/
 
     const deleteNotAllowedFiles = files => {
       const result = [];
@@ -103,23 +115,25 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
       return result;
     };
 
-    const mapImages = images => {
-      return images?.map(image => {
-        return <img className="ui medium image" src={image} alt="File loaded successfully"/>;
-      });
+	const deleteFile = id => {
+      apiClient.delete(`/api/files?id=${id}`);
+      const updatedFiles = files.filter(file => file.id !== id);
+      setFiles(updatedFiles);
     };
 
-    const mapVideos = files => {
+    const mapFiles = files => {
       return files?.map(file => {
-        return <Label className={styles.file}>
-          {`${file.name} 
-                (${Math.round(file.size / (1024 * 1024) * 100) / 100} MB)`}
-        </Label>;
+        return (
+          <div className={styles.fileItem} key={file.id}>
+           <div>{file.name}</div>
+           <Button icon='close' onClick={() => deleteFile(file.id)} size="tiny" />
+          </div>
+        );
       });
     };
 
     const onClear = () => {
-      setFiles([]);
+      files.map(file => file.id).map(id => deleteFile(id));
       setLinks([]);
       setUrl('');
       setError('');
@@ -139,7 +153,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
                     onFilesAdded={onFilesAdded}
                     disabled={files.length >= filesNumber}
                     isUploading={isUploading}
-                    mapFiles={filesType === allTypes.image ? mapImages : mapVideos}
+                    mapFiles={mapFiles}
                     onClear={onClear}
                     error={error}
                     files={files}
