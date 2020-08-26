@@ -91,7 +91,6 @@ public class QuestionController {
         var dto = new ObjectMapper().readValue(json, QuestionUpdateDto.class);
 
         return new AppResponse<>(questionService.update(dto));
-
     }
 
     @ApiOperation(value = "Add existing question to questionnaire")
@@ -132,23 +131,5 @@ public class QuestionController {
         questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
 
         return new AppResponse<>(questionService.getAllByQuestionnaireId(questionnaireId));
-    }
-
-    @ApiOperation(value = "Add new question to questionnaire")
-    @PostMapping("/questionnaires/{qId}")
-    @ResponseStatus(HttpStatus.OK)
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(
-            @RequestBody UUID id,
-            @PathVariable UUID qId)
-            throws QuestionnaireNotFoundException, CompanyNotFoundException {
-        questionService.create(QuestionCreateDto
-                .builder()
-                .name("New question")
-                .type(QuestionType.freeText)
-                .questionnaireId(Optional.of(id))
-                .categoryTitle("Sport")
-                .build());
-        return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
     }
 }

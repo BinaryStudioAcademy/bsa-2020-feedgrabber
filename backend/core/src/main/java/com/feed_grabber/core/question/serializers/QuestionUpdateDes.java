@@ -33,8 +33,17 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
         String text = node.get("name").asText();
         Integer index = this.getIndex(node);
         boolean isRequired = this.isRequired(node);
+        var type = this.getType(node);
 
-        return new QuestionUpdateDto(id, text, category, payload, index, isRequired);
+        return new QuestionUpdateDto(id, text, category, payload, index, type, isRequired);
+    }
+
+    private QuestionType getType(JsonNode node) {
+        try {
+            return QuestionType.valueOf(node.get("type").asText());
+        } catch (IllegalArgumentException e) {
+            throw new QuestionTypeNotExistsException ("This type of question does not exists");
+        }
     }
 
     private Integer getIndex(JsonNode node) {
