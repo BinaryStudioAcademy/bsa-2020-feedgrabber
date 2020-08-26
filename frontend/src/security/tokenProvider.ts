@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
-import {getDomainSuffix} from "../helpers/subdomain.helper";
+import {env} from "../env";
 
-const domain = getDomainSuffix();
+const domain = env.baseHost;
 
 const createTokenProvider = () => {
   let _token: { accessToken: string; refreshToken: string } | null =

@@ -10,4 +10,5 @@ import java.util.UUID;
 public class UserShortDto {
     private UUID id;
     private String username;
+    // TODO private String avatar;
 }

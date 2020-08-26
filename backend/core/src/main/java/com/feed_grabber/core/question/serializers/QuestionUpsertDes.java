@@ -32,12 +32,13 @@ public class QuestionUpsertDes extends StdDeserializer<QuestionUpsertDto> {
         String text = node.get("name").asText();
         Integer index = this.getIndex(node);
         var type = this.getType(node);
+        boolean isRequired = this.isRequired(node);
 
         if (id == null && type == null) {
             throw new QuestionTypeNotExistsException("Does not allow empty type and id");
         }
 
-        return new QuestionUpsertDto(id, text, category, payload, index, type);
+        return new QuestionUpsertDto(id, text, category, payload, index, type, isRequired);
     }
 
     private Integer getIndex(JsonNode node) {
@@ -58,5 +59,10 @@ public class QuestionUpsertDes extends StdDeserializer<QuestionUpsertDto> {
         return node.hasNonNull("id")
                 ? UUID.fromString((node.get("id")).asText())
                 : null;
+    }
+
+    private boolean isRequired(JsonNode node) {
+        return node.hasNonNull("isRequired")
+                && Boolean.parseBoolean(node.get("isRequired").toString());
     }
 }

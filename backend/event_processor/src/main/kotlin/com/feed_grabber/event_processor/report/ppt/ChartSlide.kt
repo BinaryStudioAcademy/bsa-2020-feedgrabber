@@ -11,9 +11,7 @@ import org.apache.poi.xslf.usermodel.XSLFRelation
 import org.apache.poi.xslf.usermodel.XSLFSlide
 import org.apache.poi.xslf.usermodel.XSLFTextBox
 import org.apache.xmlbeans.XmlOptions
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTChartSpace
-import org.openxmlformats.schemas.drawingml.x2006.chart.ChartSpaceDocument
-import org.openxmlformats.schemas.drawingml.x2006.chart.STLegendPos
+import org.openxmlformats.schemas.drawingml.x2006.chart.*
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData
 import org.openxmlformats.schemas.presentationml.x2006.main.CTGraphicalObjectFrame
 import org.springframework.stereotype.Service
@@ -56,27 +54,29 @@ class ChartSlide {
         cTStrVal.v = "Val"
         cTStrRef = cTPieSer.addNewCat().addNewStrRef()
         cTStrRef.f = "Categories"
-        cTStrRef.addNewStrCache().addNewPtCount().setVal(3)
+        cTStrRef.addNewStrCache().addNewPtCount().setVal(values.size.toLong())
+        val cTNumRef = cTPieSer.addNewVal().addNewNumRef()
+        cTNumRef.f = "0"
+        cTNumRef.addNewNumCache().addNewPtCount().setVal(values.size.toLong())
 
         val optionsSum = getOptionsSum(values.values)
-        values.keys.forEachIndexed{ i, name ->
+        values.keys.sorted().forEachIndexed{ i, name ->
             cTStrVal = cTStrRef.strCache.addNewPt()
             cTStrVal.idx = i.toLong()
             val percentPart = getPercent(optionsSum, values[name]!!)
             cTStrVal.v = "$name $percentPart%"
-        }
-        val cTNumRef = cTPieSer.addNewVal().addNewNumRef()
-        cTNumRef.f = "0"
-        cTNumRef.addNewNumCache().addNewPtCount().setVal(3)
-
-        values.values.forEachIndexed{ i, value ->
             val cTNumVal = cTNumRef.numCache.addNewPt()
             cTNumVal.idx = i.toLong()
-            cTNumVal.v = "" + 10 * value
+            cTNumVal.v = "" + 10 * values[name]!!
+        }
+
+
+        values.values.forEachIndexed{ i, value ->
+
         }
 
         val cTLegend = cTChart.addNewLegend()
-        cTLegend.addNewLegendPos().setVal(STLegendPos.R)
+        cTLegend.addNewLegendPos().setVal(STLegendPos.L)
         cTLegend.addNewOverlay().setVal(false)
     }
 
@@ -89,69 +89,62 @@ class ChartSlide {
         return result.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
     }
 
-//    fun drawBarChart(myXSLFChartShape: MyXSLFChartShape) {
-//        val chartSpace: CTChartSpace = myXSLFChartShape.myXSLFChart.chartSpace
-//        val cTChart = chartSpace.addNewChart()
-//        val cTPlotArea = cTChart.addNewPlotArea()
-//        val cTBarChart = cTPlotArea.addNewBarChart()
-//        cTBarChart.addNewVaryColors().setVal(true)
-//        cTBarChart.addNewBarDir().setVal(STBarDir.COL)
-//        for (r in 1..4) {
-//            val cTBarSer = cTBarChart.addNewSer()
-//            var cTStrRef = cTBarSer.addNewTx().addNewStrRef()
-//            cTStrRef.f = "Label $r"
-//            cTStrRef.addNewStrCache().addNewPtCount().setVal(1)
-//            var cTStrVal = cTStrRef.strCache.addNewPt()
-//            cTStrVal.idx = 0
-//            cTStrVal.v = "Val$r"
-//            cTBarSer.addNewIdx().setVal(r - 1.toLong())
-//            cTStrRef = cTBarSer.addNewCat().addNewStrRef()
-//            cTStrRef.f = "Categories"
-//            cTStrRef.addNewStrCache().addNewPtCount().setVal(3)
-//            for (c in 1..3) {
-//                cTStrVal = cTStrRef.strCache.addNewPt()
-//                cTStrVal.idx = c - 1.toLong()
-//                cTStrVal.v = "Cat$c"
-//            }
-//            val cTNumRef = cTBarSer.addNewVal().addNewNumRef()
-//            cTNumRef.f = "" + r
-//            cTNumRef.addNewNumCache().addNewPtCount().setVal(3)
-//            for (c in 1..3) {
-//                val cTNumVal = cTNumRef.numCache.addNewPt()
-//                cTNumVal.idx = c - 1.toLong()
-//                cTNumVal.v = "" + (10 + r) * c
-//            }
-//        }
-//
-//        //telling the BarChart that it has axes and giving them Ids
-//        cTBarChart.addNewAxId().setVal(123456)
-//        cTBarChart.addNewAxId().setVal(123457)
-//
-//        //cat axis
-//        val cTCatAx = cTPlotArea.addNewCatAx()
-//        cTCatAx.addNewAxId().setVal(123456) //id of the cat axis
-//        var cTScaling = cTCatAx.addNewScaling()
-//        cTScaling.addNewOrientation().setVal(STOrientation.MIN_MAX)
-//        cTCatAx.addNewDelete().setVal(false)
-//        cTCatAx.addNewAxPos().setVal(STAxPos.B)
-//        cTCatAx.addNewCrossAx().setVal(123457) //id of the val axis
-//        cTCatAx.addNewTickLblPos().setVal(STTickLblPos.NEXT_TO)
-//
-//        //val axis
-//        val cTValAx = cTPlotArea.addNewValAx()
-//        cTValAx.addNewAxId().setVal(123457) //id of the val axis
-//        cTScaling = cTValAx.addNewScaling()
-//        cTScaling.addNewOrientation().setVal(STOrientation.MIN_MAX)
-//        cTValAx.addNewDelete().setVal(false)
-//        cTValAx.addNewAxPos().setVal(STAxPos.L)
-//        cTValAx.addNewCrossAx().setVal(123456) //id of the cat axis
-//        cTValAx.addNewTickLblPos().setVal(STTickLblPos.NEXT_TO)
-//
-//        //legend
-//        val cTLegend = cTChart.addNewLegend()
-//        cTLegend.addNewLegendPos().setVal(STLegendPos.B)
-//        cTLegend.addNewOverlay().setVal(false)
-//    }
+    fun drawBarChart(myXSLFChartShape: CustomChartShape, values: Map<String, Int>) {
+        val chartSpace: CTChartSpace = myXSLFChartShape.customXSLFChart.chartSpace
+        val cTChart = chartSpace.addNewChart()
+        val cTPlotArea = cTChart.addNewPlotArea()
+        val cTBarChart = cTPlotArea.addNewBarChart()
+        cTBarChart.addNewVaryColors().setVal(true)
+        cTBarChart.addNewBarDir().setVal(STBarDir.COL)
+        val gap = cTBarChart.addNewGapWidth()
+        gap.`val` = 8
+        val cTBarSer = cTBarChart.addNewSer()
+        var cTStrRef = cTBarSer.addNewTx().addNewStrRef()
+        cTStrRef.f = "Label 1"
+        cTStrRef.addNewStrCache().addNewPtCount().setVal(1)
+        var cTStrVal = cTStrRef.strCache.addNewPt()
+        cTStrVal.idx = 0
+        cTStrVal.v = "Val"
+        cTBarSer.addNewIdx().setVal(0)
+        cTStrRef = cTBarSer.addNewCat().addNewStrRef()
+        cTStrRef.f = "Categories"
+        cTStrRef.addNewStrCache().addNewPtCount().setVal(values.size.toLong())
+        val cTNumRef = cTBarSer.addNewVal().addNewNumRef()
+        cTNumRef.f = "0"
+        cTNumRef.addNewNumCache().addNewPtCount().setVal(values.size.toLong())
+        values.keys.sorted().forEachIndexed{ i, key ->
+            cTStrVal = cTStrRef.strCache.addNewPt()
+            cTStrVal.idx = i.toLong()
+            cTStrVal.v = key
+            val cTNumVal = cTNumRef.numCache.addNewPt()
+            cTNumVal.idx = i.toLong()
+            cTNumVal.v = values[key].toString()
+        }
+
+        //telling the BarChart that it has axes and giving them Ids
+        cTBarChart.addNewAxId().setVal(123456)
+        cTBarChart.addNewAxId().setVal(123457)
+
+        //cat axis
+        val cTCatAx = cTPlotArea.addNewCatAx()
+        cTCatAx.addNewAxId().setVal(123456) //id of the cat axis
+        var cTScaling = cTCatAx.addNewScaling()
+        cTScaling.addNewOrientation().setVal(STOrientation.MIN_MAX)
+        cTCatAx.addNewDelete().setVal(false)
+        cTCatAx.addNewAxPos().setVal(STAxPos.B)
+        cTCatAx.addNewCrossAx().setVal(123457) //id of the val axis
+        cTCatAx.addNewTickLblPos().setVal(STTickLblPos.NEXT_TO)
+
+        //val axis
+        val cTValAx = cTPlotArea.addNewValAx()
+        cTValAx.addNewAxId().setVal(123457) //id of the val axis
+        cTScaling = cTValAx.addNewScaling()
+        cTScaling.addNewOrientation().setVal(STOrientation.MIN_MAX)
+        cTValAx.addNewDelete().setVal(false)
+        cTValAx.addNewAxPos().setVal(STAxPos.L)
+        cTValAx.addNewCrossAx().setVal(123456) //id of the cat axis
+        cTValAx.addNewTickLblPos().setVal(STTickLblPos.NEXT_TO)
+    }
 
     //________________________________________________________________________
     //a class for providing a MyXSLFChartShape
@@ -232,15 +225,6 @@ class ChartSlide {
         }
     }
 
-//    companion object {
-//        @Throws(Exception::class)
-//        @JvmStatic
-//        fun main(args: Array<String>) {
-//            val createPPTXCharts = CreatePPTXCharts()
-//        }
-//
-//    }
-
     fun createPieChartSlide(slideShow: XMLSlideShow, values: Map<String, Int>, question: String) {
         val slide = slideShow.createSlide()
 
@@ -255,20 +239,34 @@ class ChartSlide {
         drawPieChart(myXSLFChartShape, values)
     }
 
+    fun createBarChartSlide(slideShow: XMLSlideShow, values: Map<String, Int>, question: String) {
+        val slide = slideShow.createSlide()
+
+        val titleShape = slide.createTextBox();
+        setTitle(titleShape, question)
+
+        val options = slide.createTextBox();
+        setOptionsShape(options, values)
+
+        val myXSLFChartShape = createXSLFChart(slide);
+        myXSLFChartShape.setAnchor(Rectangle(320, 120, 350, 350))
+        drawBarChart(myXSLFChartShape, values)
+    }
+
     private fun setOptionsShape(shape: XSLFTextBox, values:  Map<String, Int>) {
-        shape.anchor = Rectangle(50, 120, 350, 300)
+        shape.anchor = Rectangle(50, 120, 250, 300)
         shape.placeholder = Placeholder.CONTENT;
-        values.forEach {entry ->
+        values.keys.sorted().forEach {key ->
             val paragraph = shape.addNewTextParagraph()
-            // paragraph.bulletCharacter = ""
             val run = paragraph.addNewTextRun()
-            run.setText(entry.key + " " + entry.value);
+            val ans =  if (values[key] == 1) " answer" else  " answers"
+            run.setText(key + " - " + values[key] + ans);
             run.fontSize = 14.0
         }
     }
 
     private fun setTitle(title: XSLFTextBox, text: String) {
-        title.anchor = Rectangle(40, 10, 600, 50)
+        title.anchor = Rectangle(40, 10, 620, 100)
         title.placeholder = Placeholder.TITLE;
         val p = title.addNewTextParagraph()
         val r = p.addNewTextRun()
@@ -276,17 +274,17 @@ class ChartSlide {
         r.setFontColor(Color.decode("#c62828"))
         r.fontSize = 25.0
     }
-
-//    init {
-//        val values = mutableMapOf<String, Int>("first fasldf ksaf;sdf sdkfjas sdfa " to 1, "second" to 3, "third" to 4, "five" to 3)
-//        val slideShow = XMLSlideShow()
-//
-//        // myXSLFChartShape = createXSLFChart(slide)
-//        // myXSLFChartShape.setAnchor(Rectangle(370, 100, 300, 300))
-//        // drawBarChart(myXSLFChartShape)
-//        val out = FileOutputStream("CreatePPTXCharts.pptx")
-//        slideShow.write(out)
-//        out.close()
-//    }
 }
 
+fun main() {
+    val slideShow = XMLSlideShow()
+    val creator = ChartSlide()
+    val values = mutableMapOf(
+            "11:06:2005" to 1, "11:06:2004" to 3, "11:06:2055" to 4, "11:06:2025" to 3)
+    creator.createBarChartSlide(slideShow, values, "when did you wont to die")
+
+    val out = FileOutputStream("CreatePPTXCharts.pptx")
+    slideShow.write(out)
+    out.close()
+
+}

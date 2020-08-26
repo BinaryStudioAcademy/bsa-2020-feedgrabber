@@ -81,7 +81,8 @@ public class QuestionService {
                 .payload(dto.getDetails())
                 .text(dto.getName())
                 .type(dto.getType())
-                .company(company);
+                .company(company)
+                .isRequired(dto.isRequired());
 
         var savedQuestion = quesRep.save(question.build());
         if (dto.getQuestionnaireId().isPresent()) {
@@ -143,6 +144,7 @@ public class QuestionService {
         question.setCategory(category);
         question.setText(dto.getName());
         question.setPayload(dto.getDetails());
+        question.setRequired(dto.isRequired());
 
         return quesRep.save(question);
     }
