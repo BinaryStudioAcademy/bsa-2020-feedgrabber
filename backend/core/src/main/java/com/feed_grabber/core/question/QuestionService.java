@@ -166,6 +166,7 @@ public class QuestionService {
 
         question.setCategory(category);
         question.setText(dto.getName());
+        question.setType(dto.getType());
         question.setPayload(dto.getDetails());
         question.setRequired(dto.isRequired());
 

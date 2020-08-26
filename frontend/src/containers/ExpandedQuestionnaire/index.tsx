@@ -11,7 +11,7 @@ import { getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import {
     deleteFromQuestionnaireRoutine,
-    indexQuestionsRoutine, loadQuestionByIdRoutine, saveQuestionRoutine
+    indexQuestionsRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import { IQuestionnaire } from 'models/forms/Questionnaires/types';
@@ -59,16 +59,12 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     }, [loadOneQuestionnaire, match.params.id, loadSections]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    const [isValid, setIsValid] = useState(false);
 
     useEffect(() => {
       setQuestion(currentQuestion);
     }, [currentQuestion]);
 
     const handleDeleteQuestion = () => {
-        if (!isValid) {
-            return;
-        }
         deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
     };
 
