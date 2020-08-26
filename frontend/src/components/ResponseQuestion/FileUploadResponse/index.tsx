@@ -1,19 +1,21 @@
 import React, { FC, useState } from "react";
 import { Label, Tab } from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import ImageUrl from "./ImageUrl";
 import InternalStorageUpload from "./InternalStorageUpload";
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
 import { IFileUploadQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
 import { fileTypes as allTypes } from "../../ComponentsQuestions/FileUploadQuestion/types";
+import ImageUrl from "./ImageUrl";
 import VideoUrl from "./UrlVideo";
+import apiClient from "../../../helpers/apiClient";
 
 const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
-  ({question, answerHandler}) => {
+  ({question = { details: { filesNumber: 3, filesSize: 3, filesType: allTypes.image } }, answerHandler}) => {
     const [links, setLinks] = useState([]); // links to uploaded files
     const [url, setUrl] = useState(''); // url to photo or video
-    const [files, setFiles] = useState(undefined); // files data
+    const [files, setFiles] = useState([]); // files data
     const [error, setError] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
 
     const filesNumber = question.details.filesNumber;
     const maxFilesSize = question.details.filesSize * (1024 * 1024);
@@ -21,6 +23,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
 
     const onFilesAdded = async addedFiles => {
       setError('');
+      setIsUploading(true);
       let newFiles: any[];
       if (files.length + addedFiles.length <= filesNumber) {
         newFiles = addedFiles;
@@ -36,10 +39,14 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         [...links, url]
       );
       setFiles([...files, ...newFiles]);
+      setIsUploading(false);
     };
 
     const onUrlInsert = url => {
       setUrl(url);
+      if (!url) {
+        return;
+      }
       answerHandler?.(
         [...links, url]
       );
@@ -49,37 +56,22 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
       const promises = [];
       for (const file of files) {
         // start sending files to the server
-        promises.push(new Promise(resolve => resolve('value2')));
+        promises.push(uploadFile(file));
       }
-      const resultLinks = await Promise.all(promises);
+      const resultLinks = (await Promise.all(promises))
+        .map(res => {
+          console.log(res.data);
+          return res.data.link;
+        });
       setLinks([...links, ...resultLinks]);
     };
-    /*
-    const loadImages = async newFiles => {
-        const addedImages = [];
-        const promises = [];
-        for (const file of newFiles) {
-            promises.push(loadImage(file, addedImages));
-        }
-        await Promise.all(promises);
-        setImages(images.concat(addedImages));
+
+    const uploadFile = file => {
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      return apiClient.post('/api/files/response', formData);
     };
 
-    const loadImage = (file, files) => {
-        if (!file.type.startsWith("image")) {
-            return null;
-        }
-
-        return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                resolve(files.push(reader.result));
-            };
-
-            reader.readAsDataURL(file);
-        });
-    };
-    */
     const checkFilesSize = checkedFiles => {
       let currentFilesSize = 0;
       for (const file of files) {
@@ -112,13 +104,13 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
     };
 
     const mapImages = images => {
-      return images.map(image => {
+      return images?.map(image => {
         return <img className="ui medium image" src={image} alt="File loaded successfully"/>;
       });
     };
 
     const mapVideos = files => {
-      return files.map(file => {
+      return files?.map(file => {
         return <Label className={styles.file}>
           {`${file.name} 
                 (${Math.round(file.size / (1024 * 1024) * 100) / 100} MB)`}
@@ -127,7 +119,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
     };
 
     const onClear = () => {
-      setFiles(undefined);
+      setFiles([]);
       setLinks([]);
       setUrl('');
       setError('');
@@ -146,9 +138,11 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
                   <InternalStorageUpload
                     onFilesAdded={onFilesAdded}
                     disabled={files.length >= filesNumber}
+                    isUploading={isUploading}
                     mapFiles={filesType === allTypes.image ? mapImages : mapVideos}
                     onClear={onClear}
                     error={error}
+                    files={files}
                   />
                 </Tab.Pane>
             },
@@ -171,6 +165,8 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
 
     return (
       <div className={styles.segment}>
+        <span>Maximum number of the files: {question.details.filesNumber}</span>
+        <span>Maximum size of the file: {question.details.filesSize}</span>
         <Tab className={styles.tab} panes={getPanes()}/>
       </div>
     );
