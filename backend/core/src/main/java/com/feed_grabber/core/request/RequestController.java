@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.feed_grabber.core.role.RoleConstants.IS_HR_OR_COMPANY_OWNER;
+import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
 @RequestMapping("/api/request")
@@ -38,7 +39,7 @@ public class RequestController {
 
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<UUID> createNewRequest(@RequestBody CreateRequestDto dto)
             throws UserNotFoundException, QuestionCategoryNotFoundException {
         return new AppResponse<>(requestService.createNew(dto));
@@ -46,7 +47,7 @@ public class RequestController {
 
     @PostMapping("/close")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<Date> closeRequest(@RequestParam UUID requestId) throws NotFoundException, JsonProcessingException {
         reportService.generateReport(requestId);
         return new AppResponse<>(requestService.closeNow(requestId));
@@ -54,7 +55,7 @@ public class RequestController {
 
     @ApiOperation("Get all requests by questionnaireId")
     @GetMapping
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<RequestShortDto>> getAllByQuestionnaireId(@RequestParam("questionnaireId") UUID id) {
         return new AppResponse<>(requestService.getAllByQuestionnaire(id));
     }

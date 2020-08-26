@@ -10,6 +10,7 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-import static com.feed_grabber.core.role.RoleConstants.IS_HR_OR_COMPANY_OWNER;
+import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -29,7 +30,7 @@ public class TeamController {
     @ApiOperation("Get all teams")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<TeamShortDto>> getAll() {
         var companyId = TokenService.getCompanyId();
         var teams = service.getAllByCompany_Id(companyId);
@@ -38,7 +39,7 @@ public class TeamController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<TeamDetailsDto> getOne(@PathVariable UUID id) throws TeamNotFoundException {
         var companyId = TokenService.getCompanyId();
         var team = service.getOne(companyId, id);
@@ -48,7 +49,7 @@ public class TeamController {
     @ApiOperation("Create team")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<TeamDetailsDto> createTeam(@RequestBody RequestTeamDto teamDto) throws AlreadyExistsException {
         teamDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.create(teamDto));
@@ -57,7 +58,7 @@ public class TeamController {
     @ApiOperation("Update team")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<TeamDto> update(@RequestBody RequestTeamDto teamDto) throws AlreadyExistsException, TeamNotFoundException {
         teamDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.update(teamDto));
@@ -66,7 +67,7 @@ public class TeamController {
     @ApiOperation("Toggle User")
     @PutMapping("/toggle_user")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<ResponseUserTeamDto> toggle(@RequestBody RequestUserTeamDto requestDto) throws TeamNotFoundException, UserNotFoundException {
         requestDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.toggleUser(requestDto));
@@ -75,7 +76,7 @@ public class TeamController {
     @ApiOperation("Delete User")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize(IS_HR_OR_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<Boolean> delete(@PathVariable UUID id) {
         service.delete(id, TokenService.getCompanyId());
         return new AppResponse<>(true);

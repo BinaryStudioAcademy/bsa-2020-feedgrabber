@@ -27,10 +27,6 @@ import static com.feed_grabber.core.auth.security.SecurityConstants.*;
 
 @Configuration
 @EnableConfigurationProperties
-@EnableGlobalMethodSecurity(
-        prePostEnabled = true,
-        securedEnabled = true,
-        jsr250Enabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -47,10 +43,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(ROUTES_WHITE_LIST)
                 .permitAll()
-                .antMatchers(ROUTES_HR_LIST)
-                .hasAnyAuthority(SystemRole.hr.toString(), SystemRole.company_owner.toString())
-                .antMatchers(ROUTES_COMPANY_OWNER_LIST)
-                .hasAnyAuthority(SystemRole.company_owner.toString())
                 .anyRequest().authenticated();
         http
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
@@ -73,16 +65,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.expressionHandler(new DefaultWebSecurityExpressionHandler() {
-//            @Override
-//            protected SecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, FilterInvocation fi) {
-//                WebSecurityExpressionRoot root = (WebSecurityExpressionRoot) super.createSecurityExpressionRoot(authentication, fi);
-//                root.setDefaultRolePrefix(""); //remove the prefix ROLE_
-//                return root;
-//            }
-//        });
-//    }
 }

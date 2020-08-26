@@ -17,6 +17,7 @@ import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ import java.util.UUID;
 import java.util.List;
 
 import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
+import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
 
 
 @RestController
@@ -96,7 +98,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("{id}/removeCompany")
-    @PreAuthorize(IS_COMPANY_OWNER)
+    @Secured(value = {ROLE_COMPANY_OWNER})
     public void removeUserFromCompany (@PathVariable UUID id) {
         userService.removeCompany(id);
     }
