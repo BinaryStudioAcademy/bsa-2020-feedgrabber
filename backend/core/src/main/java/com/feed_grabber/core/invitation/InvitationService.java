@@ -30,7 +30,7 @@ public class InvitationService {
 
     @Value("${client.host}")
     private String CLIENT_HOST;
-
+  
     private final InvitationRepository invitationRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
