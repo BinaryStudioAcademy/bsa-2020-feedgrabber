@@ -3,40 +3,42 @@ export enum Credentials {
     managingQuestionnaires = "Managing questionnaires  via form editor",
     createQuestionnaireRequest = "Creating a questionnaire request",
     createPostsAndPolls = "Create posts and polls on company feed",
+    createTeams = "Crate teams",
+    manageTeams = "Manage teams",
     manageCompanySettings = "Manage company settings",
     signUpViaCorporateEmail = "Enable sign up via the corporate email",
-    generateInviteLinks = "Generate invite links"
+    generateInviteLinks = "Generate invite links",
+    blockUserAccount = "Block user account"
 }
 
-const getRules = () => {
-    const employee = {
-        static:[]
-    };
-
-    const hr = {
-            static: [
-                ...employee.static,
-                Credentials.managingQuestions,
-                Credentials.managingQuestionnaires,
-                Credentials.createQuestionnaireRequest,
-                Credentials.createPostsAndPolls
-            ]
-        };
-
-    const companyOwner = {
-        static: [
-            ...hr.static,
-            Credentials.manageCompanySettings,
-            Credentials.signUpViaCorporateEmail,
-            Credentials.generateInviteLinks
-        ]
-    };
-
-    return {
-        employee,
-        hr,
-        "company_owner": companyOwner
-    };
+const employee = {
+    static:[]
 };
 
-export const rolesRules = getRules();
+const hr = {
+    static: [
+        ...employee.static,
+        Credentials.managingQuestions,
+        Credentials.managingQuestionnaires,
+        Credentials.createQuestionnaireRequest,
+        Credentials.createPostsAndPolls,
+        Credentials.createTeams,
+        Credentials.manageTeams
+    ]
+};
+
+const companyOwner = {
+    static: [
+        ...hr.static,
+        Credentials.manageCompanySettings,
+        Credentials.signUpViaCorporateEmail,
+        Credentials.generateInviteLinks,
+        Credentials.blockUserAccount
+    ]
+};
+
+export const rolesRules = {
+    employee,
+    hr,
+    "company_owner": companyOwner
+};

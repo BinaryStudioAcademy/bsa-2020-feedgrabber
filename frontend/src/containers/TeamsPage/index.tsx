@@ -16,6 +16,8 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
+import AccessManager from 'components/AccessManager';
+import {Credentials} from "../../components/AccessManager/rbac-rules";
 
 const TeamsPage: FC<ITeamsPageProps> = (
   {
@@ -44,12 +46,14 @@ const TeamsPage: FC<ITeamsPageProps> = (
       <UIContent>
         <LoaderWrapper loading={isLoading}>
           <UIColumn wide>
-            <UIButton
-              title="Add Team"
-              onClick={() => handleRedirect("new")}
-              center
-              primary
-            />
+            <AccessManager perform={Credentials.createTeams}>
+                <UIButton
+                  title="Add Team"
+                  onClick={() => handleRedirect("new")}
+                  center
+                  primary
+                />
+            </AccessManager>
           </UIColumn>
 
           {(teams || []).map(team => (
@@ -61,11 +65,13 @@ const TeamsPage: FC<ITeamsPageProps> = (
                 <UICardBlock>
                   <Icon name="users"/>{team.membersAmount} Member(s)
                 </UICardBlock>
-                <UICardBlock>
-                  <UIButton title="Manage" onClick={() => handleRedirect(team.id)}/>
-                  <UIButton title="Delete" secondary loading={team.deleteLoading}
-                            disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
-                </UICardBlock>
+                <AccessManager perform={Credentials.manageTeams}>
+                    <UICardBlock>
+                      <UIButton title="Manage" onClick={() => handleRedirect(team.id)}/>
+                      <UIButton title="Delete" secondary loading={team.deleteLoading}
+                                disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
+                    </UICardBlock>
+                </AccessManager>
               </UICard>
             </UIColumn>
           ))}
