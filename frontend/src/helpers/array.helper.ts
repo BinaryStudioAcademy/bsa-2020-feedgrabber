@@ -11,7 +11,5 @@ export function updateQuestions(questions: IQuestion[], newQuestion: IQuestion) 
         return questions.map(q => q.id === newQuestion.id ?
             newQuestion : q);
     }
-    questions.push(newQuestion);
-    return questions;
-
+    return [...questions, newQuestion];
 }
