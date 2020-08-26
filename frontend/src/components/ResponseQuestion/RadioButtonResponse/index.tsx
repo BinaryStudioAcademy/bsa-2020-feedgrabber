@@ -1,22 +1,36 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { Input, Radio } from "semantic-ui-react";
-
 import styles from './styles.module.sass';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IRadioQuestion } from "../../../models/forms/Questions/IQuesion";
+import { IAnswerBody } from '../../../models/forms/Response/types';
 
-const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, answerHandler }) => {
-    const [other, setOther] = useState("");
+export interface IRadioResponse {
+    response?: IAnswerBody;
+}
+
+const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse> = ({
+                                                                                         question,
+                                                                                         answerHandler,
+                                                                                         response
+                                                                                     }) => {
+    const [other, setOther] = useState<string>(() => {
+        if (!response) {
+            return '';
+        }
+        const answer = response as { selected?: string; other?: string };
+        return answer.other || '';
+    });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
-    const [answer, setAnswer] = useState(null);
+    const [answer, setAnswer] = useState(response as { selected?: string; other?: string } || null);
 
     // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
 
     const handleChange = (event, value?) => {
-        setAnswer(value?.value);
+        setAnswer({ ...answer, selected: value?.value });
         answerHandler?.({
-            selected: answer,
-            other
+            selected: answer.selected,
+            other: answer.other
         });
     };
 
@@ -29,7 +43,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, 
         }
         setOtherIsInvalid(false);
         setOther(value);
-        setAnswer(value);
+        setAnswer({ ...answer, other: value});
     };
 
     return (
@@ -37,7 +51,8 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, 
             {question.details.answerOptions.map((option, index) => (
                 <div className={styles.option_container} key={index}>
                     <Radio
-                        checked={answer === option}
+                        disabled={!!response && !answerHandler}
+                        checked={answer?.selected === option}
                         name='radioGroup'
                         value={option}
                         onChange={handleChange}
@@ -48,21 +63,22 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion>> = ({ question, 
             {question.details.includeOther && (
                 <div className={styles.option_container}>
                     <Radio
-                        checked={answer === other}
+                        disabled={!!response && !answerHandler}
+                        checked={answer?.other === other}
                         name='radioGroup'
                         value={other}
                         onChange={() => handleOther(other)}
                     />
                     <Input
+                        disabled={!!response && !answerHandler}
                         className={styles.answer_input}
                         fluid
                         transparent
+                        defaultValue={other}
                         placeholder="Or enter your variant here..."
-                        error={answer === other && !!otherIsInvalid}
-                        onChange={event => {
-                            handleOther(event.target.value);
-                        }
-                        } />
+                        error={answer === other && !!otherIsInvalid && !response}
+                        onChange={event => handleOther(event.target.value)}
+                    />
                 </div>
             )}
         </div>

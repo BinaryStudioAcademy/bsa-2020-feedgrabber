@@ -8,20 +8,18 @@ import {connect} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import {IUserInfo} from "../../models/user/types";
 import NotificationMenu from "../NotificationMenu";
-import {INotification} from "../../reducers/notifications";
+// import {INotification} from "../../reducers/notifications";
 
 export interface IHeaderProps {
   user: IUserInfo;
   logout: () => void;
-  countNotifications: number;
 }
 
 const defaultAvatar =
   "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<IHeaderProps> = ({user, logout, countNotifications}) => {
+const Header: FC<IHeaderProps> = ({user, logout}) => {
   const history = useHistory();
-  const [showNotifications, setShowNotifications] = useState(false);
   return (
     <div className={styles.headerWrapper}>
       <div className={styles.headerContent}>
@@ -45,11 +43,9 @@ const Header: FC<IHeaderProps> = ({user, logout, countNotifications}) => {
             <Icon className={styles.headerSearchIcon} name="search" size="small"/>
             <input className={styles.headerSearch} placeholder="Search"/>
           </div>
-          <div className={styles.headerBellWrapper} onClick={()=>setShowNotifications(!showNotifications)}>
-            <Icon className={styles.headerBellIcon} name="bell outline" size="large"/>
-            <div className={styles.headerBellMessages}>{countNotifications > 9 ? '9+' : countNotifications}</div>
+          <div className={styles.headerBellWrapper}>
+            <NotificationMenu/>
           </div>
-          <NotificationMenu shown={showNotifications}/>
           <Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>
           <div>
             <Dropdown
@@ -84,8 +80,7 @@ const Header: FC<IHeaderProps> = ({user, logout, countNotifications}) => {
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  user: state.user.info,
-  countNotifications: state.notifications.notifications.length
+  user: state.user.info
 });
 
 const mapDispatchToProps = {

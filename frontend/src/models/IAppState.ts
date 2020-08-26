@@ -7,7 +7,7 @@ import {IQuestionsState} from "../reducers/questions/reducer";
 import {IInvitationState} from "../reducers/invitation/reducer";
 import {IInvitationSignUpState} from "../reducers/invitationSignUp/reducer";
 import {ICompanyState} from '../reducers/companies/reducer';
-import {IQuestionnaireReportState} from "../reducers/questionnaireReport/reducer";
+import {IQuestionnaireReportsState} from "../reducers/questionnaireReport/reducer";
 import {INotificationsState} from "../reducers/notifications";
 import {IQuestionnaireResponseState} from "./forms/Response/types";
 import {ISectionsState} from "./forms/Sections/types";
@@ -19,7 +19,7 @@ export interface IAppState {
     invitationSignUp: IInvitationSignUpState;
     users: IUsersState;
     questionnaires: IQuestionnairesState;
-    questionnaireReport: IQuestionnaireReportState;
+    questionnaireReports: IQuestionnaireReportsState;
     questionnaireResponse: IQuestionnaireResponseState;
     questions: IQuestionsState;
     sections: ISectionsState;

@@ -1,7 +1,7 @@
 import {
-    loadQuestionsRoutine, loadQuestionByIdRoutine,
-    saveQuestionToQuestionnaireRoutine, deleteFromQuestionnaireRoutine,
-    addNewQuestionToQuestionnaireRoutine, copyQuestionInQuestionnaireRoutine
+  loadQuestionsRoutine,
+  loadQuestionByIdRoutine,
+  saveQuestionRoutine
 } from "sagas/questions/routines";
 import { IAppState } from "models/IAppState";
 import { IQuestion } from "../../models/forms/Questions/IQuesion";
@@ -57,27 +57,24 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
                     isLoading: false
                 }
             };
-        case saveQuestionToQuestionnaireRoutine.SUCCESS:
         case loadQuestionByIdRoutine.SUCCESS:
-        case deleteFromQuestionnaireRoutine.SUCCESS:
+        case saveQuestionRoutine.SUCCESS:
             return {
                 ...state,
                 current: payload,
                 list: [...state.list, payload],
                 isLoading: false
             };
-        case saveQuestionToQuestionnaireRoutine.TRIGGER:
         case loadQuestionsRoutine.TRIGGER:
         case loadQuestionByIdRoutine.TRIGGER:
-        case deleteFromQuestionnaireRoutine.TRIGGER:
+        case saveQuestionRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
             };
-        case saveQuestionToQuestionnaireRoutine.FAILURE:
         case loadQuestionByIdRoutine.FAILURE:
         case loadQuestionsRoutine.FAILURE:
-        case deleteFromQuestionnaireRoutine.FAILURE:
+        case saveQuestionRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false

@@ -1,4 +1,4 @@
-import {Button, Modal} from 'semantic-ui-react';
+import {Button, Modal, Popup} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import React, {FC, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
@@ -7,14 +7,15 @@ import {IAppState} from "../../models/IAppState";
 import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
-const SelectQuestionsFromExisting: FC<ContainerProps> = (
+const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
     {
         questions,
         loadQuestions,
         addQuestions,
         currentQuestions,
         qnId,
-        isLoading
+        isLoading,
+        button
     }) => {
     const [selected, setSelected] = useState([] as IQuestion[]);
     const [open, setOpen] = useState(false);
@@ -53,7 +54,10 @@ const SelectQuestionsFromExisting: FC<ContainerProps> = (
             className={styles.questionModal}
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            trigger={<Button icon="external" content="Add From Existing" />}
+            trigger={button}
+            // trigger={<Popup content='Add from existing questions'
+            //                  trigger={<Button icon="external"/>}
+            //          position='right center' />}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>

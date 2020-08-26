@@ -84,7 +84,7 @@ const QuestionCard: React.FC<ICardProps> = ({
     })
   });
 
-  const opacity = isDragging ? 0 : 1;
+  const opacity = 1; // isDragging ? 0 : 1;
   drag(drop(ref));
   
   return (

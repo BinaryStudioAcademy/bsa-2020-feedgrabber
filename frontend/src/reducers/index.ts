@@ -22,7 +22,7 @@ export default combineReducers({
   invitation: invitationReducer,
   invitationSignUp: invitationSignUpReducer,
   questionnaires: questionnairesReducer,
-  questionnaireReport: questionnaireReportReducer,
+  questionnaireReports: questionnaireReportReducer,
   questions: questionsReducer,
   sections: sectionsReducer,
   questionnaireResponse: responseReducer,

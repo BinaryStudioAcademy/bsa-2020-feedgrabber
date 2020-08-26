@@ -10,10 +10,10 @@ import invitationSignUpSagas from "./invitationSignUp/sagas";
 import categorieSagas from './categories/sagas';
 import companiesSaga from "./companies/sagas";
 import requestSaga from "./request/sagas";
-import questionnaireReportSagas from "./questionnaireReport/sagas";
+import questionnaireReportSagas from "./report/sagas";
 import notificationsSagas from "./notifications/sagas";
-import responseSagas from './questionnaireResponse/sagas';
 import sectionSagas from './sections/sagas';
+import responseSagas from './response/sagas';
 
 export default function* rootSaga() {
   yield all([

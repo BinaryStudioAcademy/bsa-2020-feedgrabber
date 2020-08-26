@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        body {
+            background: #E6E6E6;
+        }
+        table {
+            width: 600px;
+            background: #FFFFFF;
+            border-radius: 3px;
+        }
+        .header {
+            height: 50px;
+            font-size: 20px;
+        }
+        p {
+            font-size: 20px;
+            color: #444444;
+            word-break: break-word;
+        }
+        .activation-button {
+            text-decoration: none;
+            font-size: 20px;
+            background: #3658FF;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .activation-button:hover {
+            cursor: pointer;
+            background: #153AF6;
+        }
+    </style>
+    <title>
+        FeedGrabber Invitation
+    </title>
+</head>
+<body>
+    <table align="center">
+        <tr align="center">
+            <th class="header">
+                <span class="header"> Logo </span>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <p>Hello</p>
+                <p>You were invited to the FeedGrabber: </p>
+            </td>
+        </tr>
+        <tr align="center">
+            <td>
+                <a class="activation-button" style="color: #FFFFFF" th:href="${link}">Sign up</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>If the button above doesn't work, copy to your browser link: </p>
+                <p th:text="${link}"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>Good luck</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

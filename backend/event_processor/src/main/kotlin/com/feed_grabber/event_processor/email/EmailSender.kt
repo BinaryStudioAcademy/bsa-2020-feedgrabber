@@ -53,6 +53,24 @@ class EmailSender(
         send(mail)
     }
 
+    fun sendInvitationLinkMail(invitationLink: String, toEmailAddress: String) {
+        val from = Email(fromEmail)
+        val subject = "FeedGrabber Invitation"
+        val to = Email(toEmailAddress)
+        val content = mailContentBuilder.buildInvitationLinkMail(invitationLink)
+        val mail = Mail(from, subject, to, content)
+        send(mail)
+    }
+
+    fun sendNotificationMail(notification: String, toEmailAddress: String) {
+        val from = Email(fromEmail)
+        val subject = "FeedGrabber Notification"
+        val to = Email(toEmailAddress)
+        val content = mailContentBuilder.buildInvitationLinkMail(notification)
+        val mail = Mail(from, subject, to, content)
+        send(mail)
+    }
+
     fun sendMail(mailEntity: MailEntity?) {
         if (mailEntity == null) {
             return
@@ -62,8 +80,12 @@ class EmailSender(
             sendAccountActivationMail(mailEntity.getMessage(), mailEntity.getEmailTo());
         } else if (messageType == MailType.RESET) {
             sendResetPasswordMail(mailEntity.getMessage(), mailEntity.getEmailTo());
+        } else if (messageType == MailType.INVITE) {
+            sendInvitationLinkMail(mailEntity.getMessage(), mailEntity.getEmailTo())
+        } else if (messageType == MailType.NOTIFY) {
+            sendNotificationMail(mailEntity.getMessage(), mailEntity.getEmailTo())
         } else {
-            println("BAD TYPE");
+            println("BAD TYPE")
         }
     }
 

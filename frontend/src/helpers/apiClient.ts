@@ -10,12 +10,11 @@ const responseErrorHandler = e => {
     const status = e.response.status;
     const originalRequest = e.config;
 
-    if ((status !== 403) || (status === 403 && originalRequest._retry)) {
-        if (status === 403) {
-            // redirect to /auth only if user are not logged (forbidden response status)
-            history.push('/auth');
-        }
-        return Promise.reject(e.response);
+    if (status !== 403) return Promise.reject(e);
+
+    if (originalRequest._retry) {
+        history.push('/auth');
+        return Promise.reject(e);
     }
 
     originalRequest._retry = true;
@@ -34,9 +33,7 @@ const responseErrorHandler = e => {
 
 apiClient.interceptors.request.use(request => {
     const token = tokenProvider.getToken();
-    if (token) {
-      request.headers.Authorization = `Bearer ${token}`;
-    }
+    token && (request.headers.Authorization = `Bearer ${token}`);
     return request;
 });
 

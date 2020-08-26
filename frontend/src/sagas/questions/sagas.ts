@@ -1,32 +1,32 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {
-  addSelectedQuestionsRoutine,
-  loadQuestionByIdRoutine,
-  loadQuestionnaireQuestionsRoutine,
-  loadQuestionsRoutine,
-  saveQuestionToQuestionnaireRoutine,
-  addNewQuestionToQuestionnaireRoutine,
-  indexQuestionsRoutine,
-  deleteFromQuestionnaireRoutine,
-  copyQuestionInQuestionnaireRoutine,
-  loadQuestionsBySectionRoutine
+    addSelectedQuestionsRoutine,
+    loadQuestionByIdRoutine,
+    loadQuestionnaireQuestionsRoutine,
+    loadQuestionsRoutine,
+    indexQuestionsRoutine,
+    deleteFromQuestionnaireRoutine,
+    saveQuestionRoutine,
+    loadSavedQuestionsRoutine,
+    loadQuestionsBySectionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
-import { IGeneric } from 'models/IGeneric';
-import { toastr } from 'react-redux-toastr';
-import { IQuestion } from "../../models/forms/Questions/IQuesion";
+import {IGeneric} from 'models/IGeneric';
+import {toastr} from 'react-redux-toastr';
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import { getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import {updateQuestions} from "../../helpers/array.helper";
+import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 
-export function parseQuestion(rawQuestion) {
-  const details = rawQuestion.details
-    ? JSON.parse(rawQuestion.details as string)
-    : {};
-  return {
-    ...rawQuestion,
-    type: rawQuestion.type.toLowerCase(),
-    details
-  };
+function parseQuestion(rawQuestion) {
+    const details = rawQuestion.details
+        ? JSON.parse(rawQuestion.details as string)
+        : {};
+    return {
+        ...rawQuestion,
+        type: rawQuestion.type.toLowerCase(),
+        details
+    };
 }
 
 function* getAll() {
@@ -45,13 +45,11 @@ function* getAll() {
 
 function* getById(action) {
     try {
-        const { id, top, right } = action.payload;
-
+        const {id, top, right} = action.payload;
         if (id === 'empty') {
             yield put(loadQuestionByIdRoutine.success(defaultQuestion));
             return;
         }
-
         const res: IGeneric<IQuestion> = yield call(apiClient.get, `/api/questions/${id}`);
 
         const question: IQuestion = parseQuestion(res.data.data);
@@ -60,10 +58,23 @@ function* getById(action) {
             question['right'] = right;
         }
         yield put(loadQuestionByIdRoutine.success(question));
-
     } catch (e) {
         yield put(loadQuestionByIdRoutine.failure(e.data.error));
         toastr.error("Unable to load question");
+    }
+}
+
+function* getByQuestionnaireId(action) {
+    try {
+        const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/questionnaires/${action.payload}`);
+
+        const questions = res.data.data.map(q => parseQuestion(q));
+
+        yield put(loadQuestionnaireQuestionsRoutine.success(questions));
+
+    } catch (e) {
+        yield put(loadQuestionnaireQuestionsRoutine.failure(e.data.error));
+        toastr.error("Unable to load questionnaire");
     }
 }
 
@@ -86,52 +97,67 @@ function* saveOrUpdateQuestion(action) {
     try {
         const res: IGeneric<IQuestion> = action.payload?.id
             ? yield call(apiClient.put, `/api/questions`, action.payload)
-            : yield call(apiClient.post, `/api/questions`, action.payload || {});
-         yield put(saveQuestionToQuestionnaireRoutine.success(res.data.data));
-     } catch (e) {
-        yield put(saveQuestionToQuestionnaireRoutine.failure());
+            : yield call(apiClient.post, `/api/questions`, action.payload);
+        const question: IQuestion = parseQuestion(res.data.data);
+        yield put(saveQuestionRoutine.success(question));
+        const questions = action.payload?.questionnaireQuestions;
+
+        if (!questions) {
+            return;
+        }
+        const newQuestions = updateQuestions(questions, question);
+
+        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
+    } catch (e) {
+        yield put(saveQuestionRoutine.failure());
         toastr.error("Question wasn't saved");
     }
 }
 
-function* copyQuestionInQuestionnaire(action){
+function* deleteOneByQuestionnaireId(action) {
     try {
-        const {qId, question} = action.payload;
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.post,
-            `/api/questions/questionnaires/${qId}`, question);
+        const {questionId, questionnaireId} = action.payload;
+        const res: IGeneric<IQuestion[]> = yield call(
+            apiClient.delete, `/api/questions/questionnaires/${questionId}/${questionnaireId}`,
+            action.payload
+        );
 
         const questions = res.data.data.map(q => parseQuestion(q));
 
-        yield put(copyQuestionInQuestionnaireRoutine.success(questions));
-
+        yield put(deleteFromQuestionnaireRoutine.success(questions));
     } catch (e) {
-        yield put(copyQuestionInQuestionnaireRoutine.failure());
-        toastr.error("Question wasn't copied");
+        yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
+        toastr.error("Unable to delete question");
     }
 }
 
-function* addNewQuestionToQuestionnaire(action) {
-  try {
-    const { questionnaireId } = action.payload;
-    yield call(apiClient.post, `/api/questions`, action.payload);
-    yield put(getSectionsByQuestionnaireRoutine.trigger(questionnaireId));
-    yield call(getByQuestionnaireId, { payload: questionnaireId });
-  } catch(error) {
-    yield put(saveQuestionToQuestionnaireRoutine.failure());
-    toastr.error("Question wasn't saved");
-  }
+function* orderQuestions(action) {
+    try {
+        yield call(apiClient.put, `/api/questions/index`, action.payload);
+    } catch {
+        toastr.error("Unable to index questionnaire");
+    }
 }
 
-function* getByQuestionnaireId(action) {
+function* loadSaved(action) {
     try {
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/questionnaires/${action.payload}`);
+        const {responseId, questionnaireId} = action.payload;
+        const resQ: IGeneric<IQuestion[]>
+            = yield call(apiClient.get, `/api/questions/questionnaires/${questionnaireId}`);
 
-        const questions = res.data.data.map(q => parseQuestion(q));
+        const questions: IQuestion[] = resQ.data.data.map(q => parseQuestion(q));
+        const res: IGeneric<any> = yield call(apiClient.get, `/api/response?responseId=${responseId}`);
+        const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
 
-        yield put(loadQuestionnaireQuestionsRoutine.success(questions));
+        yield put(loadSavedQuestionsRoutine.success());
+        const result = questions.map(q => {
+            q['answer'] = answers.find(a => a.questionId === q.id).body;
+            return q;
+        });
+        yield put(loadQuestionnaireQuestionsRoutine.success(result));
 
     } catch (e) {
-        yield put(loadQuestionnaireQuestionsRoutine.failure(e.data.error));
+        yield put(loadSavedQuestionsRoutine.failure(e.data.error));
         toastr.error("Unable to load questionnaire");
     }
 }
@@ -149,38 +175,17 @@ function* getBySectionId(action) {
   }
 }
 
-function* deleteOneByQuestionnaireId(action) {
-    try {
-        const { id, qId } = action.payload;
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.delete, `/api/questions/questionnaires/${qId}`, id);
-        const questions = res.data.data.map(q => parseQuestion(q));
-        yield put(deleteFromQuestionnaireRoutine.success(questions));
-    } catch (e) {
-        yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
-        toastr.error("Unable to delete question");
-    }
-}
-
-function* orderQuestions(action) {
-  try {
-    yield call(apiClient.put, `/api/questions/index`, action.payload);
-  } catch {
-    toastr.error("Unable to index questionnaire");
-  }
-}
-
 export default function* questionSagas() {
 
-  yield all([
-    yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
-    yield takeEvery(saveQuestionToQuestionnaireRoutine.TRIGGER, saveOrUpdateQuestion),
-    yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),
-    yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId),
-    yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
-    yield takeEvery(addNewQuestionToQuestionnaireRoutine.TRIGGER, addNewQuestionToQuestionnaire),
-    yield takeEvery(indexQuestionsRoutine.TRIGGER, orderQuestions),
-    yield takeEvery(copyQuestionInQuestionnaireRoutine.TRIGGER, copyQuestionInQuestionnaire),
-    yield takeEvery(deleteFromQuestionnaireRoutine.TRIGGER, deleteOneByQuestionnaireId),
-    yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId)
-  ]);
+    yield all([
+        yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
+        yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),
+        yield takeEvery(loadQuestionnaireQuestionsRoutine.TRIGGER, getByQuestionnaireId),
+        yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
+        yield takeEvery(indexQuestionsRoutine.TRIGGER, orderQuestions),
+        yield takeEvery(deleteFromQuestionnaireRoutine.TRIGGER, deleteOneByQuestionnaireId),
+        yield takeEvery(saveQuestionRoutine.TRIGGER, saveOrUpdateQuestion),
+        yield takeEvery(loadSavedQuestionsRoutine.TRIGGER, loadSaved),
+        yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId)
+    ]);
 }

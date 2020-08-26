@@ -1,10 +1,13 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
+import com.feed_grabber.core.user.dto.*;
+
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.user.dto.ResetPassDto;
@@ -93,6 +96,12 @@ public class UserController {
     @PutMapping("{id}/removeCompany")
     public void removeUserFromCompany (@PathVariable UUID id) {
         userService.removeCompany(id);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/editProfile")
+    public void editProfile(@RequestBody UserProfileEditDto dto) throws NotFoundException {
+        this.userService.editUserProfile(dto);
     }
 
     @GetMapping("/short")

@@ -11,6 +11,7 @@ import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.questionnaire.dto.QuestionDeleteDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
@@ -86,7 +87,6 @@ public class QuestionController {
         var dto = new ObjectMapper().readValue(json, QuestionUpdateDto.class);
 
         return new AppResponse<>(questionService.update(dto));
-
     }
 
     @ApiOperation(value = "Add existing question to questionnaire")
@@ -113,26 +113,16 @@ public class QuestionController {
     }
 
     @ApiOperation(value = "Delete the question by id and questionnaireId")
-    @DeleteMapping("/questionnaires/{qId}")
+    @DeleteMapping("/questionnaires/{questionId}/{questionnaireId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteOneByQuestionnaireAndID(@ApiParam(
-            value = "IDs to delete one question from questionnaire", required = true) @RequestBody UUID id, @PathVariable UUID qId){
-        questionService.deleteOneByQuestionnaireIdAndQuestionId(id, qId);
-    }
+    public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(
+            @PathVariable UUID questionId,
+            @PathVariable UUID questionnaireId
+    ){
 
-    @ApiOperation(value = "Add new question to questionnaire")
-    @PostMapping("/questionnaires/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<QuestionDto>> updateQuestionnaireAddQuestion(@PathVariable UUID id)
-            throws QuestionnaireNotFoundException, CompanyNotFoundException, SectionNotFoundException {
-        questionService.create(QuestionCreateDto
-                .builder()
-                .name("New question")
-                .type(QuestionType.freeText)
-                .questionnaireId(Optional.of(id))
-                .categoryTitle("sport")
-                .build());
-        return new AppResponse<>(questionService.getAllByQuestionnaireId(id));
+        questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
+
+        return new AppResponse<>(questionService.getAllByQuestionnaireId(questionnaireId));
     }
 
     @GetMapping("/sections/{id}")

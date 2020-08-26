@@ -1,27 +1,31 @@
-import React, { FC, useEffect, useState } from "react";
-import { Button, Form, Popup } from "semantic-ui-react";
-import { IAppState } from "../../models/IAppState";
-import { connect, ConnectedProps } from "react-redux";
+import React, {FC, useEffect, useState} from "react";
+import {Button, Form, Popup} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
-import {
-    addNewQuestionToQuestionnaireRoutine,
-    deleteFromQuestionnaireRoutine, copyQuestionInQuestionnaireRoutine
-} from "sagas/questions/routines";
-import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-
 import styles from "./styles.module.sass";
 import { number } from "prop-types";
 import { createSectionRoutine } from "sagas/sections/routines";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import { connect } from "react-redux";
+import { IAppState } from "models/IAppState";
 
-const QuestionMenu: FC<ContainerProps> = ({
-    deleteQuestion,
+interface IQuestionMenuProps {
+    addQuestion(): void;
+    copyQuestion(): void;
+    onDelete(): void;
+    createSection(action: any): void;
+    currentQuestionnaireId: string;
+    currentQuestion: IQuestion;
+}
+const QuestionMenu: FC<IQuestionMenuProps> = ({
     addQuestion,
     copyQuestion,
     currentQuestion,
     currentQuestionnaireId,
-    createSection
+    createSection,
+    onDelete
 }) => {
     const [positions, setPositions] = useState({ scrollTop: 0, innerHeight: window.innerHeight });
+
     useEffect(() => {
         (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = (e: Event) => {
             setPositions(
@@ -32,17 +36,16 @@ const QuestionMenu: FC<ContainerProps> = ({
             );
         };
     });
+
     const handleAdd = (id: string) => {
         if (id === "new") {
-            addQuestion({ qId: currentQuestionnaireId});
+            addQuestion();
         } else {
-            copyQuestion({ qId: currentQuestionnaireId, question: currentQuestion });
+            copyQuestion();
         }
     };
 
-    const handleDelete = () => {
-        deleteQuestion({ qId: currentQuestionnaireId, id: currentQuestion.id });
-    };
+    const button = <Button icon={'external'} />;
 
     const handleAddSection = () => {
         createSection({questionnaireId: currentQuestionnaireId});
@@ -56,6 +59,7 @@ const QuestionMenu: FC<ContainerProps> = ({
                 || currentQuestion.top < 0
                 ? scrollTop + innerHeight / 2 - 40
                 : scrollTop + currentQuestion.top),
+            left: '20%',
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Form className={styles.question_menu_container}>
@@ -63,12 +67,14 @@ const QuestionMenu: FC<ContainerProps> = ({
                     <Popup content='New question'
                         trigger={<Button icon="plus circle" onClick={() => handleAdd("new")} />}
                         position='right center' />
-                    <SelectQuestionsFromExisting />
+                    <Popup content='Add from existing questions'
+                         trigger={<SelectQuestionsFromExisting button={button} />}
+                         position='right center' />
                     <Popup content='Copy'
                         trigger={<Button icon="copy" onClick={() => handleAdd(currentQuestion.id)} />}
                         position='right center' />
                     <Popup content='Delete'
-                        trigger={<Button icon="remove" onClick={() => handleDelete()} />}
+                        trigger={<Button icon="remove" onClick={onDelete} />}
                         position='right center' />
                     <Popup content='Add section'
                         trigger={<Button icon="plus square outline" onClick={() => handleAddSection()}/>}
@@ -85,14 +91,7 @@ const mapState = (state: IAppState) => ({
 });
 
 const mapDispatch = {
-    deleteQuestion: deleteFromQuestionnaireRoutine,
-    addQuestion: addNewQuestionToQuestionnaireRoutine,
-    copyQuestion: copyQuestionInQuestionnaireRoutine,
     createSection: createSectionRoutine
 };
 
-const connector = connect(mapState, mapDispatch);
-
-type ContainerProps = ConnectedProps<typeof connector>;
-
-export default connector(QuestionMenu);
+export default connect(mapState, mapDispatch)(QuestionMenu);
