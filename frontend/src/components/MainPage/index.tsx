@@ -75,14 +75,15 @@ const MainPage: FC<IMainPageProps> =
                                         expirationDate
                                     }) => (
                                     <UICardBlock key={requestId}
-                                        className={styles.container_all}>
+                                                 className={styles.container_all}>
                                         <p>{expirationDate
                                             ? `Deadline at ${expirationDate.toUTCString()}`
                                             : 'No deadline for this request'}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
-                                        {(expirationDate?.valueOf() > new Date().valueOf() || !expirationDate)
+                                        {((expirationDate?.valueOf() || Number.MAX_VALUE)
+                                            > new Date().valueOf() || !expirationDate)
                                             ? <UIButton title="Answer"
                                                         onClick={() =>
                                                             handleAnswerClick(requestId, questionnaire.id)}/>
@@ -109,14 +110,15 @@ const MainPage: FC<IMainPageProps> =
                                         closeDate
                                     }) => (
                                     <UICardBlock key={requestId}
-                                        className={`${styles.container_all} ${styles.container}`}>
+                                                 className={`${styles.container_all} ${styles.container}`}>
                                         <p>{expirationDate
                                             ? `Deadline on ${expirationDate.toUTCString()}`
                                             : 'No deadline for this request'}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
-                                        {(expirationDate?.valueOf() > new Date().valueOf() && !closeDate)
+                                        {((expirationDate?.valueOf() || Number.MAX_VALUE)
+                                            > new Date().valueOf() && !closeDate)
                                             ? <UIButton title="Change my answer"
                                                         onClick={() =>
                                                             handleModifyAnswerClick(
