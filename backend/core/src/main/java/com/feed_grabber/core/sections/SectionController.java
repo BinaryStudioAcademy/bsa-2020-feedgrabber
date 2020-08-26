@@ -5,6 +5,7 @@ import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.sections.dto.SectionDto;
 import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
+import com.feed_grabber.core.sections.dto.SectionUpdateDto;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,13 @@ public class SectionController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<SectionQuestionsDto>> getByQuestionnaire(@PathVariable UUID id) {
         return new AppResponse<>(sectionService.getByQuestionnaire(id));
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<SectionDto> update(@PathVariable UUID id, @RequestBody SectionUpdateDto dto)
+            throws SectionNotFoundException {
+        return new AppResponse<>(sectionService.update(id, dto));
     }
 
     @PutMapping("/question/{id}")

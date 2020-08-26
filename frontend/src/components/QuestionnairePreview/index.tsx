@@ -9,7 +9,8 @@ import UISection from "components/UI/UISectionCard";
 import SectionBlock from "components/SectionBlock";
 import { updateSectionsRoutine,
    addQuestionToSectionRoutine,
-    deleteQuestionFromSectionRoutine } from "sagas/sections/routines";
+    deleteQuestionFromSectionRoutine,
+    updateSectionRoutine } from "sagas/sections/routines";
 import { IAppState } from "models/IAppState";
 import { connect } from "react-redux";
 
@@ -35,6 +36,7 @@ interface IQuestionnairePreviewProps {
   qnId: string;
   indexQuestions(action: {}): void;
   updateSections(sections: ISection[]): void;
+  updateSection(action: {}): void;
   addQuestionToSection(action: any): void;
   deleteQuestionFromSection(action: any): void;
 }
@@ -49,6 +51,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   questions,
   indexQuestions,
   updateSections,
+  updateSection,
   addQuestionToSection,
   deleteQuestionFromSection
 }) => {
@@ -115,11 +118,15 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
     }
   };
 
+  const handleChapterChange = (id: string, title: string, description: string) => {
+    updateSection({id: id, title: title, description: description});
+  };
+
   return (
     <div className={styles.wrapper}>
       {sections && sections.map(section => 
       <SectionBlock id={section.id}>
-      <UISection title={section.title} description={section.description}/>
+      <UISection section={section} onChanged={handleChapterChange}/>
       {section.questions.length ?
         <div>
           {section.questions.map((q, i) => renderCard(q, i, section.id))}
@@ -138,6 +145,7 @@ const mapState = (state: IAppState) => ({
 
 const mapDispatch = {
   updateSections: updateSectionsRoutine.success,
+  updateSection: updateSectionRoutine,
   addQuestionToSection: addQuestionToSectionRoutine,
   deleteQuestionFromSection: deleteQuestionFromSectionRoutine
 };

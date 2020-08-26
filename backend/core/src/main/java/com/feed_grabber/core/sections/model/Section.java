@@ -3,7 +3,9 @@ package com.feed_grabber.core.sections.model;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.user.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "sections")
 public class Section {
     @Id

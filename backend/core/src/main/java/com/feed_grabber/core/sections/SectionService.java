@@ -5,6 +5,7 @@ import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.sections.dto.SectionDto;
 import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
+import com.feed_grabber.core.sections.dto.SectionUpdateDto;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +60,14 @@ public class SectionService {
         sectionRepository.deleteQuestion(sectionId, questionId);
 
         return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
+    }
+
+    public SectionDto update(UUID id, SectionUpdateDto dto) throws SectionNotFoundException {
+        var section = sectionRepository.findById(id).orElseThrow(SectionNotFoundException::new);
+        section.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) {
+            section.setDescription(dto.getDescription());
+        }
+        return SectionMapper.MAPPER.modelToDto(sectionRepository.save(section));
     }
 }

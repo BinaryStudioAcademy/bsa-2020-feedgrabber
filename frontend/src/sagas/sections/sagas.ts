@@ -7,7 +7,8 @@ import { addNewSectionRoutine,
        addQuestionToSectionRoutine, 
        deleteQuestionFromSectionRoutine,
        setCurrentSectionRoutine,
-       updateSectionsRoutine} from "./routines";
+       updateSectionsRoutine,
+       updateSectionRoutine } from "./routines";
 import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
 import {parseQuestion} from "sagas/questions/sagas";
 import { containerCSS } from "react-select/src/components/containers";
@@ -76,11 +77,22 @@ function* deleteQuestionFromSection(action) {
     }
 }
 
+function* updateSection(action) {
+    try {
+        console.log(action.payload);
+        const result = yield call(apiClient.put, `/api/section/${action.payload.id}`, action.payload);
+        yield put(updateSectionRoutine.success(result.data.data));
+    } catch (error) {
+        yield put(updateSectionRoutine.failure());
+    }
+}
+
 export default function* sectionSagas() {
     yield all([
         yield takeEvery(createSectionRoutine.TRIGGER, createSection),
         yield takeEvery(getSectionsByQuestionnaireRoutine.TRIGGER, getAllSectionsAndQuestionsByQuestionnaire),
         yield takeEvery(addQuestionToSectionRoutine.TRIGGER, addQuestionToSection),
-        yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection)
+        yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection),
+        yield takeEvery(updateSectionRoutine.TRIGGER, updateSection)
     ]);
 }
