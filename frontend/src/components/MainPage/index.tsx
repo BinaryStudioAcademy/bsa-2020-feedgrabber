@@ -123,7 +123,8 @@ const MainPage: FC<IMainPageProps> =
                                                                 requestId,
                                                                 questionnaire.id,
                                                                 responseId)}/>
-                                            : (closeDate && new Date(closeDate).valueOf() !== expirationDate.valueOf())
+                                            : (closeDate
+                                                && new Date(closeDate)?.valueOf() !== expirationDate?.valueOf())
                                                 ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
                                                 : <p>Expired {new Date(new Date().valueOf()
                                                     - expirationDate?.valueOf()).getHours()} hours ago</p>}

@@ -15,7 +15,7 @@ import UIContent from "../../components/UI/UIContent";
 
 const newQuestion: IQuestion = {
     type: QuestionType.date,
-    categoryTitle: "",
+    categoryTitle: new Date().toString(),
     name: "New Question",
     answer: "",
     id: "",
@@ -60,6 +60,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             questionnaireId: match.params.id,
             questionnaireQuestions
         });
+
     };
 
     const copyQuestion = () => {
