@@ -40,12 +40,14 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
                     <Card.Meta>at {request.creationDate.substr(0, 10)}</Card.Meta>
                 </Card.Content>
                 <Card.Content extra>
-                    <Progress active percent={calcDate(request.expirationDate)}
+                    {isClosed && <Progress percent={100} inverted indicating color="red"
+                                    label={`Closed on ${request.closeDate?.substr(0, 10)}`}/>}
+                    {!isClosed && <Progress active percent={calcDate(request.expirationDate, request.creationDate)}
                               label={request.expirationDate
                                        ? `Deadline on ${request.expirationDate?.substr(0, 10)}`
                                        : 'Without expiration'}
                               color="blue"
-                    />
+                    />}
                         <Icon name='user'/>
                     {request.userCount} Attended
                 </Card.Content>
@@ -74,7 +76,11 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
     );
 };
 
-function calcDate(deadline: string): number {
-    return Date.now() / new Date(deadline).getTime();
+function calcDate(deadline: string, create: string): number {
+    // TODO remove +19000000 after LocalDateTime migration
+    const now = Date.now()+19000000;
+    const start = new Date(create).getTime();
+    const end = new Date(deadline).getTime();
+    return (now-start)/(end-start)*100;
 }
 
