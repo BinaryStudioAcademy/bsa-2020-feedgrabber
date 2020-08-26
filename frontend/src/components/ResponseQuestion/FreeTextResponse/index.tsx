@@ -1,4 +1,4 @@
-import { ITextQuestion, QuestionType } from "models/forms/Questions/IQuesion";
+import { ITextQuestion } from "models/forms/Questions/IQuesion";
 import { IQuestionResponse } from "models/IQuestionResponse";
 import React, { FC, useState } from "react";
 import { Input, InputOnChangeData } from "semantic-ui-react";
@@ -10,7 +10,6 @@ export interface IFreeTextResponse {
 }
 
 export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextResponse> = ({
-    question,
     answerHandler,
     response
 }) => {
@@ -28,7 +27,7 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextRe
     return <Input
         onChange={handleChange}
         placeholder='Answer field'
-        disabled={!!response}
+        disabled={!!response && !answerHandler}
         defaultValue={response || ''}
         error={!!invalidMessage}
         className={styles.input}
