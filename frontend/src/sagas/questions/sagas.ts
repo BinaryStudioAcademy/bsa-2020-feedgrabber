@@ -149,9 +149,13 @@ function* loadSaved(action) {
         const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
 
         yield put(loadSavedQuestionsRoutine.success());
-        const result = questions.map(q => {
-            q['answer'] = answers.find(a => a.questionId === q.id).body;
-            return q;
+        const result = questions.filter(q => {
+            if(answers.find(a => a.questionId === q.id)) {
+                q['answer'] = answers.find(a => a.questionId === q.id).body;
+                return q;
+            }else {
+                return false;
+            }
         });
         yield put(loadQuestionnaireQuestionsRoutine.success(result));
 
