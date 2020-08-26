@@ -88,5 +88,4 @@ const rolesRules = {
     "company_owner": companyOwner
 };
 
-const getRolesRules = () => rolesRules;
-export default getRolesRules;
+export default rolesRules;

@@ -1,8 +1,8 @@
-import getRolesRules, {IRole} from "./rbac-rules";
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import {FC, useEffect} from "react";
 import {getUserRoutine} from "../../sagas/auth/routines";
+import rolesRules, {IRole} from "./rbac-rules";
 
 interface IAccessManagerProps {
     role: string;
@@ -23,7 +23,6 @@ const AccessManager: FC<IAccessManagerProps> = (
         }
     });
 
-    const rolesRules = getRolesRules();
     const permissions: IRole = rolesRules[role];
     if (!permissions)
         return null;
@@ -54,6 +53,8 @@ const AccessManager: FC<IAccessManagerProps> = (
             return true;
         }
 
+        // This check works only for company owners.
+        // It's using for getting access to all endpoints without adding new rules and should be deleted later.
         if (endpoints.includes("companyOwnerEndpointAccess"))
             return true;
 
@@ -66,7 +67,6 @@ const AccessManager: FC<IAccessManagerProps> = (
 
     return isStaticPermit && isDynamicPermit && isEndpointPermit
         ? children : (onDenied ? onDenied() : null);
-
 };
 
 const mapStateToProps = (state: IAppState) => ({
