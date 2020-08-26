@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
+import React, {FC, useEffect, useState} from "react";
 import { Input, Radio } from "semantic-ui-react";
 import styles from './styles.module.sass';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IRadioQuestion } from "../../../models/forms/Questions/IQuesion";
 import { IAnswerBody } from '../../../models/forms/Response/types';
 
 export interface IRadioResponse {
@@ -24,18 +24,18 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
     const [answer, setAnswer] = useState(response as { selected?: string; other?: string } || null);
 
-    // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
+    useEffect(() => answerHandler?.({
+        selected: answer?.selected,
+        other: answer?.other
+        // eslint-disable-next-line
+    }), [answer]);
 
     const handleChange = (event, value?) => {
         setAnswer({ ...answer, selected: value?.value });
-        answerHandler?.({
-            selected: answer.selected,
-            other: answer.other
-        });
     };
 
     const handleOther = (value: string) => {
-        if (value?.trim().length === 0 || value.trim()?.length > 200) {
+        if (value?.trim().length === 0 || value?.trim().length > 200) {
             setOther(null);
             setAnswer(null);
             setOtherIsInvalid(true);
@@ -51,7 +51,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
             {question.details.answerOptions.map((option, index) => (
                 <div className={styles.option_container} key={index}>
                     <Radio
-                        disabled={!!response}
+                        disabled={!!response && !answerHandler}
                         checked={answer?.selected === option}
                         name='radioGroup'
                         value={option}
@@ -63,14 +63,14 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
             {question.details.includeOther && (
                 <div className={styles.option_container}>
                     <Radio
-                        disabled={!!response}
+                        disabled={!!response && !answerHandler}
                         checked={answer?.other === other}
                         name='radioGroup'
                         value={other}
                         onChange={() => handleOther(other)}
                     />
                     <Input
-                        disabled={!!response}
+                        disabled={!!response && !answerHandler}
                         className={styles.answer_input}
                         fluid
                         transparent

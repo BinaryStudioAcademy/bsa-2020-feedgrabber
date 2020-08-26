@@ -3,9 +3,7 @@ package com.feed_grabber.core.report;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -26,5 +24,10 @@ public class ReportController {
     @PostMapping("/excel")
     public void generateReport(@RequestParam UUID requestId) {
         service.sendExcelReportGenerationRequest(requestId);
+    }
+
+    @PostMapping("/ppt")
+    public void generatePPTReport(@RequestParam UUID requestId) {
+        service.sendPPTReportGenerationRequest(requestId);
     }
 }

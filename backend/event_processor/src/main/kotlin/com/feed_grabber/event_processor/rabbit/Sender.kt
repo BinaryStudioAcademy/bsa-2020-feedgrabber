@@ -32,4 +32,9 @@ class Sender {
         template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
     }
 
+    fun sendPPTReportURL(dto: ReportFileCreationResponseDto) {
+        println(" [x] Sending report generation response for request with id ${dto.requestId}")
+        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
+    }
+
 }

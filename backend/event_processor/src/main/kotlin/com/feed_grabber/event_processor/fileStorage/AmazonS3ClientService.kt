@@ -37,18 +37,4 @@ class AmazonS3ClientService(private val s3Client: S3Client) {
         return ReportFileCreationResponseDto(requestId, "$ENDPOINT$BUCKET_NAME/$key", key)
     }
 
-//    fun uploadReportUpd(file: OutputStream, requestId: UUID): ReportFileCreationResponseDto {
-//        return putObject(file, requestId, "reports/")
-//    }
-//
-//    fun putObjectUpd(file: File, requestId: UUID, prefix: String): ReportFileCreationResponseDto {
-//        val key = prefix + file.name?.replace(" ", "_") ?: UUID.randomUUID().toString()
-//        val request = PutObjectRequest.builder().bucket(BUCKET_NAME).key(key).acl(ObjectCannedACL.PUBLIC_READ).build()
-//        val fis = file.inputStream();
-//        val requestBody = RequestBody.fromInputStream(fis, file.length())
-//        s3Client.putObject(request, requestBody)
-//        fis.close()
-//        return ReportFileCreationResponseDto(requestId, "$ENDPOINT$BUCKET_NAME/$key", key)
-//    }
-
 }
