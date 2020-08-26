@@ -1,12 +1,12 @@
-import { ICheckboxQuestion } from "models/forms/Questions/IQuesion";
-import { IQuestionResponse } from "models/IQuestionResponse";
-import React, { FC, useEffect, useState } from "react";
-import { Checkbox, Input } from "semantic-ui-react";
+import {ICheckboxQuestion} from "models/forms/Questions/IQuesion";
+import {IQuestionResponse} from "models/IQuestionResponse";
+import React, {FC, useEffect, useState} from "react";
+import {Checkbox, Input} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import { replaceAtIndex } from "../../../helpers/array.helper";
-import { IAnswerBody } from '../../../models/forms/Response/types';
+import {replaceAtIndex} from "../../../helpers/array.helper";
+import {IAnswerBody} from '../../../models/forms/Response/types';
 
-export  interface ICheckboxResponse {
+export interface ICheckboxResponse {
     response?: IAnswerBody;
 }
 
@@ -22,34 +22,37 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
         return !!options.find(option => option === field);
     };
     const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
+
     useEffect(() => {
         setBoxes(question.details.answerOptions.map(v => ({
             checked: isAnswer(v, (response as { selected: string[]; other: string })?.selected),
             value: v
         })));
-    }, [question.details.answerOptions, response, setBoxes]); // in dev only [question]
+        // eslint-disable-next-line
+    }, [question]); // in dev only [question]
 
     const [other, setOther] = useState({
         checked: ((response as { selected: string[]; other: string })?.other && question.details.includeOther),
         value: (response as { selected: string[]; other: string })?.other || ''
     });
 
-    const handleAnswer = () => {
+    useEffect(() => {
         const boxesChecked = boxes.filter(v => v.checked && v.value);
         answerHandler
-            ?.(boxesChecked.length
+            ?.((other.checked && other.value) || boxesChecked.length
                 ? {
                     selected: boxesChecked.map(v => v.value),
-                    other: other.value || null
+                    other: (other.checked && other.value) || null
                 }
                 : null
             );
-    };
+        // eslint-disable-next-line
+    }, [boxes, other]);
 
     return (
         <div className={styles.boxes}>
             {boxes.map((v, i) => {
-                return <Checkbox disabled={response !== undefined}
+                return <Checkbox disabled={response !== undefined && !answerHandler}
                                  label={v.value}
                                  checked={boxes[i].checked}
                                  onChange={() => {
@@ -57,25 +60,23 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
                                          const {checked, value} = boxes[i];
                                          return replaceAtIndex(boxes, {checked: !checked, value}, i);
                                      });
-                                     handleAnswer();
                                  }
                                  }/>;
             })}
             {question.details.includeOther && (
                 <div className={styles.other}>
                     <Checkbox
-                        disabled={response !== undefined}
+                        disabled={response !== undefined && !answerHandler}
                         checked={other.checked}
                         onChange={() => {
                             setOther(() => {
                                 const {checked, value} = other;
                                 return ({checked: !checked, value});
                             });
-                            handleAnswer();
                         }
                         }/>
                     <Input
-                        disabled={response !== undefined}
+                        disabled={response !== undefined && !answerHandler}
                         className={styles.otherInput}
                         defaultValue={other.value}
                         placeholder='Other option...'

@@ -32,7 +32,6 @@ services:
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
-    hostname: "localhost"
     container_name: 'rabbitmq'
     env_file:
       - ../.env/rabbitmq.env

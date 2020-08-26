@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState } from "react";
-import { Input, Radio } from "semantic-ui-react";
+import React, {FC, useEffect, useState} from "react";
+import {Input, Radio} from "semantic-ui-react";
 import styles from './styles.module.sass';
-import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IRadioQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
-import { IAnswerBody } from '../../../models/forms/Response/types';
+import {IQuestionResponse} from "../../../models/IQuestionResponse";
+import {IRadioQuestion} from "../../../models/forms/Questions/IQuesion";
+import {IAnswerBody} from '../../../models/forms/Response/types';
 
 export interface IRadioResponse {
     response?: IAnswerBody;
@@ -16,26 +16,26 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                                                                                      }) => {
     const [other, setOther] = useState<string>(() => {
         if (!response) {
-            return '';
+            return null;
         }
         const answer = response as { selected?: string; other?: string };
-        return answer.other || '';
+        return answer.other || null;
     });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
     const [answer, setAnswer] = useState(response as { selected?: string; other?: string } || null);
 
-    // useEffect(() => answerHandler?.(question.id, answer), [answer, answerHandler, question.id]);
+    useEffect(() => answerHandler?.(answer?.selected || answer?.other ? {
+        selected: !answer?.other ? answer?.selected : null,
+        other: answer?.other
+        // eslint-disable-next-line
+    } : null), [answer]);
 
     const handleChange = (event, value?) => {
-        setAnswer({ ...answer, selected: value?.value });
-        answerHandler?.({
-            selected: answer.selected,
-            other: answer.other
-        });
+        setAnswer({...answer, selected: value?.value});
     };
 
     const handleOther = (value: string) => {
-        if (value?.trim().length === 0 || value.trim()?.length > 200) {
+        if (value?.trim().length === 0 || value?.trim().length > 200) {
             setOther(null);
             setAnswer(null);
             setOtherIsInvalid(true);
@@ -43,7 +43,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         }
         setOtherIsInvalid(false);
         setOther(value);
-        setAnswer({ ...answer, other: value});
+        setAnswer({...answer, other: value});
     };
 
     return (
@@ -51,26 +51,26 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
             {question.details.answerOptions.map((option, index) => (
                 <div className={styles.option_container} key={index}>
                     <Radio
-                        disabled={!!response}
+                        disabled={!!response && !answerHandler}
                         checked={answer?.selected === option}
                         name='radioGroup'
                         value={option}
                         onChange={handleChange}
                     />
-                    <Input disabled transparent fluid className={styles.answer_input} value={option} />
+                    <Input disabled transparent fluid className={styles.answer_input} value={option}/>
                 </div>
             ))}
             {question.details.includeOther && (
                 <div className={styles.option_container}>
                     <Radio
-                        disabled={!!response}
+                        disabled={!!response && !answerHandler}
                         checked={answer?.other === other}
                         name='radioGroup'
                         value={other}
                         onChange={() => handleOther(other)}
                     />
                     <Input
-                        disabled={!!response}
+                        disabled={!!response && !answerHandler}
                         className={styles.answer_input}
                         fluid
                         transparent

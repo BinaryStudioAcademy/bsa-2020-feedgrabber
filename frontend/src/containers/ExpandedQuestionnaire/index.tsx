@@ -15,7 +15,7 @@ import UIContent from "../../components/UI/UIContent";
 
 const newQuestion: IQuestion = {
     type: QuestionType.date,
-    categoryTitle: "",
+    categoryTitle: new Date().toString(),
     name: "New Question",
     answer: "",
     id: "",
@@ -42,16 +42,12 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     }, [loadOneQuestionnaire, match.params.id]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    const [isValid, setIsValid] = useState(false);
 
     useEffect(() => {
       setQuestion(currentQuestion);
     }, [currentQuestion]);
 
     const handleDeleteQuestion = () => {
-        if (!isValid) {
-            return;
-        }
         deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
     };
 
@@ -60,6 +56,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             questionnaireId: match.params.id,
             questionnaireQuestions
         });
+
     };
 
     const copyQuestion = () => {

@@ -12,7 +12,7 @@ function* auth(action) {
     const routine = isLogin ? loginRoutine : registerRoutine;
 
     try {
-        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `api/auth/${endpoint}`, action.payload);
+        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/${endpoint}`, action.payload);
         const {user, refreshToken, accessToken} = res.data.data;
 
         yield put(routine.success(user));

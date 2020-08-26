@@ -57,24 +57,17 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onSubmit = () => {
         if (isQuestionDetailsValid) {
+            match.params.id !== "new" ?
             saveQuestion({
                 ...question,
                 questionnaireId,
                 questionnaireQuestions
+            }) :
+            saveQuestion({
+                ...question
             });
         }
         isPreview ? isPreview.close() : history.goBack();
-    };
-
-    const onCopy = () => {
-        if (isQuestionDetailsValid) {
-            saveQuestion({
-                ...question,
-                id: null,
-                questionnaireId
-            });
-            isPreview ? isPreview.close() : history.goBack();
-        }
     };
 
     return (
@@ -89,7 +82,6 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                         currentQuestion={currentQuestion}
                         categories={categories}
                         onValueChange={handleQuestionDetailsUpdate}
-                        onCopy={onCopy}
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
                         <Button className="ui button" color="red" onClick={onClose}>

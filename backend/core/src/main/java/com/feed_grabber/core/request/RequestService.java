@@ -122,11 +122,14 @@ public class RequestService {
     }
 
     public List<PendingRequestDto> getPending(UUID userId) {
-        return requestRepository
-                .findAllByResponsesUserId(userId)
+        return responseRepository
+                .findAllByUserId(userId)
                 .stream()
-                .map(r->RequestMapper.MAPPER.toPendingDtoFromModel(r,userId))
-                .sorted(Comparator.comparing(PendingRequestDto::getExpirationDate).reversed())
+                .map(RequestMapper.MAPPER::toPendingFromResponse)
+                .sorted(
+                        Comparator.comparing(PendingRequestDto::getExpirationDate
+                                , Comparator.nullsFirst(Comparator.naturalOrder())).reversed()
+                )
                 .collect(Collectors.toList());
     }
 
@@ -148,7 +151,7 @@ public class RequestService {
     public Date closeNow(UUID requestId) throws NotFoundException {
         var request = requestRepository
                 .findById(requestId)
-                .orElseThrow(()->new NotFoundException("Request not found"));
+                .orElseThrow(() -> new NotFoundException("Request not found"));
 
         request.setCloseDate(new Date());
         return requestRepository.save(request).getCloseDate();
