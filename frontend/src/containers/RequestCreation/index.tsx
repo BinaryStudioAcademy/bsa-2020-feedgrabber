@@ -122,7 +122,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               <UICardBlock>
                                 <h4>Assign target user:</h4>
                                 <p>This user will receive report</p>
-                                <div style={{height: '200px', overflow: 'auto'}}>
+                                <div className={styles.targetUserContainer}>
                                   {
                                     users.map(user => (
                                         <UIUserItemCard
