@@ -41,14 +41,15 @@ public class SectionController {
 
     @PutMapping("/question/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Integer> addQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
+    public AppResponse<SectionQuestionsDto> addQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
             throws SectionNotFoundException, QuestionNotFoundException {
+        System.out.println(sectionId);
         return new AppResponse<>(sectionService.addQuestion(sectionId, id));
     }
 
     @DeleteMapping("/question/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Integer> deleteQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
+    public AppResponse<SectionQuestionsDto> deleteQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
             throws SectionNotFoundException, QuestionNotFoundException {
         return new AppResponse<>(sectionService.deleteQuestion(sectionId, id));
     }

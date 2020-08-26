@@ -7,7 +7,7 @@ import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
-import { getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { getSectionsByQuestionnaireRoutine, createSectionRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import {
     deleteFromQuestionnaireRoutine,
@@ -49,11 +49,12 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         saveQuestion,
         deleteQuestion,
         currentQuestion,
-        questions
+        questions,
+        createSection,
+        currentSection
     }
 ) => {
     useEffect(() => {
-        console.log(match.params.id);
         loadOneQuestionnaire(match.params.id);
         loadSections(match.params.id);
     }, [loadOneQuestionnaire, match.params.id, loadSections]);
@@ -71,9 +72,13 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     const addNewQuestion = () => {
         saveQuestion({...newQuestion,
             questionnaireId: match.params.id,
+            sectionId: currentSection? currentSection.id: sections[0].id,
             questionnaireQuestions
         });
+    };
 
+    const handleAddSection = () => {
+        createSection({questionnaireId: questionnaire.id});
     };
 
     const copyQuestion = () => {
@@ -85,6 +90,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         id: "",
         name: `${question.name} (copy)`,
         questionnaireId: match.params.id,
+        sectionId: currentSection? currentSection.id: sections[0].id,
         questionnaireQuestions
       });
     };
@@ -93,7 +99,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         <LoaderWrapper loading={isLoading}>
             {questionnaire && (
                 <div className={styles.formDetails}>
-                    <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     <UIContent>
                         <div className={styles.questions_container}>
                             <QuestionnairePreview
@@ -105,8 +110,9 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                         <QuestionMenu
                             addQuestion={addNewQuestion}
                             copyQuestion={copyQuestion}
-                            // currentQuestion={currentQuestion}
+                            currentQuestion={currentQuestion}
                             onDelete={handleDeleteQuestion}
+                            addSection={handleAddSection}
                         />
                     </UIContent>
                 </div>
@@ -123,14 +129,16 @@ const mapStateToProps = (rootState: IAppState) => ({
     currentQuestion: rootState.questions.current,
     // isLoading: rootState.questionnaires.current.isLoading,
     questions: rootState.questionnaires.current.questions,
-    questionnaireQuestions: rootState.questionnaires.current.questions
+    questionnaireQuestions: rootState.questionnaires.current.questions,
+    currentSection: rootState.sections.current
 });
 
 const mapDispatchToProps = {
     loadOneQuestionnaire: loadOneQuestionnaireRoutine,
     loadSections: getSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
-    deleteQuestion: deleteFromQuestionnaireRoutine
+    deleteQuestion: deleteFromQuestionnaireRoutine,
+    createSection: createSectionRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

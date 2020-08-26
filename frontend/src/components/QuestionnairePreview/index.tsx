@@ -94,7 +94,8 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   };
 
   const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
-    const updatedSections = sections.map(section => { 
+    if (sectionId !== prevSectionId) {
+      const updatedSections = sections.map(section => { 
       if(section.id === sectionId) { 
         return {...section, 
           questions: [...section.questions, question]
@@ -109,8 +110,9 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
       else { return section; }
     });
     updateSections(updatedSections);
-    addQuestionToSection({sectionId: sectionId, questionId: question.id});
     deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
+    addQuestionToSection({sectionId: sectionId, questionId: question.id});
+    }
   };
 
   return (
@@ -122,8 +124,8 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
         <div>
           {section.questions.map((q, i) => renderCard(q, i, section.id))}
         </div>
-        : <Header as='h2'>
-          Urrr... Maybe nothing is modifying right now or you haven`t created any questions yet?
+        : <Header as='h3'>
+          Add questions
         </Header>}
         </SectionBlock>
       )}

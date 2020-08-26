@@ -14,8 +14,7 @@ interface IQuestionMenuProps {
     copyQuestion(): void;
 
     onDelete(): void;
-    createSection(action: any): void;
-    currentQuestionnaireId: string;
+    addSection(): void;
 
     currentQuestion: IQuestion;
 }
@@ -25,8 +24,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                                                   copyQuestion,
                                                   currentQuestion,
                                                   onDelete,
-                                                  currentQuestionnaireId,
-                                                createSection,
+                                                  addSection
                                               }) => {
     const [positions, setPositions] = useState({scrollTop: 0, innerHeight: window.innerHeight});
 
@@ -50,10 +48,6 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
     };
 
     const button = <Button icon={'external'}/>;
-
-    const handleAddSection = () => {
-        createSection({questionnaireId: currentQuestionnaireId});
-    };
 
     const { scrollTop, innerHeight } = positions;
     return (
@@ -81,7 +75,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                         trigger={<Button icon="remove" onClick={onDelete} />}
                         position='right center' />
                     <Popup content='Add section'
-                        trigger={<Button icon="plus square outline" onClick={() => handleAddSection()}/>}
+                        trigger={<Button icon="plus square outline" onClick={() => addSection()}/>}
                         position='right center' />
                 </Button.Group>
             </Form>
@@ -89,13 +83,4 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
     );
 };
 
-const mapState = (state: IAppState) => ({
-    currentQuestion: state.questions.current,
-    currentQuestionnaireId: state.questionnaires.current.get.id
-});
-
-const mapDispatch = {
-    createSection: createSectionRoutine
-};
-
-export default connect(mapState, mapDispatch)(QuestionMenu);
+export default QuestionMenu;

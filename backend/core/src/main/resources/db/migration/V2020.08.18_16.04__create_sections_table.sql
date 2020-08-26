@@ -14,8 +14,8 @@ create table sections_questions (
     section_id uuid not null,
     question_id uuid not null,
     primary key(section_id, question_id),
-    foreign key(section_id) references sections(id),
-    foreign key(question_id) references questions(id)
+    foreign key(section_id) references sections(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    foreign key(question_id) references questions(id) ON DELETE CASCADE ON UPDATE CASCADE
 )
 
 

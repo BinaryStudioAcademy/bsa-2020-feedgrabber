@@ -136,11 +136,16 @@ public class QuestionService {
 
         questionnaire.getQuestions().addAll(bindRows);
 
+        dto.getQuestions()
+                .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getId()));
+
         try {
             anketRep.save(questionnaire);
         } catch (Throwable e) {
             throw new QuestionNotFoundException();
         }
+
+
 
         return questionnaire
                 .getQuestions()
@@ -229,6 +234,8 @@ public class QuestionService {
 
     public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) {
         qqRepo.deleteByQuestionIdAndQuestionnaireId(questionId, qId);
+        var section = sectionRepository.findByQuestionnaireIdAndQuestionId(qId, questionId);
+        sectionRepository.deleteQuestion(section.getId(), questionId);
     }
 
     public List<QuestionDto> getAllBySection(UUID id) {

@@ -15,7 +15,8 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
         currentQuestions,
         qnId,
         isLoading,
-        button
+        button,
+        currentSection
     }) => {
     const [selected, setSelected] = useState([] as IQuestion[]);
     const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
     const handleSubmit = () => {
         if (selected) {
             selected.forEach(q => q.isReused = true);
-            addQuestions({questionnaireId: qnId, questions: selected});
+            addQuestions({questionnaireId: qnId, questions: selected, sectionId: currentSection.id});
         }
         setSelected([]);
         setOpen(false);
@@ -88,7 +89,8 @@ const mapState = (state: IAppState) => ({
     currentQuestions: state.questionnaires.current.questions,
     isLoading: state.questions.isLoading,
     qnId: state.questionnaires.current.get.id,
-    questions: state.questions.list
+    questions: state.questions.list,
+    currentSection: state.sections.current
 });
 
 const mapDispatch = {

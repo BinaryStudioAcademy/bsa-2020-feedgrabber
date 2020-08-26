@@ -16,6 +16,10 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
 
     List<Section> findByQuestionnaireId(UUID id);
 
+    @Query("select s from Section s join s.questions q " +
+            "where q.id = :questionId and s.questionnaire.id = :questionnaireId")
+    Section findByQuestionnaireIdAndQuestionId(UUID questionnaireId, UUID questionId);
+
     @Modifying
     @Transactional
     @Query(nativeQuery = true,
@@ -26,9 +30,10 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true,
-            value = "DELETE FROM sections_questions s" +
+            value = "DELETE FROM sections_questions s " +
                     "WHERE s.section_id = :sectionId AND s.question_id = :questionId")
     Integer deleteQuestion(UUID sectionId, UUID questionId);
+
 
     @Modifying
     @Transactional

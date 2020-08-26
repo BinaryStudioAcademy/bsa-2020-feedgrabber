@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import { useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
 import { DraggableItemTypes } from 'models/forms/Questions/IQuesion';
 import { IDragItem } from 'components/QuestionnaireOrderDraggableView/QuestionCard';
+import { Header } from 'semantic-ui-react';
 
 interface ISectionProps {
     id: string;
@@ -27,7 +28,10 @@ const SectionBlock: React.FC<ISectionProps> = ({id, children}) => {
             className={[styles.section, styles.backgroundColor].join(' ')}
             ref={drop}>
             {children}
-            {isActive ? <div>Release to drop</div> : null}
+            {isActive ? 
+            <Header as='h3'>
+          Drop Question here
+        </Header> : null}
         </div>
     );
 };

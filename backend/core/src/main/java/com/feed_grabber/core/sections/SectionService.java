@@ -41,19 +41,23 @@ public class SectionService {
                 .collect(Collectors.toList());
     }
 
-    public Integer addQuestion(UUID sectionId, UUID questionId) throws SectionNotFoundException, QuestionNotFoundException {
-        sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
+    public SectionQuestionsDto addQuestion(UUID sectionId, UUID questionId) throws SectionNotFoundException, QuestionNotFoundException {
+        var section = sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
 
         questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        return sectionRepository.addQuestion(sectionId, questionId);
+        sectionRepository.addQuestion(sectionId, questionId);
+
+        return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
     }
 
-    public Integer deleteQuestion(UUID sectionId, UUID questionId) throws SectionNotFoundException, QuestionNotFoundException {
-        sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
+    public SectionQuestionsDto deleteQuestion(UUID sectionId, UUID questionId) throws SectionNotFoundException, QuestionNotFoundException {
+        var section = sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
 
         questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        return sectionRepository.deleteQuestion(sectionId, questionId);
+        sectionRepository.deleteQuestion(sectionId, questionId);
+
+        return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
     }
 }

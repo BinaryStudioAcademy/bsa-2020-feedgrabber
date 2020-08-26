@@ -8,9 +8,3 @@ export interface ISection {
     to?: number;
     questions?: IQuestion[];
 }
-
-export interface ISectionsState {
-    list?: ISection[];
-    current?: ISection; 
-    isLoading?: boolean;
-}

@@ -3,13 +3,23 @@ import { setCurrentSectionRoutine,
     createSectionRoutine, 
     getSectionsByQuestionnaireRoutine, 
     setCurrentSectionIdRoutine,
-    updateSectionsRoutine} from "sagas/sections/routines";
+    updateSectionsRoutine,
+    deleteQuestionFromSectionRoutine} from "sagas/sections/routines";
 import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
+import { ISection } from "models/forms/Sections/types";
+import { updatedSections } from "sagas/sections/sagas";
+
+export interface ISectionsState {
+    list?: ISection[];
+    current?: ISection; 
+    isLoading?: boolean;
+}
 
 const sectionsReducer = (state: IAppState["sections"] = {}, {type, payload}) => {
     switch(type) {
         case setCurrentSectionRoutine.TRIGGER:
         case createSectionRoutine.SUCCESS:
+        case deleteQuestionFromSectionRoutine.SUCCESS:
             return {
                 ...state,
                 current: payload
@@ -25,6 +35,7 @@ const sectionsReducer = (state: IAppState["sections"] = {}, {type, payload}) => 
             return {
                 ...state,
                 list: payload,
+                current: payload[0],
                 isLoading: false
             };
         case getSectionsByQuestionnaireRoutine.FAILURE:
