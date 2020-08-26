@@ -1,9 +1,9 @@
-$container-height: 55vh
+$container-height: 30vh
 
 .fileUpload
   display: grid
   grid-template-columns: 50% 50%
-  grid-template-rows: 90% 10%
+  grid-template-rows: 85% 15%
   height: $container-height
 
 .Upload
@@ -13,8 +13,8 @@ $container-height: 55vh
 .filesContainer
   grid-column: 2
   grid-row: 1
-  max-height: 100%
-  overflow-y: scroll
+  max-height: 90%
+  overflow-y: auto
   display: flex
   flex-direction: column
   align-items: center
@@ -50,7 +50,7 @@ $container-height: 55vh
 
 .clearButton
   grid-column: 2
-  height: 2.5vw
+  height: 2vw
   width: 6vw
   padding: 5px !important
   font-size: 1.2vw !important

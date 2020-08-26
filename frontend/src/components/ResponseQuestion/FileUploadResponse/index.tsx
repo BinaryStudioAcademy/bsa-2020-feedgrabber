@@ -27,6 +27,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
   ]
   */
 }) => {
+    console.log(response);
     const [links, setLinks] = useState([]); // links to uploaded files
     const [url, setUrl] = useState(''); // url to photo or video
     const [files, setFiles] = useState((response as string[])?.map(link => ({ id: link, name: link, link})) || []);
@@ -60,8 +61,12 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
     const onUrlInsert = url => {
       setUrl(url);
       if (url) {
+        console.log('url + links');
+        console.log([...links, url]);
         answerHandler?.([...links, url]);
       } else {
+        console.log('links');
+        console.log([...links]);
         answerHandler?.([...links]);
       }
     };
