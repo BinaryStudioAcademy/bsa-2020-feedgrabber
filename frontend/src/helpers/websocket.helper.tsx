@@ -3,9 +3,10 @@ import {Client} from "@stomp/stompjs";
 import {useCallback, useEffect, useState} from "react";
 import tokenProvider from "../security/tokenProvider";
 import {messageCallbackType} from "@stomp/stompjs/esm5/types";
+import {env} from "../env";
 
 const client = new Client({
-    brokerURL: "ws://localhost:5000/ws",
+    brokerURL: env.wsUlr,
     connectHeaders: {auth: tokenProvider.getToken()},
     // debug: str => console.log(str),
     reconnectDelay: 5000,

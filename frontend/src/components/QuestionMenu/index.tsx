@@ -6,20 +6,24 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
+
     copyQuestion(): void;
+
     onDelete(): void;
+
     currentQuestion: IQuestion;
 }
+
 const QuestionMenu: FC<IQuestionMenuProps> = ({
-    addQuestion,
-    copyQuestion,
-    currentQuestion,
-    onDelete
-}) => {
-    const [positions, setPositions] = useState({ scrollTop: 0, innerHeight: window.innerHeight });
+                                                  addQuestion,
+                                                  copyQuestion,
+                                                  currentQuestion,
+                                                  onDelete
+                                              }) => {
+    const [positions, setPositions] = useState({scrollTop: 0, innerHeight: window.innerHeight});
 
     useEffect(() => {
-        (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = (e: Event) => {
+        (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = () => {
             setPositions(
                 {
                     scrollTop: (document.getElementById('root')?.firstChild?.firstChild as HTMLElement)?.scrollTop || 0,
@@ -37,33 +41,33 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
         }
     };
 
-    const button = <Button icon={'external'} />;
+    const button = <Button icon={'external'}/>;
 
-    const { scrollTop, innerHeight } = positions;
+    const {scrollTop, innerHeight} = positions;
     return (
         <div style={{
             position: 'absolute',
             top: (currentQuestion.top > innerHeight
-                || currentQuestion.top < 0
-                ? scrollTop + innerHeight / 2 - 40
-                : scrollTop + currentQuestion.top),
+            || currentQuestion.top < 0
+                ? (scrollTop || 0) + innerHeight / 2 - 40
+                : (scrollTop || 0) + (currentQuestion.top || innerHeight / 2 - 40)),
             left: '20%',
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Form className={styles.question_menu_container}>
                 <Button.Group vertical>
                     <Popup content='New question'
-                        trigger={<Button icon="plus circle" onClick={() => handleAdd("new")} />}
-                        position='right center' />
+                           trigger={<Button icon="plus circle" onClick={() => handleAdd("new")}/>}
+                           position='right center'/>
                     <Popup content='Add from existing questions'
-                         trigger={<SelectQuestionsFromExisting button={button} />}
-                         position='right center' />
+                           trigger={<SelectQuestionsFromExisting button={button}/>}
+                           position='right center'/>
                     <Popup content='Copy'
-                        trigger={<Button icon="copy" onClick={() => handleAdd(currentQuestion.id)} />}
-                        position='right center' />
+                           trigger={<Button icon="copy" onClick={() => handleAdd(currentQuestion.id)}/>}
+                           position='right center'/>
                     <Popup content='Delete'
-                        trigger={<Button icon="remove" onClick={onDelete} />}
-                        position='right center' />
+                           trigger={<Button icon="remove" onClick={onDelete}/>}
+                           position='right center'/>
                 </Button.Group>
             </Form>
         </div>
