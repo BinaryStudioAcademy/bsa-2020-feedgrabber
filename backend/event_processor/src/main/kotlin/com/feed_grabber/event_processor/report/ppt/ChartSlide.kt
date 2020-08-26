@@ -270,16 +270,3 @@ class ChartSlide {
         r.fontSize = 25.0
     }
 }
-
-fun main() {
-    val slideShow = XMLSlideShow()
-    val creator = ChartSlide()
-    val values = mutableMapOf(
-            "11:06:2005" to 1, "11:06:2004" to 3, "11:06:2055" to 4, "11:06:2025" to 3)
-    creator.createBarChartSlide(slideShow, values, "when did you wont to die")
-
-    val out = FileOutputStream("CreatePPTXCharts.pptx")
-    slideShow.write(out)
-    out.close()
-
-}

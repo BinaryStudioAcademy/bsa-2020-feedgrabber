@@ -93,12 +93,6 @@ class PowerPointReport(
         val response = client.uploadReport(file, requestId)
         sender.sendPPTReportURL(response)
         file.delete()
-        //val file = File("example1.pptx");
-        //val out = FileOutputStream(file);
-//
-        //ppt.write(out);
-        //out.close()
-
     }
 
     private fun createTitleSlide(slideShow: XMLSlideShow, text: String) {

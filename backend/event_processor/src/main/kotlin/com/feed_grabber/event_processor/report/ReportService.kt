@@ -154,7 +154,6 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
                         if (a.first.other != null) other.getOrPut(a.first.other!!) { mutableListOf() }.add(a.second)
                     }
                 }
-
             }
             is RadioValue -> {
                 QAWithOption().apply {
