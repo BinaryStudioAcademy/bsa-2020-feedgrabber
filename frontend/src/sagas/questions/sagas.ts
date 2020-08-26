@@ -23,7 +23,7 @@ function parseQuestion(rawQuestion) {
         : {};
     return {
         ...rawQuestion,
-        type: rawQuestion.type.toLowerCase(),
+        type: rawQuestion.type,
         details
     };
 }
