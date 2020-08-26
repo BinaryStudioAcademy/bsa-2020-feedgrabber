@@ -19,7 +19,6 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
-        saveAndAddQuestion,
         loadCategories,
         questionnaireId,
         questionnaireQuestions,
@@ -69,7 +68,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onCopy = () => {
         if (isQuestionDetailsValid) {
-            saveAndAddQuestion({
+            saveQuestion({
                 ...question,
                 id: null,
                 questionnaireId
@@ -121,8 +120,7 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine,
-    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
+    loadCategories: loadCategoriesRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
