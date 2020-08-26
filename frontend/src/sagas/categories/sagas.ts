@@ -7,8 +7,7 @@ import {defaultQuestionValues} from "../../components/QuestionDetails/defaultVal
 
 function* getAllCategories() {
     try {
-        const res: { data: ICategorie[] } = yield call(apiClient.get, `../api/question_categories`);
-        // wtf?! drop points before /api and endpoint becomes /question/api/....
+        const res: { data: ICategorie[] } = yield call(apiClient.get, `/api/question_categories`);
         const payload: string[] = res.data.map(cat => cat.title);
         if(payload.indexOf(defaultQuestionValues.categoryTitle) === -1) {
             payload.push(defaultQuestionValues.categoryTitle);
