@@ -13,6 +13,7 @@ import { IGeneric } from 'models/IGeneric';
 import { toastr } from 'react-redux-toastr';
 import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import {updateQuestions} from "../../helpers/array.helper";
 
 function parseQuestion(rawQuestion) {
   const details = rawQuestion.details
@@ -97,13 +98,12 @@ function* saveOrUpdateQuestion(action) {
 		const question: IQuestion = parseQuestion(res.data.data);
         yield put(saveQuestionRoutine.success(question));
         const questions = action.payload?.questionnaireQuestions;
+
         if (!questions) {
           return;
         }
-        const newQuestions = questions.map(q => q.id === question.id
-          ? question
-          : q
-        );
+        const newQuestions = updateQuestions(questions, question);
+
         yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
      } catch (e) {
         yield put(saveQuestionRoutine.failure());
