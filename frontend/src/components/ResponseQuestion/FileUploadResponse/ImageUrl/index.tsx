@@ -2,7 +2,7 @@ import {Input} from "semantic-ui-react";
 import React, {useState} from "react";
 import styles from "../styles.module.sass";
 
-const ImageUrl = ({ url, onChange }) => {
+const ImageUrl = ({ url, onChange, disabled }) => {
     const [error, setError] = useState(false);
 
     const handleUrlChange = e => {
@@ -13,6 +13,7 @@ const ImageUrl = ({ url, onChange }) => {
     return (
         <div className={styles.urlUpload}>
           <Input
+              disabled={disabled}
               className={styles.urlInput}
               type="text"
               placeholder="URL"

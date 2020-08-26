@@ -8,18 +8,33 @@ import { fileTypes as allTypes } from "../../ComponentsQuestions/FileUploadQuest
 import ImageUrl from "./ImageUrl";
 import VideoUrl from "./UrlVideo";
 import apiClient from "../../../helpers/apiClient";
+import { IAnswerBody } from '../../../models/forms/Response/types';
 
-const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
-  ({question = { details: { filesNumber: 3, filesSize: 3, filesType: allTypes.image } }, answerHandler}) => {
+export interface IFileUploadResponse {
+  response?: IAnswerBody;
+}
+
+const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploadResponse> = ({
+  question = { details: { filesNumber: 3, filesSize: 3, filesType: allTypes.image } },
+  // question,
+  answerHandler,
+  response
+  /*
+  response = [
+    'https://i.imgur.com/ZBnR94f.png',
+    'https://i.imgur.com/1cWTbHc.png',
+    'https://i.imgur.com/gWFCLjG.png'
+  ]
+  */
+}) => {
     const [links, setLinks] = useState([]); // links to uploaded files
     const [url, setUrl] = useState(''); // url to photo or video
-    const [files, setFiles] = useState([ {id:'1',name:'file1',ling:'some link'},
-{id:'2',name:'file2',ling:'some link'} ]); // files data
+    const [files, setFiles] = useState((response as string[])?.map(link => ({ id: link, name: link, link})) || []);
     const [error, setError] = useState('');
     const [isUploading, setIsUploading] = useState(false);
 
     const filesNumber = question.details.filesNumber;
-    const maxFilesSize = question.details.filesSize * (1024 * 1024);
+    const maxFileSize = question.details.filesSize * (1024 * 1024);
     const filesType = question.details.filesType;
 
     const onFilesAdded = async addedFiles => {
@@ -33,29 +48,31 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         setError(`Maximum number of files ${filesNumber}`);
         return;
       }
-      // newFiles = checkFilesSize(deleteNotAllowedFiles(newFiles));
+      newFiles = deleteNotAllowedFiles(newFiles);
 
       await uploadFiles(addedFiles);
       answerHandler?.(
         [...links, url]
       );
-      // setFiles([...files, ...newFiles]);
       setIsUploading(false);
     };
 
     const onUrlInsert = url => {
       setUrl(url);
-      if (!url) {
-        return;
+      if (url) {
+        answerHandler?.([...links, url]);
+      } else {
+        answerHandler?.([...links]);
       }
-      answerHandler?.(
-        [...links, url]
-      );
     };
 
     const uploadFiles = async newFiles => {
       const promises = [];
       for (const file of newFiles) {
+        if (file.size > maxFileSize) {
+          setError(`Maximum file size is ${question.details.filesSize} MB`);
+          continue;
+        }
         // start sending files to the server
         promises.push(uploadFile(file));
       }
@@ -84,39 +101,23 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
       }
     };
 
-    /* const checkFilesSize = (checkedFiles, files) => {
-      let currentFilesSize = 0;
-      for (const file of files) {
-        currentFilesSize += file.size;
-      }
-
-      const result = [];
-      checkedFiles.forEach(file => {
-        if (currentFilesSize + file.size <= maxFilesSize) {
-          result.push(file);
-          currentFilesSize += file.size;
-        } else {
-          setError(`Maximum files size: ${question.details.filesSize} MB`);
-        }
-      });
-
-      return result;
-    };*/
-
     const deleteNotAllowedFiles = files => {
       const result = [];
       files.forEach(file => {
         if (file.type.startsWith(filesType)) {
           result.push(file);
         } else {
-          setError(`Only ${filesType} allowed`);
+          setError(`Only ${filesType}s allowed`);
         }
       });
       return result;
     };
 
 	const deleteFile = id => {
-      apiClient.delete(`/api/files?id=${id}`);
+      apiClient.delete(`/api/files?id=${id}`).catch(err => {
+        // handle deletion error
+        console.log(err);
+      });
       const updatedFiles = files.filter(file => file.id !== id);
       setFiles(updatedFiles);
     };
@@ -126,7 +127,9 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
         return (
           <div className={styles.fileItem} key={file.id}>
            <div>{file.name}</div>
-           <Button icon='close' onClick={() => deleteFile(file.id)} size="tiny" />
+           {response === undefined
+             ? <Button icon='close' onClick={() => deleteFile(file.id)} size="tiny" />
+             : <a href={file.link} target="_blank"><Button icon="angle double right" size="tiny"/></a>}
           </div>
         );
       });
@@ -165,8 +168,8 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
               render: () =>
                 <Tab.Pane>
                   {filesType === allTypes.image
-                    ? <ImageUrl url={url} onChange={onUrlInsert}/>
-                    : <VideoUrl url={url} onChange={onUrlInsert}/>
+                    ? <ImageUrl url={url} onChange={onUrlInsert} disabled={response !== undefined}/>
+                    : <VideoUrl url={url} onChange={onUrlInsert} disabled={response !== undefined}/>
                   }
                 </Tab.Pane>
             }
@@ -179,7 +182,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion>> =
 
     return (
       <div className={styles.segment}>
-        <span>Maximum number of the files: {question.details.filesNumber}</span>
+        <span>Maximum number of the files: {question.details.filesNumber}</span><br />
         <span>Maximum size of the file: {question.details.filesSize}</span>
         <Tab className={styles.tab} panes={getPanes()}/>
       </div>
