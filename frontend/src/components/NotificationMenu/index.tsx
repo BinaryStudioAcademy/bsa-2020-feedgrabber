@@ -48,7 +48,10 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
       <div ref={ref}>
         <div onClick={() => setShown(!shown)}>
           <Icon className={styles.headerBellIcon} name="bell outline" size="large"/>
-          <div className={styles.headerBellMessages}>{countNotifications > 9 ? '9+' : countNotifications}</div>
+            {countNotifications &&
+                <div className={styles.headerBellMessages}>
+                    {countNotifications > 9 ? '9+' : countNotifications}
+                </div>}
         </div>
         {shown &&
         <div className={styles.notificationsContainer}>
