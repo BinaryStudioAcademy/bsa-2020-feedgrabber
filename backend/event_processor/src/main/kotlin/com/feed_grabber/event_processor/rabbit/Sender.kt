@@ -18,6 +18,9 @@ class Sender {
     @Value("\${rabbitmq.routing-key-report-excel-link}")
     private val excelLinkRoutingKey: String? = null
 
+    @Value("\${rabbitmq.routing-key-report-ppt-link}")
+    private val pptLinkRoutingKey: String? = null
+
     @Autowired
     private val template: RabbitTemplate? = null
 
@@ -34,7 +37,7 @@ class Sender {
 
     fun sendPPTReportURL(dto: ReportFileCreationResponseDto) {
         println(" [x] Sending report generation response for request with id ${dto.requestId}")
-        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
+        template!!.convertAndSend(exchange!!, pptLinkRoutingKey!!, dto)
     }
 
 }

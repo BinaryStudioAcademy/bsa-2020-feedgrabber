@@ -10,6 +10,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +34,14 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.queue.report}")
     private lateinit var reportQueue: String
 
+    @Value("\${rabbitmq.queue.report.ppt}")
+    private lateinit var pptReportQueue: String
+
     @Value("\${rabbitmq.routing-key-report-excel}")
     private val reportRoutingKey: String? = null
+
+    @Value("\${rabbitmq.routing-key-report-excel}")
+    private val pptReportRoutingKey: String? = null;
 
     @Bean
     fun queue(): Queue? {
@@ -47,6 +54,11 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     }
 
     @Bean
+    fun pptReportQueue(): Queue? {
+        return Queue(pptReportQueue, true)
+    }
+
+    @Bean
     fun exchange(): TopicExchange? {
         return TopicExchange(exchange)
     }
@@ -54,6 +66,11 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Bean
     fun binding(queue: Queue?, exchange: TopicExchange?): Binding? {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
+    }
+
+    @Bean
+    fun pptReportQueueBinding(pptReportQueue: Queue?, exchange: TopicExchange?): Binding? {
+        return BindingBuilder.bind(pptReportQueue).to(exchange).with(pptReportRoutingKey)
     }
 
     @Bean

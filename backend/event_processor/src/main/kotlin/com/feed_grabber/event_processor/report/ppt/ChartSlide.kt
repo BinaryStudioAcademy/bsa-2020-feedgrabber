@@ -70,11 +70,6 @@ class ChartSlide {
             cTNumVal.v = "" + 10 * values[name]!!
         }
 
-
-        values.values.forEachIndexed{ i, value ->
-
-        }
-
         val cTLegend = cTChart.addNewLegend()
         cTLegend.addNewLegendPos().setVal(STLegendPos.L)
         cTLegend.addNewOverlay().setVal(false)
