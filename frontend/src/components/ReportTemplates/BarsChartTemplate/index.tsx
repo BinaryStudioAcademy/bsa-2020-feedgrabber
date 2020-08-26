@@ -9,15 +9,13 @@ export interface IBarsChartTemplateProps {
 
 const BarsChartTemplate: FC<IBarsChartTemplateProps> = ({data, labels, backgroundColor}) => {
   return (
-    <div>
       <div>
         <Bar
           data={{datasets: [{data, backgroundColor}], labels}}
           options={{legend: {display: false}, scales: {yAxes: [{ticks: {beginAtZero: true}}]}}}
-          height={200}
+          height={50}
         />
       </div>
-    </div>
   );
 };
 

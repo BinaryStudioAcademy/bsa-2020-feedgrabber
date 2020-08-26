@@ -32,8 +32,18 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
         String category = node.get("categoryTitle").asText();
         String text = node.get("name").asText();
         Integer index = this.getIndex(node);
+        boolean isRequired = this.isRequired(node);
+        var type = this.getType(node);
 
-        return new QuestionUpdateDto(id, text, category, payload, index);
+        return new QuestionUpdateDto(id, text, category, payload, index, type, isRequired);
+    }
+
+    private QuestionType getType(JsonNode node) {
+        try {
+            return QuestionType.valueOf(node.get("type").asText());
+        } catch (IllegalArgumentException e) {
+            throw new QuestionTypeNotExistsException ("This type of question does not exists");
+        }
     }
 
     private Integer getIndex(JsonNode node) {
@@ -48,4 +58,8 @@ public class QuestionUpdateDes extends StdDeserializer<QuestionUpdateDto> {
                 : "";
     }
 
+    private boolean isRequired(JsonNode node) {
+        return node.hasNonNull("isRequired")
+                && Boolean.parseBoolean(node.get("isRequired").toString());
+    }
 }

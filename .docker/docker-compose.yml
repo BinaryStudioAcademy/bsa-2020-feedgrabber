@@ -22,7 +22,6 @@ services:
   mongo-db:
       image: mongo
       container_name: 'mongo-db'
-      command: mongod --auth
       env_file:
         - ../.env/mongo-db.env
       volumes:
@@ -33,7 +32,6 @@ services:
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
-    hostname: "localhost"
     container_name: 'rabbitmq'
     env_file:
       - ../.env/rabbitmq.env

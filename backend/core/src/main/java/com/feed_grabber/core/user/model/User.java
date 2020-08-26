@@ -4,10 +4,7 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.team.model.Team;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,7 +17,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@EqualsAndHashCode(callSuper = true)
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"email", "company_id"}),
         @UniqueConstraint(columnNames = {"username", "company_id"})
@@ -62,6 +58,7 @@ public class User {
     @Builder.Default
     private Role role = new Role();
 
+    @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
     private UserProfile userProfile;
 

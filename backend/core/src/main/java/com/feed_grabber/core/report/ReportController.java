@@ -1,10 +1,13 @@
 package com.feed_grabber.core.report;
 
+import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
-import com.feed_grabber.core.report.dto.ReportDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -12,16 +15,16 @@ import java.util.UUID;
 public class ReportController {
 
     @Autowired
-    private ReportService reportService;
+    private ReportService service;
 
-    @CrossOrigin(origins = "http://localhost")
-    @GetMapping
-    public ReportDetailsDto getReport(@RequestParam UUID requestId) throws NotFoundException {
-        return reportService.getReport(requestId);
+    @GetMapping("/{requestId}")
+    public AppResponse<String> getReport(@PathVariable UUID requestId) throws IOException, NotFoundException {
+        var response = service.isRequestClosed(requestId) ? service.getReport(requestId) : service.generateReport(requestId);
+        return new AppResponse<>(response);
     }
 
     @PostMapping("/excel")
     public void generateReport(@RequestParam UUID requestId) {
-        reportService.sendExcelReportGenerationRequest(requestId);
+        service.sendExcelReportGenerationRequest(requestId);
     }
 }
