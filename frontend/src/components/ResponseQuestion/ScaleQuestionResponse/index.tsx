@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IScaleQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IScaleQuestion } from "../../../models/forms/Questions/IQuesion";
 import { Form, Radio } from 'semantic-ui-react';
 import { IAnswerBody } from '../../../models/forms/Response/types';
 
@@ -32,7 +32,7 @@ export const ScaleQuestionResponse: FC<IQuestionResponse<IScaleQuestion> & IScal
           <Radio value={i}
                  name={group}
                  onChange={handleClick}
-                 disabled={!!response}
+                 disabled={!!response && !answerHandler}
                  checked={answer === i} />
         </Form.Field>
       );

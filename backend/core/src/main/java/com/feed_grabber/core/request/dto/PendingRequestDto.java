@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -14,6 +15,8 @@ import java.util.UUID;
 public class PendingRequestDto {
     private UUID requestId;
     private QuestionnaireDto questionnaire;
-    private LocalDateTime expirationDate;
-    private boolean alreadyAnswered;
+    private Date expirationDate;
+    private Date answeredAt;
+    private Date closeDate;
+    private UUID responseId;
 }

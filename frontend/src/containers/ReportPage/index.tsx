@@ -51,7 +51,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                             <>
                                 <h3>{report.questionnaire.title}</h3>
                                 {report.questions.map(q => (
-                                    <UICardBlock>
+                                    <UICardBlock key={q.id}>
                                         <h3>{q.title}</h3>
                                         <p>
                                             <b>{q.answers} answers</b>
@@ -113,7 +113,8 @@ export default connector(ReportPage);
 
 function renderUserReportPreview(userReport: IRespondentReportPreview, id: string) {
   return (
-    <Link to={`/report/${id}/${userReport.id}/${userReport.username}`} className={styles.respondent_report_preview}>
+    <Link key={userReport.id} to={`/report/${id}/${userReport.id}/${userReport.username}`}
+          className={styles.respondent_report_preview}>
       <Segment>
         <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
         <Header as="h4">{userReport.username}</Header>

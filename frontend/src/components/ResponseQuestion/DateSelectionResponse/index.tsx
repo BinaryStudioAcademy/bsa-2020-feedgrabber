@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { IQuestionResponse } from '../../../models/IQuestionResponse';
 import { Input, InputOnChangeData } from "semantic-ui-react";
 import styles from '../FreeTextResponse/styles.module.sass';
-import { IDateQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IDateQuestion } from "../../../models/forms/Questions/IQuesion";
 import { IAnswerBody } from '../../../models/forms/Response/types';
 
 export interface IDateSelectionResponse {
@@ -10,7 +10,6 @@ export interface IDateSelectionResponse {
 }
 
 export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion> & IDateSelectionResponse> = ({
-  question,
   answerHandler,
   response
 }) => {
@@ -30,6 +29,6 @@ export const DateSelectionResponse: FC<IQuestionResponse<IDateQuestion> & IDateS
 
   return (
     <Input type='date' onChange={handleChange} className={styles.input} error={!!error}
-           disabled={!!response} defaultValue={response || ''}/>
+           disabled={!!response && !answerHandler} defaultValue={response || ''}/>
   );
 };

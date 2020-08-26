@@ -15,7 +15,7 @@ import java.util.UUID;
 public class VerificationTokenService {
 
     @Value("${client.host}")
-    private Integer CLIENT_HOST;
+    private String CLIENT_HOST;
 
     private final VerificationTokenRepository verificationTokenRepository;
     private final UserRepository userRepository;
@@ -55,11 +55,7 @@ public class VerificationTokenService {
         User user = vToken.getUser();
         user.setIsEnabled(true);
 
-        try {
-			verificationTokenRepository.delete(vToken);
-		} catch (Exception ex) {
-			
-		}
+        verificationTokenRepository.delete(vToken);
         return userRepository.save(user);
     }
 

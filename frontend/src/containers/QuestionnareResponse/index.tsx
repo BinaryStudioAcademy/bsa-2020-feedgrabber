@@ -1,29 +1,25 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
-import { IQuestion } from '../../models/forms/Questions/IQuesion';
-import { history } from '../../helpers/history.helper';
+import {Form} from 'semantic-ui-react';
+import {IQuestion} from '../../models/forms/Questions/IQuesion';
+import {history} from '../../helpers/history.helper';
 import styles from './styles.module.scss';
-import { Formik } from 'formik';
-import { IAppState } from 'models/IAppState';
-import { connect } from "react-redux";
+import {Formik} from 'formik';
+import {IAppState} from 'models/IAppState';
+import {connect} from "react-redux";
 import {IAnswer, IAnswerBody, IQuestionnaireResponse} from 'models/forms/Response/types';
-import { loadOneQuestionnaireRoutine } from 'sagas/qustionnaires/routines';
+import {loadOneQuestionnaireRoutine, loadOneSavedQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
-import { saveResponseRoutine } from 'sagas/response/routines';
+import {saveResponseRoutine} from 'sagas/response/routines';
 
 interface IComponentState {
     question: IQuestion;
     isAnswered: boolean;
 }
 
-interface IComponentProps {
-    question: IQuestion;
-    handleChange(state: IComponentState): void;
-}
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
     showErrors: boolean;
@@ -41,7 +37,11 @@ interface IQuestionnaireResponseProps {
     description: string;
     questions: IQuestion[];
     isLoading: boolean;
+
+    loadOneSaved(payload: {questionnaireId: string; responseId: string}): void;
+
     loadQuestionnaire(id: string): void;
+
     saveResponseAnswers(answers: IQuestionnaireResponseAnswers): void;
 }
 
@@ -58,13 +58,14 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     handleComponentChange(state: IComponentState) {
-        const { questions } = this.props;
+        const {questions} = this.props;
         let updatedQuestions: IQuestion[] = questions;
         if (state.isAnswered) {
             updatedQuestions = questions.map(question => {
                 if (question.id === state.question.id) {
                     return state.question;
-                } return question;
+                }
+                return question;
             });
         }
         const completeStates = updatedQuestions.map(question => question.answer);
@@ -74,8 +75,10 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, loadQuestionnaire} = this.props;
-        loadQuestionnaire(match.params.id);
+        const {match, loadQuestionnaire, loadOneSaved} = this.props;
+        !match.params.responseId
+            ? loadQuestionnaire(match.params.id) 
+            : loadOneSaved({questionnaireId: match.params.id ,responseId: match.params.responseId});
     }
 
     handleSubmit = () => {
@@ -101,11 +104,11 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     render() {
-        const { title, questions, description } = this.props;
-        const { showErrors } = this.state;
+        const {title, questions, description} = this.props;
+        const {showErrors} = this.state;
         return (
             <div className={styles.response_container}>
-                <UIPageTitle title="Response" />
+                <UIPageTitle title="Response"/>
                 <UIListHeader title={title} description={description}/>
                 <Formik
                     initialValues={this.state}
@@ -116,16 +119,16 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                             {questions.map(question => {
                                 return (
                                     <UIListItem
-                                    key={question.id}
-                                    name={question.name}
-                                    category={question.categoryTitle}>
+                                        key={question.id}
+                                        name={question.name}
+                                        category={question.categoryTitle}>
                                         <ResponseQuestion question={question} answerHandler={(data: IAnswerBody) => {
                                             question["answer"] = data;
                                             this.handleComponentChange({
                                                 question,
                                                 isAnswered: !!data
                                             });
-                                        }} />
+                                        }}/>
                                         {showErrors && !question.answer ?
                                             <div className={styles.error_message}>
                                                 Please, fill the question</div> : null}
@@ -150,7 +153,8 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
-    saveResponseAnswers: saveResponseRoutine
+    saveResponseAnswers: saveResponseRoutine,
+    loadOneSaved: loadOneSavedQuestionnaireRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireResponse);

@@ -49,7 +49,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
     return (
         <div className={styles.boxes}>
             {boxes.map((v, i) => {
-                return <Checkbox disabled={response !== undefined}
+                return <Checkbox disabled={response !== undefined && !answerHandler}
                                  label={v.value}
                                  checked={boxes[i].checked}
                                  onChange={() => {
@@ -64,7 +64,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
             {question.details.includeOther && (
                 <div className={styles.other}>
                     <Checkbox
-                        disabled={response !== undefined}
+                        disabled={response !== undefined && !answerHandler}
                         checked={other.checked}
                         onChange={() => {
                             setOther(() => {
@@ -75,7 +75,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
                         }
                         }/>
                     <Input
-                        disabled={response !== undefined}
+                        disabled={response !== undefined && !answerHandler}
                         className={styles.otherInput}
                         defaultValue={other.value}
                         placeholder='Other option...'
