@@ -1,15 +1,6 @@
 import {defaultQuestionValues} from "../../../components/QuestionDetails/defaultValues";
 import {QuestionType} from "./IQuesion";
 
-// const question = {
-//   id: "",
-//   name: "",
-//   categoryTitle: "",
-//   type: undefined,
-//   details: undefined,
-//   isRequired: false
-// };
-//
 const question = {
   id: "",
   name: defaultQuestionValues.name,
