@@ -16,7 +16,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
     }, [loadQuestions]);
 
     const handleClick = id => {
-        if (questions.map(question => question.id === id &&
+        if (questions.some(question => question.id === id &&
             question.isReused === false)) {
             history.push(`question/${id}`);
         } else {

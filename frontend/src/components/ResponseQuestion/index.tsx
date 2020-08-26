@@ -24,7 +24,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
             <div ref={detailsPage}>
                 <Segment
                     className={styles.container}>
-                    {!answerHandler && isModifyingEnabled &&
+                    {!answerHandler && isModifyingEnabled && !question.isReused &&
                         <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>
                     }
                     {editor && (id === nowModifying.id)
