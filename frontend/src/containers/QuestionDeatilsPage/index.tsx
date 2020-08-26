@@ -19,7 +19,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
-        saveAndAddQuestion,
+        // saveAndAddQuestion,
         loadCategories,
         questionnaireId,
         questionnaireQuestions,
@@ -69,12 +69,14 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onCopy = () => {
         if (isQuestionDetailsValid) {
+            /*
             saveAndAddQuestion({
                 ...question,
                 id: null,
                 questionnaireId
             });
             isPreview ? isPreview.close() : history.goBack();
+            */
         }
     };
 
@@ -121,8 +123,8 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine,
-    saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
+    loadCategories: loadCategoriesRoutine
+    // saveAndAddQuestion: addNewQuestionToQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
