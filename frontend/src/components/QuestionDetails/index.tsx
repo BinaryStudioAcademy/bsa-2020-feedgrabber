@@ -21,7 +21,6 @@ interface IQuestionProps {
     onValueChange(state: IComponentState<IQuestion>): void;
     onSave?(question: IQuestion);
     onDelete?(question: IQuestion);
-    onCopy?(): void;
 }
 
 const QuestionD: React.FC<IQuestionProps> = ({
@@ -29,8 +28,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                                  categories,
                                                  onValueChange,
                                                  onSave,
-                                                 onDelete,
-                                                 onCopy
+                                                 onDelete
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
     const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
@@ -225,15 +223,15 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                         <Icon name="trash alternate outline" size="large" onClick={handleDelete}/>
                                     </span>
                                 }
-                                {currentQuestion?.id &&
-                                <Popup content={"Copy"}
-                                       trigger={(
-                                           <span className={styles.icon} onClick={onCopy}>
-                                               <Icon name="clone outline" size="large" />
-                                           </span>
-                                       )}
-                                />
-                                }
+                                {/* {currentQuestion?.id &&*/}
+                                {/* <Popup content={"Copy"}*/}
+                                {/*       trigger={(*/}
+                                {/*           <span className={styles.icon} onClick={onCopy}>*/}
+                                {/*               <Icon name="clone outline" size="large" />*/}
+                                {/*           </span>*/}
+                                {/*       )}*/}
+                                {/* />*/}
+                                {/* }*/}
                                 <Popup
                                     content="Required"
                                     trigger={

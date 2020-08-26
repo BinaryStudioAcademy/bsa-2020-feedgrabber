@@ -25,7 +25,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                 <Segment
                     className={styles.container}>
                     {!answerHandler && isModifyingEnabled && !question.isReused &&
-                        <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>
+                      <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>
                     }
                     {editor && (id === nowModifying.id)
                         ?
@@ -37,7 +37,8 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                         :
                         <>
                             {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}
-                            {TypeToResponseMap.get(type.toUpperCase())?.({question, answerHandler})}
+                            {TypeToResponseMap.get(type.toUpperCase())?.
+                            ({question, answerHandler, response: question.answer})}
                         </>
                     }
                 </Segment>
@@ -50,7 +51,7 @@ const mapState = (state: IAppState) => ({
 });
 
 const mapDispatch = {
-  loadCurrent: loadQuestionByIdRoutine
+    loadCurrent: loadQuestionByIdRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

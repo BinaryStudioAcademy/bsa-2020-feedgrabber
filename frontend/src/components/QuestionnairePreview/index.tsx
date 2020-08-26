@@ -1,22 +1,9 @@
+import React, { FC, useState, useCallback, useEffect } from "react";
+import { Header} from "semantic-ui-react";
 import ResponseQuestion from "components/ResponseQuestion";
-import { IAppState } from "models/IAppState";
-import React, {FC, useState, useCallback, useEffect} from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { Header, Button, Segment } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
-
-const newQuestion: IQuestion = {
-  type: undefined,
-  categoryTitle: "",
-  name: "",
-  answer: {} as any,
-  id: "",
-  isReused: false,
-  details: {},
-  isRequired: false
-};
 
 interface IIndex  {
   questionnaireId: string;

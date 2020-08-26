@@ -1,7 +1,6 @@
 import React, {FC, useEffect, useState} from "react";
 import {Button, Form, Popup} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../SelectQuestionsFromExisting";
-
 import styles from "./styles.module.sass";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
