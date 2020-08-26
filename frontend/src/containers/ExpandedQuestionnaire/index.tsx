@@ -9,7 +9,7 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {
     deleteFromQuestionnaireRoutine,
-    indexQuestionsRoutine, loadQuestionByIdRoutine, saveQuestionRoutine
+    indexQuestionsRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 
@@ -42,16 +42,12 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     }, [loadOneQuestionnaire, match.params.id]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    const [isValid, setIsValid] = useState(false);
 
     useEffect(() => {
       setQuestion(currentQuestion);
     }, [currentQuestion]);
 
     const handleDeleteQuestion = () => {
-        if (!isValid) {
-            return;
-        }
         deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
     };
 
