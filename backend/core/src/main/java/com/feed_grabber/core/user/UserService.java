@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
     private final VerificationTokenService verificationTokenService;
     private final ImageRepository imageRepository;
     private static final Random random = new Random();
-    private static final Long RANDOM_MAX = 36L*36L*36L*36L* 36L*36L;
+    private static final Long RANDOM_MAX = 36L * 36L * 36L * 36L * 36L * 36L;
 
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -308,11 +308,19 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])","-");
-        var namepart = Long.toString(abs(random.nextLong())%RANDOM_MAX, 36);
+        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
+        var namepart = Long.toString(abs(random.nextLong()) % RANDOM_MAX, 36);
 
 
         return name + "-" + namepart;
+    }
+
+    public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
+        var newRole = roleRepository.findById(roleId).orElseThrow(NotFoundException::new);
+        var user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        user.setRole(newRole);
+        userRepository.save(user);
+        verificationTokenService.deleteByUserId(userId);
     }
 }
 

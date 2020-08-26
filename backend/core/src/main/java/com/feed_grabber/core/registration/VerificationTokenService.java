@@ -59,4 +59,8 @@ public class VerificationTokenService {
         return userRepository.save(user);
     }
 
+    public void deleteByUserId(UUID userId) {
+        verificationTokenRepository.deleteByUserId(userId);
+    }
+
 }
