@@ -12,7 +12,6 @@ function* getAllCategories() {
         if(payload.indexOf(defaultQuestionValues.categoryTitle) === -1) {
             payload.push(defaultQuestionValues.categoryTitle);
         }
-        console.log(payload);
         yield put(loadCategoriesRoutine.success(payload));
     } catch (e) {
         yield put(loadCategoriesRoutine.failure());
