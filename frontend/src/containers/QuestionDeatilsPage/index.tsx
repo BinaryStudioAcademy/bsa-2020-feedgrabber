@@ -57,10 +57,14 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     const onSubmit = () => {
         if (isQuestionDetailsValid) {
+            match.params.id !== "new" ?
             saveQuestion({
                 ...question,
                 questionnaireId,
                 questionnaireQuestions
+            }) :
+            saveQuestion({
+                ...question
             });
         }
         isPreview ? isPreview.close() : history.goBack();
