@@ -15,17 +15,9 @@ export interface IFileUploadResponse {
 }
 
 const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploadResponse> = ({
-  question = { details: { filesNumber: 3, filesSize: 3, filesType: allTypes.image } },
-  // question,
+  question,
   answerHandler,
   response
-  /*
-  response = [
-    'https://i.imgur.com/ZBnR94f.png',
-    'https://i.imgur.com/1cWTbHc.png',
-    'https://i.imgur.com/gWFCLjG.png'
-  ]
-  */
 }) => {
     console.log(response);
     const [links, setLinks] = useState([]); // links to uploaded files
