@@ -16,7 +16,7 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
-import {Credentials} from "../../components/AccessManager/rbac-rules";
+import {Permissions} from "../../components/AccessManager/rbac-rules";
 import AccessManager from "../../components/AccessManager";
 
 const TeamsPage: FC<ITeamsPageProps> = (
@@ -46,7 +46,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
       <UIContent>
         <LoaderWrapper loading={isLoading}>
           <UIColumn wide>
-            <AccessManager staticPermission={Credentials.createTeams}>
+            <AccessManager staticPermission={Permissions.createTeams}>
                 <UIButton
                   title="Add Team"
                   onClick={() => handleRedirect("new")}
@@ -65,7 +65,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                 <UICardBlock>
                   <Icon name="users"/>{team.membersAmount} Member(s)
                 </UICardBlock>
-                <AccessManager staticPermission={Credentials.manageTeams}>
+                <AccessManager staticPermission={Permissions.manageTeams}>
                     <UICardBlock>
                       <UIButton title="Manage" onClick={() => handleRedirect(team.id)}/>
                       <UIButton title="Delete" secondary loading={team.deleteLoading}

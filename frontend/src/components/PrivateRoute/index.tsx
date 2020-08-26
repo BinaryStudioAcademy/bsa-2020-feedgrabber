@@ -21,9 +21,7 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null,
                 }
 
                 return (
-                    <AccessManager
-                        endpoint={path}
-                    >
+                    <AccessManager endpoint={path}>
                         <Header/>
                         <div className={styles.sideBarWrapper}>
                             <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>

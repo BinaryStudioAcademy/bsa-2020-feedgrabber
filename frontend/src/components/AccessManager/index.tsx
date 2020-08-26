@@ -18,30 +18,24 @@ interface IAccessManagerProps {
 const AccessManager: FC<IAccessManagerProps> = (
     {role, staticPermission, dynamicPermission, endpoint, data, onDenied, children, getUser }) => {
     useEffect(() => {
-        getUser();
+        if (!role) {
+            getUser();
+        }
     });
 
-    const check = () => {
-        const rolesRules = getRolesRules();
-        const permissions: IRole = rolesRules[role];
+    const rolesRules = getRolesRules();
+    const permissions: IRole = rolesRules[role];
+    if (!permissions)
+        return null;
 
-        if (!permissions) {
-            // role is not present
-            return false;
-        }
-
-        if (!staticPermission && !dynamicPermission && !endpoint) {
-            return true;
-        }
-
+    const checkStaticPermission = () => {
         const userStaticPermissions = permissions.static;
-        if (staticPermission
+        return staticPermission
             && userStaticPermissions
-            && userStaticPermissions.includes(staticPermission)) {
-            // static rule not provided for action
-            return true;
-        }
+            && userStaticPermissions.includes(staticPermission);
+    };
 
+    const checkDynamicPermission = () => {
         const userDynamicPermissions = permissions.dynamic;
         if (dynamicPermission && userDynamicPermissions) {
             const permissionCondition = userDynamicPermissions[dynamicPermission];
@@ -52,20 +46,27 @@ const AccessManager: FC<IAccessManagerProps> = (
 
             return permissionCondition(data);
         }
+    };
 
+    const checkEndpoint = () => {
         const endpoints = permissions.endpoints;
         if (endpoint && endpoints && endpoints.includes(endpoint)) {
             return true;
         }
 
-        if (endpoint === 'companyOwnerEndpointAccess')
+        if (endpoints.includes("companyOwnerEndpointAccess"))
             return true;
 
         return false;
     };
 
-    return check() ? children
-        : (onDenied ? onDenied() : null);
+    const isStaticPermit = staticPermission ? checkStaticPermission() : true;
+    const isDynamicPermit = dynamicPermission ? checkDynamicPermission() : true;
+    const isEndpointPermit = endpoint ? checkEndpoint() : true;
+
+    return isStaticPermit && isDynamicPermit && isEndpointPermit
+        ? children : (onDenied ? onDenied() : null);
+
 };
 
 const mapStateToProps = (state: IAppState) => ({

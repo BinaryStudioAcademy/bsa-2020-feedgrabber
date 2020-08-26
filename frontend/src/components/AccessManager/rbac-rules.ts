@@ -1,4 +1,4 @@
-export enum Credentials {
+export enum Permissions {
     managingQuestions = "Managing questions(CRUD) via question editor",
     managingQuestionnaires = "Managing questionnaires  via form editor",
     createQuestionnaireRequest = "Creating a questionnaire request",
@@ -55,12 +55,12 @@ const hr: IRole = {
     ],
     static: [
         ...employee.static,
-        Credentials.managingQuestions,
-        Credentials.managingQuestionnaires,
-        Credentials.createQuestionnaireRequest,
-        Credentials.createPostsAndPolls,
-        Credentials.createTeams,
-        Credentials.manageTeams
+        Permissions.managingQuestions,
+        Permissions.managingQuestionnaires,
+        Permissions.createQuestionnaireRequest,
+        Permissions.createPostsAndPolls,
+        Permissions.createTeams,
+        Permissions.manageTeams
     ],
     dynamic: []
 };
@@ -74,10 +74,10 @@ const companyOwner: IRole = {
     ],
     static: [
         ...hr.static,
-        Credentials.manageCompanySettings,
-        Credentials.signUpViaCorporateEmail,
-        Credentials.generateInviteLinks,
-        Credentials.blockUserAccount
+        Permissions.manageCompanySettings,
+        Permissions.signUpViaCorporateEmail,
+        Permissions.generateInviteLinks,
+        Permissions.blockUserAccount
     ],
     dynamic: []
 };
