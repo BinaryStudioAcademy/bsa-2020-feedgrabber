@@ -18,7 +18,7 @@ import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {updateQuestions} from "../../helpers/array.helper";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 
-function parseQuestion(rawQuestion) {
+export function parseQuestion(rawQuestion) {
     const details = rawQuestion.details
         ? JSON.parse(rawQuestion.details as string)
         : {};
