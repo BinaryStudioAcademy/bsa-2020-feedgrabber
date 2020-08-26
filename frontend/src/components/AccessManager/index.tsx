@@ -58,6 +58,9 @@ const AccessManager: FC<IAccessManagerProps> = (
             return true;
         }
 
+        if (endpoint === 'companyOwnerEndpointAccess')
+            return true;
+
         return false;
     };
 
