@@ -37,9 +37,6 @@ const LandingPage: React.FunctionComponent<LandingProps> = () => {
               <Link to='/auth'>
                 <Button>Make some fire!</Button>
               </Link>
-              <Link to='/auth'>
-                <Button className='signin_btn'>Sign in</Button>
-              </Link>
             </div>
           </div>
           <div className='face_main'>
