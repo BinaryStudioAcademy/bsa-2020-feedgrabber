@@ -14,6 +14,7 @@ import {
     indexQuestionsRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
+import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
 import { IQuestionnaire } from 'models/forms/Questionnaires/types';
 
 interface IExpandedQuestionnaireProps {
@@ -28,9 +29,9 @@ interface IExpandedQuestionnaireProps {
 }
 
 const newQuestion: IQuestion = {
-    type: QuestionType.date,
-    categoryTitle: new Date().toString(),
-    name: "New Question",
+    type: QuestionType.freeText,
+    categoryTitle: defaultQuestionValues.categoryTitle,
+    name: defaultQuestionValues.name,
     answer: "",
     id: "",
     isReused: false,
