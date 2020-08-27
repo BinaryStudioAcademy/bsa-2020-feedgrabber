@@ -36,7 +36,7 @@ const AccessManager: FC<IAccessManagerProps> = (
 
     const checkDynamicPermission = () => {
         const userDynamicPermissions = permissions.dynamic;
-        if (dynamicPermission && userDynamicPermissions) {
+        if (userDynamicPermissions) {
             const permissionCondition = userDynamicPermissions[dynamicPermission];
             if (!permissionCondition) {
                 // dynamic rule not provided for action
@@ -45,6 +45,8 @@ const AccessManager: FC<IAccessManagerProps> = (
 
             return permissionCondition(data);
         }
+
+        return false;
     };
 
     const checkEndpoint = () => {
