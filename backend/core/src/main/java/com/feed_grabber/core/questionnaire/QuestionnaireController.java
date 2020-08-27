@@ -85,7 +85,8 @@ public class QuestionnaireController {
     @ApiOperation("Create a questionnaire")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
+    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto)
+            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.create(createDto, TokenService.getCompanyId())
         );

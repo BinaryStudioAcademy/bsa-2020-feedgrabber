@@ -7,7 +7,7 @@ import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
-import { getSectionsByQuestionnaireRoutine, createSectionRoutine } from 'sagas/sections/routines';
+import { createSectionRoutine, loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import {
     deleteFromQuestionnaireRoutine,
@@ -23,8 +23,7 @@ interface IExpandedQuestionnaireProps {
     questionnaire: IQuestionnaire;
     sections: ISection[];
 
-    loadOneQuestionnaire(id: string): void;
-    loadSections(id: string): void;
+    loadQuestionnaire(id: string): void;
     indexQuestions(questions: any): void;
 }
 
@@ -45,22 +44,19 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         isLoading,
         questionnaire,
         sections,
-        loadSections,
+        loadQuestionnaire,
         questionnaireQuestions,
-        loadOneQuestionnaire,
         saveQuestion,
         deleteQuestion,
         currentQuestion,
-        questions,
         createSection,
         currentSection,
         indexQuestions
     }
 ) => {
     useEffect(() => {
-        loadSections(match.params.id);
-        loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire, match.params.id, loadSections]);
+        loadQuestionnaire(match.params.id);
+    }, [match.params.id, loadQuestionnaire]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
 
@@ -81,7 +77,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     };
 
     const handleAddSection = () => {
-        createSection({questionnaireId: questionnaire.id});
+        createSection({questionnaireId: match.params.id});
     };
 
     const copyQuestion = () => {
@@ -93,7 +89,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         id: "",
         name: `${question.name} (copy)`,
         questionnaireId: match.params.id,
-        sectionId: currentSection? currentSection.id: sections[0].id,
+        sectionId: currentSection? currentSection.id : sections[0].id,
         questionnaireQuestions
       });
     };
@@ -126,8 +122,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
 const mapStateToProps = (rootState: IAppState) => ({
     questionnaire: rootState.questionnaires.current.get,
-    // isLoading: rootState.sections.isLoading,
-    isLoading: rootState.questionnaires.current.isLoading,
+    isLoading: rootState.sections.isLoading,
     sections: rootState.sections.list,
     currentQuestion: rootState.questions.current,
     questions: rootState.questionnaires.current.questions,
@@ -136,8 +131,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
-    loadSections: getSectionsByQuestionnaireRoutine,
+    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,

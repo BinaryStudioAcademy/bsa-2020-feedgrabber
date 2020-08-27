@@ -2,6 +2,7 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.sections.dto.SectionDto;
 import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
@@ -29,7 +30,8 @@ public class SectionController {
     @ApiOperation("Create new section")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<SectionDto> create(@RequestBody SectionCreateDto createDto) {
+    public AppResponse<SectionDto> create(@RequestBody SectionCreateDto createDto)
+            throws QuestionnaireNotFoundException {
         return new AppResponse<>(sectionService.create(createDto));
     }
 

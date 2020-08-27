@@ -14,7 +14,7 @@ import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import {saveResponseRoutine} from 'sagas/response/routines';
-import { getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import sectionsReducer from 'reducers/section/reducer';
 import LoaderWrapper from 'components/LoaderWrapper';
@@ -45,11 +45,9 @@ interface IQuestionnaireResponseProps {
     isLoading: boolean;
     sections: ISection[];
 
-    loadSections(questionnaireId: string): void;
+    loadQuestionnaire(id: string): void;
 
     loadOneSaved(payload: {questionnaireId: string; responseId: string}): void;
-
-    loadQuestionnaire(id: string): void;
 
     saveResponseAnswers(answers: IQuestionnaireResponseAnswers): void;
 }
@@ -88,11 +86,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, loadQuestionnaire, loadOneSaved, loadSections} = this.props;
-        loadSections(match.params.id);
-        !match.params.responseId
-            ? loadQuestionnaire(match.params.id)
-            : loadOneSaved({questionnaireId: match.params.id ,responseId: match.params.responseId});
+        const {match, loadQuestionnaire} = this.props;
+        loadQuestionnaire(match.params.id);
     }
 
     getAnswers = () => {
@@ -149,9 +144,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     };
 
     render() {
-        const {sections, isLoading} = this.props;
+        const {sections, isLoading, match} = this.props;
         const {showErrors, currentSectionIndex} = this.state;
-
         return (
             <div className={styles.response_container}>
                 <UIPageTitle title="Response"/>
@@ -207,10 +201,9 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadOneQuestionnaireRoutine,
     saveResponseAnswers: saveResponseRoutine,
     loadOneSaved: loadOneSavedQuestionnaireRoutine,
-    loadSections: getSectionsByQuestionnaireRoutine
+    loadQuestionnaire: loadSectionsByQuestionnaireRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireResponse);

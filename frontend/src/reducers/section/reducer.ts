@@ -1,13 +1,12 @@
 import { IAppState } from "models/IAppState";
 import { setCurrentSectionRoutine, 
     createSectionRoutine, 
-    getSectionsByQuestionnaireRoutine, 
+    loadSectionsByQuestionnaireRoutine, 
     setCurrentSectionIdRoutine,
     updateSectionsRoutine,
     deleteQuestionFromSectionRoutine} from "sagas/sections/routines";
 import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
 import { ISection } from "models/forms/Sections/types";
-import { updatedSections } from "sagas/sections/sagas";
 
 export interface ISectionsState {
     list?: ISection[];
@@ -15,7 +14,13 @@ export interface ISectionsState {
     isLoading?: boolean;
 }
 
-const sectionsReducer = (state: IAppState["sections"] = {}, {type, payload}) => {
+const initialValues = {
+    list: [] as ISection[],
+    current: {title: ''} as ISection,
+    isLoading: false
+};
+
+const sectionsReducer = (state: IAppState["sections"] = initialValues, {type, payload}) => {
     switch(type) {
         case setCurrentSectionRoutine.TRIGGER:
         case createSectionRoutine.SUCCESS:
@@ -24,13 +29,13 @@ const sectionsReducer = (state: IAppState["sections"] = {}, {type, payload}) => 
                 ...state,
                 current: payload
             };
-        case getSectionsByQuestionnaireRoutine.TRIGGER:
+        case loadSectionsByQuestionnaireRoutine.TRIGGER:
         case loadQuestionsBySectionRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
             };
-        case getSectionsByQuestionnaireRoutine.SUCCESS:
+        case loadSectionsByQuestionnaireRoutine.SUCCESS:
         case updateSectionsRoutine.SUCCESS:
             return {
                 ...state,
@@ -38,7 +43,7 @@ const sectionsReducer = (state: IAppState["sections"] = {}, {type, payload}) => 
                 current: payload[0],
                 isLoading: false
             };
-        case getSectionsByQuestionnaireRoutine.FAILURE:
+        case loadSectionsByQuestionnaireRoutine.FAILURE:
         case loadQuestionsBySectionRoutine.FAILURE:
             return {
                 ...state,

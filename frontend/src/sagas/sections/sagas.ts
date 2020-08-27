@@ -3,16 +3,12 @@ import {call, takeEvery, all, put} from 'redux-saga/effects';
 import { toastr } from 'react-redux-toastr';
 import { addNewSectionRoutine,
      createSectionRoutine,
-      getSectionsByQuestionnaireRoutine,
+     loadSectionsByQuestionnaireRoutine,
        addQuestionToSectionRoutine, 
        deleteQuestionFromSectionRoutine,
-       setCurrentSectionRoutine,
-       updateSectionsRoutine,
        updateSectionRoutine, 
        updateQuestionsOrderRoutine} from "./routines";
-import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
 import {parseQuestion} from "sagas/questions/sagas";
-import { containerCSS } from "react-select/src/components/containers";
 
 function parseSectionWithQuestion(section) {
     const questions = section.questions.map(q => parseQuestion(q));
@@ -30,19 +26,19 @@ function* createSection(action) {
     try {
         const result = yield call(apiClient.post, `/api/section`, action.payload);
         yield put(createSectionRoutine.success(result.data.data));
-        yield put(getSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (error) {
         yield put(createSectionRoutine.failure());
     }
 }
 
-function* getAllSectionsAndQuestionsByQuestionnaire(action) {
+function* loadAllSectionsAndQuestionsByQuestionnaire(action) {
     try {
         const result = yield call(apiClient.get, `/api/section/questionnaire/${action.payload}`);
         const sections = result.data.data.map(section => parseSectionWithQuestion(section));
-        yield put(getSectionsByQuestionnaireRoutine.success(sections));
+        yield put(loadSectionsByQuestionnaireRoutine.success(sections));
     } catch (error) {
-        yield put(getSectionsByQuestionnaireRoutine.failure());
+        yield put(loadSectionsByQuestionnaireRoutine.failure());
         toastr.error("Couldn`t load sections");
     }
 }
@@ -53,8 +49,7 @@ function* addQuestionToSection(action) {
         const result = yield call(apiClient.put, `/api/section/question/${questionId}?sectionId=${sectionId}`);
         yield put(addQuestionToSectionRoutine.success(result.data.data));
         if (questionnaireId) { 
-            console.log("here");
-            yield put(getSectionsByQuestionnaireRoutine.trigger(questionnaireId));
+            yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
         }
     } catch (error) {
         yield put(addQuestionToSectionRoutine.failure());
@@ -92,7 +87,7 @@ function* updateOrder(action) {
 export default function* sectionSagas() {
     yield all([
         yield takeEvery(createSectionRoutine.TRIGGER, createSection),
-        yield takeEvery(getSectionsByQuestionnaireRoutine.TRIGGER, getAllSectionsAndQuestionsByQuestionnaire),
+        yield takeEvery(loadSectionsByQuestionnaireRoutine.TRIGGER, loadAllSectionsAndQuestionsByQuestionnaire),
         yield takeEvery(addQuestionToSectionRoutine.TRIGGER, addQuestionToSection),
         yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),

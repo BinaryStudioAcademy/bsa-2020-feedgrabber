@@ -2,6 +2,8 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.question.QuestionRepository;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
+import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.sections.dto.SectionDto;
 import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
@@ -18,18 +20,23 @@ import java.util.stream.Collectors;
 public class SectionService {
     private final SectionRepository sectionRepository;
     private final QuestionRepository questionRepository;
+    private final QuestionnaireRepository questionnaireRepository;
 
     @Autowired
     public SectionService(SectionRepository sectionRepository,
-                          QuestionRepository questionRepository) {
+                          QuestionRepository questionRepository,
+                          QuestionnaireRepository questionnaireRepository) {
         this.sectionRepository = sectionRepository;
         this.questionRepository = questionRepository;
+        this.questionnaireRepository = questionnaireRepository;
     }
 
-    public SectionDto create(SectionCreateDto createDto) {
+    public SectionDto create(SectionCreateDto createDto) throws QuestionnaireNotFoundException {
         if (createDto.getTitle() == null) {
             createDto.setTitle("New section");
         }
+        var questionnaire = questionnaireRepository.findById(createDto.getQuestionnaireId())
+                .orElseThrow(QuestionnaireNotFoundException::new);
         var section = SectionMapper.MAPPER.createDtoToModel(createDto);
         return SectionMapper.MAPPER.modelToDto(sectionRepository.save(section));
     }

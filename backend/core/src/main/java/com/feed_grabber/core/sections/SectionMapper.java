@@ -2,6 +2,8 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.model.Question;
+import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
+import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.sections.dto.SectionDto;
 import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
@@ -12,11 +14,11 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(uses ={QuestionMapper.class})
+@Mapper(uses ={QuestionMapper.class, QuestionnaireMapper.class})
 public interface SectionMapper {
     SectionMapper MAPPER = Mappers.getMapper(SectionMapper.class);
 
-    @Mapping(target ="questionnaire.id", source = "questionnaireId")
+    @Mapping(target = "questionnaire.id", source = "questionnaireId")
     Section createDtoToModel(SectionCreateDto dto);
 
     SectionDto modelToDto(Section section);

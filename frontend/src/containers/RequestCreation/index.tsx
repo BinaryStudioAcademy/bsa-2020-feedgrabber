@@ -27,7 +27,7 @@ import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
-import { getSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
+import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -296,7 +296,7 @@ const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadSections: getSectionsByQuestionnaireRoutine
+  loadSections: loadSectionsByQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

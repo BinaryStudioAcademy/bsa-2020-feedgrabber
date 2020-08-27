@@ -17,7 +17,7 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {updateQuestions} from "../../helpers/array.helper";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
-import { addQuestionToSectionRoutine, getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { addQuestionToSectionRoutine, loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 
 export function parseQuestion(rawQuestion) {
     const details = rawQuestion.details
@@ -87,7 +87,7 @@ function* addFromExisting(action) {
         const questions = res.data.data.map(q => parseQuestion(q));
 
         yield put(addSelectedQuestionsRoutine.success(questions));
-        yield put(getSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (e) {
         yield put(addSelectedQuestionsRoutine.failure(e.data.error));
         toastr.error("Something went wrong, try again");
@@ -109,7 +109,7 @@ function* saveOrUpdateQuestion(action) {
         const newQuestions = updateQuestions(questions, question);
 
         yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
-        yield put(getSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());
         toastr.error("Question wasn't saved");
@@ -127,10 +127,8 @@ function* deleteOneByQuestionnaireId(action) {
         
         const questions = res.data.data.map(q => parseQuestion(q));
         
-          console.log(questions);
-
         yield put(deleteFromQuestionnaireRoutine.success(questions));
-        yield put(getSectionsByQuestionnaireRoutine.trigger(questionnaireId));
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
     } catch (e) {
         yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
         toastr.error("Unable to delete question");
