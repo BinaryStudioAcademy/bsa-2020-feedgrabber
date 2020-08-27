@@ -17,12 +17,17 @@ import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 
 import java.util.List;
+
+import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
+import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
 
 
 @RestController
@@ -47,7 +52,6 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
-/*%%% feature/104-team-creation-u*/
     @ApiOperation(value = "Get all users",
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping("/all/list")
@@ -56,7 +60,7 @@ public class UserController {
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(userService.getAllByCompanyId(companyId));
     }
-/*%%%*/
+
     @ApiOperation(value = "Send an email to reset password")
     @PostMapping("/email/reset")
     public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) throws UserNotFoundException {
@@ -94,6 +98,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("{id}/removeCompany")
+    @Secured(value = {ROLE_COMPANY_OWNER})
     public void removeUserFromCompany (@PathVariable UUID id) {
         userService.removeCompany(id);
     }
