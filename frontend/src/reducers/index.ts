@@ -7,6 +7,7 @@ import questionnaireReportReducer from "./questionnaireReport/reducer";
 import appReducer from "./app/reducer";
 import teamsReducer from "./teams/reducer";
 import usersReducer from "./users/reducer";
+import roleReducer from "./role/reducer";
 import expandedQuestionnaireReducer from './expandedQuestionnaire/reducer';
 import invitationReducer from './invitation/reducer';
 import invitationSignUpReducer from './invitationSignUp/reducer';
@@ -28,5 +29,6 @@ export default combineReducers({
   expandedQuestionnaire: expandedQuestionnaireReducer,
   app:appReducer,
   company: companyReducer,
-  notifications: notificationReducer
+  notifications: notificationReducer,
+  role: roleReducer
 });

@@ -13,6 +13,7 @@ import requestSaga from "./request/sagas";
 import questionnaireReportSagas from "./report/sagas";
 import notificationsSagas from "./notifications/sagas";
 import responseSagas from './response/sagas';
+import roleSagas from './role/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -29,6 +30,7 @@ export default function* rootSaga() {
     companiesSaga(),
     requestSaga(),
     notificationsSagas(),
-    responseSagas()
+    responseSagas(),
+    roleSagas()
   ]);
 }
