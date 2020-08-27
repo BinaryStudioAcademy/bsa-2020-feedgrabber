@@ -65,7 +65,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             answers: []
         };
         this.handleComponentChange = this.handleComponentChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSendClick = this.handleSendClick.bind(this);
     }
 
     handleComponentChange(state: IComponentState) {
@@ -108,7 +108,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         });
     }
 
-    handleSubmit = () => {
+    handleSendClick = () => {
         if (this.state.isCompleted) {
             const answers: IAnswer<IAnswerBody>[] = this.getAnswers();
             const payload = {
@@ -143,10 +143,9 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             });
         } else {
             this.setState({
-                showErrors: false
+                showErrors: true
             });
         }
-        
     };
 
     render() {
@@ -161,7 +160,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                 description={sections[currentSectionIndex].description}/>
                 <Formik
                     initialValues={this.state}
-                    onSubmit={this.handleSubmit}
+                    onSubmit={this.handleNextClick}
                 >{formik => (
                     <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
                         <ul>
@@ -188,9 +187,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                             {/* {currentSectionIndex !== 0 ? 
                             <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
                             {sections.length === currentSectionIndex + 1 ? 
-                            <UIButton title="Send" submit/> :
-                                <UIButton title="Next" onClick={this.handleNextClick}/>
-                        }
+                            <UIButton title="Send" onClick={this.handleSendClick}/> :
+                                <UIButton title="Next" submit/>}
                         </div>
                     </Form>)}
                 </Formik>
