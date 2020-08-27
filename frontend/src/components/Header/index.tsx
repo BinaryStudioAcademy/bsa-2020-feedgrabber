@@ -1,32 +1,26 @@
-import React, {FC, useState} from "react";
+import React, {FC} from "react";
 import {Icon, Image, Dropdown} from "semantic-ui-react";
-import {NavLink, useHistory} from "react-router-dom";
+import {NavLink} from "react-router-dom";
+import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
-import icon from "../../assets/images/icon_bg.jpg";
+import icon from "../../assets/images/logo.svg";
 import {logoutRoutine} from "../../sagas/auth/routines";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../models/IAppState";
-import {IUserInfo} from "../../models/user/types";
 import NotificationMenu from "../NotificationMenu";
-// import {INotification} from "../../reducers/notifications";
-
-export interface IHeaderProps {
-  user: IUserInfo;
-  logout: () => void;
-}
+import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 const defaultAvatar =
   "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<IHeaderProps> = ({user, logout}) => {
-  const history = useHistory();
+const Header: FC<Props> = ({user, logout, toggleMenu}) => {
   return (
     <div className={styles.headerWrapper}>
       <div className={styles.headerContent}>
         <div className={styles.headerPart}>
-          <div className={styles.headerTitle} onClick={() => history.push('/')}>
-            <img alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
-            <h1 className={styles.headerServiceName}>FeedGrabber</h1>
+          <div className={styles.headerTitle}>
+            <img onClick={toggleMenu} alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
+            <h1 className={styles.headerServiceName} onClick={() => history.push('/')}>FeedGrabber</h1>
           </div>
           <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive} className={styles.headerMenuItem}>
             PENDING FEEDBACKS
@@ -82,9 +76,10 @@ const Header: FC<IHeaderProps> = ({user, logout}) => {
 const mapStateToProps = (state: IAppState) => ({
   user: state.user.info
 });
-
 const mapDispatchToProps = {
-  logout: logoutRoutine
+  logout: logoutRoutine,
+  toggleMenu: toggleMenuRoutine
 };
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type Props = ConnectedProps<typeof connector>;
+export default connector(Header);

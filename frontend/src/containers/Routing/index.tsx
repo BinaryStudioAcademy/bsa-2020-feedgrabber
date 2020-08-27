@@ -31,7 +31,6 @@ import RespondentReport from "../ReportPage/RespondentReport";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
-    // useStomp("questions", m => console.log(m.body, m.headers, m.binaryBody));
 
     useEffect(() => {
         isLogged && getUser();
