@@ -17,6 +17,7 @@ import {saveResponseRoutine} from 'sagas/response/routines';
 import { getSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import sectionsReducer from 'reducers/section/reducer';
+import LoaderWrapper from 'components/LoaderWrapper';
 
 interface IComponentState {
     question: IQuestion;
@@ -142,28 +143,29 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             });
         } else {
             this.setState({
-                showErrors: true
+                showErrors: false
             });
         }
         
     };
 
     render() {
-        const {description, sections} = this.props;
+        const {sections, isLoading} = this.props;
         const {showErrors, currentSectionIndex} = this.state;
-        const section = sections[currentSectionIndex];
 
         return (
             <div className={styles.response_container}>
                 <UIPageTitle title="Response"/>
-                <UIListHeader title={section.title} description={description}/>
+                <LoaderWrapper loading={isLoading}>
+                <UIListHeader title={sections[currentSectionIndex].title} 
+                description={sections[currentSectionIndex].description}/>
                 <Formik
                     initialValues={this.state}
                     onSubmit={this.handleSubmit}
                 >{formik => (
                     <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
                         <ul>
-                            {section.questions.map(question => {
+                            {sections[currentSectionIndex].questions.map(question => {
                                 return (
                                     <UIListItem
                                         key={question.id}
@@ -183,14 +185,16 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                             })}
                         </ul>
                         <div className={styles.submit}>
-                            {currentSectionIndex !== 0 ? 
-                            <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null}
-                            {sections.length === currentSectionIndex + 1 ? <UIButton title="Send" submit/> :
+                            {/* {currentSectionIndex !== 0 ? 
+                            <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
+                            {sections.length === currentSectionIndex + 1 ? 
+                            <UIButton title="Send" submit/> :
                                 <UIButton title="Next" onClick={this.handleNextClick}/>
                         }
                         </div>
                     </Form>)}
                 </Formik>
+                </LoaderWrapper>
             </div>);
     }
 }
@@ -200,7 +204,8 @@ const mapStateToProps = (state: IAppState) => ({
     title: state.questionnaires.current.get.title,
     description: state.questionnaires.current.get.description,
     response: state.questionnaireResponse.current,
-    sections: state.sections.list
+    sections: state.sections.list,
+    isLoading: state.sections.isLoading
 });
 
 const mapDispatchToProps = {
