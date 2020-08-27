@@ -68,13 +68,16 @@ const UserListItem: FC<IUserListItemProps> = (
                     <h3 className={styles.paginationListItemHeader}>{info}</h3>
                     <p className={styles.paginationListItemDescription}>{phoneNumber}</p>
                 </div>
-                <div className={styles.button}>
-                    {role !== 'company_owner' && <Button onClick={() => setSelectedUser(user)}>Change role</Button>}
+                <div className={styles.buttonContainer}>
+                    <div className={styles.button}>
+                        {role !== 'company_owner' && <Button onClick={() => setSelectedUser(user)}>Change role</Button>}
+                    </div>
+                    <div className={styles.button}>
+                        {role !== 'company_owner' &&
+                        <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
+                    </div>
                 </div>
-                <div className={styles.button}>
-                    {role !== 'company_owner' &&
-                    <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
-                </div>
+
             </div>
             {confirmationModal()}
         </>
