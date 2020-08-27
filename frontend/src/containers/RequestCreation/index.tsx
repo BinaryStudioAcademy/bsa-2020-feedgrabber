@@ -33,6 +33,7 @@ const initialValues = {
   chosenTeams: new Array<ITeamShort>(),
   targetUserId: null,
   includeTargetUser: false,
+  sendToTargetUser: false,
   withDeadline: false,
   expirationDate: null,
   notifyUsers: false,
@@ -110,6 +111,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             questionnaireId: match.params.id,
                             targetUserId: values.targetUserId,
                             includeTargetUser: !!values.targetUserId && values.includeTargetUser,
+                            sendToTargetUser: !!values.sendToTargetUser && values.sendToTargetUser,
                             respondentIds: values.chosenUsers.map(user => user.id),
                             teamIds: values.chosenTeams.map(team => team.id)
                           };
@@ -124,7 +126,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               <UICardBlock>
                                 <h4>Assign target user:</h4>
                                 <p>This user will receive report</p>
-                                <input type="text" onChange={e => setTargetUserPattern(e.target.value)}/>
+                                <input type="text"
+                                       style={{width: '100%'}}
+                                       onChange={e => setTargetUserPattern(e.target.value)}/>
                                 <div style={{height: '200px', overflow: 'auto'}}>
                                   {
                                     users
@@ -157,8 +161,18 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                   /></span>
                                 </h4>
                                 <p>If yes, this user will also receive request</p>
-                              </UICardBlock>)
-                              }
+                              </UICardBlock>)}
+                              {formik.values.targetUserId && (<UICardBlock>
+                                <h4 className={styles.yesNoHeader}>Send report to target user?
+                                  <span>
+                                  <UISwitch
+                                      name='sendToTargetUser'
+                                      checked={formik.values.sendToTargetUser}
+                                      onChange={formik.handleChange}
+                                  /></span>
+                                </h4>
+                                <p>If yes, this user will also receive report</p>
+                              </UICardBlock>)}
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>Set Deadline for this request?
                                   <span>
@@ -232,7 +246,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                   </span>
                                   </h4>
                                 </div>
-                                <input type="text" onChange={e => setRespondentPattern(e.target.value)}/>
+                                <input type="text"
+                                       style={{width: '100%'}}
+                                       onChange={e => setRespondentPattern(e.target.value)}/>
                                 {selectTeams && teams
                                   .filter(team => respondentPattern
                                     ? team.name.includes(respondentPattern)
