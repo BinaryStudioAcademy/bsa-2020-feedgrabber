@@ -4,6 +4,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -16,10 +17,6 @@ public class NotificationService {
 
     public <T> void sendMessageToConcreteUser(String userId, String topic, T payload) {
         simpMessagingTemplate.convertAndSendToUser(userId, "/queue/" + topic, payload);
-    }
-
-    public <T> void sendMessageToUsers(List<String> userIds, String topic, T payload) {
-        userIds.forEach(n -> sendMessageToConcreteUser(n, topic, payload));
     }
 
     public <T> void sendMessageToAllUsers(String topic, T payload) {

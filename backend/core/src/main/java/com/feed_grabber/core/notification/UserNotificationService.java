@@ -23,16 +23,15 @@ public class UserNotificationService {
     @Autowired
     UserRepository userRepository;
 
-    public List<NotificationResponseDto> getAllByUser(UUID userId){
+    public List<NotificationResponseDto> getAllByUser(UUID userId) {
         return userNotificationRepository.findAllActiveNotificationsByUser(userId);
     }
 
     public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
-        var response = Optional.of(responseRepository
-                .findByRequestAndUser(requestId, userId))
-                .orElseThrow(() -> new NotFoundException("Response Not Found"));
+        var notification = userNotificationRepository.findByUserIdAndRequestId(userId, requestId)
+                .orElseThrow(() -> new NotFoundException("Notification Not Found"));
 
-        response.setNotificationExists(false);
-        responseRepository.save(response);
+        notification.setSeen(true);
+        userNotificationRepository.save(notification);
     }
 }

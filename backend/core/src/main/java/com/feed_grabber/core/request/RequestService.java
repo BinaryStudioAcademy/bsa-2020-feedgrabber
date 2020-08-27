@@ -2,6 +2,7 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.notification.MessageTypes;
 import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
@@ -21,6 +22,7 @@ import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -93,29 +95,36 @@ public class RequestService {
             if (dto.getIncludeTargetUser()) users.add(targetUser);
             else users.remove(targetUser);
         }
-      
-        var notificationExists = dto.getNotifyUsers();
+
+        var notifyUsers = dto.getNotifyUsers();
         var responses = users.stream()
-                .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
+                .map(u -> Response.builder().user(u).request(request).notificationExists(notifyUsers).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
 
         if (dto.getNotifyUsers()) {
-            var toSaveNotification = UserNotification
-                    .builder()
-                    .request(request)
-                    .text("You have new questionnaire request")
-                    .build();
 
-            var notification = userNotificationRepository.save(toSaveNotification);
+            Map<UUID, UUID> userIdNotificationId = new HashMap();
+            for (User user : users)
+                userIdNotificationId.put(user.getId(), userNotificationRepository.save(UserNotification
+                        .builder()
+                        .request(request)
+                        .text("You have new questionnaire request")
+                        .seen(!notifyUsers)
+                        .type(MessageTypes.plain_text)
+                        .user(user)
+                        .build()).getId());
 
-            var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
-            var toSendNotification = userNotificationRepository.findNotificationById(notification.getId());
-            notificationService.sendMessageToUsers(
-                    userIds,
-                    "notify",
-                    toSendNotification);
+            for (UUID userId : userIdNotificationId.keySet()) {
+                notificationService.sendMessageToConcreteUser(
+                        userId.toString(),
+                        "notify",
+                        userNotificationRepository
+                                .findNotificationById(userIdNotificationId.get(userId))
+                                .toString()
+                );
+            }
         }
 
         return request.getId();

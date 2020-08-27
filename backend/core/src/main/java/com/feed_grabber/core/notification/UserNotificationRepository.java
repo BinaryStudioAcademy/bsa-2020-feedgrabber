@@ -13,25 +13,24 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
     @Query(
             value = "SELECT " +
                     "new com.feed_grabber.core.notification.dto.NotificationResponseDto(" +
-                    "un.id, un.text, un.request.creationDate, un.request.id, q.id) " +
-                    "from UserNotification un, Response res, User u, Questionnaire q " +
+                    "un.id, un.text, un.request.creationDate, un.request.id, q.id, un.type, un.link) " +
+                    "from UserNotification un, Questionnaire q " +
                     "WHERE " +
-                    "un.request.id = res.request.id and " +
-                    "q.id = res.request.questionnaire.id and " +
-                    "res.user.id = u.id and " +
-                    "u.id = :userId and " +
-                    "res.notificationExists = true"
-
+                    "un.user.id = :userId and " +
+                    "un.seen = false"
     )
     List<NotificationResponseDto> findAllActiveNotificationsByUser(UUID userId);
 
     @Query(
             value = "SELECT " +
                     "new com.feed_grabber.core.notification.dto.NotificationResponseDto(" +
-                    "un.id, un.text, un.request.creationDate, un.request.id, un.request.questionnaire.id) " +
+                    "un.id, un.text, un.request.creationDate, un.request.id, un.request.questionnaire.id, un.type, un.link) " +
                     "from UserNotification un " +
                     "WHERE " +
                     "un.id = :notificationId"
     )
     Optional<NotificationResponseDto> findNotificationById(UUID notificationId);
+
+
+    Optional<UserNotification> findByUserIdAndRequestId(UUID userId,UUID requestId);
 }
