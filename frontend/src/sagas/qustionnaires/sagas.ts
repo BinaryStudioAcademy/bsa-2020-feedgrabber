@@ -86,11 +86,10 @@ function* loadOneSavedQuestionnaire(action) {
     try {
         const {questionnaireId} = action.payload;
         const res = yield call(apiClient.get, `/api/questionnaires/${questionnaireId}`);
-        yield put(loadOneSavedQuestionnaireRoutine.success());
-        yield put(loadOneQuestionnaireRoutine.success(res.data.data));
+        yield put(loadOneSavedQuestionnaireRoutine.success(res.data.data));
         yield put(loadSavedQuestionsRoutine.trigger(action.payload));
     } catch (error) {
-        yield put(loadOneQuestionnaireRoutine.failure(error));
+        yield put(loadOneSavedQuestionnaireRoutine.failure(error));
         toastr.error("Unable to fetch data");
     }
 }

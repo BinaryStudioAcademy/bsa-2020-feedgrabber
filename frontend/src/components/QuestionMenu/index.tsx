@@ -27,6 +27,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                                                   addSection
                                               }) => {
     const [positions, setPositions] = useState({scrollTop: 0, innerHeight: window.innerHeight});
+    const [isOpenModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = () => {
@@ -47,7 +48,9 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
         }
     };
 
-    const button = <Button icon={'external'}/>;
+    const handleOpenModal = () => {
+        setOpenModal(!isOpenModal);
+    };
 
     const { scrollTop, innerHeight } = positions;
     return (
@@ -66,7 +69,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                            trigger={<Button icon="plus circle" onClick={() => handleAdd("new")}/>}
                            position='right center'/>
                     <Popup content='Add from existing questions'
-                           trigger={<SelectQuestionsFromExisting button={button}/>}
+                           trigger={<Button icon="external" onClick={handleOpenModal}/>}
                            position='right center'/>
                     <Popup content='Copy'
                            trigger={<Button icon="copy" onClick={() => handleAdd(currentQuestion.id)}/>}
@@ -78,6 +81,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
                         trigger={<Button icon="plus square outline" onClick={() => addSection()}/>}
                         position='right center' />
                 </Button.Group>
+                <SelectQuestionsFromExisting isOpen={isOpenModal} handleOpenModal={setOpenModal}/>
             </Form>
         </div>
     );

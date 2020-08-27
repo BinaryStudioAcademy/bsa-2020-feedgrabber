@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import ReactPlayer from "react-player";
 import styles from "../styles.module.sass";
 
-const VideoUrl = ({ url, onChange }) => {
+const VideoUrl = ({ url, onChange, disabled }) => {
   const [error, setError] = useState(false);
 
   const handleUrlChange = e => {
@@ -14,6 +14,7 @@ const VideoUrl = ({ url, onChange }) => {
   return (
       <div className={styles.urlUpload}>
           <Input
+              disabled={disabled}
               className={styles.urlInput}
               type="text"
               placeholder="URL"
