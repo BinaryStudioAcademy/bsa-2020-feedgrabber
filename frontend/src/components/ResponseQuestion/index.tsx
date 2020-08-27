@@ -5,7 +5,7 @@ import {IQuestionResponse} from "models/IQuestionResponse";
 import React, {FC, useRef, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
-import {Header, Icon, Label, Segment} from "semantic-ui-react";
+import {Button, Grid, Header, Icon, Label, Popup, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
@@ -24,9 +24,33 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
             <div ref={detailsPage}>
                 <Segment
                     className={styles.container}>
-                    {!answerHandler && isModifyingEnabled &&
-                    <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>
-                    }
+                    {isModifyingEnabled && !answerHandler &&
+                    <Icon name='code' link onClick={isModifyingEnabled && handleSegmentClick}/>}
+                    {!isModifyingEnabled &&
+                    <Popup
+                        trigger={!answerHandler && <Icon name='code' link/>}
+                        on='click'>
+                        <Grid divided columns='equal'>
+                            <Grid.Column>
+                                <Popup
+                                    trigger={<Button color='blue' content='Blue Pill' fluid/>}
+                                    content='I know what I do!'
+                                    position='top center'
+                                    size='tiny'
+                                    inverted
+                                />
+                            </Grid.Column>
+                            <Grid.Column>
+                                <Popup
+                                    trigger={<Button color='red' content='Red Pill' fluid/>}
+                                    content='Stay in Wonderland, and I show you how deep the rabbit hole goes.'
+                                    position='top center'
+                                    size='tiny'
+                                    inverted
+                                />
+                            </Grid.Column>
+                        </Grid>
+                    </Popup>}
                     {editor && (id === nowModifying.id)
                         ?
                         <div className={styles.scaleTop}>
