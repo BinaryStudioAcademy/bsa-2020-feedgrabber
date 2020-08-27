@@ -12,7 +12,7 @@ export interface INotification {
   date: Date;
   requestId: string;
   questionnaireId: string;
-  type: MessageTypes;
+  messageType: MessageTypes;
   link?: string;
 }
 
