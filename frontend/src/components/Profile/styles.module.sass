@@ -1,0 +1,38 @@
+
+$aside-width: calc((100% - 800px) / 2)
+
+html, body, #root
+  height: 100%
+
+.profileContainer
+  align-self: center
+  height: 100%
+  margin-left: $aside-width
+  margin-right: $aside-width
+
+.menu
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr
+  color: white
+  margin: 1em
+
+.menuItem
+  font-size: 1.3rem
+  height: 35px
+  display: flex
+  justify-content: center
+  align-items: center
+  padding-bottom: 1px
+  border-bottom: 1px solid white
+  &:hover
+    cursor: pointer
+    background-color: rgba(255, 255, 255, 0.05)
+    border-top-left-radius: 5px
+    border-top-right-radius: 5px
+
+.selected
+  padding-bottom: 0
+  border-bottom: 3px solid white
+
+.contentContainer
+  padding: 30px 70px

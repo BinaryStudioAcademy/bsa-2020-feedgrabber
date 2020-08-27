@@ -1,43 +1,65 @@
 import React, {FC} from 'react';
-import {Grid, Menu} from "semantic-ui-react";
-import './styles.sass';
-import {NavLink} from 'react-router-dom';
 import ProfileInfo from "./ProfileInfo";
 import ProfileSettings from "./ProfileSettings";
+import styles from './styles.module.sass';
+import UIPageTitle from "../UI/UIPageTitle";
+import UICard from "../UI/UICard";
+import UIBackgroundWrapper from "../UI/UIBackgroundWrapper";
+import {history} from "../../helpers/history.helper";
 
-type IProfileMode = { mode: 'profile' | 'settings' }
+type IProfileMode = { mode: 'profile' | 'settings' | 'security' }
 
-const ProfilePage: FC<IProfileMode> =
+const getPage = (key: string) => {
+  switch (key) {
+    case 'profile' :
+      return <ProfileInfo/>;
+    case 'settings':
+      return <ProfileSettings settings={undefined}/>;
+    default:
+      return <ProfileSettings settings={undefined}/>;
+  }
+};
+
+const getPageTitle = (key: string) => {
+  switch (key) {
+    case 'profile' :
+      return 'My Profile';
+    case 'settings':
+      return 'My settings';
+    case 'security':
+      return 'Privacy and Security';
+    default:
+      return key;
+  }
+};
+
+const Profile: FC<IProfileMode> =
     ({mode}) => {
-        const getPage = (key: string) => {
-            switch (key) {
-                case 'profile' :
-                    return <ProfileInfo/>;
-                default:
-                    return <ProfileSettings settings={undefined}/>;
-            }
-        };
 
-        return (
-            <div className={"profile-container"}>
-
-                <Grid>
-                    <Grid.Column width={4}>
-                        <Menu fluid vertical tabular>
-                            <Menu.Item exact as={NavLink} to='/profile' name={'profile'}/>
-                            <Menu.Item exact as={NavLink} to='/profile/settings' name={'settings'}/>
-                        </Menu>
-                    </Grid.Column>
-
-                    <Grid.Column stretched width={12}>
-                        {getPage(mode)}
-                    </Grid.Column>
-                </Grid>
+      return (<>
+        <UIPageTitle title={getPageTitle(mode)}/>
+        <UIBackgroundWrapper>
+          <div className={styles.profileContainer}>
+            <div className={styles.menu}>
+              <div className={[styles.menuItem, mode === 'profile' && styles.selected].join(' ')}
+                   onClick={() => history.push('/profile')}>Profile
+              </div>
+              <div className={[styles.menuItem, mode === 'security' && styles.selected].join(' ')}
+                   onClick={() => history.push('/profile/security')}>Privacy and Security
+              </div>
+              <div className={[styles.menuItem, mode === 'settings' && styles.selected].join(' ')}
+                   onClick={() => history.push('/profile/settings')}>Settings
+              </div>
             </div>
-        );
+            <UICard>
+              <div className={styles.contentContainer}>
+                {getPage(mode)}
+              </div>
+            </UICard>
+          </div>
+        </UIBackgroundWrapper>
+      </>);
     };
 
-export const Profile = () => <ProfilePage mode="profile"/>;
-
-export const ProfileX = () => <ProfilePage mode="settings"/>;
+export default Profile;
 
