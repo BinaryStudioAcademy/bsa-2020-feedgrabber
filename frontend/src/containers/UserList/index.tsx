@@ -56,7 +56,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
       role={user.role}
       roleId={user.roleId}
       roleState={roleState}
-      fire={userRole && userRole === 'company_owner' ? fireUser : undefined}
+      fire={fireUser}
       loadCompanyRoles={loadCompanyRoles}
       changeRole={changeUserRole}
       toggleModal={toggleModal}

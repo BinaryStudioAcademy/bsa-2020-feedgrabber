@@ -16,7 +16,7 @@ interface IUserListItemProps {
     username: string;
     roleState: IRoleState;
 
-    fire?(id: string): void;
+    fire(id: string): void;
 
     changeRole(dto: IRoleSwitchDto): void;
 
@@ -84,10 +84,11 @@ const UserListItem: FC<IUserListItemProps> = (
                 <p className={styles.paginationListItemDescription}>{contact}</p>
             </div>
             <div className={styles.button}>
-                <Button onClick={() => toggleModal()}>Change role</Button>
+                {role !== 'company_owner' && <Button onClick={() => toggleModal()}>Change role</Button>}
             </div>
             <div className={styles.button}>
-                {fire && <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
+                {role !== 'company_owner' &&
+                <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
             </div>
             {roleState.isChangeRoleModalOpen &&
             <SwitchRoleModal
