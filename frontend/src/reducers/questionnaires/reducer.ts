@@ -2,8 +2,8 @@ import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
-    loadOneQuestionnaireRoutine, loadOneSavedQuestionnaireRoutine,
-    loadQuestionnairesRoutine,
+    loadOneQuestionnaireRoutine,
+    loadQuestionnairesRoutine, saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine
@@ -109,7 +109,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.SUCCESS:
-        case loadOneSavedQuestionnaireRoutine.SUCCESS:
+        case saveAndGetQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
                 get: payload,
@@ -125,10 +125,10 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
             };
         case deleteFromQuestionnaireRoutine.TRIGGER:
         case loadOneQuestionnaireRoutine.TRIGGER:
-        case loadOneSavedQuestionnaireRoutine.TRIGGER:
         case loadQuestionnaireQuestionsRoutine.TRIGGER:
         case loadSavedQuestionsRoutine.TRIGGER:
         case addSelectedQuestionsRoutine.TRIGGER:
+        case saveAndGetQuestionnaireRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
@@ -137,12 +137,12 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
         case loadQuestionnaireQuestionsRoutine.FAILURE:
         case loadSavedQuestionsRoutine.FAILURE:
         case addSelectedQuestionsRoutine.FAILURE:
+        case saveAndGetQuestionnaireRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.FAILURE:
-        case loadOneSavedQuestionnaireRoutine.FAILURE:
             return {
                 ...state,
                 get: {}

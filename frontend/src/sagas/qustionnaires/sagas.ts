@@ -5,13 +5,12 @@ import {
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
-    loadQuestionnairesRoutine,
-    updateQuestionnaireRoutine,
-    loadOneSavedQuestionnaireRoutine
+    loadQuestionnairesRoutine, saveAndGetQuestionnaireRoutine,
+    updateQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
-import {loadQuestionnaireQuestionsRoutine, loadSavedQuestionsRoutine} from "../questions/routines";
+import {IGeneric} from "../../models/IGeneric";
 
 function* loadQuestionnairesList() {
     try {
@@ -27,14 +26,13 @@ function* loadQuestionnairesList() {
     }
 }
 
-function* loadOneQuestionnaire(action) {
+function* saveAndPutNewQuestionnaire(action) {
     try {
-        const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
-        yield put(loadOneQuestionnaireRoutine.success(res.data.data));
-        yield put(loadQuestionnaireQuestionsRoutine.trigger(action.payload));
-    } catch (error) {
-        yield put(loadOneQuestionnaireRoutine.failure(error));
-        toastr.error("Unable to fetch data");
+        const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `/api/questionnaires`, action.payload);
+        yield put(saveAndGetQuestionnaireRoutine.success(res.data.data));
+    } catch (e) {
+        yield put(saveAndGetQuestionnaireRoutine.failure());
+        toastr.error("Failed saving form");
     }
 }
 
@@ -79,14 +77,12 @@ function* deleteQuestionnaire(action) {
     }
 }
 
-function* loadOneSavedQuestionnaire(action) {
+function* loadOneQuestionnaire(action) {
     try {
-        const {questionnaireId} = action.payload;
-        const res = yield call(apiClient.get, `/api/questionnaires/${questionnaireId}`);
-        yield put(loadOneSavedQuestionnaireRoutine.success(res.data.data));
-        yield put(loadSavedQuestionsRoutine.trigger(action.payload));
+        const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
+        yield put(loadOneQuestionnaireRoutine.success(res.data.data));
     } catch (error) {
-        yield put(loadOneSavedQuestionnaireRoutine.failure(error));
+        yield put(loadOneQuestionnaireRoutine.failure(error));
         toastr.error("Unable to fetch data");
     }
 }
@@ -110,6 +106,6 @@ export default function* questionnairesSagas() {
         yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
         yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
         yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
-        yield takeEvery(loadOneSavedQuestionnaireRoutine.TRIGGER, loadOneSavedQuestionnaire)
+        yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire)
     ]);
 }

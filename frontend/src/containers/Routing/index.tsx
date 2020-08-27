@@ -28,6 +28,7 @@ import ReportPage from "../ReportPage";
 import RequestsPage from "../RequestsPage";
 import InvitationLinkPage from "../InvitationLinkPage";
 import RespondentReport from "../ReportPage/RespondentReport";
+import RedirectFormEditor from "../../components/RedirectFormEditor";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
@@ -50,7 +51,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/profile/settings" component={ProfileX}/>
                     <PrivateRoute exact path="/requests" component={() => <span>Requests</span>}/>
                     <PrivateRoute exact path="/help" component={() => <span>Help Center</span>}/>
-                    <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>}/>
+                    <PrivateRoute exact path="/editor" component={RedirectFormEditor}/>
                     <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
                     <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>

@@ -14,6 +14,8 @@ const defaultAvatar =
   "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
 const Header: FC<Props> = ({user, logout, toggleMenu}) => {
+  const matches = !!history.location.pathname.match("(^\\/questionnaires\\/[^\\/]+$)|(^\\/editor$)");
+
   return (
     <div className={styles.headerWrapper}>
       <div className={styles.headerContent}>
@@ -25,9 +27,9 @@ const Header: FC<Props> = ({user, logout, toggleMenu}) => {
           <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive} className={styles.headerMenuItem}>
             PENDING FEEDBACKS
           </NavLink>
-          <a className={styles.headerMenuItem}>
+          <NavLink exact to="/editor" className={matches ? styles.headerMenuItemActive : styles.headerMenuItem}>
             FORM EDITOR
-          </a>
+          </NavLink>
           <a className={styles.headerMenuItem}>
             ASSIGN FEEDBACKS
           </a>

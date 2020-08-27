@@ -26,8 +26,8 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
         </NavLink>
         <AccessManager staticPermission={Permissions.managingQuestionnaires}>
           <NavLink to="/questionnaires" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-            <Icon className={styles.menuItemIcon} name="list alternate outline" />
-            <span className={styles.menuItemTitle}>QUESTIONNAIRES</span>
+            <Icon className={styles.menuItemIcon} size="big" name="list alternate outline" />
+            <span className={styles.menuItemTitle}>Questionnaires</span>
           </NavLink>
         </AccessManager>
         <NavLink to="/teams" className={styles.menuItem} activeClassName={styles.menuItemActive}>
@@ -36,20 +36,20 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
         </NavLink>
         <AccessManager staticPermission={Permissions.managingQuestions}>
           <NavLink to="/questions" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-            <Icon className={styles.menuItemIcon} name="question circle outline" />
-            <span className={styles.menuItemTitle}>QUESTIONS</span>
+            <Icon className={styles.menuItemIcon} size="big" name="question circle outline" />
+            <span className={styles.menuItemTitle}>Questions</span>
           </NavLink>
         </AccessManager>
         <AccessManager staticPermission={Permissions.blockUserAccount}>
           <NavLink to="/employees" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-            <Icon className={styles.menuItemIcon} name="user outline" />
-            <span className={styles.menuItemTitle}>EMPLOYEES</span>
+            <Icon className={styles.menuItemIcon} size="big" name="user outline" />
+            <span className={styles.menuItemTitle}>Employees</span>
           </NavLink>
         </AccessManager>
         <AccessManager staticPermission={Permissions.generateInviteLinks}>
           <NavLink to="/invitations" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-            <Icon className={styles.menuItemIcon} name="pin" />
-            <span className={styles.menuItemTitle}>INVITATIONS</span>
+            <Icon className={styles.menuItemIcon} size="big" name="pin" />
+            <span className={styles.menuItemTitle}>Invitations</span>
           </NavLink>
         </AccessManager>
       </div>
