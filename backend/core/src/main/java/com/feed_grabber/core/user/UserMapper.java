@@ -31,6 +31,7 @@ public interface UserMapper {
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
     @Mapping(target = "avatar", source = "userProfile.avatar.link")
     @Mapping(target = "role", source = "role.systemRole")
+    @Mapping(target = "roleId", source = "role.id")
     UserDetailsResponseDTO detailedFromUser(User user);
 
     UserShortDto shortFromUser(User user);

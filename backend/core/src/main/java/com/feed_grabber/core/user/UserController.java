@@ -6,6 +6,7 @@ import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
+import com.feed_grabber.core.role.dto.RoleAssignmentDto;
 import com.feed_grabber.core.user.dto.*;
 
 import com.feed_grabber.core.apiContract.AppResponse;
@@ -79,8 +80,9 @@ public class UserController {
 
     @ApiOperation(value = "Update role")
     @PutMapping("/role/change")
-    public void changeRole(@RequestParam UUID userId, @RequestParam UUID roleId) throws NotFoundException {
-        userService.changeRole(userId, roleId);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeRole(@RequestBody RoleAssignmentDto dto) throws NotFoundException {
+        userService.changeRole(dto.getUserId(), dto.getRoleId());
     }
 
 
