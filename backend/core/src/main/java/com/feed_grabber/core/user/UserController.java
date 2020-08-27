@@ -26,7 +26,7 @@ import java.util.UUID;
 
 import java.util.List;
 
-import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
+//import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
 import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
 
 
