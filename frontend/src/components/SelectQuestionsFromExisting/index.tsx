@@ -18,7 +18,6 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         currentQuestions,
         qnId,
         isLoading,
-        button,
         currentSection,
         isOpen,
         handleOpenModal
