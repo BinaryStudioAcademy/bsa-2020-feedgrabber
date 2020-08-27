@@ -1,4 +1,4 @@
-import {Button, Form, Message} from "semantic-ui-react";
+import {Button, Form, Message, Header} from "semantic-ui-react";
 import React, {FC} from "react";
 import * as yup from "yup";
 import {Formik} from "formik";
@@ -23,13 +23,19 @@ const Container = styled.div`
     background-image: url(${img});
     width: 100wv;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 `;
 
 const StyledForm = styled(Form)`
     text-align: center;
-    padding-top: 40%;
     margin: 0 auto;
     width: 30%;
+    background: #d2d5d9;
+    padding: 1em;
+    border-radius: 1em;
 `;
 
 const ResetPasswordForm: FC<FormProps & {match}> =
@@ -55,6 +61,7 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                     return (
                         <Container>
                             <StyledForm onSubmit={handleSubmit} autoComplete='off' error={!!errorText}>
+                                <Header as="h3">Enter new password</Header>
                                 <Form.Input name="password" type="password" placeholder="Password"
                                             onChange={handleChange} onBlur={handleBlur} icon="key"
                                 />
