@@ -13,9 +13,11 @@ import { updateSectionsRoutine,
     updateSectionRoutine } from "sagas/sections/routines";
 import { IAppState } from "models/IAppState";
 import { connect } from "react-redux";
+import SectionQuestionList from "./QuestionnaireList";
 
 interface IIndex  {
-  questionnaireId: string;
+  // questionnaireId: string;
+  sectionId: string;
   questions: IIndexObject[];
 }
 
@@ -25,16 +27,8 @@ interface IIndexObject  {
 }
 
 interface IQuestionnairePreviewProps {
-  questions: IQuestion[];
-  qnId: string;
-  indexQuestions(questions: IIndex): void;
-}
-
-interface IQuestionnairePreviewProps {
   sections: ISection[];
-  questions: IQuestion[];
-  qnId: string;
-  indexQuestions(action: {}): void;
+  indexQuestions(questions: IIndex): void;
   updateSections(sections: ISection[]): void;
   updateSection(action: {}): void;
   addQuestionToSection(action: any): void;
@@ -46,55 +40,13 @@ interface ISectionState {
 }
 
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
-  qnId,
   sections,
-  questions,
   indexQuestions,
   updateSections,
   updateSection,
   addQuestionToSection,
   deleteQuestionFromSection
 }) => {
-  const [questionCards, setQuestionCards] = useState<IQuestion[]>(questions);
-
-  const indexQuestionsHandler = () => {
-    const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
-    indexQuestions({questionnaireId: qnId,  questions: rst});
-  };
-
-  useEffect(() => {
-    setQuestionCards(questions);
-  }, [questions]);
-
-  const moveCard = useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      const dragCard = questionCards[dragIndex];
-      const updCards = questionCards.slice();
-      updCards.splice(dragIndex, 1);
-      updCards.splice(hoverIndex, 0, dragCard);
-      setQuestionCards(updCards);
-    },
-    [questionCards]
-  );
-
-  const drop = () => {
-    indexQuestionsHandler();
-  };
-  
-  const renderCard = (q: IQuestion, index: number, sectionId: string) => {
-      return (
-        <QuestionCard
-          question={q}
-          key={index}
-          id={q.id}
-          index={index}
-          moveCard={moveCard}
-          onDropCard={drop}
-          addQuestionToSection={moveQuestionToSection}
-          prevSectionId={sectionId}
-        />
-      );
-  };
 
   const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
     if (sectionId !== prevSectionId) {
@@ -128,9 +80,12 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
       <SectionBlock id={section.id}>
       <UISection section={section} onChanged={handleChapterChange}/>
       {section.questions.length ?
-        <div>
-          {section.questions.map((q, i) => renderCard(q, i, section.id))}
-        </div>
+        <SectionQuestionList
+        sectionId={section.id}
+        questions={section.questions}
+        handleMoveQuestionToSection={moveQuestionToSection}
+        indexQuestions={indexQuestions}
+        />
         : <Header as='h3'>
           Add questions
         </Header>}
@@ -139,10 +94,6 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
     </div>);
 };
 
-const mapState = (state: IAppState) => ({
-  sections: state.sections.list
-});
-
 const mapDispatch = {
   updateSections: updateSectionsRoutine.success,
   updateSection: updateSectionRoutine,
@@ -150,4 +101,4 @@ const mapDispatch = {
   deleteQuestionFromSection: deleteQuestionFromSectionRoutine
 };
 
-export default connect(mapState, mapDispatch)(QuestionnairePreview);
+export default connect(null, mapDispatch)(QuestionnairePreview);

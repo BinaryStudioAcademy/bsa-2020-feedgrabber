@@ -24,6 +24,7 @@ interface IExpandedQuestionnaireProps {
 
     loadOneQuestionnaire(id: string): void;
     loadSections(id: string): void;
+    indexQuestions(questions: any): void;
 }
 
 const newQuestion: IQuestion = {
@@ -51,12 +52,13 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         currentQuestion,
         questions,
         createSection,
-        currentSection
+        currentSection,
+        indexQuestions
     }
 ) => {
     useEffect(() => {
-        loadOneQuestionnaire(match.params.id);
         loadSections(match.params.id);
+        loadOneQuestionnaire(match.params.id);
     }, [loadOneQuestionnaire, match.params.id, loadSections]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
@@ -102,9 +104,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                     <UIContent>
                         <div className={styles.questions_container}>
                             <QuestionnairePreview
-                                indexQuestions={indexQuestionsRoutine}
-                                qnId={match.params.id}
-                                questions={questions ?? []}
+                                indexQuestions={indexQuestions}
+                                sections={sections}
                             />
                         </div>
                         <QuestionMenu
@@ -124,10 +125,10 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
 const mapStateToProps = (rootState: IAppState) => ({
     questionnaire: rootState.questionnaires.current.get,
-    isLoading: rootState.sections.isLoading,
+    // isLoading: rootState.sections.isLoading,
+    isLoading: rootState.questionnaires.current.isLoading,
     sections: rootState.sections.list,
     currentQuestion: rootState.questions.current,
-    // isLoading: rootState.questionnaires.current.isLoading,
     questions: rootState.questionnaires.current.questions,
     questionnaireQuestions: rootState.questionnaires.current.questions,
     currentSection: rootState.sections.current
@@ -138,7 +139,8 @@ const mapDispatchToProps = {
     loadSections: getSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
-    createSection: createSectionRoutine
+    createSection: createSectionRoutine,
+    indexQuestions: indexQuestionsRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

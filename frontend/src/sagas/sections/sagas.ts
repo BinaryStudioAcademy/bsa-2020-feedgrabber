@@ -8,7 +8,8 @@ import { addNewSectionRoutine,
        deleteQuestionFromSectionRoutine,
        setCurrentSectionRoutine,
        updateSectionsRoutine,
-       updateSectionRoutine } from "./routines";
+       updateSectionRoutine, 
+       updateQuestionsOrderRoutine} from "./routines";
 import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
 import {parseQuestion} from "sagas/questions/sagas";
 import { containerCSS } from "react-select/src/components/containers";
@@ -37,8 +38,6 @@ function* createSection(action) {
 
 function* getAllSectionsAndQuestionsByQuestionnaire(action) {
     try {
-        console.log('getAllSectionsAndQuestionsByQuestionnaire');
-        console.log(action);
         const result = yield call(apiClient.get, `/api/section/questionnaire/${action.payload}`);
         const sections = result.data.data.map(section => parseSectionWithQuestion(section));
         yield put(getSectionsByQuestionnaireRoutine.success(sections));
@@ -50,11 +49,8 @@ function* getAllSectionsAndQuestionsByQuestionnaire(action) {
 
 function* addQuestionToSection(action) {
     try {
-        console.log("saga add");
-        console.log(action.payload);
         const {sectionId, questionId, questionnaireId} = action.payload;
         const result = yield call(apiClient.put, `/api/section/question/${questionId}?sectionId=${sectionId}`);
-        console.log(result);
         yield put(addQuestionToSectionRoutine.success(result.data.data));
         if (questionnaireId) { 
             console.log("here");
@@ -67,8 +63,6 @@ function* addQuestionToSection(action) {
 
 function* deleteQuestionFromSection(action) {
     try {
-        console.log("saga");
-        console.log(action.payload);
         const {sectionId, questionId} = action.payload;
         const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
         yield put(deleteQuestionFromSectionRoutine.success(result.data.data));
@@ -79,11 +73,19 @@ function* deleteQuestionFromSection(action) {
 
 function* updateSection(action) {
     try {
-        console.log(action.payload);
         const result = yield call(apiClient.put, `/api/section/${action.payload.id}`, action.payload);
         yield put(updateSectionRoutine.success(result.data.data));
     } catch (error) {
         yield put(updateSectionRoutine.failure());
+    }
+}
+
+function* updateOrder(action) {
+    try {
+        const result = yield call(apiClient.put, `/api/section/${action.payload.id}/order`, action.payload);
+        yield put(updateQuestionsOrderRoutine.success(result.data.data));
+    } catch (error) {
+        yield put(updateQuestionsOrderRoutine.failure());
     }
 }
 
@@ -93,6 +95,7 @@ export default function* sectionSagas() {
         yield takeEvery(getSectionsByQuestionnaireRoutine.TRIGGER, getAllSectionsAndQuestionsByQuestionnaire),
         yield takeEvery(addQuestionToSectionRoutine.TRIGGER, addQuestionToSection),
         yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection),
-        yield takeEvery(updateSectionRoutine.TRIGGER, updateSection)
+        yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
+        yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder)
     ]);
 }

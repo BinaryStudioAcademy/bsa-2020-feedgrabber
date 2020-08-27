@@ -23,9 +23,9 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true,
-            value = "INSERT INTO sections_questions (section_id, question_id) " +
-                    "VALUES (:sectionId, :questionId)")
-    Integer addQuestion(UUID sectionId, UUID questionId);
+            value = "INSERT INTO sections_questions (section_id, question_id, order_index) " +
+                    "VALUES (:sectionId, :questionId, :index)")
+    Integer addQuestion(UUID sectionId, UUID questionId, Integer index);
 
     @Modifying
     @Transactional
@@ -34,16 +34,10 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
                     "WHERE s.section_id = :sectionId AND s.question_id = :questionId")
     Integer deleteQuestion(UUID sectionId, UUID questionId);
 
-
     @Modifying
     @Transactional
     @Query(nativeQuery = true,
-            value = "update sections s set from_question_index = :from where s.id = :id")
-    void updateFrom(UUID id, Integer from);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true,
-            value = "update sections s set to_question_index = :to where s.id = :id")
-    void updateTo(UUID id, Integer to);
+            value = "UPDATE sections_questions s SET order_index = :index " +
+                    "WHERE s.section_id = :sectionId AND s.question_id = :questionId")
+    Integer setIndex(UUID sectionId, UUID questionId, Integer index);
 }

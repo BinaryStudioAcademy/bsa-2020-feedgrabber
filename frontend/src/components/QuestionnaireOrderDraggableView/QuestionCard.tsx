@@ -7,6 +7,7 @@ import {DraggableItemTypes, IQuestion} from "../../models/forms/Questions/IQuesi
 import ResponseQuestion from "components/ResponseQuestion";
 import { connect } from "react-redux";
 import { addQuestionToSectionRoutine } from "sagas/sections/routines";
+import { ISection } from "models/forms/Sections/types";
 
 export interface ICardProps {
   id: string;

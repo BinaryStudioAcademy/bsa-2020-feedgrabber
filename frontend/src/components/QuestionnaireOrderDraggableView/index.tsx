@@ -75,7 +75,7 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
           index={index}
           id={card.id}
           question={card}
-          moveCard={moveCard}
+          moveCard={null}
           prevSectionId={null}
         />
       );

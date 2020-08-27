@@ -139,6 +139,7 @@ function* deleteOneByQuestionnaireId(action) {
 
 function* orderQuestions(action) {
     try {
+      console.log(action.payload);
         yield call(apiClient.put, `/api/questions/index`, action.payload);
     } catch {
         toastr.error("Unable to index questionnaire");

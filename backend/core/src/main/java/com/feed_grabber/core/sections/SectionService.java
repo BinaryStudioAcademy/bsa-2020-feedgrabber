@@ -47,7 +47,7 @@ public class SectionService {
 
         questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
 
-        sectionRepository.addQuestion(sectionId, questionId);
+        sectionRepository.addQuestion(sectionId, questionId, Integer.MAX_VALUE);
 
         return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
     }

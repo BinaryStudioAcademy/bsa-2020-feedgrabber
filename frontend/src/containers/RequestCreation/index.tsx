@@ -27,6 +27,7 @@ import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
+import { getSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -46,11 +47,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        users,
        loadTeams,
        loadUsers,
-       loadQuestionnaire,
+       loadSections,
        sendRequest,
        isLoadingUsers,
        isLoadingTeams,
-       questions
+       sections
      }) => {
 
       // load users
@@ -63,10 +64,10 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         loadTeams();
       }, [loadTeams]);
 
-        // load teams
+        // load questionnaire
         useEffect(() => {
-            loadQuestionnaire(match.params.id);
-        }, [loadQuestionnaire, match.params.id]);
+            loadSections(match.params.id);
+        }, [loadSections, match.params.id]);
 
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
@@ -79,8 +80,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                     <UICardBlock>
                         <QuestionnairePreview
                             indexQuestions={indexQuestionsRoutine}
-                            qnId={match.params.id}
-                            questions={questions ?? []}
+                            sections={sections}
                         />
                     </UICardBlock>
                   </UICard>
@@ -288,14 +288,15 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,
-  questions: state.questionnaires.current.questions
+  questions: state.questionnaires.current.questions,
+  sections: state.sections.list
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadQuestionnaire: loadOneQuestionnaireRoutine
+  loadSections: getSectionsByQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -51,7 +51,6 @@ public class SectionController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<SectionQuestionsDto> addQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
             throws SectionNotFoundException, QuestionNotFoundException {
-        System.out.println(sectionId);
         return new AppResponse<>(sectionService.addQuestion(sectionId, id));
     }
 

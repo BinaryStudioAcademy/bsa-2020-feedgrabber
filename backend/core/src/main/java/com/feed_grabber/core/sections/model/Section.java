@@ -34,14 +34,8 @@ public class Section {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "order_number", columnDefinition = "integer default 1")
+    @Column(name = "order_index", columnDefinition = "integer default 1")
     private Integer order;
-
-    @Column(name = "from_question_index")
-    private Integer from;
-
-    @Column(name = "to_question_index")
-    private Integer to;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "questionnaire_id")

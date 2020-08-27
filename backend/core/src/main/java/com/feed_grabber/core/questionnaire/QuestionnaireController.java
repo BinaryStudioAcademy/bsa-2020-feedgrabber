@@ -108,6 +108,7 @@ public class QuestionnaireController {
     }
 
 
+    @Deprecated
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     public void updateQuestionnaireQuestions(QuestionnaireOrderedDto dto)

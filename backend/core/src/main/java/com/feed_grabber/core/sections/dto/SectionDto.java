@@ -18,8 +18,4 @@ public class SectionDto {
     String title;
 
     String description;
-
-    Integer from;
-
-    Integer to;
 }

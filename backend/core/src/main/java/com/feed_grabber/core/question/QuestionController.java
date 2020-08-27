@@ -108,7 +108,8 @@ public class QuestionController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/index")
-    public void index(@RequestBody QuestionIndexDto dto) throws QuestionNotFoundException {
+    public void index(@RequestBody QuestionIndexDto dto)
+            throws QuestionNotFoundException, SectionNotFoundException {
         this.questionService.index(dto);
     }
 

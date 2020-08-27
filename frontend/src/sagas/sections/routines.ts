@@ -10,3 +10,4 @@ export const addQuestionToSectionRoutine = createRoutine("SECTION:ADD_QUESTION")
 export const deleteQuestionFromSectionRoutine = createRoutine("SECTION:DELETE_QUESTION");
 export const updateSectionsRoutine = createRoutine("SECTION:UPDATE");
 export const updateSectionRoutine = createRoutine("SECTION:UPDATE_ONE");
+export const updateQuestionsOrderRoutine = createRoutine("SECTION:UPDATE_QYESTION_ORDER");
