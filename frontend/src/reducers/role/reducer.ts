@@ -2,21 +2,21 @@ import {IAppState} from "../../models/IAppState";
 import {
     changeRoleRoutine,
     loadShortRolesRoutine, setIsChangingRoutine,
-    setIsLoadingRoutine,
-    toggleModalRoutine
+    setIsLoadingRoutine, setSelectedUserRoutine
 } from "../../sagas/role/routines";
 import {IRoleShort} from "../../models/role/Role";
+import {IUserInfo} from "../../models/user/types";
 
 export interface IRoleState {
     companyRoles: IRoleShort[];
-    isChangeRoleModalOpen: boolean;
+    selectedUser: IUserInfo;
     isLoading: boolean;
     isChanging: boolean;
 }
 
 const initialState: IRoleState = {
     companyRoles: [],
-    isChangeRoleModalOpen: false,
+    selectedUser: null,
     isLoading: false,
     isChanging: false
 };
@@ -44,10 +44,11 @@ const roleReducer = (state: IAppState['role'] = initialState, {type, payload}) =
                 ...state,
                 isChanging: payload.isChanging
             };
-        case toggleModalRoutine.TRIGGER:
+        case setSelectedUserRoutine.TRIGGER:
+            console.log(payload);
             return {
                 ...state,
-                isChangeRoleModalOpen: !state.isChangeRoleModalOpen
+                selectedUser: payload
             };
         case changeRoleRoutine.SUCCESS:
             return {

@@ -2,14 +2,9 @@ import {all, call, put, takeEvery} from "redux-saga/effects";
 import apiClient from "../../helpers/apiClient";
 import {toastr} from 'react-redux-toastr';
 import {
-    changeRoleRoutine,
     loadShortRolesRoutine,
-    setIsChangingRoutine,
-    setIsLoadingRoutine,
-    toggleModalRoutine
+    setIsLoadingRoutine
 } from "./routines";
-import {loadCompanyUsersRoutine} from "../users/routines";
-import {act} from "react-dom/test-utils";
 
 function* loadRoles() {
     try {
@@ -21,6 +16,7 @@ function* loadRoles() {
         yield put(loadShortRolesRoutine.failure());
     }
 }
+
 export default function* roleSagas() {
     yield all([
         yield takeEvery(loadShortRolesRoutine.TRIGGER, loadRoles)

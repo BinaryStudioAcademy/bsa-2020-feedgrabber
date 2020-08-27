@@ -3,6 +3,7 @@ import React, {FC, useEffect, useState} from "react";
 import styles from './styles.module.sass';
 import {Button, Dropdown, Image, Header, Modal, Select, Icon, Loader} from "semantic-ui-react";
 import {IRoleShort} from "../../models/role/Role";
+import {IUserInfo} from "../../models/user/types";
 
 export interface IRoleSwitchDto {
     userId: string;
@@ -11,11 +12,7 @@ export interface IRoleSwitchDto {
 
 interface ISwitchRoleModalProps {
     companyRoles: IRoleShort[];
-    userId: string;
-    username: string;
-    roleId: string;
-    name?: string;
-    surname?: string;
+    selectedUser: IUserInfo;
     isChanging: boolean;
     isLoading: boolean;
 
@@ -23,26 +20,21 @@ interface ISwitchRoleModalProps {
 
     loadCompanyRoles(): void;
 
-    toggleModal(): void;
+    setSelectedUser(user: IUserInfo): void;
 }
 
 const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
     {
-        userId,
-        username,
-        name,
-        surname,
-        roleId,
         changeRole,
         loadCompanyRoles,
         companyRoles,
-        toggleModal,
+        setSelectedUser,
         isLoading,
-        isChanging
+        isChanging,
+        selectedUser
 
     }
 ) => {
-    // let options = companyRoles.map(r => ({key: r.id, value: r.id, text: r.name}));
 
     const [selectedRoleId, setSelectedRoleId] = useState("");
 
@@ -53,21 +45,22 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
     useEffect(() => {
         const options = companyRoles
             .map(r => ({key: r.id, value: r.id, text: r.name}));
-        setSelectedRoleId(roleId);
-    }, [companyRoles, roleId]);
+        setSelectedRoleId(selectedUser.roleId);
+    }, [companyRoles, selectedUser]);
 
     return (
         <Modal
             size="tiny"
             open={true}
             closeOnDimmerClick
-            onClose={() => toggleModal()}
+            onClose={() => setSelectedUser(null)}
         >
             {isLoading && <Loader/>}
             {!isLoading &&
             <>
                 <Modal.Header>
-                    Role selection for user {name && surname ? `${name} ${surname}` : `${username}`}
+                    Role selection for user {selectedUser.firstName && selectedUser.lastName ?
+                    `${selectedUser.firstName} ${selectedUser.lastName}` : `${selectedUser.userName}`}
                 </Modal.Header>
                 <Modal.Content>
                     <div className={styles.container}>
@@ -83,13 +76,13 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
                     </div>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button negative onClick={() => toggleModal()}>
+                    <Button negative onClick={() => setSelectedUser(null)}>
                         Discard changes
                     </Button>
                     <Button
                         positive
-                        disabled={selectedRoleId === roleId}
-                        onClick={() => changeRole({userId: userId, roleId: selectedRoleId})}
+                        disabled={selectedRoleId === selectedUser.roleId}
+                        onClick={() => changeRole({userId: selectedUser.id, roleId: selectedRoleId})}
                         loading={isChanging}
                     >
                         Change

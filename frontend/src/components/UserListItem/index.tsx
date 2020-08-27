@@ -4,25 +4,17 @@ import styles from './styles.module.sass';
 import {Button, Header, Image, Loader, Modal, Select} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
 import SwitchRoleModal, {IRoleSwitchDto} from "../SwitchRoleModal";
+import {IUserInfo} from "../../models/user/types";
 
 interface IUserListItemProps {
-    id: string;
-    name?: string;
-    surname?: string;
-    contact?: string;
-    avatar?: string;
-    role: string;
-    roleId: string;
-    username: string;
+    user: IUserInfo;
     roleState: IRoleState;
 
     fire(id: string): void;
 
-    changeRole(dto: IRoleSwitchDto): void;
-
     loadCompanyRoles(): void;
 
-    toggleModal(): void;
+    setSelectedUser(user: IUserInfo): void;
 }
 
 const defaultAvatar =
@@ -30,24 +22,16 @@ const defaultAvatar =
 
 const UserListItem: FC<IUserListItemProps> = (
     {
-        id,
-        username,
-        avatar,
-        name,
-        surname,
-        contact,
+        user,
         fire,
-        role,
-        roleId,
-        roleState,
-        changeRole,
-        loadCompanyRoles,
-        toggleModal
+        setSelectedUser
     }
 ) => {
+    const {id, firstName, lastName, role, avatar, userName, phoneNumber} = user;
+
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    const info = name && surname ? `${name} ${surname}` : `${username}`;
+    const info = firstName && lastName ? `${firstName} ${lastName}` : `${userName}`;
 
     const confirmationModal = () => {
         return (<Modal
@@ -57,7 +41,7 @@ const UserListItem: FC<IUserListItemProps> = (
             onClose={() => setShowConfirmationModal(false)}
         >
             <Modal.Header>
-                Do you really want to fire {name && surname ? `${name} ${surname}` : `${username} ?`}
+                Do you really want to fire {firstName && lastName ? `${firstName} ${lastName}` : `${userName} ?`}
             </Modal.Header>
             <Modal.Actions>
                 <Button negative onClick={() => setShowConfirmationModal(false)}>
@@ -75,37 +59,26 @@ const UserListItem: FC<IUserListItemProps> = (
     };
 
     return (
-        <div className={styles.listItem}>
-            <div className={styles.userImage}>
-                <Image src={avatar ?? defaultAvatar} size='tiny' circular/>
+        <>
+            <div className={styles.listItem}>
+                <div className={styles.userImage}>
+                    <Image src={avatar ?? defaultAvatar} size='tiny' circular/>
+                </div>
+                <div className={styles.info}>
+                    <h3 className={styles.paginationListItemHeader}>{info}</h3>
+                    <p className={styles.paginationListItemDescription}>{phoneNumber}</p>
+                </div>
+                <div className={styles.button}>
+                    {role !== 'company_owner' && <Button onClick={() => setSelectedUser(user)}>Change role</Button>}
+                </div>
+                <div className={styles.button}>
+                    {role !== 'company_owner' &&
+                    <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
+                </div>
             </div>
-            <div className={styles.info}>
-                <h3 className={styles.paginationListItemHeader}>{info}</h3>
-                <p className={styles.paginationListItemDescription}>{contact}</p>
-            </div>
-            <div className={styles.button}>
-                {role !== 'company_owner' && <Button onClick={() => toggleModal()}>Change role</Button>}
-            </div>
-            <div className={styles.button}>
-                {role !== 'company_owner' &&
-                <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
-            </div>
-            {roleState.isChangeRoleModalOpen &&
-            <SwitchRoleModal
-                toggleModal={toggleModal}
-                companyRoles={roleState.companyRoles}
-                roleId={roleId}
-                isChanging={roleState.isChanging}
-                isLoading={roleState.isLoading}
-                userId={id}
-                username={username}
-                name={name}
-                surname={surname}
-                changeRole={changeRole}
-                loadCompanyRoles={loadCompanyRoles}
-            />}
             {confirmationModal()}
-        </div>
+        </>
+
     );
 };
 

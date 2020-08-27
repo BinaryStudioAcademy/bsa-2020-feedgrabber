@@ -5,7 +5,7 @@ import {
   removeUserFromCompanyRoutine
 } from "./routines";
 import {toastr} from 'react-redux-toastr';
-import {changeRoleRoutine, setIsChangingRoutine, toggleModalRoutine} from "../role/routines";
+import {changeRoleRoutine, setIsChangingRoutine, setSelectedUserRoutine} from "../role/routines";
 
 function* loadUserList(action: any) {
   try {
@@ -45,7 +45,7 @@ function* changeUserRole(action) {
     yield call(apiClient.put, `/api/user/role/change`, action.payload);
     yield put(loadCompanyUsersRoutine.trigger());
     yield put(changeRoleRoutine.success());
-    yield put(toggleModalRoutine.trigger());
+    yield put(setSelectedUserRoutine.trigger(null));
     toastr.success("Role changed");
   } catch {
     toastr.error("Couldn't load company roles");
