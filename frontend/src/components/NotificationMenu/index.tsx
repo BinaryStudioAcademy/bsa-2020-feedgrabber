@@ -22,6 +22,10 @@ export enum MessageTypes {
     textWithLink = 'text_with_link'
 }
 
+export interface INotificationProps {
+    isLoading: boolean;
+}
+
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
         isLoading,
@@ -48,7 +52,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     }, true);
 
     const history = useHistory();
-    console.log(notifications);
     return (
         <div ref={ref}>
             <div onClick={() => setShown(!shown)}>
@@ -86,7 +89,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                                 <div className={styles.button}
                                      title='Delete'
                                      onClick={() => {
-                                         deleteNotification(notification.requestId);
+                                         deleteNotification(notification.id);
                                      }}
                                 >
                                     <div>

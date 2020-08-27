@@ -27,8 +27,8 @@ public class UserNotificationService {
         return userNotificationRepository.findAllActiveNotificationsByUser(userId);
     }
 
-    public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
-        var notification = userNotificationRepository.findByUserIdAndRequestId(userId, requestId)
+    public void deleteNotification(UUID notificationId) throws NotFoundException {
+        var notification = userNotificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NotFoundException("Notification Not Found"));
 
         notification.setSeen(true);

@@ -50,7 +50,7 @@ const notificationReducer = (state: IAppState['notifications'] = initialState, {
     case(deleteNotificationRoutine.TRIGGER):
       return {
         ...state,
-        notifications: state.notifications.filter(notification => notification.requestId !== payload)
+        notifications: state.notifications.filter(notification => notification.id !== payload)
       };
     case(receiveNotificationRoutine.TRIGGER):
       return {
