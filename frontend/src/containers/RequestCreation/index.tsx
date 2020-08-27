@@ -68,6 +68,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         loadQuestionnaire(match.params.id);
       }, [loadQuestionnaire, match.params.id]);
 
+      const [targetUserPattern, setTargetUserPattern] = useState('');
+      const [respondentPattern, setRespondentPattern] = useState('');
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
       return (
@@ -122,9 +124,14 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               <UICardBlock>
                                 <h4>Assign target user:</h4>
                                 <p>This user will receive report</p>
+                                <input type="text" onChange={e => setTargetUserPattern(e.target.value)}/>
                                 <div style={{height: '200px', overflow: 'auto'}}>
                                   {
-                                    users.map(user => (
+                                    users
+                                      .filter(user => targetUserPattern
+                                        ? user.username.includes(targetUserPattern)
+                                        : true)
+                                      .map(user => (
                                         <UIUserItemCard
                                             key={user.id}
                                             firstName={'username: ' + user.username}
@@ -205,28 +212,32 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               <UICardBlock>
                                 <div className={styles.selectHeader}>
                                   <h4>
-                                <span className={[styles.option, selectTeams && styles.selected].join(' ')}
-                                      onClick={() => {
-                                        if (!selectTeams) {
-                                          setSelectTeams(true);
-                                          formik.setFieldValue('chosenUsers', []);
-                                        }
-                                      }}>
-                                        Select Teams
-                                        </span>
-                                    <span className={[styles.option, !selectTeams && styles.selected].join(' ')}
-                                          onClick={() => {
-                                            if (selectTeams) {
-                                              setSelectTeams(false);
-                                              formik.setFieldValue('chosenTeams', []);
-                                            }
-                                          }}>
-                                Select Users
-                              </span>
+                                  <span className={[styles.option, selectTeams && styles.selected].join(' ')}
+                                        onClick={() => {
+                                          if (!selectTeams) {
+                                            setSelectTeams(true);
+                                            formik.setFieldValue('chosenUsers', []);
+                                          }
+                                        }}>
+                                    Select Teams
+                                  </span>
+                                  <span className={[styles.option, !selectTeams && styles.selected].join(' ')}
+                                        onClick={() => {
+                                              if (selectTeams) {
+                                                setSelectTeams(false);
+                                                formik.setFieldValue('chosenTeams', []);
+                                              }
+                                            }}>
+                                    Select Users
+                                  </span>
                                   </h4>
                                 </div>
-
-                                {selectTeams && teams.map(team => (
+                                <input type="text" onChange={e => setRespondentPattern(e.target.value)}/>
+                                {selectTeams && teams
+                                  .filter(team => respondentPattern
+                                    ? team.name.includes(respondentPattern)
+                                    : true)
+                                  .map(team => (
                                     <UITeamItemCard
                                         key={team.id}
                                         team={team}
@@ -243,7 +254,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
                                     />
                                 ))}
-                                {!selectTeams && users.map(user => (
+                                {!selectTeams && users
+                                  .filter(user => respondentPattern
+                                    ? user.username.includes(respondentPattern)
+                                    : true)
+                                  .map(user => (
                                     <UIUserItemCard
                                         key={user.id}
                                         avatar={user.avatar}
