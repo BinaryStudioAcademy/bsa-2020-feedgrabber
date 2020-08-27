@@ -98,7 +98,7 @@ public class RequestService {
 
         var notifyUsers = dto.getNotifyUsers();
         var responses = users.stream()
-                .map(u -> Response.builder().user(u).request(request).notificationExists(notifyUsers).build())
+                .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
