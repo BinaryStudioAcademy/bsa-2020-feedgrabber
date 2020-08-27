@@ -4,6 +4,7 @@ import {
   loadNotificationsRoutine,
   receiveNotificationRoutine
 } from "../../sagas/notifications/routines";
+import {MessageTypes} from "../../components/NotificationMenu";
 
 export interface INotification {
   id: string;
@@ -11,6 +12,8 @@ export interface INotification {
   date: Date;
   requestId: string;
   questionnaireId: string;
+  type: MessageTypes;
+  link?: string;
 }
 
 export interface INotificationsState {
