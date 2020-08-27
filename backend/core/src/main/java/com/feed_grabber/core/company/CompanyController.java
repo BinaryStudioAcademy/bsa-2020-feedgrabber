@@ -34,7 +34,7 @@ public class CompanyController {
 
     @GetMapping("/user-companies")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<CompanyDomainDto>> getCompaniesBuEmail(@RequestParam String email) {
+    public AppResponse<List<CompanyDomainDto>> getCompaniesByEmail(@RequestParam String email) {
         return new AppResponse<>(companyService.getByUserEmail(email));
     }
 
