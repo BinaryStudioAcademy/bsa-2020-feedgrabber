@@ -2,6 +2,8 @@ import React, {FC} from "react";
 
 import styles from './styles.module.sass';
 import {Button, Image} from "semantic-ui-react";
+import {IRoleState} from "../../reducers/role/reducer";
+import SwitchRoleModal, {IRoleSwitchDto} from "../SwitchRoleModal";
 
 interface IUserListItemProps {
     id: string;
@@ -9,9 +11,18 @@ interface IUserListItemProps {
     surname?: string;
     contact?: string;
     avatar?: string;
+    role: string;
+    roleId: string;
     username: string;
+    roleState: IRoleState;
 
     fire?(id: string): void;
+
+    changeRole(dto: IRoleSwitchDto): void;
+
+    loadCompanyRoles(): void;
+
+    toggleModal(): void;
 }
 
 const defaultAvatar =
@@ -25,7 +36,13 @@ const UserListItem: FC<IUserListItemProps> = (
         name,
         surname,
         contact,
-        fire
+        fire,
+        role,
+        roleId,
+        roleState,
+        changeRole,
+        loadCompanyRoles,
+        toggleModal
     }
 ) => {
     const info = name && surname ? `${name} ${surname}` : `${username}`;
@@ -39,8 +56,25 @@ const UserListItem: FC<IUserListItemProps> = (
                 <p className={styles.paginationListItemDescription}>{contact}</p>
             </div>
             <div className={styles.button}>
-                {fire && <Button onClick={() => fire(id)}>fire</Button>}
+                <Button onClick={() => toggleModal()}>Change role</Button>
             </div>
+            <div className={styles.button}>
+                {fire && <Button color={"red"} onClick={() => fire(id)}>Fire</Button>}
+            </div>
+            {roleState.isChangeRoleModalOpen &&
+            <SwitchRoleModal
+                toggleModal={toggleModal}
+                companyRoles={roleState.companyRoles}
+                roleId={roleId}
+                isChanging={roleState.isChanging}
+                isLoading={roleState.isLoading}
+                userId={id}
+                username={username}
+                name={name}
+                surname={surname}
+                changeRole={changeRole}
+                loadCompanyRoles={loadCompanyRoles}
+            />}
         </div>
     );
 };
