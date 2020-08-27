@@ -1,11 +1,14 @@
-import {Button, Form, Message, Header} from "semantic-ui-react";
+import {Button, Form, Message, Header, Menu} from "semantic-ui-react";
 import React, {FC} from "react";
+import { Link } from 'react-router-dom';
 import * as yup from "yup";
 import {Formik} from "formik";
 import {connect, ConnectedProps} from "react-redux";
 import {resetPasswordRoutine} from "../../../sagas/auth/routines";
 import styled from "styled-components";
 import img from "../../../assets/images/bg-pattern.jpg";
+
+import styles from "./styles.module.sass";
 
 const validationSchema = yup.object().shape({
     password: yup
@@ -60,6 +63,19 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                     const errorText = errors.password || errors.passwordRepeat;
                     return (
                         <Container>
+                            <Menu fixed='top' className={styles.menu}>
+                                <Menu.Item as={Link} to="/layout" header>
+                                    <img
+                                        className={styles.logo}
+                                        src={require("../../../assets/images/icon_bg.jpg")}
+                                        alt="Logo"
+                                    />
+                                    FeedGrabber
+                                </Menu.Item>
+                                <Menu.Item position="right" as={Link} to="/auth">
+                                    Sign In
+                                </Menu.Item>
+                            </Menu>
                             <StyledForm onSubmit={handleSubmit} autoComplete='off' error={!!errorText}>
                                 <Header as="h3">Enter new password</Header>
                                 <Form.Input name="password" type="password" placeholder="Password"
