@@ -157,10 +157,12 @@ const StyledMenu = styled(Menu)`
 class SignForm extends React.Component {
   constructor(props) {
     super(props);
+    const isActive = this.props.location.signUpActive ?? false;
     this.state = {
-      signUpActive: false
+      signUpActive: isActive
     };
 
+    console.log(isActive);
     this.toggleSignPanel = this.toggleSignPanel.bind(this);
   }
 
