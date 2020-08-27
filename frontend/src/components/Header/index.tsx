@@ -13,9 +13,7 @@ import {toggleMenuRoutine} from "../../sagas/app/routines";
 const defaultAvatar =
   "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<Props> = ({user, logout, toggleMenu}) => {
-  const matches = !!history.location.pathname.match("(^\\/questionnaires\\/[^\\/]+$)|(^\\/editor$)");
-
+const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
   return (
     <div className={styles.headerWrapper}>
       <div className={styles.headerContent}>
@@ -27,7 +25,8 @@ const Header: FC<Props> = ({user, logout, toggleMenu}) => {
           <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive} className={styles.headerMenuItem}>
             PENDING FEEDBACKS
           </NavLink>
-          <NavLink exact to="/editor" className={matches ? styles.headerMenuItemActive : styles.headerMenuItem}>
+          <NavLink exact to="/editor"
+                   className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
             FORM EDITOR
           </NavLink>
           <a className={styles.headerMenuItem}>
@@ -76,7 +75,8 @@ const Header: FC<Props> = ({user, logout, toggleMenu}) => {
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  user: state.user.info
+  user: state.user.info,
+  isEditing: !!state.questionnaires.current.get.id
 });
 const mapDispatchToProps = {
   logout: logoutRoutine,

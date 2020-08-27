@@ -1,11 +1,10 @@
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
-import {addQuestionnaireRoutine, saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
+import {saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import {history} from "../../helpers/history.helper";
 import {toastr} from 'react-redux-toastr';
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -13,9 +12,11 @@ import {
     DialogTitle,
     TextField
 } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import moment from "moment";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
-    const [title, setTitle] = useState<string>();
+    const [title, setTitle] = useState<string>(`New Form created ${moment().calendar()}`);
     const [open, setOpen] = useState<boolean>(!current.id);
 
     function handleCancel() {
@@ -29,32 +30,34 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
         toastr.success("Form created");
     }
 
-    current.id && history.push(`/questionnaires/${current.id}`);
+    useEffect(() => {
+        current.id && history.push(`/questionnaires/${current.id}`);
+    }, [current]);
 
     return (
         <Dialog open={open} aria-labelledby="form-dialog-title" onClose={handleCancel}>
-            <DialogTitle id="form-dialog-title">Create New Form</DialogTitle>
+            <DialogTitle>
+                Type In Form Title
+            </DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Please enter Form title or use default
+                <DialogContentText variant="h6">
+                    Looks like you don't have currently edited form, create new!
                 </DialogContentText>
                 <TextField
                     autoFocus
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    placeholder="New Form"
                     margin="dense"
-                    label="Form title"
                     type="text"
                     fullWidth
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCancel} color="primary">
+                <Button variant="outlined" onClick={handleCancel} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={handleSubmit} color="primary">
-                    Subscribe
+                <Button variant="contained" onClick={handleSubmit} color="primary">
+                    Add
                 </Button>
             </DialogActions>
         </Dialog>
