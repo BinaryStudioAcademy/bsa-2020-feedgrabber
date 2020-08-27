@@ -6,6 +6,8 @@
 npm i
 ```
 
+Copy .env.example file to .env in the root of /frontend folder
+
 ## Run
 
 ```

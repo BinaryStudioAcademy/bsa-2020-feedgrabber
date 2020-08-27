@@ -148,7 +148,6 @@ function* loadSaved(action) {
         const res: IGeneric<any> = yield call(apiClient.get, `/api/response?responseId=${responseId}`);
         const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
 
-        yield put(loadSavedQuestionsRoutine.success());
         const result = questions.filter(q => {
             if(answers.find(a => a.questionId === q.id)) {
                 q['answer'] = answers.find(a => a.questionId === q.id).body;
@@ -157,7 +156,7 @@ function* loadSaved(action) {
                 return false;
             }
         });
-        yield put(loadQuestionnaireQuestionsRoutine.success(result));
+        yield put(loadSavedQuestionsRoutine.success(result));
 
     } catch (e) {
         yield put(loadSavedQuestionsRoutine.failure(e.data.error));

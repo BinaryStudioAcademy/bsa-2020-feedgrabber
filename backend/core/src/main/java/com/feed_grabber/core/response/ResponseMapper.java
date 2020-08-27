@@ -1,5 +1,6 @@
 package com.feed_grabber.core.response;
 
+import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.dto.ResponseCreateDto;
 import com.feed_grabber.core.response.dto.ResponseDetailsDto;
@@ -11,7 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {UserMapper.class})
+@Mapper(uses = {UserMapper.class, QuestionnaireMapper.class})
 public interface ResponseMapper {
     ResponseMapper MAPPER = Mappers.getMapper(ResponseMapper.class);
 
@@ -20,6 +21,7 @@ public interface ResponseMapper {
 
     @Mapping(target = "requestId", source = "request.id")
     @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "questionnaire", source = "request.questionnaire")
     ResponseDto responseToDto(Response response);
 
     ResponseDetailsDto responseToResponseDetailsDto(Response response);
