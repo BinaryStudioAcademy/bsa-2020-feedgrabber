@@ -11,7 +11,6 @@ import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
-import {getResponseRoutine} from 'sagas/response/routines';
 import styles from './styles.module.sass';
 import {Tab} from "semantic-ui-react";
 
@@ -39,20 +38,17 @@ const MainPage: FC<IMainPageProps> =
          reportsList = [],
          newsList = [],
          isLoading,
-         loadQuestionnaires,
-         getResponse
+         loadQuestionnaires
      }) => {
 
         const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
 
-        const handleAnswerClick = (requestId, questionnaireId) => {
-            getResponse(requestId);
-            history.push(`/response/${questionnaireId}`);
+        const handleAnswerClick = requestId => {
+            history.push(`/response/${requestId}`);
         };
 
-        const handleModifyAnswerClick = (requestId, questionnaireId, responseId) => {
-            getResponse(requestId);
-            history.push(`/response/${questionnaireId}/modify/${responseId}/`);
+        const handleModifyAnswerClick = (requestId, responseId) => {
+            history.push(`/response/${requestId}/modify/${responseId}/`);
         };
 
         useEffect(() => {
@@ -86,7 +82,7 @@ const MainPage: FC<IMainPageProps> =
                                             > new Date().valueOf() || !expirationDate)
                                             ? <UIButton title="Answer"
                                                         onClick={() =>
-                                                            handleAnswerClick(requestId, questionnaire.id)}/>
+                                                            handleAnswerClick(requestId)}/>
                                             : <p>Expired {new Date(new Date().valueOf()
                                                 - expirationDate?.valueOf()).getHours()} hours ago</p>}
                                     </UICardBlock>
@@ -123,7 +119,6 @@ const MainPage: FC<IMainPageProps> =
                                                         onClick={() =>
                                                             handleModifyAnswerClick(
                                                                 requestId,
-                                                                questionnaire.id,
                                                                 responseId)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
                                                 ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
@@ -192,8 +187,7 @@ const MapStateToProps = (state: IAppState) => ({
 });
 
 const MapDispatchToProps = {
-    loadQuestionnaires: loadRequestedQuestionnairesRoutine,
-    getResponse: getResponseRoutine
+    loadQuestionnaires: loadRequestedQuestionnairesRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps)(MainPage);

@@ -9,10 +9,14 @@ import com.feed_grabber.core.response.dto.ResponseUpdateDto;
 import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
 @RequestMapping("api/response")
@@ -37,6 +41,7 @@ public class ResponseController {
     }
 
     @GetMapping("/users")
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<UserResponseShortDto>> getRespondentsShortInfo(@RequestParam UUID requestId) {
         return new AppResponse<>(service.getRespondents(requestId));
     }

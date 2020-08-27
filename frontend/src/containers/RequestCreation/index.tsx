@@ -63,7 +63,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       useEffect(() => {
         loadTeams();
       }, [loadTeams]);
-
+  
         // load questionnaire
         useEffect(() => {
             loadSections(match.params.id);
@@ -279,7 +279,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
     };
 
 interface IRouterProps {
-    id: string;
+  id: string;
 }
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({

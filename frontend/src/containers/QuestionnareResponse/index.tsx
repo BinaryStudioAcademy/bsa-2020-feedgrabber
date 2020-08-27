@@ -13,7 +13,7 @@ import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
-import {saveResponseRoutine} from 'sagas/response/routines';
+import {saveResponseRoutine, getResponseRoutine} from 'sagas/response/routines';
 import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import sectionsReducer from 'reducers/section/reducer';
@@ -29,6 +29,7 @@ interface IQuestionnaireResponseState {
     showErrors: boolean;
     currentSectionIndex: number;
     answers: IAnswer<IAnswerBody>[];
+    oldResponseId: string;
 }
 
 interface IQuestionnaireResponseAnswers {
@@ -47,9 +48,11 @@ interface IQuestionnaireResponseProps {
 
     loadQuestionnaire(id: string): void;
 
-    loadOneSaved(payload: {questionnaireId: string; responseId: string}): void;
+    loadOneSaved(payload: { questionnaireId: string; responseId: string }): void;
 
     saveResponseAnswers(answers: IQuestionnaireResponseAnswers): void;
+
+    getResponse(id: string): void;
 }
 
 class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps, IQuestionnaireResponseState> {
@@ -60,7 +63,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             isCompleted: false,
             showErrors: false,
             currentSectionIndex: 0,
-            answers: []
+            answers: [],
+            oldResponseId: props.response?.id
         };
         this.handleComponentChange = this.handleComponentChange.bind(this);
         this.handleSendClick = this.handleSendClick.bind(this);
@@ -86,8 +90,20 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, loadQuestionnaire} = this.props;
+        const {match, loadQuestionnaire, getResponse} = this.props;
         loadQuestionnaire(match.params.id);
+        getResponse(match.params.id);
+    }
+
+    componentDidUpdate() {
+        const {match, loadQuestionnaire, loadOneSaved, response} = this.props;
+        const {oldResponseId} = this.state;
+        if (oldResponseId !== response?.id) {
+            this.setState({oldResponseId: response?.id});
+            !match.params.responseId
+                ? loadQuestionnaire(response.questionnaire.id)
+                : loadOneSaved({questionnaireId: response.questionnaire.id, responseId: response.id});
+        }
     }
 
     getAnswers = () => {
@@ -203,7 +219,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     saveResponseAnswers: saveResponseRoutine,
     loadOneSaved: loadOneSavedQuestionnaireRoutine,
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine
+    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
+    getResponse: getResponseRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireResponse);
