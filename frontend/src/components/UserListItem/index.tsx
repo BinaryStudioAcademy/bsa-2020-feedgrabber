@@ -1,7 +1,7 @@
-import React, {FC} from "react";
+import React, {FC, useState} from "react";
 
 import styles from './styles.module.sass';
-import {Button, Image} from "semantic-ui-react";
+import {Button, Header, Image, Loader, Modal, Select} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
 import SwitchRoleModal, {IRoleSwitchDto} from "../SwitchRoleModal";
 
@@ -45,7 +45,35 @@ const UserListItem: FC<IUserListItemProps> = (
         toggleModal
     }
 ) => {
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
     const info = name && surname ? `${name} ${surname}` : `${username}`;
+
+    const confirmationModal = () => {
+        return (<Modal
+            size="tiny"
+            open={showConfirmationModal}
+            closeOnDimmerClick
+            onClose={() => setShowConfirmationModal(false)}
+        >
+            <Modal.Header>
+                Do you really want to fire {name && surname ? `${name} ${surname}` : `${username} ?`}
+            </Modal.Header>
+            <Modal.Actions>
+                <Button negative onClick={() => setShowConfirmationModal(false)}>
+                    No
+                </Button>
+                <Button positive
+                        onClick={() => {
+                            setShowConfirmationModal(false);
+                            fire(id);
+                        }}>
+                    Yes
+                </Button>
+            </Modal.Actions>
+        </Modal>);
+    };
+
     return (
         <div className={styles.listItem}>
             <div className={styles.userImage}>
@@ -59,7 +87,7 @@ const UserListItem: FC<IUserListItemProps> = (
                 <Button onClick={() => toggleModal()}>Change role</Button>
             </div>
             <div className={styles.button}>
-                {fire && <Button color={"red"} onClick={() => fire(id)}>Fire</Button>}
+                {fire && <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
             </div>
             {roleState.isChangeRoleModalOpen &&
             <SwitchRoleModal
@@ -75,6 +103,7 @@ const UserListItem: FC<IUserListItemProps> = (
                 changeRole={changeRole}
                 loadCompanyRoles={loadCompanyRoles}
             />}
+            {confirmationModal()}
         </div>
     );
 };
