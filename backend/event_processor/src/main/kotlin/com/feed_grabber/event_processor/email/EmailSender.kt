@@ -75,17 +75,19 @@ class EmailSender(
         if (mailEntity == null) {
             return
         }
-        val messageType: MailType = mailEntity.getType()
-        if (messageType == MailType.REGISTER) {
-            sendAccountActivationMail(mailEntity.getMessage(), mailEntity.getEmailTo());
-        } else if (messageType == MailType.RESET) {
-            sendResetPasswordMail(mailEntity.getMessage(), mailEntity.getEmailTo());
-        } else if (messageType == MailType.INVITE) {
-            sendInvitationLinkMail(mailEntity.getMessage(), mailEntity.getEmailTo())
-        } else if (messageType == MailType.NOTIFY) {
-            sendNotificationMail(mailEntity.getMessage(), mailEntity.getEmailTo())
-        } else {
-            println("BAD TYPE")
+        when (mailEntity.getType()) {
+            MailType.REGISTER -> {
+                sendAccountActivationMail(mailEntity.getMessage(), mailEntity.getEmailTo());
+            }
+            MailType.RESET -> {
+                sendResetPasswordMail(mailEntity.getMessage(), mailEntity.getEmailTo());
+            }
+            MailType.INVITE -> {
+                sendInvitationLinkMail(mailEntity.getMessage(), mailEntity.getEmailTo())
+            }
+            MailType.NOTIFY -> {
+                sendNotificationMail(mailEntity.getMessage(), mailEntity.getEmailTo())
+            }
         }
     }
 
