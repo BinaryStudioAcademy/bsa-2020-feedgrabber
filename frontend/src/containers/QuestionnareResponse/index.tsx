@@ -127,7 +127,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         this.setState({
             isCompleted: true,
             showErrors: false,
-            currentSectionIndex: this.state.currentSectionIndex + 1
+            currentSectionIndex: this.state.currentSectionIndex - 1
         });
     };
 
@@ -176,18 +176,17 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                                 isAnswered: !!data
                                             });
                                         }}/>
-                                        {showErrors && !question.answer ?
+                                        {showErrors && !question.answer?
                                             <div className={styles.error_message}>
                                                 Please, fill the question</div> : null}
                                     </UIListItem>);
                             })}
                         </ul>
                         <div className={styles.submit}>
+                            {currentSectionIndex !== 0 ? 
+                            <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null}
                             {sections.length === currentSectionIndex + 1 ? <UIButton title="Send" submit/> :
-                            <div>
-                                <UIButton title="Previous" onClick={this.handlePreviousClick}/>
                                 <UIButton title="Next" onClick={this.handleNextClick}/>
-                            </div>
                         }
                         </div>
                     </Form>)}
