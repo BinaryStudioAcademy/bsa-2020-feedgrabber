@@ -34,4 +34,8 @@ public interface UserMapper {
     UserDetailsResponseDTO detailedFromUser(User user);
 
     UserShortDto shortFromUser(User user);
+
+    @Mapping(target = "language", source = "userSettings.language", defaultValue = "English")
+    @Mapping(target = "enableNotifications", source = "userSettings.enableNotifications", defaultValue = "true")
+    UserSettingsDto settingsFromUser(User user);
 }

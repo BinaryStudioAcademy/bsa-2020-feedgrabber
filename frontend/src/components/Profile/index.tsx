@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import ProfileInfo from "./ProfileInfo";
 import ProfileSettings from "./ProfileSettings";
+import ProfileSecurity from "./ProfileSecurity";
 import styles from './styles.module.sass';
 import UIPageTitle from "../UI/UIPageTitle";
 import UICard from "../UI/UICard";
@@ -14,9 +15,11 @@ const getPage = (key: string) => {
     case 'profile' :
       return <ProfileInfo/>;
     case 'settings':
-      return <ProfileSettings settings={undefined}/>;
+      return <ProfileSettings/>;
+    case 'security':
+      return <ProfileSecurity/>;
     default:
-      return <ProfileSettings settings={undefined}/>;
+      return <ProfileInfo/>;
   }
 };
 

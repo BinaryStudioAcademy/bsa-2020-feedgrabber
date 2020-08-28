@@ -5,16 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UserProfileEditDto {
+public class UserSettingsDto {
     @NotNull
-    private String firstName;
+    private String language;
     @NotNull
-    private String lastName;
-    @NotNull
-    private String phoneNumber;
+    private Boolean enableNotifications;
 }

@@ -31,15 +31,20 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final VerificationTokenService tokenService;
+    private final UserProfileService userProfileService;
 
-    public UserController(UserService userService, UserRepository userRepository, VerificationTokenService tokenService) {
+    public UserController(UserService userService,
+                          UserRepository userRepository,
+                          VerificationTokenService tokenService,
+                          UserProfileService userProfileService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this.userProfileService = userProfileService;
     }
 
     @ApiOperation(value = "Get details from one user",
-    notes = "You should not to provide an id, it will be got from token service")
+            notes = "You should not to provide an id, it will be got from token service")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UserDetailsResponseDTO> getUserDetails() {
@@ -47,7 +52,7 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
-/*%%% feature/104-team-creation-u*/
+    /*%%% feature/104-team-creation-u*/
     @ApiOperation(value = "Get all users",
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping("/all/list")
@@ -56,7 +61,8 @@ public class UserController {
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(userService.getAllByCompanyId(companyId));
     }
-/*%%%*/
+
+    /*%%%*/
     @ApiOperation(value = "Send an email to reset password")
     @PostMapping("/email/reset")
     public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) throws UserNotFoundException {
@@ -78,7 +84,7 @@ public class UserController {
 
 
     @GetMapping("/all")
-    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId (
+    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId(
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
@@ -94,21 +100,69 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("{id}/removeCompany")
-    public void removeUserFromCompany (@PathVariable UUID id) {
+    public void removeUserFromCompany(@PathVariable UUID id) {
         userService.removeCompany(id);
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping("/editProfile")
-    public void editProfile(@RequestBody UserProfileEditDto dto) throws NotFoundException {
-        this.userService.editUserProfile(dto);
     }
 
     @GetMapping("/short")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UserShortDto> getUserShortByEmailAndCompany(@RequestParam String email,
                                                                    @RequestParam UUID companyId)
-                throws UserNotFoundException {
+            throws UserNotFoundException {
         return new AppResponse<>(userService.getUserShortByEmailAndCompany(email, companyId));
     }
+
+    @ApiOperation(value = "Update user profile ")
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/editProfile")
+    public AppResponse<UserDetailsResponseDTO> editProfile(@RequestBody UserProfileEditDto dto)
+            throws NotFoundException {
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userProfileService.editUserProfile(id, dto));
+    }
+
+    @ApiOperation(value = "Update user avatar by url, or delete if url is not provided")
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/editAvatar")
+    public AppResponse<UserDetailsResponseDTO> editAvatar(@RequestParam(required = false) UUID imageId)
+            throws NotFoundException {
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userProfileService.editUserAvatar(id, imageId));
+    }
+
+    @ApiOperation(value = "Update username")
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/updateUsername")
+    public AppResponse<UserDetailsResponseDTO> updateUsername(@RequestBody UserUpdateUsernameDto dto)
+            throws NotFoundException {
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userProfileService.updateUsername(id, dto.getUsername()));
+    }
+
+    @ApiOperation(value = "Update password")
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/updatePassword")
+    public AppResponse<UserDetailsResponseDTO> updatePassword(@RequestBody UserUpdatePasswordDto dto)
+            throws UserNotFoundException {
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userProfileService.updatePassword(id, dto.getOldPassword(), dto.getNewPassword()));
+    }
+
+    @ApiOperation(value = "Get settings for user from token")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/settings")
+    public AppResponse<UserSettingsDto> getUserSettings() throws UserNotFoundException {
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userProfileService.getUserSettings(id));
+    }
+
+    @ApiOperation(value = "Get settings for user from token")
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/settings")
+    public AppResponse<UserSettingsDto> updateUserSettings(@RequestBody UserSettingsDto dto) throws UserNotFoundException {
+        var id = TokenService.getUserId();
+        return new AppResponse<>(userProfileService.updateUserSettings(id, dto));
+    }
+
+
 }

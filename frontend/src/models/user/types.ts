@@ -3,6 +3,7 @@ export interface IUserState {
     info?: IUserInfo;
     error?: IUserErrors;
     shortInfo?: IUserShort;
+    settings?: IUserSettings;
 }
 
 export interface IUserInfo {
@@ -30,5 +31,10 @@ export interface IUserShort {
     username: string;
     selected?: boolean;
     loading?: boolean;
+}
+
+export interface IUserSettings {
+    language: string;
+    enableNotifications: boolean;
 }
 
