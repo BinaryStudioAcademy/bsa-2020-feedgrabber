@@ -1,5 +1,5 @@
-import React, {FC, useState} from "react";
-import {Image, Divider, Icon, Input} from "semantic-ui-react";
+import React, {FC} from "react";
+import {Header as HeUI, Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
@@ -9,60 +9,18 @@ import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
-import {Menu, MenuItem, MenuProps, withStyles} from "@material-ui/core";
+import styled from "styled-components";
 
-const StyledMenu = withStyles({
-    paper: {
-        border: '1px solid #d3d4d5',
-        borderRadius: '6px',
-        minWidth: 'fit-content',
-        padding: '.7em',
-        '& span': {
-            fontSize: '1.2em',
-            fontWeight: '400',
-            color: '#717171'
-        },
-        '& ul': {
-          padding: '0',
-            '& h4': {
-                fontSize: '1.15em',
-                fontWeight: 'bold',
-                color: '#717171',
-                padding: '.3em'
-            }
-        },
-        '& li': {
-            padding: '.3em .5em .3em .5em'
-        }
-    }
-})((props: MenuProps) => (
-    <Menu
-        getContentAnchorEl={null}
-        elevation={0}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-        }}
-        transformOrigin={{
-            vertical: -12,
-            horizontal: "center"
-        }}
-        {...props}
-    />
-));
+const StyledItem = styled(Menu.Item)`
+    font-size: 1.15em !important;
+    font-weight: bold !important;
+    color: #717171 !important;
+`;
 
 const defaultAvatar =
     "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
 const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-    const handleClick = e => setAnchorEl(e.currentTarget);
-
-    const close = (func: any) => e => {
-        setAnchorEl(null);
-        func();
-    };
 
     return (
         <div className={styles.headerWrapper}>
@@ -86,33 +44,23 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                 </div>
                 <div className={styles.headerPart}>
                     <Input placeholder='Search...' size="small" transparent inverted
-                           icon={<Icon name='search' inverted link />}/>
-                    <StyledMenu
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={() => setAnchorEl(null)}
-                    >
-                        <h4>{user.userName}</h4>
-                        <Divider style={{margin: '.25em'}}/>
-                        <MenuItem onClick={close(() => history.push('/profile'))}>
-                            <span>Profile</span>
-                        </MenuItem>
-                        <MenuItem onClick={close(() => history.push('/profile/settings'))}>
-                            <span>Settings</span>
-                        </MenuItem>
-                        <MenuItem onClick={close(() => history.push('/requests'))}>
-                            <span>Request</span>
-                        </MenuItem>
-                        <MenuItem onClick={close(() => logout())}>
-                            <span className={styles.headerMenuText}>Log out</span>
-                        </MenuItem>
-                    </StyledMenu>
+                           icon={<Icon name='search' inverted link/>}/>
                     <div className={styles.headerBellWrapper}>
                         <NotificationMenu/>
                     </div>
-                    <Image onClick={handleClick} avatar src={user?.avatar ?? defaultAvatar}
-                           className={styles.headerAvatar}/>
+                    <Popup pinned on='click' position="bottom right" style={{padding: 0}}
+                           trigger={<Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>}
+                    >
+                        <Menu vertical>
+                            <Menu.Item disabled>
+                                <HeUI as='h4'><Icon name="user"/>{user.userName}</HeUI>
+                            </Menu.Item>
+                            <StyledItem name="Profile" onClick={() => history.push('/profile')}/>
+                            <StyledItem name="Settings" onClick={() => history.push('/profile/settings')}/>
+                            <StyledItem name="Requests" onClick={() => history.push('/requests')}/>
+                            <StyledItem name="Log out" onClick={logout}/>
+                        </Menu>
+                    </Popup>
                 </div>
             </div>
         </div>

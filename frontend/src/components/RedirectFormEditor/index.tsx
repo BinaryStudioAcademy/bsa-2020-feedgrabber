@@ -4,16 +4,8 @@ import {connect, ConnectedProps} from "react-redux";
 import {saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import {history} from "../../helpers/history.helper";
 import {toastr} from 'react-redux-toastr';
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    TextField
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import moment from "moment";
+import {Modal, Button, Icon, Input} from "semantic-ui-react";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     const [title, setTitle] = useState<string>();
@@ -35,33 +27,32 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     }, [current]);
 
     return (
-        <Dialog open={open} aria-labelledby="form-dialog-title" onClose={handleCancel}>
-            <DialogTitle>
-                Type-in Form Title
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText variant="h6">
-                    Looks like you don't have currently edited form, create new!
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    value={title}
-                    placeholder={`New Form created ${moment().calendar()}`}
-                    onChange={e => setTitle(e.target.value)}
-                    margin="dense"
-                    type="text"
-                    fullWidth
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleCancel} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={handleSubmit} color="primary">
-                    Add
-                </Button>
-            </DialogActions>
-        </Dialog>
+    <Modal
+        open={open}
+        onClose={handleCancel}
+        style={{textAlign: "center"}}
+    >
+        <Modal.Content>
+            <Modal.Description as="h3">
+                Looks like you don't have currently edited form, create new!
+            </Modal.Description>
+            <Input
+                icon='hashtag'
+                iconPosition='left'
+                label={{ tag: true, content: 'Add Title' }}
+                labelPosition='right'
+                value={title}
+                fluid
+                placeholder={`New Form created ${moment().calendar()}`}
+                onChange={e => setTitle(e.target.value)}
+            />
+        </Modal.Content>
+        <Modal.Actions>
+            <Button primary onClick={handleSubmit}>
+                Create <Icon name='chevron right' />
+            </Button>
+        </Modal.Actions>
+    </Modal>
     );
 };
 

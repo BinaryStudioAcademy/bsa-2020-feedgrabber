@@ -59,21 +59,22 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
             </Card>
             <Modal
                 closeIcon
+                basic
                 open={open}
                 size="mini"
                 onClose={() => setOpen(false)}
             >
                 <Header icon='archive' content='Close Request & View Report'/>
-                <Modal.Content as="h2">
-                    <p>Do you really want to close request?</p>
-                    Respondents won't be able to answer anymore.
+                <Modal.Content>
+                    <p>Do you really want to <strong style={{color: "red"}}>close the request?</strong></p>
+                    Respondents <strong>won't be able to answer</strong> anymore.
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setOpen(false)}>
-                        <Icon name='remove'/> No
+                    <Button basic color='green' inverted onClick={() => setOpen(false)}>
+                        <Icon name='remove' /> No
                     </Button>
-                    <Button color='green' onClick={handleRequestClose}>
-                        <Icon name='checkmark'/> Yes
+                    <Button color='red' inverted onClick={handleRequestClose}>
+                        <Icon name='checkmark' /> Yes
                     </Button>
                 </Modal.Actions>
             </Modal>
