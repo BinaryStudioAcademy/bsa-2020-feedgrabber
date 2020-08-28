@@ -35,11 +35,8 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
     });
 
     const handleAdd = (id: string) => {
-        if (id === "new") {
-            addQuestion();
-        } else {
-            copyQuestion();
-        }
+        if (!id) addQuestion();
+        else copyQuestion();
     };
 
     const handleOpenModal = () => {
@@ -54,13 +51,13 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
             || currentQuestion.top < 0
                 ? (scrollTop || 0) + innerHeight / 2 - 40
                 : (scrollTop || 0) + (currentQuestion.top || innerHeight / 2 - 40)),
-            left: '20%',
+            left: '24%',
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Form className={styles.question_menu_container}>
                 <Button.Group vertical>
                     <Popup content='New question'
-                           trigger={<Button icon="plus circle" onClick={() => handleAdd("new")}/>}
+                           trigger={<Button icon="plus circle" onClick={() => handleAdd("")}/>}
                            position='right center'/>
                     <Popup content='Add from existing questions'
                            trigger={<Button icon="external" onClick={handleOpenModal}/>}

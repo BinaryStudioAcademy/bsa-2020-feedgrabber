@@ -12,6 +12,8 @@ import {
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import {Paper} from "@material-ui/core";
+import {Header} from "semantic-ui-react";
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
@@ -49,10 +51,14 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     };
 
     return (
-        <LoaderWrapper loading={isLoading}>
+        <>
+            <Header as='h1' dividing style={{padding: "1.2em", textAlign: "center"}}>
+                <Header.Content>
+                    {questionnaire.title}
+                </Header.Content>
+            </Header>
             {questionnaire && (
                 <div className={styles.formDetails}>
-                    <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     <UIContent>
                         <div className={styles.questions_container}>
                             <QuestionnairePreview
@@ -68,9 +74,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                             onDelete={handleDeleteQuestion}
                         />
                     </UIContent>
-                </div>
-            )}
-        </LoaderWrapper>
+                </div>)}
+        </>
     );
 };
 
