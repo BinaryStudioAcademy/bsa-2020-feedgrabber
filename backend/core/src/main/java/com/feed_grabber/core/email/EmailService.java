@@ -13,9 +13,9 @@ public class EmailService {
 
     private static final String NOREPLY_ADDRESS = "noreply@feedgrubber.com";
     @Autowired
-    MailContentBuilder mailContentBuilder;
+    MailContentBuilder mailContentBuilder
     @Autowired
-    private JavaMailSender emailSender;
+    private JavaMailSender emailSender
 
     public void sendInviteLink(String to, String link) {
         var htmlMessage = mailContentBuilder.buildInviteHtmlForm(link);
