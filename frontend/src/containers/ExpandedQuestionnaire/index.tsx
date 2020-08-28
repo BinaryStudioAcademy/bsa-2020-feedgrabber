@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
-import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
@@ -12,8 +11,8 @@ import {
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {Paper} from "@material-ui/core";
 import {Header} from "semantic-ui-react";
+import LoaderWrapper from "../../components/LoaderWrapper";
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
@@ -59,21 +58,23 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             </Header>
             {questionnaire && (
                 <div className={styles.formDetails}>
-                    <UIContent>
-                        <div className={styles.questions_container}>
-                            <QuestionnairePreview
-                                indexQuestions={indexQuestionsRoutine}
-                                qnId={match.params.id}
-                                questions={questions ?? []}
+                    <LoaderWrapper loading={isLoading}>
+                        <UIContent>
+                            <div className={styles.questions_container}>
+                                <QuestionnairePreview
+                                    indexQuestions={indexQuestionsRoutine}
+                                    qnId={match.params.id}
+                                    questions={questions ?? []}
+                                />
+                            </div>
+                            <QuestionMenu
+                                addQuestion={addNewQuestion}
+                                copyQuestion={copyQuestion}
+                                currentQuestion={question}
+                                onDelete={handleDeleteQuestion}
                             />
-                        </div>
-                        <QuestionMenu
-                            addQuestion={addNewQuestion}
-                            copyQuestion={copyQuestion}
-                            currentQuestion={question}
-                            onDelete={handleDeleteQuestion}
-                        />
-                    </UIContent>
+                        </UIContent>
+                    </LoaderWrapper>
                 </div>)}
         </>
     );
