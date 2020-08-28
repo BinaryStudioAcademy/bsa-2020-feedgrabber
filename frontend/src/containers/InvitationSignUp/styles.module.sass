@@ -8,40 +8,34 @@
 
   .pageContent
 
-    .pageTitle
-      font-size: 3em
-      line-height: 1.5em
-      font-weight: normal
-      text-align: center
-
-    .pageError
-      font-size: 2em
-      line-height: 1.3em
-      font-weight: normal
-      text-align: center
-
     .formWrapper
-      margin-top: 2em
-      padding: 50px
-      width: 500px
-      background-color: #ffffff
-      box-shadow: 0 0 5px #aaa
-      border-radius: 10px
+      position: absolute
+      top: 0
+      height: 100%
+      left: 0
+      width: 50%
+      z-index: 2
 
       .formContent
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-direction: column
+        padding: 0 50px
+        height: 100%
+        text-align: center
+
+        .invitationInput
+          border-radius: 4px
+          padding: 12px 15px
+          margin: 8px 0
+          width: 100%
+          outline: none
+          font-size: 1rem
 
         .acceptedMessage
           text-align: center
           font-size: 1.3em
-
-        input,
-        .errorMessage
-          margin: 20px 0
-          font-size: 1.2em
-
-        input::placeholder
-          color: #000000
-          background-color: #eaeaea
 
         .submitButton
           display: block
