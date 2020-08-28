@@ -2,7 +2,6 @@ import React, {useRef} from "react";
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styles from "../../containers/QuestionsList/styles.module.sass";
-import {Card} from "semantic-ui-react";
 import {DraggableItemTypes, IQuestion} from "../../models/forms/Questions/IQuesion";
 import ResponseQuestion from "components/ResponseQuestion";
 
@@ -64,7 +63,7 @@ export const QuestionCard: React.FC<ICardProps> = ({
     }
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: DraggableItemTypes.QUESTION_CARD, id: question.id, index },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging()
@@ -77,11 +76,6 @@ export const QuestionCard: React.FC<ICardProps> = ({
   return (
     <div ref={ref}  style={{ opacity }} className={styles.question} >
       <ResponseQuestion question={question} />
-      {/* <Card className={styles.question}
-        link centered fluid
-        description={question.name}
-        meta={question.categoryTitle}
-      />  */}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import styles from "./styles.module.sass";
 import ImageUrl from "./ImageUrl";
 import InternalStorageUpload from "./InternalStorageUpload";
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IFileUploadQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IFileUploadQuestion } from "../../../models/forms/Questions/IQuesion";
 import { fileTypes as allTypes } from "../../ComponentsQuestions/FileUploadQuestion/types";
 import VideoUrl from "./UrlVideo";
 

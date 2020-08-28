@@ -20,13 +20,11 @@ import {IUserShort} from "../../models/user/types";
 import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 import {RouteComponentProps} from "react-router-dom";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),

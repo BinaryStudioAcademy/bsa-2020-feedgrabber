@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC} from "react";
 import {Icon, Image, Dropdown} from "semantic-ui-react";
 import {NavLink, useHistory} from "react-router-dom";
 import styles from "./styles.module.sass";
@@ -8,7 +8,6 @@ import {connect} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import {IUserInfo} from "../../models/user/types";
 import NotificationMenu from "../NotificationMenu";
-// import {INotification} from "../../reducers/notifications";
 
 export interface IHeaderProps {
   user: IUserInfo;
@@ -31,10 +30,10 @@ const Header: FC<IHeaderProps> = ({user, logout}) => {
           <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive} className={styles.headerMenuItem}>
             PENDING FEEDBACKS
           </NavLink>
-          <a className={styles.headerMenuItem}>
+          <a href={"/#"} className={styles.headerMenuItem}>
             FORM EDITOR
           </a>
-          <a className={styles.headerMenuItem}>
+          <a href={"/#"} className={styles.headerMenuItem}>
             ASSIGN FEEDBACKS
           </a>
         </div>

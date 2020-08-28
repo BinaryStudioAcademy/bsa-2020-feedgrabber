@@ -106,7 +106,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                             <Button
                               className={styles.submitButton}
                               loading={registerLoading}
-                              disabled={!!errorText && errorText !== error || registerLoading}
+                              disabled={(!!errorText && errorText !== error) || registerLoading}
                               primary
                               type="submit"
                             >
