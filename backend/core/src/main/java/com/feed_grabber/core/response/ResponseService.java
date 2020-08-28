@@ -29,6 +29,9 @@ public class ResponseService {
             DeadlineExpiredException {
         var response = responseRepository.findById(dto.getId()).orElseThrow(ResponseNotFoundException::new);
         var request = response.getRequest();
+        if (!request.isChangeable()) {
+            return Optional.of(ResponseMapper.MAPPER.responseToDto(response));
+        }
 
         if (Optional.ofNullable(request.getExpirationDate()).isPresent()
                 && request.getExpirationDate().compareTo(new Date()) < 0) {

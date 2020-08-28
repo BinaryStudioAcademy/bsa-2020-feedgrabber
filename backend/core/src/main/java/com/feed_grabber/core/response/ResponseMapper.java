@@ -22,6 +22,7 @@ public interface ResponseMapper {
     @Mapping(target = "requestId", source = "request.id")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "questionnaire", source = "request.questionnaire")
+    @Mapping(target = "changeable", source = "request.changeable")
     ResponseDto responseToDto(Response response);
 
     ResponseDetailsDto responseToResponseDetailsDto(Response response);

@@ -117,7 +117,9 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     render() {
-        const {title, questions, description} = this.props;
+        const {title, questions, description, response } = this.props;
+        const changeable = response?.changeable;
+        const isModifying = !!response?.answeredAt;
         const {showErrors} = this.state;
         return (
             <div className={styles.response_container}>
@@ -148,9 +150,11 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                     </UIListItem>);
                             })}
                         </ul>
-                        <div className={styles.submit}>
-                            <UIButton title="Send" submit/>
-                        </div>
+                        {(!isModifying || changeable) &&
+                            <div className={styles.submit}>
+                                <UIButton title="Send" submit />
+                            </div>
+                        }
                     </Form>)}
                 </Formik>
             </div>);
