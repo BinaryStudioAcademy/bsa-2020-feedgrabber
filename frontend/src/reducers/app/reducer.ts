@@ -2,7 +2,7 @@ import {IAppState} from "../../models/IAppState";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 const initialState = {
-    showMenu: false
+    showMenu: true
 };
 
 export interface IAdditionalState {

@@ -8,7 +8,6 @@ export interface IQuestionnairesState {
     questions?: IQuestion[];
     isLoading?: boolean;
   };
-  currentQuestion?: IQuestion;
   pending?: IRequestState;
 }
 
