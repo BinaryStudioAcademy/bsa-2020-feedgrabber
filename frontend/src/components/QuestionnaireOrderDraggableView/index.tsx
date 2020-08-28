@@ -52,16 +52,16 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
       save(questions);
     };
 
-    const moveCard = useCallback(
-      (dragIndex: number, hoverIndex: number) => {
-        const dragCard = cards[dragIndex];
-        const updCards = cards.slice();
-        updCards.splice(dragIndex, 1);
-        updCards.splice(hoverIndex, 0, dragCard);
-        setCards(updCards);
-      },
-      [cards]
-    );
+    // const moveCard = useCallback(
+    //   (dragIndex: number, hoverIndex: number) => {
+    //     const dragCard = cards[dragIndex];
+    //     const updCards = cards.slice();
+    //     updCards.splice(dragIndex, 1);
+    //     updCards.splice(hoverIndex, 0, dragCard);
+    //     setCards(updCards);
+    //   },
+    //   [cards]
+    // );
 
     const drop = () => {
       console.log('dropped');
