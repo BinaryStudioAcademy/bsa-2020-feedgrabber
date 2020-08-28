@@ -166,15 +166,15 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
             <div className={styles.response_container}>
                 <UIPageTitle title="Response"/>
                 <LoaderWrapper loading={isLoading}>
-                <UIListHeader title={sections[currentSectionIndex].title} 
-                description={sections[currentSectionIndex].description}/>
+                <UIListHeader title={sections[currentSectionIndex]?.title}
+                description={sections[currentSectionIndex]?.description}/>
                 <Formik
                     initialValues={this.state}
                     onSubmit={this.handleNextClick}
                 >{formik => (
                     <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
                         <ul>
-                            {sections[currentSectionIndex].questions.map(question => {
+                            {sections[currentSectionIndex]?.questions.map(question => {
                                 return (
                                     <UIListItem
                                         key={question.id}
