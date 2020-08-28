@@ -53,7 +53,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                     <Radio
                         disabled={!!response && !answerHandler}
                         checked={answer?.selected === option}
-                        name='radioGroup'
+                        name={question.id}
                         value={option}
                         onChange={handleChange}
                     />
