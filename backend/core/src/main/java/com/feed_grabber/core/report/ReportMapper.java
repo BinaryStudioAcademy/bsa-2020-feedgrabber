@@ -3,6 +3,7 @@ package com.feed_grabber.core.report;
 import com.feed_grabber.core.company.CompanyMapper;
 import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
+import com.feed_grabber.core.report.dto.ReportShortDto;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.user.UserMapper;
 import org.mapstruct.Mapper;
@@ -18,4 +19,10 @@ public interface ReportMapper {
     @Mapping(source = "creationDate", target = "requestCreationDate")
     @Mapping(source = "id", target = "requestId")
     ReportDetailsDto requestToReportDetails(Request request);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "closeDate", target = "closeDate")
+    @Mapping(source = "questionnaire.title", target = "title")
+    @Mapping(source = "requestMaker.username", target = "author")
+    ReportShortDto requestToReportShort(Request request);
 }

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
+import com.feed_grabber.core.report.dto.ReportShortDto;
 import com.feed_grabber.core.request.RequestRepository;
+import com.feed_grabber.core.request.model.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -13,8 +15,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import static com.feed_grabber.core.role.RoleConstants.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -53,5 +58,24 @@ public class ReportService {
 
     public String getReport(UUID requestId) {
         return template.getForObject(EP +"/report/"+requestId, String.class);
+    }
+
+    public List<ReportShortDto> getAllAvailableReports(final UUID userId, final String role, final UUID comanyId) {
+        System.out.println("==== ROLE: [" + role + "] ====");
+        List<Request> reports = null;
+        switch (role) {
+            case ROLE_COMPANY_OWNER:
+            case ROLE_HR:
+                reports = requestRepository.findAllReports(comanyId);
+                break;
+            case ROLE_EMPLOYEE:
+                reports = requestRepository.findReportsForEmployee(userId);
+                break;
+            default:
+                return null;
+        }
+        return reports.stream()
+                .map(ReportMapper.MAPPER::requestToReportShort)
+                .collect(Collectors.toList());
     }
 }
