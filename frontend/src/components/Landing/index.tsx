@@ -7,6 +7,11 @@ export type LandingProps = {
   loggedIn: boolean;
 };
 
+const toSignUp = {
+  pathname: "/auth",
+  signUpActive: true
+};
+
 const LandingPage: React.FunctionComponent<LandingProps> = () => {
   return (
     <>
@@ -34,11 +39,8 @@ const LandingPage: React.FunctionComponent<LandingProps> = () => {
               now.
             </div>
             <div className='face_card_actions'>
-              <Link to='/auth'>
+              <Link to={toSignUp}>
                 <Button>Make some fire!</Button>
-              </Link>
-              <Link to='/auth'>
-                <Button className='signin_btn'>Sign in</Button>
               </Link>
             </div>
           </div>

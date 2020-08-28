@@ -9,6 +9,7 @@ import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service
@@ -57,6 +58,11 @@ public class VerificationTokenService {
 
         verificationTokenRepository.delete(vToken);
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteByUserId(UUID userId) {
+        verificationTokenRepository.deleteByUserId(userId);
     }
 
 }

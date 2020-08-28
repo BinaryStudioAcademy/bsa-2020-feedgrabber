@@ -1,5 +1,6 @@
 import {IAppState} from "../../models/IAppState";
 import {
+  deleteAllNotificationsRoutine,
   deleteNotificationRoutine,
   loadNotificationsRoutine,
   receiveNotificationRoutine
@@ -48,6 +49,11 @@ const notificationReducer = (state: IAppState['notifications'] = initialState, {
       return {
         ...state,
         notifications: state.notifications.filter(notification => notification.requestId !== payload)
+      };
+      case(deleteAllNotificationsRoutine.TRIGGER):
+      return {
+        ...state,
+        notifications: []
       };
     case(receiveNotificationRoutine.TRIGGER):
       return {

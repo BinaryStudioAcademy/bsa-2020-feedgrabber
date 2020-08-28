@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
+import { useDrag, useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styles from "../../containers/QuestionsList/styles.module.sass";
 import {DraggableItemTypes, IQuestion} from "../../models/forms/Questions/IQuesion";
@@ -8,21 +8,25 @@ import ResponseQuestion from "components/ResponseQuestion";
 export interface ICardProps {
   id: string;
   question: IQuestion;
+  prevSectionId: string;
   index: number;
   moveCard(dragIndex: number, hoverIndex: number): void;
   onDropCard(): void;
+  addQuestionToSection?(sectionId: string, question: IQuestion, prevSectionId: string): void;
 }
 
-interface IDragItem {
+export interface IDragItem {
   index: number;
   id: string;
   type: string;
 }
-export const QuestionCard: React.FC<ICardProps> = ({
+const QuestionCard: React.FC<ICardProps> = ({
   index,
   moveCard,
   onDropCard,
-  question
+  question,
+  addQuestionToSection,
+  prevSectionId
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop({
@@ -65,6 +69,13 @@ export const QuestionCard: React.FC<ICardProps> = ({
 
   const [, drag] = useDrag({
     item: { type: DraggableItemTypes.QUESTION_CARD, id: question.id, index },
+    end(item: IDragItem, monitor: DragSourceMonitor ) {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        const sectionId = dropResult.id as string;
+        addQuestionToSection(sectionId, question, prevSectionId);
+      }
+    },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging()
     })
@@ -74,8 +85,15 @@ export const QuestionCard: React.FC<ICardProps> = ({
   drag(drop(ref));
   
   return (
-    <div ref={ref}  style={{ opacity }} className={styles.question} >
+    <div ref={ref}  style={{ opacity }} className={styles.question}>
       <ResponseQuestion question={question} />
     </div>
   );
 };
+
+// const MapDispatch = {
+//   addQuestionToSection: addQuestionToSectionRoutine
+// };
+
+// export default connect(null, MapDispatch)(QuestionCard);
+export default QuestionCard;

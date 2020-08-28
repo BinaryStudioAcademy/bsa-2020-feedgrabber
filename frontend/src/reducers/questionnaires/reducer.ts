@@ -4,6 +4,7 @@ import {
     hideModalQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
     loadQuestionnairesRoutine,
+    saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine
@@ -42,6 +43,15 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
                 ...state,
                 pagination: action.payload,
                 isLoading: false
+            };
+        case saveAndGetQuestionnaireRoutine.SUCCESS:
+            return {
+                ...state,
+                pagination: {
+                    ...state.pagination,
+                    total: state.pagination?.total + 1,
+                    items: [...state.pagination?.items??[], action.payload]
+                 }
             };
         case addQuestionnaireRoutine.TRIGGER:
         case updateQuestionnaireRoutine.TRIGGER:
@@ -109,6 +119,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.SUCCESS:
+        case saveAndGetQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
                 get: payload,
@@ -125,6 +136,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
         case loadOneQuestionnaireRoutine.TRIGGER:
         case loadQuestionnaireQuestionsRoutine.TRIGGER:
         case addSelectedQuestionsRoutine.TRIGGER:
+        case saveAndGetQuestionnaireRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
@@ -132,6 +144,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
         case deleteFromQuestionnaireRoutine.FAILURE:
         case loadQuestionnaireQuestionsRoutine.FAILURE:
         case addSelectedQuestionsRoutine.FAILURE:
+        case saveAndGetQuestionnaireRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false

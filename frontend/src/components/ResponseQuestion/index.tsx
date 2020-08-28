@@ -5,7 +5,7 @@ import {IQuestionResponse} from "models/IQuestionResponse";
 import React, {FC, useRef, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
-import {Header, Icon, Label, Segment} from "semantic-ui-react";
+import {Button, Header, Icon, Label, Popup, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
@@ -24,9 +24,23 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
             <div ref={detailsPage}>
                 <Segment
                     className={styles.container}>
-                    {!answerHandler && isModifyingEnabled &&
-                    <Icon name='code' className={styles.edit} onClick={handleSegmentClick}/>
-                    }
+                    {((isModifyingEnabled && !answerHandler) || editor) &&
+                    <Icon name='code' link onClick={handleSegmentClick}/>}
+                    {!isModifyingEnabled && !editor &&
+                    <Popup
+                        trigger={!answerHandler && <Icon name='code' link/>}
+                        on='click'>
+                        <Popup
+                            trigger={<Button color='blue'
+                                             content='I know what I do!'
+                                             fluid
+                                             onClick={handleSegmentClick}/>}
+                            content='It may affect answers that have been given before!!!'
+                            position='top center'
+                            size='tiny'
+                            inverted
+                        />
+                    </Popup>}
                     {editor && (id === nowModifying.id)
                         ?
                         <div className={styles.scaleTop}>

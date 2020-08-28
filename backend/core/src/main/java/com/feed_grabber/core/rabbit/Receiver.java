@@ -32,4 +32,9 @@ public class Receiver {
     public void receive(S3FileCreationDto dto) throws NotFoundException {
         requestService.addExcelReport(dto);
     }
+
+    @RabbitListener(queues = "${rabbitmq.queue.report.ppt}")
+    public void receivePPTReport(S3FileCreationDto dto) throws NotFoundException {
+        requestService.addPPTReport(dto);
+    }
 }

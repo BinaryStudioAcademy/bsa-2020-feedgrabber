@@ -20,7 +20,7 @@ function* loadTeams() {
     yield put(loadTeamsRoutine.success(res.data.data));
   } catch (error) {
     yield put(loadTeamsRoutine.failure());
-    toastr.error(error);
+    toastr.error(error.data?.error || 'No response');
   }
 }
 
@@ -45,7 +45,7 @@ function* createTeam(action: any) {
     toastr.success("Team added");
   } catch (errorResponse) {
     yield put(createTeamRoutine.failure(errorResponse.data?.error || "No response"));
-    toastr.error("Unable to create Team");
+    toastr.error("Team with entered name already exists");
   }
 }
 

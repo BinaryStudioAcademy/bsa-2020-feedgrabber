@@ -7,7 +7,10 @@ import {IAppState} from "../../models/IAppState";
 import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
-const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
+const SelectQuestionsFromExisting: FC<ContainerProps & {
+    isOpen: boolean;
+    handleOpenModal: Function;
+}> = (
     {
         questions,
         loadQuestions,
@@ -15,10 +18,11 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
         currentQuestions,
         qnId,
         isLoading,
-        button
+        currentSection,
+        isOpen,
+        handleOpenModal
     }) => {
     const [selected, setSelected] = useState([] as IQuestion[]);
-    const [open, setOpen] = useState(false);
 
     const handleClick = (id, isSelected) => {
         if (isSelected) {
@@ -33,10 +37,10 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
     const handleSubmit = () => {
         if (selected) {
             selected.forEach(q => q.isReused = true);
-            addQuestions({questionnaireId: qnId, questions: selected});
+            addQuestions({questionnaireId: qnId, questions: selected, sectionId: currentSection.id});
         }
         setSelected([]);
-        setOpen(false);
+        handleOpenModal(false);
     };
 
     const display = questions.filter(q => {
@@ -49,15 +53,11 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
 
     return (
         <Modal
-            open={open}
+            open={isOpen}
             onMount={() => loadQuestions()}
             className={styles.questionModal}
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
-            trigger={button}
-            // trigger={<Popup content='Add from existing questions'
-            //                  trigger={<Button icon="external"/>}
-            //          position='right center' />}
+            onOpen={() => handleOpenModal(true)}
+            onClose={() => handleOpenModal(false)}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>
@@ -71,7 +71,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & { button }> = (
             </Modal.Content>
             <Modal.Actions
             className={styles.modalActions}>
-                <Button onClick={() => setOpen(false)} content="Cancel"/>
+                <Button onClick={() => handleOpenModal(false)} content="Cancel"/>
                 <Button
                     loading={isLoading}
                     content="Add"
@@ -88,7 +88,8 @@ const mapState = (state: IAppState) => ({
     currentQuestions: state.questionnaires.current.questions,
     isLoading: state.questions.isLoading,
     qnId: state.questionnaires.current.get.id,
-    questions: state.questions.list
+    questions: state.questions.list,
+    currentSection: state.sections.current
 });
 
 const mapDispatch = {
