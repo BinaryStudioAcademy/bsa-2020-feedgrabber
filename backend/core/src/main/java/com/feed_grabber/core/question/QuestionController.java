@@ -14,6 +14,7 @@ import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.dto.QuestionDeleteDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class QuestionController {
     @PostMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<QuestionDto> create(@RequestBody String json)
-            throws QuestionnaireNotFoundException, JsonProcessingException, CompanyNotFoundException {
+            throws QuestionnaireNotFoundException, JsonProcessingException, CompanyNotFoundException, SectionNotFoundException {
 
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
@@ -115,7 +116,8 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/index")
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void index(@RequestBody QuestionIndexDto dto) throws QuestionNotFoundException {
+    public void index(@RequestBody QuestionIndexDto dto)
+            throws QuestionNotFoundException, SectionNotFoundException {
         this.questionService.index(dto);
     }
 
@@ -131,5 +133,11 @@ public class QuestionController {
         questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
 
         return new AppResponse<>(questionService.getAllByQuestionnaireId(questionnaireId));
+    }
+
+    @GetMapping("/sections/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<List<QuestionDto>> getAllBySection(@PathVariable UUID id) {
+        return new AppResponse<>(questionService.getAllBySection(id));
     }
 }
