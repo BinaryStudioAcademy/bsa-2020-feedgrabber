@@ -6,9 +6,11 @@ import SideMenu from "../SideMenu";
 import styles from './styles.module.sass';
 import {connect} from "react-redux";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
+import AccessManager from "../AccessManager";
 
 const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null, ...rest}) => {
     const isLogged = useAuth();
+    const path = rest.path;
 
     return (
         <Route
@@ -19,7 +21,7 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null,
                 }
 
                 return (
-                    <>
+                    <AccessManager endpoint={path}>
                         <Header/>
                         <div className={styles.sideBarWrapper}>
                             <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
@@ -27,7 +29,7 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null,
                         <div className={styles.appContent}>
                             <Component {...props} />
                         </div>
-                    </>
+                    </AccessManager>
                 );
             }}
         />

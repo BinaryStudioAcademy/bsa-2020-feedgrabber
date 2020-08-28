@@ -34,6 +34,7 @@ dependencies {
     implementation("khttp:khttp:1.0.0")
 	implementation ("org.apache.poi:poi:4.1.2")
 	implementation ("org.apache.poi:poi-ooxml:4.1.2")
+	implementation ("org.apache.poi:ooxml-schemas:1.4")
 	compileOnly("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.3.2.RELEASE")
 	annotationProcessor("org.projectlombok:lombok")

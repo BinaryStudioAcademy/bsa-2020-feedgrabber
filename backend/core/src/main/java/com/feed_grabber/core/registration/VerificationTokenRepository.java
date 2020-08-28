@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, UUID> {
     Optional<VerificationToken> findByTokenAndType(String token, TokenType type);
+
+    void deleteByUserId(UUID userId);
 }

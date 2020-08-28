@@ -15,16 +15,32 @@ import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import { Button, Input} from 'semantic-ui-react';
 import styles from './styles.module.sass';
+import {IRoleState} from "../../reducers/role/reducer";
+import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
+import SwitchRoleModal, {IRoleSwitchDto} from "../../components/SwitchRoleModal";
 
 const defaultSize = 10;
+
+// interface ICompanyUsersListProps {
+//   pagination?: IPaginationInfo<IUserInfo>;
+//   isLoading: boolean;
+//   userRole: string;
+//   loadUsers(query?: string): void;
+//   fireUser(id: string): void;
+//   setPagination(pagination: IPaginationInfo<IUserInfo>): void;
+// }
 
 interface ICompanyUsersListProps {
   pagination?: IPaginationInfo<IUserInfo>;
   isLoading: boolean;
   userRole: string;
+  roleState: IRoleState;
   loadUsers(query?: string): void;
   fireUser(id: string): void;
   setPagination(pagination: IPaginationInfo<IUserInfo>): void;
+  changeUserRole(dto: IRoleSwitchDto): void;
+  loadCompanyRoles(): void;
+  setSelectedUser(user: IUserInfo): void;
 }
 
 const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
@@ -34,20 +50,20 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     loadUsers,
     fireUser,
     setPagination,
-    userRole
+    roleState,
+    loadCompanyRoles,
+    changeUserRole,
+    setSelectedUser
   }
 ) => {
   const mapItemToJSX = (user: IUserInfo) => (
-    
     <UserListItem
       key={user.id}
-      id={user.id}
-      name={user.firstName}
-      surname={user.lastName}
-      avatar={user.avatar}
-      contact={user.phoneNumber}
-      username={user.userName}
-      fire={userRole && userRole === 'company_owner' ? fireUser : undefined}
+      user={user}
+      roleState={roleState}
+      fire={fireUser}
+      loadCompanyRoles={loadCompanyRoles}
+      setSelectedUser={setSelectedUser}
     />
   );
 
@@ -76,19 +92,19 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
   };
 
   const onKeyPressed = (evt: KeyboardEvent) => {
-      if (evt.charCode === 13) {
-        handleSearch();
-      }
+    if (evt.charCode === 13) {
+      handleSearch();
+    }
   };
 
   const search = () => (
     <div className={styles.searchContainer}>
       <Input style={{width: '450px'}}
-        icon={{ name: 'search', circular: true, link: true, onClick: handleSearch }}
-        placeholder='Search employee'
-        value={searchQuery}
-        onKeyPress={onKeyPressed}
-        onChange={handleChange}
+             icon={{ name: 'search', circular: true, link: true, onClick: handleSearch }}
+             placeholder='Search employee'
+             value={searchQuery}
+             onKeyPress={onKeyPressed}
+             onChange={handleChange}
       />
       <Button onClick={handleClear} color='blue' size={"small"}>clear</Button>
     </div>
@@ -96,7 +112,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 
   return (
     <>
-      <UIPageTitle title="Users" />
+      <UIPageTitle title="Users"/>
       <UIContent>
         <UIColumn>
           {search()}
@@ -104,11 +120,21 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
             isLoading={isLoading}
             pagination={pagination}
             setPagination={setPagination}
-            loadItems={loadItems}
+            loadItems={loadUsers}
             mapItemToJSX={mapItemToJSX}
           />
         </UIColumn>
       </UIContent>
+      {roleState.selectedUser &&
+      <SwitchRoleModal
+        changeRole={changeUserRole}
+        setSelectedUser={setSelectedUser}
+        selectedUser={roleState.selectedUser}
+        companyRoles={roleState.companyRoles}
+        isChanging={roleState.isChanging}
+        isLoading={roleState.isLoading}
+        loadCompanyRoles={loadCompanyRoles}
+      />}
     </>
   );
 };
@@ -116,13 +142,17 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 const mapStateToProps = (rootState: IAppState) => ({
   pagination: rootState.users.pagination,
   isLoading: rootState.users.isLoading,
-  userRole: rootState.user.info?.role
+  userRole: rootState.user.info?.role,
+  roleState: rootState.role
 });
 
 const mapDispatchToProps = {
   loadUsers: loadCompanyUsersRoutine,
+  loadCompanyRoles: loadShortRolesRoutine,
+  changeUserRole: changeRoleRoutine,
   fireUser: removeUserFromCompanyRoutine,
-  setPagination: setUsersPaginationRoutine
+  setPagination: setUsersPaginationRoutine,
+  setSelectedUser: setSelectedUserRoutine
 };
 
 export default connect(

@@ -16,6 +16,7 @@ export interface IUserInfo {
     phoneNumber?: string;
     avatar?: string;
     role: string;
+    roleId?: string;
 }
 
 export interface IUserErrors {

@@ -47,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "order by p.last_name, u.username ",
             nativeQuery = true)
     List<User> findByNameAndLastNameAndCompanyId(UUID companyId, String name, String surname, Pageable pageable);
-    
+
     @Query(value = "select count(*) " +
             "from (select * from users u inner join companies c on u.company_id = c.id " +
             "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +

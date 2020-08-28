@@ -1,6 +1,7 @@
 package com.feed_grabber.core.response.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.response.KeepAsJsonDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,9 @@ public class ResponseDto {
 
     @NotNull
     private UUID userId;
+
+    @NotNull
+    private QuestionnaireDto questionnaire;
 
     @JsonDeserialize(using = KeepAsJsonDeserializer.class)
     private String payload;
