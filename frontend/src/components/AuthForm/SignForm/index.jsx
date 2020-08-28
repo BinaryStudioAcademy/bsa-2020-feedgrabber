@@ -162,7 +162,6 @@ class SignForm extends React.Component {
       signUpActive: isActive
     };
 
-    console.log(isActive);
     this.toggleSignPanel = this.toggleSignPanel.bind(this);
   }
 
