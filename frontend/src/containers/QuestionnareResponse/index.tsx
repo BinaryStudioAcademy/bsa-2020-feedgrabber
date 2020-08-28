@@ -13,7 +13,6 @@ import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import {saveResponseRoutine, getResponseRoutine} from 'sagas/response/routines';
-import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import LoaderWrapper from 'components/LoaderWrapper';
 
@@ -88,8 +87,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, loadQuestionnaire, getResponse} = this.props;
-        loadQuestionnaire(match.params.id);
+        const {match, getResponse} = this.props;
         getResponse(match.params.id);
     }
 
@@ -118,7 +116,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     handleSendClick = () => {
-        if (this.state.isCompleted) {
+        if (this.checkIfCompleted()) {
             const answers: IAnswer<IAnswerBody>[] = this.getAnswers();
             const payload = {
                 id: this.props.response.id,
@@ -141,8 +139,14 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         });
     };
 
+    checkIfCompleted = () => {
+        const {sections} = this.props;
+        const {currentSectionIndex, isCompleted} = this.state;
+        return isCompleted || !sections[currentSectionIndex].questions.filter(q => !q.answer).length;
+    }
+
     handleNextClick = () => {
-        if (this.state.isCompleted) {
+        if (this.checkIfCompleted()) {
             const answers: IAnswer<IAnswerBody>[] = this.getAnswers();
             this.setState({
                 answers: this.state.answers.concat(answers),
@@ -158,7 +162,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     };
 
     render() {
-        const {sections, isLoading, match} = this.props;
+        const {sections, isLoading} = this.props;
         const {showErrors, currentSectionIndex} = this.state;
         return (
             <div className={styles.response_container}>
@@ -216,7 +220,6 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     saveResponseAnswers: saveResponseRoutine,
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     getResponse: getResponseRoutine
 };
 

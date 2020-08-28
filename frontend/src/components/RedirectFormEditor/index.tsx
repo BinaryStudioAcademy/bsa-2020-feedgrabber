@@ -8,7 +8,7 @@ import moment from "moment";
 import {Modal, Button, Icon, Input} from "semantic-ui-react";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
-    const [title, setTitle] = useState<string>();
+    const [title, setTitle] = useState<string>(`New Form created ${moment().calendar()}`);
     const [open, setOpen] = useState<boolean>(!current.id);
 
     function handleCancel() {
@@ -29,12 +29,14 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     return (
     <Modal
         open={open}
+        size="small"
         onClose={handleCancel}
         style={{textAlign: "center"}}
     >
         <Modal.Content>
             <Modal.Description as="h3">
-                Looks like you don't have currently edited form, create new!
+                <p>Looks like you don't have currently edited form</p>
+                Let's create new right now!
             </Modal.Description>
             <Input
                 icon='hashtag'
@@ -43,7 +45,6 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
                 labelPosition='right'
                 value={title}
                 fluid
-                placeholder={`New Form created ${moment().calendar()}`}
                 onChange={e => setTitle(e.target.value)}
             />
         </Modal.Content>
