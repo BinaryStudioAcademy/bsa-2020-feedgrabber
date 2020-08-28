@@ -22,6 +22,9 @@ public class Sender {
     @Value("${rabbitmq.routing-key-report-excel}")
     private String excelReportGenerationRoutinKey;
 
+    @Value("${rabbitmq.routing-key-report-ppt}")
+    private String pptReportGenerationRoutinKey;
+
     private final RabbitTemplate template;
 
     @Autowired
@@ -38,6 +41,12 @@ public class Sender {
     public void sendExcelReportGenerationRequest(UUID requestId) {
         log.info(" [x] Sending...");
         this.template.convertAndSend(exchange, excelReportGenerationRoutinKey, requestId);
+        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
+    }
+
+    public void sendPPTReportGenerationRequest(UUID requestId) {
+        log.info(" [x] Sending...");
+        this.template.convertAndSend(exchange, pptReportGenerationRoutinKey, requestId);
         log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
     }
 

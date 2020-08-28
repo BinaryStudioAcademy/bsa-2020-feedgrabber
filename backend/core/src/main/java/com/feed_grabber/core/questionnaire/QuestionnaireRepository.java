@@ -21,4 +21,9 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
     @Query("select q from Questionnaire q join Request r on q = r.questionnaire" +
             " join User u on u.id = :id")
     List<Questionnaire> findAllByRespondentId(UUID id);
+
+    @Query("select distinct r.questionnaire from Request r " +
+            "where r.questionnaire.id = :questionnaireId " +
+            "and r.closeDate is null")
+    Optional<Questionnaire> findByAllClosedRequests(UUID questionnaireId);
 }

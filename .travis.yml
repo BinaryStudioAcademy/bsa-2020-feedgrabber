@@ -26,9 +26,7 @@ cache:
         - $HOME/.gradle/wrapper/
     npm: true
 
-script:
-    - if [[ $TRAVIS_EVENT_TYPE == "pull_request" && ($TRAVIS_PULL_REQUEST_BRANCH == "dev") ]] ; then bash scripts/test.sh ; fi
-    - if [[ $TRAVIS_EVENT_TYPE == "push" && $TRAVIS_BRANCH == "dev" ]] ; then  bash scripts/build.sh && expect scripts/deploy.sh ; fi
+script: bash scripts/ci.sh
 
 notifications:
   slack:

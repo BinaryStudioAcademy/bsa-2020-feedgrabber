@@ -1,5 +1,5 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {loadNotificationsRoutine, deleteNotificationRoutine} from './routines';
+import {loadNotificationsRoutine, deleteNotificationRoutine, deleteAllNotificationsRoutine} from './routines';
 import apiClient from "../../helpers/apiClient";
 import {INotification} from "../../reducers/notifications";
 import {IGeneric} from "../../models/IGeneric";
@@ -13,7 +13,16 @@ function* deleteNotification(action) {
   }
 }
 
-function* loadNotifications(action) {
+function* deleteAll() {
+  try {
+    yield call(apiClient.delete, `/api/user-notifications/delete/`);
+    yield put(deleteAllNotificationsRoutine.success());
+  } catch (error) {
+    yield put(deleteAllNotificationsRoutine.failure(error));
+  }
+}
+
+function* loadNotifications() {
   try{
     const res: IGeneric<INotification[]> = yield call(apiClient.get, '/api/user-notifications/all');
     yield put(loadNotificationsRoutine.success(res.data.data));
@@ -25,6 +34,7 @@ function* loadNotifications(action) {
 export default function* notificationsSagas() {
   yield all([
       takeEvery(loadNotificationsRoutine.TRIGGER, loadNotifications),
-      takeEvery(deleteNotificationRoutine.TRIGGER, deleteNotification)
+      takeEvery(deleteNotificationRoutine.TRIGGER, deleteNotification),
+      takeEvery(deleteAllNotificationsRoutine.TRIGGER, deleteAll)
   ]);
 }

@@ -10,6 +10,8 @@ import {ICompanyState} from '../reducers/companies/reducer';
 import {IQuestionnaireReportsState} from "../reducers/questionnaireReport/reducer";
 import {INotificationsState} from "../reducers/notifications";
 import {IQuestionnaireResponseState} from "./forms/Response/types";
+import {IRoleState} from "../reducers/role/reducer";
+import {ISectionsState} from "../reducers/section/reducer";
 
 export interface IAppState {
     toastr: any;
@@ -17,10 +19,12 @@ export interface IAppState {
     invitation: IInvitationState;
     invitationSignUp: IInvitationSignUpState;
     users: IUsersState;
+    role: IRoleState;
     questionnaires: IQuestionnairesState;
     questionnaireReports: IQuestionnaireReportsState;
     questionnaireResponse: IQuestionnaireResponseState;
     questions: IQuestionsState;
+    sections: ISectionsState;
     app: IAdditionalState;
     teams: ITeamsState;
     company: ICompanyState;

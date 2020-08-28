@@ -223,14 +223,22 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public org.springframework.security.core.userdetails.User loadUserByUsername(String usernameAndCompanyId) throws UsernameNotFoundException {
+    public org.springframework.security.core.userdetails.User loadUserByUsername(String usernameAndCompanyId)
+            throws UsernameNotFoundException {
         var username = this.extractUserName(usernameAndCompanyId);
         var companyId = this.extractCompanyId(usernameAndCompanyId);
         return userRepository
                 .findByUsernameAndCompanyId(username, companyId)
-                .map(u -> new org.springframework.security.core.userdetails.User(u.getUsername()
-                        , u.getPassword()
-                        , List.of(new SimpleGrantedAuthority(u.getRole().getName()))))
+                .map(u ->
+                        new org.springframework.security.core.userdetails.User(
+                                u.getUsername(),
+                                u.getPassword(),
+                                true,  // u.getIsEnabled(), //TODO replace true to enable email authorization
+                                true,
+                                true,
+                                true,
+                                List.of(new SimpleGrantedAuthority(u.getRole().getSystemRole().toString()))
+                        ))
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
@@ -275,11 +283,19 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])","-");
-        var namepart = Long.toString(abs(random.nextLong())%RANDOM_MAX, 36);
+        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
+        var namepart = Long.toString(abs(random.nextLong()) % RANDOM_MAX, 36);
 
 
         return name + "-" + namepart;
+    }
+
+    public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
+        var newRole = roleRepository.findById(roleId).orElseThrow(NotFoundException::new);
+        var user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        user.setRole(newRole);
+        userRepository.save(user);
+        verificationTokenService.deleteByUserId(userId);
     }
 }
 

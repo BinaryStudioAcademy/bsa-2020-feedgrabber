@@ -6,6 +6,7 @@ import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
+import com.feed_grabber.core.role.dto.RoleAssignmentDto;
 import com.feed_grabber.core.user.dto.*;
 
 import com.feed_grabber.core.apiContract.AppResponse;
@@ -17,12 +18,15 @@ import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 
 import java.util.List;
+
+import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
 
 
 @RestController
@@ -80,6 +84,13 @@ public class UserController {
         userService.updatePassword(user.getId(), dto.getPassword());
     }
 
+    @ApiOperation(value = "Update role")
+    @PutMapping("/role/change")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeRole(@RequestBody RoleAssignmentDto dto) throws NotFoundException {
+        userService.changeRole(dto.getUserId(), dto.getRoleId());
+    }
+
 
     @GetMapping("/all")
     public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId(
@@ -98,7 +109,8 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("{id}/removeCompany")
-    public void removeUserFromCompany(@PathVariable UUID id) {
+    @Secured(value = {ROLE_COMPANY_OWNER})
+    public void removeUserFromCompany (@PathVariable UUID id) {
         userService.removeCompany(id);
     }
 

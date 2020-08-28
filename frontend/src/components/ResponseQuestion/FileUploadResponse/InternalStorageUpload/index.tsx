@@ -1,9 +1,9 @@
 import styles from "../styles.module.sass";
 import Dropzone from "../Dropzone";
 import React from "react";
-import {Button} from "semantic-ui-react";
+import { Button, Dimmer, Loader } from "semantic-ui-react";
 
-const InternalStorageUpload = ({ onFilesAdded, mapFiles, disabled, onClear, error }) => {
+const InternalStorageUpload = ({ onFilesAdded, mapFiles, disabled, onClear, error, files, isUploading }) => {
     return (
         <div className={styles.fileUpload} >
             <Dropzone
@@ -12,7 +12,11 @@ const InternalStorageUpload = ({ onFilesAdded, mapFiles, disabled, onClear, erro
                 onFilesAdded={onFilesAdded}
             />
             <div className={styles.filesContainer}>
-                {mapFiles()}
+                {mapFiles(files)}
+                {isUploading &&
+                  <Dimmer active>
+                    <Loader />
+                  </Dimmer>}
             </div>
             <div className={styles.wrap}>
                 <div className={styles.errorMessage}>{error}</div>
