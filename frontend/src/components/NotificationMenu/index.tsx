@@ -70,7 +70,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     setShown={setShown}/>);
         }
     };
-console.log(notifications);
     return (
         <div ref={ref}>
             <div onClick={() => setShown(!shown)}>

@@ -4,62 +4,42 @@
   border-top: 1px solid #efefef
   border-bottom: 1px solid #efefef
   display: grid
-  grid-template-columns: auto 70px
-  cursor: pointer
+  grid-template-columns: 270px 20px
+  grid-template-rows: auto 15px
+  align-items: center
+  padding: 5px
+  border-radius: 5px
+  border-bottom-style: solid
   &:hover
-    background-color: rgba(26, 14, 218, 0.1)
-.noNotifications
-  font-size: 1.4rem
-  padding-top: 20px
-  text-align: center
+    background-color: #e1e8ee
+    .close
+      visibility: visible
 
 .text
-  padding: 10px
+  grid-column: 1
+  grid-row: 1
+  padding: 3px
   font-size: 1.2rem
   hyphens: auto
+  cursor: pointer
+  vertical-align: middle
   position: relative
-
-
-.button
-  justify-self: center
-  align-self: center
-  height: 30px
-  width: 30px
-  border-radius: 50%
-  background-color: #F55078
-
-  div
-    text-align: center
-    vertical-align: middle
-    line-height: 30px
-    color: white
-    font-weight: bolder
-    font-size: 1.5rem
-    width: 100%
-    height: 100%
   &:hover
-    box-shadow: 0 0 1px 1px rgba(0,0,0,0.25)
-    background-color: #b62b49
-    cursor: pointer
+    color: #5f83c1
 
-.headerBellIcon
-  color: #fff
+.close
+  grid-column: 2
+  grid-row: 1
+  align-self: start
+  margin-right: 3px
+  margin-top: 3px
+  visibility: hidden
+  cursor: pointer
 
-.headerBellMessages
-  position: absolute
-  top: 0
-  right: 0
-  font-size: 0.8em
-  height: 1.3em
-  width: 1.3em
-  text-align: center
-  padding-top: 2px
-  color: #000
-  font-weight: bold
-  background-color: #ff5176
-  border-radius: 50%
 .date
-  position: absolute
+  grid-column: 1
+  grid-row: 2
   bottom: 2px
   color: #979797
+  cursor: default
   font-size: 1rem
