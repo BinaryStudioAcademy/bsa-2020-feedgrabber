@@ -11,11 +11,12 @@ import { createSectionRoutine, loadSectionsByQuestionnaireRoutine } from 'sagas/
 import { ISection } from 'models/forms/Sections/types';
 import {
     deleteFromQuestionnaireRoutine,
-    indexQuestionsRoutine, saveQuestionRoutine
+    indexQuestionsRoutine, loadQuestionByIdRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
 import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+import {toastr} from 'react-redux-toastr';
 
 interface IExpandedQuestionnaireProps {
     match: any;
@@ -25,6 +26,7 @@ interface IExpandedQuestionnaireProps {
 
     loadQuestionnaire(id: string): void;
     indexQuestions(questions: any): void;
+    loadQuestion({ id: string }): void;
 }
 
 const newQuestion: IQuestion = {
@@ -51,14 +53,18 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         currentQuestion,
         createSection,
         currentSection,
-        indexQuestions
+        indexQuestions,
+        loadQuestion
     }
 ) => {
     useEffect(() => {
         loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
-    const [question, setQuestion] = useState<IQuestion>(currentQuestion);
+    const [question, setQuestion] = useState<IQuestion>();
+    if (!question) {
+        loadQuestion({ id: "empty" });
+    }
 
     useEffect(() => {
       setQuestion(currentQuestion);
@@ -82,6 +88,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     const copyQuestion = () => {
       if(!question.id) {
+        toastr.info("Choose question");
         return;
       }
       saveQuestion({
@@ -115,7 +122,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                     </UIContent>
                 </div>
             )}
-            
+
         </LoaderWrapper>
     );
 };
@@ -135,7 +142,8 @@ const mapDispatchToProps = {
     saveQuestion: saveQuestionRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,
-    indexQuestions: indexQuestionsRoutine
+    indexQuestions: indexQuestionsRoutine,
+    loadQuestion: loadQuestionByIdRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
