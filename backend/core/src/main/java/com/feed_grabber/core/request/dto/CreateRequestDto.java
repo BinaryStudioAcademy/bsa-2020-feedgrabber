@@ -32,4 +32,6 @@ public class CreateRequestDto {
     private Boolean notifyUsers = true;
 
     private Boolean generateReport = true;
+
+    private Boolean sendToTargetUser = false;
 }

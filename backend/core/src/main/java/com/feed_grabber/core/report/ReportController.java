@@ -26,6 +26,9 @@ public class ReportController {
 
     @GetMapping("/{requestId}")
     public AppResponse<String> getReport(@PathVariable UUID requestId) throws IOException, NotFoundException {
+        final String role = TokenService.getRoleName();
+        final UUID userId = TokenService.getUserId();
+		service.hasAccess(requestId, userId, role);
         var response = service.isRequestClosed(requestId) ? service.getReport(requestId) : service.generateReport(requestId);
         return new AppResponse<>(response);
     }

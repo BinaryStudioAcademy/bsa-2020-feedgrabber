@@ -1,16 +1,21 @@
 package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.request.model.Request;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findAllByResponsesUserId(UUID id);
+
+    @Query("select r from Request r where r.id = :id and r.targetUser.id = :targetUser")
+    Optional<Request> findByIdAndTargetUser(UUID id, UUID targetUser);
 
     @Query("select r from Request r " +
             "join Response responses on responses.request.id = r.id where " +

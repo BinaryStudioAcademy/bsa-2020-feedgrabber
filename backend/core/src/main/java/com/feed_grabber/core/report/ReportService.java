@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import static com.feed_grabber.core.role.RoleConstants.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -60,9 +62,18 @@ public class ReportService {
         return template.getForObject(EP +"/report/"+requestId, String.class);
     }
 
+	public void hasAccess(UUID requestId, UUID userId, String role) {
+        if (role.equals(ROLE_COMPANY_OWNER) || role.equals(ROLE_HR)) {
+            return;
+        }
+        Optional<Request> request = requestRepository.findByIdAndTargetUser(requestId, userId);
+        if (request.isEmpty() || !request.get().getSendToTarget()) {
+            throw new AccessDeniedException("You have not enough permissions to view this report");
+        }
+	}
+
     public List<ReportShortDto> getAllAvailableReports(final UUID userId, final String role, final UUID comanyId) {
-        System.out.println("==== ROLE: [" + role + "] ====");
-        List<Request> reports = null;
+        List<Request> reports;
         switch (role) {
             case ROLE_COMPANY_OWNER:
             case ROLE_HR:

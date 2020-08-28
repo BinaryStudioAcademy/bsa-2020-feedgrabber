@@ -25,6 +25,7 @@ public interface RequestMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
+    @Mapping(source = "dto.sendToTargetUser", target = "sendToTarget")
     Request requestCreationRequestDtoToModel(CreateRequestDto dto,
                                              Questionnaire questionnaire,
                                              User targetUser,
