@@ -8,6 +8,8 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.sections.SectionService;
+import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +24,15 @@ public class QuestionnaireService {
     private final QuestionnaireRepository questionnaireRepository;
     private final CompanyRepository companyRepository;
 
+    private final SectionService sectionService;
+
     @Autowired
     public QuestionnaireService(QuestionnaireRepository questionnaireRepository,
                                 CompanyRepository companyRepository,
-                                UserRepository userRepository) {
+                                SectionService sectionService) {
         this.questionnaireRepository = questionnaireRepository;
         this.companyRepository = companyRepository;
+        this.sectionService = sectionService;
     }
 
 //    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
@@ -58,7 +63,7 @@ public class QuestionnaireService {
     }
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId)
-            throws CompanyNotFoundException, AlreadyExistsException {
+            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
         if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)) {
             throw new AlreadyExistsException("Such questionnair already exists in this company");
         }
@@ -69,8 +74,14 @@ public class QuestionnaireService {
         var questionnaire = QuestionnaireMapper.MAPPER
                 .questionnaireCreateDtoToModel(createDto, company);
 
+        //questionnaire.setSections(List.of(section));
+
+        var savedQuestionnaire = questionnaireRepository.save(questionnaire);
+
+        var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId()));
+
         return QuestionnaireMapper.MAPPER
-                .questionnaireToQuestionnaireDto(questionnaireRepository.save(questionnaire));
+                .questionnaireToQuestionnaireDto(savedQuestionnaire);
     }
 
     public QuestionnaireDto update(QuestionnaireUpdateDto updateDto, UUID companyId)

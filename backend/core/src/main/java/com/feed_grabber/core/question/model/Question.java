@@ -4,6 +4,7 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
+import com.feed_grabber.core.sections.model.Section;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

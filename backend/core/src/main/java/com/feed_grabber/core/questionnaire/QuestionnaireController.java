@@ -14,14 +14,19 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsExcepti
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
+
+import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
 @RequestMapping("/api/questionnaires")
@@ -40,6 +45,7 @@ public class QuestionnaireController {
     @ApiOperation("Get all questionnaires")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<DataList<QuestionnaireDto>> getAll(
                 @RequestParam Integer page,
                 @RequestParam Integer size
@@ -84,7 +90,9 @@ public class QuestionnaireController {
     @ApiOperation("Create a questionnaire")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
+    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto)
+            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.create(createDto, TokenService.getCompanyId())
         );
@@ -93,6 +101,7 @@ public class QuestionnaireController {
     @ApiOperation("Update the questionnaire")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<QuestionnaireDto> update(@RequestBody QuestionnaireUpdateDto updateDto) throws QuestionnaireNotFoundException, CompanyNotFoundException, QuestionnaireExistsException {
         return new AppResponse<>(
                 questionnaireService.update(updateDto, TokenService.getCompanyId())
@@ -102,15 +111,18 @@ public class QuestionnaireController {
     @ApiOperation("Delete one")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public void delete(@PathVariable UUID id) {
         questionnaireService.delete(id);
     }
 
 
+    @Deprecated
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public void updateQuestionnaireQuestions(QuestionnaireOrderedDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException {
+            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException, SectionNotFoundException {
         this.questionService.saveOrdered(dto);
     }
 }

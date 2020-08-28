@@ -19,10 +19,10 @@ public interface UserMapper {
     @Mapping(target = "userSettings", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
-    @Mapping(target = "role", source = "role.systemRole")
+    @Mapping(target = "role", expression = "java(user.getRole().getSystemRole().toString())")
     UserResponseAuthDetailsDTO responseFromUser(User user);
 
-    @Mapping(target = "role", source = "role.systemRole")
+    @Mapping(target = "role", expression = "java(user.getRole().getSystemRole().toString())")
     UserDetailsReportDTO reportDetailsFromUser(User user);
 
     @Mapping(target = "userName", source = "username")
@@ -30,7 +30,7 @@ public interface UserMapper {
     @Mapping(target = "lastName", source = "userProfile.lastName")
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
     @Mapping(target = "avatar", source = "userProfile.avatar.link")
-    @Mapping(target = "role", source = "role.systemRole")
+    @Mapping(target = "role", expression = "java(user.getRole().getSystemRole().toString())")
     @Mapping(target = "roleId", source = "role.id")
     UserDetailsResponseDTO detailedFromUser(User user);
 

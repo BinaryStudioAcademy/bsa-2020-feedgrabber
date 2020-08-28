@@ -12,6 +12,7 @@ import companiesSaga from "./companies/sagas";
 import requestSaga from "./request/sagas";
 import questionnaireReportSagas from "./report/sagas";
 import notificationsSagas from "./notifications/sagas";
+import sectionSagas from './sections/sagas';
 import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
 
@@ -31,6 +32,7 @@ export default function* rootSaga() {
     requestSaga(),
     notificationsSagas(),
     responseSagas(),
-    roleSagas()
+    roleSagas(),
+    sectionSagas()
   ]);
 }

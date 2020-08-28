@@ -37,15 +37,18 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     };
 
     useEffect(() => {
+      loadCategories();
+    }, [loadCategories]);
+
+    useEffect(() => {
         if (match.params.id === 'new') {
             loadQuestion({id: 'empty'});
         }
         else {
             if (!isPreview)
                 loadQuestion({ id: match.params.id });
-            loadCategories();
         }
-    }, [loadQuestion, match.params.id, loadCategories, isPreview]);
+    }, [loadQuestion, match.params.id, isPreview]);
 
     useEffect(() => {
         setQuestion(currentQuestion);

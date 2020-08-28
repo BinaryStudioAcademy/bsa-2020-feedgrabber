@@ -10,11 +10,15 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -24,7 +28,6 @@ public class TeamController {
     TeamService service;
 
     @ApiOperation("Get all teams")
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<TeamShortDto>> getAll() {
@@ -44,6 +47,7 @@ public class TeamController {
     @ApiOperation("Create team")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<TeamDetailsDto> createTeam(@RequestBody RequestTeamDto teamDto) throws AlreadyExistsException {
         teamDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.create(teamDto));
@@ -52,6 +56,7 @@ public class TeamController {
     @ApiOperation("Update team")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<TeamDto> update(@RequestBody RequestTeamDto teamDto) throws AlreadyExistsException, TeamNotFoundException {
         teamDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.update(teamDto));
@@ -60,6 +65,7 @@ public class TeamController {
     @ApiOperation("Toggle User")
     @PutMapping("/toggle_user")
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<ResponseUserTeamDto> toggle(@RequestBody RequestUserTeamDto requestDto) throws TeamNotFoundException, UserNotFoundException {
         requestDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.toggleUser(requestDto));
@@ -68,6 +74,7 @@ public class TeamController {
     @ApiOperation("Delete User")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<Boolean> delete(@PathVariable UUID id) {
         service.delete(id, TokenService.getCompanyId());
         return new AppResponse<>(true);
