@@ -11,7 +11,7 @@ import LoaderWrapper from "../LoaderWrapper";
 import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
-import {Icon} from "semantic-ui-react";
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 import {getResponseRoutine} from "../../sagas/response/routines";
@@ -47,7 +47,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
   return (
       <div ref={ref}>
         <div onClick={() => setShown(!shown)}>
-          <Icon className={styles.headerBellIcon} name="bell outline" size="large"/>
+            <NotificationsIcon fontSize="large" style={{color: "white"}}/>
             {countNotifications &&
                 <div className={styles.headerBellMessages}>
                     {countNotifications > 9 ? '9+' : countNotifications}

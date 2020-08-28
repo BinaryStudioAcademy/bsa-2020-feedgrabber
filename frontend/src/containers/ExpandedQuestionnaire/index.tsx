@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
-import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IAppState} from 'models/IAppState';
@@ -12,18 +11,7 @@ import {
     indexQuestionsRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
-import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
-
-const newQuestion: IQuestion = {
-    type: QuestionType.freeText,
-    categoryTitle: defaultQuestionValues.categoryTitle,
-    name: defaultQuestionValues.name,
-    answer: "",
-    id: "",
-    isReused: false,
-    details: {},
-    isRequired: false
-};
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
@@ -34,7 +22,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         loadOneQuestionnaire,
         saveQuestion,
         deleteQuestion,
-        currentQuestion,
+        question,
         questions
     }
 ) => {
@@ -42,23 +30,10 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         loadOneQuestionnaire(match.params.id);
     }, [loadOneQuestionnaire, match.params.id]);
 
-    const [question, setQuestion] = useState<IQuestion>(currentQuestion);
+    const handleDeleteQuestion = () => deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
 
-    useEffect(() => {
-      setQuestion(currentQuestion);
-    }, [currentQuestion]);
-
-    const handleDeleteQuestion = () => {
-        deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
-    };
-
-    const addNewQuestion = () => {
-        saveQuestion({...newQuestion,
-            questionnaireId: match.params.id,
-            questionnaireQuestions
-        });
-
-    };
+    const addNewQuestion = () =>
+        saveQuestion({...defaultQuestion, questionnaireId: match.params.id, questionnaireQuestions});
 
     const copyQuestion = () => {
       if(!question.id) {
@@ -89,7 +64,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                         <QuestionMenu
                             addQuestion={addNewQuestion}
                             copyQuestion={copyQuestion}
-                            currentQuestion={currentQuestion}
+                            currentQuestion={question}
                             onDelete={handleDeleteQuestion}
                         />
                     </UIContent>
@@ -100,7 +75,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-    currentQuestion: rootState.questions.current,
+    question: rootState.questions.current,
     questionnaire: rootState.questionnaires.current.get,
     isLoading: rootState.questionnaires.current.isLoading,
     questions: rootState.questionnaires.current.questions,

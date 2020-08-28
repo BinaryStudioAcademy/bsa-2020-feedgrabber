@@ -1,4 +1,5 @@
 $background-color: #00334e
+$white: #ffffff
 
 .headerWrapper
   position: fixed
@@ -6,7 +7,8 @@ $background-color: #00334e
   background-color: $background-color
   width: 100%
   padding: 1em
-  box-shadow: 0 0 5px #000
+  border-bottom: 2px solid #aeb0b2
+
 
   .headerContent
     display: flex
@@ -20,7 +22,7 @@ $background-color: #00334e
 
       .headerTitle
         margin-right: 1em
-        color: #fff
+        color: $white
         display: flex
         justify-content: space-between
         align-items: center
@@ -31,27 +33,28 @@ $background-color: #00334e
 
         .headerLogo
           width: 2.5em
+          filter: contrast(1.4)
           height: 2.5em
-          margin: 0 1em
+          margin: 0 .6em
 
       .headerMenuItem
         font-size: 0.9em
         cursor: pointer
         font-weight: bold
         margin: 0 1.5em
-        color: #fff
+        color: $white
         border-bottom: 1px solid $background-color
         transition: border-bottom-color 0.3s
 
         &:hover
-          border-bottom-color: #fff
+          border-bottom-color: $white
 
       .headerMenuItemActive
-        border-bottom-color: #fff
+        border-bottom-color: $white
 
       .headerSearchWrapper
         padding: 0.15em 0.3em
-        border: 1px solid #fff
+        border: 1px solid $white
         border-radius: 5px
 
         .headerSearchIcon
@@ -65,7 +68,7 @@ $background-color: #00334e
           font-size: 0.8em
           background-color: $background-color
           border: none
-          color: #fff
+          color: $white
 
       .headerBellWrapper
         margin: 0 1em
@@ -74,9 +77,12 @@ $background-color: #00334e
 
       .headerAvatar
         cursor: pointer
+        height: 3em
+        width: 3em
 
       .headerMyAccount
-        font-size: 0.8em
+        font-size: 0.9em
+        font-weight: bold
         margin: 0 1.5em 0 0.7em
-        color: #fff
+        color: $white
         cursor: pointer

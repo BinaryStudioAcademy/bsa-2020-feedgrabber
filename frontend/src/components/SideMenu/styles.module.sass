@@ -1,43 +1,49 @@
-$toggle-menu-duration: .4s
-$toggle-menu-timing: ease-out
+$toggle-menu-duration: .2s
+$toggle-menu-timing: ease-in-out
+$back-color: #aeb0b2
+$attention-color: #4a84df
 
 .menuWrapper
   position: fixed
   height: 100%
   padding-top: 5em
-  background-color: #e1e8ee
+  background-color: rgb(255,255,255)
   z-index: 1
   transition: all $toggle-menu-duration $toggle-menu-timing
   overflow: hidden
+  border-right: 2px solid rgb(230,236,240)
 
 .menuContent
   display: flex
   flex-direction: column
 
 .menuItem
-  min-width: 30em
+  min-width: 15em
   font-size: .9em
+  font-weight: bold
   padding: 1em
   cursor: pointer
   transition: all .25s ease-in-out
 
-  .menuItemIcon:hover
-    transform: scale(1.1)
+  .menuItemIcon
+    color: $back-color
+    &:hover
+      transform: scale(1.1)
 
 .menuItemActive
-  background-color: #145374
+  background-color: #fefefe
   .menuItemIcon
-    color: #f6f5f5
+    color: $attention-color
   .menuItemTitle
-    color: #f6f5f5
+    color: $attention-color
 
 .menuItemIcon
-  color: #145374
+  color: $back-color
   transition: all .2s ease-in-out
 
 .menuItemTitle
   margin-left: .8em
-  color: #000
+  color: #717171
   transition: all $toggle-menu-duration $toggle-menu-timing
 
 .menuWrapperOpen
@@ -51,7 +57,7 @@ $toggle-menu-timing: ease-out
 .menuWrapperClosed
   width: 4em
   .menuItemActive
-    background-color: #145374
+    //background-color: $main-color
     transform: none
 
     .menuItemTitle

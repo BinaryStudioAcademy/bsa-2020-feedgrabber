@@ -5,12 +5,15 @@ import {
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
-    loadQuestionnairesRoutine, saveAndGetQuestionnaireRoutine,
+    loadQuestionnairesRoutine,
+    saveAndGetQuestionnaireRoutine,
     updateQuestionnaireRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
+import {loadQuestionnaireQuestionsRoutine, saveQuestionRoutine} from "../questions/routines";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 function* loadQuestionnairesList() {
     try {
@@ -29,7 +32,9 @@ function* loadQuestionnairesList() {
 function* saveAndPutNewQuestionnaire(action) {
     try {
         const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `/api/questionnaires`, action.payload);
-        yield put(saveAndGetQuestionnaireRoutine.success(res.data.data));
+        const payload = res.data.data;
+        yield put(saveAndGetQuestionnaireRoutine.success(payload));
+        yield put(saveQuestionRoutine.trigger({...defaultQuestion, questionnaireId: payload.id}));
     } catch (e) {
         yield put(saveAndGetQuestionnaireRoutine.failure());
         toastr.error("Failed saving form");
@@ -81,6 +86,7 @@ function* loadOneQuestionnaire(action) {
     try {
         const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
         yield put(loadOneQuestionnaireRoutine.success(res.data.data));
+        yield put(loadQuestionnaireQuestionsRoutine.trigger(action.payload));
     } catch (error) {
         yield put(loadOneQuestionnaireRoutine.failure(error));
         toastr.error("Unable to fetch data");

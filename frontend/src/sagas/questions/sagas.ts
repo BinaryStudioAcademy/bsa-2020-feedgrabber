@@ -45,7 +45,7 @@ function* getAll() {
 function* getById(action) {
     try {
         const {id, top, right} = action.payload;
-        if (id === 'empty') {
+        if (!id) {
             yield put(loadQuestionByIdRoutine.success(defaultQuestion));
             return;
         }

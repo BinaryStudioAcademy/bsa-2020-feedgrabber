@@ -29,7 +29,7 @@ public class UserNotificationService {
 
     public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
         var response = Optional.of(responseRepository
-                .findByRequestAndUser(requestId, userId))
+                .findByRequestIdAndUserId(requestId, userId))
                 .orElseThrow(() -> new NotFoundException("Response Not Found"));
 
         response.setNotificationExists(false);

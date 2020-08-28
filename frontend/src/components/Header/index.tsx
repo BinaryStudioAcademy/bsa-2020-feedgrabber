@@ -34,14 +34,9 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
           </a>
         </div>
         <div className={styles.headerPart}>
-          <div className={styles.headerSearchWrapper}>
-            <Icon className={styles.headerSearchIcon} name="search" size="small"/>
-            <input className={styles.headerSearch} placeholder="Search"/>
-          </div>
           <div className={styles.headerBellWrapper}>
             <NotificationMenu/>
           </div>
-          <Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>
           <div>
             <Dropdown
               icon={null}
@@ -67,6 +62,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+          <Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>
           </div>
         </div>
       </div>

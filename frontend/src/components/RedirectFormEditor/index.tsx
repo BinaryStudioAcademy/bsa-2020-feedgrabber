@@ -16,7 +16,7 @@ import Button from "@material-ui/core/Button";
 import moment from "moment";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
-    const [title, setTitle] = useState<string>(`New Form created ${moment().calendar()}`);
+    const [title, setTitle] = useState<string>();
     const [open, setOpen] = useState<boolean>(!current.id);
 
     function handleCancel() {
@@ -25,7 +25,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     }
 
     function handleSubmit() {
-        saveAndGet({title: title ?? "New Form"});
+        saveAndGet({title: title ?? `New Form created ${moment().calendar()}`});
         setOpen(false);
         toastr.success("Form created");
     }
@@ -37,7 +37,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     return (
         <Dialog open={open} aria-labelledby="form-dialog-title" onClose={handleCancel}>
             <DialogTitle>
-                Type In Form Title
+                Type-in Form Title
             </DialogTitle>
             <DialogContent>
                 <DialogContentText variant="h6">
@@ -46,6 +46,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
                 <TextField
                     autoFocus
                     value={title}
+                    placeholder={`New Form created ${moment().calendar()}`}
                     onChange={e => setTitle(e.target.value)}
                     margin="dense"
                     type="text"
@@ -53,10 +54,10 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" onClick={handleCancel} color="primary">
+                <Button onClick={handleCancel} color="primary">
                     Cancel
                 </Button>
-                <Button variant="contained" onClick={handleSubmit} color="primary">
+                <Button onClick={handleSubmit} color="primary">
                     Add
                 </Button>
             </DialogActions>
