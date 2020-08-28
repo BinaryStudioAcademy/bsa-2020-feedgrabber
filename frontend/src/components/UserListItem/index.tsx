@@ -66,6 +66,7 @@ const UserListItem: FC<IUserListItemProps> = (
                 </div>
                 <div className={styles.info}>
                     <h3 className={styles.paginationListItemHeader}>{info}</h3>
+                    <p className={styles.paginationListItemDescription}>{role.replace("_"," ")}</p>
                     <p className={styles.paginationListItemDescription}>{phoneNumber}</p>
                 </div>
                 <div className={styles.buttonContainer}>
