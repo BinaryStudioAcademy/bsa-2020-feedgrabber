@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 docker login -u $docker_user -p $docker_pass
 
