@@ -52,7 +52,6 @@ public class UserController {
         return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
     }
 
-    /*%%% feature/104-team-creation-u*/
     @ApiOperation(value = "Get all users",
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping("/all/list")
@@ -62,7 +61,6 @@ public class UserController {
         return new AppResponse<>(userService.getAllByCompanyId(companyId));
     }
 
-    /*%%%*/
     @ApiOperation(value = "Send an email to reset password")
     @PostMapping("/email/reset")
     public void sendEmailToResetPass(@RequestBody UserInfoToResetPassDto dto) throws UserNotFoundException {

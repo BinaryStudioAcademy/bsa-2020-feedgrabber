@@ -101,8 +101,6 @@ public class UserProfileService {
         if (user.getUserSettings() == null) {
             user.setUserSettings(new UserSettings(user));
         }
-        System.out.println(dto);
-
 
         user.getUserSettings().setEnableNotifications(dto.getEnableNotifications());
         user.getUserSettings().setLanguage(dto.getLanguage());
