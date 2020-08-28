@@ -28,7 +28,7 @@ const UserListItem: FC<IUserListItemProps> = (
         fire
     }
 ) => {
-    const info = name && surname ? `${name} ${surname}` : `${username}`;
+  const info = name && surname ? `${surname} ${name}` : `${username}`;
     return (
         <div className={styles.listItem}>
             <div className={styles.userImage}>

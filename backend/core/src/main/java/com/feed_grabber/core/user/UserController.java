@@ -26,7 +26,7 @@ import java.util.UUID;
 
 import java.util.List;
 
-import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
+// import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
 import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
 
 
@@ -94,6 +94,24 @@ public class UserController {
                         page,
                         size
                 ));
+    }
+
+    @GetMapping("/search")
+    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersBySurname (
+            @RequestParam String query,
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        var companyId = TokenService.getCompanyId();
+        // var users = userService.searchBySurname(companyId, query);
+        return new AppResponse<>(
+                new DataList<>(
+                        userService.searchBySurname(companyId, query, page, size),
+                        userService.getCountByUserName(companyId, query),
+                        page,
+                        size
+                ));
+
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

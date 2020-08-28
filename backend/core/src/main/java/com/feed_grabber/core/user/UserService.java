@@ -40,6 +40,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -286,8 +287,29 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    public List<UserDetailsResponseDTO> searchBySurname(
+            UUID companyId,
+            String query,
+            Integer page,
+            Integer size) {
+
+        var rst = userRepository.findByLastNameBeginAndCompanyId(
+                companyId,
+                query.toLowerCase() + "%",
+                PageRequest.of(page, size)
+        ).stream()
+                .map(UserMapper.MAPPER::detailedFromUser)
+                .collect(Collectors.toList());
+        return rst;
+    }
+
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
+    }
+
+    public Long getCountByUserName(UUID companyId, String query) {
+        var rst = userRepository.countByLastNameBeginAndCompanyId(companyId, query.toLowerCase()+ "%");
+        return  rst;
     }
 
     @Transactional
