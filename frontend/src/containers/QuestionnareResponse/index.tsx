@@ -90,8 +90,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, loadQuestionnaire, getResponse} = this.props;
-        loadQuestionnaire(match.params.id);
+        const {match, getResponse} = this.props;
         getResponse(match.params.id);
     }
 
@@ -219,7 +218,7 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     saveResponseAnswers: saveResponseRoutine,
     loadOneSaved: loadOneSavedQuestionnaireRoutine,
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
     getResponse: getResponseRoutine
 };
 
