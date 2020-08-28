@@ -1,4 +1,4 @@
-import React, {useState, SyntheticEvent, ChangeEvent} from 'react';
+import React, {useState, ChangeEvent} from 'react';
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import GenericPagination from "../../components/GenericPagination";
@@ -76,7 +76,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
   };
 
   const onKeyPressed = (evt: KeyboardEvent) => {
-      if (evt.charCode == 13) {
+      if (evt.charCode === 13) {
         handleSearch();
       }
   };

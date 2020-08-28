@@ -102,7 +102,6 @@ public class UserController {
             @RequestParam Integer size
     ) {
         var companyId = TokenService.getCompanyId();
-        // var users = userService.searchBySurname(companyId, query);
         return new AppResponse<>(
                 new DataList<>(
                         userService.searchByQuery(companyId, query, page, size),
