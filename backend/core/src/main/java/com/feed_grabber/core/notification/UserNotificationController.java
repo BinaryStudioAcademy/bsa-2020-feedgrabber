@@ -44,4 +44,11 @@ public class UserNotificationController {
         userNotificationService.deleteAllNotificationsByUserId(userId);
     }
 
+    @ApiOperation("Mark notification as read")
+    @PutMapping("/{id}/read")
+    @ResponseStatus(HttpStatus.OK)
+    public void readNotification(@PathVariable UUID notificationId) throws NotFoundException {
+        userNotificationService.markAsRead(notificationId);
+    }
+
 }
