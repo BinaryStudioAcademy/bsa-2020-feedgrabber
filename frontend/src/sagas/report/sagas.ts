@@ -5,7 +5,7 @@ import {
     loadReportRoutine,
     loadRespondentReportRoutine,
     loadRespondentReportsRoutine,
-	loadReportsRoutine
+    loadReportsRoutine
 } from "./routines";
 import {IQuestionnaireReport, IRequestShort, QuestionDto} from "../../models/report/IReport";
 import {IGeneric} from "../../models/IGeneric";
@@ -72,14 +72,14 @@ function* loadUsersReports(action) {
 }
 
 function* loadAwailableReports(action) {
-	try {
-		const res = yield call(apiClient.get, '/api/report/all');
-		yield put(loadReportsRoutine.success(res.data.data));
-	} catch (err) {
-		console.log(err);
-		yield put(loadReportsRoutine.failure());
-		toastr.error("Unable to load awailable reports");
-	}
+    try {
+        const res = yield call(apiClient.get, '/api/report/all');
+        yield put(loadReportsRoutine.success(res.data.data));
+    } catch (err) {
+        console.log(err);
+        yield put(loadReportsRoutine.failure());
+        toastr.error("Unable to load awailable reports");
+    }
 }
 
 export default function* questionnaireReportSagas() {
@@ -88,6 +88,6 @@ export default function* questionnaireReportSagas() {
         yield takeEvery(loadReportRoutine.TRIGGER, loadReport),
         yield takeEvery(loadRespondentReportRoutine.TRIGGER, loadRespondentReports),
         yield takeEvery(loadRespondentReportsRoutine.TRIGGER, loadUsersReports),
-		yield takeEvery(loadReportsRoutine.TRIGGER, loadAwailableReports)
+        yield takeEvery(loadReportsRoutine.TRIGGER, loadAwailableReports)
     ]);
 }

@@ -62,7 +62,7 @@ public class ReportService {
         return template.getForObject(EP +"/report/"+requestId, String.class);
     }
 
-	public void hasAccess(UUID requestId, UUID userId, String role) {
+    public void hasAccess(UUID requestId, UUID userId, String role) {
         if (role.equals(ROLE_COMPANY_OWNER) || role.equals(ROLE_HR)) {
             return;
         }
@@ -70,7 +70,7 @@ public class ReportService {
         if (request.isEmpty() || !request.get().getSendToTarget()) {
             throw new AccessDeniedException("You have not enough permissions to view this report");
         }
-	}
+    }
 
     public List<ReportShortDto> getAllAvailableReports(final UUID userId, final String role, final UUID comanyId) {
         List<Request> reports;

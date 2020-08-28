@@ -26,8 +26,8 @@ public class ResponseController {
     @Autowired
     ResponseService service;
 
-	@Autowired
-	ReportService reportService;
+    @Autowired
+    ReportService reportService;
 
     @GetMapping("/request/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -48,9 +48,9 @@ public class ResponseController {
     @GetMapping("/users")
     // @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<UserResponseShortDto>> getRespondentsShortInfo(@RequestParam UUID requestId) {
-		final String role = TokenService.getRoleName();
+        final String role = TokenService.getRoleName();
         final UUID userId = TokenService.getUserId();
-		reportService.hasAccess(requestId, userId, role);
+        reportService.hasAccess(requestId, userId, role);
         return new AppResponse<>(service.getRespondents(requestId));
     }
 
