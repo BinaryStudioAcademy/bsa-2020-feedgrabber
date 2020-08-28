@@ -20,7 +20,7 @@ function* loadTeams() {
     yield put(loadTeamsRoutine.success(res.data.data));
   } catch (error) {
     yield put(loadTeamsRoutine.failure());
-    toastr.error(error);
+    toastr.error(error.data?.error || 'No response');
   }
 }
 
