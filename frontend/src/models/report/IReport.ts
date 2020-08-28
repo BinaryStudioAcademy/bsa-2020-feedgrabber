@@ -51,6 +51,13 @@ export interface IQuestionReport {
   IQuestionReportFileData;
 }
 
+export interface IReportShort {
+  id: string;
+  title: string;
+  author: string;
+  closeDate: string;
+}
+
 export interface IQuestionReportMultichoiceData {
   options: { title: string; amount: number }[];
 }

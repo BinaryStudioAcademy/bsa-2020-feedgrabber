@@ -8,11 +8,14 @@ import UIColumn from "../UI/UIColumn";
 import {IAppState} from 'models/IAppState';
 import {connect} from "react-redux";
 import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
+import {loadReportsRoutine} from 'sagas/report/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
+import {IReportShort} from 'models/report/IReport';
 import styles from './styles.module.sass';
 import {Tab} from "semantic-ui-react";
+import { Link } from 'react-router-dom';
 
 interface IItem {
     id: string;
@@ -23,11 +26,12 @@ interface IItem {
 
 interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
-    reportsList?: IItem[];
+    reportsList?: IReportShort[];
     newsList?: IItem[];
     isLoading: boolean;
 
     loadQuestionnaires(): void;
+    loadReports(): void;
 
     getResponse(requestId: string): void;
 }
@@ -38,7 +42,8 @@ const MainPage: FC<IMainPageProps> =
          reportsList = [],
          newsList = [],
          isLoading,
-         loadQuestionnaires
+         loadQuestionnaires,
+         loadReports
      }) => {
 
         const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
@@ -54,6 +59,10 @@ const MainPage: FC<IMainPageProps> =
         useEffect(() => {
             loadQuestionnaires();
         }, [loadQuestionnaires]);
+
+       useEffect(() => {
+            loadReports();
+       }, [loadReports]);
 
         useEffect(() => {
             setPanes([
@@ -152,10 +161,10 @@ const MainPage: FC<IMainPageProps> =
                             </UICardBlock>
                             {reportsList.map(item => (
                                 <UICardBlock key={item.id}>
-                                    {item.header && <h4>{item.header}</h4>}
-                                    {item.content && <p>{item.content}</p>}
+                                    {item.title && <h4>{item.title}</h4>}
+                                    {item.closeDate && <p>{item.closeDate}</p>}
                                     {item.author && <p><b>{item.author}</b></p>}
-                                    <UIButton title="Details"/>
+                                    <Link to={`/report/${item.id}`}><UIButton title="Details"/></Link>
                                 </UICardBlock>
                             ))}
                         </UICard>
@@ -183,11 +192,13 @@ const MainPage: FC<IMainPageProps> =
 const MapStateToProps = (state: IAppState) => ({
     questionnaireList: state.questionnaireResponse.list,
     isLoading: state.questionnaireResponse.isLoading,
-    user: state.user.shortInfo
+    user: state.user.shortInfo,
+    reportsList: state.questionnaireReports.reports
 });
 
 const MapDispatchToProps = {
-    loadQuestionnaires: loadRequestedQuestionnairesRoutine
+    loadQuestionnaires: loadRequestedQuestionnairesRoutine,
+    loadReports: loadReportsRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps)(MainPage);

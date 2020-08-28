@@ -1,11 +1,13 @@
 import {
     IQuestionnaireReport,
     IRequestShort,
+	IReportShort,
     IRespondentReportPreview
 } from "../../models/report/IReport";
 import {
     loadQuestionnaireRequestsRoutine,
     loadReportRoutine,
+	loadReportsRoutine,
     loadRespondentReportRoutine,
     loadRespondentReportsRoutine
 } from "../../sagas/report/routines";
@@ -14,6 +16,7 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 export interface IQuestionnaireReportsState {
     currentFullReport?: IQuestionnaireReport;
     requests?: IRequestShort[];
+	reports?: IReportShort[];
     responsesPreview: IRespondentReportPreview[];
     currentUserReport: IQuestion[];
     isLoading?: boolean;
@@ -24,6 +27,7 @@ export interface IQuestionnaireReportsState {
 const defaultValues = {
     currentFullReport: {} as IQuestionnaireReport,
     requests: [] as IRequestShort[],
+	reports: [] as IReportShort[],
     currentUserReport: [] as IQuestion[],
     responsesPreview: [] as IRespondentReportPreview[],
     isLoadingUserReport: false,
@@ -50,6 +54,19 @@ export default (state: IQuestionnaireReportsState = defaultValues, {type, payloa
                 ...state,
                 isLoading: false,
                 currentFullReport: payload
+            };
+        case loadReportsRoutine.SUCCESS:
+            console.log('load reports');
+            console.log(payload);
+            return {
+                ...state,
+                reports: payload
+            };
+        case loadReportsRoutine.FAILURE:
+            console.log('failure');
+            return {
+                ...state,
+                reports: []
             };
         case loadReportRoutine.FAILURE:
         case loadQuestionnaireRequestsRoutine.FAILURE:
