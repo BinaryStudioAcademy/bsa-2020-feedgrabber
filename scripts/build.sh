@@ -2,6 +2,11 @@
 
 docker login -u $docker_user -p $docker_pass
 
+cd backend/core && gradle assemble || exit 1
+cd ../event_processor && gradle assemble || exit 1
+cd ../../frontend  && npm install --no-optional && npm run build || exit 1
+cd ../
+
 docker build \
    -f ".docker/api.dockerfile" \
    -t "fg-core" \
