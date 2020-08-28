@@ -93,7 +93,7 @@ public class RequestService {
             if (dto.getIncludeTargetUser()) users.add(targetUser);
             else users.remove(targetUser);
         }
-      
+
         var notificationExists = dto.getNotifyUsers();
         var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
@@ -154,7 +154,18 @@ public class RequestService {
                 .orElseThrow(() -> new NotFoundException("Request not found"));
 
         request.setCloseDate(new Date());
-        return requestRepository.save(request).getCloseDate();
+        var closeDate = requestRepository.save(request).getCloseDate();
+        var questionnaireWithOpenRequests = questionnaireRepository
+                .findByAllClosedRequests(request
+                        .getQuestionnaire()
+                        .getId());
+
+        if (questionnaireWithOpenRequests.isEmpty()) {
+            var questionnaire = request.getQuestionnaire();
+            questionnaire.setEditingEnabled(true);
+            questionnaireRepository.save(questionnaire);
+        }
+        return closeDate;
     }
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {

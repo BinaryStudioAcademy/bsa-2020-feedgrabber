@@ -36,4 +36,12 @@ public class UserNotificationController {
         userNotificationService.deleteNotificationByRequestIdAndUserId(requestId, userId);
     }
 
+    @ApiOperation("Delete all notifications for user from token")
+    @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteNotificationsAll() {
+        UUID userId = TokenService.getUserId();
+        userNotificationService.deleteAllNotificationsByUserId(userId);
+    }
+
 }
