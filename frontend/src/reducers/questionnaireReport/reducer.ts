@@ -56,14 +56,11 @@ export default (state: IQuestionnaireReportsState = defaultValues, {type, payloa
                 currentFullReport: payload
             };
         case loadReportsRoutine.SUCCESS:
-            console.log('load reports');
-            console.log(payload);
             return {
                 ...state,
                 reports: payload
             };
         case loadReportsRoutine.FAILURE:
-            console.log('failure');
             return {
                 ...state,
                 reports: []

@@ -73,12 +73,10 @@ function* loadUsersReports(action) {
 
 function* loadAwailableReports(action) {
 	try {
-		// load from backend reports
 		const res = yield call(apiClient.get, '/api/report/all');
-		console.log(res);
-		console.log(res.data.data);
 		yield put(loadReportsRoutine.success(res.data.data));
 	} catch (err) {
+		console.log(err);
 		yield put(loadReportsRoutine.failure());
 		toastr.error("Unable to load awailable reports");
 	}
