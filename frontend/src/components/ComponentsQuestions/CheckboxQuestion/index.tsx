@@ -14,7 +14,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
   const value = useInitValue(
     {
       value: {
-        answerOptions: [""],
+        answerOptions: ["Option 1"],
         includeOther: false
       },
       isCompleted: false
@@ -42,7 +42,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
                 onValueChange(
                   invalidState({
                     ...value,
-                    answerOptions: value.answerOptions.concat("")
+                    answerOptions: value.answerOptions.concat(`Option ${value.answerOptions.length + 1}`)
                   })
                 );
               }}
@@ -116,7 +116,21 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
                   }
                 );
               }}
-              onBlur={() => setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index))}
+              onBlur={() => {
+                if(answer.trim().length === 0) {
+                  validate(
+                      {
+                        answerOptions: replaceAtIndex(
+                            value.answerOptions,
+                            answer = `Option ${index + 1}`,
+                            index
+                        ),
+                        includeOther: value.includeOther
+                      }
+                  );
+                }
+                setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index));
+              }}
             />
             {value.answerOptions.length > 1 && (
               <button

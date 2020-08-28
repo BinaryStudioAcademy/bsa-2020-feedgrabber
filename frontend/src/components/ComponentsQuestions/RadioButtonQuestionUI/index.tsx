@@ -13,7 +13,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                                                                          value: propValue, onValueChange
                                                                                      }) => {
     const value = useInitValue(
-        {value: {answerOptions: [""], includeOther: false}, isCompleted: false},
+        {value: {answerOptions: ["Option 1"], includeOther: false}, isCompleted: false},
         propValue,
         onValueChange
     );
@@ -58,7 +58,21 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                 }
                             );
                         }}
-                        onBlur={() => setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index))}
+                        onBlur={() => {
+                            if(answer.trim().length === 0) {
+                                validate(
+                                    {
+                                        answerOptions: replaceAtIndex(
+                                            value.answerOptions,
+                                            `Option ${index + 1}`,
+                                            index
+                                        ),
+                                        includeOther: value.includeOther
+                                    }
+                                );
+                            }
+                            setIsFieldTouched(replaceAtIndex(isFieldTouched, true, index));
+                        }}
                     />
                     {value.answerOptions.length !== 1 && (
                         <Icon className={"close-icon unselected"} name={"x"} onClick={() => {
@@ -99,7 +113,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                     <span onClick={() => {
                         onValueChange(
                             validState({
-                                answerOptions: value.answerOptions.concat(""),
+                                answerOptions: value.answerOptions.concat(`Option ${value.answerOptions.length + 1}`),
                                 includeOther: value.includeOther
                             })
                         );

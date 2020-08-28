@@ -2,7 +2,7 @@ import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
-    loadOneQuestionnaireRoutine,
+    loadOneQuestionnaireRoutine, loadOneSavedQuestionnaireRoutine,
     loadQuestionnairesRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
@@ -109,6 +109,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.SUCCESS:
+        case loadOneSavedQuestionnaireRoutine.SUCCESS:
             return {
                 ...state,
                 get: payload,
@@ -123,6 +124,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
             };
         case deleteFromQuestionnaireRoutine.TRIGGER:
         case loadOneQuestionnaireRoutine.TRIGGER:
+        case loadOneSavedQuestionnaireRoutine.TRIGGER:
         case loadQuestionnaireQuestionsRoutine.TRIGGER:
         case addSelectedQuestionsRoutine.TRIGGER:
             return {
@@ -137,6 +139,7 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.FAILURE:
+        case loadOneSavedQuestionnaireRoutine.FAILURE:
             return {
                 ...state,
                 get: {}

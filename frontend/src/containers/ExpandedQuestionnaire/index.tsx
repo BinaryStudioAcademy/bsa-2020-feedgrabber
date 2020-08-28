@@ -7,16 +7,30 @@ import QuestionnairePreview from 'components/QuestionnairePreview';
 import {loadOneQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
+import { createSectionRoutine, loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { ISection } from 'models/forms/Sections/types';
 import {
     deleteFromQuestionnaireRoutine,
     indexQuestionsRoutine, saveQuestionRoutine
 } from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
+import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
+import { IQuestionnaire } from 'models/forms/Questionnaires/types';
+
+interface IExpandedQuestionnaireProps {
+    match: any;
+    isLoading: boolean;
+    questionnaire: IQuestionnaire;
+    sections: ISection[];
+
+    loadQuestionnaire(id: string): void;
+    indexQuestions(questions: any): void;
+}
 
 const newQuestion: IQuestion = {
-    type: QuestionType.date,
-    categoryTitle: new Date().toString(),
-    name: "New Question",
+    type: QuestionType.freeText,
+    categoryTitle: defaultQuestionValues.categoryTitle,
+    name: defaultQuestionValues.name,
     answer: "",
     id: "",
     isReused: false,
@@ -29,17 +43,20 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         match,
         isLoading,
         questionnaire,
+        sections,
+        loadQuestionnaire,
         questionnaireQuestions,
-        loadOneQuestionnaire,
         saveQuestion,
         deleteQuestion,
         currentQuestion,
-        questions
+        createSection,
+        currentSection,
+        indexQuestions
     }
 ) => {
     useEffect(() => {
-        loadOneQuestionnaire(match.params.id);
-    }, [loadOneQuestionnaire, match.params.id]);
+        loadQuestionnaire(match.params.id);
+    }, [match.params.id, loadQuestionnaire]);
 
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
 
@@ -54,9 +71,13 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     const addNewQuestion = () => {
         saveQuestion({...newQuestion,
             questionnaireId: match.params.id,
+            sectionId: currentSection? currentSection.id: sections[0].id,
             questionnaireQuestions
         });
+    };
 
+    const handleAddSection = () => {
+        createSection({questionnaireId: match.params.id});
     };
 
     const copyQuestion = () => {
@@ -68,6 +89,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         id: "",
         name: `${question.name} (copy)`,
         questionnaireId: match.params.id,
+        sectionId: currentSection? currentSection.id : sections[0].id,
         questionnaireQuestions
       });
     };
@@ -76,13 +98,11 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         <LoaderWrapper loading={isLoading}>
             {questionnaire && (
                 <div className={styles.formDetails}>
-                    <h1 className={styles.questionnaireTitle}>{questionnaire.title}</h1>
                     <UIContent>
                         <div className={styles.questions_container}>
                             <QuestionnairePreview
-                                indexQuestions={indexQuestionsRoutine}
-                                qnId={match.params.id}
-                                questions={questions ?? []}
+                                indexQuestions={indexQuestions}
+                                sections={sections}
                             />
                         </div>
                         <QuestionMenu
@@ -90,26 +110,32 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                             copyQuestion={copyQuestion}
                             currentQuestion={currentQuestion}
                             onDelete={handleDeleteQuestion}
+                            addSection={handleAddSection}
                         />
                     </UIContent>
                 </div>
             )}
+            
         </LoaderWrapper>
     );
 };
 
 const mapStateToProps = (rootState: IAppState) => ({
-    currentQuestion: rootState.questions.current,
     questionnaire: rootState.questionnaires.current.get,
-    isLoading: rootState.questionnaires.current.isLoading,
+    isLoading: rootState.sections.isLoading,
+    sections: rootState.sections.list,
+    currentQuestion: rootState.questions.current,
     questions: rootState.questionnaires.current.questions,
-    questionnaireQuestions: rootState.questionnaires.current.questions
+    questionnaireQuestions: rootState.questionnaires.current.questions,
+    currentSection: rootState.sections.current
 });
 
 const mapDispatchToProps = {
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
-    deleteQuestion: deleteFromQuestionnaireRoutine
+    deleteQuestion: deleteFromQuestionnaireRoutine,
+    createSection: createSectionRoutine,
+    indexQuestions: indexQuestionsRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
