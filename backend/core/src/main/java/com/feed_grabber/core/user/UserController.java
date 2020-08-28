@@ -18,7 +18,6 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -106,8 +105,8 @@ public class UserController {
         // var users = userService.searchBySurname(companyId, query);
         return new AppResponse<>(
                 new DataList<>(
-                        userService.searchBySurname(companyId, query, page, size),
-                        userService.getCountByUserName(companyId, query),
+                        userService.searchByQuery(companyId, query, page, size),
+                        userService.getCountByQuery(companyId, query),
                         page,
                         size
                 ));

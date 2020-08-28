@@ -287,29 +287,37 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDetailsResponseDTO> searchBySurname(
+    public List<UserDetailsResponseDTO> searchByQuery(
             UUID companyId,
             String query,
             Integer page,
             Integer size) {
-
-        var rst = userRepository.findByLastNameBeginAndCompanyId(
-                companyId,
-                query.toLowerCase() + "%",
-                PageRequest.of(page, size)
-        ).stream()
+        var parts = query.split(" ");
+        var pageable = PageRequest.of(page, size);
+        var users = parts.length == 1
+                ? userRepository.findByLastNameBeginAndCompanyId(
+                        companyId,
+                        query.toLowerCase() + "%",
+                        pageable)
+                : userRepository.findByNameAndLastNameAndCompanyId(
+                        companyId,
+                        parts[1].toLowerCase() + "%", parts[0],
+                        pageable);
+        return users.stream()
                 .map(UserMapper.MAPPER::detailedFromUser)
                 .collect(Collectors.toList());
-        return rst;
     }
 
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
     }
 
-    public Long getCountByUserName(UUID companyId, String query) {
-        var rst = userRepository.countByLastNameBeginAndCompanyId(companyId, query.toLowerCase()+ "%");
-        return  rst;
+    public Long getCountByQuery(UUID companyId, String query) {
+        var parts = query.split(" ");
+        return parts.length == 1
+                ? userRepository.countByLastNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
+                : userRepository.countByLastNameAndNameAndCompanyId(
+                        companyId, parts[1].toLowerCase() + "%", parts[0]);
     }
 
     @Transactional

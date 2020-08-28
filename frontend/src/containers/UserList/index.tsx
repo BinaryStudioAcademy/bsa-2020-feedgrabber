@@ -14,13 +14,7 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import { Button, Input} from 'semantic-ui-react';
-
-const optionsd = [
-  { key: 100, text: 'alex' },
-  { key: 1000, text: 'fred' },
-  { key: 200, text: 'sergey' },
-  { key: 300, text: 'elvis' }
-];
+import styles from './styles.module.sass';
 
 const defaultSize = 10;
 
@@ -81,15 +75,22 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     loadUsers();
   };
 
+  const onKeyPressed = (evt: KeyboardEvent) => {
+      if (evt.charCode == 13) {
+        handleSearch();
+      }
+  };
+
   const search = () => (
-    <div>
-      <Input
+    <div className={styles.searchContainer}>
+      <Input style={{width: '450px'}}
         icon={{ name: 'search', circular: true, link: true, onClick: handleSearch }}
         placeholder='Search employee'
         value={searchQuery}
+        onKeyPress={onKeyPressed}
         onChange={handleChange}
       />
-      <Button onClick={handleClear}>clear</Button>
+      <Button onClick={handleClear} color='blue' size={"small"}>clear</Button>
     </div>
   );
 
