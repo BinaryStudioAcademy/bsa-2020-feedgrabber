@@ -14,14 +14,15 @@ import java.util.UUID;
 @Service
 public class UserNotificationService {
 
-    @Autowired
     private UserNotificationRepository userNotificationRepository;
 
-    @Autowired
-    private ResponseRepository responseRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    UserRepository userRepository;
+    public UserNotificationService(UserNotificationRepository userNotificationRepository, UserRepository userRepository) {
+        this.userNotificationRepository = userNotificationRepository;
+        this.userRepository = userRepository;
+    }
 
     public List<NotificationResponseDto> getAllByUser(UUID userId) {
         return userNotificationRepository.findAllActiveNotificationsByUser(userId);

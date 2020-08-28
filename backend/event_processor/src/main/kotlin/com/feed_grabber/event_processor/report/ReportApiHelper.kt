@@ -13,7 +13,6 @@ import java.util.*
 @Service
 class ReportApiHelper(val JSON: ObjectMapper = jacksonObjectMapper()) {
     var URL = "http://localhost:5000/api/report?requestId="
-
     fun fetchReportData(requestId: UUID): DataForReport {
         val result: DataForReport = RestTemplate().getForObject(URL.plus(requestId), DataForReport::class)
         result.responses.forEach { t ->

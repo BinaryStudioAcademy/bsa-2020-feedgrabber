@@ -2,7 +2,11 @@ package com.feed_grabber.core.report;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.notification.MessageTypes;
+import com.feed_grabber.core.notification.UserNotificationRepository;
+import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
 import com.feed_grabber.core.request.RequestRepository;
@@ -19,6 +23,8 @@ import java.util.UUID;
 @Service
 public class ReportService {
     private final RequestRepository requestRepository;
+    private final NotificationService notificationService;
+    private final UserNotificationRepository userNotificationRepository;
     private final RestTemplate template = new RestTemplate();
     private final Sender sender;
 
@@ -26,8 +32,10 @@ public class ReportService {
     private String EP;
 
     @Autowired
-    public ReportService(RequestRepository requestRepository, Sender sender) {
+    public ReportService(RequestRepository requestRepository,NotificationService notificationService,UserNotificationRepository userNotificationRepository, Sender sender) {
         this.requestRepository = requestRepository;
+        this.userNotificationRepository = userNotificationRepository;
+        this.notificationService = notificationService;
         this.sender = sender;
     }
 
@@ -48,10 +56,27 @@ public class ReportService {
         var body = new ObjectMapper().writeValueAsString(getDataForReport(requestId));
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
+        var result = template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
+        var request = requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
+        var requestMaker = request.getRequestMaker();
+        notificationService.sendMessageToConcreteUser(
+                requestMaker.getId().toString(),
+                "notify",
+                userNotificationRepository
+                        .findNotificationById(userNotificationRepository.save(UserNotification
+                                .builder()
+                                .request(request)
+                                .text("Web report generated")
+                                .seen(false)
+                                .type(MessageTypes.plain_text)
+                                .user(requestMaker)
+                                .build()).getId())
+                        .toString()
+        );
+        return result;
     }
 
     public String getReport(UUID requestId) {
-        return template.getForObject(EP +"/report/"+requestId, String.class);
+        return template.getForObject(EP + "/report/" + requestId, String.class);
     }
 }

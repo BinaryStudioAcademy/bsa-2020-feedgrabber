@@ -153,8 +153,25 @@ public class RequestService {
     public void addExcelReport(S3FileCreationDto dto) throws NotFoundException {
         var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
         var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
+        var requestMaker = request.getRequestMaker();
         request.setExcelReport(report);
         requestRepository.save(request);
+
+        notificationService.sendMessageToConcreteUser(
+                requestMaker.getId().toString(),
+                "notify",
+                userNotificationRepository
+                        .findNotificationById(userNotificationRepository.save(UserNotification
+                                .builder()
+                                .request(request)
+                                .text("You have new questionnaire request")
+                                .seen(false)
+                                .type(MessageTypes.text_with_link)
+                                .link(dto.getLink())
+                                .user(requestMaker)
+                                .build()).getId())
+                        .toString()
+        );
     }
 
     public Date closeNow(UUID requestId) throws NotFoundException {

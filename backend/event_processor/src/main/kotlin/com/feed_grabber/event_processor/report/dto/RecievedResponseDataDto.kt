@@ -6,7 +6,7 @@ import java.util.*
 
 
 data class DataForReport(
-        val requestId: UUID,
+        val requestId: UUID?,
         val questionnaire: QuestionnaireDto,
         val requestCreationDate: Date,
         val requestExpirationDate: Date?,

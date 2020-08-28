@@ -31,7 +31,7 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
             else QuestionDB(it.id, it.name, it.categoryTitle, it.type, answers)
         }
         dto.apply {
-            return Report(requestId, questions.filterNotNull(), questionnaire,
+            return Report(requestId!!, questions.filterNotNull(), questionnaire,
                     requestCreationDate, requestExpirationDate,
                     requestMaker, targetUser, "", "")
         }
