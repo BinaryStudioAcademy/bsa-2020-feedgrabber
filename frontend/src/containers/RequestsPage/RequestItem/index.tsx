@@ -40,7 +40,7 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
                     <Card.Meta>at {request.creationDate.substr(0, 10)}</Card.Meta>
                 </Card.Content>
                 <Card.Content extra>
-                    {isClosed && <Progress percent={100} inverted indicating color="red"
+                    {isClosed && <Progress percent={100} inverted indicating color="green"
                                     label={`Closed on ${request.closeDate?.substr(0, 10)}`}/>}
                     {!isClosed && <Progress active percent={calcDate(request.expirationDate, request.creationDate)}
                               label={request.expirationDate

@@ -30,7 +30,6 @@ public class TeamController {
     @ApiOperation("Get all teams")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<TeamShortDto>> getAll() {
         var companyId = TokenService.getCompanyId();
         var teams = service.getAllByCompany_Id(companyId);
