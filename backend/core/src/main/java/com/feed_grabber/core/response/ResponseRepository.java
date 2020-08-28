@@ -20,5 +20,5 @@ public interface ResponseRepository extends JpaRepository<Response, UUID> {
             "res.user.userProfile up where res.answeredAt is not null and r.id = :id")
     List<UserResponseShortDto> findRespondentsByRequestId(UUID id);
 
-    List<Response> findAllByUserId(UUID userId);
+    List<Response> findAllByUserIdAndRequestNotNull(UUID userId);
 }

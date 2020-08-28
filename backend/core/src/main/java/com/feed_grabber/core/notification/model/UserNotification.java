@@ -23,7 +23,7 @@ public class UserNotification {
     @Column(name = "text")
     private String text;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "request_id", referencedColumnName = "id")
     private Request request;
 }

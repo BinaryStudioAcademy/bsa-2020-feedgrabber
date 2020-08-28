@@ -123,7 +123,7 @@ public class RequestService {
 
     public List<PendingRequestDto> getPending(UUID userId) {
         return responseRepository
-                .findAllByUserId(userId)
+                .findAllByUserIdAndRequestNotNull(userId)
                 .stream()
                 .map(RequestMapper.MAPPER::toPendingFromResponse)
                 .sorted(
