@@ -36,6 +36,7 @@ function* saveAndPutNewQuestionnaire(action) {
         yield put(saveAndGetQuestionnaireRoutine.success(payload));
         yield put(saveQuestionRoutine.trigger({...defaultQuestion, questionnaireId: payload.id}));
     } catch (e) {
+        console.log(e);
         yield put(saveAndGetQuestionnaireRoutine.failure());
         toastr.error("Failed saving form");
     }

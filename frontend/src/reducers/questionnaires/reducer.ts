@@ -49,8 +49,8 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
                 ...state,
                 pagination: {
                     ...state.pagination,
-                    total: state.pagination.total + 1,
-                    items: [...state.pagination.items, action.payload]
+                    total: state.pagination?.total + 1,
+                    items: [...state.pagination?.items??[], action.payload]
                  }
             };
         case addQuestionnaireRoutine.TRIGGER:

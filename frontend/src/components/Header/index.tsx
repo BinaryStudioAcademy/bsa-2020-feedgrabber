@@ -3,7 +3,7 @@ import {Image, Divider, Icon, Input} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
-import icon from "../../assets/images/logo.svg";
+import icon from "../../assets/images/icon_bg.jpg";
 import {logoutRoutine} from "../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../models/IAppState";
