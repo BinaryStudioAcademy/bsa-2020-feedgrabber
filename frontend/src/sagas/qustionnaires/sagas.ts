@@ -12,6 +12,7 @@ import {
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from "../sections/routines";
+import {loadNotificationsRoutine} from "../notifications/routines";
 
 function* loadQuestionnairesList() {
     try {
@@ -72,6 +73,7 @@ function* deleteQuestionnaire(action) {
         yield put(deleteQuestionnaireRoutine.success());
         toastr.success("Deleted questionnaire");
         yield put(loadQuestionnairesRoutine.trigger());
+        yield put(loadNotificationsRoutine.trigger());
     } catch (errorResponse) {
         yield put(deleteQuestionnaireRoutine.failure());
         toastr.error(errorResponse?.data?.error || 'No response');
