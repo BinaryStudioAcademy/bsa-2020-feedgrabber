@@ -7,6 +7,6 @@ import java.util.UUID;
 
 @Data
 public class QuestionIndexDto {
-    UUID questionnaireId;
+    UUID sectionId;
     List<IndexDto> questions;
 }

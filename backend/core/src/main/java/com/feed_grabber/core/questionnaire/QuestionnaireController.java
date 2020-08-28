@@ -14,6 +14,7 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsExcepti
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -90,7 +91,8 @@ public class QuestionnaireController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException {
+    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto)
+            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.create(createDto, TokenService.getCompanyId())
         );
@@ -115,11 +117,12 @@ public class QuestionnaireController {
     }
 
 
+    @Deprecated
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public void updateQuestionnaireQuestions(QuestionnaireOrderedDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException {
+            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException, SectionNotFoundException {
         this.questionService.saveOrdered(dto);
     }
 }
