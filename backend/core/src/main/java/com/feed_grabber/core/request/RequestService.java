@@ -148,6 +148,13 @@ public class RequestService {
         requestRepository.save(request);
     }
 
+    public void addPPTReport(S3FileCreationDto dto) throws NotFoundException {
+        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
+        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
+        request.setPowerPointReport(report);
+        requestRepository.save(request);
+    }
+
     public Date closeNow(UUID requestId) throws NotFoundException {
         var request = requestRepository
                 .findById(requestId)
