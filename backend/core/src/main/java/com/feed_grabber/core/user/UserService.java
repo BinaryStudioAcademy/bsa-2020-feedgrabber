@@ -10,6 +10,7 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
