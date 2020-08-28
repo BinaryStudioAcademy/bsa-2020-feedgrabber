@@ -7,7 +7,6 @@ import {
     indexQuestionsRoutine,
     deleteFromQuestionnaireRoutine,
     saveQuestionRoutine,
-    loadSavedQuestionsRoutine,
     loadQuestionsBySectionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
@@ -16,8 +15,7 @@ import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {updateQuestions} from "../../helpers/array.helper";
-import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
-import { addQuestionToSectionRoutine, loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 
 export function parseQuestion(rawQuestion) {
     const details = rawQuestion.details
@@ -143,32 +141,6 @@ function* orderQuestions(action) {
     }
 }
 
-function* loadSaved(action) {
-    try {
-        const {responseId, questionnaireId} = action.payload;
-        const resQ: IGeneric<IQuestion[]>
-            = yield call(apiClient.get, `/api/questions/questionnaires/${questionnaireId}`);
-
-        const questions: IQuestion[] = resQ.data.data.map(q => parseQuestion(q));
-        const res: IGeneric<any> = yield call(apiClient.get, `/api/response?responseId=${responseId}`);
-        const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
-
-        const result = questions.filter(q => {
-            if(answers.find(a => a.questionId === q.id)) {
-                q['answer'] = answers.find(a => a.questionId === q.id).body;
-                return q;
-            }else {
-                return false;
-            }
-        });
-        yield put(loadSavedQuestionsRoutine.success(result));
-
-    } catch (e) {
-        yield put(loadSavedQuestionsRoutine.failure(e.data.error));
-        toastr.error("Unable to load questionnaire");
-    }
-}
-
 function* getBySectionId(action) {
   try {
     const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
@@ -192,7 +164,6 @@ export default function* questionSagas() {
         yield takeEvery(indexQuestionsRoutine.TRIGGER, orderQuestions),
         yield takeEvery(deleteFromQuestionnaireRoutine.TRIGGER, deleteOneByQuestionnaireId),
         yield takeEvery(saveQuestionRoutine.TRIGGER, saveOrUpdateQuestion),
-        yield takeEvery(loadSavedQuestionsRoutine.TRIGGER, loadSaved),
         yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId)
     ]);
 }
