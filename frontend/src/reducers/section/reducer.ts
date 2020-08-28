@@ -1,10 +1,12 @@
 import { IAppState } from "models/IAppState";
-import { setCurrentSectionRoutine, 
-    createSectionRoutine, 
-    loadSectionsByQuestionnaireRoutine, 
+import {
+    setCurrentSectionRoutine,
+    createSectionRoutine,
+    loadSectionsByQuestionnaireRoutine,
     setCurrentSectionIdRoutine,
     updateSectionsRoutine,
-    deleteQuestionFromSectionRoutine} from "sagas/sections/routines";
+    deleteQuestionFromSectionRoutine, loadSavedSectionsByQuestionnaireRoutine
+} from "sagas/sections/routines";
 import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
 import { ISection } from "models/forms/Sections/types";
 
@@ -30,12 +32,14 @@ const sectionsReducer = (state: IAppState["sections"] = initialValues, {type, pa
                 current: payload
             };
         case loadSectionsByQuestionnaireRoutine.TRIGGER:
+        case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
         case loadQuestionsBySectionRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
             };
         case loadSectionsByQuestionnaireRoutine.SUCCESS:
+        case loadSavedSectionsByQuestionnaireRoutine.SUCCESS:
         case updateSectionsRoutine.SUCCESS:
             return {
                 ...state,
@@ -44,6 +48,7 @@ const sectionsReducer = (state: IAppState["sections"] = initialValues, {type, pa
                 isLoading: false
             };
         case loadSectionsByQuestionnaireRoutine.FAILURE:
+        case loadSavedSectionsByQuestionnaireRoutine.FAILURE:
         case loadQuestionsBySectionRoutine.FAILURE:
             return {
                 ...state,

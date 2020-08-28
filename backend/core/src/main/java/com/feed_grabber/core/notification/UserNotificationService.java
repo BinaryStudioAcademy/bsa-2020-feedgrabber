@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserNotificationService {
@@ -23,7 +24,7 @@ public class UserNotificationService {
     @Autowired
     UserRepository userRepository;
 
-    public List<NotificationResponseDto> getAllByUser(UUID userId){
+    public List<NotificationResponseDto> getAllByUser(UUID userId) {
         return userNotificationRepository.findAllActiveNotificationsByUser(userId);
     }
 
@@ -34,5 +35,9 @@ public class UserNotificationService {
 
         response.setNotificationExists(false);
         responseRepository.save(response);
+    }
+
+    public void deleteAllNotificationsByUserId(UUID userId) {
+        responseRepository.deleteAllNotificationsByUserId(userId);
     }
 }

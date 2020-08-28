@@ -131,7 +131,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,

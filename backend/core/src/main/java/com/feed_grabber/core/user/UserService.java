@@ -322,5 +322,13 @@ public class UserService implements UserDetailsService {
 
         return name + "-" + namepart;
     }
+
+    public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
+        var newRole = roleRepository.findById(roleId).orElseThrow(NotFoundException::new);
+        var user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        user.setRole(newRole);
+        userRepository.save(user);
+        verificationTokenService.deleteByUserId(userId);
+    }
 }
 
