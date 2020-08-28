@@ -301,7 +301,8 @@ public class UserService implements UserDetailsService {
                         pageable)
                 : userRepository.findByNameAndLastNameAndCompanyId(
                         companyId,
-                        parts[1].toLowerCase() + "%", parts[0],
+                        parts[1].toLowerCase() + "%",
+                        parts[0],
                         pageable);
         return users.stream()
                 .map(UserMapper.MAPPER::detailedFromUser)
