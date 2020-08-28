@@ -30,6 +30,8 @@ public class QuestionCreateDto {
 
     Optional<UUID> questionnaireId;
 
+    Optional<UUID> sectionId;
+
     String details;
 
     Integer index;
