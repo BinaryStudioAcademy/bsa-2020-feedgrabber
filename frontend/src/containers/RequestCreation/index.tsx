@@ -206,7 +206,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <h4 className={styles.yesNoHeader}>Can users change answers?
                                     <span>
                                     <UISwitch
-                                        name="changeAnswers"
+                                        name="changeable"
                                         checked={formik.values.changeable}
                                         onChange={formik.handleChange}
                                     />
