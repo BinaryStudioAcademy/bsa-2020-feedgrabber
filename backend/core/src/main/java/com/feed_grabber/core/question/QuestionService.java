@@ -11,7 +11,6 @@ import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
 import com.feed_grabber.core.sections.SectionRepository;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import com.feed_grabber.core.sections.model.Section;
@@ -29,10 +28,8 @@ public class QuestionService {
     private final QuestionnaireRepository anketRep;
     private final QuestionCategoryRepository quesCategRep;
     private final CompanyRepository companyRep;
-    // private final QuestionQuestionnaireRepository qqRepo;
     private final SectionRepository sectionRepository;
 
-    @Autowired
     public QuestionService(QuestionRepository quesRep,
                            QuestionnaireRepository anketRep,
                            QuestionCategoryRepository quesCategRep,
@@ -109,8 +106,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public List<QuestionDto> addExistingQuestion(AddExistingQuestionsDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException {
+    public List<QuestionDto> addExistingQuestion(AddExistingQuestionsDto dto) throws QuestionnaireNotFoundException {
 
         var questionnaire = anketRep
                 .findById(dto.getQuestionnaireId())
@@ -123,16 +119,12 @@ public class QuestionService {
                         q.getIndex()))
                 .collect(Collectors.toList());
 
-        questionnaire.getQuestions().addAll(bindRows);
+        questionnaire.getQuestions().addAll(dto.getQuestions());
 
         dto.getQuestions()
                 .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getId(), q.getIndex()));
 
-        try {
-            anketRep.save(questionnaire);
-        } catch (Throwable e) {
-            throw new QuestionNotFoundException();
-        }
+        anketRep.save(questionnaire);
 
         return questionnaire
                 .getQuestions()

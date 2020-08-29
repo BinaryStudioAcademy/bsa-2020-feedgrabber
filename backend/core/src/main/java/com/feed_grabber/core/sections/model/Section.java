@@ -41,15 +41,6 @@ public class Section {
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
-    @ManyToMany(
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "sections_questions",
-            joinColumns = {@JoinColumn(name = "section_id")},
-            inverseJoinColumns = {@JoinColumn(name = "question_id")}
-    )
-    private List<Question> questions;
+    @OneToMany(mappedBy = "section")
+    private List<SectionQuestion> questions;
 }
