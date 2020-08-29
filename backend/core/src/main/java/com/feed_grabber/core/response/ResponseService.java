@@ -4,6 +4,7 @@ import com.feed_grabber.core.response.dto.ResponseDto;
 import com.feed_grabber.core.response.dto.ResponseUpdateDto;
 import com.feed_grabber.core.response.dto.UserResponseShortDto;
 import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
+import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,9 @@ public class ResponseService {
     }
 
     public Optional<ResponseDto> getOneByRequestAndUser(UUID requestId, UUID userId) {
+        var byRequestIdAndUserId = responseRepository.findByRequestIdAndUserId(requestId, userId);
         return Optional
-                .of(ResponseMapper.MAPPER.responseToDto(responseRepository.findByRequestAndUser(requestId, userId)));
+                .of(ResponseMapper.MAPPER.responseToDto(byRequestIdAndUserId));
     }
 
     public Optional<ResponseDto> update(ResponseUpdateDto dto) throws ResponseNotFoundException,
