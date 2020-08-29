@@ -77,14 +77,11 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                         notifications.map(notification => (
                             <div key={notification.id}
                                  className={styles.notification}>
-                                     {console.log("render")}
-                                   {console.log(notifications)}
                                 <div className={styles.text}
                                      onClick={() => {
                                          getResponse(notification.requestId);
                                          history.push(`/response/${notification.questionnaireId}`);
                                          readNotification(notification.id);
-                                         // deleteNotification(notification.requestId);
                                          setShown(false);
                                      }}>
                                     <div>{notification.text?.substr(0, 54)}</div>
