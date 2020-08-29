@@ -5,6 +5,7 @@ import {
   removeUserFromCompanyRoutine
 } from "./routines";
 import {toastr} from 'react-redux-toastr';
+import {changeRoleRoutine, setIsChangingRoutine, setSelectedUserRoutine} from "../role/routines";
 
 function* loadUserList(action: any) {
   try {
@@ -38,9 +39,24 @@ function* deleteUserFromCompany(action: any) {
   }
 }
 
+function* changeUserRole(action) {
+  try {
+    yield put(setIsChangingRoutine.trigger({isChanging: true}));
+    yield call(apiClient.put, `/api/user/role/change`, action.payload);
+    yield put(loadCompanyUsersRoutine.trigger());
+    yield put(changeRoleRoutine.success());
+    yield put(setSelectedUserRoutine.trigger(null));
+    toastr.success("Role changed");
+  } catch {
+    toastr.error("Couldn't load company roles");
+    yield put(changeRoleRoutine.failure());
+  }
+}
+
 export default function* questionnairesSagas() {
   yield all([
     yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadUserList),
-    yield takeEvery(removeUserFromCompanyRoutine.TRIGGER, deleteUserFromCompany)
+    yield takeEvery(removeUserFromCompanyRoutine.TRIGGER, deleteUserFromCompany),
+    yield takeEvery(changeRoleRoutine.TRIGGER, changeUserRole)
   ]);
 }

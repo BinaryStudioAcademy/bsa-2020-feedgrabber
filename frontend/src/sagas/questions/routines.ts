@@ -8,4 +8,3 @@ export const loadQuestionnaireQuestionsRoutine = createRoutine('QUESTION:LOAD_QU
 export const indexQuestionsRoutine = createRoutine('QUESTION:INDEX_QUESTIONS');
 export const deleteFromQuestionnaireRoutine = createRoutine('QUESTION:DELETE_QUESTION_FROM_QUESTIONNAIRE');
 export const loadQuestionsBySectionRoutine = createRoutine('QUESTION:LOAD_SECTION');
-export const loadSavedQuestionsRoutine = createRoutine('QUESTION:LOAD_SAVED');

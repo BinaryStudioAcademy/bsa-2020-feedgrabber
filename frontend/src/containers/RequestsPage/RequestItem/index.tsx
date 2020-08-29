@@ -5,6 +5,7 @@ import {toastr} from 'react-redux-toastr';
 import {Button, Card, Icon, Modal, Progress} from "semantic-ui-react";
 import Header from "semantic-ui-react/dist/commonjs/elements/Header";
 import {closeRequestRoutine} from "../../../sagas/request/routines";
+import moment from "moment";
 
 type Props = {
     request: IRequestShort;
@@ -19,8 +20,7 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
     function handleClick() {
         if (isClosed) {
             history.push(`/report/${request.requestId}`);
-        }
-        else {
+        } else {
             toastr.info("Request is in progress");
             setOpen(true);
         }
@@ -32,55 +32,61 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
         setOpen(false);
     }
 
+    const getProgressBar = () => (
+        isClosed ?
+            <Progress percent={calcDate(request.expirationDate, request.creationDate, request.closeDate)}
+                      success label={`Closed ${moment(request.closeDate).calendar()}`}/>
+            : <Progress active percent={calcDate(request.expirationDate, request.creationDate)}
+                        label={request.expirationDate
+                            ? `Deadline on ${moment(request.expirationDate).calendar()}`
+                            : 'Without expiration'}
+                        color="blue"
+            />
+    );
+
     return (
         <>
             <Card fluid raised={true} onClick={handleClick} color="blue">
                 <Card.Content textAlign="center">
                     <Card.Header>Created by {request.requestMaker.username}</Card.Header>
-                    <Card.Meta>at {request.creationDate.substr(0, 10)}</Card.Meta>
+                    <Card.Meta>{moment(request.creationDate).calendar()}</Card.Meta>
                 </Card.Content>
                 <Card.Content extra>
-                    {isClosed && <Progress percent={100} inverted indicating color="red"
-                                    label={`Closed on ${request.closeDate?.substr(0, 10)}`}/>}
-                    {!isClosed && <Progress active percent={calcDate(request.expirationDate, request.creationDate)}
-                              label={request.expirationDate
-                                       ? `Deadline on ${request.expirationDate?.substr(0, 10)}`
-                                       : 'Without expiration'}
-                              color="blue"
-                    />}
-                        <Icon name='user'/>
+                    {getProgressBar()}
+                    <Icon name='user'/>
                     {request.userCount} Attended
                 </Card.Content>
             </Card>
             <Modal
                 closeIcon
+                basic
                 open={open}
                 size="mini"
                 onClose={() => setOpen(false)}
             >
                 <Header icon='archive' content='Close Request & View Report'/>
-                <Modal.Content as="h2">
-                    <p>Do you really want to close request?</p>
-                    Respondents won't be able to answer anymore.
+                <Modal.Content>
+                    <p>Do you really want to <strong style={{color: "red"}}>close the request?</strong></p>
+                    Respondents <strong>won't be able to answer</strong> anymore.
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color='red' onClick={() => setOpen(false)}>
+                    <Button basic color='green' inverted onClick={() => setOpen(false)}>
                         <Icon name='remove' /> No
                     </Button>
-                    <Button color='green' onClick={handleRequestClose}>
+                    <Button color='red' inverted onClick={handleRequestClose}>
                         <Icon name='checkmark' /> Yes
                     </Button>
                 </Modal.Actions>
             </Modal>
-    </>
+        </>
     );
 };
 
-function calcDate(deadline: string, create: string): number {
-    // TODO remove +19000000 after LocalDateTime migration
-    const now = Date.now()+19000000;
-    const start = new Date(create).getTime();
+function calcDate(deadline: string, create: string, close?: string): number {
+    const diff = -2*3600*1000;
+    const now = Date.now();
+    const start = new Date(create).getTime() + diff;
     const end = new Date(deadline).getTime();
-    return (now-start)/(end-start)*100;
+    return ((new Date(close).getTime() || now) - start) / (end - start) * 100;
 }
 

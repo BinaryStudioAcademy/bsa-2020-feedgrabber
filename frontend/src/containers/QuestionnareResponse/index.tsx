@@ -7,16 +7,13 @@ import {Formik} from 'formik';
 import {IAppState} from 'models/IAppState';
 import {connect} from "react-redux";
 import {IAnswer, IAnswerBody, IQuestionnaireResponse} from 'models/forms/Response/types';
-import {loadOneQuestionnaireRoutine, loadOneSavedQuestionnaireRoutine} from 'sagas/qustionnaires/routines';
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import {saveResponseRoutine, getResponseRoutine} from 'sagas/response/routines';
-import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
-import sectionsReducer from 'reducers/section/reducer';
 import LoaderWrapper from 'components/LoaderWrapper';
 
 interface IComponentState {
@@ -90,8 +87,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, loadQuestionnaire, getResponse} = this.props;
-        loadQuestionnaire(match.params.id);
+        const {match, getResponse} = this.props;
         getResponse(match.params.id);
     }
 
@@ -120,7 +116,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     handleSendClick = () => {
-        if (this.state.isCompleted) {
+        if (this.checkIfCompleted()) {
             const answers: IAnswer<IAnswerBody>[] = this.getAnswers();
             const payload = {
                 id: this.props.response.id,
@@ -143,8 +139,14 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         });
     };
 
+    checkIfCompleted = () => {
+        const {sections} = this.props;
+        const {currentSectionIndex, isCompleted} = this.state;
+        return isCompleted || !sections[currentSectionIndex].questions.filter(q => !q.answer).length;
+    }
+
     handleNextClick = () => {
-        if (this.state.isCompleted) {
+        if (this.checkIfCompleted()) {
             const answers: IAnswer<IAnswerBody>[] = this.getAnswers();
             this.setState({
                 answers: this.state.answers.concat(answers),
@@ -160,21 +162,21 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     };
 
     render() {
-        const {sections, isLoading, match} = this.props;
+        const {sections, isLoading} = this.props;
         const {showErrors, currentSectionIndex} = this.state;
         return (
             <div className={styles.response_container}>
                 <UIPageTitle title="Response"/>
                 <LoaderWrapper loading={isLoading}>
-                <UIListHeader title={sections[currentSectionIndex].title} 
-                description={sections[currentSectionIndex].description}/>
+                <UIListHeader title={sections[currentSectionIndex]?.title}
+                description={sections[currentSectionIndex]?.description}/>
                 <Formik
                     initialValues={this.state}
                     onSubmit={this.handleNextClick}
                 >{formik => (
                     <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
                         <ul>
-                            {sections[currentSectionIndex].questions.map(question => {
+                            {sections[currentSectionIndex]?.questions.map(question => {
                                 return (
                                     <UIListItem
                                         key={question.id}
@@ -194,9 +196,9 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                             })}
                         </ul>
                         <div className={styles.submit}>
-                            {/* {currentSectionIndex !== 0 ? 
+                            {/* {currentSectionIndex !== 0 ?
                             <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
-                            {sections.length === currentSectionIndex + 1 ? 
+                            {sections.length === currentSectionIndex + 1 ?
                             <UIButton title="Send" onClick={this.handleSendClick}/> :
                                 <UIButton title="Next" submit/>}
                         </div>
@@ -218,8 +220,6 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     saveResponseAnswers: saveResponseRoutine,
-    loadOneSaved: loadOneSavedQuestionnaireRoutine,
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     getResponse: getResponseRoutine
 };
 
