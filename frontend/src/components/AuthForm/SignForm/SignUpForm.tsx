@@ -59,14 +59,19 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
             }
         >
             {({
+                  touched,
                   errors,
                   values,
                   handleChange,
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.email ||
-                    errors.companyName || errors.password || errors.passwordRepeat || error;
+                const errorText = (touched.username && errors.username)
+                    || (touched.email && errors.email)
+                    || (touched.companyName && errors.companyName)
+                    || (touched.password && errors.password)
+                    || (touched.passwordRepeat && errors.passwordRepeat)
+                    || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">

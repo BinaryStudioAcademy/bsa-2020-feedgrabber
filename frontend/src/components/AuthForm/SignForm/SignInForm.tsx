@@ -77,13 +77,16 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
             }}
         >
             {({
+                  touched,
                   values,
                   errors,
                   handleChange,
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.password || error;
+                const errorText = (touched.username && errors.username)
+                    || (touched.password && errors.password)
+                    || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
