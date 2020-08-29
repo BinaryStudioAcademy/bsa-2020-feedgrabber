@@ -99,7 +99,7 @@ public class QuestionController {
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<QuestionDto>> addExisting(@RequestBody AddExistingQuestionsDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException {
+            throws QuestionnaireNotFoundException {
 
         return new AppResponse<>(questionService.addExistingQuestion(dto));
     }
@@ -112,14 +112,6 @@ public class QuestionController {
         questionService.delete(id);
     }
 
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/index")
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void index(@RequestBody QuestionIndexDto dto)
-            throws QuestionNotFoundException, SectionNotFoundException {
-        this.questionService.index(dto);
-    }
 
     @ApiOperation(value = "Delete the question by id and questionnaireId")
     @DeleteMapping("/questionnaires/{questionId}/{questionnaireId}")

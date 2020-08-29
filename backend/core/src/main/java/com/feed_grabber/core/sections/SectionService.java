@@ -32,12 +32,12 @@ public class SectionService {
     }
 
     public SectionDto create(SectionCreateDto createDto) throws QuestionnaireNotFoundException {
-        if (createDto.getTitle() == null) {
-            createDto.setTitle("New section");
-        }
+        if (createDto.getTitle() == null) createDto.setTitle("New section");
+
         var questionnaire = questionnaireRepository.findById(createDto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
-        var section = SectionMapper.MAPPER.createDtoToModel(createDto);
+
+        var section = SectionMapper.MAPPER.createDtoToModel(createDto, questionnaire);
         return SectionMapper.MAPPER.modelToDto(sectionRepository.save(section));
     }
 
