@@ -47,8 +47,8 @@ public class UserNotificationController {
     @ApiOperation("Mark notification as read")
     @PutMapping("/{id}/read")
     @ResponseStatus(HttpStatus.OK)
-    public void readNotification(@PathVariable UUID notificationId) throws NotFoundException {
-        userNotificationService.markAsRead(notificationId);
+    public void readNotification(@PathVariable UUID id) throws NotFoundException {
+        userNotificationService.markAsRead(id);
     }
 
 }

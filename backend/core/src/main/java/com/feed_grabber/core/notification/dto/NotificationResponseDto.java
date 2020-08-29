@@ -16,5 +16,5 @@ public class NotificationResponseDto {
     private Date date;
     private UUID requestId;
     private UUID questionnaireId;
-    private UUID isRead;
+    private Boolean isRead;
 }

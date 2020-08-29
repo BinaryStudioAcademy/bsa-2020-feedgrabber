@@ -1,6 +1,7 @@
 package com.feed_grabber.core.notification.model;
 
 import com.feed_grabber.core.request.model.Request;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_notifications")
 public class UserNotification {
 

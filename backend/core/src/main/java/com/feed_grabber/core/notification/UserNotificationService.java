@@ -41,8 +41,8 @@ public class UserNotificationService {
         responseRepository.deleteAllNotificationsByUserId(userId);
     }
 
-    public void markAsRead(UUID id) throws NotFoundException {
-        var notification = userNotificationRepository.findById(id)
+    public void markAsRead(UUID notificationId) throws NotFoundException {
+        var notification = userNotificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NotFoundException("Notification Not Found"));
         notification.setIsRead(true);
         userNotificationRepository.save(notification);

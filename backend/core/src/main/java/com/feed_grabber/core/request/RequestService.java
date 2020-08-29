@@ -106,6 +106,7 @@ public class RequestService {
                     .builder()
                     .request(request)
                     .text("You have new questionnaire request")
+                    .isRead(false)
                     .build();
 
             var notification = userNotificationRepository.save(toSaveNotification);
