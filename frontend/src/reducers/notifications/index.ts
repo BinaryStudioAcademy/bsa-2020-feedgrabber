@@ -3,7 +3,8 @@ import {
   deleteAllNotificationsRoutine,
   deleteNotificationRoutine,
   loadNotificationsRoutine,
-  receiveNotificationRoutine
+  receiveNotificationRoutine,
+  markNotificationAsReadRoutine
 } from "../../sagas/notifications/routines";
 
 export interface INotification {
@@ -12,6 +13,7 @@ export interface INotification {
   date: Date;
   requestId: string;
   questionnaireId: string;
+  isRead: boolean;
 }
 
 export interface INotificationsState {
