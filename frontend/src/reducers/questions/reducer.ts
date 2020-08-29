@@ -1,11 +1,10 @@
 import {
-  loadQuestionsRoutine,
-  loadQuestionByIdRoutine,
-  saveQuestionRoutine
+    loadQuestionsRoutine,
+    loadQuestionByIdRoutine,
+    saveQuestionRoutine, deleteFromQuestionnaireRoutine
 } from "sagas/questions/routines";
 import { IAppState } from "models/IAppState";
 import { IQuestion } from "../../models/forms/Questions/IQuesion";
-import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import { ICategoriesState } from "models/categories/ICategorie";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
 
@@ -21,7 +20,7 @@ const initialState: IAppState['questions'] = {
     categories: {
         list: [] as string[]
     } as ICategoriesState,
-    current: defaultQuestion as IQuestion,
+    current: {} as IQuestion,
     isLoading: false
 };
 
@@ -57,6 +56,9 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
                     isLoading: false
                 }
             };
+        case deleteFromQuestionnaireRoutine.TRIGGER:
+            if (state.current.id === payload) return {...state, current: {}};
+            else return state;
         case loadQuestionByIdRoutine.SUCCESS:
         case saveQuestionRoutine.SUCCESS:
             return {

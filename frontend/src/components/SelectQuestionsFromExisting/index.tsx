@@ -18,6 +18,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         currentQuestions,
         qnId,
         isLoading,
+        currentSection,
         isOpen,
         handleOpenModal
     }) => {
@@ -36,7 +37,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
     const handleSubmit = () => {
         if (selected) {
             selected.forEach(q => q.isReused = true);
-            addQuestions({questionnaireId: qnId, questions: selected});
+            addQuestions({questionnaireId: qnId, questions: selected, sectionId: currentSection.id});
         }
         setSelected([]);
         handleOpenModal(false);
@@ -87,7 +88,8 @@ const mapState = (state: IAppState) => ({
     currentQuestions: state.questionnaires.current.questions,
     isLoading: state.questions.isLoading,
     qnId: state.questionnaires.current.get.id,
-    questions: state.questions.list
+    questions: state.questions.list,
+    currentSection: state.sections.current
 });
 
 const mapDispatch = {

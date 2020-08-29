@@ -1,13 +1,16 @@
 import {defaultQuestionValues} from "../../../components/QuestionDetails/defaultValues";
-import {QuestionType} from "./IQuesion";
+import {IQuestion, QuestionType} from "./IQuesion";
+import {IAnswerBody} from "../Response/types";
 
-const question = {
+const question: IQuestion = {
   id: "",
   name: defaultQuestionValues.name,
   categoryTitle: defaultQuestionValues.categoryTitle,
   type: QuestionType.radio,
   details: {answerOptions: ["Option 1"], includeOther: false},
-  isRequired: false
+  isRequired: false,
+  isReused: false,
+  answer: {} as IAnswerBody
 };
 
 export default question;

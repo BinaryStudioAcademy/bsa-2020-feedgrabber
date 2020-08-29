@@ -3,10 +3,21 @@ import { Header} from "semantic-ui-react";
 import ResponseQuestion from "components/ResponseQuestion";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
-import { QuestionCard } from "components/QuestionnaireOrderDraggableView/QuestionCard";
+import QuestionCard from "components/QuestionnaireOrderDraggableView/QuestionCard";
+import { ISection } from "models/forms/Sections/types";
+import UISection from "components/UI/UISectionCard";
+import SectionBlock from "components/SectionBlock";
+import { updateSectionsRoutine,
+   addQuestionToSectionRoutine,
+    deleteQuestionFromSectionRoutine,
+    updateSectionRoutine } from "sagas/sections/routines";
+import { IAppState } from "models/IAppState";
+import { connect } from "react-redux";
+import SectionQuestionList from "./QuestionnaireList";
 
 interface IIndex  {
-  questionnaireId: string;
+  // questionnaireId: string;
+  sectionId: string;
   questions: IIndexObject[];
 }
 
@@ -16,68 +27,78 @@ interface IIndexObject  {
 }
 
 interface IQuestionnairePreviewProps {
-  questions: IQuestion[];
-  qnId: string;
+  sections: ISection[];
   indexQuestions(questions: IIndex): void;
+  updateSections(sections: ISection[]): void;
+  updateSection(action: {}): void;
+  addQuestionToSection(action: any): void;
+  deleteQuestionFromSection(action: any): void;
+}
+
+interface ISectionState {
+  questions: IQuestion[];
 }
 
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
-  questions,
-  qnId,
-  indexQuestions
+  sections,
+  indexQuestions,
+  updateSections,
+  updateSection,
+  addQuestionToSection,
+  deleteQuestionFromSection
 }) => {
-  const [questionCards, setQuestionCards] = useState<IQuestion[]>(questions);
 
-  const indexQuestionsHandler = () => {
-    const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
-    indexQuestions({questionnaireId: qnId,  questions: rst});
+  const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
+    if (sectionId !== prevSectionId) {
+      const updatedSections = sections.map(section => { 
+      if(section.id === sectionId) { 
+        return {...section, 
+          questions: [...section.questions, question]
+        };}
+      else if(section.id === prevSectionId) {
+        const updatedQuestions = section.questions.filter(q => question.id !== q.id);
+        return {
+          ...section,
+          questions: updatedQuestions
+        };
+      }
+      else { return section; }
+    });
+    updateSections(updatedSections);
+    deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
+    addQuestionToSection({sectionId: sectionId, questionId: question.id});
+    }
   };
 
-  useEffect(() => {
-    setQuestionCards(questions);
-  }, [questions]);
-
-  const moveCard = useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      const dragCard = questionCards[dragIndex];
-      const updCards = questionCards.slice();
-      updCards.splice(dragIndex, 1);
-      updCards.splice(hoverIndex, 0, dragCard);
-      setQuestionCards(updCards);
-    },
-    [questionCards]
-  );
-
-  const drop = () => {
-    indexQuestionsHandler();
-  };
-
-  const renderCard = (q: IQuestion, index: number) => {
-    return (
-      <QuestionCard
-        question={q}
-        key={index}
-        id={q.id}
-        index={index}
-        moveCard={moveCard}
-        onDropCard={drop}
-      />
-    );
+  const handleChapterChange = (id: string, title: string, description: string) => {
+    updateSection({id: id, title: title, description: description});
   };
 
   return (
     <div className={styles.wrapper}>
-      {questions.length ?
-        <div>
-          {/* {questions.map(q => <ResponseQuestion question={q} key={q.id} />)} */}
-          {questionCards.map((q, i) => renderCard(q, i))}
-        </div>
-        : <Header as='h2'>
-          Urrr... Maybe nothing is modifying right now or you haven`t created any questions yet?
-        </Header>
-      }
+      {sections && sections.map(section => 
+      <SectionBlock id={section.id}>
+      <UISection section={section} onChanged={handleChapterChange}/>
+      {section.questions.length ?
+        <SectionQuestionList
+        sectionId={section.id}
+        questions={section.questions}
+        handleMoveQuestionToSection={moveQuestionToSection}
+        indexQuestions={indexQuestions}
+        />
+        : <Header as='h3'>
+          Add questions
+        </Header>}
+        </SectionBlock>
+      )}
     </div>);
 };
 
-export default QuestionnairePreview;
+const mapDispatch = {
+  updateSections: updateSectionsRoutine.success,
+  updateSection: updateSectionRoutine,
+  addQuestionToSection: addQuestionToSectionRoutine,
+  deleteQuestionFromSection: deleteQuestionFromSectionRoutine
+};
 
+export default connect(null, mapDispatch)(QuestionnairePreview);

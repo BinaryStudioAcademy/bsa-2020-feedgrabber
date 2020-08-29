@@ -11,8 +11,10 @@ import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireOrderedDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.questionnaire2question.QuestionQuestionnaireRepository;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
+import com.feed_grabber.core.sections.SectionRepository;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
+import com.feed_grabber.core.sections.model.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +29,20 @@ public class QuestionService {
     private final QuestionnaireRepository anketRep;
     private final QuestionCategoryRepository quesCategRep;
     private final CompanyRepository companyRep;
-    private final QuestionQuestionnaireRepository qqRepo;
+    // private final QuestionQuestionnaireRepository qqRepo;
+    private final SectionRepository sectionRepository;
 
     @Autowired
     public QuestionService(QuestionRepository quesRep,
                            QuestionnaireRepository anketRep,
-                           QuestionCategoryRepository quesCategRep, CompanyRepository companyRep, QuestionQuestionnaireRepository qqRepo) {
+                           QuestionCategoryRepository quesCategRep,
+                           CompanyRepository companyRep,
+                           SectionRepository sectionRepository) {
         this.quesRep = quesRep;
         this.anketRep = anketRep;
         this.quesCategRep = quesCategRep;
         this.companyRep = companyRep;
-        this.qqRepo = qqRepo;
+        this.sectionRepository = sectionRepository;
     }
 
     public List<QuestionDto> getAll() {
@@ -61,13 +66,15 @@ public class QuestionService {
     }
 
 
-    public QuestionDto create(QuestionCreateDto dto) throws CompanyNotFoundException, QuestionnaireNotFoundException {
+    public QuestionDto create(QuestionCreateDto dto)
+            throws CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
         var question = this.createModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
     @Transactional
-    public Question createModel(QuestionCreateDto dto) throws CompanyNotFoundException, QuestionnaireNotFoundException {
+    public Question createModel(QuestionCreateDto dto)
+            throws CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
         var question = Question.builder();
 
         var company = companyRep
@@ -89,10 +96,15 @@ public class QuestionService {
             var questionnaire =  anketRep.findById(dto.getQuestionnaireId().get())
                     .orElseThrow(QuestionnaireNotFoundException::new);
 
-            var bindRow = QuestionnaireQuestion.getFromEntities(savedQuestion, questionnaire, dto.getIndex());
-            this.qqRepo.save(bindRow);
+            Section section;
+            if (dto.getSectionId().isEmpty()) {
+                section = this.sectionRepository.findByQuestionnaireIdAndTitle(questionnaire.getId(), questionnaire.getTitle());
+            } else {
+                section = this.sectionRepository.findById(dto.getSectionId().get())
+                        .orElseThrow(SectionNotFoundException::new);
+            }
+            this.sectionRepository.addQuestion(section.getId(), savedQuestion.getId(), dto.getIndex());
         }
-
         return savedQuestion;
     }
 
@@ -112,6 +124,9 @@ public class QuestionService {
                 .collect(Collectors.toList());
 
         questionnaire.getQuestions().addAll(bindRows);
+
+        dto.getQuestions()
+                .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getId(), q.getIndex()));
 
         try {
             anketRep.save(questionnaire);
@@ -151,7 +166,7 @@ public class QuestionService {
     }
 
     public void saveOrdered(QuestionnaireOrderedDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException {
+            throws QuestionNotFoundException, QuestionnaireNotFoundException, CompanyNotFoundException, SectionNotFoundException {
         Map<Question, Integer> questionsIndices = new HashMap<>();
         for (QuestionUpsertDto question: dto.getQuestions() ) {
             questionsIndices.put(this.getOrCreate(question), question.getIndex());
@@ -184,27 +199,30 @@ public class QuestionService {
     }
 
     public Question getOrCreate(QuestionUpsertDto question)
-            throws QuestionNotFoundException, CompanyNotFoundException, QuestionnaireNotFoundException {
+            throws QuestionNotFoundException, CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
         return question.getId() == null
                 ? this.createModel(QuestionMapper.MAPPER.upsertDtoToCreateDto(question))
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
     }
 
 
-    public void index(QuestionIndexDto dto) throws QuestionNotFoundException {
-        List<QuestionnaireQuestion> binds = new ArrayList<>();
+    public void index(QuestionIndexDto dto) throws QuestionNotFoundException, SectionNotFoundException {
         for (IndexDto question : dto.getQuestions()) {
-            var bindRow = this.qqRepo.findByQuestionIdAndQuestionnaireId(
-                    question.getQuestionId(),
-                    dto.getQuestionnaireId()
-            ).orElseThrow(QuestionNotFoundException::new);
-            bindRow.setIndex(question.getIndex());
-            binds.add(bindRow);
+            quesRep.findById(question.getQuestionId()).orElseThrow(QuestionNotFoundException::new);
+            sectionRepository.findById(dto.getSectionId()).orElseThrow(SectionNotFoundException::new);
+            sectionRepository.setIndex(dto.getSectionId(), question.getQuestionId(), question.getIndex());
         }
-        qqRepo.saveAll(binds);
     }
 
     public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) {
-        qqRepo.deleteByQuestionIdAndQuestionnaireId(questionId, qId);
+        var section = sectionRepository.findByQuestionnaireIdAndQuestionId(qId, questionId);
+        sectionRepository.deleteQuestion(section.getId(), questionId);
+    }
+
+    public List<QuestionDto> getAllBySection(UUID id) {
+        return quesRep.findAllBySectionId(id)
+                .stream()
+                .map(QuestionMapper.MAPPER::questionToQuestionDto)
+                .collect(Collectors.toList());
     }
 }

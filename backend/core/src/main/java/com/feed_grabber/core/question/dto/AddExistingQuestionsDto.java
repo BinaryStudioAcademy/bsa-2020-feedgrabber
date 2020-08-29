@@ -13,4 +13,5 @@ import java.util.UUID;
 public class AddExistingQuestionsDto {
     private Set<QuestionUpdateDto> questions;
     private UUID questionnaireId;
+    private UUID sectionId;
 }

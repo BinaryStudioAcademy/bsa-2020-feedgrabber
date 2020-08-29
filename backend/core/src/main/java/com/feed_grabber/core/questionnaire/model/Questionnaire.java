@@ -3,6 +3,7 @@ package com.feed_grabber.core.questionnaire.model;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
+import com.feed_grabber.core.sections.model.Section;
 import com.feed_grabber.core.request.model.Request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +45,9 @@ public class Questionnaire {
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 
+    @OneToMany(mappedBy = "questionnaire")
+    private List<Section> sections;
+    
     @Column(name = "is_editing_enabled", nullable = false)
     @ColumnDefault("true")
     private boolean isEditingEnabled = true;

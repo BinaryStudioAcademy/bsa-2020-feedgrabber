@@ -6,6 +6,7 @@ import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenNotFoundException;
+import com.feed_grabber.core.role.dto.RoleAssignmentDto;
 import com.feed_grabber.core.user.dto.*;
 
 import com.feed_grabber.core.apiContract.AppResponse;
@@ -18,7 +19,6 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -26,7 +26,6 @@ import java.util.UUID;
 
 import java.util.List;
 
-import static com.feed_grabber.core.role.RoleConstants.IS_COMPANY_OWNER;
 import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
 
 
@@ -44,7 +43,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "Get details from one user",
-    notes = "You should not to provide an id, it will be got from token service")
+            notes = "You should not to provide an id, it will be got from token service")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UserDetailsResponseDTO> getUserDetails() {
@@ -80,9 +79,16 @@ public class UserController {
         userService.updatePassword(user.getId(), dto.getPassword());
     }
 
+    @ApiOperation(value = "Update role")
+    @PutMapping("/role/change")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeRole(@RequestBody RoleAssignmentDto dto) throws NotFoundException {
+        userService.changeRole(dto.getUserId(), dto.getRoleId());
+    }
+
 
     @GetMapping("/all")
-    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId (
+    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId(
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
@@ -113,7 +119,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UserShortDto> getUserShortByEmailAndCompany(@RequestParam String email,
                                                                    @RequestParam UUID companyId)
-                throws UserNotFoundException {
+            throws UserNotFoundException {
         return new AppResponse<>(userService.getUserShortByEmailAndCompany(email, companyId));
     }
 }

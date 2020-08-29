@@ -4,9 +4,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.report.dto.ReportShortDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import com.feed_grabber.core.auth.security.TokenService;
@@ -39,11 +37,17 @@ public class ReportController {
         service.sendExcelReportGenerationRequest(requestId);
     }
 
+<<<<<<< HEAD
     @GetMapping("/all")
     public AppResponse<List<ReportShortDto>> getAllAvailableReports() {
         final String role = TokenService.getRoleName();
         final UUID companyId = TokenService.getCompanyId();
         final UUID userId = TokenService.getUserId();
         return new AppResponse<>(service.getAllAvailableReports(userId, role, companyId));
+=======
+    @PostMapping("/ppt")
+    public void generatePPTReport(@RequestParam UUID requestId) {
+        service.sendPPTReportGenerationRequest(requestId);
+>>>>>>> 95befba248047d9ebb7a92db740c859999538045
     }
 }

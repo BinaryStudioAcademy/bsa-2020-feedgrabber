@@ -27,6 +27,7 @@ import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
+import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -47,11 +48,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        users,
        loadTeams,
        loadUsers,
-       loadQuestionnaire,
+       loadSections,
        sendRequest,
        isLoadingUsers,
        isLoadingTeams,
-       questions
+       sections
      }) => {
 
       // load users
@@ -63,11 +64,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       useEffect(() => {
         loadTeams();
       }, [loadTeams]);
-
-      // load questionnaire
-      useEffect(() => {
-        loadQuestionnaire(match.params.id);
-      }, [loadQuestionnaire, match.params.id]);
+  
+        // load questionnaire
+        useEffect(() => {
+            loadSections(match.params.id);
+        }, [loadSections, match.params.id]);
 
       const [targetUserPattern, setTargetUserPattern] = useState('');
       const [respondentPattern, setRespondentPattern] = useState('');
@@ -78,15 +79,14 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
             <UIPageTitle title='Send Request'/>
             <UIContent>
               <UIColumn>
-                <UICard>
-                  <UICardBlock>
-                    <QuestionnairePreview
-                        indexQuestions={indexQuestionsRoutine}
-                        qnId={match.params.id}
-                        questions={questions ?? []}
-                    />
-                  </UICardBlock>
-                </UICard>
+                  <UICard>
+                    <UICardBlock>
+                        <QuestionnairePreview
+                            indexQuestions={indexQuestionsRoutine}
+                            sections={sections}
+                        />
+                    </UICardBlock>
+                  </UICard>
               </UIColumn>
               <UIColumn>
                 <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
@@ -319,14 +319,15 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,
-  questions: state.questionnaires.current.questions
+  questions: state.questionnaires.current.questions,
+  sections: state.sections.list
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadQuestionnaire: loadOneQuestionnaireRoutine
+  loadSections: loadSectionsByQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
