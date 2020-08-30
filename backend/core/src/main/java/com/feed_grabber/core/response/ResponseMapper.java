@@ -17,6 +17,8 @@ public interface ResponseMapper {
     ResponseMapper MAPPER = Mappers.getMapper(ResponseMapper.class);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "notificationExists", ignore = true)
+    @Mapping(target = "answeredAt", ignore = true)
     Response responseFromDto(ResponseCreateDto dto, User user, Request request);
 
     @Mapping(target = "requestId", source = "request.id")
