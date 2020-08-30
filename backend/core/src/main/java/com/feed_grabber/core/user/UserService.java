@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService {
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
 
-	@Autowired
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private final UserProfileRepository profileRepository;
