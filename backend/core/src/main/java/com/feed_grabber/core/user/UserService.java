@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UUID createDefault(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException {
+    public UUID createDefault(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException, CompanyAlreadyExistsException {
 
 //        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
 //                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
