@@ -37,17 +37,16 @@ public class ReportController {
         service.sendExcelReportGenerationRequest(requestId);
     }
 
-<<<<<<< HEAD
     @GetMapping("/all")
     public AppResponse<List<ReportShortDto>> getAllAvailableReports() {
         final String role = TokenService.getRoleName();
         final UUID companyId = TokenService.getCompanyId();
         final UUID userId = TokenService.getUserId();
         return new AppResponse<>(service.getAllAvailableReports(userId, role, companyId));
-=======
+    }
+
     @PostMapping("/ppt")
     public void generatePPTReport(@RequestParam UUID requestId) {
         service.sendPPTReportGenerationRequest(requestId);
->>>>>>> 95befba248047d9ebb7a92db740c859999538045
     }
 }
