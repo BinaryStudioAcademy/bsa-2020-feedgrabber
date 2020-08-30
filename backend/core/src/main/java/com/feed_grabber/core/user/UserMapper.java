@@ -17,6 +17,8 @@ public interface UserMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "userProfile", ignore = true)
     @Mapping(target = "userSettings", ignore = true)
+    @Mapping(target = "isEnabled", ignore = true)
+    @Mapping(target = "company", ignore = true)
     User userCreateDtoToModel(UserCreateDto userDto);
 
     @Mapping(target = "role", expression = "java(user.getRole().getSystemRole().toString())")

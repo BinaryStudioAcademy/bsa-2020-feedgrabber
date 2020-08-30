@@ -25,6 +25,10 @@ public interface RequestMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "responses", ignore = true)
+    @Mapping(target = "closeDate", ignore = true)
+    @Mapping(target = "excelReport", ignore = true)
+    @Mapping(target = "powerPointReport", ignore = true)
     Request requestCreationRequestDtoToModel(CreateRequestDto dto,
                                              Questionnaire questionnaire,
                                              User targetUser,
