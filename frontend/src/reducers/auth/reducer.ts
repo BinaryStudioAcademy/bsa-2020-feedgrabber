@@ -46,25 +46,29 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
     if (type === logoutRoutine.SUCCESS) {
         return {
             ...state,
-            info: undefined
+            info: undefined,
+            isLoading: false
         };
     }
     if (type === registerRoutine.FAILURE) {
         return {
             ...state,
-            error: {...state.error, register: payload}
+            error: {...state.error, register: payload},
+            isLoading: false
         };
     }
     if (type === loginRoutine.FAILURE) {
         return {
             ...state,
-            error: {...state.error, login: payload}
+            error: {...state.error, login: payload},
+            isLoading: false
         };
     }
     if (type === getUserRoutine.FAILURE) {
         return {
             ...state,
-            error: {...state.error, getUser: payload}
+            error: {...state.error, getUser: payload},
+            isLoading: false
         };
     }
     if (type === "SET_USER_EMAIL") {

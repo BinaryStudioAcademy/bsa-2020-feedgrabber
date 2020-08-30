@@ -28,10 +28,10 @@ import RequestsPage from "../RequestsPage";
 import InvitationLinkPage from "../InvitationLinkPage";
 import RespondentReport from "../ReportPage/RespondentReport";
 import Profile from "../../components/Profile";
+import RedirectFormEditor from "../../components/RedirectFormEditor";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
-    // useStomp("questions", m => console.log(m.body, m.headers, m.binaryBody));
 
     useEffect(() => {
         isLogged && getUser();
@@ -52,7 +52,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/profile/security" component={() => <Profile mode='security'/>}/>
                     <PrivateRoute exact path="/requests" component={() => <span>Requests</span>}/>
                     <PrivateRoute exact path="/help" component={() => <span>Help Center</span>}/>
-                    <PrivateRoute exact path="/editor" component={() => <span>Form Editor</span>}/>
+                    <PrivateRoute exact path="/editor" component={RedirectFormEditor}/>
                     <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
                     <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>

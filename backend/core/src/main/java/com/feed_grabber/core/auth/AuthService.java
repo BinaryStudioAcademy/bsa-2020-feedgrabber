@@ -40,7 +40,7 @@ public class AuthService {
             authenticationManager.authenticate(upa);
 
         } catch (BadCredentialsException e) {
-            throw new WrongCredentialsException("Incorrect username or password");
+            throw new WrongCredentialsException("Incorrect password");
         }
 
         var user = userRepository

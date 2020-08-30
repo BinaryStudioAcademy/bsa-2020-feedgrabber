@@ -8,12 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ResponseRepository extends JpaRepository<Response, UUID> {
-    @Query("select r from Response r " +
-            "where r.user.id = :userId and r.request.id = :requestId")
-    Response findByRequestAndUser(UUID requestId, UUID userId);
+    Response findByRequestIdAndUserId(UUID requestId, UUID userId);
 
     @Query("select new com.feed_grabber.core.response.dto.UserResponseShortDto" +
             "(res.id, res.user.username, up.firstName, " +
@@ -21,6 +20,8 @@ public interface ResponseRepository extends JpaRepository<Response, UUID> {
             "join r.responses res left join " +
             "res.user.userProfile up where res.answeredAt is not null and r.id = :id")
     List<UserResponseShortDto> findRespondentsByRequestId(UUID id);
+
+    List<Response> findAllByUserIdAndRequestNotNull(UUID userId);
 
     List<Response> findAllByUserId(UUID userId);
 
