@@ -3,6 +3,8 @@ import {QuestionType} from "../forms/Questions/IQuesion";
 export interface IQuestionnaireReport {
   questionnaire: IQuestionnaireDto;
   questions: IQuestionReport[];
+  excelReportLink?: string;
+  pptReportLink?: string;
 }
 
 type IQuestionnaireDto = {

@@ -2,7 +2,9 @@ package com.feed_grabber.core.report;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.rabbit.Receiver;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
 import com.feed_grabber.core.request.RequestRepository;
@@ -57,7 +59,10 @@ public class ReportService {
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         var result = template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
+
         sendFilesReportGenerationRequest(requestId);
+        Receiver.reportToUser.put(requestId, TokenService.getUserId());
+
         return result;
     }
 

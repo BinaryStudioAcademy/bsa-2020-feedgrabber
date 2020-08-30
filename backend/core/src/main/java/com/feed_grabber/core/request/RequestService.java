@@ -143,6 +143,12 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
+    public void sendReportsUrls(UUID userId, FileReportsDto dto ) {
+        notificationService.sendMessageToConcreteUser(
+                userId.toString(),
+                "reportUrls",
+                dto);
+    }
 //    public void addExcelReport(S3FileCreationDto dto) throws NotFoundException {
 //        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
 //        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);

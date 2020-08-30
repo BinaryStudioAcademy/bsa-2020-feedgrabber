@@ -11,11 +11,17 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 @Slf4j
 public class Receiver {
 
     private RequestService requestService;
+
+    public static final Map<UUID, UUID> reportToUser = new ConcurrentHashMap<>();
 
     @Autowired
     public Receiver(RequestService requestService) {
@@ -32,7 +38,10 @@ public class Receiver {
     @RabbitListener(queues = "${rabbitmq.queue.report}")
     public void receive(FileReportsDto dto) throws NotFoundException {
         requestService.addFileReports(dto);
-
+        var userId = reportToUser.get(dto.getRequestId());
+        if (userId != null) {
+            requestService.sendReportsUrls(userId, dto);
+        }
     }
 
 //    @RabbitListener(queues = "${rabbitmq.queue.report.ppt}")
