@@ -112,7 +112,8 @@ const MainPage: FC<IMainPageProps> =
                                         responseId,
                                         questionnaire,
                                         expirationDate,
-                                        closeDate
+                                        closeDate,
+                                        changeable
                                     }) => (
                                     <UICardBlock key={requestId}
                                                  className={`${styles.container_all} ${styles.container}`}>
@@ -124,11 +125,12 @@ const MainPage: FC<IMainPageProps> =
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() && !closeDate)
-                                            ? <UIButton title="Change my answer"
-                                                        onClick={() =>
-                                                            handleModifyAnswerClick(
-                                                                requestId,
-                                                                responseId)}/>
+                                            ? <UIButton
+                                                title={changeable ? "Change my answer" : "Show answers"}
+                                                onClick={() =>
+                                                    handleModifyAnswerClick(
+                                                        requestId,
+                                                        responseId)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
                                                 ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
                                                 : <p>Expired {new Date(new Date().valueOf()
