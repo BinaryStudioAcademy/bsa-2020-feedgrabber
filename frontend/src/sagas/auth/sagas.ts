@@ -19,7 +19,7 @@ function* auth(action) {
         yield call(saveTokens, {accessToken, refreshToken});
         yield call(history.push, "/");
     } catch (error) {
-        yield put(routine.failure(error.data.error));
+        yield put(routine.failure(error.response?.data?.error || "No response"));
     }
 }
 
