@@ -15,7 +15,10 @@ import org.mapstruct.factory.Mappers;
 @Mapper(uses = {UserMapper.class, QuestionnaireMapper.class})
 public interface ResponseMapper {
     ResponseMapper MAPPER = Mappers.getMapper(ResponseMapper.class);
-    
+
+    @Mapping(target = "id", ignore = true)
+    Response responseFromDto(ResponseCreateDto dto, User user, Request request);
+
     @Mapping(target = "requestId", source = "request.id")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "questionnaire", source = "request.questionnaire")
