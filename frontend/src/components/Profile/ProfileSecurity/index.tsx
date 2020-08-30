@@ -27,7 +27,11 @@ const passwordSchema = yup.object().shape({
       .min(8, "Password too short")
       .max(16, "Password too long!")
       .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
-          "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )")
+          "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
+  newPasswordAgain: yup
+      .string()
+      .required("Repeat the password")
+      .oneOf([yup.ref("newPassword")], "Passwords must match")
 });
 
 const ProfileSecurity: React.FC<ProfileSecurityProps> =
@@ -118,14 +122,15 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                                  name='newPasswordAgain'
                                  value={formik.values.newPasswordAgain}
                                  onChange={formik.handleChange}
-                                 error={formik.errors.newPasswordAgain}
-                                 onBlur={() => {
-                                   if (formik.values.newPasswordAgain !== formik.values.newPassword) {
-                                     formik.setFieldError('newPasswordAgain', 'Password must match');
-                                   } else {
-                                     formik.setFieldError('newPasswordAgain', null);
-                                   }
-                                 }}
+                                 error={formik.touched.newPasswordAgain && formik.errors.newPasswordAgain}
+                                 // onBlur={() => {
+                                 //   if (formik.values.newPasswordAgain !== formik.values.newPassword) {
+                                 //     formik.setFieldError('newPasswordAgain', 'Password must match');
+                                 //   } else {
+                                 //     formik.setFieldError('newPasswordAgain', null);
+                                 //   }
+                                 // }}
+                                onBlur={formik.handleBlur}
                     />
                     <UIButton disabled={!!(formik.values === initialPassword
                         || formik.errors.oldPassword
