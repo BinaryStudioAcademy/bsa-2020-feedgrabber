@@ -10,7 +10,7 @@ import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
-import {Search} from "../Search";
+import Search from "../Search";
 
 const StyledItem = styled(Menu.Item)`
     font-size: 1.15em !important;
