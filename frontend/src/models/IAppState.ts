@@ -31,5 +31,5 @@ export interface IAppState {
     company: ICompanyState;
     isLoading: boolean;
     notifications: INotificationsState;
-    searchResult: ISearchResultState;
+    search: ISearchResultState;
 }

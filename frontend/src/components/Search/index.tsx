@@ -1,13 +1,13 @@
 import React, {FC, useEffect, useState} from "react";
-import {Icon, Search as SearchSemantic} from "semantic-ui-react";
+import {Header, Icon, Label, Search as SearchSemantic} from "semantic-ui-react";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {searchOverAllEntities} from "../../sagas/search/routines";
+import styles from "./styles.module.sass";
 
 interface IResult {
+    count: number;
     title: string;
-    description: string;
-    image?: string;
 }
 
 const Search: FC<SearchProps> = ({isLoading, result, searchAll}) => {
@@ -15,56 +15,35 @@ const Search: FC<SearchProps> = ({isLoading, result, searchAll}) => {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        const temp: { name: string; results: IResult[] }[] = [];
+        const temp: IResult[] = [];
         if (result?.questions) {
             temp.push({
-                name: 'Questions', results: result.questions.map(q => {
-                    return {
-                        title: q.name,
-                        description: q.categoryTitle
-                    };
-                })
+                count: result.questions.length,
+                title: 'Questions'
             });
         }
         if (result?.questionnaires) {
             temp.push({
-                name: 'Questionnaires', results: result.questionnaires.map(q => {
-                    return {
-                        title: q.title,
-                        description: q.description
-                    };
-                })
+                count: result.questionnaires.length,
+                title: 'Questionnaires'
             });
         }
         if (result?.users) {
             temp.push({
-                name: 'Users', results: result.users.map(q => {
-                    return {
-                        title: `${q.firstName} ${q.lastName}`,
-                        description: q.companyName,
-                        image: q.avatar
-                    };
-                })
+                count: result.users.length,
+                title: 'Users'
             });
         }
         if (result?.teams) {
             temp.push({
-                name: 'Teams', results: result.teams.map(q => {
-                    return {
-                        title: q.name,
-                        description: `${q.membersId.length} members`
-                    };
-                })
+                count: result.teams.length,
+                title: 'Teams'
             });
         }
         if (result?.reports) {
             temp.push({
-                name: 'Reports', results: result.reports.map(q => {
-                    return {
-                        title: `${q.questionnaire.title} report`,
-                        description: `${q.questions.length} questions`
-                    };
-                })
+                count: result.reports.length,
+                title: 'Reports'
             });
         }
         setOptions(temp);
@@ -78,16 +57,20 @@ const Search: FC<SearchProps> = ({isLoading, result, searchAll}) => {
         <SearchSemantic onSearchChange={handleChange}
                         placeholder='Search...'
                         size="small"
-                        inverted
                         results={options}
+                        resultRenderer={result => (
+                            <div className={styles.searchItem}>
+                                <Header className={styles.header} as='h3'>{result?.title}</Header>
+                                <Label content={result?.count}/>
+                            </div>)}
                         icon={<Icon name='search' link loading={isLoading}/>}
-                        category/>
+        />
     );
 };
 
 const mapStateToProps = (state: IAppState) => ({
-    isLoading: state.searchResult?.isLoading,
-    result: state.searchResult?.result
+    isLoading: state.search.isLoading,
+    result: state.search.result
 });
 const mapDispatchToProps = {
     searchAll: searchOverAllEntities

@@ -13,7 +13,7 @@ const initialState: ISearchResultState = {
     isLoading: false
 };
 
-const searchReducer = (state: IAppState['searchResult'] = initialState, {type, payload}) => {
+const searchReducer = (state: IAppState['search'] = initialState, {type, payload}) => {
     switch (type) {
         case searchOverAllEntities.SUCCESS:
             return {
