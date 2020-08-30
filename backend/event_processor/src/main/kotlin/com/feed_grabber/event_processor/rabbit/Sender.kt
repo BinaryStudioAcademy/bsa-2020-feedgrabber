@@ -1,6 +1,7 @@
 package com.feed_grabber.event_processor.rabbit
 
-import com.feed_grabber.event_processor.report.dto.ReportFileCreationResponseDto
+import com.feed_grabber.event_processor.report.dto.ReportFileCreationDto
+import com.feed_grabber.event_processor.report.dto.ReportFilesResponseDto
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,14 +31,19 @@ class Sender {
         println(" [x] Sent $text")
     }
 
-    fun sendUploadedReportURL(dto: ReportFileCreationResponseDto) {
-        println(" [x] Sending report generation response for request with id ${dto.requestId}")
-        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
-    }
+//    fun sendUploadedReportURL(dto: ReportFileCreationDto) {
+//        println(" [x] Sending report generation response for request with id ${dto.requestId}")
+//        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
+//    }
 
-    fun sendPPTReportURL(dto: ReportFileCreationResponseDto) {
+    fun sendPPTReportURL(dto: ReportFileCreationDto) {
         println(" [x] Sending report generation response for request with id ${dto.requestId}")
         template!!.convertAndSend(exchange!!, pptLinkRoutingKey!!, dto)
+    }
+
+    fun sendUploadedReportsURL(dto: ReportFilesResponseDto) {
+        println(" [x] Sending report generation response for request with id ${dto.requestId}")
+        template!!.convertAndSend(exchange!!, excelLinkRoutingKey!!, dto)
     }
 
 }

@@ -31,12 +31,16 @@ public class ReportService {
         this.sender = sender;
     }
 
-    public void sendExcelReportGenerationRequest(UUID requestId) {
-        sender.sendExcelReportGenerationRequest(requestId);
-    }
+//    public void sendExcelReportGenerationRequest(UUID requestId) {
+//        sender.sendExcelReportGenerationRequest(requestId);
+//    }
+//
+//    public void sendPPTReportGenerationRequest(UUID requestId) {
+//        sender.sendPPTReportGenerationRequest(requestId);
+//    }
 
-    public void sendPPTReportGenerationRequest(UUID requestId) {
-        sender.sendPPTReportGenerationRequest(requestId);
+    public void sendFilesReportGenerationRequest(UUID requestId) {
+        sender.sendReportsGenerationRequest(requestId);
     }
 
     public ReportDetailsDto getDataForReport(UUID requestId) throws NotFoundException {
@@ -52,7 +56,9 @@ public class ReportService {
         var body = new ObjectMapper().writeValueAsString(getDataForReport(requestId));
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
+        var result = template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
+        sendFilesReportGenerationRequest(requestId);
+        return result;
     }
 
     public String getReport(UUID requestId) {

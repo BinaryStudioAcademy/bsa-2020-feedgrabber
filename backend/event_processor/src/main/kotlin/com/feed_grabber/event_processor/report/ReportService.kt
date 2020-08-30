@@ -3,15 +3,26 @@ package com.feed_grabber.event_processor.report
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.feed_grabber.event_processor.rabbit.Sender
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.dto.QuestionTypes.*
+import com.feed_grabber.event_processor.report.excel.ExcelReportGenerator
 import com.feed_grabber.event_processor.report.model.*
+import com.feed_grabber.event_processor.report.ppt.PowerPointReport
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.util.*
 
 @Service
-class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = jacksonObjectMapper()) {
+class ReportService(
+        val repository: ReportRepository,
+        val JSON: ObjectMapper = jacksonObjectMapper(),
+        val excelReportGenerator: ExcelReportGenerator,
+        val pptReportGenerator: PowerPointReport,
+        val sender: Sender
+) {
     fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
 
     fun getFrontendData(requestId: UUID): FrontendReportData = projectionToDto(repository.getProjection(requestId))
@@ -164,6 +175,13 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
                 }
             }
         }
+    }
+
+    fun generateExcelAndPPTReports(requestId: UUID ) = runBlocking {
+        val excelReportPromise = async { excelReportGenerator.generate(requestId) }
+        val pptReportPromise = async { pptReportGenerator.create(requestId) }
+        val report = ReportFilesResponseDto(requestId, pptReportPromise.await(), excelReportPromise.await())
+        sender.sendUploadedReportsURL(report)
     }
 }
 

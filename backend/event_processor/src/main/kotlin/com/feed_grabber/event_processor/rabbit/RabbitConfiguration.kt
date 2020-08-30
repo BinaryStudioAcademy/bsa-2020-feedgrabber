@@ -39,8 +39,8 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.routing-key-report-excel}")
     private val reportRoutingKey: String? = null
 
-    @Value("\${rabbitmq.routing-key-report-excel}")
-    private val pptReportRoutingKey: String? = null;
+    // @Value("\${rabbitmq.routing-key-report-ppt}")
+    // private val pptReportRoutingKey: String? = null;
 
     @Bean
     fun queue(): Queue? {
@@ -52,10 +52,10 @@ class RabbitConfiguration: RabbitListenerConfigurer {
         return Queue(reportQueue, true)
     }
 
-    @Bean
-    fun pptReportQueue(): Queue? {
-        return Queue(pptReportQueue, true)
-    }
+//    @Bean
+//    fun pptReportQueue(): Queue? {
+//        return Queue(pptReportQueue, true)
+//    }
 
     @Bean
     fun exchange(): TopicExchange? {
@@ -67,10 +67,10 @@ class RabbitConfiguration: RabbitListenerConfigurer {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
     }
 
-    @Bean
-    fun pptReportQueueBinding(pptReportQueue: Queue?, exchange: TopicExchange?): Binding? {
-        return BindingBuilder.bind(pptReportQueue).to(exchange).with(pptReportRoutingKey)
-    }
+//    @Bean
+//    fun pptReportQueueBinding(pptReportQueue: Queue?, exchange: TopicExchange?): Binding? {
+//        return BindingBuilder.bind(pptReportQueue).to(exchange).with(pptReportRoutingKey)
+//    }
 
     @Bean
     fun reportQueueBinding(reportQueue: Queue?, exchange: TopicExchange?): Binding? {

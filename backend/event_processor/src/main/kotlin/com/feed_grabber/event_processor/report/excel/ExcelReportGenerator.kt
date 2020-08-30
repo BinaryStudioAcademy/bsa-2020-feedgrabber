@@ -8,12 +8,13 @@ import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.model.QuestionDB
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
-import org.apache.poi.xssf.usermodel.*
+import org.apache.poi.xssf.usermodel.XSSFCellStyle
+import org.apache.poi.xssf.usermodel.XSSFConditionalFormattingRule
+import org.apache.poi.xssf.usermodel.XSSFFont
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.time.LocalDate
 import java.util.*
 import java.util.stream.Collectors
@@ -131,13 +132,13 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
         }
     }
 
-    @Throws(IOException::class)
-    fun generate(requestId: UUID) {
+    // @Throws(IOException::class)
+    fun generate(requestId: UUID): ReportFileCreationDto? {
         val report = apiHelper.fetchReportData(requestId)
         val parsedQuestions = service.parseIncomingData(report).questions
         if (parsedQuestions != null) {
             // #WORKBOOK
-            var workbook = XSSFWorkbook()
+            val workbook = XSSFWorkbook()
 
             // #FONTS
             titleFont = workbook.createFont()
@@ -177,15 +178,24 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
             generateInfoPage(workbook, report)
 
             // #WRITE_FILE
-            val file = File("${UUID.randomUUID()}-report.xlsx")
-            val fileOut = FileOutputStream(file)
-            workbook.write(fileOut)
-            fileOut.close()
+//            val file = File("${UUID.randomUUID()}-report.xlsx")
+//            val fileOut = FileOutputStream(file)
+//            workbook.write(fileOut)
+//            fileOut.close()
+//            workbook.close()
+//            val response = client.uploadReport(file, requestId)
+//            sender.sendUploadedReportURL(response)
+//            file.delete()
+
+            val stream = ByteArrayOutputStream()
+            workbook.write(stream)
             workbook.close()
-            val response = client.uploadReport(file, requestId)
-            sender.sendUploadedReportURL(response)
-            file.delete()
+            val inputStream: InputStream = ByteArrayInputStream(stream.toByteArray())
+            val response = client.uploadReport(inputStream, requestId, "${UUID.randomUUID()}-report.xlsx")
+            return response
         }
+
+        return null
     }
 
     fun generateMainPage(workbook: XSSFWorkbook, parsedQuestions: List<QuestionDB>, report: DataForReport) {

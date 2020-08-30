@@ -20,10 +20,10 @@ public class Sender {
     private String routingKey;
 
     @Value("${rabbitmq.routing-key-report-excel}")
-    private String excelReportGenerationRoutinKey;
+    private String reportsGenerationRoutinKey;
 
-    @Value("${rabbitmq.routing-key-report-ppt}")
-    private String pptReportGenerationRoutinKey;
+//    @Value("${rabbitmq.routing-key-report-ppt}")
+//    private String pptReportGenerationRoutinKey;
 
     private final RabbitTemplate template;
 
@@ -38,16 +38,22 @@ public class Sender {
         log.info(" [x] Sent '{}'", message);
     }
 
-    public void sendExcelReportGenerationRequest(UUID requestId) {
+    public void sendReportsGenerationRequest(UUID requestId) {
         log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, excelReportGenerationRoutinKey, requestId);
-        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
+        this.template.convertAndSend(exchange, reportsGenerationRoutinKey, requestId);
+        log.info(" [x] Sent reports generation request for request with id: '{}'", requestId);
     }
 
-    public void sendPPTReportGenerationRequest(UUID requestId) {
-        log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, pptReportGenerationRoutinKey, requestId);
-        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
-    }
+//    public void sendExcelReportGenerationRequest(UUID requestId) {
+//        log.info(" [x] Sending...");
+//        this.template.convertAndSend(exchange, excelReportGenerationRoutinKey, requestId);
+//        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
+//    }
+
+//    public void sendPPTReportGenerationRequest(UUID requestId) {
+//        log.info(" [x] Sending...");
+//        this.template.convertAndSend(exchange, pptReportGenerationRoutinKey, requestId);
+//        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
+//    }
 
 }
