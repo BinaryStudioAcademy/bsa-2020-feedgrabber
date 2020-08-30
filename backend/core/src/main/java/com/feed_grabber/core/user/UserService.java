@@ -40,6 +40,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,7 +54,10 @@ public class UserService implements UserDetailsService {
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
-    private final PasswordEncoder passwordEncoder;
+
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final UserProfileRepository profileRepository;
     private final VerificationTokenService verificationTokenService;
     private final ImageRepository imageRepository;
@@ -65,7 +69,6 @@ public class UserService implements UserDetailsService {
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
                        InvitationService invitationService,
-                       PasswordEncoder passwordEncoder,
                        UserProfileRepository profileRepository,
                        ImageRepository imageRepository,
                        VerificationTokenService verificationTokenService) {
@@ -74,7 +77,6 @@ public class UserService implements UserDetailsService {
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
         this.invitationService = invitationService;
-        this.passwordEncoder = passwordEncoder;
         this.profileRepository = profileRepository;
         this.verificationTokenService = verificationTokenService;
         this.imageRepository = imageRepository;
