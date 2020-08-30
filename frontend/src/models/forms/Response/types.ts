@@ -37,6 +37,7 @@ export interface IQuestionnaireResponse {
     answeredAt: string;
     closeDate: string;
     responseId: string;
+    changeable: boolean;
 }
 
 export interface IQuestionnaireResponseState {

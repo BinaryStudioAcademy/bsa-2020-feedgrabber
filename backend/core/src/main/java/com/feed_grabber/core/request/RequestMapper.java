@@ -36,6 +36,7 @@ public interface RequestMapper {
     @Mapping(target = "questionnaire", source = "request.questionnaire")
     @Mapping(target = "expirationDate", source = "request.expirationDate")
     @Mapping(target = "closeDate", source = "request.closeDate")
+    @Mapping(target = "changeable", source = "request.changeable")
     PendingRequestDto toPendingFromResponse(Response response);
 
     @Mapping(target = "requestId", source = "request.id")
