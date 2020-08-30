@@ -5,7 +5,6 @@ import Landing from "../../components/Landing";
 import PrivateRoute from "../../components/PrivateRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
-import {Profile, ProfileX} from "../../components/Profile";
 import QuestionsList from "../QuestionsList";
 import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
@@ -28,6 +27,7 @@ import ReportPage from "../ReportPage";
 import RequestsPage from "../RequestsPage";
 import InvitationLinkPage from "../InvitationLinkPage";
 import RespondentReport from "../ReportPage/RespondentReport";
+import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
@@ -47,8 +47,9 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
                     <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
                     <PrivateRoute exact path="/" component={MainPage}/>
-                    <PrivateRoute exact path="/profile" component={Profile}/>
-                    <PrivateRoute exact path="/profile/settings" component={ProfileX}/>
+                    <PrivateRoute exact path="/profile" component={() => <Profile mode='profile'/>}/>
+                    <PrivateRoute exact path="/profile/settings" component={() => <Profile mode='settings'/>}/>
+                    <PrivateRoute exact path="/profile/security" component={() => <Profile mode='security'/>}/>
                     <PrivateRoute exact path="/requests" component={() => <span>Requests</span>}/>
                     <PrivateRoute exact path="/help" component={() => <span>Help Center</span>}/>
                     <PrivateRoute exact path="/editor" component={RedirectFormEditor}/>
