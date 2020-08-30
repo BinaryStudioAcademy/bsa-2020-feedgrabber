@@ -12,70 +12,70 @@ interface IResult {
 
 const Search: FC<SearchProps> = ({isLoading, result, searchAll}) => {
 
-    const initialOptions = {
-        questionnaires: {
-            name: 'Questionnaires',
-            results: [] as IResult[]
-        },
-        questions: {
-            name: 'Questions',
-            results: [] as IResult[]
-        },
-        users: {
-            name: 'Users',
-            results: [] as IResult[]
-        },
-        teams: {
-            name: 'Teams',
-            results: [] as IResult[]
-        },
-        reports: {
-            name: 'Reports',
-            results: [] as IResult[]
-        }
-    };
-
-    const [options, setOptions] = useState(initialOptions);
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        const tempOptions = initialOptions;
-        tempOptions.questions.results = result?.questions.map(q => {
-            return {
-                title: q.name,
-                description: q.categoryTitle
-            };
-        }) || [];
-        tempOptions.questionnaires.results = result?.questionnaires.map(q => {
-            return {
-                title: q.title,
-                description: q.description
-            };
-        }) || [];
-        tempOptions.users.results = result?.users.map(q => {
-            return {
-                title: `${q.firstName} ${q.lastName}`,
-                description: q.companyName,
-                image: q.avatar
-            };
-        }) || [];
-        tempOptions.teams.results = result?.teams.map(q => {
-            return {
-                title: q.name,
-                description: `${q.membersId.length} members`
-            };
-        }) || [];
-        tempOptions.reports.results = result?.reports.map(q => {
-            return {
-                title: `${q.questionnaire.title} report`,
-                description: `${q.questions.length} questions`
-            };
-        }) || [];
+        const temp: { name: string; results: IResult[] }[] = [];
+        if (result?.questions) {
+            temp.push({
+                name: 'Questions', results: result.questions.map(q => {
+                    return {
+                        title: q.name,
+                        description: q.categoryTitle
+                    };
+                })
+            });
+        }
+        if (result?.questionnaires) {
+            temp.push({
+                name: 'Questionnaires', results: result.questionnaires.map(q => {
+                    return {
+                        title: q.title,
+                        description: q.description
+                    };
+                })
+            });
+        }
+        if (result?.users) {
+            temp.push({
+                name: 'Users', results: result.users.map(q => {
+                    return {
+                        title: `${q.firstName} ${q.lastName}`,
+                        description: q.companyName,
+                        image: q.avatar
+                    };
+                })
+            });
+        }
+        if (result?.teams) {
+            temp.push({
+                name: 'Teams', results: result.teams.map(q => {
+                    return {
+                        title: q.name,
+                        description: `${q.membersId.length} members`
+                    };
+                })
+            });
+        }
+        if (result?.reports) {
+            temp.push({
+                name: 'Reports', results: result.reports.map(q => {
+                    return {
+                        title: `${q.questionnaire.title} report`,
+                        description: `${q.questions.length} questions`
+                    };
+                })
+            });
+        }
+        setOptions(temp);
+    }, [result]);
 
-        setOptions(tempOptions);
-    }, [initialOptions, result]);
+    const handleChange = (e, data) => {
+        data.value.trim() ? searchAll(data.value.trim()) : setOptions([]);
+    };
 
     return (
-        <SearchSemantic onSearchChange={(e, {value}) => searchAll(value)}
+        <SearchSemantic onSearchChange={handleChange}
                         placeholder='Search...'
                         size="small"
                         inverted
