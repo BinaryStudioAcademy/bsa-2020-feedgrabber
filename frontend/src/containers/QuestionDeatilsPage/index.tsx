@@ -42,7 +42,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     useEffect(() => {
         if (match.params.id === 'new') {
-            loadQuestion({id: 'empty'});
+            // loadQuestion({id: 'empty'});
+            loadQuestion({});
         }
         else {
             if (!isPreview)
