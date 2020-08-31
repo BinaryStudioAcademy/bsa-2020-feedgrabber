@@ -55,6 +55,7 @@ public class NewsService {
                 .orElseThrow(CompanyNotFoundException::new);
 
         var news = News.builder()
+                .title(newsCreateDto.getTitle())
                 .body(newsCreateDto.getBody())
                 .image(image)
                 .user(user)
@@ -67,6 +68,7 @@ public class NewsService {
     public NewsDto update(NewsUpdateDto newsUpdateDto) throws NotFoundException {
         var news = newsRepository.findById(newsUpdateDto.getId())
                 .orElseThrow(NewsNotFoundException::new);
+        news.setTitle(newsUpdateDto.getTitle());
         news.setBody(newsUpdateDto.getBody());
 
         var image = imageRepository.findById(newsUpdateDto.getImageId())

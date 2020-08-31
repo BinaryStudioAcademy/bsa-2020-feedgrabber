@@ -6,6 +6,7 @@ import java.util.UUID;
 
 @Data
 public class NewsCreateDto {
+    private String title;
     private String body;
     private UUID imageId;
     private UUID userId;

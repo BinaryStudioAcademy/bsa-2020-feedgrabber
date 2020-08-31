@@ -3,8 +3,10 @@ package com.feed_grabber.core.news.model;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.image.model.Image;
 import com.feed_grabber.core.user.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,6 +16,8 @@ import java.util.UUID;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "news")
 public class News {
@@ -25,6 +29,9 @@ public class News {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private UUID id;
+
+    @Column
+    private String title;
 
     @Column(name = "body", columnDefinition="TEXT")
     private String body;

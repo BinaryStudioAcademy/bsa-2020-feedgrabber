@@ -10,6 +10,7 @@ import java.util.UUID;
 @Data
 public class NewsDto {
     private UUID id;
+    private String title;
     private String body;
     private ImageDto image;
     private UserShortDto user;
