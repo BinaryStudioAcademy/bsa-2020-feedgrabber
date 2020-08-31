@@ -1,6 +1,6 @@
 package com.feed_grabber.core.fileStorage;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -8,12 +8,12 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileMapper;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.dto.S3FileDetailsDto;
+import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.fileStorage.exceptions.BadFileException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.feed_grabber.core.file.model.S3File;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,11 +31,11 @@ public class AmazonService {
     @Value("${amazon.response.files.path}")
     private String RESPONSE_FILES_PATH;
 
-    private final AmazonS3Client s3client;
+    private final AmazonS3 s3client;
     private final FileRepository fIleRepository;
 
     @Autowired
-    public AmazonService(AmazonS3Client s3client, FileRepository fileRepository) {
+    public AmazonService(AmazonS3 s3client, FileRepository fileRepository) {
         this.s3client = s3client;
         this.fIleRepository = fileRepository;
     }
