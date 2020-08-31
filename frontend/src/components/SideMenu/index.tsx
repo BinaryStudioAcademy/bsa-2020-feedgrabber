@@ -36,13 +36,13 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
         </NavLink>
         <AccessManager staticPermission={Permissions.managingQuestions}>
           <NavLink to="/questions" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-            <Icon className={styles.menuItemIcon} size="big" name="question circle outline" />
+            <Icon className={styles.menuItemIcon} size="big" name="question" />
             <span className={styles.menuItemTitle}>Questions</span>
           </NavLink>
         </AccessManager>
         <AccessManager staticPermission={Permissions.blockUserAccount}>
           <NavLink to="/employees" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-            <Icon className={styles.menuItemIcon} size="big" name="user outline" />
+            <Icon className={styles.menuItemIcon} size="big" name="user" />
             <span className={styles.menuItemTitle}>Employees</span>
           </NavLink>
         </AccessManager>

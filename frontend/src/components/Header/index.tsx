@@ -3,7 +3,7 @@ import {Header as HeUI, Icon, Image, Input, Menu, Popup} from "semantic-ui-react
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
-import icon from "../../assets/images/icon_bg.jpg";
+import icon from "../../assets/images/icon_scaled.png";
 import {logoutRoutine} from "../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../models/IAppState";
