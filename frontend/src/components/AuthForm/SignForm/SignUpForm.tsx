@@ -13,7 +13,7 @@ const schema = yup.object().shape({
     companyName: yup
         .string()
         .required("Company name required")
-        .min(3, "Company name too short!")
+        .min(2, "Company name too short!")
         .max(40, "Company name too long!")
         .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
             "Company name must be valid"),
@@ -35,8 +35,8 @@ const schema = yup.object().shape({
     username: yup
         .string()
         .required("Username required")
-        .min(5, "Username too short!")
-        .max(15, "Username too long!")
+        .min(3, "Username too short!")
+        .max(20, "Username too long!")
         .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
             "Username must be valid")
 });
