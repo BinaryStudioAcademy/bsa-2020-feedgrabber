@@ -5,6 +5,7 @@ import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.model.User;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -23,7 +24,7 @@ public class Request {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "questionnaire_id", nullable = false)
     private Questionnaire questionnaire;
 
@@ -50,6 +51,10 @@ public class Request {
 
     @Column(name = "generate_report")
     private Boolean generateReport;
+
+    @Column(name = "changeable", nullable = false)
+    @ColumnDefault("false")
+    private boolean changeable;
 
     @Column
     private Date closeDate;

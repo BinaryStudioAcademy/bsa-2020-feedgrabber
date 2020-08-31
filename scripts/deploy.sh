@@ -17,10 +17,10 @@ expect "$ "
 send "sudo docker pull feedgrabber2020/fg-event-processor:latest\r"
 expect "$ "
 
-send "sudo docker-compose -f ~/.docker/docker-compose.yml down\r"
+send "sudo docker-compose -f ~/.docker/docker-compose.yml up -d --force-recreate\r"
 expect "$ "
-
-send "sudo docker-compose -f ~/.docker/docker-compose.yml up -d\r"
+sleep 10
+send "sudo docker ps\r"
 expect "$ "
 
 send "exit\r"

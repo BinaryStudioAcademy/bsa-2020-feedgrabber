@@ -95,6 +95,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
+                        {/* eslint-disable-next-line */ }
                         <a href="#"
                             onClick={() => resetPassword({userEmail, companyId: company.id})}
                         >Reset password</a>

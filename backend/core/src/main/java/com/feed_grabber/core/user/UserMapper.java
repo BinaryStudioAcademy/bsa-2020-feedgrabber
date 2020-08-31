@@ -31,7 +31,12 @@ public interface UserMapper {
     @Mapping(target = "phoneNumber", source = "userProfile.phoneNumber")
     @Mapping(target = "avatar", source = "userProfile.avatar.link")
     @Mapping(target = "role", expression = "java(user.getRole().getSystemRole().toString())")
+    @Mapping(target = "roleId", source = "role.id")
     UserDetailsResponseDTO detailedFromUser(User user);
 
     UserShortDto shortFromUser(User user);
+
+    @Mapping(target = "language", source = "userSettings.language", defaultValue = "English")
+    @Mapping(target = "enableNotifications", source = "userSettings.enableNotifications", defaultValue = "true")
+    UserSettingsDto settingsFromUser(User user);
 }

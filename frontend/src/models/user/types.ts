@@ -3,6 +3,7 @@ export interface IUserState {
     info?: IUserInfo;
     error?: IUserErrors;
     shortInfo?: IUserShort;
+    settings?: IUserSettings;
 }
 
 export interface IUserInfo {
@@ -16,6 +17,7 @@ export interface IUserInfo {
     phoneNumber?: string;
     avatar?: string;
     role: string;
+    roleId?: string;
 }
 
 export interface IUserErrors {
@@ -30,5 +32,10 @@ export interface IUserShort {
     username: string;
     selected?: boolean;
     loading?: boolean;
+}
+
+export interface IUserSettings {
+    language: string;
+    enableNotifications: boolean;
 }
 

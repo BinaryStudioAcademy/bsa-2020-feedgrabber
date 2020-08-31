@@ -11,28 +11,20 @@ import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.NotFoundException;
-import com.feed_grabber.core.image.ImageRepository;
-import com.feed_grabber.core.image.ImageService;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
-import com.feed_grabber.core.user.dto.*;
-import com.feed_grabber.core.registration.TokenType;
-import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
 import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
-import com.feed_grabber.core.user.model.UserProfile;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,6 +32,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,10 +46,11 @@ public class UserService implements UserDetailsService {
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
-    private final PasswordEncoder passwordEncoder;
-    private final UserProfileRepository profileRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final VerificationTokenService verificationTokenService;
-    private final ImageRepository imageRepository;
     private static final Random random = new Random();
     private static final Long RANDOM_MAX = 36L * 36L * 36L * 36L * 36L * 36L;
 
@@ -65,23 +59,17 @@ public class UserService implements UserDetailsService {
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
                        InvitationService invitationService,
-                       PasswordEncoder passwordEncoder,
-                       UserProfileRepository profileRepository,
-                       ImageRepository imageRepository,
                        VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
         this.invitationService = invitationService;
-        this.passwordEncoder = passwordEncoder;
-        this.profileRepository = profileRepository;
         this.verificationTokenService = verificationTokenService;
-        this.imageRepository = imageRepository;
     }
 
     @Transactional
-    public UUID createDefault(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException {
+    public UUID createDefault(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException, CompanyAlreadyExistsException {
 
 //        if (userRepository.findByUsername(userRegisterDTO.getUsername()).isPresent()
 //                || userRepository.findByEmail(userRegisterDTO.getEmail()).isPresent()) {
@@ -290,24 +278,6 @@ public class UserService implements UserDetailsService {
         return userRepository.countAllByCompanyId(companyId);
     }
 
-    @Transactional
-    public void editUserProfile(UserProfileEditDto dto) throws NotFoundException {
-        var user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
-        if (user.getUserProfile() == null) {
-            var savedProfile = profileRepository.save(new UserProfile(user));
-            user.setUserProfile(savedProfile);
-        }
-        var profile = user.getUserProfile();
-        var avatar = imageRepository.findByLink(dto.getAvatar()).orElseThrow(NotFoundException::new);
-        profile.setAvatar(avatar);
-        profile.setFirstName(dto.getFirstName());
-        profile.setLastName(dto.getLastName());
-        profile.setPhoneNumber(dto.getPhoneNumber());
-        user.setUsername(dto.getUserName());
-        userRepository.save(user);
-    }
-
     public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {
         return UserMapper.MAPPER.shortFromUser(
                 userRepository
@@ -321,6 +291,14 @@ public class UserService implements UserDetailsService {
 
 
         return name + "-" + namepart;
+    }
+
+    public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
+        var newRole = roleRepository.findById(roleId).orElseThrow(NotFoundException::new);
+        var user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        user.setRole(newRole);
+        userRepository.save(user);
+        verificationTokenService.deleteByUserId(userId);
     }
 }
 

@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from 'react';
 import {useHistory} from "react-router";
-import {Button, Card, Dimmer, Loader} from 'semantic-ui-react';
+import {Card, Dimmer, Loader} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from '../../sagas/questions/routines';

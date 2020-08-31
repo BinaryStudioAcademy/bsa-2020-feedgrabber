@@ -34,13 +34,13 @@ public class AuthService {
 
     public AuthUserResponseDTO login(UserLoginDTO dto) {
         try {
-            var username = this.generateUserName(dto.getUsername(), dto.getCompanyId());
+            var username = AuthService.generateUserName(dto.getUsername(), dto.getCompanyId());
             var upa = new UsernamePasswordAuthenticationToken(username, dto.getPassword());
 
             authenticationManager.authenticate(upa);
 
         } catch (BadCredentialsException e) {
-            throw new WrongCredentialsException("Incorrect username or password");
+            throw new WrongCredentialsException("Incorrect password");
         }
 
         var user = userRepository
@@ -57,7 +57,7 @@ public class AuthService {
                 tokenService.generateRefreshToken(tokenDto), user);
     }
 
-    private String generateUserName(String username, UUID companyId) {
+    public static String generateUserName(String username, UUID companyId) {
         return username + LOGIN_DIVIDER + companyId.toString();
     }
 }
