@@ -16,8 +16,8 @@ const defaultItem = {
 
 const feedItemMock = {
   title: 'Demo is coming...',
-  text: 'Hello everybody. Today I would like to talk about our deadline.' +
-        'So, we know that it will be on 02.09.2020.',
+  text: 'Hello everybody. Today I would like to talk about our deadline. ' +
+        'So, we know that the demo will be on 02.09.2020.',
   images: [ 'https://i.imgur.com/gWFCLjG.png', 'https://i.imgur.com/wDPiXac.png' ]
 };
 
@@ -36,6 +36,7 @@ function* loadCompanyFeedItem(action) {
   try {
     const id = action.payload;
     if (!id) {
+      console.log('return default');
       // return defaultItem
       yield put(loadCompanyFeedItemRoutine.success(defaultItem));
       return;
@@ -51,8 +52,9 @@ function* loadCompanyFeedItem(action) {
 
 function* saveCompanyFeedItem(action) {
   try {
+    console.log(action.payload);
     // here well be api-call
-	yield put(saveCompanyFeedItemRoutine.success());
+    yield put(saveCompanyFeedItemRoutine.success());
   } catch (error) {
     toastr.error('Unable to save feed item');
     console.log(error);
