@@ -19,6 +19,10 @@ public interface SectionMapper {
     SectionMapper MAPPER = Mappers.getMapper(SectionMapper.class);
 
     @Mapping(target = "questionnaire.id", source = "questionnaireId")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "order", ignore = true)
+    @Mapping(target = "questions", ignore = true)
     Section createDtoToModel(SectionCreateDto dto);
 
     SectionDto modelToDto(Section section);

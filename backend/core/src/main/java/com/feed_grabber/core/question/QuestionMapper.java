@@ -31,6 +31,7 @@ public abstract class QuestionMapper {
     @Mapping(source = "question.payload", target = "details")
     @Mapping(source = "question.type", target = "type")
     @Mapping(source = "question.id", target = "id")
+    @Mapping(source = "question.required", target = "required")
     public abstract QuestionDto questionQuestionToQuestionDto(QuestionnaireQuestion question);
 
     @Mapping(target = "id", ignore = true)
@@ -45,6 +46,8 @@ public abstract class QuestionMapper {
             QuestionCategory category
     );
 
+    @Mapping(target = "questionnaireId", ignore = true)
+    @Mapping(target = "sectionId", ignore = true)
     public abstract QuestionCreateDto upsertDtoToCreateDto(QuestionUpsertDto dto);
 
     public abstract QuestionUpdateDto upsertDtoToUpdateDto(QuestionUpsertDto dto);

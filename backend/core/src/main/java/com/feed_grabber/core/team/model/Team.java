@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +47,6 @@ public class Team {
             joinColumns = {@JoinColumn(name = "team_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
 }
