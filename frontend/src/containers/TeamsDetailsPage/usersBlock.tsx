@@ -6,7 +6,7 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import UIButton from "../../components/UI/UIButton";
 import {ITeam, ITeamUserToggle} from "../../models/teams/ITeam";
 import styles from "./styles.module.sass";
-import {Image} from "semantic-ui-react";
+import {Icon, Image} from "semantic-ui-react";
 import {IUserShort} from "../../models/user/types";
 
 interface ITeamUsersBlockProps {
@@ -40,6 +40,7 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
               <div className={styles.cardUserBlock}>
                 <Image src={user.avatar ?? defaultAvatar} size="mini" avatar/>
                 <h4>{user.username}</h4>
+                <Icon name="star outline" className={styles.cardUserStar} />
               </div>
               {currentTeam && (
                 <UIButton
