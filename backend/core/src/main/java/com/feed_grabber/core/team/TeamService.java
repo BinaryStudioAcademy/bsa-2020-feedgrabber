@@ -5,6 +5,7 @@ import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.team.dto.*;
 import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
+import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
@@ -70,11 +71,40 @@ public class TeamService {
         var userId = user.getId();
 
         if (teamRepository.existsUser(teamId, userId)) {
+            if (team.getLead().getId().equals(userId)) {
+                team.setLead(null);
+                teamRepository.save(team);
+            }
             teamRepository.deleteUser(teamId, userId);
             return new ResponseUserTeamDto(teamId, userId, false);
         } else {
             teamRepository.addUser(teamId, userId);
             return new ResponseUserTeamDto(teamId, userId, true);
+        }
+    }
+
+    public ResponseTeamLeadDto toggleLead(RequestTeamLeadDto requestDto) throws TeamNotFoundException, UserNotFoundException, TeamUserLeadNotFoundException {
+        var team = teamRepository
+                .findOneByCompanyIdAndId(requestDto.getCompanyId(), requestDto.getTeamId())
+                .orElseThrow(TeamNotFoundException::new);
+        var user = userRepository.findById(requestDto.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        var teamId = team.getId();
+        var userId = user.getId();
+
+        if (!teamRepository.existsUser(teamId, userId)) {
+            throw new TeamUserLeadNotFoundException();
+        }
+
+        if (team.getLead().getId().equals(userId)) {
+            team.setLead(null);
+            teamRepository.save(team);
+            return new ResponseTeamLeadDto(null);
+        } else {
+            team.setLead(user);
+            teamRepository.save(team);
+            return new ResponseTeamLeadDto(userId);
         }
     }
 
