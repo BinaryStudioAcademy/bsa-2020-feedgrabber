@@ -1,4 +1,4 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {
   createTeamRoutine, deleteTeamRoutine,
   loadCompanyUsersRoutine,
@@ -13,6 +13,7 @@ import {IGeneric} from "../../models/IGeneric";
 import {IUserInfo} from "../../models/user/types";
 import {ITeam, ITeamLeadToggle, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
+import {IAppState} from "../../models/IAppState";
 
 function* loadTeams() {
   try {
@@ -79,6 +80,13 @@ function* toggleUserTeam(action: any) {
     const response = yield call(apiClient.put, `http://localhost:5000/api/teams/toggle_user`, request);
     const data = response.data.data;
     yield put(toggleUserCurrentTeamRoutine.success(data));
+
+    const store: IAppState = yield select();
+    const currentLeadId = store.teams?.current?.currentTeam?.teamLeadId;
+    if (currentLeadId === request.userId && !data.added) {
+      yield put(toggleLeadCurrentTeamRoutine.success({leadId: null}));
+    }
+
     toastr.success(`User ${request.username} ${data.added ? "added to" : "deleted from"} the team`);
   } catch (errorResponse) {
     yield put(toggleUserCurrentTeamRoutine.failure(request.userId));

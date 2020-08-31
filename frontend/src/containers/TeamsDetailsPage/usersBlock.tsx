@@ -32,6 +32,10 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
     isLoadingLeadToggle
   }
 ) => {
+  const isUserTeamLead = (user: IUserShort) => {
+    return user.id === currentTeam?.teamLeadId;
+  };
+
   return (
     <UIColumn>
       <LoaderWrapper loading={isLoadingUsers}>
@@ -44,11 +48,17 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
               <div className={styles.cardUserBlock}>
                 <Image src={user.avatar ?? defaultAvatar} size="mini" avatar/>
                 <h4>{user.username}</h4>
-                <Icon
-                  name="star outline"
-                  className={styles.cardUserStar}
-                  onClick={() => toggleLead({teamId: currentTeam.id, userId: user.id, username: user.username})}
-                />
+                {user.selected && (
+                  <Icon
+                    name={isUserTeamLead(user) ? "star" : "star outline"}
+                    className={`${styles.cardUserStar} ${isUserTeamLead(user) ? styles.cardUserStarActive : ""}`}
+                    onClick={() => {
+                      if (!isLoadingLeadToggle) {
+                        toggleLead({teamId: currentTeam.id, userId: user.id, username: user.username});
+                      }
+                    }}
+                  />
+                )}
               </div>
               {currentTeam && (
                 <UIButton
