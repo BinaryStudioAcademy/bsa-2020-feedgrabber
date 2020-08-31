@@ -39,7 +39,12 @@ public class TeamService {
                 .map(User::getId)
                 .collect(Collectors.toList());
 
-        return new TeamDetailsDto(team.getId(), team.getName(), ids);
+        UUID teamLeadId = null;
+        if (team.getLead() != null) {
+            teamLeadId = team.getLead().getId();
+        }
+
+        return new TeamDetailsDto(team.getId(), team.getName(), teamLeadId, ids);
     }
 
     public TeamDto update(RequestTeamDto teamDto) throws TeamNotFoundException, TeamExistsException {
@@ -71,7 +76,7 @@ public class TeamService {
         var userId = user.getId();
 
         if (teamRepository.existsUser(teamId, userId)) {
-            if (team.getLead().getId().equals(userId)) {
+            if (team.getLead() != null && team.getLead().getId().equals(userId)) {
                 team.setLead(null);
                 teamRepository.save(team);
             }
@@ -97,7 +102,7 @@ public class TeamService {
             throw new TeamUserLeadNotFoundException();
         }
 
-        if (team.getLead().getId().equals(userId)) {
+        if (team.getLead() != null && team.getLead().getId().equals(userId)) {
             team.setLead(null);
             teamRepository.save(team);
             return new ResponseTeamLeadDto(null);
@@ -116,7 +121,7 @@ public class TeamService {
         Team team = TeamMapper.MAPPER.teamDtoToModel(teamDto);
         team = teamRepository.save(team);
 
-        return new TeamDetailsDto(team.getId(), team.getName(), Collections.emptyList());
+        return new TeamDetailsDto(team.getId(), team.getName(), null, Collections.emptyList());
     }
 
     public void delete(UUID id, UUID companyId) {

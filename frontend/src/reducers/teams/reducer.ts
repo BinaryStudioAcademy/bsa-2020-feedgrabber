@@ -4,7 +4,7 @@ import {
   deleteTeamRoutine,
   loadCompanyUsersRoutine,
   loadCurrentTeamRoutine,
-  loadTeamsRoutine,
+  loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
   toggleUserCurrentTeamRoutine,
   updateTeamRoutine
 } from '../../sagas/teams/routines';
@@ -16,6 +16,7 @@ export interface ITeamCurrent {
   failed?: boolean;
   isLoadingTeam?: boolean;
   isLoadingRequest?: boolean;
+  isLoadingToggleLead?: boolean;
   currentTeam?: ITeam;
   error?: string;
 }
@@ -147,6 +148,35 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
             ? {...u, loading: false}
             : u
         ))
+      };
+
+    case toggleLeadCurrentTeamRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingToggleLead: true
+        }
+      };
+    case toggleLeadCurrentTeamRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingToggleLead: false,
+          currentTeam: {
+            ...state.current.currentTeam,
+            teamLeadId: action.payload.leadId
+          }
+        }
+      };
+    case toggleLeadCurrentTeamRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingToggleLead: false
+        }
       };
 
     case updateTeamRoutine.TRIGGER:
