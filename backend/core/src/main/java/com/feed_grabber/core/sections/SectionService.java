@@ -42,6 +42,10 @@ public class SectionService {
     }
 
     public List<SectionQuestionsDto> getByQuestionnaire(UUID id) {
+        var questions = sectionRepository.findByQuestionnaireId(id);
+        var rst = questions.stream().map(section ->
+                SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId())))
+                .collect(Collectors.toList());
         return sectionRepository.findByQuestionnaireId(id)
                 .stream()
                 .map(section ->
