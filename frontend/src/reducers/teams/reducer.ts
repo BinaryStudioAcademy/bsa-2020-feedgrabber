@@ -79,7 +79,12 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
       const team: ITeam = action.payload;
       return {
         ...state,
-        companyUsers: state.companyUsers.map(u => (team.membersId.includes(u.id) ? {...u, selected: true} : u)),
+        companyUsers:
+          state.companyUsers
+            .map(u => (team.membersId.includes(u.id) ? {...u, selected: true} : u))
+            .sort((a, b) => Number(a.username < b.username))
+            .sort((a, b) => Number(a.selected && !b.selected))
+            .sort(a => Number(a.id !== team.teamLeadId)),
         current: {
           ...state.current,
           isLoadingTeam: false,
