@@ -6,9 +6,10 @@ $attention-color: #606790
 .menuWrapper
   position: fixed
   height: 100%
-  padding-top: 4em
+  margin-top: 4.1em
+  border-top: #565c86 solid 2px
   z-index: 1
-  transition: all $toggle-menu-duration $toggle-menu-timing
+  transition: width $toggle-menu-duration $toggle-menu-timing, background-color .6s, border-top-color .6s
   overflow: hidden
 
 .menuContent
@@ -31,11 +32,11 @@ $attention-color: #606790
   transition: all $toggle-menu-duration $toggle-menu-timing
 
 .menuWrapperOpen
-  width: 15.5em
+  width: 17em
   background-color: $attention-color
 
   .menuItem
-    transition: all .1s linear
+    transition: background-color .35s ease-in-out
 
   .menuItemTitle, .menuItemIcon
     color: #FFFFFF
@@ -48,6 +49,7 @@ $attention-color: #606790
 .menuWrapperClosed
   width: 4em
   background-color: #FFFFFF
+  border-top-color: #FFFFFF
 
   .menuItemIcon:hover
     transform: scale(1.1)

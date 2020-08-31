@@ -11,7 +11,6 @@ import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
-import styles from './styles.module.sass';
 import {Tab} from "semantic-ui-react";
 
 interface IItem {
@@ -41,7 +40,7 @@ const MainPage: FC<IMainPageProps> =
          loadQuestionnaires
      }) => {
 
-        const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
+        const [panes, setPanes] = useState([]);
 
         const handleAnswerClick = requestId => {
             history.push(`/response/${requestId}`);
@@ -58,8 +57,9 @@ const MainPage: FC<IMainPageProps> =
         useEffect(() => {
             setPanes([
                 {
-                    menuItem: {key: 'opened', icon: 'eye', content: 'Pending requests'},
-                    render: () => <Tab.Pane className={styles.tab_container} loading={isLoading}>
+                    menuItem: {key: 'opened', icon: 'eye', content: 'Pending'},
+                    render: () => <Tab.Pane loading={isLoading}
+                        style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => (!r.closeDate &&
                                 !r.answeredAt &&
@@ -70,8 +70,7 @@ const MainPage: FC<IMainPageProps> =
                                         questionnaire,
                                         expirationDate
                                     }) => (
-                                    <UICardBlock key={requestId}
-                                                 className={styles.container_all}>
+                                    <UICardBlock key={requestId}>
                                         <p>{expirationDate
                                             ? `Deadline at ${expirationDate.toUTCString()}`
                                             : 'No deadline for this request'}</p>
@@ -91,8 +90,8 @@ const MainPage: FC<IMainPageProps> =
                     </Tab.Pane>
                 },
                 {
-                    menuItem: {key: 'closed', icon: 'lock', content: 'Closed requests'},
-                    render: () => <Tab.Pane className={styles.tab_container}>
+                    menuItem: {key: 'closed', icon: 'lock', content: 'Closed'},
+                    render: () => <Tab.Pane style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => r.closeDate ||
                                 r.answeredAt ||
@@ -106,8 +105,7 @@ const MainPage: FC<IMainPageProps> =
                                         closeDate,
                                         changeable
                                     }) => (
-                                    <UICardBlock key={requestId}
-                                                 className={`${styles.container_all} ${styles.container}`}>
+                                    <UICardBlock key={requestId}>
                                         <p>{expirationDate
                                             ? `Deadline on ${expirationDate.toUTCString()}`
                                             : 'No deadline for this request'}</p>
@@ -142,14 +140,6 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Pending Questionnaires</h3>
-                            </UICardBlock>
-                            <Tab panes={panes}/>
-                        </UICard>
-                    </UIColumn>
-                    <UIColumn>
-                        <UICard>
-                            <UICardBlock>
                                 <h3>My Reports</h3>
                             </UICardBlock>
                             {reportsList.map(item => (
@@ -162,11 +152,10 @@ const MainPage: FC<IMainPageProps> =
                             ))}
                         </UICard>
                     </UIColumn>
-
-                    <UIColumn wide>
+                    <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company NewsFeed</h3>
+                                <h3>Company News Feed</h3>
                             </UICardBlock>
                             {newsList.map(item => (
                                 <UICardBlock key={item.id}>
@@ -175,6 +164,14 @@ const MainPage: FC<IMainPageProps> =
                                     {item.author && <p><b>{item.author}</b></p>}
                                 </UICardBlock>
                             ))}
+                        </UICard>
+                    </UIColumn>
+                    <UIColumn wide>
+                        <UICard>
+                            <UICardBlock>
+                                <h3>My Requests</h3>
+                            </UICardBlock>
+                            <Tab  menu={{ secondary: true, pointing: true }} panes={panes}/>
                         </UICard>
                     </UIColumn>
                 </UIContent>
