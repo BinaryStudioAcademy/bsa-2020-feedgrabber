@@ -41,7 +41,9 @@ const ProfileInfo: FC<ProfileInfoProps> =
        uploadImage,
        getUser
      }) => {
-      useEffect(() => getUser, [getUser]);
+      useEffect(() => {
+          !user && getUser();
+      }, [getUser]);
       const [src, setSource] = useState<string | ArrayBuffer>(undefined);
       const [fileName, setFileName] = useState('avatar');
 
