@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Formik} from 'formik';
-import {Button, Form, Header, Segment} from 'semantic-ui-react';
+import {Button, Form, Segment} from 'semantic-ui-react';
 import * as yup from 'yup';
 import UserSelection from './UserSelection';
 

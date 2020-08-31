@@ -1,7 +1,6 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { loadCategoriesRoutine } from './routines';
 import apiClient from '../../helpers/apiClient';
-import { toastr } from 'react-redux-toastr';
 import { ICategorie } from 'models/categories/ICategorie';
 import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
 

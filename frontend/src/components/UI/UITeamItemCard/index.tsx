@@ -1,8 +1,7 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import {Icon} from 'semantic-ui-react';
 import styles from "./styles.module.sass";
-import {ITeam, ITeamShort} from "../../../models/teams/ITeam";
-import UIUserItemCard from "../UIUserItemCard";
+import {ITeamShort} from "../../../models/teams/ITeam";
 
 interface IUITeamItemCardProps {
   team: ITeamShort;
