@@ -1,29 +1,46 @@
-import React, { useState } from 'react';
-import UIContent from "../UI/UIContent";
-import UIButton from "../UI/UIButton";
-import UIColumn from "../UI/UIColumn";
+import React, { useState, useEffect, FC } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { Image, Icon, Button, Header } from 'semantic-ui-react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import {
+  loadCompanyFeedItemRoutine,
+  saveCompanyFeedItemRoutine
+} from '../../sagas/companyFeed/routines';
+import { toastr } from 'react-redux-toastr';
+import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
+import { IAppState } from "../../models/IAppState";
 
 import styles from './styles.module.sass';
 
-const CompanyFeedItem = () => {
+const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
+  match,
+  feedItem,
+  loadFeedItem,
+  saveFeedItem
+}) => {
   const history = useHistory();
-  const [title, setTitle] = useState<string>('');
-  const [text, setText] = useState<string>('');
-  const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [item, setItem] = useState<ICompanyFeedItem>(undefined);
+
+  useEffect(() => {
+    const id = match.params.id;
+    if (id === 'new') {
+      loadFeedItem();
+      return;
+    }
+    loadFeedItem(id);
+  }, [loadFeedItem, match.params.id]);
 
   const handleSubmit = () => {
-    // here we send this new item to backend
-    const newItem = {
-      title,
-      text,
-      images
-    };
-    console.log({ newItem });
-    history.goBack();
+    // here we send new item to backend
+    console.log(item);
+    saveFeedItem(item);
+    // history.goBack();
   };
+
+  useEffect(() => {
+    setItem(feedItem);
+  }, [feedItem]);
 
   const uploadFile = file => {
     // upload image and return the link
@@ -31,20 +48,21 @@ const CompanyFeedItem = () => {
   };
 
   const handleUploadPhotos = async files => {
-    console.log('handleUploadPhotos');
     setIsUploading(true);
     try {
       const newLinks = [];
       for (const file of files) {
-        console.log({ file });
+        if (!file.type.startsWith('image')) {
+          continue;
+        }
         newLinks.push(await uploadFile(file));
       }
       setIsUploading(false);
-      console.log(newLinks);
-      setImages(newLinks);
+      setItem({ ...item, images: newLinks as string[] });
     } catch (error) {
       console.log(error);
-      setImages([]);
+      toastr.error('Unable to upload images');
+      setItem({ ...item, images: [] });
     }
     setIsUploading(false);
   };
@@ -54,17 +72,20 @@ const CompanyFeedItem = () => {
     <div className={styles.new_feed_item_page}>
       <Header as="h3">Create a new feed item</Header>
       <input placeholder="Title" type="text"
+             value={item?.title || ''}
              className={styles.feed_item_input}
-             onChange={e => setTitle(e.target.value)} />
+             onChange={e => setItem({ ...item, title: e.target.value })} />
       <textarea placeholder="What's up?"
+                value={item?.text || ''}
                 className={styles.feed_item_textarea}
-                onChange={e => setText(e.target.value)} />
-      <div className={styles.images}>
-        {images.map(image => {
-          console.log(image);
-          return (<Image src={image} size='small' key={Math.random() + '1'} alt="image" />);
-        })}
-      </div>
+                onChange={e => setItem({ ...item, text: e.target.value })} />
+      {(item?.images && item.images.length !== 0) && (
+        <div className={styles.images}>
+          {item.images.map(image => (
+            <Image src={image} size='small' key={Math.random() + '1'} alt="image" bordered />
+          ))}
+        </div>
+      )}
       <Button color="teal" icon labelPosition="left" as="label"
               loading={isUploading} disabled={isUploading} className={styles.button}>
         <Icon name="image" />
@@ -72,10 +93,25 @@ const CompanyFeedItem = () => {
         <input name="image" type="file" multiple
                onChange={e => handleUploadPhotos(e.target.files)} hidden />
       </Button>
-      <UIButton title="Submit" secondary onClick={handleSubmit} />
+      <Button type="submit" onClick={handleSubmit} className={styles.submit_button}>
+        Submit
+      </Button>
     </div>
     </div>
   );
 };
 
-export default CompanyFeedItem;
+const mapStateToProps = (rootState: IAppState) => ({
+    feedItem: rootState.companyFeed.currentItem
+});
+
+const mapDispatchToProps = {
+    loadFeedItem: loadCompanyFeedItemRoutine,
+    saveFeedItem: saveCompanyFeedItemRoutine
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ConnectedFeedCreationProps = ConnectedProps<typeof connector>;
+
+export default connector(CompanyFeedItemCreation);
