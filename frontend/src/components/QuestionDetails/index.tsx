@@ -30,8 +30,8 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                                  onDelete
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
-    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle.length > 0);
+    const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name?.length > 0);
+    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle?.length > 0);
     const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(true);
     const [addedCategories, setNewCategories] = useState([]);
 
