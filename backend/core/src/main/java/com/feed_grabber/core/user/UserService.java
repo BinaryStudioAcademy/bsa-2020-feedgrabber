@@ -32,6 +32,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,7 +46,10 @@ public class UserService implements UserDetailsService {
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
-    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final VerificationTokenService verificationTokenService;
     private static final Random random = new Random();
     private static final Long RANDOM_MAX = 36L * 36L * 36L * 36L * 36L * 36L;
@@ -55,14 +59,12 @@ public class UserService implements UserDetailsService {
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
                        InvitationService invitationService,
-                       PasswordEncoder passwordEncoder,
                        VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
         this.invitationService = invitationService;
-        this.passwordEncoder = passwordEncoder;
         this.verificationTokenService = verificationTokenService;
     }
 
