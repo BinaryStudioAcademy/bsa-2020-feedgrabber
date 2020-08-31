@@ -1,6 +1,6 @@
-import {Button, Modal, Popup} from 'semantic-ui-react';
+import {Button, Modal} from 'semantic-ui-react';
 import styles from './styles.module.sass';
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";

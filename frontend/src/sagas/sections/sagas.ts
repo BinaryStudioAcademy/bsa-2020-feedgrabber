@@ -2,7 +2,6 @@ import apiClient from "../../helpers/apiClient";
 import {call, takeEvery, all, put} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
-    addNewSectionRoutine,
     createSectionRoutine,
     loadSectionsByQuestionnaireRoutine,
     addQuestionToSectionRoutine,
