@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Divider, Dropdown, Form, Icon, Popup, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Form, Icon, Popup, Segment} from "semantic-ui-react";
 import {Formik} from "formik";
 import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IComponentState} from "../ComponentsQuestions/IQuestionInputContract";
 import CheckboxQuestion from "../ComponentsQuestions/CheckboxQuestion";
-// import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
 import DateSelectionQuestionUI from "../ComponentsQuestions/DateSelectionQuestionUI";
 import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
 import {mainSchema} from "./schemas";
-// import {questionTypeOptions} from "./questionTypeOptions";
 import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI";
 import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {defaultQuestionValues} from "./defaultValues";
-import {string} from "prop-types";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;

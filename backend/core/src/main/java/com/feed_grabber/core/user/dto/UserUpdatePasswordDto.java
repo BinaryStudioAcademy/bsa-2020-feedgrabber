@@ -5,16 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UserProfileEditDto {
+public class UserUpdatePasswordDto {
     @NotNull
-    private String firstName;
+    private String oldPassword;
     @NotNull
-    private String lastName;
-    @NotNull
-    private String phoneNumber;
+    private String newPassword;
 }
