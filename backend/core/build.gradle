@@ -42,11 +42,11 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.3.2.RELEASE'
 	compile group: 'org.flywaydb', name: 'flyway-core', version: '6.5.5'
 //	compile group: 'org.elasticsearch', name: 'elasticsearch', version: '7.9.0'
-//	compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: '7.9.0'
+	compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: '6.8.12'
 //	compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.9.0'
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.21.Final'
 	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.5.Final'
-//	compile group: 'org.hibernate', name: 'hibernate-search-elasticsearch', version: '5.11.5.Final'
+	compile group: 'org.hibernate', name: 'hibernate-search-elasticsearch', version: '5.11.5.Final'
 
 	runtimeOnly 'org.postgresql:postgresql'
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
