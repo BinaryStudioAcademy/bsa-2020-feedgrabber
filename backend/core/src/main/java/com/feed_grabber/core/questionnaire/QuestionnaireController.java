@@ -78,6 +78,7 @@ public class QuestionnaireController {
         );
     }
 
+    @ApiOperation(value = "Get requests for one questionnaire")
     @GetMapping("/requests/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<QuestionnaireDto> getRequests(@PathVariable UUID id) throws QuestionnaireNotFoundException {
@@ -117,6 +118,8 @@ public class QuestionnaireController {
     }
 
 
+    @ApiOperation(value = "Update questions with their indexes in new order",
+            notes = "DEPRECATED")
     @Deprecated
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)

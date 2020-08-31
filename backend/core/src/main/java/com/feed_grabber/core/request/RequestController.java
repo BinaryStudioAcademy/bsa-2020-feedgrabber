@@ -37,6 +37,7 @@ public class RequestController {
     @Autowired
     ReportService reportService;
 
+    @ApiOperation(value = "Create new request")
     @PostMapping("/new")
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
@@ -45,6 +46,7 @@ public class RequestController {
         return new AppResponse<>(requestService.createNew(dto));
     }
 
+    @ApiOperation(value = "Close the request by id", notes = "Report will be generated after closing")
     @PostMapping("/close")
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
@@ -60,6 +62,7 @@ public class RequestController {
         return new AppResponse<>(requestService.getAllByQuestionnaire(id));
     }
 
+    @ApiOperation(value = "Get the pending for the user", notes = "user id is got from token")
     @GetMapping("/pending")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<PendingRequestDto>> getPending() {

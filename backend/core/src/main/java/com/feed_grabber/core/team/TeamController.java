@@ -36,6 +36,7 @@ public class TeamController {
         return new AppResponse<>(teams);
     }
 
+    @ApiOperation("Get the team by id")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<TeamDetailsDto> getOne(@PathVariable UUID id) throws TeamNotFoundException {
@@ -44,7 +45,7 @@ public class TeamController {
         return new AppResponse<>(team);
     }
 
-    @ApiOperation("Create team")
+    @ApiOperation(value = "Create team", notes = "Provide name of the new team")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
@@ -53,7 +54,7 @@ public class TeamController {
         return new AppResponse<>(service.create(teamDto));
     }
 
-    @ApiOperation("Update team")
+    @ApiOperation(value = "Update team", notes = "Provide name of the new team")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
