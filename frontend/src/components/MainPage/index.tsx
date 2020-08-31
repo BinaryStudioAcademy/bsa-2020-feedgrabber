@@ -13,6 +13,8 @@ import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import styles from './styles.module.sass';
 import {Tab} from "semantic-ui-react";
+import NewsList from 'components/NewsList';
+import { INewsItem } from 'models/news';
 
 interface IItem {
     id: string;
@@ -24,7 +26,7 @@ interface IItem {
 interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
     reportsList?: IItem[];
-    newsList?: IItem[];
+    newsList?: INewsItem[];
     isLoading: boolean;
 
     loadQuestionnaires(): void;
@@ -36,7 +38,7 @@ const MainPage: FC<IMainPageProps> =
     ({
          questionnaireList,
          reportsList = [],
-         newsList = [],
+         newsList,
          isLoading,
          loadQuestionnaires
      }) => {
@@ -168,13 +170,7 @@ const MainPage: FC<IMainPageProps> =
                             <UICardBlock>
                                 <h3>Company NewsFeed</h3>
                             </UICardBlock>
-                            {newsList.map(item => (
-                                <UICardBlock key={item.id}>
-                                    {item.header && <h4>{item.header}</h4>}
-                                    {item.content && <p>{item.content}</p>}
-                                    {item.author && <p><b>{item.author}</b></p>}
-                                </UICardBlock>
-                            ))}
+                            <NewsList newsList={newsList}/>
                         </UICard>
                     </UIColumn>
                 </UIContent>
