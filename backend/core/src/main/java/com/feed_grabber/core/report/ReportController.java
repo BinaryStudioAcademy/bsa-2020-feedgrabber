@@ -24,6 +24,7 @@ public class ReportController {
         return new AppResponse<>(response);
     }
 
+
 //    @PostMapping("/excel")
 //    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
 //    public void generateReport(@RequestParam UUID requestId) {
