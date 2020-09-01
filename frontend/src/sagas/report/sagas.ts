@@ -76,7 +76,6 @@ function* loadAwailableReports(action) {
         const res = yield call(apiClient.get, '/api/report/all');
         yield put(loadReportsRoutine.success(res.data.data));
     } catch (err) {
-        console.log(err);
         yield put(loadReportsRoutine.failure());
         toastr.error("Unable to load awailable reports");
     }
