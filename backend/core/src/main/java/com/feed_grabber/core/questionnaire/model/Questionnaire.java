@@ -55,4 +55,9 @@ public class Questionnaire {
     @ColumnDefault("true")
     @Builder.Default
     private boolean isEditingEnabled = true;
+
+    @Column(name = "is_deleted", nullable = false)
+    @ColumnDefault("false")
+    @Builder.Default
+    private boolean isDeleted = false;
 }
