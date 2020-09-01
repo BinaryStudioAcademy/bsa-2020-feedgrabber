@@ -3,18 +3,16 @@ package com.feed_grabber.core.company;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.dto.CompanyDomainDto;
 import com.feed_grabber.core.company.dto.CompanyDto;
+import com.feed_grabber.core.company.dto.CompanyEmailUpdateDto;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -50,5 +48,13 @@ public class CompanyController {
     public AppResponse<CompanyDomainDto> getCompanyFromToken() throws CompanyNotFoundException {
         var id = TokenService.getCompanyId();
         return new AppResponse<>(companyService.getCompanyDomain(id));
+    }
+
+    @ApiOperation(value = "Create company corporate email domain name")
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<CompanyDomainDto> updateEmailDomain(@RequestBody CompanyEmailUpdateDto dto, @PathVariable UUID id)
+            throws CompanyNotFoundException {
+        return new AppResponse<>(companyService.updateEmailDomain(dto, id));
     }
 }
