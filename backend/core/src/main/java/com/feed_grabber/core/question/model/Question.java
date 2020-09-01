@@ -36,10 +36,12 @@ public class Question {
     private UUID id;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "text", nullable = false, unique = true)
     private String text;
 
     @Field(bridge = @FieldBridge(impl = EnumBridge.class))
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 

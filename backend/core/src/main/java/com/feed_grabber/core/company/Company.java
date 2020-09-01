@@ -31,6 +31,7 @@ public class Company {
     private UUID id;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column
     private String name;
 

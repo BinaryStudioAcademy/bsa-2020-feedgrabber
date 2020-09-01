@@ -33,6 +33,7 @@ public class QuestionCategory {
     private UUID id;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 

@@ -36,6 +36,7 @@ public class Questionnaire {
     private UUID id;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "title", nullable = false)
     private String title;
 

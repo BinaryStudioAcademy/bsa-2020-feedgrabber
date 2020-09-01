@@ -34,6 +34,7 @@ public class Team {
     private UUID id;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "name")
     private String name;
 

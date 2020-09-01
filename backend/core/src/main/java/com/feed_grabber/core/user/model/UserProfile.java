@@ -29,14 +29,17 @@ public class UserProfile {
     private UUID id;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "first_name")
     private String firstName;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "last_name")
     private String lastName;
 
     @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "phone_number")
     private String phoneNumber;
 
