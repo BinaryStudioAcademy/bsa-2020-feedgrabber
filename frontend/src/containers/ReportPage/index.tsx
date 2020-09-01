@@ -57,11 +57,11 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                   report.excelLink && report.powerPointLink &&
                   <div>
                     <Label as='a' color='blue' image className={styles.excel} href={report.excelLink.link}>
-                      <img src='https://i.imgur.com/hUTbkcP.png' />
+                      <img src='https://i.imgur.com/hUTbkcP.png' alt="" />
                       Excel report
                     </Label>
                     <Label as='a' color='blue' image href={report.powerPointLink.link}>
-                      <img src='https://i.imgur.com/fs4C1Yy.png' />
+                      <img src='https://i.imgur.com/fs4C1Yy.png' alt="" />
                       PowerPoint report
                     </Label>
                   </div>

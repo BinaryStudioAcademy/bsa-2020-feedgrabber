@@ -20,8 +20,8 @@ class ReportController(val service: ReportService, val excel: ExcelReportGenerat
     fun generateReport(@RequestBody dto: DataForReport): FrontendReportData {
         val report = service.parseIncomingData(dto)
 
-        report.powerPointLink = excel.generate(dto)
-        report.excelLink = pp.create(report)
+        report.powerPointLink = pp.create(report)
+        report.excelLink = excel.generate(dto)
 
         val savedReport = service.saveReport(report)
         return service.reportToDto(savedReport)
