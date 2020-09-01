@@ -16,12 +16,14 @@ import UIColumn from "../../components/UI/UIColumn";
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
 import SwitchRoleModal, {IRoleSwitchDto} from "../../components/SwitchRoleModal";
+import {ISearchResult} from "../../models/search/Search";
 
 interface ICompanyUsersListProps {
     pagination?: IPaginationInfo<IUserInfo>;
     isLoading: boolean;
     userRole: string;
     roleState: IRoleState;
+    result: ISearchResult;
 
     loadUsers(): void;
 
@@ -46,7 +48,8 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
         roleState,
         loadCompanyRoles,
         changeUserRole,
-        setSelectedUser
+        setSelectedUser,
+        result
     }
 ) => {
     const mapItemToJSX = (user: IUserInfo) => (
@@ -57,6 +60,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
             fire={fireUser}
             loadCompanyRoles={loadCompanyRoles}
             setSelectedUser={setSelectedUser}
+            result={result}
         />
     );
 
@@ -92,7 +96,8 @@ const mapStateToProps = (rootState: IAppState) => ({
     pagination: rootState.users.pagination,
     isLoading: rootState.users.isLoading,
     userRole: rootState.user.info?.role,
-    roleState: rootState.role
+    roleState: rootState.role,
+    result: rootState.search.result
 });
 
 const mapDispatchToProps = {
