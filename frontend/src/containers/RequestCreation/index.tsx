@@ -25,6 +25,7 @@ import QuestionnairePreview from "../../components/QuestionnairePreview";
 import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
+import { useTranslation } from "react-i18next";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -52,6 +53,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        sections
      }) => {
 
+      const [t] = useTranslation();
       // load users
       useEffect(() => {
         loadUsers();
@@ -61,7 +63,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       useEffect(() => {
         loadTeams();
       }, [loadTeams]);
-  
+
         // load questionnaire
         useEffect(() => {
             loadSections(match.params.id);
@@ -71,7 +73,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       const [error, setError] = useState(null);
       return (
           <>
-            <UIPageTitle title='Send Request'/>
+            <UIPageTitle title={t("Send Request")}/>
             <UIContent>
               <UIColumn>
                   <UICard>
@@ -90,11 +92,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                         initialValues={initialValues}
                         onSubmit={values => {
                           if (values.withDeadline && !values.expirationDate) {
-                            setError('Select deadline date!');
+                            setError(t("Select deadline date!"));
                             return;
                           }
                           if (values.chosenUsers.length === 0 && values.chosenTeams.length === 0) {
-                            setError('Select at least one user or team');
+                            setError(t("Select at least one user or team"));
                             return;
                           }
                           setError(null);
@@ -119,8 +121,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             <form onSubmit={formik.handleSubmit}>
 
                               <UICardBlock>
-                                <h4>Assign target user:</h4>
-                                <p>This user will receive report</p>
+                                <h4>{t("Assign target user:")}</h4>
+                                <p>{t("This user will receive report")}</p>
                                 <div style={{height: '200px', overflow: 'auto'}}>
                                   {
                                     users.map(user => (
@@ -148,11 +150,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                       onChange={formik.handleChange}
                                   /></span>
                                 </h4>
-                                <p>If yes, this user will also receive request</p>
+                                <p>{t("If yes, this user will also receive request")}</p>
                               </UICardBlock>)
                               }
                               <UICardBlock>
-                                <h4 className={styles.yesNoHeader}>Set Deadline for this request?
+                                <h4 className={styles.yesNoHeader}>{t("Set Deadline for this request?")}
                                   <span>
                                   <UISwitch
                                       name='withDeadline'
@@ -160,7 +162,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                       onChange={formik.handleChange}
                                   /></span>
                                 </h4>
-                                <p>Users will be notified before the deadline</p>
+                                <p>{t("Users will be notified before the deadline")}</p>
 
                                 {formik.values.withDeadline &&
                                 <>
@@ -187,11 +189,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                       onChange={formik.handleChange}
                                   /></span>
                                 </h4>
-                                <p>Users will be notified after sending the request</p>
+                                <p>{t("Users will be notified after sending the request")}</p>
                               </UICardBlock>
 
                               <UICardBlock>
-                                <h4 className={styles.yesNoHeader}>Automatically Generate Report?
+                                <h4 className={styles.yesNoHeader}>{t("Automatically Generate Report?")}
                                   <span>
                                   <UISwitch
                                       name='generateReport'
@@ -202,7 +204,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               </UICardBlock>
 
                               <UICardBlock>
-                                <h4 className={styles.yesNoHeader}>Can users change answers?
+                                <h4 className={styles.yesNoHeader}>{t("Can users change answers?")}
                                     <span>
                                     <UISwitch
                                         name="changeable"
@@ -223,7 +225,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                           formik.setFieldValue('chosenUsers', []);
                                         }
                                       }}>
-                                        Select Teams
+                                        {t("Select Teams")}
                                         </span>
                                     <span className={[styles.option, !selectTeams && styles.selected].join(' ')}
                                           onClick={() => {
@@ -232,7 +234,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                               formik.setFieldValue('chosenTeams', []);
                                             }
                                           }}>
-                                Select Users
+                                {t("Select Users")}
                               </span>
                                   </h4>
                                 </div>
@@ -273,7 +275,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               </UICardBlock>
 
                               <UICardBlock>
-                                <UIButton title='Send!' submit/>
+                                <UIButton title={t('Send')} submit/>
                                 {error && <Message color='red'>{error}</Message>}
 
                               </UICardBlock>

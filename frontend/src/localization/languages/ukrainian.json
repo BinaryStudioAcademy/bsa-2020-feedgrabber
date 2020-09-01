@@ -120,6 +120,60 @@
     "by this invitation link.": "за цим посиланням.",
     "Welcome to": "Ласкаво просимо до",
     "Unable to load data.": "Не вдається завантажити дані.",
-    "Maybe, the link is not relevant": "Можливо, посилання не є актуальним"
+    "Maybe, the link is not relevant": "Можливо, посилання не є актуальним",
+
+    "Add Questionnaire": "Додати опитувальник",
+    "Response": "Відповідь",
+    "Please, fill the question": "Будь ласка, дайте відповідь на питання",
+    "Next": "Наступне",
+    "Add new": "Додати нове",
+
+    "average size": "середній розмір",
+    "Overall": "Загалом",
+    "answers": "відповіді",
+    "Respondents": "Респонденти",
+    "View Report Info": "Переглянути звіт",
+
+    "Send Request": "Відправити запит",
+    "Select deadline date!": "Оберіть кінцевий термін!",
+    "Select at least one user or team": "Виберіть принаймні одного користувача чи команду",
+    "Assign target user:": "Призначити користувача:",
+    "This user will receive report": "Цей користувач отримає звіт",
+    "If yes, this user will also receive request": "Якщо так, цей користувач також отримає запит",
+    "Set Deadline for this request?": "Встановити кінцевий термін для цього запиту?",
+    "Users will be notified before the deadline": "Користувачі будуть сповіщені до кінцевого терміну",
+    "Users will be notified after sending the request": "Користувачі отримають сповіщення після відправлення запиту",
+    "Automatically Generate Report?": "Автоматично створювати звіт?",
+    "Can users change answers?": "Чи можуть користувачі змінювати відповіді?",
+    "Select Teams": "Виберіть команди",
+    "Select Users": "Виберіть користувачів",
+
+    "Request is in progress": "Запит в процесі",
+    "Closed": "Закрито",
+    "Deadline on": "Кінцевий термін о",
+    "Created by": "Створено",
+    "Attended": "Відвідали",
+    "Do you really want to": "Ви справді хочете",
+    "close the request?": "закрити запит?",
+    "won't be able to answer": "не зможуть відповісти",
+    "anymore": "більше",
+    "No": "Ні",
+    "Yes": "Так",
+
+    "Opened requests": "Відкриті запити",
+    "Track pending/closed requests": "Відстежувати очікуючі/закриті запити",
+
+    "Add Team": "Додати команду",
+    "Edit Team": "Редагувати команду",
+    "Here could be requests or something else": "Тут можуть бути запити чи щось інше",
+
+    "Metadata": "Метадані",
+    "Team name": "Назва команди",
+    "Add": "Додати",
+    "Users": "Користувачі",
+    "Remove": "Видалити",
+
+    "Teams List": "Список команд",
+    "Manage": "Керування"
   }
 }

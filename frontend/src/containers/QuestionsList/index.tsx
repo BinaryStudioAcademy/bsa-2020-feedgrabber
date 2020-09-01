@@ -6,9 +6,11 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
 import UIButton from 'components/UI/UIButton';
+import { useTranslation } from 'react-i18next';
 
 const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions}) => {
     const history = useHistory();
+    const [t] = useTranslation();
 
     useEffect(() => {
         loadQuestions();
@@ -20,7 +22,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
 
     return (
         <div className={styles.container}>
-            <h3>Questions</h3>
+            <h3>{t("Questions")}</h3>
             <div className={styles.questionsContainer}>
                 {isLoading
                     ? <Dimmer active inverted>
@@ -42,7 +44,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
                         );
                     }))}
                 <div className={styles.addNewButton}>
-                    <UIButton title="Add new" onClick={() => handleClick("new")}/>
+                    <UIButton title={t("Add new")} onClick={() => handleClick("new")}/>
                 </div>
             </div>
         </div>

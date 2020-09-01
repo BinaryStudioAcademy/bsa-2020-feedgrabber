@@ -24,6 +24,7 @@ import DateSelectionReport from "./DateSelectionReport";
 import {FileQuestionReport} from './FileQuestionReport';
 import {Link} from 'react-router-dom';
 import styles from './styles.module.sass';
+import { useTranslation } from 'react-i18next';
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     {
@@ -41,9 +42,11 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
         loadUsersReports(match.params.id);
     }, [loadReport, match.params.id, loadUsersReports]);
 
+    const [t] = useTranslation();
+
     const panes = [
         {
-            menuItem: 'Overall',
+            menuItem: t("Overall"),
             render: () => (
                 <Tab.Pane>
                     <LoaderWrapper loading={isLoadingReport}>
@@ -54,7 +57,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                                     <UICardBlock key={q.id}>
                                         <h3>{q.title}</h3>
                                         <p>
-                                            <b>{q.answers} answers</b>
+                                            <b>{q.answers} {t("answers")}</b>
                                         </p>
                                         {renderQuestionData(q)}
                                     </UICardBlock>
@@ -66,7 +69,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
             )
         },
         {
-            menuItem: 'Respondents',
+            menuItem: t("Respondents"),
             render: () => (
                 <Tab.Pane>
                     <LoaderWrapper loading={isLoadingUsersReports}>
@@ -84,7 +87,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
         <Container textAlign="center" style={{width: "75%"}}>
             <Header as='h1' dividing style={{padding: 20}}>
                 <Header.Content>
-                    View Report Info
+                    {t("View Report Info")}
                 </Header.Content>
             </Header>
             <Tab panes={panes}/>

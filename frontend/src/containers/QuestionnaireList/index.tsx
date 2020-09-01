@@ -23,6 +23,7 @@ import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
 import {Icon} from "semantic-ui-react";
 import styles from './styles.module.sass';
+import {useTranslation} from "react-i18next";
 
 const QuestionnaireList: FC<Props> = (
     {
@@ -42,6 +43,7 @@ const QuestionnaireList: FC<Props> = (
         clearOneQuestionnaire
     }
 ) => {
+    const [t] = useTranslation();
     const mapItemToJSX = (item: IQuestionnaire) => (
         <UICard>
             <UICardBlock className={styles.cardBlockWrapper}>
@@ -93,11 +95,11 @@ const QuestionnaireList: FC<Props> = (
                 updateQuestionnaire={updateQuestionnaire}
                 modalError={modalError}
             />
-            <UIPageTitle title="Questionnaires"/>
+            <UIPageTitle title={t("Questionnaires")}/>
             <UIContent>
                 <UIColumn wide>
                     <UIButton
-                        title="Add Questionnaire"
+                        title={t("Add Questionnaire")}
                         onClick={() => showModal(undefined)}
                         center
                         primary

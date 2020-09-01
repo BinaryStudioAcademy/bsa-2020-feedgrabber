@@ -16,6 +16,7 @@ import UIColumn from "../../components/UI/UIColumn";
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
 import SwitchRoleModal, {IRoleSwitchDto} from "../../components/SwitchRoleModal";
+import { useTranslation } from 'react-i18next';
 
 interface ICompanyUsersListProps {
     pagination?: IPaginationInfo<IUserInfo>;
@@ -49,6 +50,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
         setSelectedUser
     }
 ) => {
+    const [t] = useTranslation();
     const mapItemToJSX = (user: IUserInfo) => (
         <UserListItem
             key={user.id}
@@ -62,7 +64,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 
     return (
         <>
-            <UIPageTitle title="Users"/>
+            <UIPageTitle title={t("Users")}/>
             <UIContent>
                 <UIColumn>
                     <GenericPagination
