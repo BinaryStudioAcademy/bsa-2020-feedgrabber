@@ -12,8 +12,8 @@ const ReportsNotification: React.FC<INotificationProps> = ({
                                                                     setShown
                                                                 }) => {
     const payloadItems = notification.payload.split(',');
-    const excelLink = payloadItems[1];
-    const pptLink = payloadItems[2];
+    const excelLink = payloadItems[0];
+    const pptLink = payloadItems[1];
     const history = useHistory();
     return (
         <div key={notification.id}
