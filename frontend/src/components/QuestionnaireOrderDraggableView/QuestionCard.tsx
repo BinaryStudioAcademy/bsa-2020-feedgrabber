@@ -2,12 +2,8 @@ import React, {useRef} from "react";
 import { useDrag, useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import styles from "../../containers/QuestionsList/styles.module.sass";
-import {Card} from "semantic-ui-react";
 import {DraggableItemTypes, IQuestion} from "../../models/forms/Questions/IQuesion";
 import ResponseQuestion from "components/ResponseQuestion";
-import { connect } from "react-redux";
-import { addQuestionToSectionRoutine } from "sagas/sections/routines";
-import { ISection } from "models/forms/Sections/types";
 
 export interface ICardProps {
   id: string;
@@ -91,11 +87,6 @@ const QuestionCard: React.FC<ICardProps> = ({
   return (
     <div ref={ref}  style={{ opacity }} className={styles.question}>
       <ResponseQuestion question={question} />
-      {/* <Card className={styles.question}
-        link centered fluid
-        description={question.name}
-        meta={question.categoryTitle}
-      />  */}
     </div>
   );
 };

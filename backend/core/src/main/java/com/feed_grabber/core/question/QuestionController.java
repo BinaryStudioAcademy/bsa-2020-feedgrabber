@@ -113,6 +113,16 @@ public class QuestionController {
     }
 
 
+    @ApiOperation(value = "Move question to section",
+            notes = "Provide section id and list of indexes of questions in this section")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/index")
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
+    public void index(@RequestBody QuestionIndexDto dto)
+            throws QuestionNotFoundException, SectionNotFoundException {
+        this.questionService.index(dto);
+    }
+
     @ApiOperation(value = "Delete the question by id and questionnaireId")
     @DeleteMapping("/questionnaires/{questionId}/{questionnaireId}")
     @ResponseStatus(HttpStatus.OK)
@@ -127,15 +137,12 @@ public class QuestionController {
         return new AppResponse<>(questionService.getAllByQuestionnaireId(questionnaireId));
     }
 
+    @ApiOperation(value = "Get all questions from one section",
+            notes = "Provide id in the path to get questions")
     @GetMapping("/sections/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAllBySection(@PathVariable UUID id) {
         return new AppResponse<>(questionService.getAllBySection(id));
     }
 
-
-    @PutMapping("/index")
-    public void index(@RequestBody QuestionIndexDto dto) throws QuestionNotFoundException, SectionNotFoundException {
-        questionService.index(dto);
-    }
 }

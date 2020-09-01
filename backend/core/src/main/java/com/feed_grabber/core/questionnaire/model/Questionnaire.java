@@ -53,5 +53,6 @@ public class Questionnaire {
 
     @Column(name = "is_editing_enabled", nullable = false)
     @ColumnDefault("true")
+    @Builder.Default
     private boolean isEditingEnabled = true;
 }

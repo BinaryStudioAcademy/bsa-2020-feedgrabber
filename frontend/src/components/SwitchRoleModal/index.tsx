@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from "react";
 
 import styles from './styles.module.sass';
-import {Button, Dropdown, Image, Header, Modal, Select, Icon, Loader} from "semantic-ui-react";
+import {Button, Header, Modal, Select, Loader} from "semantic-ui-react";
 import {IRoleShort} from "../../models/role/Role";
 import {IUserInfo} from "../../models/user/types";
 
@@ -43,8 +43,8 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
     }, [loadCompanyRoles]);
 
     useEffect(() => {
-        const options = companyRoles
-            .map(r => ({key: r.id, value: r.id, text: r.name}));
+        // const options = companyRoles
+        //     .map(r => ({key: r.id, value: r.id, text: r.name}));
         setSelectedRoleId(selectedUser.roleId);
     }, [companyRoles, selectedUser]);
 

@@ -32,6 +32,8 @@ public abstract class QuestionMapper {
             QuestionCategory category
     );
 
+    @Mapping(target = "questionnaireId", ignore = true)
+    @Mapping(target = "sectionId", ignore = true)
     public abstract QuestionCreateDto upsertDtoToCreateDto(QuestionUpsertDto dto);
 
     public abstract QuestionUpdateDto upsertDtoToUpdateDto(QuestionUpsertDto dto);

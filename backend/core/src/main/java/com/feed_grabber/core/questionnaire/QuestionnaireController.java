@@ -60,6 +60,7 @@ public class QuestionnaireController {
         );
     }
 
+    @ApiOperation(value = "Get requests for one questionnaire")
     @GetMapping("/requests/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<QuestionnaireDto> getRequests(@PathVariable UUID id) throws QuestionnaireNotFoundException {
@@ -96,4 +97,5 @@ public class QuestionnaireController {
     public void delete(@PathVariable UUID id) {
         questionnaireService.delete(id);
     }
+
 }

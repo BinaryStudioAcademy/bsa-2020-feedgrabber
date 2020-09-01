@@ -71,7 +71,6 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
             }
             QuestionTypes.date -> {
                 val answer: DateValue = service.parseQuestion(response) as DateValue
-                var date = answer.date
                 textCell(answer.date.toString(), row, cellPosition, cellStyle)
             }
         }

@@ -1,9 +1,8 @@
 import React, {FC, useState} from "react";
 
 import styles from './styles.module.sass';
-import {Button, Header, Image, Loader, Modal, Select} from "semantic-ui-react";
+import {Button, Image, Modal} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
-import SwitchRoleModal, {IRoleSwitchDto} from "../SwitchRoleModal";
 import {IUserInfo} from "../../models/user/types";
 
 interface IUserListItemProps {

@@ -77,13 +77,16 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
             }}
         >
             {({
+                  touched,
                   values,
                   errors,
                   handleChange,
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.password || error;
+                const errorText = (touched.username && errors.username)
+                    || (touched.password && errors.password)
+                    || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
@@ -95,6 +98,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
+                        {/* eslint-disable-next-line */ }
                         <a href="#"
                             onClick={() => resetPassword({userEmail, companyId: company.id})}
                         >Reset password</a>

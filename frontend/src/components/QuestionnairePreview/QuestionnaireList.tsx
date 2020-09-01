@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { IQuestion } from 'models/forms/Questions/IQuesion';
-import { ISection } from 'models/forms/Sections/types';
 import QuestionCard from 'components/QuestionnaireOrderDraggableView/QuestionCard';
 import { Header } from 'semantic-ui-react';
 import styles from "./styles.module.sass";
