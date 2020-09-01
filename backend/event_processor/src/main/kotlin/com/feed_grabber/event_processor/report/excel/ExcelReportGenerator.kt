@@ -2,7 +2,6 @@ package com.feed_grabber.event_processor.report.excel
 
 import com.feed_grabber.event_processor.fileStorage.AmazonS3ClientService
 import com.feed_grabber.event_processor.rabbit.Sender
-import com.feed_grabber.event_processor.report.ReportApiHelper
 import com.feed_grabber.event_processor.report.ReportService
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.model.QuestionDB
@@ -20,8 +19,7 @@ import java.util.stream.Collectors
 
 
 @Service
-class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
-                           @Autowired private val service: ReportService,
+class ExcelReportGenerator(@Autowired private val service: ReportService,
                            @Autowired private val client: AmazonS3ClientService,
                            @Autowired private val sender: Sender) {
 
@@ -131,8 +129,7 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
     }
 
     @Throws(IOException::class)
-    fun generate(requestId: UUID) {
-        val report = apiHelper.fetchReportData(requestId)
+    fun generate(report: DataForReport) {
         val parsedQuestions = service.parseIncomingData(report).questions
         if (parsedQuestions != null) {
             // #WORKBOOK
@@ -181,7 +178,7 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
             workbook.write(fileOut)
             fileOut.close()
             workbook.close()
-            val response = client.uploadReport(file, requestId)
+            val response = client.uploadReport(file, report.requestId)
             sender.sendUploadedReportURL(response)
             file.delete()
         }

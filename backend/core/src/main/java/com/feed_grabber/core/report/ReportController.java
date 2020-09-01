@@ -23,8 +23,7 @@ public class ReportController {
             notes = "Provide id in the path to get the report")
     @GetMapping("/{requestId}")
     public AppResponse<String> getReport(@PathVariable UUID requestId) throws IOException, NotFoundException {
-        var response = service.isRequestClosed(requestId) ?
-                service.getReport(requestId) : service.generateReport(requestId);
+        var response = service.isRequestClosed(requestId) ? service.getReport(requestId) : service.generateReport(requestId);
         return new AppResponse<>(response);
     }
 
