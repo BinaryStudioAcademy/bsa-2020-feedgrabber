@@ -8,11 +8,13 @@ import {IGeneric} from "../../models/IGeneric";
 
 function* auth(action) {
     const isLogin = action.type === loginRoutine.TRIGGER;
-    const endpoint = isLogin ? 'login' : 'register';
+    let endpoint = isLogin ? 'login' : 'register';
     const routine = isLogin ? loginRoutine : registerRoutine;
+    const {userDto, byEmail} = action.payload;
+    endpoint += byEmail ? '/byEmail' : '';
 
     try {
-        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/${endpoint}`, action.payload);
+        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/${endpoint}`, userDto);
         const {user, refreshToken, accessToken} = res.data.data;
 
         yield put(routine.success(user));

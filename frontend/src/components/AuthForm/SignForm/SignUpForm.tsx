@@ -8,6 +8,7 @@ import {registerRoutine} from "../../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
+import LoaderWrapper from 'components/LoaderWrapper';
 
 const schema = yup.object().shape({
     companyName: yup
@@ -42,7 +43,7 @@ const schema = yup.object().shape({
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error} = props;
+    const {signUp, className, error, company, isLoadingCompany} = props;
 
     return (
         <Formik
@@ -50,10 +51,13 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
             validationSchema={schema}
             onSubmit={values => {
                 signUp({
-                    email: values.email,
-                    password: values.password,
-                    companyName: values.companyName,
-                    username: values.username
+                    userDto: {
+                        email: values.email,
+                        password: values.password,
+                        companyName: values.companyName,
+                        username: values.username
+                    },
+                    byEmail: company ? true : false
                 });
             }
             }
@@ -72,6 +76,10 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                     || (touched.password && errors.password)
                     || (touched.passwordRepeat && errors.passwordRepeat)
                     || error;
+                
+                const setCompanyName = (companyName: string) => {
+                    values.companyName = companyName;
+                };
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
@@ -80,12 +88,22 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                         <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
-                        <Input name="email" placeholder="Email" value={values.email}
-                               onChange={handleChange} onBlur={handleBlur}
-                        />
-                        <Input name="companyName" placeholder="Company" value={values.companyName}
-                               onChange={handleChange} onBlur={handleBlur}
-                        />
+                        <LoaderWrapper loading={isLoadingCompany}>
+                            {company ? 
+                            <>
+                            <Input name="email" placeholder="Email" value={values.username +"@"+ company.emailDomain}
+                                onChange={values.email=values.username +"@"+company.emailDomain}
+                                onBlur={handleBlur} disabled
+                            /> 
+                            {setCompanyName(company.name)}
+                            </> : <>
+                            <Input name="email" placeholder="Email" value={values.email}
+                                onChange={handleChange} onBlur={handleBlur}/>
+                            <Input name="companyName" placeholder="Company" value={values.companyName}
+                            onChange={handleChange} onBlur={handleBlur}
+                            /> </>
+                            }
+                        </LoaderWrapper>
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -109,7 +127,9 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error?.register
+    error: state.user.error?.register,
+    company: state.company.currentCompany,
+    isLoadingCompany: state.company.isLoading
 });
 
 const mapDispatch = {

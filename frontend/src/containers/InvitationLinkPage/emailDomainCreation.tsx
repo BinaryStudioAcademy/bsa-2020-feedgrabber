@@ -27,7 +27,7 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
     const handleSave = values => {
         const payload = {
             id: company.id,
-            emailDomain: values.emailDomain
+            emailDomain: values.emailDomain + ".com"
         };
         setCompanyDomain(payload);
     };
@@ -54,12 +54,12 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
                     <Input id="emailDomain"
                         name="emailDomain"
                         icon='at' 
+                        fluid
                         iconPosition='left' 
                         placeholder='Write domain...' 
                         onChange={formik.handleChange}
-                        onBlure={formik.handleBlur}/>
+                        />
                     {formik.errors.emailDomain && <div>{formik.errors.emailDomain}</div>}
-                    <br/>
                     <UIButton 
                         title="Save" 
                         onClick={formik.handleSubmit} 
