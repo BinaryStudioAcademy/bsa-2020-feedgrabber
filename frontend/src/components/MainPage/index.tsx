@@ -13,7 +13,6 @@ import LoaderWrapper from 'components/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import {IReportShort} from 'models/report/IReport';
-import styles from './styles.module.sass';
 import {Tab} from "semantic-ui-react";
 import { Link } from 'react-router-dom';
 
