@@ -12,19 +12,15 @@ import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.ImageRepository;
-import com.feed_grabber.core.image.ImageService;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
-import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.*;
-import com.feed_grabber.core.registration.TokenType;
-import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.user.dto.UserCreateDto;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserDto;
@@ -32,7 +28,6 @@ import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import com.feed_grabber.core.user.model.UserProfile;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,7 +35,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -316,7 +310,7 @@ public class UserService implements UserDetailsService {
     public Long getCountByQuery(UUID companyId, String query) {
         var parts = query.split(" ");
         return parts.length == 1
-                ? userRepository.countByLastNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
+                ? userRepository.countByNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
                 : userRepository.countByLastNameAndNameAndCompanyId(
                         companyId, parts[1].toLowerCase() + "%", parts[0]);
     }
