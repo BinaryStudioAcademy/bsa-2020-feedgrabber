@@ -8,6 +8,7 @@ export interface ITeamShort {
 export interface ITeam {
   id: string;
   name: string;
+  teamLeadId: string | null;
   membersId: string[];
 }
 
@@ -21,6 +22,12 @@ export interface ITeamCreate {
 }
 
 export interface ITeamUserToggle {
+  teamId: string;
+  userId: string;
+  username: string;
+}
+
+export interface ITeamLeadToggle {
   teamId: string;
   userId: string;
   username: string;

@@ -10,19 +10,17 @@ import java.awt.Color
 fun numericCell(value: Double, row: Row, cellPosition: Int, cellStyle: XSSFCellStyle) {
     val cell = row.createCell(cellPosition)
     cell.setCellValue(value)
-    cell.cellType = CellType.NUMERIC
     cell.cellStyle = cellStyle
 }
 
 fun textCell(value: String, row: Row, cellPosition: Int, cellStyle: XSSFCellStyle) {
     val cell = row.createCell(cellPosition)
     cell.setCellValue(value)
-    cell.cellType = CellType.STRING
     cell.cellStyle = cellStyle
 }
 
 fun errorCell(row: Row, cellPosition: Int, cellStyle: XSSFCellStyle) {
-    cellStyle.setFillForegroundColor(XSSFColor(Color(236, 120, 120)))
+    cellStyle.setFillForegroundColor(XSSFColor(Color(236, 120, 120), null))
     textCell("", row, cellPosition, cellStyle)
 }
 

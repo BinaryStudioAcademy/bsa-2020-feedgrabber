@@ -12,6 +12,7 @@ export interface INotification {
   date: Date;
   requestId: string;
   questionnaireId: string;
+  isRead: boolean;
 }
 
 export interface INotificationsState {

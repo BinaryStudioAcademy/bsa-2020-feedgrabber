@@ -92,6 +92,7 @@ public class UserController {
     }
 
 
+    @ApiOperation(value = "Get users by company id", notes = "Provide size of user's list and count of pages")
     @GetMapping("/all")
     public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId(
             @RequestParam Integer page,
@@ -107,6 +108,7 @@ public class UserController {
                 ));
     }
 
+    @ApiOperation(value = "Remove user from company")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("{id}/removeCompany")
     @Secured(value = {ROLE_COMPANY_OWNER})
@@ -114,6 +116,7 @@ public class UserController {
         userService.removeCompany(id);
     }
 
+    @ApiOperation(value = "Get user short info by email and company")
     @GetMapping("/short")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<UserShortDto> getUserShortByEmailAndCompany(@RequestParam String email,

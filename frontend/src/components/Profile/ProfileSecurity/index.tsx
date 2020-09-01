@@ -42,7 +42,9 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
        updatePassword,
        getUser
      }) => {
-      useEffect(() => getUser, [getUser]);
+        useEffect(() => {
+            !user && getUser();
+        }, [getUser, user]);
 
       const initialUsername = {
         username: user?.userName
