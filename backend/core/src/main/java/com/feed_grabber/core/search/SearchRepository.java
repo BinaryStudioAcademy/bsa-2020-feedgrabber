@@ -11,6 +11,7 @@ import com.feed_grabber.core.team.TeamMapper;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.model.User;
+import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.springframework.stereotype.Repository;
 
@@ -20,97 +21,63 @@ import java.util.stream.Collectors;
 
 @Repository
 public class SearchRepository {
-
     private final EntityManager entityManager;
 
     public SearchRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    private FullTextQuery getFullTextQuery(Class<?> initial, String query, String... fields) {
+        var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        return fullTextEntityManager.createFullTextQuery(
+                fullTextEntityManager
+                        .getSearchFactory()
+                        .buildQueryBuilder()
+                        .forEntity(initial)
+                        .get()
+                        .keyword()
+                        .fuzzy()
+                        .withEditDistanceUpTo(2)
+                        .withPrefixLength(0)
+                        .onFields(fields)
+                        .matching(query)
+                        .createQuery()
+                , initial);
+    }
+
     @SuppressWarnings("unchecked")
     public SearchDto findAllByQuery(String query) {
-        var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        var userQuery = fullTextEntityManager.createFullTextQuery(
-                fullTextEntityManager
-                        .getSearchFactory()
-                        .buildQueryBuilder()
-                        .forEntity(User.class)
-                        .get()
-                        .keyword()
-                        .fuzzy()
-                        .withEditDistanceUpTo(2)
-                        .withPrefixLength(0)
-                        .onFields("email"
-                                , "username"
-                                , "userProfile.firstName"
-                                , "userProfile.lastName"
-                                , "userProfile.phoneNumber")
-                        .matching(query)
-                        .createQuery()
-                , User.class);
+        var userQuery = getFullTextQuery(
+                User.class
+                , query
+                , "email"
+                , "username"
+                , "userProfile.firstName"
+                , "userProfile.lastName"
+                , "userProfile.phoneNumber");
 
-        var questionQuery = fullTextEntityManager.createFullTextQuery(
-                fullTextEntityManager
-                        .getSearchFactory()
-                        .buildQueryBuilder()
-                        .forEntity(Question.class)
-                        .get()
-                        .keyword()
-                        .fuzzy()
-                        .withEditDistanceUpTo(2)
-                        .withPrefixLength(0)
-                        .onFields("text"
-                                , "category.title")
-                        .matching(query)
-                        .createQuery()
-                , Question.class);
+        var questionQuery = getFullTextQuery(
+                Question.class
+                , query
+                , "text"
+                , "category.title");
 
-        var questionnaireQuery = fullTextEntityManager.createFullTextQuery(
-                fullTextEntityManager
-                        .getSearchFactory()
-                        .buildQueryBuilder()
-                        .forEntity(Questionnaire.class)
-                        .get()
-                        .keyword()
-                        .fuzzy()
-                        .withEditDistanceUpTo(2)
-                        .withPrefixLength(0)
-                        .onFields("title"
-                                , "company.name")
-                        .matching(query)
-                        .createQuery()
-                , Questionnaire.class);
+        var questionnaireQuery = getFullTextQuery(
+                Questionnaire.class
+                , query
+                , "title"
+                , "company.name");
 
-        var reportQuery = fullTextEntityManager.createFullTextQuery(
-                fullTextEntityManager
-                        .getSearchFactory()
-                        .buildQueryBuilder()
-                        .forEntity(Request.class)
-                        .get()
-                        .keyword()
-                        .fuzzy()
-                        .withEditDistanceUpTo(2)
-                        .withPrefixLength(0)
-                        .onFields("questionnaire.title")
-                        .matching(query)
-                        .createQuery()
-                , Request.class);
+        var reportQuery = getFullTextQuery(
+                Request.class
+                , query
+                , "questionnaire.title");
 
-        var teamQuery = fullTextEntityManager.createFullTextQuery(
-                fullTextEntityManager
-                        .getSearchFactory()
-                        .buildQueryBuilder()
-                        .forEntity(Team.class)
-                        .get()
-                        .keyword()
-                        .fuzzy()
-                        .withEditDistanceUpTo(2)
-                        .withPrefixLength(0)
-                        .onFields("name"
-                                , "company.name")
-                        .matching(query)
-                        .createQuery()
-                , Team.class);
+        var teamQuery = getFullTextQuery(
+                Team.class
+                , query
+                , "name"
+                , "company.name");
 
         return SearchDto
                 .builder()
