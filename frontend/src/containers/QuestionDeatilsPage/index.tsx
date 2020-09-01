@@ -109,7 +109,7 @@ const mapState = (state: IAppState) => ({
     currentQuestion: state.questions.current,
     isLoading: state.questions.categories.isLoading,
     categories: state.questions.categories.list,
-    questionnaireId: state.questionnaires.current.get.id,
+    questionnaireId: state.sections.questionnaireId,
     questionnaireQuestions: state.questionnaires.current.questions
 });
 
