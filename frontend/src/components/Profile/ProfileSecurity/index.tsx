@@ -58,7 +58,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
       return (
           !isLoading && !!user &&
           <>
-            <h4 className={styles.header}> Change your username</h4>
+            <h4 className={styles.header}>{t("Change your username")}</h4>
             <Formik
                 enableReinitialize
                 initialValues={initialUsername}
@@ -70,7 +70,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
               {formik => (
                   <Form onSubmit={formik.handleSubmit}>
                     <UITextInput labelText={'Username'}
-                                 placeholder={'Type your username...'}
+                                 placeholder={t('Type your username...')}
                                  name='username'
                                  value={formik.values.username}
                                  error={formik.touched.username && formik.errors.username}
@@ -80,12 +80,12 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                     />
                     <UIButton disabled={!!formik.errors.username}
                               submit
-                              title={'Update Username'}/>
+                              title={t('Update Username')}/>
                   </Form>
               )}
             </Formik>
 
-            <h4 className={styles.header}>Change your password</h4>
+            <h4 className={styles.header}>{t("Change your password")}</h4>
             <Formik
                 // enableReinitialize
                 initialValues={initialPassword}
