@@ -14,4 +14,7 @@ public class SectionCreateDto {
     String title;
 
     UUID questionnaireId;
+
+    Integer index;
+
 }

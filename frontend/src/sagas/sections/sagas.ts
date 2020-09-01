@@ -9,10 +9,12 @@ import {
     updateSectionRoutine,
     updateQuestionsOrderRoutine, loadSavedSectionsByQuestionnaireRoutine
 } from "./routines";
+
 import {parseQuestion} from "sagas/questions/sagas";
 import {IGeneric} from "../../models/IGeneric";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 import {ISection} from "../../models/forms/Sections/types";
+import { setCurrentIdRoutine } from "sagas/qustionnaires/routines";
 
 function parseSectionWithQuestion(section) {
     const questions = section.questions.map(q => parseQuestion(q));
@@ -41,6 +43,7 @@ function* loadAllSectionsAndQuestionsByQuestionnaire(action) {
         const result = yield call(apiClient.get, `/api/section/questionnaire/${action.payload}`);
         const sections = result.data.data.map(section => parseSectionWithQuestion(section));
         yield put(loadSectionsByQuestionnaireRoutine.success(sections));
+      yield put(setCurrentIdRoutine(action.payload));
     } catch (error) {
         yield put(loadSectionsByQuestionnaireRoutine.failure());
         toastr.error("Couldn`t load sections");
@@ -62,9 +65,13 @@ function* addQuestionToSection(action) {
 
 function* deleteQuestionFromSection(action) {
     try {
-        const {sectionId, questionId} = action.payload;
-        const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
+        const {sectionId, questionId, questionnaireId} = action.payload;
+        const result = yield call(
+          apiClient.delete,
+          `/api/section/question/${questionId}?sectionId=${sectionId}&questionnaireId=${questionnaireId}`);
         yield put(deleteQuestionFromSectionRoutine.success(result.data.data));
+
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
     } catch (error) {
         yield put(deleteQuestionFromSectionRoutine.failure());
     }
