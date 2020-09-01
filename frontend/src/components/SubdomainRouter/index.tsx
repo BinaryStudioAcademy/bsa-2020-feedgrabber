@@ -1,23 +1,44 @@
 import React, {useEffect} from 'react';
 import {useAuth} from '../../security/authProvider';
-import {redirectToCompany, redirectToMain} from "../../helpers/subdomain.helper";
+import {getSubdomainFromDomain, redirectToCompany} from "../../helpers/subdomain.helper";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
-import {fetchCompanyRoutine} from "../../sagas/companies/routines";
+import {history} from "../../helpers/history.helper";
+import {fetchCompanyBySubdomainRoutine, fetchCompanyRoutine} from "../../sagas/companies/routines";
 
-const SubdomainRouter: React.FC<SubdomainRouterProps> = ({company, fetchCompany, children}) => {
+const SubdomainRouter: React.FC<SubdomainRouterProps> =
+    ({
+       company,
+       error,
+       fetchCompany,
+       fetchCompanyBySubdomain,
+       children}) => {
+
     const isLogged = useAuth();
+
     useEffect(() => {
         if(isLogged && !company) {
             fetchCompany();
             return;
         }
+        const subdomain = getSubdomainFromDomain();
+        if(!isLogged && subdomain && !company && !error) {
+            fetchCompanyBySubdomain(subdomain);
+            return;
+        }
+
         if (isLogged) {
             redirectToCompany(company);
-        } else {
-            redirectToMain();
         }
-    }, [isLogged, company, fetchCompany]);
+        
+        if(!isLogged && error) {
+            history.push('/error');
+        }
+        
+        if(!isLogged && company) {
+            history.push('/auth');
+        }
+    }, [isLogged, company, fetchCompany, fetchCompanyBySubdomain, error]);
     return (
         <>
             {children}
@@ -25,11 +46,13 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> = ({company, fetchCompany,
     );
 };
 const mapStateToProps = (state: IAppState) => ({
-    company: state.company.currentCompany
+    company: state.company.currentCompany,
+    error: state.company.error
 });
 
 const mapDispatchToProps = {
-    fetchCompany: fetchCompanyRoutine
+    fetchCompany: fetchCompanyRoutine,
+    fetchCompanyBySubdomain: fetchCompanyBySubdomainRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

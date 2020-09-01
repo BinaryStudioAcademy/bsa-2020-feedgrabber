@@ -2,7 +2,7 @@ import {ICompanyDomain} from "../../models/companies/ICompanyDomain";
 import {IAppState} from "../../models/IAppState";
 import {
     chooseCompanyRoutine,
-    dropCompanyRoutine,
+    dropCompanyRoutine, fetchCompanyBySubdomainRoutine,
     fetchCompanyRoutine,
     loadCompaniesRoutine,
     setEmailDomainRoutine
@@ -26,6 +26,7 @@ const companyReducer = (state: IAppState['company'] = initialState, {type, paylo
     switch (type) {
         case(loadCompaniesRoutine.TRIGGER):
         case(fetchCompanyRoutine.TRIGGER):
+        case(fetchCompanyBySubdomainRoutine.TRIGGER):
             return {
                 ...state,
                 isLoading: true,
@@ -40,6 +41,7 @@ const companyReducer = (state: IAppState['company'] = initialState, {type, paylo
             };
         case(fetchCompanyRoutine.SUCCESS):
         case(setEmailDomainRoutine.SUCCESS):
+        case(fetchCompanyBySubdomainRoutine.SUCCESS):
             return {
                 ...state,
                 isLoading: false,
@@ -48,6 +50,7 @@ const companyReducer = (state: IAppState['company'] = initialState, {type, paylo
             };
         case(loadCompaniesRoutine.FAILURE):
         case(fetchCompanyRoutine.FAILURE):
+        case(fetchCompanyBySubdomainRoutine.FAILURE):
             return {
                 ...state,
                 isLoading: false,

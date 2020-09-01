@@ -64,7 +64,13 @@ public class CompanyService {
     public CompanyDomainDto getCompanyDomain(UUID id) throws CompanyNotFoundException {
         return companyRepository.findById(id)
                 .map(CompanyMapper.MAPPER::companyToCompanyDomainDto)
-                .orElseThrow(() -> new CompanyNotFoundException());
+                .orElseThrow(CompanyNotFoundException::new);
+    }
+
+    public CompanyDomainDto getCompanyDomain(String subDomain) throws CompanyNotFoundException {
+        return companyRepository.findCompanyBySubdomainName(subDomain)
+                .map(CompanyMapper.MAPPER::companyToCompanyDomainDto)
+                .orElseThrow(CompanyNotFoundException::new);
     }
 
     public CompanyDomainDto updateEmailDomain(CompanyEmailUpdateDto dto, UUID id)

@@ -15,6 +15,7 @@ public interface TeamMapper {
     @Mapping(source = "companyId", target = "company.id")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "users", ignore = true)
+    @Mapping(target = "lead", ignore = true)
     Team teamDtoToModel(RequestTeamDto teamDto);
 
     @Mapping(source = "users", target = "members")

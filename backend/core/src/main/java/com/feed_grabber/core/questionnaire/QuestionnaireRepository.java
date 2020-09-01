@@ -3,9 +3,11 @@ package com.feed_grabber.core.questionnaire;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,4 +28,11 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
             "where r.questionnaire.id = :questionnaireId " +
             "and r.closeDate is null")
     Optional<Questionnaire> findByAllClosedRequests(UUID questionnaireId);
+
+    @Modifying
+    @Transactional
+    @Query(nativeQuery = true,
+            value = "DELETE FROM question_questionnaire qq " +
+                    "WHERE qq.questionnaire_id = :questionnaireId AND qq.question_id = :questionId")
+    void deleteQuestion(UUID questionnaireId, UUID questionId);
 }

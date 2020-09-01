@@ -32,17 +32,17 @@ public class SectionService {
     }
 
     public SectionDto create(SectionCreateDto createDto) throws QuestionnaireNotFoundException {
-        if (createDto.getTitle() == null) {
-            createDto.setTitle("New section");
-        }
+        if (createDto.getTitle() == null) createDto.setTitle("New section");
+
         var questionnaire = questionnaireRepository.findById(createDto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
-        var section = SectionMapper.MAPPER.createDtoToModel(createDto);
+
+        var section = SectionMapper.MAPPER.createDtoToModel(createDto, questionnaire);
         return SectionMapper.MAPPER.modelToDto(sectionRepository.save(section));
     }
 
     public List<SectionQuestionsDto> getByQuestionnaire(UUID id) {
-        return sectionRepository.findByQuestionnaireId(id)
+        return sectionRepository.findByQuestionnaireIdOrderByOrder(id)
                 .stream()
                 .map(section ->
                         SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId())))
@@ -59,12 +59,16 @@ public class SectionService {
         return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
     }
 
-    public SectionQuestionsDto deleteQuestion(UUID sectionId, UUID questionId) throws SectionNotFoundException, QuestionNotFoundException {
+    public SectionQuestionsDto deleteQuestion(UUID sectionId, UUID questionId, UUID questionnaireId)
+            throws SectionNotFoundException, QuestionNotFoundException, QuestionnaireNotFoundException
+    {
         var section = sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
 
         questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
+        questionnaireRepository.findById(questionnaireId).orElseThrow(QuestionnaireNotFoundException::new);
 
         sectionRepository.deleteQuestion(sectionId, questionId);
+        questionnaireRepository.deleteQuestion(questionnaireId, questionId);
 
         return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
     }
