@@ -121,7 +121,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                 }) => (
                   <Form name="userForm" onSubmit={handleSubmit}>
                     <UITextInput labelText={t('First Name')}
-                                 placeholder={'Type your first name...'}
+                                 placeholder={t('Type your first name...')}
                                  name='firstName'
                                  value={values.firstName}
                                  onChange={handleChange}
@@ -130,7 +130,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  onClick={() => setFieldError('firstName', null)}
                     />
                     <UITextInput labelText={t('Last Name')}
-                                 placeholder={'Type your last name...'}
+                                 placeholder={t('Type your last name...')}
                                  name='lastName'
                                  value={values.lastName}
                                  onChange={handleChange}

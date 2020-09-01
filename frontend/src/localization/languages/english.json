@@ -45,6 +45,7 @@
     "Type of files": "Type of files",
     "Maximum number of files": "Maximum number of files",
     "Maximum files size": "Maximum files size, MB",
+    "Upload Files": "Upload Files",
     "Add new answer": "Add new answer",
 
     "Cancel": "Cancel",
@@ -217,16 +218,28 @@
     "Too Short!": "Too Short!",
     "Too Long!": "Too Long!",
 
-    "placeholder": {
-      "Username": "Username",
-      "Email": "Email",
-      "Company": "Company",
-      "Password": "Password",
-      "Confirm password": "Confirm password",
-      "Long answer text...": "Long answer text...",
-      "Choose file type": "Choose file type",
-      "description (optional)": "description (optional)",
-      "Type answer here": "Type answer here..."
-    }
+    "Username": "Username",
+    "Email": "Email",
+    "Company": "Company",
+    "Password": "Password",
+    "Confirm password": "Confirm password",
+    "Long answer text...": "Long answer text...",
+    "Choose file type": "Choose file type",
+    "description (optional)": "description (optional)",
+    "Type answer here...": "Type answer here...",
+    "Search...": "Search...",
+    "Type your first name...": "Type your first name...",
+    "Type your last name...": "Type your last name...",
+    "Type your username...": "Type your username...",
+    "Preferred language": "Preferred language",
+    "Choose type": "Choose type",
+    "Other option...": "Other option...",
+    "Answer field": "Answer field",
+    "Or enter your variant here...": "Or enter your variant here...",
+    "It may affect answers that have been given before!!!": "It may affect answers that have been given before!!!",
+    "I know what I do!": "I know what I do!",
+    "Team Name": "Team Name",
+    "Invitation email": "Invitation email",
+    "Title": "Title"
   }
 }

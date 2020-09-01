@@ -45,7 +45,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 <span className={styles.description}>{t("Type of files")}</span>
                 <Dropdown
                     error={!values.filesType}
-                    className={styles.inputField} name="filesType" selection placeholder="Choose file type"
+                    className={styles.inputField} name="filesType" selection placeholder={t("Choose file type")}
                     options={options} value={values.filesType}
                     onChange={(e, data) => {
                         onValueChange(validState({

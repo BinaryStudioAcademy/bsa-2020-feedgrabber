@@ -100,7 +100,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
             </div>
             <CustomInput
               type="text"
-              placeholder="Type answer here..."
+              placeholder={t("Type answer here...")}
               name={`answers.${index}`}
               value={answer}
               error={isFieldTouched[index] &&

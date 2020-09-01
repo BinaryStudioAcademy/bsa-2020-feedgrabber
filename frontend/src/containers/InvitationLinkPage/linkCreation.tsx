@@ -62,7 +62,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
                   <input
                     id="email"
                     name="email"
-                    placeholder="Invitation email"
+                    placeholder={t("Invitation email")}
                     type="text"
                     onChange={handleChange}
                     onBlur={handleBlur}

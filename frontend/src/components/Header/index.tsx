@@ -44,7 +44,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
           </a>
         </div>
         <div className={styles.headerPart}>
-          <Input placeholder='Search...' size="small" transparent inverted
+          <Input placeholder={t('Search...')} size="small" transparent inverted
                  icon={<Icon name='search' inverted link/>}/>
           <div className={styles.headerBellWrapper}>
             <NotificationMenu/>

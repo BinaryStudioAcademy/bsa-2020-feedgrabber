@@ -192,7 +192,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
 
                                 return (
                                   <form onSubmit={handleSubmit} autoComplete="off">
-                                    <Input name="username" placeholder="Username"
+                                    <Input name="username" placeholder={t("Username")}
                                            value={values.username}
                                            onChange={handleChange}
                                            onBlur={handleBlur}

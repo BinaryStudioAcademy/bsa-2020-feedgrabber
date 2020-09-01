@@ -43,7 +43,7 @@ const TeamForm: FC = () => {
                             fluid
                             icon="group"
                             iconPosition="left"
-                            placeholder="Team Name"
+                            placeholder={t("Team Name")}
                             name="teamName"
                             error={touched.teamName && errors.teamName ? t(errors.teamName) : null}
                             onChange={handleChange}

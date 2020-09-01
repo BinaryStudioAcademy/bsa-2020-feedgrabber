@@ -42,7 +42,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                         icon="circle outline"
                         transparent
                         iconPosition="left"
-                        placeholder="Type answer here..."
+                        placeholder={t("Type answer here...")}
                         type="text"
                         value={answer}
                         error={isFieldTouched[index] &&

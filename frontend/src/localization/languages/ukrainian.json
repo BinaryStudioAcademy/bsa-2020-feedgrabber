@@ -45,6 +45,7 @@
     "Type of files": "Тип файлів",
     "Maximum number of files": "Максимальна кількість файлів",
     "Maximum files size": "Максимальний розмір файлів, МБ",
+    "Upload Files": "Завантаження файлів",
     "Add new answer": "Додати нову відповідь",
 
     "Cancel": "Скасувати",
@@ -215,6 +216,30 @@
 
     "Required": "Обов'язкове",
     "Too Short!": "Занадто коротке!",
-    "Too Long!": "Занадто довге!"
+    "Too Long!": "Занадто довге!",
+
+    "Username": "Username",
+    "Email": "Email",
+    "Company": "Компанія",
+    "Password": "Пароль",
+    "Confirm password": "Підтвердьте пароль",
+    "Long answer text...": "Довгий текст...",
+    "Choose file type": "Виберіть тип файлу",
+    "description (optional)": "Опис (необов'язково)",
+    "Type answer here...": "Введіть відповідь тут...",
+    "Search...": "Пошук...",
+    "Type your first name...": "Введіть своє ім’я...",
+    "Type your last name...": "Введіть своє прізвище...",
+    "Type your username...": "Введіть свій username...",
+    "Preferred language": "Мова",
+    "Choose type": "Виберіть тип",
+    "Other option...": "Інший варіант...",
+    "Answer field": "Поле для відповіді",
+    "Or enter your variant here...": "Або введіть свій варіант тут...",
+    "It may affect answers that have been given before!!!": "Це може вплинути на відповіді, які були дані раніше!!!",
+    "I know what I do!": "Я знаю, що роблю!",
+    "Team Name": "Назва команди",
+    "Invitation email": "Email для запрошення",
+    "Title": "Заголовок"
   }
 }

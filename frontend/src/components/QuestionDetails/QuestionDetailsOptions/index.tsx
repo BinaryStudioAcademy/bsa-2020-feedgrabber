@@ -52,7 +52,7 @@ const QuestionDetailsOptions = ({ question, setQuestionType }) => {
             selection
             options={questionTypeOptions}
             value={question.type}
-            placeholder={"Choose type"}
+            placeholder={t("Choose type")}
             onChange={(event, data) => setQuestionType(data)}
         />
     );
