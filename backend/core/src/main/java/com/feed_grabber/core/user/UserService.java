@@ -9,6 +9,7 @@ import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
@@ -299,6 +300,32 @@ public class UserService implements UserDetailsService {
         user.setRole(newRole);
         userRepository.save(user);
         verificationTokenService.deleteByUserId(userId);
+    }
+
+    // move to helper service
+    private String getSubdomain(String email) {
+        return email.split("\\@")[1];
+    }
+
+    public UUID createInCompanyByEmail(UserRegisterDTO registerDto) throws CompanyNotFoundException {
+        var company = companyRepository
+                .findCompanyBySubdomainName(getSubdomain(registerDto.getEmail()))
+                .orElseThrow(CompanyNotFoundException::new);
+        userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
+                registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
+        ).orElseThrow(UserAlreadyExistsException::new);
+        var role = roleRepository.findByCompanyIdAndSystemRole(company.getId(), SystemRole.employee)
+                .orElseThrow();
+        var user = userRepository.save(User.builder()
+                .email(registerDto.getEmail())
+                .username(registerDto.getUsername())
+                .password(registerDto.getPassword())
+                .role(role)
+                .company(company)
+                .build()
+        );
+
+        return company.getId();
     }
 }
 
