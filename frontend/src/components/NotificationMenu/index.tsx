@@ -14,8 +14,6 @@ import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
-import moment from "moment";
-import {useHistory} from "react-router-dom";
 import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
 import RequestNotification from "./notificationTypes/RequestNotification";
@@ -83,8 +81,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         receiveNotification(notification);
         toastr.info(notification.text);
     }, true);
-
-    const history = useHistory();
 
     return (
         <div ref={ref}>

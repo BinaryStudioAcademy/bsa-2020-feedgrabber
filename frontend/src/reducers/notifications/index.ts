@@ -3,8 +3,7 @@ import {
   deleteAllNotificationsRoutine,
   deleteNotificationRoutine,
   loadNotificationsRoutine,
-  receiveNotificationRoutine,
-  markNotificationAsReadRoutine
+  receiveNotificationRoutine
 } from "../../sagas/notifications/routines";
 import {MessageTypes} from "../../components/NotificationMenu";
 
