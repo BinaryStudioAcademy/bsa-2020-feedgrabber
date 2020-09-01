@@ -81,6 +81,8 @@
     "New Password": "New Password",
     "Repeat New Password": "Repeat New Password",
     "Update password": "Update password",
+    "Language settings": "Language settings",
+    "Turn on notifications": "Turn on notifications",
 
     "My Profile": "My Profile",
     "My settings": "My settings",
@@ -176,24 +178,44 @@
     "Teams List": "Teams List",
     "Manage": "Manage",
 
-    "validation": {
-      "Password required": "Password required",
-      "Password too short!": "Password too short!",
-      "Password too long!": "Password too long!",
-      "Password contains at least 8 characters": "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )",
-      "Repeat password": "Repeat password",
-      "Passwords must match": "Passwords must match",
-      "Email must be valid": "Email must be valid",
-      "No companies found. Create your own :)": "No companies found. Create your own :)",
-      "Company name required": "Company name required",
-      "Company name too short!": "Company name too short!",
-      "Company name too long!": "Company name too long!",
-      "Company name must be valid": "Company name must be valid",
-      "Username required": "Username required",
-      "Username too short!": "Username too short!",
-      "Username too long!": "Username too long!",
-      "Username must be valid": "Username must be valid"
-    },
+    "Password required": "Password required",
+    "Password too short!": "Password too short!",
+    "Password too long!": "Password too long!",
+    "Password contains at least 8 characters": "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )",
+    "Repeat password": "Repeat password",
+    "Passwords must match": "Passwords must match",
+
+    "Email must be valid": "Email must be valid",
+
+    "No companies found. Create your own :)": "No companies found. Create your own :)",
+    "Company name required": "Company name required",
+    "Company name too short!": "Company name too short!",
+    "Company name too long!": "Company name too long!",
+    "Company name must be valid": "Company name must be valid",
+
+    "Username required": "Username required",
+    "Username too short!": "Username too short!",
+    "Username too long!": "Username too long!",
+    "Username must be valid": "Username must be valid",
+
+    "Too short first name": "Too short first name",
+    "Too long first name": "Too long first name",
+    "First name is invalid": "First name is invalid",
+    "Too short last name": "Too short last name",
+    "Too long last name": "Too long last name",
+    "Last name is invalid": "Last name is invalid",
+    "Too short phone number": "Too short phone number",
+    "Too long phone number": "Too long phone number",
+
+    "Enter question": "Enter question",
+    "Max length is 40 symbols": "Max length is 40 symbols",
+    "Question must contain not only whitespaces": "Question must contain not only whitespaces",
+    "Question should have name": "Question should have name",
+    "Category can not be empty": "Category can not be empty",
+
+    "Required": "Required",
+    "Too Short!": "Too Short!",
+    "Too Long!": "Too Long!",
 
     "placeholder": {
       "Username": "Username",

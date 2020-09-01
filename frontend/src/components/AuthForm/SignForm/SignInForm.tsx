@@ -108,7 +108,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
                             companyCard
                         }
                         {
-                            errorText && <Message attached="top" error size="small" content={errorText}/>
+                            errorText && <Message attached="top" error size="small" content={t(errorText)}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"

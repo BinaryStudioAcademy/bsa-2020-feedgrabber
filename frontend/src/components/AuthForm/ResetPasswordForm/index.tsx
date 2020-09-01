@@ -92,7 +92,7 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                                 <Message
                                     style={{width: '70%', margin: '10px auto'}}
                                     error
-                                    content={errorText}
+                                    content={t(errorText)}
                                 />
                                 <Button disabled={!!errors.password || !!errors.passwordRepeat}
                                         primary

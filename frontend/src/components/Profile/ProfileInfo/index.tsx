@@ -125,7 +125,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  name='firstName'
                                  value={values.firstName}
                                  onChange={handleChange}
-                                 error={touched.firstName && errors.firstName}
+                                 error={touched.firstName && t(errors.firstName)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('firstName', null)}
                     />
@@ -134,7 +134,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  name='lastName'
                                  value={values.lastName}
                                  onChange={handleChange}
-                                 error={touched.lastName && errors.lastName}
+                                 error={touched.lastName && t(errors.lastName)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('lastName', null)}
                     />
@@ -143,7 +143,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  name='phoneNumber'
                                  value={values.phoneNumber}
                                  onChange={value => setFieldValue('phoneNumber', value)}
-                                 error={touched.phoneNumber && errors.phoneNumber}
+                                 error={touched.phoneNumber && t(errors.phoneNumber)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('phoneNumber', null)}
                                  phoneNumber

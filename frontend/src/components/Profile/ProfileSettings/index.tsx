@@ -4,6 +4,7 @@ import './styles.sass';
 import {IAppState} from "../../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {getUserSettingsRoutine, updateUserSettingsRoutine} from "../../../sagas/user/routines";
+import { useTranslation } from 'react-i18next';
 
 const languages = [
   {
@@ -14,7 +15,7 @@ const languages = [
   },
   {
     key: 'Ukrainian',
-    text: 'Ukrainian',
+    text: 'Українська',
     value: 'ukrainian',
     image: {avatar: true, src: 'https://www.countryflags.io/ua/flat/64.png'}
   }
@@ -31,6 +32,7 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
     getSettings();
   }, [getSettings]);
 
+  const [t] = useTranslation();
   return (
       <>{
         settings &&
@@ -39,7 +41,7 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
             <Form>
               <Header as='h4'>
                 <Icon name='translate'/>
-                <Header.Content>Language settings</Header.Content>
+                <Header.Content>{t("Language settings")}</Header.Content>
               </Header>
               <br/>
               <Dropdown
@@ -56,12 +58,12 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
               <br/>
               <Header as='h4'>
                 <Icon name='bell'/>
-                <Header.Content>Notifications</Header.Content>
+                <Header.Content>{t("Notifications")}</Header.Content>
               </Header>
               <br/>
               <Checkbox checked={settings.enableNotifications}
                         toggle
-                        label={"Turn on notifications"}
+                        label={t("Turn on notifications")}
                         onChange={(event, data) => {
                           updateSettings({...settings, enableNotifications: data.checked});
                         }}/>

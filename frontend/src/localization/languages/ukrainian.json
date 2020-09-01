@@ -81,6 +81,8 @@
     "New Password": "Новий пароль",
     "Repeat New Password": "Повторіть пароль",
     "Update password": "Оновити пароль",
+    "Language settings": "Мова",
+    "Turn on notifications": "Увімкнути сповіщення",
 
     "My Profile": "Мій профіль",
     "My settings": "Мої налаштування",
@@ -174,6 +176,45 @@
     "Remove": "Видалити",
 
     "Teams List": "Список команд",
-    "Manage": "Керування"
+    "Manage": "Керування",
+
+    "Password required": "Введіть пароль",
+    "Password too short!": "Пароль занадто короткий!",
+    "Password too long!": "Пароль занадто довгий!",
+    "Password contains at least 8 characters": "Пароль повинен містити щонайменше 8 символів (літери, цифри та !#$%&'*+-/=?^_`{} )",
+    "Repeat password": "Повторіть пароль",
+    "Passwords must match": "Паролі повинні збігатися",
+
+    "Email must be valid": "Електронна адреса повинна бути дійсною",
+
+    "No companies found. Create your own :)": "Компаній не знайдено Створіть свою власну :)",
+    "Company name required": "Введіть назву компанії",
+    "Company name too short!": "Назва компанії занадто коротка!",
+    "Company name too long!": "Назва компанії занадто довга!",
+    "Company name must be valid": "Назва компанії повинна бути валідною",
+
+    "Username required": "Потрібне ім’я користувача",
+    "Username too short!": "Ім'я користувача занадто коротке!",
+    "Username too long!": "Ім'я користувача занадто довге!",
+    "Username must be valid": "Ім'я користувача має бути валідним",
+
+    "Too short first name": "Ім'я занадто коротке",
+    "Too long first name": "Ім'я занадто довге",
+    "First name is invalid": "Ім'я недійсне",
+    "Too short last name": "Прізвище занадто коротке",
+    "Too long last name": "Прізвище занадто довге",
+    "Last name is invalid": "Прізвище недійсне",
+    "Too short phone number": "Номер телефону занадто короткий",
+    "Too long phone number": "Номер телефону занадто довгий",
+
+    "Enter question": "Введіть запитання",
+    "Max length is 40 symbols": "Максимальна довжина - 40 символів",
+    "Question must contain not only whitespaces": "Питання повинно містити не лише пробіли",
+    "Question should have name": "Питання повинно мати назву",
+    "Category can not be empty": "Категорія не може бути порожньою",
+
+    "Required": "Обов'язкове",
+    "Too Short!": "Занадто коротке!",
+    "Too Long!": "Занадто довге!"
   }
 }

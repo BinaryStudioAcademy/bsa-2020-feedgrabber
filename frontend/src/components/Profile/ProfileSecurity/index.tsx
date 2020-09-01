@@ -115,7 +115,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                                  name='newPassword'
                                  value={formik.values.newPassword}
                                  onChange={formik.handleChange}
-                                 error={formik.touched.newPassword && formik.errors.newPassword}
+                                 error={formik.touched.newPassword && t(formik.errors.newPassword)}
                                  onBlur={formik.handleBlur}
                     />
                     <UITextInput password
@@ -124,7 +124,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                                  name='newPasswordAgain'
                                  value={formik.values.newPasswordAgain}
                                  onChange={formik.handleChange}
-                                 error={formik.touched.newPasswordAgain && formik.errors.newPasswordAgain}
+                                 error={formik.touched.newPasswordAgain && t(formik.errors.newPasswordAgain)}
                                  // onBlur={() => {
                                  //   if (formik.values.newPasswordAgain !== formik.values.newPassword) {
                                  //     formik.setFieldError('newPasswordAgain', 'Password must match');

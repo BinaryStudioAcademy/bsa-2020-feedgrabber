@@ -96,7 +96,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         {
-                            errorText && <Message attached="top" error size="tiny" content={errorText}/>
+                            errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"

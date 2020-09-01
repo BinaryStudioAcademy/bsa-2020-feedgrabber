@@ -84,7 +84,7 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
                                 {content}
                             </div>
                             {
-                                errorText && <Message attached="top" error size="small" content={errorText}/>
+                                errorText && <Message attached="top" error size="small" content={t(errorText)}/>
                             }
                             {!companiesList ? (
                                     <Button variant='secondary'

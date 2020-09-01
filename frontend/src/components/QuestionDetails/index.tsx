@@ -13,6 +13,7 @@ import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI"
 import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {defaultQuestionValues} from "./defaultValues";
+import { useTranslation } from "react-i18next";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
@@ -34,6 +35,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
     const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle?.length > 0);
     const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(true);
     const [addedCategories, setNewCategories] = useState([]);
+    const [t] = useTranslation();
 
     useEffect(() => {
         if(onValueChange) {
@@ -167,7 +169,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                     name="name"
                                     error={
                                         formik.touched.name && formik.errors.name
-                                            ? formik.errors.name
+                                            ? t(formik.errors.name)
                                             : undefined
                                     }
                                     onChange={(e, {value}) => {
@@ -206,7 +208,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 search
                                 selection
                                 error={formik.touched.categoryTitle && formik.errors.categoryTitle
-                                    ? formik.errors.categoryTitle
+                                    ? t(formik.errors.categoryTitle)
                                     : undefined}
                                 options={categoriesOptions(
                                     [...addedCategories, ...categories])}
