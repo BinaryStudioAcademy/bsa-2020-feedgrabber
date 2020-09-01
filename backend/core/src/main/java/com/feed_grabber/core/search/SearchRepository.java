@@ -27,6 +27,7 @@ public class SearchRepository {
         this.entityManager = entityManager;
     }
 
+    @SuppressWarnings("unchecked")
     public SearchDto findAllByQuery(String query) {
         var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         var userQuery = fullTextEntityManager.createFullTextQuery(
