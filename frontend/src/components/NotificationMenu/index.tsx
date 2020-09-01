@@ -19,6 +19,11 @@ import {useHistory} from "react-router-dom";
 import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
 
+export enum MessageTypes {
+    plainText = 'plain_text',
+    textWithLink = 'text_with_link'
+}
+
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
         isLoading,
@@ -90,7 +95,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                                 <div className={styles.button}
                                      title='Delete'
                                      onClick={() => {
-                                         deleteNotification(notification.requestId);
+                                         deleteNotification(notification.id);
                                      }}>
                                     <div>
                                         x
