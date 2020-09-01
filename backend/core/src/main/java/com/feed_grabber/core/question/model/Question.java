@@ -11,7 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.List;
@@ -34,12 +35,14 @@ public class Question {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field(termVector = TermVector.YES)
     @Column(name = "text", nullable = false, unique = true)
     private String text;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
+    @Field(termVector = TermVector.YES)
     @Column
     private String payload;
 
@@ -49,6 +52,7 @@ public class Question {
     )
     private List<QuestionnaireQuestion> questionnaires;
 
+    @IndexedEmbedded(depth=1)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;
 

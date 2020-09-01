@@ -1,12 +1,12 @@
 package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.company.Company;
-import com.feed_grabber.core.request.model.Request;
-import com.feed_grabber.core.role.Role;
+import com.feed_grabber.core.role.model.Role;
 import com.feed_grabber.core.team.model.Team;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,9 +33,11 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field(termVector = TermVector.YES)
     @Column(name = "email")
     private String email;
 
+    @Field(termVector = TermVector.YES)
     @Column(name = "username")
     private String username;
 
@@ -60,6 +62,7 @@ public class User {
     @Builder.Default
     private Role role = new Role();
 
+    @IndexedEmbedded(depth=1)
     @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserProfile userProfile;

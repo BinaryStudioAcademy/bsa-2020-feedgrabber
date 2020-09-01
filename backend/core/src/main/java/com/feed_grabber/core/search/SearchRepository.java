@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 @Repository
 public class SearchRepository {
 
+    private final EntityManager entityManager;
+
     public SearchRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
-    private final EntityManager entityManager;
 
     public SearchDto findAllByQuery(String query) {
         var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
@@ -43,7 +43,7 @@ public class SearchRepository {
                                 , "userProfile.phoneNumber")
                         .matching(query)
                         .createQuery()
-                , User.class);
+                );
 
         var questionQuery = fullTextEntityManager.createFullTextQuery(
                 fullTextEntityManager
@@ -57,7 +57,7 @@ public class SearchRepository {
                                 , "category.title")
                         .matching(query)
                         .createQuery()
-                , Question.class);
+                );
 
         var questionnaireQuery = fullTextEntityManager.createFullTextQuery(
                 fullTextEntityManager
@@ -70,7 +70,7 @@ public class SearchRepository {
                                 , "company.name")
                         .matching(query)
                         .createQuery()
-                , Questionnaire.class);
+                );
 
         var reportQuery = fullTextEntityManager.createFullTextQuery(
                 fullTextEntityManager
@@ -82,7 +82,7 @@ public class SearchRepository {
                         .onFields("questionnaire.title")
                         .matching(query)
                         .createQuery()
-                , Request.class);
+                );
 
         var teamQuery = fullTextEntityManager.createFullTextQuery(
                 fullTextEntityManager
@@ -95,7 +95,7 @@ public class SearchRepository {
                                 , "company.name")
                         .matching(query)
                         .createQuery()
-                , Team.class);
+                );
 
         return SearchDto
                 .builder()

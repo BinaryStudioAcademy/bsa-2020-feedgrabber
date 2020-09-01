@@ -5,7 +5,8 @@ import com.feed_grabber.core.user.model.User;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,9 +33,11 @@ public class Team {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field(termVector = TermVector.YES)
     @Column(name = "name")
     private String name;
 
+    @IndexedEmbedded(depth=1)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;

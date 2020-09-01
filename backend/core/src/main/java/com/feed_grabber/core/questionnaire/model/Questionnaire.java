@@ -11,7 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class Questionnaire {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field(termVector = TermVector.YES)
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -45,6 +47,7 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
+    @IndexedEmbedded(depth=1)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 

@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class Request {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @IndexedEmbedded(depth=1)
     @ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "questionnaire_id", nullable = false)
     private Questionnaire questionnaire;

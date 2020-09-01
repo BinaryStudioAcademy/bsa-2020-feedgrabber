@@ -3,6 +3,7 @@ package com.feed_grabber.core.role;
 import com.feed_grabber.core.role.dto.RoleCreationDto;
 import com.feed_grabber.core.role.dto.RoleDetailsDto;
 import com.feed_grabber.core.role.dto.ShortRoleDto;
+import com.feed_grabber.core.role.model.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

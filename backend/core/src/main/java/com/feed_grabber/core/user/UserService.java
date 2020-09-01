@@ -16,7 +16,7 @@ import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
-import com.feed_grabber.core.role.Role;
+import com.feed_grabber.core.role.model.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
 import com.feed_grabber.core.user.dto.UserCreateDto;

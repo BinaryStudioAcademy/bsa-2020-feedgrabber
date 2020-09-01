@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,6 +30,7 @@ public class Company {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field(termVector = TermVector.YES)
     @Column
     private String name;
 
