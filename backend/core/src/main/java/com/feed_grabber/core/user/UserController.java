@@ -108,6 +108,23 @@ public class UserController {
                 ));
     }
 
+    @GetMapping("/search")
+    public AppResponse<DataList<UserDetailsResponseDTO>> getUsersBySurname (
+            @RequestParam String query,
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        var companyId = TokenService.getCompanyId();
+        return new AppResponse<>(
+                new DataList<>(
+                        userService.searchByQuery(companyId, query, page, size),
+                        userService.getCountByQuery(companyId, query),
+                        page,
+                        size
+                ));
+
+    }
+
     @ApiOperation(value = "Remove user from company")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("{id}/removeCompany")
