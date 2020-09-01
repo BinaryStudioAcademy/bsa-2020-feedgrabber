@@ -187,6 +187,7 @@
     "Passwords must match": "Passwords must match",
 
     "Email must be valid": "Email must be valid",
+    "Email is required": "Email is required",
 
     "No companies found. Create your own :)": "No companies found. Create your own :)",
     "Company name required": "Company name required",
@@ -240,6 +241,13 @@
     "I know what I do!": "I know what I do!",
     "Team Name": "Team Name",
     "Invitation email": "Invitation email",
-    "Title": "Title"
+    "Title": "Title",
+    "Update Username": "Update Username",
+    "Change your username": "Change your username",
+    "Change your password": "Change your password",
+
+    "Type your question": "Type your question",
+    "Choose category or type custom": "Choose category or type custom",
+    "Add new category:": "Add new category:"
   }
 }

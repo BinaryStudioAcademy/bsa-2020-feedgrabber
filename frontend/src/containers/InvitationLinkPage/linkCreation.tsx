@@ -17,8 +17,8 @@ interface IInvitationBlockProps {
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email()
-    .required()
+    .email("Email must be valid")
+    .required("Email is required")
 });
 
 const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = (
@@ -69,7 +69,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
                     value={values.email}
                     ref={emailInput}
                   />
-                  {error && <div>{error}<br/><br/></div>}
+                  {error && <div>{t(error)}<br/><br/></div>}
                   <UIButton
                     title={t("Send")}
                     onClick={handleSubmit}

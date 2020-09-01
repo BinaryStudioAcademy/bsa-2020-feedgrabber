@@ -94,7 +94,7 @@
     "TextArea": "Текст",
     "Scaled": "Шкала",
     "Date": "Дата",
-    "File upload": "Завантаження файлів",
+    "File upload": "Файли",
 
     "New question": "Нове запитання",
     "Add from existing questions": "Додати із існуючих питань",
@@ -187,6 +187,7 @@
     "Passwords must match": "Паролі повинні збігатися",
 
     "Email must be valid": "Електронна адреса повинна бути дійсною",
+    "Email is required": "Введіть електронну адресу",
 
     "No companies found. Create your own :)": "Компаній не знайдено Створіть свою власну :)",
     "Company name required": "Введіть назву компанії",
@@ -240,6 +241,13 @@
     "I know what I do!": "Я знаю, що роблю!",
     "Team Name": "Назва команди",
     "Invitation email": "Email для запрошення",
-    "Title": "Заголовок"
+    "Title": "Заголовок",
+    "Update Username": "Змінити username",
+    "Change your username": "Змінити username",
+    "Change your password": "Змінити пароль",
+
+    "Type your question": "Введіть запитання",
+    "Choose category or type custom": "Виберіть категорію або створіть свою",
+    "Add new category:": "Додати нову категорію:"
   }
 }

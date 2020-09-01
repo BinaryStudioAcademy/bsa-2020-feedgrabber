@@ -163,7 +163,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <Form.Input
                                     className={styles.question_input}
                                     fluid
-                                    placeholder="Type your question"
+                                    placeholder={t("Type your question")}
                                     type="text"
                                     value={formik.values.name}
                                     name="name"
@@ -187,10 +187,10 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <QuestionDetailsOptions question={question} setQuestionType={setQuestionType}/>
                             </div>
                             <Form.Dropdown
-                                placeholder='Choose category or type custom'
+                                placeholder={t('Choose category or type custom')}
                                 closeOnBlur
                                 allowAdditions
-                                additionLabel='Add new category: '
+                                additionLabel={t('Add new category: ')}
                                 onChange={(e, {value}) => {
                                     setCategoryIsValid(true);
                                     handleQuestionUpdate({...question, categoryTitle: value as string});
@@ -240,7 +240,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 {/* />*/}
                                 {/* }*/}
                                 <Popup
-                                    content="Required"
+                                    content={t("Required")}
                                     trigger={
                                         <Checkbox
                                             toggle
