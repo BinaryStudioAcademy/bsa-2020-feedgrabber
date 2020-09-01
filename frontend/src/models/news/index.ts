@@ -7,7 +7,7 @@ export interface INewsItem {
     image: string;
     type: string;
     body: string;
-    author: IUserShort;
+    user: IUserShort;
     date: string;
 }
 
@@ -18,4 +18,5 @@ export interface INewsListState {
 
 export interface INewsFeedState {
     list: INewsListState;
+    current: INewsItem;
 }

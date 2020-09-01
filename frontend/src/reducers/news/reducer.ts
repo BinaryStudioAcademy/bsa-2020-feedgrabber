@@ -1,7 +1,12 @@
 import { IAppState } from "models/IAppState";
 import { setNewsPaginationRoutine, loadNewsListRoutine } from "sagas/news/routines";
+import { combineReducers } from "redux";
 
-const newsReducer = (state: IAppState['news']['list'] = {isLoading: false}, action) => {
+const initialState = {
+    isLoading: false
+};
+
+const newsListReducer = (state: IAppState['news']['list'] = initialState, action) => {
     switch (action.type) {
         case setNewsPaginationRoutine.TRIGGER:
             return {
@@ -28,5 +33,9 @@ const newsReducer = (state: IAppState['news']['list'] = {isLoading: false}, acti
             return state;
     }
 };
+
+const newsReducer = combineReducers({
+    list: newsListReducer
+});
 
 export default newsReducer;
