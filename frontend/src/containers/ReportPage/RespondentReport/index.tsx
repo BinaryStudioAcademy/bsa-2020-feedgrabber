@@ -1,51 +1,57 @@
-import React, { useEffect, FC } from 'react';
-import { connect, ConnectedProps } from "react-redux";
+import React, {FC, useEffect} from 'react';
+import {connect, ConnectedProps} from "react-redux";
 import LoaderWrapper from "../../../components/LoaderWrapper";
 import styles from "../styles.module.sass";
-import { Header, Segment } from "semantic-ui-react";
-import { IQuestion } from "../../../models/forms/Questions/IQuesion";
-import { loadRespondentReportRoutine } from "../../../sagas/report/routines";
+import {Header, Segment} from "semantic-ui-react";
+import {IQuestion} from "../../../models/forms/Questions/IQuesion";
+import {loadRespondentReportRoutine} from "../../../sagas/report/routines";
 import UIContent from "../../../components/UI/UIContent";
 import UIColumn from "../../../components/UI/UIColumn";
 import {IAppState} from "../../../models/IAppState";
 import TypeToResponseMap from "../../../models/forms/Questions/TypeToResponseMap";
+import UIPageTitle from "../../../components/UI/UIPageTitle";
 
 const RespondentReport: FC<ConnectedReportPageProps & { match }> = ({
-  match,
-  userReport,
-  isLoading,
-  loadReport
-}) => {
-  useEffect(() => {
-    loadReport(match.params.respondent);
-  }, [match.params.respondent, loadReport]);
+                                                                        match,
+                                                                        userReport,
+                                                                        isLoading,
+                                                                        loadReport
+                                                                    }) => {
+    useEffect(() => {
+        loadReport(match.params.respondent);
+    }, [match.params.respondent, loadReport]);
 
-  return (
-    <UIContent>
-      <UIColumn>
-        <LoaderWrapper loading={isLoading}>
-          {userReport &&
-            renderUserReport(userReport, match.params.username)
-          }
-        </LoaderWrapper>
-      </UIColumn>
-    </UIContent>
-  );
+    return (
+        <>
+            <UIPageTitle title="User Report Info"/>
+            <br/>
+            <br/>
+            <UIContent>
+                <UIColumn>
+                    <LoaderWrapper loading={isLoading}>
+                        {userReport &&
+                        renderUserReport(userReport, match.params.username)
+                        }
+                    </LoaderWrapper>
+                </UIColumn>
+            </UIContent>
+        </>
+    );
 };
 
 function renderUserReport(userReport: IQuestion[], username: string) {
-  return (
-    <div className={styles.report_page_block}>
-      <Header as='h4'>Respondent: {username}</Header>
-      {userReport.map(question => (
-        <Segment key={question.id}>
-          <Header as='h4'>{question.name}</Header>
-          {TypeToResponseMap.get(question.type.toUpperCase())?.
-          ({question, response: question.answer})}
-        </Segment>
-      ))}
-    </div>
-  );
+    return (
+        <div className={styles.report_page_block}>
+            <Header as='h4'>Respondent: {username}</Header>
+            {userReport.map(question => (
+                <Segment key={question.id}>
+                    <Header as='h4'>{question.name}</Header>
+                    {TypeToResponseMap.get(question.type.toUpperCase())?.
+                    ({question, response: question.answer})}
+                </Segment>
+            ))}
+        </div>
+    );
 }
 
 // function renderQuestionResponse(question: IQuestion) {
@@ -66,12 +72,12 @@ function renderUserReport(userReport: IQuestion[], username: string) {
 // }
 
 const mapStateToProps = (state: IAppState) => ({
-  userReport: state.questionnaireReports.currentUserReport,
-  isLoading: state.questionnaireReports.isLoadingUserReport
+    userReport: state.questionnaireReports.currentUserReport,
+    isLoading: state.questionnaireReports.isLoadingUserReport
 });
 
 const mapDispatchToProps = {
-  loadReport: loadRespondentReportRoutine
+    loadReport: loadRespondentReportRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
