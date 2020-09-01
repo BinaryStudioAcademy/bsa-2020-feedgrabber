@@ -52,7 +52,7 @@ const QuestionnaireList: FC<Props> = (
                     position="top center"
                     trigger={
                       <Icon
-                        name="plus"
+                        name="share alternate"
                         onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
                         className={styles.cardIcon}
                       />
