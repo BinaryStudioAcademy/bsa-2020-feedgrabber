@@ -32,7 +32,13 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
     getSettings();
   }, [getSettings]);
 
-  const [t] = useTranslation();
+  const [t, i18n] = useTranslation();
+
+  const handleLanguageChange = (event, data) => {
+    updateSettings({...settings, language: data.value});
+    i18n.changeLanguage(data.value);
+  };
+
   return (
       <>{
         settings &&
@@ -51,9 +57,7 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
                   value={settings.language}
                   options={languages}
                   className='icon'
-                  onChange={(event, data) => {
-                    updateSettings({...settings, language: data.value});
-                  }}
+                  onChange={handleLanguageChange}
               />
               <br/>
               <Header as='h4'>
