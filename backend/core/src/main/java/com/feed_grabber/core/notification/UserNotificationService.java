@@ -28,17 +28,15 @@ public class UserNotificationService {
         return userNotificationRepository.findAllActiveNotificationsByUser(userId);
     }
 
-    public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
-        var response = Optional.of(responseRepository
-                .findByRequestIdAndUserId(requestId, userId))
-                .orElseThrow(() -> new NotFoundException("Response Not Found"));
-
-        response.setNotificationExists(false);
-        responseRepository.save(response);
+    public void closeNotification(UUID notificationId) throws NotFoundException {
+        var notification = userNotificationRepository.findById(notificationId)
+                .orElseThrow(() -> new NotFoundException("Notification Not Found"));
+        notification.setIsClosed(true);
+        userNotificationRepository.save(notification);
     }
 
     public void deleteAllNotificationsByUserId(UUID userId) {
-        responseRepository.deleteAllNotificationsByUserId(userId);
+        userNotificationRepository.deleteAllNotificationsByUserId(userId);
     }
 
     public void markAsRead(UUID notificationId) throws NotFoundException {
