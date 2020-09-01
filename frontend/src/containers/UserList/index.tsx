@@ -120,7 +120,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
             isLoading={isLoading}
             pagination={pagination}
             setPagination={setPagination}
-            loadItems={loadUsers}
+            loadItems={loadItems}
             mapItemToJSX={mapItemToJSX}
           />
         </UIColumn>
