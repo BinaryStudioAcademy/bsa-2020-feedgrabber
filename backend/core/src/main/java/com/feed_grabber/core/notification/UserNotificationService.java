@@ -29,16 +29,14 @@ public class UserNotificationService {
     }
 
     public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
-        var response = Optional.of(responseRepository
-                .findByRequestIdAndUserId(requestId, userId))
-                .orElseThrow(() -> new NotFoundException("Response Not Found"));
-
-        response.setNotificationExists(false);
-        responseRepository.save(response);
+        var notification = userNotificationRepository.findByUserIdAndRequestId(userId, requestId)
+                .orElseThrow(() -> new NotFoundException("Notification Not Found"));
+        notification.setIsClosed(true);
+        userNotificationRepository.save(notification);
     }
 
     public void deleteAllNotificationsByUserId(UUID userId) {
-        responseRepository.deleteAllNotificationsByUserId(userId);
+        userNotificationRepository.deleteAllNotificationsByUserId(userId);
     }
 
     public void markAsRead(UUID notificationId) throws NotFoundException {
