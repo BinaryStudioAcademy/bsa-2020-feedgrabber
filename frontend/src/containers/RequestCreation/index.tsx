@@ -128,7 +128,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <input type="text"
                                        style={{width: '100%'}}
                                        onChange={e => setTargetUserPattern(e.target.value)}/>
-                                <div style={{height: '200px', overflow: 'auto'}}>
+                                <div className={styles.targetUserContainer}>
                                   {
                                     users
                                       .filter(user => targetUserPattern
