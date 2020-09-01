@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useAuth} from '../../security/authProvider';
-import {getSubdomainFromDomain, redirectToCompany, redirectToMain} from "../../helpers/subdomain.helper";
+import {getSubdomainFromDomain, redirectToCompany} from "../../helpers/subdomain.helper";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {history} from "../../helpers/history.helper";
