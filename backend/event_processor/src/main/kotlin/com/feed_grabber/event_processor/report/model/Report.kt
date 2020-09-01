@@ -1,7 +1,7 @@
 package com.feed_grabber.event_processor.report.model
 
 import com.feed_grabber.event_processor.report.dto.QuestionnaireDto
-import com.feed_grabber.event_processor.report.dto.ReportFileCreationResponseDto
+import com.feed_grabber.event_processor.report.dto.ReportFileCreationDto
 import com.feed_grabber.event_processor.report.dto.UserDto
 import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
@@ -16,6 +16,6 @@ data class Report(
         val requestExpirationDate: Date?,
         val requestMaker: UserDto,
         val targetUser: UserDto?,
-        var excelLink: ReportFileCreationResponseDto?,
-        var powerPointLink: ReportFileCreationResponseDto?
+        var excelLink: ReportFileCreationDto?,
+        var powerPointLink: ReportFileCreationDto?
 )

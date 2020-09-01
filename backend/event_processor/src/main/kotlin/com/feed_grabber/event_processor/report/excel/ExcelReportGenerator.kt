@@ -13,9 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.time.LocalDate
 import java.util.*
 import java.util.stream.Collectors
@@ -23,9 +21,7 @@ import java.util.stream.Collectors
 
 @Service
 class ExcelReportGenerator(@Autowired private val service: ReportService,
-                           @Autowired private val client: AmazonS3ClientService,
-                           @Autowired private val sender: Sender) {
-
+                           @Autowired private val client: AmazonS3ClientService) {
     private val VERTICAL_INDENT = 1
     private val HORIZONTAL_INDENT = 1
     private val LETTER_WIDTH = 426
@@ -131,8 +127,8 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
         }
     }
 
-    @Throws(IOException::class)
-    fun generate(report: DataForReport): ReportFileCreationResponseDto? {
+
+    fun generate(report: DataForReport): ReportFileCreationDto? {
         val parsedQuestions = service.parseIncomingData(report).questions ?: return null
         // #WORKBOOK
         var workbook = XSSFWorkbook()
@@ -174,14 +170,11 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
 
         generateInfoPage(workbook, report)
 
-        // #WRITE_FILE
-        val file = File("${UUID.randomUUID()}-report.xlsx")
-        val fileOut = FileOutputStream(file)
-        workbook.write(fileOut)
-        fileOut.close()
+        val stream = ByteArrayOutputStream()
+        workbook.write(stream)
         workbook.close()
-        val response = client.uploadReport(file, report.requestId)
-        file.delete()
+        val inputStream: InputStream = ByteArrayInputStream(stream.toByteArray())
+        val response = client.uploadReport(inputStream, report.requestId, "${UUID.randomUUID()}-report.xlsx")
         return response
     }
 

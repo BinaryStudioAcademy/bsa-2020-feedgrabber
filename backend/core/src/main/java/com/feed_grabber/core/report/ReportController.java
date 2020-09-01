@@ -27,16 +27,4 @@ public class ReportController {
         return new AppResponse<>(response);
     }
 
-    @ApiOperation(value = "Get the excel for report by id")
-    @PostMapping("/excel")
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void generateReport(@RequestParam UUID requestId) {
-        service.sendExcelReportGenerationRequest(requestId);
-    }
-
-    @ApiOperation(value = "Get the ppt for report by id")
-    @PostMapping("/ppt")
-    public void generatePPTReport(@RequestParam UUID requestId) {
-        service.sendPPTReportGenerationRequest(requestId);
-    }
 }
