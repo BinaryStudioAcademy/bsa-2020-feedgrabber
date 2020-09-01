@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Formik} from 'formik';
 import UIButton from "../../UI/UIButton";
 import UITextInput from "../../UI/UITextInput/UITextInput";
@@ -9,6 +9,7 @@ import * as yup from "yup";
 import {connect, ConnectedProps} from "react-redux";
 import {getUserRoutine} from "../../../sagas/auth/routines";
 import {updateUserPasswordRoutine, updateUserUsernameRoutine} from "../../../sagas/user/routines";
+import {useTranslation} from "react-i18next";
 
 const usernameSchema = yup.object().shape({
   username: yup
@@ -43,6 +44,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
        getUser
      }) => {
       useEffect(() => getUser, [getUser]);
+      const [t] = useTranslation();
 
       const initialUsername = {
         username: user?.userName
@@ -100,7 +102,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                     formik.handleSubmit(event);
                   }}>
                     <UITextInput password
-                                 labelText={'Old Password'}
+                                 labelText={t("Old Password")}
                                  placeholder={''}
                                  name='oldPassword'
                                  value={formik.values.oldPassword}
@@ -108,7 +110,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                                  onBlur={formik.handleBlur}
                     />
                     <UITextInput password
-                                 labelText={'New Password'}
+                                 labelText={t("New Password")}
                                  placeholder={''}
                                  name='newPassword'
                                  value={formik.values.newPassword}
@@ -117,7 +119,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                                  onBlur={formik.handleBlur}
                     />
                     <UITextInput password
-                                 labelText={'Repeat New Password'}
+                                 labelText={t("Repeat New Password")}
                                  placeholder={''}
                                  name='newPasswordAgain'
                                  value={formik.values.newPasswordAgain}
@@ -137,7 +139,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                         || formik.errors.newPassword
                         || formik.errors.newPasswordAgain)}
                               submit
-                              title={'Update password'}/>
+                              title={t("Update password")}/>
 
                   </Form>
               )}

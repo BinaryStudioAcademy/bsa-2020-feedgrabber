@@ -15,6 +15,7 @@ import {theme} from "../../components/AuthForm/SignForm/Theme";
 import styles from './styles.module.sass';
 import Typography from "../../components/AuthForm/SignForm/Typography";
 import Button from "components/AuthForm/SignForm/Button";
+import {useTranslation} from "react-i18next";
 
 const StyledMenu = styled(Menu)`
   background-color: transparent !important;
@@ -131,6 +132,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
     }
   }, [invitationData, loadInvitationData, match]);
 
+  const [t] = useTranslation();
   return (
     <>
       <StyledMenu fixed='top'>
@@ -161,10 +163,10 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                         <div className={styles.formWrapper}>
                           <div className={styles.formContent}>
                             <Typography fontWeight="bold" variant="h4">
-                              Create Account
+                              {t("Create Account")}
                             </Typography>
                             <Typography variant="body2">
-                              by this invitation link.
+                              {t("by this invitation link.")}
                             </Typography>
                             <Formik
                               initialValues={{password: '', username: ''}}
@@ -227,7 +229,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                           <Overlay>
                             <OverlayPanel>
                               <Typography fontWeight="bold" variant="h4" color="white">
-                                Welcome to {invitationData.companyName},
+                                {t("Welcome to")} {invitationData.companyName},
                                 <br/>{invitationData.email}!
                               </Typography>
                             </OverlayPanel>
@@ -239,7 +241,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                 )}
                 {loadFailed && (
                   <h1 className={styles.pageError}>
-                    Unable to load data.<br/>Maybe, the link is not relevant
+                    {t("Unable to load data.")}<br/>{t("Maybe, the link is not relevant")}
                   </h1>
                 )}
               </LoaderWrapper>

@@ -5,6 +5,7 @@ import { Header } from 'semantic-ui-react';
 import styles from "./styles.module.sass";
 import { connect } from 'react-redux';
 import { updateQuestionsOrderRoutine } from 'sagas/sections/routines';
+import {useTranslation} from "react-i18next";
 
 interface IIndex  {
     sectionId: string;
@@ -30,17 +31,18 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
     indexQuestions,
     handleMoveQuestionToSection
   }) => {
+    const [t] = useTranslation();
     const [questionCards, setQuestionCards] = useState<IQuestion[]>([]);
-  
+
     const indexQuestionsHandler = () => {
       const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
       indexQuestions({sectionId: sectionId,  questions: rst});
     };
-  
+
     useEffect(() => {
       setQuestionCards(questions);
     }, [questions]);
-  
+
     const moveCard = useCallback(
       (dragIndex: number, hoverIndex: number) => {
         const dragCard = questionCards[dragIndex];
@@ -51,11 +53,11 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
       },
       [questionCards]
     );
-  
+
     const drop = () => {
       indexQuestionsHandler();
     };
-    
+
     const renderCard = (q: IQuestion, index: number, sectionId: string) => {
         return (
           <QuestionCard
@@ -78,7 +80,7 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
               {questionCards.map((q, i) => renderCard(q, i, sectionId))}
             </div>
             : <Header as='h3'>
-              Add questions
+              {t("Add questions")}
             </Header>}
         </div>
     );

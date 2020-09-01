@@ -13,6 +13,7 @@ import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import styles from './styles.module.sass';
 import {Tab} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
 
 interface IItem {
     id: string;
@@ -40,7 +41,7 @@ const MainPage: FC<IMainPageProps> =
          isLoading,
          loadQuestionnaires
      }) => {
-
+        const [t] = useTranslation();
         const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
 
         const handleAnswerClick = requestId => {
@@ -58,7 +59,7 @@ const MainPage: FC<IMainPageProps> =
         useEffect(() => {
             setPanes([
                 {
-                    menuItem: {key: 'opened', icon: 'eye', content: 'Pending requests'},
+                    menuItem: {key: 'opened', icon: 'eye', content: t('Pending requests')},
                     render: () => <Tab.Pane className={styles.tab_container} loading={isLoading}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => (!r.closeDate &&
@@ -73,17 +74,17 @@ const MainPage: FC<IMainPageProps> =
                                     <UICardBlock key={requestId}
                                                  className={styles.container_all}>
                                         <p>{expirationDate
-                                            ? `Deadline at ${expirationDate.toUTCString()}`
-                                            : 'No deadline for this request'}</p>
+                                            ? `${t("Deadline at")} ${expirationDate.toUTCString()}`
+                                            : t('No deadline for this request')}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() || !expirationDate)
-                                            ? <UIButton title="Answer"
+                                            ? <UIButton title={t("Answer")}
                                                         onClick={() =>
                                                             handleAnswerClick(requestId)}/>
-                                            : <p>Expired {new Date(new Date().valueOf()
+                                            : <p>{t("Expired")} {new Date(new Date().valueOf()
                                                 - expirationDate?.valueOf()).getHours()} hours ago</p>}
                                     </UICardBlock>
                                 ))}
@@ -91,7 +92,7 @@ const MainPage: FC<IMainPageProps> =
                     </Tab.Pane>
                 },
                 {
-                    menuItem: {key: 'closed', icon: 'lock', content: 'Closed requests'},
+                    menuItem: {key: 'closed', icon: 'lock', content: t('Closed requests')},
                     render: () => <Tab.Pane className={styles.tab_container}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => r.closeDate ||
@@ -109,8 +110,8 @@ const MainPage: FC<IMainPageProps> =
                                     <UICardBlock key={requestId}
                                                  className={`${styles.container_all} ${styles.container}`}>
                                         <p>{expirationDate
-                                            ? `Deadline on ${expirationDate.toUTCString()}`
-                                            : 'No deadline for this request'}</p>
+                                            ? `${t("Deadline at")} ${expirationDate.toUTCString()}`
+                                            : t('No deadline for this request')}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
@@ -123,8 +124,8 @@ const MainPage: FC<IMainPageProps> =
                                                         requestId,
                                                         responseId)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
-                                                ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
-                                                : <p>Expired {new Date(new Date().valueOf()
+                                                ? <p>{t("Force closed on")} {new Date(closeDate).toUTCString()}</p>
+                                                : <p>{t("Expired")} {new Date(new Date().valueOf()
                                                     - expirationDate?.valueOf()).getHours()} hours ago</p>}
                                     </UICardBlock>
                                 ))}
@@ -142,7 +143,7 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Pending Questionnaires</h3>
+                                <h3>{t("Pending Questionnaires")}</h3>
                             </UICardBlock>
                             <Tab panes={panes}/>
                         </UICard>
@@ -150,14 +151,14 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>My Reports</h3>
+                                <h3>{t("My Reports")}</h3>
                             </UICardBlock>
                             {reportsList.map(item => (
                                 <UICardBlock key={item.id}>
                                     {item.header && <h4>{item.header}</h4>}
                                     {item.content && <p>{item.content}</p>}
                                     {item.author && <p><b>{item.author}</b></p>}
-                                    <UIButton title="Details"/>
+                                    <UIButton title={t("Details")}/>
                                 </UICardBlock>
                             ))}
                         </UICard>
@@ -166,7 +167,7 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn wide>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company NewsFeed</h3>
+                                <h3>{t("Company NewsFeed")}</h3>
                             </UICardBlock>
                             {newsList.map(item => (
                                 <UICardBlock key={item.id}>

@@ -9,13 +9,13 @@ const languages = [
   {
     key: 'English',
     text: 'English',
-    value: 'English',
+    value: 'english',
     image: {avatar: true, src: 'https://www.countryflags.io/gb/flat/64.png'}
   },
   {
     key: 'Ukrainian',
     text: 'Ukrainian',
-    value: 'Ukrainian',
+    value: 'ukrainian',
     image: {avatar: true, src: 'https://www.countryflags.io/ua/flat/64.png'}
   }
 ];

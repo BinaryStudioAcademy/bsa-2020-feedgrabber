@@ -10,6 +10,7 @@ import {
   sendInvitationRoutine
 } from "../../sagas/invitation/routines";
 import InvitationsListBlock from "./linksList";
+import {useTranslation} from "react-i18next";
 
 const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
   {
@@ -25,9 +26,10 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
     deleteInvitation
   }
 ) => {
+  const [t] = useTranslation();
   return (
     <>
-      <UIPageTitle title="Invitations" />
+      <UIPageTitle title={t("Invitations")} />
       <UIContent>
         <InvitationCreationBlock
           responseError={errorGeneration}

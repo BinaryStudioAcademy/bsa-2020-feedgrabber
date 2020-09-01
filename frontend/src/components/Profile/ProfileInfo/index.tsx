@@ -10,6 +10,7 @@ import UIButton from "../../UI/UIButton";
 import UITextInput from "../../UI/UITextInput/UITextInput";
 import styles from './styles.module.sass';
 import {editUserProfileRoutine, uploadUserAvatarRoutine} from "../../../sagas/user/routines";
+import {useTranslation} from "react-i18next";
 
 const validationSchema = yup.object().shape({
   firstName: yup
@@ -44,6 +45,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
       useEffect(() => getUser, [getUser]);
       const [src, setSource] = useState<string | ArrayBuffer>(undefined);
       const [fileName, setFileName] = useState('avatar');
+      const [t] = useTranslation();
 
       const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -70,7 +72,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                 <Button size='small'
                         as='label'
                         basic>
-                  Update
+                  {t("Update")}
                   <input name="image" type="file" onChange={onSelectFile} hidden/>
                 </Button>
                 <Button content='Delete'
@@ -118,7 +120,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                   setFieldValue
                 }) => (
                   <Form name="userForm" onSubmit={handleSubmit}>
-                    <UITextInput labelText={'First Name'}
+                    <UITextInput labelText={t('First Name')}
                                  placeholder={'Type your first name...'}
                                  name='firstName'
                                  value={values.firstName}
@@ -127,7 +129,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('firstName', null)}
                     />
-                    <UITextInput labelText={'Last Name'}
+                    <UITextInput labelText={t('Last Name')}
                                  placeholder={'Type your last name...'}
                                  name='lastName'
                                  value={values.lastName}
@@ -136,7 +138,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('lastName', null)}
                     />
-                    <UITextInput labelText={'Phone'}
+                    <UITextInput labelText={t('Phone')}
                                  placeholder={'+380 99 999 99 99'}
                                  name='phoneNumber'
                                  value={values.phoneNumber}
@@ -148,7 +150,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                     />
                     <UIButton disabled={!!(errors.firstName || errors.lastName || errors.phoneNumber)}
                               submit
-                              title={'Save'}/>
+                              title={t('Save')}/>
 
                   </Form>
               )}

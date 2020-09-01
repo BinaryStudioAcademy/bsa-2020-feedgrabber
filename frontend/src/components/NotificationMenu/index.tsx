@@ -17,6 +17,7 @@ import moment from "moment";
 import {useHistory} from "react-router-dom";
 import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
+import {useTranslation} from "react-i18next";
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
@@ -29,6 +30,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         countNotifications,
         getResponse
     }) => {
+    const [t] = useTranslation();
     const [shown, setShown] = useState(false);
 
     const ref = useRef(null);
@@ -57,7 +59,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
             </div>
             {shown &&
             <div className={styles.notificationsContainer}>
-                <div className={`${styles.header} ${styles.notifyHeader}`}><h4>Notifications</h4>
+                <div className={`${styles.header} ${styles.notifyHeader}`}><h4>{t("Notifications")}</h4>
                     {notifications.length > 1 &&
                     <Icon
                         className={styles.removeAll}
@@ -68,7 +70,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     {
                         notifications.length === 0 &&
                         <div className={styles.noNotifications}>
-                            No notifications yet(
+                            {t("No notifications yet")}
                         </div>
                     }
                     {

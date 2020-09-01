@@ -10,6 +10,7 @@ import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
+import {useTranslation} from "react-i18next";
 
 const StyledItem = styled(Menu.Item)`
     font-size: 1.15em !important;
@@ -21,7 +22,7 @@ const defaultAvatar =
   "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
 const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
-
+  const [ t ] = useTranslation();
   return (
     <div className={styles.headerWrapper}>
       <div className={styles.headerContent}>
@@ -32,14 +33,14 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
           </div>
           <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive}
                    className={styles.headerMenuItem}>
-            PENDING FEEDBACKS
+            {t("PENDING FEEDBACKS")}
           </NavLink>
           <NavLink exact to="/editor"
                    className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-            FORM EDITOR
+            {t("FORM EDITOR")}
           </NavLink>
           <a href="/#" className={styles.headerMenuItem}>
-            ASSIGN FEEDBACKS
+            {t("ASSIGN FEEDBACKS")}
           </a>
         </div>
         <div className={styles.headerPart}>
@@ -55,10 +56,10 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
               <Menu.Item disabled>
                 <HeUI as='h4'><Icon name="user"/>{user.userName}</HeUI>
               </Menu.Item>
-              <StyledItem name="Profile" onClick={() => history.push('/profile')}/>
-              <StyledItem name="Settings" onClick={() => history.push('/profile/settings')}/>
-              <StyledItem name="Requests" onClick={() => history.push('/requests')}/>
-              <StyledItem name="Log out" onClick={logout}/>
+              <StyledItem name={t("Profile")} onClick={() => history.push('/profile')}/>
+              <StyledItem name={t("Settings")} onClick={() => history.push('/profile/settings')}/>
+              <StyledItem name={t("Requests")} onClick={() => history.push('/requests')}/>
+              <StyledItem name={t("Log out")} onClick={logout}/>
             </Menu>
           </Popup>
         </div>

@@ -5,6 +5,7 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Formik} from "formik";
 import UIButton from "../../components/UI/UIButton";
+import {useTranslation} from "react-i18next";
 
 interface IInvitationBlockProps {
   isLoading?: boolean;
@@ -27,6 +28,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
     sendInvitation
   }
 ) => {
+  const [t] = useTranslation();
   const emailInput = useRef(null);
 
   const onSubmit = values => {
@@ -38,7 +40,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
     <UIColumn wide>
       <UICard>
         <UICardBlock>
-          <h3>Send New Invitation</h3>
+          <h3>{t("Send New Invitation")}</h3>
         </UICardBlock>
         <UICardBlock>
           <Formik
@@ -69,7 +71,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
                   />
                   {error && <div>{error}<br/><br/></div>}
                   <UIButton
-                    title={"Send"}
+                    title={t("Send")}
                     onClick={handleSubmit}
                     submit
                     loading={isLoading}

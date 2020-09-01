@@ -7,6 +7,7 @@ import UIPageTitle from "../UI/UIPageTitle";
 import UICard from "../UI/UICard";
 import UIBackgroundWrapper from "../UI/UIBackgroundWrapper";
 import {history} from "../../helpers/history.helper";
+import {useTranslation} from "react-i18next";
 
 type IProfileMode = { mode: 'profile' | 'settings' | 'security' }
 
@@ -38,20 +39,21 @@ const getPageTitle = (key: string) => {
 
 const Profile: FC<IProfileMode> =
     ({mode}) => {
+      const [t] = useTranslation();
 
       return (<>
-        <UIPageTitle title={getPageTitle(mode)}/>
+        <UIPageTitle title={t(getPageTitle(mode))}/>
         <UIBackgroundWrapper>
           <div className={styles.profileContainer}>
             <div className={styles.menu}>
               <div className={[styles.menuItem, mode === 'profile' && styles.selected].join(' ')}
-                   onClick={() => history.push('/profile')}>Profile
+                   onClick={() => history.push('/profile')}>{t("Profile")}
               </div>
               <div className={[styles.menuItem, mode === 'security' && styles.selected].join(' ')}
-                   onClick={() => history.push('/profile/security')}>Privacy and Security
+                   onClick={() => history.push('/profile/security')}>{t("Privacy and Security")}
               </div>
               <div className={[styles.menuItem, mode === 'settings' && styles.selected].join(' ')}
-                   onClick={() => history.push('/profile/settings')}>Settings
+                   onClick={() => history.push('/profile/settings')}>{t("Settings")}
               </div>
             </div>
             <UICard>

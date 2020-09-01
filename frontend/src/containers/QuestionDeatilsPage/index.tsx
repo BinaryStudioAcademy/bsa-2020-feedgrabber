@@ -12,6 +12,7 @@ import QuestionDetails from "../../components/QuestionDetails";
 import { Button, Loader } from "semantic-ui-react";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
+import {useTranslation} from "react-i18next";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
@@ -27,6 +28,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         isPreview
     }) => {
     const history = useHistory();
+    const [t] = useTranslation();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
 
@@ -89,13 +91,13 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
                         <Button className="ui button" color="red" onClick={onClose}>
-                            Cancel
+                            {t("Cancel")}
                         </Button>
                         <Button className="ui button"
                             color="green"
                             disabled={!isQuestionDetailsValid}
                             onClick={onSubmit}>
-                            Save
+                            {t("Save")}
                         </Button>
                     </div>
                 </div>
