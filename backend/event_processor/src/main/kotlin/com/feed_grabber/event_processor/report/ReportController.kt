@@ -1,6 +1,7 @@
 package com.feed_grabber.event_processor.report
 
 import com.feed_grabber.event_processor.report.dto.DataForReport
+import com.feed_grabber.event_processor.report.dto.FrontendReportData
 import com.feed_grabber.event_processor.report.excel.ExcelReportGenerator
 import com.feed_grabber.event_processor.report.ppt.PowerPointReport
 import org.springframework.dao.EmptyResultDataAccessException
@@ -16,11 +17,14 @@ class ReportController(val service: ReportService, val excel: ExcelReportGenerat
     fun getReport(@PathVariable requestId: UUID) = service.getFrontendData(requestId)
 
     @PostMapping
-    fun generateReport(@RequestBody dto: DataForReport)  {
-        excel.generate(dto);
-        val parsed = service.parseAndSaveReport(dto)
-        pp.create(parsed)
-        service.reportToDto(parsed)
+    fun generateReport(@RequestBody dto: DataForReport): FrontendReportData {
+        val report = service.parseIncomingData(dto)
+
+        report.powerPointLink = excel.generate(dto)
+        report.excelLink = pp.create(report)
+
+        val savedReport = service.saveReport(report)
+        return service.reportToDto(savedReport)
     }
 
     @ExceptionHandler(value = [(EmptyResultDataAccessException::class)])

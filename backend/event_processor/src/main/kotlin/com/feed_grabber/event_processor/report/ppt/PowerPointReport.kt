@@ -4,6 +4,7 @@ import com.feed_grabber.event_processor.fileStorage.AmazonS3ClientService
 import com.feed_grabber.event_processor.rabbit.Sender
 import com.feed_grabber.event_processor.report.ReportService
 import com.feed_grabber.event_processor.report.dto.QuestionTypes
+import com.feed_grabber.event_processor.report.dto.ReportFileCreationResponseDto
 import com.feed_grabber.event_processor.report.model.*
 import org.apache.poi.sl.usermodel.Placeholder
 import org.apache.poi.xslf.usermodel.SlideLayout
@@ -20,14 +21,13 @@ import java.util.*
 
 @Service
 class PowerPointReport(
-        @Autowired private val parser: ReportService,
         @Autowired private val client: AmazonS3ClientService,
         @Autowired private val chartSlideCreator: ChartSlide,
         @Autowired private val sender: Sender
 ) {
-    fun create(report: Report) {
+    fun create(report: Report): ReportFileCreationResponseDto? {
         if (report.questions == null) {
-            return
+            return null
         }
 
         val ppt = XMLSlideShow()
@@ -83,6 +83,7 @@ class PowerPointReport(
         val response = client.uploadReport(file, report.id)
         sender.sendPPTReportURL(response)
         file.delete()
+        return response
     }
 
     private fun createTitleSlide(slideShow: XMLSlideShow, text: String) {

@@ -7,7 +7,10 @@ import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.model.QuestionDB
 import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellRangeAddress
-import org.apache.poi.xssf.usermodel.*
+import org.apache.poi.xssf.usermodel.XSSFCellStyle
+import org.apache.poi.xssf.usermodel.XSSFConditionalFormattingRule
+import org.apache.poi.xssf.usermodel.XSSFFont
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.File
@@ -129,59 +132,57 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
     }
 
     @Throws(IOException::class)
-    fun generate(report: DataForReport) {
-        val parsedQuestions = service.parseIncomingData(report).questions
-        if (parsedQuestions != null) {
-            // #WORKBOOK
-            var workbook = XSSFWorkbook()
+    fun generate(report: DataForReport): ReportFileCreationResponseDto? {
+        val parsedQuestions = service.parseIncomingData(report).questions ?: return null
+        // #WORKBOOK
+        var workbook = XSSFWorkbook()
 
-            // #FONTS
-            titleFont = workbook.createFont()
-            titleFont.bold = true
-            titleFont.setFontHeightInPoints(24.toShort())
-            titleFont.setFontName("Arial")
+        // #FONTS
+        titleFont = workbook.createFont()
+        titleFont.bold = true
+        titleFont.setFontHeightInPoints(24.toShort())
+        titleFont.setFontName("Arial")
 
-            headerFont = workbook.createFont()
-            headerFont.bold = true
-            headerFont.setFontHeightInPoints(16.toShort())
-            headerFont.setFontName("Arial")
+        headerFont = workbook.createFont()
+        headerFont.bold = true
+        headerFont.setFontHeightInPoints(16.toShort())
+        headerFont.setFontName("Arial")
 
-            dataFont = workbook.createFont()
-            dataFont.setFontHeightInPoints(14.toShort())
-            dataFont.setFontName("Arial")
+        dataFont = workbook.createFont()
+        dataFont.setFontHeightInPoints(14.toShort())
+        dataFont.setFontName("Arial")
 
-            // #STYLES
-            titleCellStyle = workbook.createCellStyle()
-            titleCellStyle.setFont(titleFont)
-            titleCellStyle.alignment = HorizontalAlignment.CENTER;
-            titleCellStyle.verticalAlignment = VerticalAlignment.CENTER;
+        // #STYLES
+        titleCellStyle = workbook.createCellStyle()
+        titleCellStyle.setFont(titleFont)
+        titleCellStyle.alignment = HorizontalAlignment.CENTER;
+        titleCellStyle.verticalAlignment = VerticalAlignment.CENTER;
 
-            headerCellStyle = workbook.createCellStyle()
-            headerCellStyle.setFont(headerFont)
-            headerCellStyle.wrapText = true
-            headerCellStyle.verticalAlignment = VerticalAlignment.CENTER;
+        headerCellStyle = workbook.createCellStyle()
+        headerCellStyle.setFont(headerFont)
+        headerCellStyle.wrapText = true
+        headerCellStyle.verticalAlignment = VerticalAlignment.CENTER;
 
-            dataCellStyle = workbook.createCellStyle()
-            dataCellStyle.setFont(dataFont)
-            dataCellStyle.wrapText = true
-            dataCellStyle.verticalAlignment = VerticalAlignment.TOP;
+        dataCellStyle = workbook.createCellStyle()
+        dataCellStyle.setFont(dataFont)
+        dataCellStyle.wrapText = true
+        dataCellStyle.verticalAlignment = VerticalAlignment.TOP;
 
-            generateMainPage(workbook, parsedQuestions, report)
+        generateMainPage(workbook, parsedQuestions, report)
 
-            generateQuestionsPage(workbook, parsedQuestions, report)
+        generateQuestionsPage(workbook, parsedQuestions, report)
 
-            generateInfoPage(workbook, report)
+        generateInfoPage(workbook, report)
 
-            // #WRITE_FILE
-            val file = File("${UUID.randomUUID()}-report.xlsx")
-            val fileOut = FileOutputStream(file)
-            workbook.write(fileOut)
-            fileOut.close()
-            workbook.close()
-            val response = client.uploadReport(file, report.requestId)
-            sender.sendUploadedReportURL(response)
-            file.delete()
-        }
+        // #WRITE_FILE
+        val file = File("${UUID.randomUUID()}-report.xlsx")
+        val fileOut = FileOutputStream(file)
+        workbook.write(fileOut)
+        fileOut.close()
+        workbook.close()
+        val response = client.uploadReport(file, report.requestId)
+        file.delete()
+        return response
     }
 
     fun generateMainPage(workbook: XSSFWorkbook, parsedQuestions: List<QuestionDB>, report: DataForReport) {
