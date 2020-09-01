@@ -18,14 +18,15 @@ import java.util.List;
 public interface SectionMapper {
     SectionMapper MAPPER = Mappers.getMapper(SectionMapper.class);
 
-    @Mapping(target = "questionnaire.id", source = "questionnaireId")
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "description", ignore = true)
-    @Mapping(target = "order", ignore = true)
+    @Mapping(target = "questionnaire", source = "questionnaire")
+    @Mapping(target = "title", source = "dto.title")
+    @Mapping(target = "order", source = "dto.index")
     @Mapping(target = "questions", ignore = true)
-    Section createDtoToModel(SectionCreateDto dto);
+    @Mapping(target = "description", ignore = true)
+    Section createDtoToModel(SectionCreateDto dto, Questionnaire questionnaire);
 
     SectionDto modelToDto(Section section);
 
+    @Mapping(target = "questions", source = "questions")
     SectionQuestionsDto sectionAndQuestionsDto(Section section, List<Question> questions);
 }

@@ -7,7 +7,8 @@ import {
     saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
-    updateQuestionnaireRoutine
+    updateQuestionnaireRoutine,
+    setCurrentIdRoutine
 } from '../../sagas/qustionnaires/routines';
 import { IAppState } from "../../models/IAppState";
 import { combineReducers } from "redux";
@@ -117,6 +118,11 @@ const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current
                 ...state,
                 questions: [...state.questions, ...payload],
                 isLoading: false
+            };
+        case setCurrentIdRoutine.TRIGGER:
+            return {
+                ...state,
+                get: {...state.get, id: payload}
             };
         case loadOneQuestionnaireRoutine.SUCCESS:
         case saveAndGetQuestionnaireRoutine.SUCCESS:

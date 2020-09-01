@@ -13,5 +13,6 @@ import java.util.UUID;
 public class TeamDetailsDto {
     private UUID id;
     private String name;
+    private UUID teamLeadId;
     private List<UUID> membersId;
 }

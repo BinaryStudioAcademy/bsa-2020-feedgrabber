@@ -99,7 +99,7 @@ public class QuestionController {
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<QuestionDto>> addExisting(@RequestBody AddExistingQuestionsDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException {
+            throws QuestionnaireNotFoundException {
 
         return new AppResponse<>(questionService.addExistingQuestion(dto));
     }
@@ -144,4 +144,5 @@ public class QuestionController {
     public AppResponse<List<QuestionDto>> getAllBySection(@PathVariable UUID id) {
         return new AppResponse<>(questionService.getAllBySection(id));
     }
+
 }

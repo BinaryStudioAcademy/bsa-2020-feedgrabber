@@ -42,6 +42,10 @@ public class Team {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "lead_id")
+    private User lead;
+
     @ManyToMany(
             cascade = {
                     CascadeType.PERSIST,

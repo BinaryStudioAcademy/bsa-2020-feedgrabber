@@ -2,7 +2,6 @@ package com.feed_grabber.core.questionnaire.model;
 
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.model.Question;
-import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
 import com.feed_grabber.core.sections.model.Section;
 import com.feed_grabber.core.request.model.Request;
 import lombok.AllArgsConstructor;
@@ -40,9 +39,12 @@ public class Questionnaire {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<QuestionnaireQuestion> questions = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "question_questionnaire",
+            joinColumns = @JoinColumn(name = "questionnaire_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
+    private List<Question> questions;
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
@@ -51,9 +53,9 @@ public class Questionnaire {
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 
-    @OneToMany(mappedBy = "questionnaire")
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Section> sections;
-    
+
     @Column(name = "is_editing_enabled", nullable = false)
     @ColumnDefault("true")
     @Builder.Default

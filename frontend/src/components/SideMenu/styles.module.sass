@@ -1,64 +1,65 @@
 $toggle-menu-duration: .2s
 $toggle-menu-timing: ease-in-out
 $back-color: #aeb0b2
-$attention-color: #4a84df
+$active-back: #565c86
+$attention-color: #606790
 
 .menuWrapper
   position: fixed
+  background-color: $attention-color
   height: 100%
-  padding-top: 4em
-  background-color: rgb(255,255,255)
+  margin-top: 5.1em
+  border-top: #565c86 solid 2px
   z-index: 1
-  transition: all $toggle-menu-duration $toggle-menu-timing
+  transition: width $toggle-menu-duration $toggle-menu-timing
   overflow: hidden
-  border-right: 2px solid rgb(230,236,240)
 
-.menuContent
-  display: flex
-  flex-direction: column
+  .menuItemTitle, .menuItemIcon
+    transition: visibility $toggle-menu-duration $toggle-menu-timing
+    color: #FFFFFF
+    visibility: visible
+
+  .menuContent
+    display: flex
+    flex-direction: column
 
 .menuItem
-  min-width: 15em
-  font-size: .9em
-  font-weight: bold
+  font-family: Raleway
+  font-style: normal
+  min-width: 18em
+  display: flex
+  align-items: center
+  font-size: 1.1em
   padding: 1em
   cursor: pointer
-  transition: all .25s ease-in-out
 
-  .menuItemIcon
-    color: $back-color
-    &:hover
+  &:hover
+    background-color: $active-back
+
+    .menuItemIcon
       transform: scale(1.1)
 
-.menuItemActive
-  background-color: #fefefe
-  .menuItemIcon
-    color: $attention-color
-  .menuItemTitle
-    color: $attention-color
-
 .menuItemIcon
-  color: $back-color
   transition: all .2s ease-in-out
+  margin-left: .5em
 
 .menuItemTitle
-  margin-left: .8em
+  margin-left: 1.4em
   color: #717171
-  transition: all $toggle-menu-duration $toggle-menu-timing
 
 .menuWrapperOpen
-  width: 13.5em
+  width: 17em
 
-  .menuItem
-
-    .menuItemTitle
-      visibility: visible
+  .menuItemActive
+    background-color: $active-back
+    border-left: 2px solid #eaba63
 
 .menuWrapperClosed
-  width: 4em
-  .menuItemActive
-    //background-color: $main-color
-    transform: none
+  width: 5em
 
-    .menuItemTitle
-      visibility: hidden
+  .menuItemActive
+    background-color: $active-back
+
+  .menuItemTitle
+    visibility: hidden
+
