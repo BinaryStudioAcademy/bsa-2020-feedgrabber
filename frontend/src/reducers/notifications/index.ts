@@ -14,7 +14,7 @@ export interface INotification {
   date: Date;
   requestId: string;
   questionnaireId: string;
-  type: MessageTypes;
+  messageType: MessageTypes;
   payload?: string;
   isRead: boolean;
 }
