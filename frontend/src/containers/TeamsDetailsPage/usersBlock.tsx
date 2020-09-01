@@ -4,17 +4,19 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import UIButton from "../../components/UI/UIButton";
-import {ITeam, ITeamUserToggle} from "../../models/teams/ITeam";
+import {ITeam, ITeamLeadToggle, ITeamUserToggle} from "../../models/teams/ITeam";
 import styles from "./styles.module.sass";
-import {Image} from "semantic-ui-react";
+import {Icon, Image} from "semantic-ui-react";
 import {IUserShort} from "../../models/user/types";
 
 interface ITeamUsersBlockProps {
   currentTeam?: ITeam;
   companyUsers?: IUserShort[];
   isLoadingUsers?: boolean;
+  isLoadingLeadToggle?: boolean;
 
   toggleUser(request: ITeamUserToggle): void;
+  toggleLead(request: ITeamLeadToggle): void;
 }
 
 const defaultAvatar =
@@ -25,9 +27,15 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
     currentTeam,
     companyUsers,
     toggleUser,
-    isLoadingUsers
+    toggleLead,
+    isLoadingUsers,
+    isLoadingLeadToggle
   }
 ) => {
+  const isUserTeamLead = (user: IUserShort) => {
+    return user.id === currentTeam?.teamLeadId;
+  };
+
   return (
     <UIColumn>
       <LoaderWrapper loading={isLoadingUsers}>
@@ -40,6 +48,17 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
               <div className={styles.cardUserBlock}>
                 <Image src={user.avatar ?? defaultAvatar} size="mini" avatar/>
                 <h4>{user.username}</h4>
+                {user.selected && (
+                  <Icon
+                    name={isUserTeamLead(user) ? "star" : "star outline"}
+                    className={`${styles.cardUserStar} ${isUserTeamLead(user) ? styles.cardUserStarActive : ""}`}
+                    onClick={() => {
+                      if (!isLoadingLeadToggle) {
+                        toggleLead({teamId: currentTeam.id, userId: user.id, username: user.username});
+                      }
+                    }}
+                  />
+                )}
               </div>
               {currentTeam && (
                 <UIButton
