@@ -83,7 +83,7 @@ public class SearchRepository {
                 .builder()
                 .users(((List<User>) userQuery.getResultList())
                         .stream()
-                        .map(UserMapper.MAPPER::userToUserDto)
+                        .map(UserMapper.MAPPER::detailedFromUser)
                         .collect(Collectors.toList()))
                 .questionnaires(((List<Questionnaire>) questionnaireQuery.getResultList())
                         .stream()
