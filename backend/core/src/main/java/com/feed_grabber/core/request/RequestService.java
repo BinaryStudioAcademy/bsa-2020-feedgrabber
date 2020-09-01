@@ -57,7 +57,7 @@ public class RequestService {
         this.fileRepository = fileRepository;
     }
 
-    public UUID createNew(CreateRequestDto dto) throws QuestionCategoryNotFoundException, UserNotFoundException {
+    public UUID createNew(CreateRequestDto dto) throws NotFoundException {
         var questionnaire = questionnaireRepository
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
@@ -116,6 +116,14 @@ public class RequestService {
                                 .type(MessageTypes.plain_text)
                                 .user(user)
                                 .build()).getId());
+            for (UUID userId : userIdNotificationId.keySet()) {
+                notificationService.sendMessageToConcreteUser(
+                        userId.toString(),
+                        "notify",
+                        userNotificationRepository
+                                .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
+                );
+            }
         }
 
         return request.getId();
