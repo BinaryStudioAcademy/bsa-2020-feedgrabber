@@ -7,7 +7,7 @@ import {ISearchResult} from "../../models/search/Search";
 
 function* searchOverAll(action) {
     try {
-        const res: IGeneric<ISearchResult> = yield call(apiClient.get, `/api/search/${action.payload}`);
+        const res: IGeneric<ISearchResult> = yield call(apiClient.get, `/api/search?query=${action.payload}`);
 
         yield put(searchOverAllEntities.success(res.data.data));
     } catch (error) {

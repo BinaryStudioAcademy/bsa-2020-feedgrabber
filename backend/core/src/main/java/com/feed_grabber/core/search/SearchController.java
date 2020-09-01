@@ -15,9 +15,9 @@ public class SearchController {
         this.searchService = searchService;
     }
 
-    @GetMapping("/{query}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<SearchDto> searchForAllMatch(@PathVariable String query){
+    public AppResponse<SearchDto> searchForAllMatch(@RequestParam String query){
         return new AppResponse<>(searchService.getAllByQuery(query));
     }
 }
