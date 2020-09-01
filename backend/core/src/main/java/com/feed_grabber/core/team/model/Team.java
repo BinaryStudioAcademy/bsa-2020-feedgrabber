@@ -5,12 +5,14 @@ import com.feed_grabber.core.user.model.User;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Indexed
 @Data
 @Entity
 @Table(name = "teams")
