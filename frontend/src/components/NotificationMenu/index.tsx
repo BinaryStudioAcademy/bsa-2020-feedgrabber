@@ -6,7 +6,8 @@ import {
     deleteAllNotificationsRoutine,
     deleteNotificationRoutine,
     loadNotificationsRoutine,
-    receiveNotificationRoutine
+    receiveNotificationRoutine,
+    markNotificationAsReadRoutine
 } from "../../sagas/notifications/routines";
 import LoaderWrapper from "../LoaderWrapper";
 import {useStomp} from "../../helpers/websocket.helper";
@@ -27,7 +28,8 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         loadNotifications,
         receiveNotification,
         countNotifications,
-        getResponse
+        getResponse,
+        readNotification
     }) => {
     const [shown, setShown] = useState(false);
 
@@ -79,7 +81,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                                      onClick={() => {
                                          getResponse(notification.requestId);
                                          history.push(`/response/${notification.questionnaireId}`);
-                                         deleteNotification(notification.requestId);
+                                         readNotification(notification.id);
                                          setShown(false);
                                      }}>
                                     <div>{notification.text?.substr(0, 54)}</div>
@@ -89,12 +91,12 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                                      title='Delete'
                                      onClick={() => {
                                          deleteNotification(notification.requestId);
-                                     }}
-                                >
+                                     }}>
                                     <div>
                                         x
                                     </div>
                                 </div>
+                                {!notification.isRead && <div className={styles.readMark}/>}
                             </div>
                         ))}
                 </LoaderWrapper>
@@ -116,7 +118,8 @@ const mapDispatchToProps = {
     deleteAll: deleteAllNotificationsRoutine,
     loadNotifications: loadNotificationsRoutine,
     receiveNotification: receiveNotificationRoutine,
-    getResponse: getResponseRoutine
+    getResponse: getResponseRoutine,
+    readNotification: markNotificationAsReadRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

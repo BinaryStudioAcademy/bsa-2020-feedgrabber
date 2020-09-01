@@ -4,6 +4,8 @@ import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
+import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
+import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,14 +24,9 @@ public class RegisterService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public UUID registerUser(UserRegisterDTO userRegisterDTO) {
+    public UUID registerUser(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException, CompanyAlreadyExistsException {
         userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
-
-        try {
-            return userService.createDefault(userRegisterDTO);
-        } catch (Exception exception) {
-            throw new UserAlreadyExistsException();
-        }
+        return userService.createDefault(userRegisterDTO);
     }
 
     public UUID registerUserByInvitation(UserRegisterInvitationDTO dto) throws InvitationNotFoundException, InvitationExpiredException {

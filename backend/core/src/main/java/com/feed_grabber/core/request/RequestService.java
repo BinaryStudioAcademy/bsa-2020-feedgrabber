@@ -106,6 +106,7 @@ public class RequestService {
                     .builder()
                     .request(request)
                     .text("You have new questionnaire request")
+                    .isRead(false)
                     .build();
 
             var notification = userNotificationRepository.save(toSaveNotification);
@@ -123,7 +124,7 @@ public class RequestService {
 
     public List<PendingRequestDto> getPending(UUID userId) {
         return responseRepository
-                .findAllByUserId(userId)
+                .findAllByUserIdAndRequestNotNull(userId)
                 .stream()
                 .map(RequestMapper.MAPPER::toPendingFromResponse)
                 .sorted(

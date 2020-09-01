@@ -30,7 +30,7 @@ public class UserNotificationService {
 
     public void deleteNotificationByRequestIdAndUserId(UUID requestId, UUID userId) throws NotFoundException {
         var response = Optional.of(responseRepository
-                .findByRequestAndUser(requestId, userId))
+                .findByRequestIdAndUserId(requestId, userId))
                 .orElseThrow(() -> new NotFoundException("Response Not Found"));
 
         response.setNotificationExists(false);
@@ -39,5 +39,12 @@ public class UserNotificationService {
 
     public void deleteAllNotificationsByUserId(UUID userId) {
         responseRepository.deleteAllNotificationsByUserId(userId);
+    }
+
+    public void markAsRead(UUID notificationId) throws NotFoundException {
+        var notification = userNotificationRepository.findById(notificationId)
+                .orElseThrow(() -> new NotFoundException("Notification Not Found"));
+        notification.setIsRead(true);
+        userNotificationRepository.save(notification);
     }
 }

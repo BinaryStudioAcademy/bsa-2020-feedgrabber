@@ -15,6 +15,7 @@ public interface CompanyMapper {
 
     @Mapping(source = "email", target = "corporateEmail")
     @Mapping(target = "questionnaires", ignore = true)
+    @Mapping(target = "subdomainName", ignore = true)
     Company companyDtoToModel(CompanyDto companyDto);
 
 

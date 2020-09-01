@@ -3,8 +3,7 @@ package com.feed_grabber.core.question.model;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
-import com.feed_grabber.core.questionnaire2question.QuestionnaireQuestion;
-import com.feed_grabber.core.sections.model.Section;
+import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,11 +40,8 @@ public class Question {
     @Column
     private String payload;
 
-    @OneToMany(
-            mappedBy = "question",
-            cascade = {CascadeType.REFRESH, CascadeType.PERSIST}
-    )
-    private List<QuestionnaireQuestion> questionnaires;
+    @ManyToMany(mappedBy = "questions")
+    private List<Questionnaire> questionnaires;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;

@@ -1,59 +1,65 @@
-$toggle-menu-duration: 0.2s
-$toggle-menu-timing: ease-out
+$toggle-menu-duration: .2s
+$toggle-menu-timing: ease-in-out
+$back-color: #aeb0b2
+$active-back: #565c86
+$attention-color: #606790
 
 .menuWrapper
   position: fixed
+  background-color: $attention-color
   height: 100%
-  padding-top: 6em
-  background-color: #e1e8ee
-  transition: width $toggle-menu-duration $toggle-menu-timing
+  margin-top: 5.1em
+  border-top: #565c86 solid 2px
   z-index: 1
+  transition: width $toggle-menu-duration $toggle-menu-timing
+  overflow: hidden
 
-.menuContent
-  display: flex
-  flex-direction: column
+  .menuItemTitle, .menuItemIcon
+    transition: visibility $toggle-menu-duration $toggle-menu-timing
+    color: #FFFFFF
+    visibility: visible
+
+  .menuContent
+    display: flex
+    flex-direction: column
 
 .menuItem
-  font-size: 0.8em
+  font-family: Raleway
+  font-style: normal
+  min-width: 18em
+  display: flex
+  align-items: center
+  font-size: 1.1em
+  padding: 1em
   cursor: pointer
-  transition: padding-left $toggle-menu-duration $toggle-menu-timing, background-color 0.1s
 
   &:hover
-    background-color: rgba(253,198,178,0.94)
+    background-color: $active-back
 
-.menuItemActive
-  background-color: #ee6f57
-
-  .menuItemIcon
-    color: #fff
-
-  .menuItemTitle
-    color: #fff
-
-  &:hover
-    background-color: #ee6f57
+    .menuItemIcon
+      transform: scale(1.1)
 
 .menuItemIcon
-  color: #145374
+  transition: all .2s ease-in-out
+  margin-left: .5em
 
 .menuItemTitle
-  transition: margin-left $toggle-menu-duration $toggle-menu-timing, color $toggle-menu-duration $toggle-menu-timing
-  color: #000
+  margin-left: 1.4em
+  color: #717171
 
 .menuWrapperOpen
   width: 17em
 
-  .menuItem
-    padding: 1em 1em 1em 3em
-
-    .menuItemIcon
-      margin-right: 0.7em
+  .menuItemActive
+    background-color: $active-back
+    border-left: 2px solid #eaba63
 
 .menuWrapperClosed
-  width: 2.6em
+  width: 5em
 
-  .menuItem
-    padding: 1em
+  .menuItemActive
+    background-color: $active-back
 
-    .menuItemTitle
-      margin-left: -20em
+  .menuItemTitle
+    visibility: hidden
+

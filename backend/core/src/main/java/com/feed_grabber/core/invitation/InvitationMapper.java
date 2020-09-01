@@ -26,6 +26,8 @@ public abstract class InvitationMapper {
 
     @Mapping(source = "companyId", target = "company.id")
     @Mapping(constant = "false", target = "accepted")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     public abstract Invitation invitationDtoToModel(InvitationGenerateRequestDto dto);
 
     public abstract InvitationGenerateResponseDto invitationToGenerateDto(Invitation invitation);

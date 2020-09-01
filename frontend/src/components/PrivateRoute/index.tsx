@@ -17,7 +17,7 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu, roles = null,
             {...rest}
             render={props => {
                 if (!isLogged) {
-                    return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>;
+                    return <Redirect to={{pathname: '/auth', state: {from: props.location}}}/>;
                 }
 
                 return (

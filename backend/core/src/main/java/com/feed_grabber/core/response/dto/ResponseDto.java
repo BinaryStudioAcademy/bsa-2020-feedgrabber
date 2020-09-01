@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -28,4 +29,9 @@ public class ResponseDto {
 
     @JsonDeserialize(using = KeepAsJsonDeserializer.class)
     private String payload;
+
+    private boolean changeable;
+
+    @NotNull
+    private Date answeredAt;
 }
