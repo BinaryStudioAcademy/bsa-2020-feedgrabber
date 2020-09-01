@@ -60,7 +60,6 @@ public class SearchRepository {
                         .withEditDistanceUpTo(2)
                         .withPrefixLength(0)
                         .onFields("text"
-                                , "payload"
                                 , "category.title")
                         .matching(query)
                         .createQuery()

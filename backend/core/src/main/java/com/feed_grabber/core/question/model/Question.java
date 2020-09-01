@@ -12,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.bridge.builtin.EnumBridge;
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,10 +39,10 @@ public class Question {
     @Column(name = "text", nullable = false, unique = true)
     private String text;
 
+    @Field(bridge = @FieldBridge(impl = EnumBridge.class))
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
-    @Field
     @Column
     private String payload;
 
