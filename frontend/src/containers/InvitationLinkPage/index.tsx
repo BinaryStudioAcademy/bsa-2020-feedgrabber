@@ -10,6 +10,8 @@ import {
   sendInvitationRoutine
 } from "../../sagas/invitation/routines";
 import InvitationsListBlock from "./linksList";
+import DomainCreationBlock from "./emailDomainCreation";
+import UIColumn from "components/UI/UIColumn";
 
 const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
   {
@@ -22,18 +24,25 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
     loadInvitations,
     sendInvitation,
     resendInvitation,
-    deleteInvitation
+    deleteInvitation,
+
+    company
   }
 ) => {
   return (
     <>
       <UIPageTitle title="Invitations" />
       <UIContent>
-        <InvitationCreationBlock
+        <UIColumn>
+          <InvitationCreationBlock
           responseError={errorGeneration}
           sendInvitation={sendInvitation}
           isLoading={isLoadingGeneration}
         />
+        </UIColumn>
+        <UIColumn>
+          <DomainCreationBlock/>
+        </UIColumn>
         <InvitationsListBlock
           loadInvitations={loadInvitations}
           invitationsList={invitationsList}
@@ -52,7 +61,8 @@ const mapState = (state: IAppState) => ({
   errorGeneration: state.invitation.errorGeneration,
   invitationsList: state.invitation.list,
   isLoadingList: state.invitation.isLoadingList,
-  errorLoadingList: state.invitation.errorLoadingList
+  errorLoadingList: state.invitation.errorLoadingList,
+  company: state.company.currentCompany
 });
 
 const mapDispatch = {
