@@ -173,8 +173,10 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         const isModifying = !!response?.answeredAt;
         const {showErrors, currentSectionIndex} = this.state;
         return (
-            <div className={styles.response_container}>
+            <>
                 <UIPageTitle title="Response"/>
+                <br/>
+                <br/>
                 <LoaderWrapper loading={isLoading}>
                 <UIListHeader title={sections[currentSectionIndex]?.title}
                 description={sections[currentSectionIndex]?.description}/>
@@ -206,15 +208,15 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                         <div className={styles.submit}>
                             {/* {currentSectionIndex !== 0 ?
                             <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
-                                {sections.length === currentSectionIndex + 1 
+                                {sections.length === currentSectionIndex + 1
                                     ? ((!isModifying || changeable) &&
-                                      <UIButton title="Send" onClick={this.handleSendClick}/>)
+                                      <UIButton title="Send" submit onClick={this.handleSendClick}/>)
                                     : <UIButton title="Next" submit/>}
                             </div>
                         </Form>)}
                     </Formik>
                 </LoaderWrapper>
-            </div>);
+            </>);
     }
 }
 
