@@ -71,7 +71,7 @@ const QuestionCard: React.FC<ICardProps> = ({
     }
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: DraggableItemTypes.QUESTION_CARD, id: question.id, index },
     end(item: IDragItem, monitor: DragSourceMonitor ) {
       const dropResult = monitor.getDropResult();

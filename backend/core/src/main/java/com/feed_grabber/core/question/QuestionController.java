@@ -132,4 +132,10 @@ public class QuestionController {
     public AppResponse<List<QuestionDto>> getAllBySection(@PathVariable UUID id) {
         return new AppResponse<>(questionService.getAllBySection(id));
     }
+
+
+    @PutMapping("/index")
+    public void index(@RequestBody QuestionIndexDto dto) throws QuestionNotFoundException, SectionNotFoundException {
+        questionService.index(dto);
+    }
 }

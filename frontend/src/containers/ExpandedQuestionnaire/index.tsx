@@ -4,8 +4,12 @@ import styles from './styles.module.sass';
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
-import {createSectionRoutine, loadSectionsByQuestionnaireRoutine} from 'sagas/sections/routines';
-import {deleteFromQuestionnaireRoutine, indexQuestionsRoutine, saveQuestionRoutine} from "sagas/questions/routines";
+import {
+  createSectionRoutine,
+  loadSectionsByQuestionnaireRoutine,
+  deleteQuestionFromSectionRoutine
+} from 'sagas/sections/routines';
+import {indexQuestionsRoutine, saveQuestionRoutine} from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {Header} from "semantic-ui-react";
@@ -31,17 +35,24 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
-    const handleDeleteQuestion = () => deleteQuestion({questionId: question.id, questionnaireId: match.params.id});
+    const handleDeleteQuestion = () => deleteQuestion({
+      questionId: question.id,
+      sectionId: currentSection.id,
+      questionnaireId: questionnaire.id
+    });
 
-    const addNewQuestion = () =>
+    const addNewQuestion = () => {
+        const section = currentSection ? currentSection : sections[0];
         saveQuestion({
             ...defaultQuestion,
             questionnaireId: match.params.id,
             questionnaireQuestions,
-            sectionId: currentSection ? currentSection.id : sections[0].id
+            sectionId: section.id,
+            index: section.questions.length
         });
+      };
 
-    const handleAddSection = () => createSection({questionnaireId: match.params.id});
+    const handleAddSection = () => createSection({questionnaireId: match.params.id, index: sections.length});
 
     const copyQuestion = () => {
         if (!question.id) {
@@ -100,7 +111,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
-    deleteQuestion: deleteFromQuestionnaireRoutine,
+    deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
     indexQuestions: indexQuestionsRoutine
 };

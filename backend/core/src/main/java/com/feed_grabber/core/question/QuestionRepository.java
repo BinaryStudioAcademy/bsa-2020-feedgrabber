@@ -41,6 +41,6 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
     @Query("from Question q " +
             "inner join SectionQuestion sq on q.id = sq.question.id " +
             "inner join Section s on sq.section.id = s.id " +
-            "where s.id = :sectionId")
+            "where s.id = :sectionId order by sq.orderIndex asc ")
     List<Question> findAllBySectionId(UUID sectionId);
 }

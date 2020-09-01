@@ -56,11 +56,11 @@ public class SectionController {
         return new AppResponse<>(sectionService.addQuestion(sectionId, id));
     }
 
-    @DeleteMapping("/question/{id}")
+    @DeleteMapping("/question/{questionId}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<SectionQuestionsDto> deleteQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
+    public AppResponse<SectionQuestionsDto> deleteQuestion(@PathVariable UUID questionId, @RequestParam UUID sectionId)
             throws SectionNotFoundException, QuestionNotFoundException {
-        return new AppResponse<>(sectionService.deleteQuestion(sectionId, id));
+        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId));
     }
 
 }

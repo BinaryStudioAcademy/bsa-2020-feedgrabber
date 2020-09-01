@@ -48,7 +48,7 @@ public class Questionnaire {
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 
-    @OneToMany(mappedBy = "questionnaire")
+    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Section> sections;
 
     @Column(name = "is_editing_enabled", nullable = false)

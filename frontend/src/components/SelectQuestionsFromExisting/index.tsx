@@ -35,9 +35,11 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
     };
 
     const handleSubmit = () => {
+        const startIndex = currentQuestions.length;
+        const questions = selected.map((q, i) => { return { questionId: q.id, index: startIndex + i }; });
         if (selected) {
             selected.forEach(q => q.isReused = true);
-            addQuestions({questionnaireId: qnId, questions: selected, sectionId: currentSection.id});
+            addQuestions({questionnaireId: qnId, questions, sectionId: currentSection.id});
         }
         setSelected([]);
         handleOpenModal(false);
