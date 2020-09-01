@@ -27,7 +27,7 @@ public class Request {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @IndexedEmbedded(depth=1)
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "questionnaire_id", nullable = false)
     private Questionnaire questionnaire;

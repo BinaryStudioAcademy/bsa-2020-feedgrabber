@@ -49,7 +49,7 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
-    @IndexedEmbedded(depth=1)
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 

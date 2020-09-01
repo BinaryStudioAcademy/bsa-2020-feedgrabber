@@ -37,7 +37,7 @@ public class Team {
     @Column(name = "name")
     private String name;
 
-    @IndexedEmbedded(depth=1)
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;

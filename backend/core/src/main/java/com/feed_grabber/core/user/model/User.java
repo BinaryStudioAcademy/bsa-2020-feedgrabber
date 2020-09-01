@@ -62,7 +62,7 @@ public class User {
     @Builder.Default
     private Role role = new Role();
 
-    @IndexedEmbedded(depth=1)
+    @IndexedEmbedded(depth = 2)
     @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserProfile userProfile;
