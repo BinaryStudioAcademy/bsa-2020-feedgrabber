@@ -2,9 +2,8 @@ package com.feed_grabber.event_processor.report.ppt
 
 import com.feed_grabber.event_processor.fileStorage.AmazonS3ClientService
 import com.feed_grabber.event_processor.rabbit.Sender
-import com.feed_grabber.event_processor.report.ReportApiHelper
-import com.feed_grabber.event_processor.report.ReportService
-import com.feed_grabber.event_processor.report.dto.*
+import com.feed_grabber.event_processor.report.dto.QuestionTypes
+import com.feed_grabber.event_processor.report.dto.ReportFileCreationDto
 import com.feed_grabber.event_processor.report.model.*
 import org.apache.poi.sl.usermodel.Placeholder
 import org.apache.poi.xslf.usermodel.SlideLayout
@@ -15,20 +14,18 @@ import org.springframework.stereotype.Service
 import java.awt.Color
 import java.awt.Rectangle
 import java.io.*
+
 import java.util.*
 
 
 @Service
 class PowerPointReport(
-        @Autowired private val apiHelper: ReportApiHelper,
-        @Autowired private val parser: ReportService,
         @Autowired private val client: AmazonS3ClientService,
         @Autowired private val chartSlideCreator: ChartSlide,
         @Autowired private val sender: Sender
 ) {
-    fun create(requestId: UUID): ReportFileCreationDto? {
-        val data: DataForReport = apiHelper.fetchReportData(requestId)
-        val report = parser.parseIncomingData(data)
+
+    fun create(report: Report): ReportFileCreationDto? {
         if (report.questions == null) {
             return null
         }
@@ -90,8 +87,10 @@ class PowerPointReport(
         val stream = ByteArrayOutputStream()
         ppt.write(stream)
         ppt.close()
+
         val inputStream: InputStream = ByteArrayInputStream(stream.toByteArray())
-        val response = client.uploadReport(inputStream, requestId, "${UUID.randomUUID()}-ppt-report.pptx")
+        val response = client.uploadReport(inputStream, report.id, "${UUID.randomUUID()}-ppt-report.pptx")
+
         return response
     }
 
@@ -193,8 +192,6 @@ class PowerPointReport(
         }
         return variants
     }
-
-
 
 }
 

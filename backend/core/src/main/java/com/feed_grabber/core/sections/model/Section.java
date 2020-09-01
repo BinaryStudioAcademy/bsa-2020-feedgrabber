@@ -37,19 +37,10 @@ public class Section {
     @Column(name = "order_index", columnDefinition = "integer default 1")
     private Integer order;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
-    @ManyToMany(
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "sections_questions",
-            joinColumns = {@JoinColumn(name = "section_id")},
-            inverseJoinColumns = {@JoinColumn(name = "question_id")}
-    )
-    private List<Question> questions;
+    @OneToMany(mappedBy = "section")
+    private List<SectionQuestion> questions;
 }

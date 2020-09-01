@@ -19,15 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class Receiver {
 
-    private RequestService requestService;
-
-    public static final Map<UUID, UUID> reportToUser = new ConcurrentHashMap<>();
-
-    @Autowired
-    public Receiver(RequestService requestService) {
-        this.requestService = requestService;
-    }
-
     @RabbitListener(queues = "${rabbitmq.queue.response}")
     public void receive(PostEntity postEntity) {
         if (postEntity.getType() == MailType.REGISTER) {
@@ -35,14 +26,14 @@ public class Receiver {
         }
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.report}")
-    public void receive(FileReportsDto dto) throws NotFoundException {
-        requestService.addFileReports(dto);
-        var userId = reportToUser.get(dto.getRequestId());
-        if (userId != null) {
-            requestService.sendReportsUrls(userId, dto);
-        }
-    }
+//    @RabbitListener(queues = "${rabbitmq.queue.report}")
+//    public void receive(FileReportsDto dto) throws NotFoundException {
+//        requestService.addFileReports(dto);
+//        var userId = reportToUser.get(dto.getRequestId());
+//        if (userId != null) {
+//            requestService.sendReportsUrls(userId, dto);
+//        }
+//    }
 
 //    @RabbitListener(queues = "${rabbitmq.queue.report.ppt}")
 //    public void receivePPTReport(S3FileCreationDto dto) throws NotFoundException {

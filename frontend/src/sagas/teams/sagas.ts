@@ -1,9 +1,9 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {
   createTeamRoutine, deleteTeamRoutine,
   loadCompanyUsersRoutine,
   loadCurrentTeamRoutine,
-  loadTeamsRoutine,
+  loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
   toggleUserCurrentTeamRoutine,
   updateTeamRoutine
 } from './routines';
@@ -11,8 +11,9 @@ import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
 import {IUserInfo} from "../../models/user/types";
-import {ITeam, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
+import {ITeam, ITeamLeadToggle, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
+import {IAppState} from "../../models/IAppState";
 
 function* loadTeams() {
   try {
@@ -79,10 +80,30 @@ function* toggleUserTeam(action: any) {
     const response = yield call(apiClient.put, `http://localhost:5000/api/teams/toggle_user`, request);
     const data = response.data.data;
     yield put(toggleUserCurrentTeamRoutine.success(data));
+
+    const store: IAppState = yield select();
+    const currentLeadId = store.teams?.current?.currentTeam?.teamLeadId;
+    if (currentLeadId === request.userId && !data.added) {
+      yield put(toggleLeadCurrentTeamRoutine.success({leadId: null}));
+    }
+
     toastr.success(`User ${request.username} ${data.added ? "added to" : "deleted from"} the team`);
   } catch (errorResponse) {
     yield put(toggleUserCurrentTeamRoutine.failure(request.userId));
     toastr.error("Error while user toggle");
+  }
+}
+
+function* toggleLeadTeam(action: any) {
+  const request: ITeamLeadToggle = action.payload;
+  try {
+    const response = yield call(apiClient.put, `http://localhost:5000/api/teams/toggle_lead`, request);
+    const data = response.data.data;
+    yield put(toggleLeadCurrentTeamRoutine.success(data));
+    toastr.success(`User ${request.username} ${data.leadId ? "is a new team lead" : "is not a team lead anymore"}`);
+  } catch (error) {
+    yield put(toggleLeadCurrentTeamRoutine.failure());
+    toastr.error(error.response?.data?.error || "No response");
   }
 }
 
@@ -104,6 +125,7 @@ export default function* teamsSaga() {
     yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam),
     yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam),
     yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam),
+    yield takeEvery(toggleLeadCurrentTeamRoutine.TRIGGER, toggleLeadTeam),
     yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers)
   ]);
 }

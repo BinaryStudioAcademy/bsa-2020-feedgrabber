@@ -3,27 +3,17 @@ package com.feed_grabber.event_processor.report
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.feed_grabber.event_processor.rabbit.Sender
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.dto.QuestionTypes.*
-import com.feed_grabber.event_processor.report.excel.ExcelReportGenerator
 import com.feed_grabber.event_processor.report.model.*
-import com.feed_grabber.event_processor.report.ppt.PowerPointReport
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.util.*
 
 @Service
-class ReportService(
-        val repository: ReportRepository,
-        val JSON: ObjectMapper = jacksonObjectMapper(),
-        val excelReportGenerator: ExcelReportGenerator,
-        val pptReportGenerator: PowerPointReport,
-        val sender: Sender
-) {
-    fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
+class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = jacksonObjectMapper()) {
+
+    fun saveReport(report: Report) = repository.save(report)
 
     fun getFrontendData(requestId: UUID): FrontendReportData = projectionToDto(repository.getProjection(requestId))
 
@@ -44,7 +34,7 @@ class ReportService(
         dto.apply {
             return Report(requestId, questions.filterNotNull(), questionnaire,
                     requestCreationDate, requestExpirationDate,
-                    requestMaker, targetUser, "", "")
+                    requestMaker, targetUser, null, null)
         }
     }
 
@@ -54,15 +44,15 @@ class ReportService(
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))
-            })
+            }, report.excelLink, report.powerPointLink)
 
-    fun reportToDto(report: Report): FrontendReportData = FrontendReportData(
+    fun reportToDto(report: Report) = FrontendReportData(
             report.questionnaire,
             report.questions?.map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))
-            })
+            }, report.excelLink, report.powerPointLink)
 
 
     fun mapAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): QuestionReportData? {
@@ -177,11 +167,5 @@ class ReportService(
         }
     }
 
-    fun generateExcelAndPPTReports(requestId: UUID ) = runBlocking {
-        val excelReportPromise = async { excelReportGenerator.generate(requestId) }
-        val pptReportPromise = async { pptReportGenerator.create(requestId) }
-        val report = ReportFilesResponseDto(requestId, pptReportPromise.await(), excelReportPromise.await())
-        sender.sendUploadedReportsURL(report)
-    }
 }
 

@@ -1,6 +1,5 @@
 import React, {FC} from "react";
-import {IQuestionReportMultichoiceData, IQuestionReportRadioData} from "../../../models/report/IReport";
-import PieChartTemplate from "../../../components/ReportTemplates/PieChartTemplate";
+import {IQuestionReportMultichoiceData} from "../../../models/report/IReport";
 import BarsChartTemplate from "../../../components/ReportTemplates/BarsChartTemplate";
 import {getRandomColor} from "../../../helpers/colors.helper";
 

@@ -2,7 +2,6 @@ package com.feed_grabber.event_processor.report.excel
 
 import com.feed_grabber.event_processor.fileStorage.AmazonS3ClientService
 import com.feed_grabber.event_processor.rabbit.Sender
-import com.feed_grabber.event_processor.report.ReportApiHelper
 import com.feed_grabber.event_processor.report.ReportService
 import com.feed_grabber.event_processor.report.dto.*
 import com.feed_grabber.event_processor.report.model.QuestionDB
@@ -21,11 +20,8 @@ import java.util.stream.Collectors
 
 
 @Service
-class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
-                           @Autowired private val service: ReportService,
-                           @Autowired private val client: AmazonS3ClientService,
-                           @Autowired private val sender: Sender) {
-
+class ExcelReportGenerator(@Autowired private val service: ReportService,
+                           @Autowired private val client: AmazonS3ClientService) {
     private val VERTICAL_INDENT = 1
     private val HORIZONTAL_INDENT = 1
     private val LETTER_WIDTH = 426
@@ -72,7 +68,6 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
             }
             QuestionTypes.date -> {
                 val answer: DateValue = service.parseQuestion(response) as DateValue
-                var date = answer.date
                 textCell(answer.date.toString(), row, cellPosition, cellStyle)
             }
         }
@@ -132,70 +127,65 @@ class ExcelReportGenerator(@Autowired private val apiHelper: ReportApiHelper,
         }
     }
 
-    // @Throws(IOException::class)
-    fun generate(requestId: UUID): ReportFileCreationDto? {
-        val report = apiHelper.fetchReportData(requestId)
-        val parsedQuestions = service.parseIncomingData(report).questions
-        if (parsedQuestions != null) {
-            // #WORKBOOK
-            val workbook = XSSFWorkbook()
 
-            // #FONTS
-            titleFont = workbook.createFont()
-            titleFont.bold = true
-            titleFont.setFontHeightInPoints(24.toShort())
-            titleFont.setFontName("Arial")
+    fun generate(report: DataForReport): ReportFileCreationDto? {
+        val parsedQuestions = service.parseIncomingData(report).questions ?: return null
+        // #WORKBOOK
+        var workbook = XSSFWorkbook()
 
-            headerFont = workbook.createFont()
-            headerFont.bold = true
-            headerFont.setFontHeightInPoints(16.toShort())
-            headerFont.setFontName("Arial")
+        // #FONTS
+        titleFont = workbook.createFont()
+        titleFont.bold = true
+        titleFont.setFontHeightInPoints(24.toShort())
+        titleFont.setFontName("Arial")
 
-            dataFont = workbook.createFont()
-            dataFont.setFontHeightInPoints(14.toShort())
-            dataFont.setFontName("Arial")
+        headerFont = workbook.createFont()
+        headerFont.bold = true
+        headerFont.setFontHeightInPoints(16.toShort())
+        headerFont.setFontName("Arial")
 
-            // #STYLES
-            titleCellStyle = workbook.createCellStyle()
-            titleCellStyle.setFont(titleFont)
-            titleCellStyle.alignment = HorizontalAlignment.CENTER;
-            titleCellStyle.verticalAlignment = VerticalAlignment.CENTER;
+        dataFont = workbook.createFont()
+        dataFont.setFontHeightInPoints(14.toShort())
+        dataFont.setFontName("Arial")
 
-            headerCellStyle = workbook.createCellStyle()
-            headerCellStyle.setFont(headerFont)
-            headerCellStyle.wrapText = true
-            headerCellStyle.verticalAlignment = VerticalAlignment.CENTER;
+        // #STYLES
+        titleCellStyle = workbook.createCellStyle()
+        titleCellStyle.setFont(titleFont)
+        titleCellStyle.alignment = HorizontalAlignment.CENTER;
+        titleCellStyle.verticalAlignment = VerticalAlignment.CENTER;
 
-            dataCellStyle = workbook.createCellStyle()
-            dataCellStyle.setFont(dataFont)
-            dataCellStyle.wrapText = true
-            dataCellStyle.verticalAlignment = VerticalAlignment.TOP;
+        headerCellStyle = workbook.createCellStyle()
+        headerCellStyle.setFont(headerFont)
+        headerCellStyle.wrapText = true
+        headerCellStyle.verticalAlignment = VerticalAlignment.CENTER;
 
-            generateMainPage(workbook, parsedQuestions, report)
+        dataCellStyle = workbook.createCellStyle()
+        dataCellStyle.setFont(dataFont)
+        dataCellStyle.wrapText = true
+        dataCellStyle.verticalAlignment = VerticalAlignment.TOP;
 
-            generateQuestionsPage(workbook, parsedQuestions, report)
+        generateMainPage(workbook, parsedQuestions, report)
 
-            generateInfoPage(workbook, report)
+        generateQuestionsPage(workbook, parsedQuestions, report)
 
-            // #WRITE_FILE
-//            val file = File("${UUID.randomUUID()}-report.xlsx")
-//            val fileOut = FileOutputStream(file)
-//            workbook.write(fileOut)
-//            fileOut.close()
-//            workbook.close()
-//            val response = client.uploadReport(file, requestId)
-//            sender.sendUploadedReportURL(response)
-//            file.delete()
+        generateInfoPage(workbook, report)
 
-            val stream = ByteArrayOutputStream()
-            workbook.write(stream)
-            workbook.close()
-            val inputStream: InputStream = ByteArrayInputStream(stream.toByteArray())
-            val response = client.uploadReport(inputStream, requestId, "${UUID.randomUUID()}-report.xlsx")
-            return response
-        }
+        // #WRITE_FILE
+//        val file = File("${UUID.randomUUID()}-report.xlsx")
+//        val fileOut = FileOutputStream(file)
+//        workbook.write(fileOut)
+//        fileOut.close()
+//        workbook.close()
+//        val response = client.uploadReport(file, report.requestId)
+//        file.delete()
+//        return response
 
-        return null
+        val stream = ByteArrayOutputStream()
+        workbook.write(stream)
+        workbook.close()
+        val inputStream: InputStream = ByteArrayInputStream(stream.toByteArray())
+        val response = client.uploadReport(inputStream, report.requestId, "${UUID.randomUUID()}-report.xlsx")
+        return response
     }
 
     fun generateMainPage(workbook: XSSFWorkbook, parsedQuestions: List<QuestionDB>, report: DataForReport) {

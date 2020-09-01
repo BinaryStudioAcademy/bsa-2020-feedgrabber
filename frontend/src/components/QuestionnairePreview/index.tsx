@@ -1,9 +1,7 @@
-import React, { FC, useState, useCallback, useEffect } from "react";
+import React, { FC } from "react";
 import { Header} from "semantic-ui-react";
-import ResponseQuestion from "components/ResponseQuestion";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
-import QuestionCard from "components/QuestionnaireOrderDraggableView/QuestionCard";
 import { ISection } from "models/forms/Sections/types";
 import UISection from "components/UI/UISectionCard";
 import SectionBlock from "components/SectionBlock";
@@ -11,7 +9,6 @@ import { updateSectionsRoutine,
    addQuestionToSectionRoutine,
     deleteQuestionFromSectionRoutine,
     updateSectionRoutine } from "sagas/sections/routines";
-import { IAppState } from "models/IAppState";
 import { connect } from "react-redux";
 import SectionQuestionList from "./QuestionnaireList";
 

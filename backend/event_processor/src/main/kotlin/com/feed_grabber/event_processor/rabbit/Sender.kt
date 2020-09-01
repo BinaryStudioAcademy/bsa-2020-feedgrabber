@@ -27,7 +27,7 @@ class Sender {
 
     fun send(text: String) {
         println(" [x] Sending...")
-        template!!.convertAndSend(exchange!!, routingKey!!, text!!)
+        template!!.convertAndSend(exchange!!, routingKey!!, text)
         println(" [x] Sent $text")
     }
 

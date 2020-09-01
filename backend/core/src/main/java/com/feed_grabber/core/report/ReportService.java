@@ -41,9 +41,9 @@ public class ReportService {
 //        sender.sendPPTReportGenerationRequest(requestId);
 //    }
 
-    public void sendFilesReportGenerationRequest(UUID requestId) {
-        sender.sendReportsGenerationRequest(requestId);
-    }
+//    public void sendFilesReportGenerationRequest(UUID requestId) {
+//        sender.sendReportsGenerationRequest(requestId);
+//    }
 
     public ReportDetailsDto getDataForReport(UUID requestId) throws NotFoundException {
         var request = requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
@@ -58,12 +58,8 @@ public class ReportService {
         var body = new ObjectMapper().writeValueAsString(getDataForReport(requestId));
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        var result = template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
 
-        sendFilesReportGenerationRequest(requestId);
-        Receiver.reportToUser.put(requestId, TokenService.getUserId());
-
-        return result;
+        return template.postForObject(EP.concat("/report"), new HttpEntity<>(body, headers), String.class);
     }
 
     public String getReport(UUID requestId) {

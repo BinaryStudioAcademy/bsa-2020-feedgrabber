@@ -7,8 +7,7 @@ import {
     loadQuestionnaireRequestsRoutine,
     loadReportRoutine,
     loadRespondentReportRoutine,
-    loadRespondentReportsRoutine,
-    setExcelAndPPTLinksRoutine
+    loadRespondentReportsRoutine
 } from "../../sagas/report/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
@@ -51,16 +50,6 @@ export default (state: IQuestionnaireReportsState = defaultValues, {type, payloa
                 ...state,
                 isLoading: false,
                 currentFullReport: payload
-            };
-        case setExcelAndPPTLinksRoutine.TRIGGER:
-            return {
-              ...state,
-              isLoading: false,
-              currentFullReport: {
-                ...state.currentFullReport,
-                excelReportLink: payload.excelReportLink,
-                pptReportLink: payload.pptReportLink
-              }
             };
         case loadReportRoutine.FAILURE:
         case loadQuestionnaireRequestsRoutine.FAILURE:

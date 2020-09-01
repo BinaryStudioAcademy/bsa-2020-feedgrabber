@@ -38,11 +38,11 @@ public class Sender {
         log.info(" [x] Sent '{}'", message);
     }
 
-    public void sendReportsGenerationRequest(UUID requestId) {
-        log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, reportsGenerationRoutinKey, requestId);
-        log.info(" [x] Sent reports generation request for request with id: '{}'", requestId);
-    }
+//    public void sendReportsGenerationRequest(UUID requestId) {
+//        log.info(" [x] Sending...");
+//        this.template.convertAndSend(exchange, reportsGenerationRoutinKey, requestId);
+//        log.info(" [x] Sent reports generation request for request with id: '{}'", requestId);
+//    }
 
 //    public void sendExcelReportGenerationRequest(UUID requestId) {
 //        log.info(" [x] Sending...");

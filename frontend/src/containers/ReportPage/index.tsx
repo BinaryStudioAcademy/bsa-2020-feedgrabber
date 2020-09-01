@@ -1,14 +1,10 @@
 import React, { FC, useEffect } from 'react';
 import { connect, ConnectedProps } from "react-redux";
 import { IAppState } from 'models/IAppState';
-import {
-  loadReportRoutine,
-  loadRespondentReportsRoutine,
-  setExcelAndPPTLinksRoutine
-} from "../../sagas/report/routines";
+import { loadReportRoutine, loadRespondentReportsRoutine } from "../../sagas/report/routines";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import { Container, Header, Label, Segment, Tab } from 'semantic-ui-react';
+import { Header, Segment, Tab, Label } from 'semantic-ui-react';
 import { QuestionType } from "../../models/forms/Questions/IQuesion";
 import {
   IQuestionReport,
@@ -28,18 +24,9 @@ import DateSelectionReport from "./DateSelectionReport";
 import { FileQuestionReport } from './FileQuestionReport';
 import { Link } from 'react-router-dom';
 import styles from './styles.module.sass';
-import { useStomp } from "../../helpers/websocket.helper";
-
-interface IFileReportDto {
-  link: string;
-  key: string;
-}
-
-interface IReportLinks {
-  requestId: string;
-  pptReport: IFileReportDto;
-  excelReport: IFileReportDto;
-}
+import UIContent from "../../components/UI/UIContent";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import UIColumn from "../../components/UI/UIColumn";
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
   {
@@ -57,16 +44,6 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     loadUsersReports(match.params.id);
   }, [loadReport, match.params.id, loadUsersReports]);
 
-  useStomp("reportUrls", m => {
-    const links: IReportLinks = JSON.parse(m.body);
-    if (links.requestId === match.params.id) {
-      setExcelAndPPTLinksRoutine({
-        excelReportLink: links.excelReport.link,
-        pptReportLink: links.pptReport.link
-      });
-    }
-  }, true);
-
   const panes = [
     {
       menuItem: 'Overall',
@@ -75,21 +52,20 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
           <LoaderWrapper loading={isLoadingReport}>
             {report.questions && (
               <>
-                <div className={styles.header}>
-                  <h3>{report.questionnaire.title}</h3>
-                  {report.excelReportLink && report.pptReportLink &&
-                    <div>
-                      <Label as='a' color='blue' image className={styles.excel} href={report.excelReportLink}>
-                        <img src='https://i.imgur.com/hUTbkcP.png' />
-                                            Excel report
-                                          </Label>
-                      <Label as='a' color='blue' image href={report.pptReportLink}>
-                        <img src='https://i.imgur.com/fs4C1Yy.png' />
-                                            PowerPoint report
-                                          </Label>
-                    </div>
-                  }
-                </div>
+                <h3>{report.questionnaire.title}</h3>
+                {
+                  report.excelLink && report.powerPointLink &&
+                  <div>
+                    <Label as='a' color='blue' image className={styles.excel} href={report.excelLink.link}>
+                      <img src='https://i.imgur.com/hUTbkcP.png' />
+                      Excel report
+                    </Label>
+                    <Label as='a' color='blue' image href={report.powerPointLink.link}>
+                      <img src='https://i.imgur.com/fs4C1Yy.png' />
+                      PowerPoint report
+                    </Label>
+                  </div>
+                }
                 {report.questions.map(q => (
                   <UICardBlock key={q.id}>
                     <h3>{q.title}</h3>
@@ -121,14 +97,16 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
   ];
 
   return (
-    <Container textAlign="center" style={{ width: "75%" }}>
-      <Header as='h1' dividing style={{ padding: 20 }}>
-        <Header.Content>
-          View Report Info
-                </Header.Content>
-      </Header>
-      <Tab panes={panes} />
-    </Container>
+    <>
+      <UIPageTitle title="View Report Info" />
+      <br />
+      <br />
+      <UIContent>
+        <UIColumn wide>
+          <Tab panes={panes} />
+        </UIColumn>
+      </UIContent>
+    </>
   );
 };
 
@@ -142,8 +120,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 
 const mapDispatchToProps = {
   loadReport: loadReportRoutine,
-  loadUsersReports: loadRespondentReportsRoutine,
-  setLinks: setExcelAndPPTLinksRoutine
+  loadUsersReports: loadRespondentReportsRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

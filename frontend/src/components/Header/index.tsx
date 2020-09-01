@@ -1,20 +1,33 @@
 import React, {FC} from "react";
-import {Header as HeUI, Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
+import {Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
-import icon from "../../assets/images/icon_bg.jpg";
+import icon from "../../assets/images/icon_scaled.png";
 import {logoutRoutine} from "../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
+import AccessManager from "../AccessManager";
+import {Permissions} from "../AccessManager/rbac-rules";
+import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
 
 const StyledItem = styled(Menu.Item)`
     font-size: 1.15em !important;
-    font-weight: bold !important;
-    color: #717171 !important;
+    font-family: Raleway;
+    font-style: normal;
+    display: flex !important;
+    align-items: center !important;
+    font-weight: normal !important;
+    color: white !important;
+`;
+
+const StyledMenu = styled(Menu)`
+    background-color: #535E87 !important;
+    color: white !important;
+    border-radius: 7px !important;
 `;
 
 const defaultAvatar =
@@ -30,17 +43,15 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                         <img onClick={toggleMenu} alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
                         <h1 className={styles.headerServiceName} onClick={() => history.push('/')}>FeedGrabber</h1>
                     </div>
-                    <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive}
-                             className={styles.headerMenuItem}>
-                        PENDING FEEDBACKS
-                    </NavLink>
-                    <NavLink exact to="/editor"
-                             className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-                        FORM EDITOR
-                    </NavLink>
-                    <a className={styles.headerMenuItem}>
-                        ASSIGN FEEDBACKS
-                    </a>
+                    <div className={styles.navLinks}>
+                        <NavLink exact to="/editor"
+                                 className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
+                            Form Editor
+                        </NavLink>
+                        <a href="/#" className={styles.headerMenuItem}>
+                            Create Request
+                        </a>
+                    </div>
                 </div>
                 <div className={styles.headerPart}>
                     <Input placeholder='Search...' size="small" transparent inverted
@@ -48,18 +59,26 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                     <div className={styles.headerBellWrapper}>
                         <NotificationMenu/>
                     </div>
-                    <Popup pinned on='click' position="bottom right" style={{padding: 0}}
+                    <Popup on='click' style={{padding: 0, background: '#535E87', border: 'none'}} basic
                            trigger={<Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>}
                     >
-                        <Menu vertical>
-                            <Menu.Item disabled>
-                                <HeUI as='h4'><Icon name="user"/>{user.userName}</HeUI>
-                            </Menu.Item>
-                            <StyledItem name="Profile" onClick={() => history.push('/profile')}/>
-                            <StyledItem name="Settings" onClick={() => history.push('/profile/settings')}/>
-                            <StyledItem name="Requests" onClick={() => history.push('/requests')}/>
-                            <StyledItem name="Log out" onClick={logout}/>
-                        </Menu>
+                        <StyledMenu vertical>
+                            <StyledItem onClick={() => history.push('/profile')}>
+                                <RiUserReceived2Line size="1.3em" color="white"/>&nbsp;&nbsp;
+                                <strong>{user.userName}</strong>
+                            </StyledItem>
+                            <StyledItem onClick={() => history.push('/profile/settings')}>
+                                <RiSettings5Line size="1.3em" color="white"/>&nbsp;&nbsp; Settings
+                            </StyledItem>
+                            <AccessManager staticPermission={Permissions.generateInviteLinks}>
+                                <StyledItem onClick={() => history.push('/invitations')}>
+                                    <RiMailSendLine size="1.3em" color="white"/>&nbsp;&nbsp; Invitations
+                                </StyledItem>
+                            </AccessManager>
+                            <StyledItem onClick={logout}>
+                                <RiLogoutBoxRLine size="1.3em" color="white"/>&nbsp;&nbsp; Logout
+                            </StyledItem>
+                        </StyledMenu>
                     </Popup>
                 </div>
             </div>

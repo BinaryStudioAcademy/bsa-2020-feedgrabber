@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { IQuestion } from 'models/forms/Questions/IQuesion';
-import { ISection } from 'models/forms/Sections/types';
 import QuestionCard from 'components/QuestionnaireOrderDraggableView/QuestionCard';
 import { Header } from 'semantic-ui-react';
 import styles from "./styles.module.sass";
@@ -34,7 +33,9 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
     const [questionCards, setQuestionCards] = useState<IQuestion[]>([]);
   
     const indexQuestionsHandler = () => {
-      const rst = questions.map((card, i) => { return { questionId: card.id, index: i }; });
+      const rst = questionCards
+        .filter(card => card)
+        .map((card, i) => { return { questionId: card.id, index: i }; });
       indexQuestions({sectionId: sectionId,  questions: rst});
     };
   
@@ -58,6 +59,9 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
     };
     
     const renderCard = (q: IQuestion, index: number, sectionId: string) => {
+        if (!q) {
+          return null;
+        }
         return (
           <QuestionCard
             question={q}
@@ -74,7 +78,7 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
 
     return (
         <div className={styles.wrapper}>
-          {questions.length ?
+        {questionCards.length ?
             <div>
               {questionCards.map((q, i) => renderCard(q, i, sectionId))}
             </div>
