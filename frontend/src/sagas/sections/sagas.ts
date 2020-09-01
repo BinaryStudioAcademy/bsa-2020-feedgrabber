@@ -66,7 +66,9 @@ function* addQuestionToSection(action) {
 function* deleteQuestionFromSection(action) {
     try {
         const {sectionId, questionId, questionnaireId} = action.payload;
-        const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
+        const result = yield call(
+          apiClient.delete,
+          `/api/section/question/${questionId}?sectionId=${sectionId}&questionnaireId=${questionnaireId}`);
         yield put(deleteQuestionFromSectionRoutine.success(result.data.data));
 
         yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));

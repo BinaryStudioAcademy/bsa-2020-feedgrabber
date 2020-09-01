@@ -22,6 +22,7 @@ public interface SectionMapper {
     @Mapping(target = "title", source = "dto.title")
     @Mapping(target = "order", source = "dto.index")
     @Mapping(target = "questions", ignore = true)
+    @Mapping(target = "description", ignore = true)
     Section createDtoToModel(SectionCreateDto dto, Questionnaire questionnaire);
 
     SectionDto modelToDto(Section section);

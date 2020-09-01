@@ -11,7 +11,6 @@ import {
   deleteQuestionFromSectionRoutine
 } from 'sagas/sections/routines';
 import {
-    deleteFromQuestionnaireRoutine,
     indexQuestionsRoutine,
     loadQuestionByIdRoutine,
     saveQuestionRoutine

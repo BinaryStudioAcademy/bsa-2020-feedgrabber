@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { IQuestion, QuestionType } from "../../models/forms/Questions/IQuesion";
+import { IQuestion } from "../../models/forms/Questions/IQuesion";
 import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
 import { loadCategoriesRoutine } from "sagas/categories/routines";

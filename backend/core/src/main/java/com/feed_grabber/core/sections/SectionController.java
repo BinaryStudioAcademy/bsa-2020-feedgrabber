@@ -61,9 +61,12 @@ public class SectionController {
     @DeleteMapping("/question/{questionId}")
     @ApiOperation(value = "Delete question from section", notes = "Provide both id: section and question")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<SectionQuestionsDto> deleteQuestion(@PathVariable UUID questionId, @RequestParam UUID sectionId)
-            throws SectionNotFoundException, QuestionNotFoundException {
-        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId));
+    public AppResponse<SectionQuestionsDto> deleteQuestion(
+            @PathVariable UUID questionId,
+            @RequestParam UUID sectionId,
+            @RequestParam UUID questionnaireId)
+            throws SectionNotFoundException, QuestionNotFoundException, QuestionnaireNotFoundException {
+        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId, questionnaireId));
     }
 
 }

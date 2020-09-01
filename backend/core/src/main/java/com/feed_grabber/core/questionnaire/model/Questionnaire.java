@@ -40,7 +40,7 @@ public class Questionnaire {
             name = "question_questionnaire",
             joinColumns = @JoinColumn(name = "questionnaire_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id"))
-    private List<Question> questions = new ArrayList<>();
+    private List<Question> questions;
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
