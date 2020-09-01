@@ -22,10 +22,6 @@ class AmazonS3ClientService(private val s3Client: S3Client) {
     @Value("\${amazon.endpointUrl}")
     private lateinit var ENDPOINT: String
 
-//    fun uploadReport(file: File, requestId: UUID): ReportFileCreationDto {
-//        return putObject(file, requestId, "reports/")
-//    }
-
     fun uploadReport(file: InputStream, requestId: UUID, name: String): ReportFileCreationDto {
         return putObject(file, requestId, "reports/", name)
     }

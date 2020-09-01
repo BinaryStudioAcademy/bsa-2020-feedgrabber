@@ -170,16 +170,6 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
 
         generateInfoPage(workbook, report)
 
-        // #WRITE_FILE
-//        val file = File("${UUID.randomUUID()}-report.xlsx")
-//        val fileOut = FileOutputStream(file)
-//        workbook.write(fileOut)
-//        fileOut.close()
-//        workbook.close()
-//        val response = client.uploadReport(file, report.requestId)
-//        file.delete()
-//        return response
-
         val stream = ByteArrayOutputStream()
         workbook.write(stream)
         workbook.close()

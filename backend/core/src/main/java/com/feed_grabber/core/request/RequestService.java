@@ -151,26 +151,6 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
-    public void sendReportsUrls(UUID userId, FileReportsDto dto ) {
-        notificationService.sendMessageToConcreteUser(
-                userId.toString(),
-                "reportUrls",
-                dto);
-    }
-//    public void addExcelReport(S3FileCreationDto dto) throws NotFoundException {
-//        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
-//        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
-//        request.setExcelReport(report);
-//        requestRepository.save(request);
-//    }
-//
-//    public void addPPTReport(S3FileCreationDto dto) throws NotFoundException {
-//        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
-//        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
-//        request.setPowerPointReport(report);
-//        requestRepository.save(request);
-//    }
-
     public void addFileReports(FileReportsDto dto) throws NotFoundException {
         if(dto.getExcelReport() != null && dto.getPptReport() != null) {
             var excelReport = fileRepository.save(
@@ -190,7 +170,6 @@ public class RequestService {
             request.setExcelReport(excelReport);
             requestRepository.save(request);
         }
-
 
     }
 

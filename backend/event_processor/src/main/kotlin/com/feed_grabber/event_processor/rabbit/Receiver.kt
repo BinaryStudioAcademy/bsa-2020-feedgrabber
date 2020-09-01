@@ -15,14 +15,4 @@ class Receiver(@Autowired val emailSender: EmailSender) {
         emailSender.sendMail(mailEntity)
     }
 
-//    @RabbitListener(queues = ["\${rabbitmq.queue.report}"])
-//    fun receiveExcelGenerationRequest(requestId: UUID) {
-//        reportService.generateExcelAndPPTReports(requestId)
-//    }
-
-//    @RabbitListener(queues = ["\${rabbitmq.queue.report.ppt}"])
-//    fun receivePPTGenerationRequest(requestId: UUID) {
-//        pptReportGenerator.create(requestId)
-//    }
-
 }

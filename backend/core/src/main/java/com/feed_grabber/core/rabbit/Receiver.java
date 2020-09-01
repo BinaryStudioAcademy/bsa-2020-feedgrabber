@@ -25,18 +25,4 @@ public class Receiver {
             log.info(" [x] Received '{}'", postEntity);
         }
     }
-
-//    @RabbitListener(queues = "${rabbitmq.queue.report}")
-//    public void receive(FileReportsDto dto) throws NotFoundException {
-//        requestService.addFileReports(dto);
-//        var userId = reportToUser.get(dto.getRequestId());
-//        if (userId != null) {
-//            requestService.sendReportsUrls(userId, dto);
-//        }
-//    }
-
-//    @RabbitListener(queues = "${rabbitmq.queue.report.ppt}")
-//    public void receivePPTReport(S3FileCreationDto dto) throws NotFoundException {
-//        requestService.addPPTReport(dto);
-//    }
 }

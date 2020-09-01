@@ -75,15 +75,6 @@ class PowerPointReport(
 
         }
 
-//        val file = File("${UUID.randomUUID()}-ppt-report.pptx")
-//        val fileOut = FileOutputStream(file)
-//        ppt.write(fileOut)
-//        fileOut.close()
-//        ppt.close()
-//        val response = client.uploadReport(file, requestId)
-//        sender.sendPPTReportURL(response)
-//        file.delete()
-
         val stream = ByteArrayOutputStream()
         ppt.write(stream)
         ppt.close()

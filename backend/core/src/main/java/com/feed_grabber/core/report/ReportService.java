@@ -33,18 +33,6 @@ public class ReportService {
         this.sender = sender;
     }
 
-//    public void sendExcelReportGenerationRequest(UUID requestId) {
-//        sender.sendExcelReportGenerationRequest(requestId);
-//    }
-//
-//    public void sendPPTReportGenerationRequest(UUID requestId) {
-//        sender.sendPPTReportGenerationRequest(requestId);
-//    }
-
-//    public void sendFilesReportGenerationRequest(UUID requestId) {
-//        sender.sendReportsGenerationRequest(requestId);
-//    }
-
     public ReportDetailsDto getDataForReport(UUID requestId) throws NotFoundException {
         var request = requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
         return ReportMapper.MAPPER.requestToReportDetails(request);
