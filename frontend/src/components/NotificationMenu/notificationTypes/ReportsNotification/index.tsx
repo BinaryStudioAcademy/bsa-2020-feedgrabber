@@ -3,6 +3,7 @@ import {INotificationProps} from "../../index";
 import styles from "./styles.module.sass";
 import moment from "moment";
 import {Icon} from "semantic-ui-react";
+import {useHistory} from "react-router-dom";
 
 const ReportsNotification: React.FC<INotificationProps> = ({
                                                                     notification,
@@ -11,13 +12,17 @@ const ReportsNotification: React.FC<INotificationProps> = ({
                                                                     setShown
                                                                 }) => {
     const payloadItems = notification.payload.split(',');
-    const requestId = payloadItems[0];
     const excelLink = payloadItems[1];
     const pptLink = payloadItems[2];
+    const history = useHistory();
     return (
         <div key={notification.id}
              className={styles.notification}>
-            <div className={styles.text}>New reports were generated</div>
+            <div className={styles.text} onClick={() => {
+                history.push(`/report/${notification.requestId}`);
+                readNotification(notification.id);
+                setShown(false);
+            }}>New reports were generated</div>
             <div className={styles.excel}>Excel report</div>
             <div className={styles.ppt}>PowerPoint report</div>
             <div className={styles.date}>{moment(notification.date).fromNow()}</div>
