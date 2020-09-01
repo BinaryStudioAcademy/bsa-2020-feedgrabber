@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.scss';
 import UICardBlock from 'components/UI/UICardBlock';
-import { INewsItem } from 'models/news';
+import { INewsItem} from 'models/news';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
 import { loadNewsListRoutine, setNewsPaginationRoutine } from 'sagas/news/routines';
@@ -19,17 +19,17 @@ const getNewsItem = (item: INewsItem) => {
     return (
         <UICardBlock key={item.id}
         className={styles.newsItemContainer}>
-            <img src={item.image} alt=''
-            height="240" width="180"/> {/* scale 4:3 * 60*/}
+            {item.image? <img src={item.image} alt=''
+            height="240" width="180"/> : <div/>} {/* scale 4:3 * 60*/}
             <div className={styles.detailesContainer}>
                 <div className={styles.type}>{item.type}</div>
                 <div className={styles.title}>{item.title}</div>
                 <div className={styles.body}>{item.body}</div>
-                <div className={styles.authorContainer}>
-                    <img src={item.author.avatar} alt='avatar'
-                    height="50" width="50"/>
+                <div className={item.image ? styles.authorContainer : styles.authorContainerRight}>
+                {item.user.avatar ? <img src={item.user.avatar} alt='avatar'
+                    height="50" width="50"/> : null}
                     <div className={styles.detailesContainer}>
-                        <div className={styles.userName}>{item.author.username}</div>
+                        <div className={styles.userName}>{item.user.username}</div>
                         <div className={styles.date}>{item.date}</div>
                     </div>
                 </div>
@@ -39,6 +39,7 @@ const getNewsItem = (item: INewsItem) => {
 };
 
 const NewsList: React.FC<INewsFeedProps> = ({pagination, isLoading, loadNews, setPagination}) => {
+
     return (
         <div className={styles.newsFeedContainer}>
             <div className={styles.newsListMain}>

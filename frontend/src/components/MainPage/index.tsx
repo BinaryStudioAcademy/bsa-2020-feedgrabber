@@ -163,17 +163,17 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company News Feed</h3>
+                                <h3>My Requests</h3>
                             </UICardBlock>
-                            <NewsList/>
+                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
                         </UICard>
                     </UIColumn>
                     <UIColumn wide>
                         <UICard>
                             <UICardBlock>
-                                <h3>My Requests</h3>
+                                <h3>Company News Feed</h3>
                             </UICardBlock>
-                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
+                            <NewsList/>
                         </UICard>
                     </UIColumn>
                 </UIContent>
