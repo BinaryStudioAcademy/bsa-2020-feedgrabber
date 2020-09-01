@@ -15,6 +15,7 @@ import companyReducer from "./companies/reducer";
 import notificationReducer from "./notifications";
 import responseReducer from "./questionnaireResponse/reducer";
 import sectionsReducer from './section/reducer';
+import newsReducer from './news/reducer';
 
 export default combineReducers({
   toastr,
@@ -32,5 +33,6 @@ export default combineReducers({
   app:appReducer,
   company: companyReducer,
   notifications: notificationReducer,
-  role: roleReducer
+  role: roleReducer,
+  news: newsReducer
 });

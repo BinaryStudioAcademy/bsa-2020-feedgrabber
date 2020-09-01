@@ -170,7 +170,7 @@ const MainPage: FC<IMainPageProps> =
                             <UICardBlock>
                                 <h3>Company NewsFeed</h3>
                             </UICardBlock>
-                            <NewsList newsList={newsList}/>
+                            <NewsList/>
                         </UICard>
                     </UIColumn>
                 </UIContent>

@@ -1,4 +1,5 @@
 import { IUserShort } from "models/user/types";
+import { IPaginationInfo } from "models/IPaginationInfo";
 
 export interface INewsItem {
     id: string;
@@ -8,4 +9,13 @@ export interface INewsItem {
     body: string;
     author: IUserShort;
     date: string;
+}
+
+export interface INewsListState {
+    pagination?: IPaginationInfo<INewsItem>;
+    isLoading: boolean;
+}
+
+export interface INewsFeedState {
+    list: INewsListState;
 }

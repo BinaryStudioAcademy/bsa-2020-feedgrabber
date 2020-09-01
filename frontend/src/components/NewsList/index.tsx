@@ -2,35 +2,24 @@ import React from 'react';
 import styles from './styles.module.scss';
 import UICardBlock from 'components/UI/UICardBlock';
 import { INewsItem } from 'models/news';
+import { connect, ConnectedProps } from 'react-redux';
+import { IAppState } from 'models/IAppState';
+import { loadNewsListRoutine, setNewsPaginationRoutine } from 'sagas/news/routines';
+import GenericPagination from 'components/GenericPagination';
+import { IPaginationInfo } from 'models/IPaginationInfo';
 
 interface INewsFeedProps {
-    newsList: INewsItem[];
+    pagination?: IPaginationInfo<INewsItem>;
+    isLoading?: boolean;
+    loadNews?(): void;
+    setPagination?(pagination: IPaginationInfo<INewsItem>): void;
 }
-
-// mock
-const defaultProps: INewsFeedProps = {
-    newsList: [
-        {id: "1",
-        title: "Announcing a free plan for small teams",
-        image:
-    "https://images.unsplash.com/photo-1554469384-e58fac16e23a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-        type: "Announcements",
-        body: "At wake, our mission has always been focused on bringing openness.",
-        author: {
-            id: "1",
-            username: "Hanna Wolfe",
-            avatar: "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/02-512.png"
-        },
-        date: "Feb 4, 2020"
-    }
-    ]
-};
 
 const getNewsItem = (item: INewsItem) => {
     return (
         <UICardBlock key={item.id}
         className={styles.newsItemContainer}>
-            <img src={item.image} alt='image'
+            <img src={item.image} alt=''
             height="240" width="180"/> {/* scale 4:3 * 60*/}
             <div className={styles.detailesContainer}>
                 <div className={styles.type}>{item.type}</div>
@@ -49,16 +38,34 @@ const getNewsItem = (item: INewsItem) => {
     );
 };
 
-const NewsList: React.FC<INewsFeedProps> = ({newsList}) => {
+const NewsList: React.FC<INewsFeedProps> = ({pagination, isLoading, loadNews, setPagination}) => {
     return (
         <div className={styles.newsFeedContainer}>
             <div className={styles.newsListMain}>
-                {newsList.map(item => getNewsItem(item))}
+                <GenericPagination
+                isLoading={isLoading}
+                loadItems={loadNews}
+                pagination={pagination}
+                setPagination={setPagination}
+                mapItemToJSX={getNewsItem}
+                ></GenericPagination>
             </div>
         </div>
     );
 };
 
-NewsList.defaultProps = defaultProps;
+const mapStateToProps = (state: IAppState) => ({
+    pagination: state.news.list.pagination,
+    isLoading: state.news.list.isLoading
+});
+
+const mapDispatchToProps = {
+    loadNews: loadNewsListRoutine,
+    setPagination: setNewsPaginationRoutine
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type Props = ConnectedProps<typeof connector>;
 
 export default NewsList;

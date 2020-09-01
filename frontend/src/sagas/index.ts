@@ -15,6 +15,7 @@ import notificationsSagas from "./notifications/sagas";
 import sectionSagas from './sections/sagas';
 import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
+import newsSagas from './news/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -33,6 +34,7 @@ export default function* rootSaga() {
     notificationsSagas(),
     responseSagas(),
     roleSagas(),
-    sectionSagas()
+    sectionSagas(),
+    newsSagas()
   ]);
 }
