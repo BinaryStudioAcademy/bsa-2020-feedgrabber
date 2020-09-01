@@ -1,8 +1,16 @@
 import {QuestionType} from "../forms/Questions/IQuesion";
 
 export interface IQuestionnaireReport {
-  questionnaire: IQuestionnaireDto;
-  questions: IQuestionReport[];
+    questionnaire: IQuestionnaireDto;
+    questions: IQuestionReport[];
+    powerPointLink: MsLink;
+    excelLink: MsLink;
+}
+
+type MsLink = {
+    requestId: string;
+    link: string;
+    key: string;
 }
 
 type IQuestionnaireDto = {
@@ -39,16 +47,16 @@ export interface IRequestShort {
 }
 
 export interface IQuestionReport {
-  id: string;
-  title: string;
-  type: QuestionType;
-  answers: number;
-  data:  // serialized from JSON
-  IQuestionReportRadioData |
-  IQuestionReportFreeTextData |
-  IQuestionReportMultichoiceData |
-  IQuestionReportScaleData |
-  IQuestionReportFileData;
+    id: string;
+    title: string;
+    type: QuestionType;
+    answers: number;
+    data:  // serialized from JSON
+        IQuestionReportRadioData |
+        IQuestionReportFreeTextData |
+        IQuestionReportMultichoiceData |
+        IQuestionReportScaleData |
+        IQuestionReportFileData;
 }
 
 export interface IReportShort {
@@ -59,37 +67,37 @@ export interface IReportShort {
 }
 
 export interface IQuestionReportMultichoiceData {
-  options: { title: string; amount: number }[];
+    options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportRadioData {
-  options: { title: string; amount: number }[];
+    options: { title: string; amount: number }[];
 }
 
 export interface IRespondentReportPreview {
-  id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  answeredAt: string;
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    answeredAt: string;
 }
 
 export interface IQuestionReportScaleData {
-  options: { title: string; amount: number }[];
+    options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportFreeTextData {
-  values: string[];
+    values: string[];
 }
 
 export interface IQuestionReportCheckboxData {
-  options: { title: string; amount: number }[];
+    options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportDateData {
-  options: { title: string; amount: number }[];
+    options: { title: string; amount: number }[];
 }
 
 export interface IQuestionReportFileData {
-  options: { type: string; amount: number; sizes: number[] }[];
+    options: { type: string; amount: number; sizes: number[] }[];
 }
