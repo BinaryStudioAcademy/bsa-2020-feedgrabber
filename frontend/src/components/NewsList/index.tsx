@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './styles.module.scss';
 import UICardBlock from 'components/UI/UICardBlock';
 import { INewsItem } from 'models/news';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
 import { loadNewsListRoutine, setNewsPaginationRoutine } from 'sagas/news/routines';
 import GenericPagination from 'components/GenericPagination';
@@ -64,8 +64,4 @@ const mapDispatchToProps = {
     setPagination: setNewsPaginationRoutine
 };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type Props = ConnectedProps<typeof connector>;
-
-export default NewsList;
+export default connect(mapStateToProps, mapDispatchToProps)(NewsList);
