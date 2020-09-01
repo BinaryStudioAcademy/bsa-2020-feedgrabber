@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {Header as HeUI, Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
+import {Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
@@ -12,13 +12,7 @@ import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
 import AccessManager from "../AccessManager";
 import {Permissions} from "../AccessManager/rbac-rules";
-import {
-    RiArrowRightLine,
-    RiLogoutBoxRLine,
-    RiMailSendLine,
-    RiSettings5Line,
-    RiUser3Line
-} from "react-icons/ri";
+import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
 
 const StyledItem = styled(Menu.Item)`
     font-size: 1.15em !important;
@@ -72,7 +66,8 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                     >
                         <StyledMenu vertical>
                             <StyledItem onClick={() => history.push('/profile')}>
-                                <RiUser3Line size="1.3em" color="white"/> &nbsp;&nbsp;Profile
+                                <RiUserReceived2Line size="1.3em" color="white"/>&nbsp;&nbsp;
+                                <strong>{user.userName}</strong>
                             </StyledItem>
                             <StyledItem onClick={() => history.push('/profile/settings')}>
                                 <RiSettings5Line size="1.3em" color="white"/>&nbsp;&nbsp; Settings
@@ -84,10 +79,6 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                             </AccessManager>
                             <StyledItem onClick={logout}>
                                 <RiLogoutBoxRLine size="1.3em" color="white"/>&nbsp;&nbsp; Logout
-                            </StyledItem>
-                            <StyledItem>
-                                <RiArrowRightLine size="1.3em" color="white"/>&nbsp;&nbsp;
-                                <strong>{user.userName}</strong>
                             </StyledItem>
                         </StyledMenu>
                     </Popup>
