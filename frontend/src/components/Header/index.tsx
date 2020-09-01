@@ -43,17 +43,15 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                         <img onClick={toggleMenu} alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
                         <h1 className={styles.headerServiceName} onClick={() => history.push('/')}>FeedGrabber</h1>
                     </div>
-                    <NavLink exact to="/pending" activeClassName={styles.headerMenuItemActive}
-                             className={styles.headerMenuItem}>
-                        PENDING FEEDBACKS
-                    </NavLink>
-                    <NavLink exact to="/editor"
-                             className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-                        FORM EDITOR
-                    </NavLink>
-                    <a href="/#" className={styles.headerMenuItem}>
-                        ASSIGN FEEDBACKS
-                    </a>
+                    <div className={styles.navLinks}>
+                        <NavLink exact to="/editor"
+                                 className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
+                            Form Editor
+                        </NavLink>
+                        <a href="/#" className={styles.headerMenuItem}>
+                            Create Request
+                        </a>
+                    </div>
                 </div>
                 <div className={styles.headerPart}>
                     <Input placeholder='Search...' size="small" transparent inverted

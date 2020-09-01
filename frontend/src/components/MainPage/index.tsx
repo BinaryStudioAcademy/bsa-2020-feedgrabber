@@ -59,7 +59,7 @@ const MainPage: FC<IMainPageProps> =
                 {
                     menuItem: {key: 'opened', icon: 'eye', content: 'Pending'},
                     render: () => <Tab.Pane loading={isLoading}
-                        style={{border: 'none', paddingTop: 0}}>
+                                            style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => (!r.closeDate &&
                                 !r.answeredAt &&
@@ -80,6 +80,7 @@ const MainPage: FC<IMainPageProps> =
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() || !expirationDate)
                                             ? <UIButton title="Answer"
+                                                        primary
                                                         onClick={() =>
                                                             handleAnswerClick(requestId)}/>
                                             : <p>Expired {new Date(new Date().valueOf()
@@ -115,6 +116,7 @@ const MainPage: FC<IMainPageProps> =
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() && !closeDate)
                                             ? <UIButton
+                                                primary
                                                 title={changeable ? "Change my answer" : "Show answers"}
                                                 onClick={() =>
                                                     handleModifyAnswerClick(
@@ -142,14 +144,18 @@ const MainPage: FC<IMainPageProps> =
                             <UICardBlock>
                                 <h3>My Reports</h3>
                             </UICardBlock>
-                            {reportsList.map(item => (
-                                <UICardBlock key={item.id}>
-                                    {item.header && <h4>{item.header}</h4>}
-                                    {item.content && <p>{item.content}</p>}
-                                    {item.author && <p><b>{item.author}</b></p>}
-                                    <UIButton title="Details"/>
-                                </UICardBlock>
-                            ))}
+                            {reportsList.length === 0 ?
+                                <UICardBlock>
+                                    Your Report list is empty. Stay tuned for more
+                                </UICardBlock> :
+                                reportsList.map(item => (
+                                    <UICardBlock key={item.id}>
+                                        {item.header && <h4>{item.header}</h4>}
+                                        {item.content && <p>{item.content}</p>}
+                                        {item.author && <p><b>{item.author}</b></p>}
+                                        <UIButton title="Details"/>
+                                    </UICardBlock>
+                                ))}
                         </UICard>
                     </UIColumn>
                     <UIColumn>
@@ -157,7 +163,11 @@ const MainPage: FC<IMainPageProps> =
                             <UICardBlock>
                                 <h3>Company News Feed</h3>
                             </UICardBlock>
-                            {newsList.map(item => (
+                            {newsList.length === 0 ?
+                                <UICardBlock>
+                                    No news for now, we'll notify you
+                                </UICardBlock> :
+                            newsList.map(item => (
                                 <UICardBlock key={item.id}>
                                     {item.header && <h4>{item.header}</h4>}
                                     {item.content && <p>{item.content}</p>}
@@ -171,7 +181,7 @@ const MainPage: FC<IMainPageProps> =
                             <UICardBlock>
                                 <h3>My Requests</h3>
                             </UICardBlock>
-                            <Tab  menu={{ secondary: true, pointing: true }} panes={panes}/>
+                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
                         </UICard>
                     </UIColumn>
                 </UIContent>

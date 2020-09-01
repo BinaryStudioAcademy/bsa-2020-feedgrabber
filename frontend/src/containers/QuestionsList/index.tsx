@@ -28,7 +28,7 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
-                        <UIButton center title="Add new" onClick={() => handleClick("new")}/>
+                        <UIButton center primary title="Add new" onClick={() => handleClick("new")}/>
                         <br />
                         {(questions.map((question, index) => {
                             return (
