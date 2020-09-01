@@ -10,14 +10,28 @@ import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
+import AccessManager from "../AccessManager";
+import {Permissions} from "../AccessManager/rbac-rules";
+import {
+    RiArrowRightLine,
+    RiLogoutBoxRLine,
+    RiMailSendLine,
+    RiSettings5Line,
+    RiUser3Line
+} from "react-icons/ri";
 
 const StyledItem = styled(Menu.Item)`
     font-size: 1.15em !important;
+    font-family: Raleway;
+    font-style: normal;
+    display: flex !important;
+    align-items: center !important;
+    font-weight: normal !important;
     color: white !important;
 `;
 
 const StyledMenu = styled(Menu)`
-    background: #535E87 !important;
+    background-color: #535E87 !important;
     color: white !important;
     border-radius: 7px !important;
 `;
@@ -57,13 +71,24 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                            trigger={<Image avatar src={user?.avatar ?? defaultAvatar} className={styles.headerAvatar}/>}
                     >
                         <StyledMenu vertical>
-                            <Menu.Item disabled>
-                                <HeUI style={{color: 'white'}} as='h4'><Icon name="user"/>{user.userName}</HeUI>
-                            </Menu.Item>
-                            <StyledItem name="Profile" onClick={() => history.push('/profile')}/>
-                            <StyledItem name="Settings" onClick={() => history.push('/profile/settings')}/>
-                            <StyledItem name="Requests" onClick={() => history.push('/requests')}/>
-                            <StyledItem name="Log out" onClick={logout}/>
+                            <StyledItem onClick={() => history.push('/profile')}>
+                                <RiUser3Line size="1.3em" color="white"/> &nbsp;&nbsp;Profile
+                            </StyledItem>
+                            <StyledItem onClick={() => history.push('/profile/settings')}>
+                                <RiSettings5Line size="1.3em" color="white"/>&nbsp;&nbsp; Settings
+                            </StyledItem>
+                            <AccessManager staticPermission={Permissions.generateInviteLinks}>
+                                <StyledItem onClick={() => history.push('/invitations')}>
+                                    <RiMailSendLine size="1.3em" color="white"/>&nbsp;&nbsp; Invitations
+                                </StyledItem>
+                            </AccessManager>
+                            <StyledItem onClick={logout}>
+                                <RiLogoutBoxRLine size="1.3em" color="white"/>&nbsp;&nbsp; Logout
+                            </StyledItem>
+                            <StyledItem>
+                                <RiArrowRightLine size="1.3em" color="white"/>&nbsp;&nbsp;
+                                <strong>{user.userName}</strong>
+                            </StyledItem>
                         </StyledMenu>
                     </Popup>
                 </div>

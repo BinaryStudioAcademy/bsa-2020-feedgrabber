@@ -43,7 +43,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
      }) => {
       useEffect(() => {
           !user && getUser();
-      }, [getUser]);
+      }, [getUser, user]);
       const [src, setSource] = useState<string | ArrayBuffer>(undefined);
       const [fileName, setFileName] = useState('avatar');
 

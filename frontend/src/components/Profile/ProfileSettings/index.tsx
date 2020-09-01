@@ -29,7 +29,7 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
 ) => {
   useEffect(() => {
    !settings && getSettings();
-  }, [getSettings]);
+  }, [getSettings, settings]);
 
   return (
       <>{

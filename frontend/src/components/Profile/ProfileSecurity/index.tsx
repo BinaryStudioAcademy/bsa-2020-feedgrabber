@@ -44,7 +44,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
      }) => {
         useEffect(() => {
             !user && getUser();
-        }, [getUser]);
+        }, [getUser, user]);
 
       const initialUsername = {
         username: user?.userName
