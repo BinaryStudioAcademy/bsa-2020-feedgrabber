@@ -36,6 +36,9 @@ public class SearchRepository {
                         .forEntity(User.class)
                         .get()
                         .keyword()
+                        .fuzzy()
+                        .withEditDistanceUpTo(2)
+                        .withPrefixLength(0)
                         .onFields("email"
                                 , "username"
                                 , "userProfile.firstName"
@@ -52,6 +55,9 @@ public class SearchRepository {
                         .forEntity(Question.class)
                         .get()
                         .keyword()
+                        .fuzzy()
+                        .withEditDistanceUpTo(2)
+                        .withPrefixLength(0)
                         .onFields("text"
                                 , "payload"
                                 , "category.title")
@@ -66,6 +72,9 @@ public class SearchRepository {
                         .forEntity(Questionnaire.class)
                         .get()
                         .keyword()
+                        .fuzzy()
+                        .withEditDistanceUpTo(2)
+                        .withPrefixLength(0)
                         .onFields("title"
                                 , "company.name")
                         .matching(query)
@@ -79,6 +88,9 @@ public class SearchRepository {
                         .forEntity(Request.class)
                         .get()
                         .keyword()
+                        .fuzzy()
+                        .withEditDistanceUpTo(2)
+                        .withPrefixLength(0)
                         .onFields("questionnaire.title")
                         .matching(query)
                         .createQuery()
@@ -91,6 +103,9 @@ public class SearchRepository {
                         .forEntity(Team.class)
                         .get()
                         .keyword()
+                        .fuzzy()
+                        .withEditDistanceUpTo(2)
+                        .withPrefixLength(0)
                         .onFields("name"
                                 , "company.name")
                         .matching(query)

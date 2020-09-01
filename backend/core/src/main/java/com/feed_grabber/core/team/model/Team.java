@@ -33,7 +33,7 @@ public class Team {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "name")
     private String name;
 

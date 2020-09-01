@@ -28,15 +28,15 @@ public class UserProfile {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "first_name")
     private String firstName;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "last_name")
     private String lastName;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "phone_number")
     private String phoneNumber;
 

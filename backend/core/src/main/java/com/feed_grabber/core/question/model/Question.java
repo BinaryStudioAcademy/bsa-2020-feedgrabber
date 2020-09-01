@@ -35,14 +35,14 @@ public class Question {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "text", nullable = false, unique = true)
     private String text;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column
     private String payload;
 

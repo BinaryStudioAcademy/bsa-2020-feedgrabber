@@ -32,7 +32,7 @@ public class QuestionCategory {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 

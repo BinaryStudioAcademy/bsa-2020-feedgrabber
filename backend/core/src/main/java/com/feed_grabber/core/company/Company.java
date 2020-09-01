@@ -30,7 +30,7 @@ public class Company {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column
     private String name;
 

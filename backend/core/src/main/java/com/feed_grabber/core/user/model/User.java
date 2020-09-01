@@ -33,11 +33,11 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "email")
     private String email;
 
-    @Field(termVector = TermVector.YES)
+    @Field
     @Column(name = "username")
     private String username;
 
