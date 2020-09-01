@@ -33,6 +33,9 @@ public class News {
     @Column
     private String title;
 
+    @Column
+    private String type;
+
     @Column(name = "body", columnDefinition="TEXT")
     private String body;
 

@@ -1,6 +1,7 @@
 CREATE TABLE news (
     id uuid not null,
     title varchar(255),
+    type varchar(255),
     body text,
     image_id uuid,
     user_id uuid not null,

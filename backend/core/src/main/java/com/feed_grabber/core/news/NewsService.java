@@ -36,8 +36,8 @@ public class NewsService {
         this.userRepository = userRepository;
     }
 
-    public List<NewsDto> getAllByCompanyId(Integer from, Integer count, UUID companyId) {
-        var pageable = PageRequest.of(from / count, count);
+    public List<NewsDto> getAllByCompanyId(Integer page, Integer size, UUID companyId) {
+        var pageable = PageRequest.of(page, size);
         return newsRepository.findAllNews(companyId, pageable)
                 .stream()
                 .map(NewsMapper.MAPPER::newsToNewsDto)
@@ -56,6 +56,7 @@ public class NewsService {
 
         var news = News.builder()
                 .title(newsCreateDto.getTitle())
+                .type(newsCreateDto.getType())
                 .body(newsCreateDto.getBody())
                 .image(image)
                 .user(user)
@@ -69,6 +70,7 @@ public class NewsService {
         var news = newsRepository.findById(newsUpdateDto.getId())
                 .orElseThrow(NewsNotFoundException::new);
         news.setTitle(newsUpdateDto.getTitle());
+        news.setType(newsUpdateDto.getType());
         news.setBody(newsUpdateDto.getBody());
 
         var image = imageRepository.findById(newsUpdateDto.getImageId())

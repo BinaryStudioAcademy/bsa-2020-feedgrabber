@@ -27,10 +27,10 @@ public class NewsController {
     @ApiOperation("Load news from repo")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<NewsDto>> getAll(@RequestParam(defaultValue="0") Integer from,
-                                         @RequestParam(defaultValue="10") Integer count) {
+    public AppResponse<List<NewsDto>> getAll(@RequestParam(defaultValue="0") Integer page,
+                                         @RequestParam(defaultValue="10") Integer size) {
         var companyId = getCompanyId();
-        return new AppResponse<>(newsService.getAllByCompanyId(from, count, companyId));
+        return new AppResponse<>(newsService.getAllByCompanyId(page, size, companyId));
     }
 
     @ApiOperation(value = "Create new news",

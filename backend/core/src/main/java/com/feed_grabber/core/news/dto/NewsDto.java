@@ -11,6 +11,7 @@ import java.util.UUID;
 public class NewsDto {
     private UUID id;
     private String title;
+    private String type;
     private String body;
     private ImageDto image;
     private UserShortDto user;
