@@ -57,6 +57,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         switch (notification.messageType) {
             case MessageTypes.plainText:
                 return (<RequestNotification
+                    key ={notification.id}
                     notification={notification}
                     deleteNotification={deleteNotification}
                     readNotification={readNotification}
@@ -64,6 +65,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     setShown={setShown}/>);
             case MessageTypes.textWithLink:
                 return (<TextWithLinkNotification
+                    key ={notification.id}
                     notification={notification}
                     deleteNotification={deleteNotification}
                     getResponse={getResponse}
