@@ -26,7 +26,7 @@ class AmazonS3ClientService(private val s3Client: S3Client) {
     }
 
     fun putObject(file: File, requestId: UUID, prefix: String): ReportFileCreationResponseDto {
-        val key = prefix + file.name?.replace(" ", "_") ?: UUID.randomUUID().toString()
+        val key = prefix + file.name?.replace(" ", "_")
         val request = PutObjectRequest.builder().bucket(BUCKET_NAME).key(key).acl(ObjectCannedACL.PUBLIC_READ).build()
         val fis = file.inputStream();
         val requestBody = RequestBody.fromInputStream(fis, file.length())

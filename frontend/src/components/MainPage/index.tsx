@@ -46,7 +46,7 @@ const MainPage: FC<IMainPageProps> =
          loadReports
      }) => {
 
-        const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
+        const [panes, setPanes] = useState([]);
 
         const handleAnswerClick = requestId => {
             history.push(`/response/${requestId}`);
@@ -67,8 +67,9 @@ const MainPage: FC<IMainPageProps> =
         useEffect(() => {
             setPanes([
                 {
-                    menuItem: {key: 'opened', icon: 'eye', content: 'Pending requests'},
-                    render: () => <Tab.Pane className={styles.tab_container} loading={isLoading}>
+                    menuItem: {key: 'opened', icon: 'eye', content: 'Pending'},
+                    render: () => <Tab.Pane loading={isLoading}
+                                            style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => (!r.closeDate &&
                                 !r.answeredAt &&
@@ -79,8 +80,7 @@ const MainPage: FC<IMainPageProps> =
                                         questionnaire,
                                         expirationDate
                                     }) => (
-                                    <UICardBlock key={requestId}
-                                                 className={styles.container_all}>
+                                    <UICardBlock key={requestId}>
                                         <p>{expirationDate
                                             ? `Deadline at ${expirationDate.toUTCString()}`
                                             : 'No deadline for this request'}</p>
@@ -90,6 +90,7 @@ const MainPage: FC<IMainPageProps> =
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() || !expirationDate)
                                             ? <UIButton title="Answer"
+                                                        primary
                                                         onClick={() =>
                                                             handleAnswerClick(requestId)}/>
                                             : <p>Expired {new Date(new Date().valueOf()
@@ -100,8 +101,8 @@ const MainPage: FC<IMainPageProps> =
                     </Tab.Pane>
                 },
                 {
-                    menuItem: {key: 'closed', icon: 'lock', content: 'Closed requests'},
-                    render: () => <Tab.Pane className={styles.tab_container}>
+                    menuItem: {key: 'closed', icon: 'lock', content: 'Closed'},
+                    render: () => <Tab.Pane style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => r.closeDate ||
                                 r.answeredAt ||
@@ -112,10 +113,10 @@ const MainPage: FC<IMainPageProps> =
                                         responseId,
                                         questionnaire,
                                         expirationDate,
-                                        closeDate
+                                        closeDate,
+                                        changeable
                                     }) => (
-                                    <UICardBlock key={requestId}
-                                                 className={`${styles.container_all} ${styles.container}`}>
+                                    <UICardBlock key={requestId}>
                                         <p>{expirationDate
                                             ? `Deadline on ${expirationDate.toUTCString()}`
                                             : 'No deadline for this request'}</p>
@@ -124,11 +125,13 @@ const MainPage: FC<IMainPageProps> =
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() && !closeDate)
-                                            ? <UIButton title="Change my answer"
-                                                        onClick={() =>
-                                                            handleModifyAnswerClick(
-                                                                requestId,
-                                                                responseId)}/>
+                                            ? <UIButton
+                                                primary
+                                                title={changeable ? "Change my answer" : "Show answers"}
+                                                onClick={() =>
+                                                    handleModifyAnswerClick(
+                                                        requestId,
+                                                        responseId)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
                                                 ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
                                                 : <p>Expired {new Date(new Date().valueOf()
@@ -149,39 +152,42 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Pending Questionnaires</h3>
-                            </UICardBlock>
-                            <Tab panes={panes}/>
-                        </UICard>
-                    </UIColumn>
-                    <UIColumn>
-                        <UICard>
-                            <UICardBlock>
                                 <h3>My Reports</h3>
                             </UICardBlock>
-                            {reportsList.map(item => (
+                              {reportsList.map(item => (
                                 <UICardBlock key={item.id}>
                                     {item.title && <h4>{item.title}</h4>}
                                     {item.closeDate && <p>{item.closeDate}</p>}
                                     {item.author && <p><b>{item.author}</b></p>}
                                     <Link to={`/report/${item.id}`}><UIButton title="Details"/></Link>
                                 </UICardBlock>
+                              ))}
+                        </UICard>
+                    </UIColumn>
+                    <UIColumn>
+                        <UICard>
+                            <UICardBlock>
+                                <h3>Company News Feed</h3>
+                            </UICardBlock>
+                            {newsList.length === 0 ?
+                                <UICardBlock>
+                                    No news for now, we'll notify you
+                                </UICardBlock> :
+                                newsList.map(item => (
+                                  <UICardBlock key={item.id}>
+                                      {item.header && <h4>{item.header}</h4>}
+                                      {item.content && <p>{item.content}</p>}
+                                      {item.author && <p><b>{item.author}</b></p>}
+                                  </UICardBlock>
                             ))}
                         </UICard>
                     </UIColumn>
-
                     <UIColumn wide>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company NewsFeed</h3>
+                                <h3>My Requests</h3>
                             </UICardBlock>
-                            {newsList.map(item => (
-                                <UICardBlock key={item.id}>
-                                    {item.header && <h4>{item.header}</h4>}
-                                    {item.content && <p>{item.content}</p>}
-                                    {item.author && <p><b>{item.author}</b></p>}
-                                </UICardBlock>
-                            ))}
+                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
                         </UICard>
                     </UIColumn>
                 </UIContent>

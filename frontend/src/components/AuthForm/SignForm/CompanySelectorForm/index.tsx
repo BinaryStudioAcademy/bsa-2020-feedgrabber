@@ -65,7 +65,7 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
                 }}
             >
                 {formik => {
-                    const errorText = formik.errors.email;
+                    const errorText = formik.touched.email && formik.errors.email;
                     return (
                         <form onSubmit={formik.handleSubmit} className={className} autoComplete='off'>
                             <Typography fontWeight="bold" variant="h4">Sign In</Typography>

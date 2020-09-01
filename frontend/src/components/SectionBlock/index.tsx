@@ -1,8 +1,7 @@
 import React from 'react';
 import styles from "./styles.module.scss";
-import { useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
+import { useDrop } from 'react-dnd';
 import { DraggableItemTypes } from 'models/forms/Questions/IQuesion';
-import { IDragItem } from 'components/QuestionnaireOrderDraggableView/QuestionCard';
 import { Header } from 'semantic-ui-react';
 
 interface ISectionProps {

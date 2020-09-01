@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Dropdown } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import {
     IGenericQuestionComponent,
     useInitValue,

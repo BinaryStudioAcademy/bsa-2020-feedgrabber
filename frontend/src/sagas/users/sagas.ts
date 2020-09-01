@@ -9,18 +9,19 @@ import {changeRoleRoutine, setIsChangingRoutine, setSelectedUserRoutine} from ".
 
 function* loadUserList(action: any) {
   try {
+    const query = action.payload;
     const store = yield select();
     const {page, size} = store.users.pagination;
-    const res = yield call(
-      apiClient.get,
-      `api/user/all/?page=${page}&size=${size}`
-    );
+    const api = query 
+      ? `api/user/search/?page=${page}&size=${size}&query=${query}` 
+      : `api/user/all/?page=${page}&size=${size}`;
+    const res = yield call(apiClient.get, api);
     const items = res.data.data;
 
     yield put(loadCompanyUsersRoutine.success(items));
   } catch (error) {
     yield put(loadCompanyUsersRoutine.failure(error));
-    toastr.error(error);
+    toastr.error("Cant fetch employe. Try again");
   }
 }
 

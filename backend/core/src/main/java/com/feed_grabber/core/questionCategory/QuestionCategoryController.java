@@ -55,6 +55,7 @@ public class QuestionCategoryController {
 //        return questionCategoryService.getAllByCompanyId(id);
 //    }
 
+    @ApiOperation(value = "Get the question category by id")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})

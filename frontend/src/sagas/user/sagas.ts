@@ -1,17 +1,21 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import apiClient from '../../helpers/apiClient';
-import {IUserInfo, IUserShort} from "../../models/user/types";
+import {IUserInfo, IUserSettings, IUserShort} from "../../models/user/types";
 import {IGeneric} from "../../models/IGeneric";
 import {toastr} from 'react-redux-toastr';
 import {
-  editUserProfileRoutine,
   getUserRoutine,
   resetPasswordRoutine,
   sendEmailToResetPasswordRoutine,
-  uploadUserAvatarRoutine,
   getUserShortRoutine
 } from "../auth/routines";
 import {history} from "../../helpers/history.helper";
+import {
+  editUserProfileRoutine, getUserSettingsRoutine,
+  updateUserPasswordRoutine, updateUserSettingsRoutine,
+  updateUserUsernameRoutine,
+  uploadUserAvatarRoutine
+} from "./routines";
 
 function* getUser() {
     try {
@@ -24,23 +28,33 @@ function* getUser() {
 
 function* uploadAvatar(action) {
   try {
-    const formData = new FormData();
-    formData.append('image', action.payload);
+    if (action.payload) {
+      const formData = new FormData();
+      formData.append('image', action.payload);
 
-    const image = yield call(apiClient.post, '/api/image', formData);
-    yield put(uploadUserAvatarRoutine.success(image.data.link));
+      const image = yield call(apiClient.post, '/api/image', formData);
+      const res: IGeneric<IUserInfo> = yield call(apiClient.patch, `/api/user/editAvatar?imageId=${image.data.id}`);
+
+      yield put(uploadUserAvatarRoutine.success(res.data.data));
+      toastr.success('Avatar updated');
+    } else {
+      const res: IGeneric<IUserInfo> = yield call(apiClient.patch, '/api/user/editAvatar');
+      yield put(uploadUserAvatarRoutine.success(res.data.data));
+      toastr.success('Avatar deleted');
+    }
   } catch (e) {
     yield put(uploadUserAvatarRoutine.failure(e));
+    toastr.error("Unable to update image");
   }
 }
 
 function* editUserProfile(action) {
   try {
-    const user = { ...action.payload, userId: action.payload.id };
-    yield call(apiClient.post, 'api/user/editProfile', user);
-    getUser();
+    const res: IGeneric<IUserInfo> = yield call(apiClient.patch, '/api/user/editProfile', action.payload);
+    yield put(editUserProfileRoutine.success(res.data.data));
+    toastr.success('Successfully updated');
   } catch (error) {
-    yield call(toastr.error, ("Something went wrong, try again"));
+    toastr.error('Failed to update');
   }
 }
 
@@ -79,6 +93,44 @@ function* passwordReset(action) {
     yield call(history.push, '/auth');
 }
 
+function* updateUsername(action) {
+  try {
+    const res: IGeneric<IUserInfo> = yield call(apiClient.patch, '/api/user/updateUsername', action.payload);
+    yield put(updateUserUsernameRoutine.success(res.data.data));
+    toastr.success('Username updated successfully');
+  } catch (error) {
+    toastr.error('Unable to update username');
+  }
+}
+
+function* updatePassword(action) {
+  try {
+    const res: IGeneric<IUserInfo> = yield call(apiClient.patch, '/api/user/updatePassword', action.payload);
+    yield put(updateUserPasswordRoutine.success(res.data.data));
+    toastr.success('Password updated successfully');
+  } catch (error) {
+    toastr.error('Unable to update password');
+  }
+}
+
+function* getSettings() {
+  try {
+    const res: IGeneric<IUserSettings> = yield call(apiClient.get,  '/api/user/settings');
+    yield put(getUserSettingsRoutine.success(res.data.data));
+  } catch (error) {
+    toastr.error('Unable to load settings');
+  }
+}
+
+function* updateSettings(action) {
+  try {
+    const res: IGeneric<IUserSettings> = yield call(apiClient.post,  '/api/user/settings', action.payload);
+    yield put(getUserSettingsRoutine.success(res.data.data));
+  } catch (error) {
+    toastr.error('Unable to load settings');
+  }
+}
+
 export default function* userSagas() {
     yield all([
         yield takeEvery(getUserRoutine.TRIGGER, getUser),
@@ -86,6 +138,10 @@ export default function* userSagas() {
         yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset),
         yield takeEvery(editUserProfileRoutine.TRIGGER, editUserProfile),
         yield takeEvery(uploadUserAvatarRoutine.TRIGGER, uploadAvatar),
-        yield takeEvery(getUserShortRoutine.TRIGGER, getUserShort)
+        yield takeEvery(getUserShortRoutine.TRIGGER, getUserShort),
+        yield takeEvery(updateUserPasswordRoutine.TRIGGER, updatePassword),
+        yield takeEvery(updateUserUsernameRoutine.TRIGGER, updateUsername),
+        yield takeEvery(getUserSettingsRoutine.TRIGGER, getSettings),
+        yield takeEvery(updateUserSettingsRoutine.TRIGGER, updateSettings)
     ]);
 }

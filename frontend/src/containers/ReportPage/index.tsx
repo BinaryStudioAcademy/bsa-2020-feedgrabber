@@ -4,7 +4,7 @@ import {IAppState} from 'models/IAppState';
 import {loadReportRoutine, loadRespondentReportsRoutine} from "../../sagas/report/routines";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import {Container, Header, Segment, Tab} from 'semantic-ui-react';
+import {Header, Segment, Tab} from 'semantic-ui-react';
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {
     IQuestionReport,
@@ -24,6 +24,9 @@ import DateSelectionReport from "./DateSelectionReport";
 import {FileQuestionReport} from './FileQuestionReport';
 import {Link} from 'react-router-dom';
 import styles from './styles.module.sass';
+import UIContent from "../../components/UI/UIContent";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import UIColumn from "../../components/UI/UIColumn";
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     {
@@ -81,14 +84,16 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     ];
 
     return (
-        <Container textAlign="center" style={{width: "75%"}}>
-            <Header as='h1' dividing style={{padding: 20}}>
-                <Header.Content>
-                    View Report Info
-                </Header.Content>
-            </Header>
-            <Tab panes={panes}/>
-        </Container>
+        <>
+            <UIPageTitle title="View Report Info"/>
+            <br />
+            <br />
+            <UIContent>
+                <UIColumn wide>
+                    <Tab panes={panes}/>
+                </UIColumn>
+            </UIContent>
+        </>
     );
 };
 
@@ -112,16 +117,16 @@ type ConnectedReportPageProps = ConnectedProps<typeof connector>;
 export default connector(ReportPage);
 
 function renderUserReportPreview(userReport: IRespondentReportPreview, id: string) {
-  return (
-    <Link key={userReport.id} to={`/report/${id}/${userReport.id}/${userReport.username}`}
-          className={styles.respondent_report_preview}>
-      <Segment>
-        <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
-        <Header as="h4">{userReport.username}</Header>
-        <span>{userReport.answeredAt}</span>
-      </Segment>
-    </Link>
-  );
+    return (
+        <Link key={userReport.id} to={`/report/${id}/${userReport.id}/${userReport.username}`}
+              className={styles.respondent_report_preview}>
+            <Segment>
+                <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
+                <Header as="h4">{userReport.username}</Header>
+                <span>{userReport.answeredAt}</span>
+            </Segment>
+        </Link>
+    );
 }
 
 function renderQuestionData(question: IQuestionReport) {

@@ -21,4 +21,5 @@ public class RequestShortDto {
     private Boolean notifyUsers;
     private Date closeDate;
     private Integer userCount;
+    private boolean changeable;
 }

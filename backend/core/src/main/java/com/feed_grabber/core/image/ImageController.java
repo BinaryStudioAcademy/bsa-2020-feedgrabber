@@ -26,7 +26,7 @@ public class ImageController {
     }
 
     @ApiOperation(value = "Upload new image to imgur and save link to database",
-            notes = "Provide image file an optionally x, y, wifth and height if you want to crop image")
+            notes = "Provide image file an optionally x, y, width and height if you want to crop image")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ImageDto upload(

@@ -2,6 +2,7 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.notification.MessageTypes;
 import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
@@ -21,6 +22,7 @@ import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -55,7 +57,7 @@ public class RequestService {
         this.fileRepository = fileRepository;
     }
 
-    public UUID createNew(CreateRequestDto dto) throws QuestionCategoryNotFoundException, UserNotFoundException {
+    public UUID createNew(CreateRequestDto dto) throws NotFoundException {
         var questionnaire = questionnaireRepository
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
@@ -94,28 +96,34 @@ public class RequestService {
             else users.remove(targetUser);
         }
 
-        var notificationExists = dto.getNotifyUsers();
+        var notifyUsers = dto.getNotifyUsers();
         var responses = users.stream()
-                .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
+                .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
 
         if (dto.getNotifyUsers()) {
-            var toSaveNotification = UserNotification
-                    .builder()
-                    .request(request)
-                    .text("You have new questionnaire request")
-                    .build();
-
-            var notification = userNotificationRepository.save(toSaveNotification);
-
-            var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
-            var toSendNotification = userNotificationRepository.findNotificationById(notification.getId());
-            notificationService.sendMessageToUsers(
-                    userIds,
-                    "notify",
-                    toSendNotification);
+            Map<UUID, UUID> userIdNotificationId = new HashMap();
+            for (User user : users)
+                userIdNotificationId.put(user.getId(),
+                        userNotificationRepository.save(UserNotification
+                                .builder()
+                                .request(request)
+                                .text("You have new questionnaire request")
+                                .isClosed(!notifyUsers)
+                                .isRead(false)
+                                .type(MessageTypes.plain_text)
+                                .user(user)
+                                .build()).getId());
+            for (UUID userId : userIdNotificationId.keySet()) {
+                notificationService.sendMessageToConcreteUser(
+                        userId.toString(),
+                        "notify",
+                        userNotificationRepository
+                                .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
+                );
+            }
         }
 
         return request.getId();
@@ -123,7 +131,7 @@ public class RequestService {
 
     public List<PendingRequestDto> getPending(UUID userId) {
         return responseRepository
-                .findAllByUserId(userId)
+                .findAllByUserIdAndRequestNotNull(userId)
                 .stream()
                 .map(RequestMapper.MAPPER::toPendingFromResponse)
                 .sorted(

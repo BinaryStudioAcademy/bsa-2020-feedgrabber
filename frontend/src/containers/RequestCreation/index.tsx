@@ -20,13 +20,10 @@ import {IUserShort} from "../../models/user/types";
 import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 import {RouteComponentProps} from "react-router-dom";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
 import {indexQuestionsRoutine} from "../../sagas/questions/routines";
-import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import UICheckbox from "../../components/UI/UIInputs/UICheckbox";
 import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
 
 const initialValues = {
@@ -38,7 +35,8 @@ const initialValues = {
   withDeadline: false,
   expirationDate: null,
   notifyUsers: false,
-  generateReport: false
+  generateReport: false,
+  changeable: false
 };
 
 const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
@@ -113,7 +111,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             includeTargetUser: !!values.targetUserId && values.includeTargetUser,
                             sendToTargetUser: !!values.sendToTargetUser && values.sendToTargetUser,
                             respondentIds: values.chosenUsers.map(user => user.id),
-                            teamIds: values.chosenTeams.map(team => team.id)
+                            teamIds: values.chosenTeams.map(team => team.id),
+                            changeable: values.changeable
                           };
                           sendRequest(data);
                           history.goBack();
@@ -224,6 +223,18 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               </UICardBlock>
 
                               <UICardBlock>
+                                <h4 className={styles.yesNoHeader}>Can users change answers?
+                                    <span>
+                                    <UISwitch
+                                        name="changeable"
+                                        checked={formik.values.changeable}
+                                        onChange={formik.handleChange}
+                                    />
+                                    </span>
+                                </h4>
+                              </UICardBlock>
+
+                              <UICardBlock>
                                 <div className={styles.selectHeader}>
                                   <h4>
                                   <span className={[styles.option, selectTeams && styles.selected].join(' ')}
@@ -235,6 +246,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         }}>
                                     Select Teams
                                   </span>
+                                  <span className={styles.separator}>or</span>
                                   <span className={[styles.option, !selectTeams && styles.selected].join(' ')}
                                         onClick={() => {
                                               if (selectTeams) {

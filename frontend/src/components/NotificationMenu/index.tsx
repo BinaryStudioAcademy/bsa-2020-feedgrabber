@@ -6,17 +6,35 @@ import {
     deleteAllNotificationsRoutine,
     deleteNotificationRoutine,
     loadNotificationsRoutine,
-    receiveNotificationRoutine
+    receiveNotificationRoutine,
+    markNotificationAsReadRoutine
 } from "../../sagas/notifications/routines";
 import LoaderWrapper from "../LoaderWrapper";
 import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
-import moment from "moment";
-import {useHistory} from "react-router-dom";
 import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
+import RequestNotification from "./notificationTypes/RequestNotification";
+import TextWithLinkNotification from "./notificationTypes/TextWithLinkNotification";
+
+export enum MessageTypes {
+    plainText = 'plain_text',
+    textWithLink = 'text_with_link'
+}
+
+export interface INotificationProps {
+    notification: INotification;
+
+    deleteNotification(id: string): void;
+
+    setShown(value: boolean): void;
+
+    readNotification(id: string): void;
+
+    getResponse(id: string): void;
+}
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
@@ -27,12 +45,34 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         loadNotifications,
         receiveNotification,
         countNotifications,
-        getResponse
+        getResponse,
+        readNotification
     }) => {
     const [shown, setShown] = useState(false);
 
     const ref = useRef(null);
     useOutsideAlerter(ref, () => shown && setShown(false));
+
+    const getNotification = (notification: INotification) => {
+        switch (notification.messageType) {
+            case MessageTypes.plainText:
+                return (<RequestNotification
+                    key ={notification.id}
+                    notification={notification}
+                    deleteNotification={deleteNotification}
+                    readNotification={readNotification}
+                    getResponse={getResponse}
+                    setShown={setShown}/>);
+            case MessageTypes.textWithLink:
+                return (<TextWithLinkNotification
+                    key ={notification.id}
+                    notification={notification}
+                    deleteNotification={deleteNotification}
+                    getResponse={getResponse}
+                    readNotification={readNotification}
+                    setShown={setShown}/>);
+        }
+    };
 
     useEffect(() => {
         loadNotifications();
@@ -43,8 +83,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         receiveNotification(notification);
         toastr.info(notification.text);
     }, true);
-
-    const history = useHistory();
 
     return (
         <div ref={ref}>
@@ -72,31 +110,8 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                         </div>
                     }
                     {
-                        notifications.map(notification => (
-                            <div key={notification.id}
-                                 className={styles.notification}>
-                                <div className={styles.text}
-                                     onClick={() => {
-                                         getResponse(notification.requestId);
-                                         history.push(`/response/${notification.questionnaireId}`);
-                                         deleteNotification(notification.requestId);
-                                         setShown(false);
-                                     }}>
-                                    <div>{notification.text?.substr(0, 54)}</div>
-                                    <div className={styles.date}>{moment(notification.date).fromNow()}</div>
-                                </div>
-                                <div className={styles.button}
-                                     title='Delete'
-                                     onClick={() => {
-                                         deleteNotification(notification.requestId);
-                                     }}
-                                >
-                                    <div>
-                                        x
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        notifications.map(notification => getNotification(notification))
+                    }
                 </LoaderWrapper>
             </div>
             }
@@ -116,7 +131,8 @@ const mapDispatchToProps = {
     deleteAll: deleteAllNotificationsRoutine,
     loadNotifications: loadNotificationsRoutine,
     receiveNotification: receiveNotificationRoutine,
-    getResponse: getResponseRoutine
+    getResponse: getResponseRoutine,
+    readNotification: markNotificationAsReadRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

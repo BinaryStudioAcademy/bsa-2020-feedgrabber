@@ -26,6 +26,10 @@ public interface RequestMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(source = "dto.sendToTargetUser", target = "sendToTarget")
+    @Mapping(target = "responses", ignore = true)
+    @Mapping(target = "closeDate", ignore = true)
+    @Mapping(target = "excelReport", ignore = true)
+    @Mapping(target = "powerPointReport", ignore = true)
     Request requestCreationRequestDtoToModel(CreateRequestDto dto,
                                              Questionnaire questionnaire,
                                              User targetUser,
@@ -37,6 +41,7 @@ public interface RequestMapper {
     @Mapping(target = "questionnaire", source = "request.questionnaire")
     @Mapping(target = "expirationDate", source = "request.expirationDate")
     @Mapping(target = "closeDate", source = "request.closeDate")
+    @Mapping(target = "changeable", source = "request.changeable")
     PendingRequestDto toPendingFromResponse(Response response);
 
     @Mapping(target = "requestId", source = "request.id")

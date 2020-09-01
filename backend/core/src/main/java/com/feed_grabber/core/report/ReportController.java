@@ -3,6 +3,7 @@ package com.feed_grabber.core.report;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.report.dto.ReportShortDto;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +23,19 @@ public class ReportController {
     @Autowired
     private ReportService service;
 
+    @ApiOperation(value = "Get report by request id",
+            notes = "Provide id in the path to get the report")
     @GetMapping("/{requestId}")
     public AppResponse<String> getReport(@PathVariable UUID requestId) throws IOException, NotFoundException {
         final String role = TokenService.getRoleName();
         final UUID userId = TokenService.getUserId();
         service.hasAccess(requestId, userId, role);
-        var response = service.isRequestClosed(requestId) ? service.getReport(requestId) : service.generateReport(requestId);
+        var response = service.isRequestClosed(requestId) ?
+                service.getReport(requestId) : service.generateReport(requestId);
         return new AppResponse<>(response);
     }
 
+    @ApiOperation(value = "Get the excel for report by id")
     @PostMapping("/excel")
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public void generateReport(@RequestParam UUID requestId) {
@@ -45,6 +50,7 @@ public class ReportController {
         return new AppResponse<>(service.getAllAvailableReports(userId, role, companyId));
     }
 
+    @ApiOperation(value = "Get the ppt for report by id")
     @PostMapping("/ppt")
     public void generatePPTReport(@RequestParam UUID requestId) {
         service.sendPPTReportGenerationRequest(requestId);
