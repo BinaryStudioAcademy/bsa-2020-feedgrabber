@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 import {useAuth} from '../../security/authProvider';
-import {getSubdomainFromDomain, redirectToCompany} from "../../helpers/subdomain.helper";
+import {getSubdomainFromDomain, redirectToCompany, redirectToMain} from "../../helpers/subdomain.helper";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {history} from "../../helpers/history.helper";
 import {fetchCompanyBySubdomainRoutine, fetchCompanyRoutine} from "../../sagas/companies/routines";
+import {toastr} from 'react-redux-toastr';
 
 const SubdomainRouter: React.FC<SubdomainRouterProps> =
     ({
@@ -21,24 +22,30 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
             fetchCompany();
             return;
         }
+        if (isLogged) {
+            redirectToCompany(company);
+        }
+
         const subdomain = getSubdomainFromDomain();
-        if(!isLogged && subdomain && !company && !error) {
+        if(!subdomain) {
+            return;
+        }
+
+        if(!isLogged && !company && !error) {
             fetchCompanyBySubdomain(subdomain);
             return;
         }
 
-        if (isLogged) {
-            redirectToCompany(company);
-        }
-        
-        if(!isLogged && error) {
+        if(!isLogged && !company) {
             history.push('/error');
+            redirectToMain();
         }
-        
-        if(!isLogged && company) {
+
+        if(!isLogged && !!company) {
             history.push('/auth');
         }
     }, [isLogged, company, fetchCompany, fetchCompanyBySubdomain, error]);
+
     return (
         <>
             {children}
