@@ -6,8 +6,8 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 
 import {
-  createSectionRoutine,
-  loadSectionsByQuestionnaireRoutine
+    createSectionRoutine, deleteQuestionFromSectionRoutine,
+    loadSectionsByQuestionnaireRoutine
 } from 'sagas/sections/routines';
 import {
     indexQuestionsRoutine,
