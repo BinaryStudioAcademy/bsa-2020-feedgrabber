@@ -17,5 +17,7 @@ public interface ReportMapper {
     @Mapping(source = "expirationDate", target = "requestExpirationDate")
     @Mapping(source = "creationDate", target = "requestCreationDate")
     @Mapping(source = "id", target = "requestId")
+    @Mapping(source = "excelReport.link", target = "excelReportLink")
+    @Mapping(source = "powerPointReport.link", target = "pptReportLink")
     ReportDetailsDto requestToReportDetails(Request request);
 }

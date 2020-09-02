@@ -93,6 +93,8 @@ public class QuestionService {
         if (dto.getQuestionnaireId().isPresent()) {
             var questionnaire = anketRep.findById(dto.getQuestionnaireId().get())
                     .orElseThrow(QuestionnaireNotFoundException::new);
+            questionnaire.getQuestions().add(savedQuestion);
+            anketRep.save(questionnaire);
 
             Section section;
             if (dto.getSectionId().isEmpty()) {
@@ -129,6 +131,7 @@ public class QuestionService {
 
     public QuestionDto update(QuestionUpdateDto dto)
             throws QuestionNotFoundException, CompanyNotFoundException {
+        if (dto.getDetails().equals(""))dto.setDetails("{}");
         var question = this.updateModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }

@@ -2,6 +2,7 @@ package com.feed_grabber.core.news;
 
 
 import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.news.dto.NewsCreateDto;
 import com.feed_grabber.core.news.dto.NewsDto;
@@ -27,10 +28,16 @@ public class NewsController {
     @ApiOperation("Load news from repo")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<NewsDto>> getAll(@RequestParam(defaultValue="0") Integer page,
-                                         @RequestParam(defaultValue="10") Integer size) {
+    public AppResponse<DataList<NewsDto>> getAll(@RequestParam(defaultValue="0") Integer page,
+                                                 @RequestParam(defaultValue="10") Integer size) {
         var companyId = getCompanyId();
-        return new AppResponse<>(newsService.getAllByCompanyId(page, size, companyId));
+        var dataList = new DataList<>(
+                newsService.getAllByCompanyId(page, size, companyId),
+                newsService.getCountByCompanyId(companyId),
+                page,
+                size
+        );
+        return new AppResponse<>(dataList);
     }
 
     @ApiOperation(value = "Create new news",

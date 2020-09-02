@@ -1,6 +1,8 @@
 package com.feed_grabber.core.notification.model;
 
+import com.feed_grabber.core.notification.MessageTypes;
 import com.feed_grabber.core.request.model.Request;
+import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,4 +35,17 @@ public class UserNotification {
 
     @Column(name = "is_read")
     private Boolean isRead;
+
+    @Column(name = "is_closed")
+    private Boolean isClosed;
+
+    @Column(name = "message_type")
+    @Enumerated(EnumType.STRING)
+    private MessageTypes type;
+
+    private String payload;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

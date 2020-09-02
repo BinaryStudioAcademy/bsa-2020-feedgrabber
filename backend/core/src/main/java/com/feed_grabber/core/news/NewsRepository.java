@@ -13,5 +13,7 @@ import java.util.UUID;
 public interface NewsRepository extends JpaRepository<News, UUID> {
 
     @Query("SELECT n FROM News n WHERE n.company.id = :companyId")
-    List<News> findAllNews(@Param("companyId") UUID id, Pageable pageable);
+    List<News> findAllNews(@Param("companyId") UUID companyId, Pageable pageable);
+
+    Long countAllByCompanyId(UUID companyId);
 }
