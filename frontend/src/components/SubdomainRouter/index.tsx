@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
 import {useAuth} from '../../security/authProvider';
-import {getSubdomainFromDomain, redirectToCompany, redirectToMain} from "../../helpers/subdomain.helper";
+import {getSubdomainFromDomain, redirectToCompany} from "../../helpers/subdomain.helper";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {history} from "../../helpers/history.helper";
 import {fetchCompanyBySubdomainRoutine, fetchCompanyRoutine} from "../../sagas/companies/routines";
-import {toastr} from 'react-redux-toastr';
 
 const SubdomainRouter: React.FC<SubdomainRouterProps> =
     ({
@@ -37,8 +36,10 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
         }
 
         if(!isLogged && !company) {
-            history.push('/error');
-            redirectToMain();
+            history.push({
+                pathname: '/error',
+                state: {text: 'This company does not exist. Sign in to existing or create you own'}
+            });
         }
 
         if(!isLogged && !!company) {

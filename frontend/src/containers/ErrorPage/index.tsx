@@ -1,13 +1,24 @@
 import React from "react";
 import styles from './styles.module.sass';
 import {Menu} from "semantic-ui-react";
-import {Link} from "react-router-dom";
+import {redirectToMain} from "../../helpers/subdomain.helper";
+import {history} from "../../helpers/history.helper";
 
-const ErrorPage: React.FC = () => {
+interface IErrorPageProps {
+  location: {
+    state?: { text?: string };
+  };
+}
+
+const ErrorPage: React.FC<IErrorPageProps> = props => {
+  const {location} = props;
   return <>
-    <section className='landing_face  '>
+    <section className='landing_face'>
       <Menu fixed='top'>
-        <Menu.Item as={Link} to='/layout' header>
+        <Menu.Item onClick={() => {
+          history.push('/layout');
+          redirectToMain();
+        }} header>
           <img
               className='logo'
               src={require('../../assets/images/icon_bg.jpg')}
@@ -15,16 +26,18 @@ const ErrorPage: React.FC = () => {
           />
           FeedGrabber
         </Menu.Item>
-        <Menu.Item position='right' as={Link} to='/auth'>
+        <Menu.Item position='right' onClick={() => {
+          history.push('/auth');
+          redirectToMain();
+        }}>
           Sign In
         </Menu.Item>
       </Menu>
       <div>
         <div className={styles.cont_principal + ' ' + styles.cont_error_active}>
           <div className={styles.cont_error}>
-
-            <h1>Oops</h1>
-            <p>{"The Page you're looking for isn't here."}</p>
+            <h1>Oops...</h1>
+            <p>{location?.state?.text ?? "The Page you're looking for isn't here."}</p>
           </div>
           <div className={styles.cont_aura_1}/>
           <div className={styles.cont_aura_2}/>
