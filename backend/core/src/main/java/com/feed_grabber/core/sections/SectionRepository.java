@@ -16,8 +16,10 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
 
     List<Section> findByQuestionnaireIdOrderByOrder(UUID id);
 
-    @Query("select s from Section s join s.questions q " +
-            "where q.id = :questionId and s.questionnaire.id = :questionnaireId")
+    @Query("select s from Section s inner join SectionQuestion sq on sq.section.id = s.id " +
+            " inner join Question q on sq.question.id = q.id " +
+            "inner join s.questionnaire qq " +
+            "where q.id = :questionId and qq.id = :questionnaireId")
     Section findByQuestionnaireIdAndQuestionId(UUID questionnaireId, UUID questionId);
 
     @Modifying
