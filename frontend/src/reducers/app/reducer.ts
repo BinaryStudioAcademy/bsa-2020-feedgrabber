@@ -9,11 +9,11 @@ export interface IAdditionalState {
     showMenu: boolean;
 }
 
-const appReducer = (state: IAppState['app'] = initialState, {type}) => {
+const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => {
     if (type === toggleMenuRoutine.TRIGGER) {
         return {
             ...state,
-            showMenu: !state.showMenu
+            showMenu: payload
         };
     }
     return state;

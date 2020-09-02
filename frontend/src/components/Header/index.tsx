@@ -36,14 +36,16 @@ const StyledMenu = styled(Menu)`
 const defaultAvatar =
     "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
-  const [t] = useTranslation();
-  return (
-      <div className={styles.headerWrapper}>
+
+const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
+    const [t] = useTranslation();
+    return (
+        <div className={styles.headerWrapper}>
             <div className={styles.headerContent}>
                 <div className={styles.headerPart}>
                     <div className={styles.headerTitle}>
-                        <img onClick={toggleMenu} alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
+                        <img onClick={() => toggleMenu(!toggled)} alt="FeedGrabber" className={styles.headerLogo}
+                             src={icon}/>
                         <h1 className={styles.headerServiceName} onClick={() => history.push('/')}>FeedGrabber</h1>
                     </div>
                     <div className={styles.navLinks}>
@@ -89,8 +91,9 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
 };
 
 const mapStateToProps = (state: IAppState) => ({
-  user: state.user.info,
-  isEditing: !!state.questionnaires.current.get.id
+    user: state.user.info,
+    isEditing: !!state.questionnaires.current.get.id,
+    toggled: state.app.showMenu
 });
 const mapDispatchToProps = {
   logout: logoutRoutine,
