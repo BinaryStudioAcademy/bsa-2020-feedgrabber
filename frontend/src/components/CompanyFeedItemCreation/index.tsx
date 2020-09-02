@@ -1,7 +1,7 @@
 import React, { useState, useEffect, FC } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Image, Icon, Button, Header } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import {
   loadCompanyFeedItemRoutine,
   saveCompanyFeedItemRoutine
@@ -18,7 +18,7 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   loadFeedItem,
   saveFeedItem
 }) => {
-  const history = useHistory();
+  // const history = useHistory();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [item, setItem] = useState<ICompanyFeedItem>(undefined);
 
