@@ -15,6 +15,7 @@ import notificationsSagas from "./notifications/sagas";
 import sectionSagas from './sections/sagas';
 import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
+import companyFeedSaga from './companyFeed/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -29,6 +30,7 @@ export default function* rootSaga() {
     invitationSignUpSagas(),
     categorieSagas(),
     companiesSaga(),
+    companyFeedSaga(),
     requestSaga(),
     notificationsSagas(),
     responseSagas(),
