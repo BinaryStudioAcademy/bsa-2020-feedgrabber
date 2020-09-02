@@ -38,7 +38,7 @@ function* loadCurrentTeam(action: any) {
 
 function* createTeam(action: any) {
   try {
-    const response = yield call(apiClient.post, `http://localhost:5000/api/teams`, action.payload);
+    const response = yield call(apiClient.post, `/api/teams`, action.payload);
     const data = response.data.data;
     yield put(createTeamRoutine.success(data));
     yield put(loadTeamsRoutine.trigger());
@@ -52,7 +52,7 @@ function* createTeam(action: any) {
 
 function* updateTeam(action: any) {
   try {
-    yield call(apiClient.put, `http://localhost:5000/api/teams`, action.payload);
+    yield call(apiClient.put, `/api/teams`, action.payload);
     yield put(updateTeamRoutine.success());
     yield put(loadTeamsRoutine.trigger());
     toastr.success("Team metadata updated");
@@ -64,7 +64,7 @@ function* updateTeam(action: any) {
 
 function* deleteTeam(action: any) {
   try {
-    yield call(apiClient.delete, `http://localhost:5000/api/teams/${action.payload}`);
+    yield call(apiClient.delete, `/api/teams/${action.payload}`);
     yield put(deleteTeamRoutine.success());
     yield put(loadTeamsRoutine.trigger());
     toastr.success("Team deleted");
@@ -77,7 +77,7 @@ function* deleteTeam(action: any) {
 function* toggleUserTeam(action: any) {
   const request: ITeamUserToggle = action.payload;
   try {
-    const response = yield call(apiClient.put, `http://localhost:5000/api/teams/toggle_user`, request);
+    const response = yield call(apiClient.put, `/api/teams/toggle_user`, request);
     const data = response.data.data;
     yield put(toggleUserCurrentTeamRoutine.success(data));
 
@@ -97,7 +97,7 @@ function* toggleUserTeam(action: any) {
 function* toggleLeadTeam(action: any) {
   const request: ITeamLeadToggle = action.payload;
   try {
-    const response = yield call(apiClient.put, `http://localhost:5000/api/teams/toggle_lead`, request);
+    const response = yield call(apiClient.put, `/api/teams/toggle_lead`, request);
     const data = response.data.data;
     yield put(toggleLeadCurrentTeamRoutine.success(data));
     toastr.success(`User ${request.username} ${data.leadId ? "is a new team lead" : "is not a team lead anymore"}`);
@@ -109,7 +109,7 @@ function* toggleLeadTeam(action: any) {
 
 function* loadCompanyUsers() {
   try{
-    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `http://localhost:5000/api/user/all/list`);
+    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `/api/user/all/list`);
     yield put(loadCompanyUsersRoutine.success(res.data.data));
   } catch (e) {
     yield put(loadCompanyUsersRoutine.failure());
