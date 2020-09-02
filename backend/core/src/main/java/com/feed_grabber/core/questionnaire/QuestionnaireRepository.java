@@ -34,5 +34,5 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
     @Query(nativeQuery = true,
             value = "DELETE FROM question_questionnaire qq " +
                     "WHERE qq.questionnaire_id = :questionnaireId AND qq.question_id = :questionId")
-    void deleteQuestion(UUID questionnaireId, UUID questionId);
+    void deleteQuestionFromQuestionnaire(UUID questionnaireId, UUID questionId);
 }
