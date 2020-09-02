@@ -8,10 +8,15 @@ import UIColumn from "../UI/UIColumn";
 import {IAppState} from 'models/IAppState';
 import {connect} from "react-redux";
 import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
+import {loadReportsRoutine} from 'sagas/report/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
+import {IReportShort} from 'models/report/IReport';
 import {Tab} from "semantic-ui-react";
+import { Link } from 'react-router-dom';
+import NewsList from 'components/NewsList';
+import { INewsItem } from 'models/news';
 
 interface IItem {
     id: string;
@@ -22,11 +27,12 @@ interface IItem {
 
 interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
-    reportsList?: IItem[];
-    newsList?: IItem[];
+    reportsList?: IReportShort[];
+    newsList?: INewsItem[];
     isLoading: boolean;
 
     loadQuestionnaires(): void;
+    loadReports(): void;
 
     getResponse(requestId: string): void;
 }
@@ -35,9 +41,10 @@ const MainPage: FC<IMainPageProps> =
     ({
          questionnaireList,
          reportsList = [],
-         newsList = [],
+         newsList,
          isLoading,
-         loadQuestionnaires
+         loadQuestionnaires,
+         loadReports
      }) => {
 
         const [panes, setPanes] = useState([]);
@@ -53,6 +60,10 @@ const MainPage: FC<IMainPageProps> =
         useEffect(() => {
             loadQuestionnaires();
         }, [loadQuestionnaires]);
+
+       useEffect(() => {
+            loadReports();
+       }, [loadReports]);
 
         useEffect(() => {
             setPanes([
@@ -145,43 +156,33 @@ const MainPage: FC<IMainPageProps> =
                                 <h3>My Reports</h3>
                             </UICardBlock>
                             {reportsList.length === 0 ?
-                                <UICardBlock>
-                                    Your Report list is empty. Stay tuned for more
-                                </UICardBlock> :
-                                reportsList.map(item => (
-                                    <UICardBlock key={item.id}>
-                                        {item.header && <h4>{item.header}</h4>}
-                                        {item.content && <p>{item.content}</p>}
-                                        {item.author && <p><b>{item.author}</b></p>}
-                                        <UIButton title="Details"/>
-                                    </UICardBlock>
-                                ))}
+                              <UICardBlock>
+                                No reports for now, we'll notify you
+                              </UICardBlock> :
+                              reportsList.map(item => (
+                                <UICardBlock key={item.id}>
+                                    {item.title && <h4>{item.title}</h4>}
+                                    {item.closeDate && <p>{item.closeDate}</p>}
+                                    {item.author && <p><b>{item.author}</b></p>}
+                                    <Link to={`/report/${item.id}`}><UIButton title="Details"/></Link>
+                                </UICardBlock>
+                              ))}
                         </UICard>
                     </UIColumn>
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company News Feed</h3>
+                                <h3>My Requests</h3>
                             </UICardBlock>
-                            {newsList.length === 0 ?
-                                <UICardBlock>
-                                    No news for now, we'll notify you
-                                </UICardBlock> :
-                            newsList.map(item => (
-                                <UICardBlock key={item.id}>
-                                    {item.header && <h4>{item.header}</h4>}
-                                    {item.content && <p>{item.content}</p>}
-                                    {item.author && <p><b>{item.author}</b></p>}
-                                </UICardBlock>
-                            ))}
+                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
                         </UICard>
                     </UIColumn>
                     <UIColumn wide>
                         <UICard>
                             <UICardBlock>
-                                <h3>My Requests</h3>
+                                <h3>Company News Feed</h3>
                             </UICardBlock>
-                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
+                            <NewsList/>
                         </UICard>
                     </UIColumn>
                 </UIContent>
@@ -192,11 +193,13 @@ const MainPage: FC<IMainPageProps> =
 const MapStateToProps = (state: IAppState) => ({
     questionnaireList: state.questionnaireResponse.list,
     isLoading: state.questionnaireResponse.isLoading,
-    user: state.user.shortInfo
+    user: state.user.shortInfo,
+    reportsList: state.questionnaireReports.reports
 });
 
 const MapDispatchToProps = {
-    loadQuestionnaires: loadRequestedQuestionnairesRoutine
+    loadQuestionnaires: loadRequestedQuestionnairesRoutine,
+    loadReports: loadReportsRoutine
 };
 
 export default connect(MapStateToProps, MapDispatchToProps)(MainPage);

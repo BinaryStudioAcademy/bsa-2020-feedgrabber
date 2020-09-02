@@ -17,11 +17,11 @@ import {Icon} from "semantic-ui-react";
 import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
 import RequestNotification from "./notificationTypes/RequestNotification";
-import TextWithLinkNotification from "./notificationTypes/TextWithLinkNotification";
+import ReportsNotification from "./notificationTypes/ReportsNotification";
 
 export enum MessageTypes {
     plainText = 'plain_text',
-    textWithLink = 'text_with_link'
+    reports = 'reports'
 }
 
 export interface INotificationProps {
@@ -63,8 +63,8 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     readNotification={readNotification}
                     getResponse={getResponse}
                     setShown={setShown}/>);
-            case MessageTypes.textWithLink:
-                return (<TextWithLinkNotification
+            case MessageTypes.reports:
+                return (<ReportsNotification
                     key ={notification.id}
                     notification={notification}
                     deleteNotification={deleteNotification}
