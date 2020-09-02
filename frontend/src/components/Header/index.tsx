@@ -36,7 +36,6 @@ const StyledMenu = styled(Menu)`
 const defaultAvatar =
     "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-
 const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
     const [t] = useTranslation();
     return (
