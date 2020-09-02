@@ -6,8 +6,8 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 
 import {
-  createSectionRoutine,
-  deleteQuestionFromSectionRoutine
+    createSectionRoutine,
+    deleteQuestionFromSectionRoutine
 } from 'sagas/sections/routines';
 import {
     indexQuestionsRoutine,
@@ -44,16 +44,16 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     const [question, setQuestion] = useState<IQuestion>();
     if (!question) {
-        loadQuestion({ id: "" });
+        loadQuestion({id: ""});
     }
 
     useEffect(() => {
-      loadQuestionnaire(match.params.id);
+        loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
     const handleDeleteQuestion = () => deleteQuestion({
-      questionId: question.id,
-      questionnaireId: questionnaire.id
+        questionId: question.id,
+        questionnaireId: questionnaire.id
     });
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             sectionId: section.id,
             index: section.questions.length
         });
-      };
+    };
 
     const handleAddSection = () => createSection({questionnaireId: match.params.id, index: sections.length});
 
@@ -91,7 +91,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     return (
         <>
-            <UIPageTitle title={questionnaire.title} />
+            <UIPageTitle title={questionnaire.title}/>
             {questionnaire && (
                 <div className={styles.formDetails}>
                     <LoaderWrapper loading={isLoading}>
