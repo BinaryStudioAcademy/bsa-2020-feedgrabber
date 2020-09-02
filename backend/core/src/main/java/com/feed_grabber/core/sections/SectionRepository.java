@@ -14,7 +14,7 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
             "where s.questionnaire.id = :id and s.title = :title")
     Section findByQuestionnaireIdAndTitle(UUID id, String title);
 
-    List<Section> findByQuestionnaireId(UUID id);
+    List<Section> findByQuestionnaireIdOrderByOrder(UUID id);
 
     @Query("select s from Section s join s.questions q " +
             "where q.id = :questionId and s.questionnaire.id = :questionnaireId")
@@ -36,8 +36,8 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true,
-            value = "UPDATE sections_questions s SET order_index = :index " +
-                    "WHERE s.section_id = :sectionId AND s.question_id = :questionId")
+    @Query(
+            value = "UPDATE SectionQuestion s SET s.orderIndex = :index " +
+                    "WHERE s.section.id = :sectionId AND s.question.id = :questionId")
     Integer setIndex(UUID sectionId, UUID questionId, Integer index);
 }

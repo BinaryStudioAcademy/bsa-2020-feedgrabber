@@ -1,7 +1,8 @@
 {
   "translations": {
     "PENDING FEEDBACKS": "PENDING FEEDBACKS",
-    "FORM EDITOR": "FORM EDITOR",
+    "Form Editor": "Form Editor",
+    "Create Request": "Create Request",
     "ASSIGN FEEDBACKS": "ASSIGN FEEDBACKS",
     "Profile": "Profile",
     "Settings": "Settings",
@@ -248,6 +249,20 @@
 
     "Type your question": "Type your question",
     "Choose category or type custom": "Choose category or type custom",
-    "Add new category:": "Add new category:"
+    "Add new category:": "Add new category:",
+
+    "Pending": "Pending",
+    "Company News Feed": "Company News Feed",
+    "My Requests": "My Requests",
+    "Search employee": "Search employee",
+    "clear": "clear",
+    "Unfortunately": "Unfortunately",
+    "this link has been expired": "this link has been expired",
+    "Go to main page": "Go to main page",
+    "You have already registered": "You have already registered",
+    "using this link": "using this link",
+    "Enter your personal details and start journey with us": "Enter your personal details and start journey with us",
+    "Unable to load data": "Unable to load data",
+    "report": "report"
   }
 }

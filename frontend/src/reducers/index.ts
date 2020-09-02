@@ -12,6 +12,7 @@ import expandedQuestionnaireReducer from './expandedQuestionnaire/reducer';
 import invitationReducer from './invitation/reducer';
 import invitationSignUpReducer from './invitationSignUp/reducer';
 import companyReducer from "./companies/reducer";
+import companyFeedReducer from "./companyFeed/reducer";
 import notificationReducer from "./notifications";
 import responseReducer from "./questionnaireResponse/reducer";
 import sectionsReducer from './section/reducer';
@@ -31,6 +32,7 @@ export default combineReducers({
   expandedQuestionnaire: expandedQuestionnaireReducer,
   app:appReducer,
   company: companyReducer,
+  companyFeed: companyFeedReducer,
   notifications: notificationReducer,
   role: roleReducer
 });

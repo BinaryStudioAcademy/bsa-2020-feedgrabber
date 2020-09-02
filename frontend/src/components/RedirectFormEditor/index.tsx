@@ -5,8 +5,9 @@ import {saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines
 import {history} from "../../helpers/history.helper";
 import {toastr} from 'react-redux-toastr';
 import moment from "moment";
-import {Modal, Button, Icon, Input} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
+import {Modal, Input} from "semantic-ui-react";
+import UIButton from "../UI/UIButton";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     const [title, setTitle] = useState<string>(`New Form created ${moment().calendar()}`);
@@ -51,9 +52,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
             />
         </Modal.Content>
         <Modal.Actions>
-            <Button primary onClick={handleSubmit}>
-                {t("Create")} <Icon name='chevron right' />
-            </Button>
+           <UIButton title={t("Create")} primary onClick={handleSubmit}/>
         </Modal.Actions>
     </Modal>
     );

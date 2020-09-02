@@ -1,7 +1,8 @@
 {
   "translations": {
     "PENDING FEEDBACKS": "ОЧІКУЮЩІ ВІДГУКИ",
-    "FORM EDITOR": "СТВОРЕННЯ ФОРМИ",
+    "Form Editor": "Створення форми",
+    "Create Request": "Створити запит",
     "ASSIGN FEEDBACKS": "НАЗНАЧИТИ ВІДГУК",
     "Profile": "Профіль",
     "Settings": "Налаштування",
@@ -248,6 +249,20 @@
 
     "Type your question": "Введіть запитання",
     "Choose category or type custom": "Виберіть категорію або створіть свою",
-    "Add new category:": "Додати нову категорію:"
+    "Add new category:": "Додати нову категорію:",
+
+    "Pending": "Очікуючі",
+    "Company News Feed": "Новини компанії",
+    "My Requests": "Мої запити",
+    "Search employee": "Пошук співробітника",
+    "clear": "очистити",
+    "Unfortunately": "Нажаль",
+    "this link has been expired": "термін дії цього посилання закінчився",
+    "Go to main page": "До головної сторінки",
+    "You have already registered": "Ви вже зареєструвались",
+    "using this link": "за цим посиланням",
+    "Enter your personal details and start journey with us": "Введіть свої особисті дані та розпочніть подорож з нами",
+    "Unable to load data": "Не вдається завантажити дані",
+    "report": "звіт"
   }
 }

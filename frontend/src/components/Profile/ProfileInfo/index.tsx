@@ -11,24 +11,12 @@ import UITextInput from "../../UI/UITextInput/UITextInput";
 import styles from './styles.module.sass';
 import {editUserProfileRoutine, uploadUserAvatarRoutine} from "../../../sagas/user/routines";
 import {useTranslation} from "react-i18next";
+import validation from "../../../helpers/validation.helper";
 
 const validationSchema = yup.object().shape({
-  firstName: yup
-      .string()
-      .min(1, "Too short first name")
-      .max(40, "Too long first name")
-      .matches(/^\w([A-Za-zА-Яа-я.])([ \-`,]?[A-Za-zА-Яа-я.])*$/,
-          "First name is invalid"),
-  lastName: yup
-      .string()
-      .min(1, "Too short last name")
-      .max(40, "Too long last name")
-      .matches(/^\w([A-Za-zА-Яа-я.])([ \-`,]?[A-Za-zА-Яа-я.])*$/,
-          "Last name is invalid"),
-  phoneNumber: yup
-      .string()
-      .min(7, "Too short phone number")
-      .max(20, "Too long phone number")
+  firstName: validation.firstName,
+  lastName: validation.lastName,
+  phoneNumber: validation.phoneNumber
 });
 
 const defaultAvatar =
@@ -42,7 +30,9 @@ const ProfileInfo: FC<ProfileInfoProps> =
        uploadImage,
        getUser
      }) => {
-      useEffect(() => getUser, [getUser]);
+      useEffect(() => {
+          !user && getUser();
+      }, [getUser, user]);
       const [src, setSource] = useState<string | ArrayBuffer>(undefined);
       const [fileName, setFileName] = useState('avatar');
       const [t] = useTranslation();
@@ -138,11 +128,15 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('lastName', null)}
                     />
-                    <UITextInput labelText={t('Phone')}
+                    <UITextInput
+                        labelText={t('Phone')}
                                  placeholder={'+380 99 999 99 99'}
                                  name='phoneNumber'
                                  value={values.phoneNumber}
-                                 onChange={value => setFieldValue('phoneNumber', value)}
+                                 onChange={value => {
+                                   console.log(value);
+                                   setFieldValue('phoneNumber', value);
+                                 }}
                                  error={touched.phoneNumber && t(errors.phoneNumber)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('phoneNumber', null)}

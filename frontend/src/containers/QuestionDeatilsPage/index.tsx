@@ -13,6 +13,7 @@ import { Button, Loader } from "semantic-ui-react";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
@@ -30,7 +31,9 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     const history = useHistory();
     const [t] = useTranslation();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
-    const [question, setQuestion] = useState<IQuestion>(currentQuestion);
+  const [question, setQuestion] = useState<IQuestion>(
+    Object.keys(currentQuestion).length === 0 ? defaultQuestion : currentQuestion
+  );
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
         const { isCompleted, value } = state;
@@ -44,12 +47,11 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
     useEffect(() => {
         if (match.params.id === 'new') {
-            // loadQuestion({id: 'empty'});
-            loadQuestion({});
+            loadQuestion({id: ""});
         }
         else {
-            if (!isPreview)
-                loadQuestion({ id: match.params.id });
+          if (!isPreview)
+              loadQuestion({ id: match.params.id });
         }
     }, [loadQuestion, match.params.id, isPreview]);
 
@@ -84,8 +86,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
             {!isLoading && (
                 <div>
                     <QuestionDetails
-                        key={currentQuestion.id}
-                        currentQuestion={currentQuestion}
+                        key={question.id}
+                        currentQuestion={question}
                         categories={categories}
                         onValueChange={handleQuestionDetailsUpdate}
                     />
@@ -111,7 +113,7 @@ const mapState = (state: IAppState) => ({
     currentQuestion: state.questions.current,
     isLoading: state.questions.categories.isLoading,
     categories: state.questions.categories.list,
-    questionnaireId: state.questionnaires.current.get.id,
+    questionnaireId: state.sections.questionnaireId,
     questionnaireQuestions: state.questionnaires.current.questions
 });
 

@@ -42,7 +42,7 @@ public class RequestController {
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<UUID> createNewRequest(@RequestBody CreateRequestDto dto)
-            throws UserNotFoundException, QuestionCategoryNotFoundException {
+            throws NotFoundException {
         return new AppResponse<>(requestService.createNew(dto));
     }
 

@@ -10,25 +10,14 @@ import {connect, ConnectedProps} from "react-redux";
 import {getUserRoutine} from "../../../sagas/auth/routines";
 import {updateUserPasswordRoutine, updateUserUsernameRoutine} from "../../../sagas/user/routines";
 import {useTranslation} from "react-i18next";
+import validation from "../../../helpers/validation.helper";
 
 const usernameSchema = yup.object().shape({
-  username: yup
-      .string()
-      .required("Username required")
-      .min(3, "Username too short!")
-      .max(40, "Username too long!")
-      .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
-          "Username is invalid")
+  username: validation.username
 });
 
 const passwordSchema = yup.object().shape({
-  newPassword: yup
-      .string()
-      .required("Password required")
-      .min(8, "Password too short")
-      .max(16, "Password too long!")
-      .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
-          "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
+  newPassword: validation.password,
   newPasswordAgain: yup
       .string()
       .required("Repeat the password")
@@ -43,8 +32,10 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
        updatePassword,
        getUser
      }) => {
-      useEffect(() => getUser, [getUser]);
       const [t] = useTranslation();
+        useEffect(() => {
+            !user && getUser();
+        }, [getUser, user]);
 
       const initialUsername = {
         username: user?.userName

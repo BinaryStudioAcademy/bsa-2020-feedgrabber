@@ -6,6 +6,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.team.dto.*;
 
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
+import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,15 @@ public class TeamController {
     public AppResponse<ResponseUserTeamDto> toggle(@RequestBody RequestUserTeamDto requestDto) throws TeamNotFoundException, UserNotFoundException {
         requestDto.setCompanyId(TokenService.getCompanyId());
         return new AppResponse<>(service.toggleUser(requestDto));
+    }
+
+    @ApiOperation("Toggle Lead")
+    @PutMapping("/toggle_lead")
+    @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
+    public AppResponse<ResponseTeamLeadDto> toggleLead(@RequestBody RequestTeamLeadDto requestDto) throws TeamNotFoundException, TeamUserLeadNotFoundException, UserNotFoundException {
+        requestDto.setCompanyId(TokenService.getCompanyId());
+        return new AppResponse<>(service.toggleLead(requestDto));
     }
 
     @ApiOperation("Delete User")

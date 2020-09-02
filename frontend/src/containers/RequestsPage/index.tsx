@@ -3,10 +3,13 @@ import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionnaireRequestsRoutine} from "../../sagas/report/routines";
 import {RequestItem} from "./RequestItem";
-import {Card, Container, Header, Tab} from "semantic-ui-react";
+import {Card, Tab} from "semantic-ui-react";
 import {IRequestShort} from "models/report/IReport";
 import {closeRequestRoutine} from "../../sagas/request/routines";
 import { useTranslation } from "react-i18next";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import UIContent from "../../components/UI/UIContent";
+import UIColumn from "../../components/UI/UIColumn";
 
 const RequestsPage: FC<RequestPageProps & { match }> = (
     {loadRequests, match, requests, isLoading, closeRequest}) => {
@@ -49,14 +52,16 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
     ];
 
     return (
-        <Container textAlign="center" style={{width: "70%"}}>
-            <Header as='h1' dividing style={{padding: 20}}>
-                <Header.Content>
-                    {t("Track pending/closed requests")}
-                </Header.Content>
-            </Header>
-            <Tab panes={panes}/>
-        </Container>
+        <>
+            <UIPageTitle title={t("Track pending/closed requests")}/>
+            <br />
+            <br />
+            <UIContent>
+                <UIColumn wide>
+                    <Tab panes={panes}/>
+                </UIColumn>
+            </UIContent>
+        </>
     );
 };
 

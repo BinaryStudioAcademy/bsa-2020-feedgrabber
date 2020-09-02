@@ -29,8 +29,8 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
     }
 ) => {
   useEffect(() => {
-    getSettings();
-  }, [getSettings]);
+   !settings && getSettings();
+  }, [getSettings, settings]);
 
   const [t, i18n] = useTranslation();
 

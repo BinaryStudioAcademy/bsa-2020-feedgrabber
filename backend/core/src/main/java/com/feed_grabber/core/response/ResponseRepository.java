@@ -24,9 +24,5 @@ public interface ResponseRepository extends JpaRepository<Response, UUID> {
     List<Response> findAllByUserIdAndRequestNotNull(UUID userId);
 
     List<Response> findAllByUserId(UUID userId);
-
-    @Transactional
-    @Modifying
-    @Query("update Response r set r.notificationExists = false where r.user.id = :id")
-    void deleteAllNotificationsByUserId(UUID id);
+    
 }
