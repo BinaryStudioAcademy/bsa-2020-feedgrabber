@@ -32,6 +32,7 @@ const initialValues = {
   chosenTeams: new Array<ITeamShort>(),
   targetUserId: null,
   includeTargetUser: false,
+  sendToTargetUser: false,
   withDeadline: false,
   expirationDate: null,
   notifyUsers: false,
@@ -69,6 +70,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
             loadSections(match.params.id);
         }, [loadSections, match.params.id]);
 
+      const [targetUserPattern, setTargetUserPattern] = useState('');
+      const [respondentPattern, setRespondentPattern] = useState('');
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
       return (
@@ -108,6 +111,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             questionnaireId: match.params.id,
                             targetUserId: values.targetUserId,
                             includeTargetUser: !!values.targetUserId && values.includeTargetUser,
+                            sendToTargetUser: !!values.sendToTargetUser && values.sendToTargetUser,
                             respondentIds: values.chosenUsers.map(user => user.id),
                             teamIds: values.chosenTeams.map(team => team.id),
                             changeable: values.changeable
@@ -121,11 +125,18 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             <form onSubmit={formik.handleSubmit}>
 
                               <UICardBlock>
-                                <h4>{t("Assign target user:")}</h4>
+                                <h4>{t("Assign target user")}:</h4>
                                 <p>{t("This user will receive report")}</p>
-                                <div style={{height: '200px', overflow: 'auto'}}>
+                                <input type="text"
+                                       style={{width: '100%'}}
+                                       onChange={e => setTargetUserPattern(e.target.value)}/>
+                                <div className={styles.targetUserContainer}>
                                   {
-                                    users.map(user => (
+                                    users
+                                      .filter(user => targetUserPattern
+                                        ? user.username.includes(targetUserPattern)
+                                        : true)
+                                      .map(user => (
                                         <UIUserItemCard
                                             key={user.id}
                                             firstName={'username: ' + user.username}
@@ -151,8 +162,18 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                   /></span>
                                 </h4>
                                 <p>{t("If yes, this user will also receive request")}</p>
-                              </UICardBlock>)
-                              }
+                              </UICardBlock>)}
+                              {formik.values.targetUserId && (<UICardBlock>
+                                <h4 className={styles.yesNoHeader}>Send report to target user?
+                                  <span>
+                                  <UISwitch
+                                      name='sendToTargetUser'
+                                      checked={formik.values.sendToTargetUser}
+                                      onChange={formik.handleChange}
+                                  /></span>
+                                </h4>
+                                <p>{t("If yes, this user will also receive report")}</p>
+                              </UICardBlock>)}
                               <UICardBlock>
                                 <h4 className={styles.yesNoHeader}>{t("Set Deadline for this request?")}
                                   <span>
@@ -218,28 +239,35 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               <UICardBlock>
                                 <div className={styles.selectHeader}>
                                   <h4>
-                                <span className={[styles.option, selectTeams && styles.selected].join(' ')}
-                                      onClick={() => {
-                                        if (!selectTeams) {
-                                          setSelectTeams(true);
-                                          formik.setFieldValue('chosenUsers', []);
-                                        }
-                                      }}>
-                                        {t("Select Teams")}
-                                        </span>
-                                    <span className={[styles.option, !selectTeams && styles.selected].join(' ')}
-                                          onClick={() => {
-                                            if (selectTeams) {
-                                              setSelectTeams(false);
-                                              formik.setFieldValue('chosenTeams', []);
-                                            }
-                                          }}>
-                                {t("Select Users")}
-                              </span>
+                                  <span className={[styles.option, selectTeams && styles.selected].join(' ')}
+                                        onClick={() => {
+                                          if (!selectTeams) {
+                                            setSelectTeams(true);
+                                            formik.setFieldValue('chosenUsers', []);
+                                          }
+                                        }}>
+                                    {t("Select Teams")}
+                                  </span>
+                                  <span className={styles.separator}>{t("or")}</span>
+                                  <span className={[styles.option, !selectTeams && styles.selected].join(' ')}
+                                        onClick={() => {
+                                              if (selectTeams) {
+                                                setSelectTeams(false);
+                                                formik.setFieldValue('chosenTeams', []);
+                                              }
+                                            }}>
+                                    {t("Select Users")}
+                                  </span>
                                   </h4>
                                 </div>
-
-                                {selectTeams && teams.map(team => team.membersAmount > 0 && (
+                                <input type="text"
+                                       style={{width: '100%'}}
+                                       onChange={e => setRespondentPattern(e.target.value)}/>
+                                {selectTeams && teams
+                                  .filter(team => respondentPattern
+                                    ? team.name.includes(respondentPattern)
+                                    : true)
+                                  .map(team => team.membersAmount > 0 && (
                                     <UITeamItemCard
                                         key={team.id}
                                         team={team}
@@ -256,7 +284,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
                                     />
                                 ))}
-                                {!selectTeams && users.map(user => (
+                                {!selectTeams && users
+                                  .filter(user => respondentPattern
+                                    ? user.username.includes(respondentPattern)
+                                    : true)
+                                  .map(user => (
                                     <UIUserItemCard
                                         key={user.id}
                                         avatar={user.avatar}

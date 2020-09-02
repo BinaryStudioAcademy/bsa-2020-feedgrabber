@@ -113,15 +113,11 @@ function* saveOrUpdateQuestion(action) {
 function* deleteOneByQuestionnaireId(action) {
     try {
         const {questionId, questionnaireId} = action.payload;
-
-        const res: IGeneric<IQuestion[]> = yield call(
+        console.log(action.payload);
+        yield call(
             apiClient.delete, `/api/questions/questionnaires/${questionId}/${questionnaireId}`,
             action.payload
         );
-
-        const questions = res.data.data.map(q => parseQuestion(q));
-
-        yield put(deleteFromQuestionnaireRoutine.success(questions));
         yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
     } catch (e) {
         yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));

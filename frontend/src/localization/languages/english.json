@@ -141,7 +141,7 @@
     "Send Request": "Send Request",
     "Select deadline date!": "Select deadline date!",
     "Select at least one user or team": "Select at least one user or team",
-    "Assign target user:": "Assign target user:",
+    "Assign target user": "Assign target user",
     "This user will receive report": "This user will receive report",
     "If yes, this user will also receive request": "If yes, this user will also receive request",
     "Set Deadline for this request?": "Set Deadline for this request?",
@@ -263,6 +263,9 @@
     "using this link": "using this link",
     "Enter your personal details and start journey with us": "Enter your personal details and start journey with us",
     "Unable to load data": "Unable to load data",
-    "report": "report"
+    "report": "report",
+    "No reports for now, we'll notify you": "No reports for now, we'll notify you",
+    "or": "or",
+    "Matches searched query": "Matches searched query",
   }
 }

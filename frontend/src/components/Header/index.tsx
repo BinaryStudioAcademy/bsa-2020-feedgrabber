@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 
-import {Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
+import {Image, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
@@ -11,7 +11,7 @@ import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
-// import Search from "../Search";
+import Search from "../Search";
 import AccessManager from "../AccessManager";
 import {Permissions} from "../AccessManager/rbac-rules";
 import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
@@ -57,7 +57,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                     </div>
                 </div>
                 <div className={styles.headerPart}>
-                    {/* <Search/>*/}
+                    <Search/>
                     <div className={styles.headerBellWrapper}>
                         <NotificationMenu/>
                     </div>

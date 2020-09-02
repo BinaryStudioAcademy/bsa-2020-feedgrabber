@@ -7,13 +7,13 @@ import QuestionMenu from "../../components/QuestionMenu";
 
 import {
   createSectionRoutine,
-  loadSectionsByQuestionnaireRoutine,
-  deleteQuestionFromSectionRoutine
+  loadSectionsByQuestionnaireRoutine
 } from 'sagas/sections/routines';
 import {
     indexQuestionsRoutine,
     loadQuestionByIdRoutine,
-    saveQuestionRoutine
+    saveQuestionRoutine,
+    deleteFromQuestionnaireRoutine
 } from "sagas/questions/routines";
 
 import UIContent from "../../components/UI/UIContent";
@@ -51,7 +51,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     const handleDeleteQuestion = () => deleteQuestion({
       questionId: question.id,
-      sectionId: currentSection.id,
       questionnaireId: questionnaire.id
     });
 
@@ -130,7 +129,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
-    deleteQuestion: deleteQuestionFromSectionRoutine,
+    deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,
     indexQuestions: indexQuestionsRoutine,
     loadQuestion: loadQuestionByIdRoutine

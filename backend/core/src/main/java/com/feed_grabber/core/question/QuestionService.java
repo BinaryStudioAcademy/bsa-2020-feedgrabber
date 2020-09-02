@@ -183,9 +183,11 @@ public class QuestionService {
         }
     }
 
-    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) {
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) throws QuestionnaireNotFoundException {
         var section = sectionRepository.findByQuestionnaireIdAndQuestionId(qId, questionId);
         sectionRepository.deleteQuestion(section.getId(), questionId);
+
+        anketRep.deleteQuestionFromQuestionnaire(qId, questionId);
     }
 
     public List<QuestionDto> getAllBySection(UUID id) {

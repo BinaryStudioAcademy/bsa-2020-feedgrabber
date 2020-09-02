@@ -141,7 +141,7 @@
     "Send Request": "Відправити запит",
     "Select deadline date!": "Оберіть кінцевий термін!",
     "Select at least one user or team": "Виберіть принаймні одного користувача чи команду",
-    "Assign target user:": "Призначити користувача:",
+    "Assign target user": "Призначити користувача",
     "This user will receive report": "Цей користувач отримає звіт",
     "If yes, this user will also receive request": "Якщо так, цей користувач також отримає запит",
     "Set Deadline for this request?": "Встановити кінцевий термін для цього запиту?",
@@ -263,6 +263,9 @@
     "using this link": "за цим посиланням",
     "Enter your personal details and start journey with us": "Введіть свої особисті дані та розпочніть подорож з нами",
     "Unable to load data": "Не вдається завантажити дані",
-    "report": "звіт"
+    "report": "звіт",
+    "No reports for now, we'll notify you": "Поки що звітів немає, ми вас сповіщимо",
+    "or": "або",
+    "Matches searched query": "Знайдені пошукові запити"
   }
 }

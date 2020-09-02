@@ -130,7 +130,7 @@ public class QuestionController {
     public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(
             @PathVariable UUID questionId,
             @PathVariable UUID questionnaireId
-    ){
+    ) throws QuestionnaireNotFoundException {
 
         questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
 

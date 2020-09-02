@@ -10,7 +10,7 @@ import {loadQuestionnaireRequestsRoutine} from "../report/routines";
 
 function* saveRequest(action) {
   try {
-    yield call(apiClient.post,'/api/request/new' ,action.payload);
+    yield call(apiClient.post,'/api/request/new', action.payload);
     toastr.success('Request Created');
   } catch(error) {
     toastr.error('Creating Request Failed');
