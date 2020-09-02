@@ -7,7 +7,7 @@
     "Profile": "Profile",
     "Settings": "Settings",
     "Requests": "Requests",
-    "Log out": "Log out",
+    "Logout": "Logout",
 
     "Home": "Home",
     "Company Dashboard": "Company Dashboard",
@@ -266,6 +266,16 @@
     "report": "report",
     "No reports for now, we'll notify you": "No reports for now, we'll notify you",
     "or": "or",
-    "Matches searched query": "Matches searched query"
+    "Matches searched query": "Matches searched query",
+    "items per page": "items per page",
+
+    "New request": "New request",
+    "Show requests and reports": "Show requests and reports",
+    "Manage questions": "Manage questions",
+    "Change title": "Change title",
+    "Delete questionnaire": "Delete questionnaire",
+
+    "Edit questionnaire": "Edit questionnaire",
+    "Add questionnaire": "Add questionnaire"
   }
 }

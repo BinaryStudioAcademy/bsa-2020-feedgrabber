@@ -7,7 +7,7 @@
     "Profile": "Профіль",
     "Settings": "Налаштування",
     "Requests": "Запит",
-    "Log out": "Вийти",
+    "Logout": "Вийти",
 
     "Home": "Домашня",
     "Company Dashboard": "Дошка компанії",
@@ -266,6 +266,16 @@
     "report": "звіт",
     "No reports for now, we'll notify you": "Поки що звітів немає, ми вас сповіщимо",
     "or": "або",
-    "Matches searched query": "Знайдені пошукові запити"
+    "Matches searched query": "Знайдені пошукові запити",
+    "items per page": "елементів на сторінці",
+
+    "New request": "Новий запит",
+    "Show requests and reports": "Показати запити та звіти",
+    "Manage questions": "Редагування питаннями",
+    "Change title": "Змінити заголовок",
+    "Delete questionnaire": "Видалити опитник",
+
+    "Edit questionnaire": "Редагувати опитник",
+    "Add questionnaire": "Створити опитник"
   }
 }

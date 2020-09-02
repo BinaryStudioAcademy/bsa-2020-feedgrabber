@@ -96,7 +96,7 @@ const MainPage: FC<IMainPageProps> =
                                                         onClick={() =>
                                                             handleAnswerClick(requestId)}/>
                                             : <p>{t("Expired")} {new Date(new Date().valueOf()
-                                                - expirationDate?.valueOf()).getHours()} hours ago</p>}
+                                                - expirationDate?.valueOf()).getHours()} {t("hours ago")}</p>}
                                     </UICardBlock>
                                 ))}
                         </LoaderWrapper>
@@ -129,7 +129,7 @@ const MainPage: FC<IMainPageProps> =
                                             > new Date().valueOf() && !closeDate)
                                             ? <UIButton
                                                 primary
-                                                title={changeable ? "Change my answer" : "Show answers"}
+                                                title={changeable ? t("Change my answer") : t("Show answers")}
                                                 onClick={() =>
                                                     handleModifyAnswerClick(
                                                         requestId,
@@ -137,7 +137,7 @@ const MainPage: FC<IMainPageProps> =
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
                                                 ? <p>{t("Force closed on")} {new Date(closeDate).toUTCString()}</p>
                                                 : <p>{t("Expired")} {new Date(new Date().valueOf()
-                                                    - expirationDate?.valueOf()).getHours()} hours ago</p>}
+                                                    - expirationDate?.valueOf()).getHours()} {t("hours ago")}</p>}
                                     </UICardBlock>
                                 ))}
                         </LoaderWrapper>
@@ -149,7 +149,7 @@ const MainPage: FC<IMainPageProps> =
 
         return (
             <>
-                <UIPageTitle title="Home"/>
+                <UIPageTitle title={t("Home")}/>
                 <UIContent>
                     <UIColumn>
                         <UICard>

@@ -63,7 +63,7 @@ const QuestionnaireList: FC<Props> = (
                     }>{match && 'Matches searched query!'}</span>
                 <div className={styles.cardIconWrapper}>
                   <Popup
-                    content="New request"
+                    content={t("New request")}
                     position="top center"
                     trigger={
                       <Icon
@@ -74,7 +74,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Show requests and reports"
+                    content={t("Show requests and reports")}
                     position="top center"
                     trigger={
                       <Icon
@@ -87,7 +87,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Manage questions"
+                    content={t("Manage questions")}
                     position="top center"
                     trigger={
                       <Icon
@@ -101,7 +101,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Change title"
+                    content={t("Change title")}
                     position="top center"
                     trigger={
                       <Icon
@@ -112,7 +112,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Delete questionnaire"
+                    content={t("Delete questionnaire")}
                     position="top center"
                     trigger={
                       <Icon
