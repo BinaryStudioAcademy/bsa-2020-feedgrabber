@@ -10,11 +10,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.bridge.builtin.EnumBridge;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+@Indexed
 @Entity
 @Data
 @NoArgsConstructor
@@ -31,9 +35,13 @@ public class Question {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "text", nullable = false, unique = true)
     private String text;
 
+    @Field(bridge = @FieldBridge(impl = EnumBridge.class))
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
@@ -43,6 +51,7 @@ public class Question {
     @ManyToMany(mappedBy = "questions")
     private List<Questionnaire> questionnaires;
 
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;
 

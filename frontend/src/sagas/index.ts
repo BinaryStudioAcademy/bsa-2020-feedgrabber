@@ -37,6 +37,7 @@ export default function* rootSaga() {
         responseSagas(),
         roleSagas(),
         sectionSagas(),
-        searchSagas()
+        searchSagas(),
+        companyFeedSaga()
     ]);
 }
