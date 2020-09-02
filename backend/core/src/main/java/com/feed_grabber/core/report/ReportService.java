@@ -7,16 +7,23 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.rabbit.Receiver;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
+import com.feed_grabber.core.report.dto.ReportShortDto;
 import com.feed_grabber.core.request.RequestRepository;
+import com.feed_grabber.core.request.model.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import static com.feed_grabber.core.role.RoleConstants.*;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -52,5 +59,33 @@ public class ReportService {
 
     public String getReport(UUID requestId) {
         return template.getForObject(EP +"/report/"+requestId, String.class);
+    }
+
+    public void hasAccess(UUID requestId, UUID userId, String role) {
+        if (role.equals(ROLE_COMPANY_OWNER) || role.equals(ROLE_HR)) {
+            return;
+        }
+        Optional<Request> request = requestRepository.findByIdAndTargetUser(requestId, userId);
+        if (request.isEmpty() || !request.get().getSendToTarget()) {
+            throw new AccessDeniedException("You have not enough permissions to view this report");
+        }
+    }
+
+    public List<ReportShortDto> getAllAvailableReports(final UUID userId, final String role, final UUID comanyId) {
+        List<Request> reports;
+        switch (role) {
+            case ROLE_COMPANY_OWNER:
+            case ROLE_HR:
+                reports = requestRepository.findAllReports(comanyId);
+                break;
+            case ROLE_EMPLOYEE:
+                reports = requestRepository.findReportsForEmployee(userId);
+                break;
+            default:
+                return null;
+        }
+        return reports.stream()
+                .map(ReportMapper.MAPPER::requestToReportShort)
+                .collect(Collectors.toList());
     }
 }

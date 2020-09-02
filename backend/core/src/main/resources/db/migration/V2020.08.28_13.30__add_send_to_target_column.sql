@@ -1,0 +1,1 @@
+alter table requests add column send_to_target boolean;

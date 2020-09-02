@@ -56,6 +56,9 @@ public class Request {
     @Column(name = "generate_report")
     private Boolean generateReport;
 
+    @Column(name = "send_to_target")
+    private Boolean sendToTarget;
+
     @Column(name = "changeable", nullable = false)
     @ColumnDefault("false")
     private boolean changeable;
