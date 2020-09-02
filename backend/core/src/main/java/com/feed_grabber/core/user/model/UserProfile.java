@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -26,12 +28,18 @@ public class UserProfile {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "first_name")
     private String firstName;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "last_name")
     private String lastName;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "phone_number")
     private String phoneNumber;
 

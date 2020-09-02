@@ -1,6 +1,7 @@
-package com.feed_grabber.core.role;
+package com.feed_grabber.core.role.model;
 
 import com.feed_grabber.core.company.Company;
+import com.feed_grabber.core.role.SystemRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

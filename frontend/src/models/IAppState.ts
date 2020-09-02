@@ -14,6 +14,7 @@ import {IQuestionnaireResponseState} from "./forms/Response/types";
 import {IRoleState} from "../reducers/role/reducer";
 import {ISectionsState} from "../reducers/section/reducer";
 import { INewsFeedState } from "./news";
+import {ISearchResultState} from "./search/Search";
 
 export interface IAppState {
     toastr: any;
@@ -34,4 +35,5 @@ export interface IAppState {
     isLoading: boolean;
     notifications: INotificationsState;
     news: INewsFeedState;
+    search: ISearchResultState;
 }

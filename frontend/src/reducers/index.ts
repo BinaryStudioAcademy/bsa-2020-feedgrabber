@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux';
-import { reducer as toastr } from 'react-redux-toastr';
+import {combineReducers} from 'redux';
+import {reducer as toastr} from 'react-redux-toastr';
 import authAndProfileReducer from './auth/reducer';
 import questionsReducer from "./questions/reducer";
 import questionnairesReducer from "./questionnaires/reducer";
@@ -17,6 +17,7 @@ import notificationReducer from "./notifications";
 import responseReducer from "./questionnaireResponse/reducer";
 import sectionsReducer from './section/reducer';
 import newsReducer from './news/reducer';
+import searchReducer from "./search/reducer";
 
 export default combineReducers({
   toastr,
@@ -36,5 +37,6 @@ export default combineReducers({
   companyFeed: companyFeedReducer,
   notifications: notificationReducer,
   role: roleReducer,
-  news: newsReducer
+  news: newsReducer,
+  search: searchReducer
 });
