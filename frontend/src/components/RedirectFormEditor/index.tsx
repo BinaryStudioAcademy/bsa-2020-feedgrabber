@@ -5,7 +5,7 @@ import {saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines
 import {history} from "../../helpers/history.helper";
 import {toastr} from 'react-redux-toastr';
 import moment from "moment";
-import {Modal, Button, Icon, Input} from "semantic-ui-react";
+import {Modal, Input} from "semantic-ui-react";
 import UIButton from "../UI/UIButton";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {

@@ -6,14 +6,14 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 
 import {
-  createSectionRoutine,
-  loadSectionsByQuestionnaireRoutine,
-  deleteQuestionFromSectionRoutine
+    createSectionRoutine, deleteQuestionFromSectionRoutine,
+    loadSectionsByQuestionnaireRoutine
 } from 'sagas/sections/routines';
 import {
     indexQuestionsRoutine,
     loadQuestionByIdRoutine,
-    saveQuestionRoutine
+    saveQuestionRoutine,
+    deleteFromQuestionnaireRoutine
 } from "sagas/questions/routines";
 
 import UIContent from "../../components/UI/UIContent";
@@ -22,6 +22,8 @@ import {Header} from "semantic-ui-react";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {toastr} from "react-redux-toastr";
+import UIPageTitle from "../../components/UI/UIPageTitle";
+import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
@@ -37,7 +39,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         createSection,
         currentSection,
         indexQuestions,
-        loadQuestion
+        loadQuestion,
+        toggleMenu
     }
 ) => {
     const [question, setQuestion] = useState<IQuestion>();
@@ -51,13 +54,13 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     const handleDeleteQuestion = () => deleteQuestion({
       questionId: question.id,
-      sectionId: currentSection.id,
       questionnaireId: questionnaire.id
     });
 
     useEffect(() => {
         setQuestion(currentQuestion);
-    }, [currentQuestion]);
+        toggleMenu(false);
+    }, [currentQuestion, toggleMenu]);
 
     const addNewQuestion = () => {
         const section = currentSection ? currentSection : sections[0];
@@ -89,11 +92,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     return (
         <>
-            <Header as='h1' dividing style={{padding: "1.2em", textAlign: "center"}}>
-                <Header.Content>
-                    {questionnaire.title}
-                </Header.Content>
-            </Header>
+            <UIPageTitle title={questionnaire.title} />
             {questionnaire && (
                 <div className={styles.formDetails}>
                     <LoaderWrapper loading={isLoading}>
@@ -130,6 +129,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
+    toggleMenu: toggleMenuRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
     indexQuestions: indexQuestionsRoutine,

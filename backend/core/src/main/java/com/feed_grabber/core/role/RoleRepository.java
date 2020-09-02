@@ -1,5 +1,6 @@
 package com.feed_grabber.core.role;
 
+import com.feed_grabber.core.role.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

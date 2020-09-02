@@ -11,7 +11,7 @@ import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import LoaderWrapper from "../../components/LoaderWrapper";
 
-const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions}) => {
+const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions, result}) => {
     const history = useHistory();
 
     useEffect(() => {
@@ -29,15 +29,20 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
                         <UIButton center primary title="Add new" onClick={() => handleClick("new")}/>
-                        <br />
+                        <br/>
                         {(questions.map((question, index) => {
+                            const match = result
+                                .questions
+                                .map(q => q.id)
+                                .includes(question.id);
                             return (
                                 <div key={index} className={styles.questionContainer}>
-                                    <Card className={styles.question}
+                                    <Card className={`${styles.question} ${match && styles.searched}`}
                                           link centered fluid
                                           description={question.name.length > 70 ?
                                               question.name.slice(0, 70).concat("...") :
                                               question.name}
+                                          extra={match && 'Matches searched query!'}
                                           meta={question.categoryTitle.length > 70 ?
                                               question.categoryTitle.slice(0, 70).concat("...") :
                                               question.categoryTitle}
@@ -54,7 +59,8 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
 
 const mapState = (state: IAppState) => ({
     questions: state.questions.list,
-    isLoading: state.questions.isLoading
+    isLoading: state.questions.isLoading,
+    result: state.search.result
 });
 
 const mapDispatch = {

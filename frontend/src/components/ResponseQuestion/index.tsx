@@ -2,7 +2,7 @@ import QuestionDetailsPage from "../../containers/QuestionDeatilsPage";
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import {IAppState} from "models/IAppState";
 import {IQuestionResponse} from "models/IQuestionResponse";
-import React, {FC, useRef, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
 import {Button, Header, Icon, Label, Popup, Segment} from "semantic-ui-react";
@@ -13,6 +13,11 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         const {name, categoryTitle, type, id} = question;
         const [editor, setEditor] = useState(false);
         const detailsPage = useRef(null);
+        const [style, setStyle] = useState(styles.container);
+
+        useEffect(() => {
+            id === nowModifying.id ? setStyle(styles.highlight) : setStyle(styles.container);
+        }, [id, nowModifying]);
 
         const handleSegmentClick = () => {
             setEditor(!editor);
@@ -23,7 +28,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         return (
             <div ref={detailsPage}>
                 <Segment
-                    className={styles.container}>
+                    className={style}>
                     {((isModifyingEnabled && !answerHandler) || editor) &&
                     <Icon name='code' link onClick={handleSegmentClick}/>}
                     {!isModifyingEnabled && !editor &&

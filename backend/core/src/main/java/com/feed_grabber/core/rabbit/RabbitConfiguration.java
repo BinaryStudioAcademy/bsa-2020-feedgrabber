@@ -26,20 +26,14 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Value("${rabbitmq.routing-key-response}")
     private String routingKey;
 
-    @Value("${rabbitmq.routing-key-report-excel-link}")
-    private String reportGenerationResponseRoutingKey;
-
-    @Value("${rabbitmq.routing-key-report-ppt-link}")
-    private String pptReportResponseRoutingKey;
-
     @Value("${rabbitmq.queue.response}")
     private String queue;
 
-    @Value("${rabbitmq.queue.report}")
-    private String reportQueue;
+    @Value("${rabbitmq.routing-key-response-links}")
+    private String linksRoutingKey;
 
-    @Value("${rabbitmq.queue.report.ppt}")
-    private String pptReportQueue;
+    @Value("${rabbitmq.queue.response.links}")
+    private String linksQueue;
 
     @Bean
     public Queue queue() {
@@ -47,14 +41,10 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     }
 
     @Bean
-    public Queue reportQueue() {
-        return new Queue(reportQueue, true);
+    public Queue linksQueue() {
+        return new Queue(linksQueue, true);
     }
 
-    @Bean
-    public Queue pptReportQueue() {
-        return new Queue(pptReportQueue, true);
-    }
 
     @Bean
     public TopicExchange exchange() {
@@ -66,13 +56,9 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
-    @Bean Binding bindingPPTReportResponseQueue(Queue pptReportQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(pptReportQueue).to(exchange).with(pptReportResponseRoutingKey);
-    }
-
     @Bean
-    public Binding bindingReportResponseQueue(Queue reportQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(reportQueue).to(exchange).with(reportGenerationResponseRoutingKey);
+    public Binding bindingLinks(Queue linksQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(linksQueue).to(exchange).with(linksRoutingKey);
     }
 
     @Bean

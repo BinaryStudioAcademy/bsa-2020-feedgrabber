@@ -8,12 +8,15 @@ import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Indexed
 @Entity
 @Data
 @Table(name = "requests")
@@ -24,6 +27,7 @@ public class Request {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "questionnaire_id", nullable = false)
     private Questionnaire questionnaire;
@@ -51,6 +55,9 @@ public class Request {
 
     @Column(name = "generate_report")
     private Boolean generateReport;
+
+    @Column(name = "send_to_target")
+    private Boolean sendToTarget;
 
     @Column(name = "changeable", nullable = false)
     @ColumnDefault("false")

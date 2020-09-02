@@ -30,32 +30,11 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.queue}")
     private val queue: String? = null
 
-    @Value("\${rabbitmq.queue.report}")
-    private lateinit var reportQueue: String
-
-    @Value("\${rabbitmq.queue.report.ppt}")
-    private lateinit var pptReportQueue: String
-
-    @Value("\${rabbitmq.routing-key-report-excel}")
-    private val reportRoutingKey: String? = null
-
-    @Value("\${rabbitmq.routing-key-report-excel}")
-    private val pptReportRoutingKey: String? = null;
-
     @Bean
     fun queue(): Queue? {
         return Queue(queue, true)
     }
 
-    @Bean
-    fun reportQueue(): Queue? {
-        return Queue(reportQueue, true)
-    }
-
-    @Bean
-    fun pptReportQueue(): Queue? {
-        return Queue(pptReportQueue, true)
-    }
 
     @Bean
     fun exchange(): TopicExchange? {
@@ -66,17 +45,7 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     fun binding(queue: Queue?, exchange: TopicExchange?): Binding? {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
     }
-
-    @Bean
-    fun pptReportQueueBinding(pptReportQueue: Queue?, exchange: TopicExchange?): Binding? {
-        return BindingBuilder.bind(pptReportQueue).to(exchange).with(pptReportRoutingKey)
-    }
-
-    @Bean
-    fun reportQueueBinding(reportQueue: Queue?, exchange: TopicExchange?): Binding? {
-        return BindingBuilder.bind(reportQueue).to(exchange).with(reportRoutingKey)
-    }
-
+    
     @Bean
     fun rabbitTemplate(connectionFactory: ConnectionFactory?): RabbitTemplate? {
         val rabbitTemplate = connectionFactory?.let { RabbitTemplate(it) }

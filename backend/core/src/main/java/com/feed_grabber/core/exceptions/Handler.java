@@ -9,6 +9,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -68,6 +69,13 @@ public class Handler extends ResponseEntityExceptionHandler {
     public ResponseEntity<AppResponse<Object>> handleDeadlineExpired(DeadlineExpiredException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(ex));
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<AppResponse<Object>> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(new AppResponse<>(ex));
     }
 }

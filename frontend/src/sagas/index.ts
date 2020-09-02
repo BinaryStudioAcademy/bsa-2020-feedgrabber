@@ -15,24 +15,31 @@ import notificationsSagas from "./notifications/sagas";
 import sectionSagas from './sections/sagas';
 import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
+import newsSagas from './news/sagas';
+import searchSagas from "./search/sagas";
+import companyFeedSaga from './companyFeed/sagas';
 
 export default function* rootSaga() {
-  yield all([
-    authSaga(),
-    userSagas(),
-    questionSagas(),
-    teamsSagas(),
-    questionnairesSagas(),
-    questionnaireReportSagas(),
-    usersSagas(),
-    invitationSagas(),
-    invitationSignUpSagas(),
-    categorieSagas(),
-    companiesSaga(),
-    requestSaga(),
-    notificationsSagas(),
-    responseSagas(),
-    roleSagas(),
-    sectionSagas()
-  ]);
+    yield all([
+        authSaga(),
+        userSagas(),
+        questionSagas(),
+        teamsSagas(),
+        questionnairesSagas(),
+        questionnaireReportSagas(),
+        usersSagas(),
+        invitationSagas(),
+        invitationSignUpSagas(),
+        categorieSagas(),
+        companiesSaga(),
+        companyFeedSaga(),
+        requestSaga(),
+        notificationsSagas(),
+        responseSagas(),
+        roleSagas(),
+        sectionSagas(),
+        searchSagas(),
+        companyFeedSaga(),
+        newsSagas()
+    ]);
 }
