@@ -114,11 +114,11 @@ public class UserController {
             @RequestParam Integer page,
             @RequestParam Integer size
     ) {
-        var companyId = TokenService.getCompanyId();
+        var pagedResponse = userService.searchByQuery(query, page, size);
         return new AppResponse<>(
                 new DataList<>(
-                        userService.searchByQuery(companyId, query, page, size),
-                        userService.getCountByQuery(companyId, query),
+                        pagedResponse.getObjects(),
+                        pagedResponse.getSize(),
                         page,
                         size
                 ));
