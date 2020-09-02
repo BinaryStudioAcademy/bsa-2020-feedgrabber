@@ -2,6 +2,7 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
+
 import com.feed_grabber.core.notification.MessageTypes;
 import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
@@ -12,6 +13,7 @@ import com.feed_grabber.core.file.dto.S3FileCreationDto;
 import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.report.dto.FileReportsDto;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
@@ -149,18 +151,26 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
-    public void addExcelReport(S3FileCreationDto dto) throws NotFoundException {
-        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
-        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
-        request.setExcelReport(report);
-        requestRepository.save(request);
-    }
+    public void addFileReports(FileReportsDto dto) throws NotFoundException {
+        if(dto.getExcelReport() != null && dto.getPptReport() != null) {
+            var excelReport = fileRepository.save(
+                    S3File.builder()
+                            .link(dto.getExcelReport().getLink())
+                            .key(dto.getExcelReport().getKey())
+                            .build()
+            );
+            var pptReport = fileRepository.save(
+                    S3File.builder()
+                            .link(dto.getPptReport().getLink())
+                            .key(dto.getPptReport().getKey())
+                            .build()
+            );
+            var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
+            request.setPowerPointReport(pptReport);
+            request.setExcelReport(excelReport);
+            requestRepository.save(request);
+        }
 
-    public void addPPTReport(S3FileCreationDto dto) throws NotFoundException {
-        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
-        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
-        request.setPowerPointReport(report);
-        requestRepository.save(request);
     }
 
     public Date closeNow(UUID requestId) throws NotFoundException {

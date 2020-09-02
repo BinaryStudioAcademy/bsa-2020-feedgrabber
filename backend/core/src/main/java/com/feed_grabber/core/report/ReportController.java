@@ -35,24 +35,11 @@ public class ReportController {
         return new AppResponse<>(response);
     }
 
-    @ApiOperation(value = "Get the excel for report by id")
-    @PostMapping("/excel")
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void generateReport(@RequestParam UUID requestId) {
-        service.sendExcelReportGenerationRequest(requestId);
-    }
-
     @GetMapping("/all")
     public AppResponse<List<ReportShortDto>> getAllAvailableReports() {
         final String role = TokenService.getRoleName();
         final UUID companyId = TokenService.getCompanyId();
         final UUID userId = TokenService.getUserId();
         return new AppResponse<>(service.getAllAvailableReports(userId, role, companyId));
-    }
-
-    @ApiOperation(value = "Get the ppt for report by id")
-    @PostMapping("/ppt")
-    public void generatePPTReport(@RequestParam UUID requestId) {
-        service.sendPPTReportGenerationRequest(requestId);
     }
 }

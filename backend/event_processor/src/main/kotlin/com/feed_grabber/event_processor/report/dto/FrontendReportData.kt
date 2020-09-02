@@ -7,8 +7,8 @@ import java.util.*
 data class FrontendReportData(
         val questionnaire: QuestionnaireDto,
         val questions: List<QuestionInfo>?,
-        val excelLink: ReportFileCreationResponseDto?,
-        val powerPointLink: ReportFileCreationResponseDto?
+        val excelLink: ReportFileCreationDto?,
+        val powerPointLink: ReportFileCreationDto?
 )
 
 data class OptionInfo(val title: String, val amount: Int)
@@ -29,5 +29,5 @@ data class QuestionWithValues(val values: List<String>) : QuestionReportData()
 
 data class FrontendProjection(val questions: List<QuestionDB>,
                               val questionnaire: QuestionnaireDto,
-                              val excelLink: ReportFileCreationResponseDto?,
-                              val powerPointLink: ReportFileCreationResponseDto?)
+                              val excelLink: ReportFileCreationDto?,
+                              val powerPointLink: ReportFileCreationDto?)

@@ -153,7 +153,11 @@ const MainPage: FC<IMainPageProps> =
                             <UICardBlock>
                                 <h3>My Reports</h3>
                             </UICardBlock>
-                              {reportsList.map(item => (
+                            {reportsList.length === 0 ?
+                              <UICardBlock>
+                                No reports for now, we'll notify you
+                              </UICardBlock> :
+                              reportsList.map(item => (
                                 <UICardBlock key={item.id}>
                                     {item.title && <h4>{item.title}</h4>}
                                     {item.closeDate && <p>{item.closeDate}</p>}
