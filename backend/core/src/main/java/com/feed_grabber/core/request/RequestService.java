@@ -2,6 +2,8 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
+
+import com.feed_grabber.core.notification.MessageTypes;
 import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
@@ -11,6 +13,7 @@ import com.feed_grabber.core.file.dto.S3FileCreationDto;
 import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.report.dto.FileReportsDto;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
@@ -21,6 +24,7 @@ import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -55,7 +59,7 @@ public class RequestService {
         this.fileRepository = fileRepository;
     }
 
-    public UUID createNew(CreateRequestDto dto) throws QuestionCategoryNotFoundException, UserNotFoundException {
+    public UUID createNew(CreateRequestDto dto) throws NotFoundException {
         var questionnaire = questionnaireRepository
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionCategoryNotFoundException::new);
@@ -94,28 +98,34 @@ public class RequestService {
             else users.remove(targetUser);
         }
 
-        var notificationExists = dto.getNotifyUsers();
+        var notifyUsers = dto.getNotifyUsers();
         var responses = users.stream()
-                .map(u -> Response.builder().user(u).request(request).notificationExists(notificationExists).build())
+                .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
 
         if (dto.getNotifyUsers()) {
-            var toSaveNotification = UserNotification
-                    .builder()
-                    .request(request)
-                    .text("You have new questionnaire request")
-                    .build();
-
-            var notification = userNotificationRepository.save(toSaveNotification);
-
-            var userIds = users.stream().map(user -> user.getId().toString()).collect(Collectors.toList());
-            var toSendNotification = userNotificationRepository.findNotificationById(notification.getId());
-            notificationService.sendMessageToUsers(
-                    userIds,
-                    "notify",
-                    toSendNotification);
+            Map<UUID, UUID> userIdNotificationId = new HashMap();
+            for (User user : users)
+                userIdNotificationId.put(user.getId(),
+                        userNotificationRepository.save(UserNotification
+                                .builder()
+                                .request(request)
+                                .text("You have new questionnaire request")
+                                .isClosed(!notifyUsers)
+                                .isRead(false)
+                                .type(MessageTypes.plain_text)
+                                .user(user)
+                                .build()).getId());
+            for (UUID userId : userIdNotificationId.keySet()) {
+                notificationService.sendMessageToConcreteUser(
+                        userId.toString(),
+                        "notify",
+                        userNotificationRepository
+                                .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
+                );
+            }
         }
 
         return request.getId();
@@ -141,18 +151,26 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
-    public void addExcelReport(S3FileCreationDto dto) throws NotFoundException {
-        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
-        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
-        request.setExcelReport(report);
-        requestRepository.save(request);
-    }
+    public void addFileReports(FileReportsDto dto) throws NotFoundException {
+        if(dto.getExcelReport() != null && dto.getPptReport() != null) {
+            var excelReport = fileRepository.save(
+                    S3File.builder()
+                            .link(dto.getExcelReport().getLink())
+                            .key(dto.getExcelReport().getKey())
+                            .build()
+            );
+            var pptReport = fileRepository.save(
+                    S3File.builder()
+                            .link(dto.getPptReport().getLink())
+                            .key(dto.getPptReport().getKey())
+                            .build()
+            );
+            var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
+            request.setPowerPointReport(pptReport);
+            request.setExcelReport(excelReport);
+            requestRepository.save(request);
+        }
 
-    public void addPPTReport(S3FileCreationDto dto) throws NotFoundException {
-        var report = fileRepository.save(S3File.builder().link(dto.getLink()).key(dto.getKey()).build());
-        var request = requestRepository.findById(dto.getRequestId()).orElseThrow(NotFoundException::new);
-        request.setPowerPointReport(report);
-        requestRepository.save(request);
     }
 
     public Date closeNow(UUID requestId) throws NotFoundException {

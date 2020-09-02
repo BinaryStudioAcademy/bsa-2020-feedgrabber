@@ -33,7 +33,7 @@ const UserListItem: FC<IUserListItemProps> = (
 
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    const info = firstName && lastName ? `${firstName} ${lastName}` : `${userName}`;
+    const info = firstName && lastName ? `${lastName} ${firstName}` : `${userName}`;
 
     const confirmationModal = () => {
         return (<Modal
@@ -43,7 +43,7 @@ const UserListItem: FC<IUserListItemProps> = (
             onClose={() => setShowConfirmationModal(false)}
         >
             <Modal.Header>
-                Do you really want to fire {firstName && lastName ? `${firstName} ${lastName}` : `${userName} ?`}
+                Do you really want to fire {firstName && lastName ? `${lastName} ${firstName}` : `${userName} ?`}
             </Modal.Header>
             <Modal.Actions>
                 <Button negative onClick={() => setShowConfirmationModal(false)}>
@@ -95,7 +95,6 @@ const UserListItem: FC<IUserListItemProps> = (
                         <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
                     </div>
                 </div>
-
             </div>
             {confirmationModal()}
         </>

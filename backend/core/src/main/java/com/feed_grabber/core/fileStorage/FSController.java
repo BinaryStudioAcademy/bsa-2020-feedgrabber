@@ -38,7 +38,7 @@ public class FSController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFile(
-            @ApiParam(value = "File to upload", required = true)
+            @ApiParam(value = "ID of the file to delete", required = true)
             @RequestParam UUID id
     ) throws NotFoundException {
         this.amazonService.deleteFile(id);

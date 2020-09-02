@@ -11,6 +11,8 @@ import com.feed_grabber.core.invitation.exceptions.InvitationAlreadyExistsExcept
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.invitation.exceptions.InvitationUserAlreadyExistsException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,11 +34,17 @@ public class InvitationController {
         this.invitationService = invitationService;
     }
 
+    @ApiOperation(value = "Get the invitation by id",
+            notes = "Provide id in the path to get the invitation")
     @GetMapping("/sign-up/{id}")
-    public AppResponse<InvitationSignUpDto> getById(@PathVariable UUID id) throws InvitationNotFoundException {
+    public AppResponse<InvitationSignUpDto> getById(
+            @ApiParam(value = "ID to get the invitation", required = true)
+            @PathVariable UUID id) throws InvitationNotFoundException {
         return new AppResponse<>(invitationService.getById(id));
     }
 
+    @ApiOperation(value = "Get the list of invitations",
+    notes = "All invitations are got for one company, that is got from the token")
     @GetMapping
     @Secured(value = {ROLE_COMPANY_OWNER})
     public AppResponse<List<InvitationDto>> getByCompanyId() {
@@ -44,6 +52,8 @@ public class InvitationController {
         return new AppResponse<>(invitationService.getByCompanyId(companyId));
     }
 
+    @ApiOperation(value = "Generate new invitation",
+            notes = "Provide email and company id in request body")
     @PostMapping
     @Secured(value = {ROLE_COMPANY_OWNER})
     public AppResponse<InvitationGenerateResponseDto> generate(@RequestBody InvitationGenerateRequestDto dto)
@@ -52,6 +62,8 @@ public class InvitationController {
         return new AppResponse<>(invitationService.generate(dto));
     }
 
+    @ApiOperation(value = "Regenerate the invitation",
+            notes = "Provide id in the path to get the invitation, that was expired")
     @PostMapping("/resend")
     @Secured(value = {ROLE_COMPANY_OWNER})
     public AppResponse<InvitationGenerateResponseDto> reGenerate(@RequestBody InvitationGenerateRequestDto dto)
@@ -60,6 +72,7 @@ public class InvitationController {
         return new AppResponse<>(invitationService.reGenerate(dto));
     }
 
+    @ApiOperation(value = "Delete invitation by email, that was used to generate it")
     @DeleteMapping
     @Secured(value = {ROLE_COMPANY_OWNER})
     public void delete(@RequestParam String email) {

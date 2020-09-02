@@ -1,12 +1,17 @@
 import {
-  getUserRoutine,
-  loginRoutine,
-  logoutRoutine,
-  registerRoutine,
-  uploadUserAvatarRoutine,
-  getUserShortRoutine
+    getUserRoutine,
+    loginRoutine,
+    logoutRoutine,
+    registerRoutine,
+    getUserShortRoutine
 } from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
+import {
+    editUserProfileRoutine, getUserSettingsRoutine,
+    updateUserPasswordRoutine,
+    updateUserSettingsRoutine,
+    uploadUserAvatarRoutine
+} from "../../sagas/user/routines";
 
 const initialState = {
     isLoading: false
@@ -72,10 +77,13 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             info: {...state.info, email: payload}
         };
     }
-    if (type === uploadUserAvatarRoutine.SUCCESS) {
+    if (type === uploadUserAvatarRoutine.SUCCESS
+        || type === editUserProfileRoutine.SUCCESS
+        || type === updateUserPasswordRoutine.SUCCESS
+        || type === updateUserPasswordRoutine.SUCCESS) {
       return {
         ...state,
-        info: {...state.info, avatar: payload}
+        info: payload
       };
     }
     if(type === getUserShortRoutine.TRIGGER) {
@@ -96,6 +104,13 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             ...state,
             isLoading: false,
             error: {...state.error, getUser: payload}
+        };
+    }
+    if(type === getUserSettingsRoutine.SUCCESS
+        || type === updateUserSettingsRoutine.SUCCESS) {
+        return {
+            ...state,
+            settings: payload
         };
     }
 

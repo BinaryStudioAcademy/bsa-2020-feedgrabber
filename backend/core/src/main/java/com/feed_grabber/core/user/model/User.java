@@ -59,10 +59,10 @@ public class User {
     private Role role = new Role();
 
     @EqualsAndHashCode.Exclude
-    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserProfile userProfile;
 
-    @OneToOne(cascade = CascadeType.REFRESH, mappedBy = "user")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserSettings userSettings;
 
     @ManyToOne(cascade = CascadeType.REFRESH)

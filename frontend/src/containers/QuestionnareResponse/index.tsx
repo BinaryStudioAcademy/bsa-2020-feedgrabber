@@ -13,6 +13,10 @@ import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import {saveResponseRoutine, getResponseRoutine} from 'sagas/response/routines';
+import {
+  loadSectionsByQuestionnaireRoutine,
+  loadSavedSectionsByQuestionnaireRoutine
+} from 'sagas/sections/routines';
 import { ISection } from 'models/forms/Sections/types';
 import LoaderWrapper from 'components/LoaderWrapper';
 
@@ -43,9 +47,11 @@ interface IQuestionnaireResponseProps {
     isLoading: boolean;
     sections: ISection[];
 
-    loadQuestionnaire(id: string): void;
+    // loadQuestionnaire(id: string): void;
+    loadSections(id: string): void;
 
-    loadOneSaved(payload: { questionnaireId: string; responseId: string }): void;
+    // loadOneSaved(payload: { questionnaireId: string; responseId: string }): void;
+    loadSavedQuestionnaire(payload: { questionnaireId: string; responseId: string }): void;
 
     saveResponseAnswers(answers: IQuestionnaireResponseAnswers): void;
 
@@ -68,8 +74,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     handleComponentChange(state: IComponentState) {
-        const {sections} = this.props;
-        const {currentSectionIndex} = this.state;
+        const { sections } = this.props;
+        const { currentSectionIndex } = this.state;
         const questions = sections[currentSectionIndex].questions;
         let updatedQuestions: IQuestion[] = questions;
         if (state.isAnswered) {
@@ -87,18 +93,18 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const {match, getResponse} = this.props;
+        const { match, getResponse } = this.props;
         getResponse(match.params.id);
     }
 
     componentDidUpdate() {
-        const {match, loadQuestionnaire, loadOneSaved, response} = this.props;
-        const {oldResponseId} = this.state;
+        const { match, loadSections, loadSavedQuestionnaire, response } = this.props;
+        const { oldResponseId } = this.state;
         if (oldResponseId !== response?.id) {
-            this.setState({oldResponseId: response?.id});
+            this.setState({ oldResponseId: response?.id });
             !match.params.responseId
-                ? loadQuestionnaire(response.questionnaire.id)
-                : loadOneSaved({questionnaireId: response.questionnaire.id, responseId: response.id});
+                ? loadSections(response.questionnaire.id)
+                : loadSavedQuestionnaire({ questionnaireId: response.questionnaire.id, responseId: response.id });
         }
     }
 
@@ -167,8 +173,10 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         const isModifying = !!response?.answeredAt;
         const {showErrors, currentSectionIndex} = this.state;
         return (
-            <div className={styles.response_container}>
+            <>
                 <UIPageTitle title="Response"/>
+                <br/>
+                <br/>
                 <LoaderWrapper loading={isLoading}>
                 <UIListHeader title={sections[currentSectionIndex]?.title}
                 description={sections[currentSectionIndex]?.description}/>
@@ -200,15 +208,15 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                         <div className={styles.submit}>
                             {/* {currentSectionIndex !== 0 ?
                             <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
-                                {sections.length === currentSectionIndex + 1 
+                                {sections.length === currentSectionIndex + 1
                                     ? ((!isModifying || changeable) &&
-                                      <UIButton title="Send" onClick={this.handleSendClick}/>)
+                                      <UIButton title="Send" submit onClick={this.handleSendClick}/>)
                                     : <UIButton title="Next" submit/>}
                             </div>
                         </Form>)}
                     </Formik>
                 </LoaderWrapper>
-            </div>);
+            </>);
     }
 }
 
@@ -223,7 +231,9 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     saveResponseAnswers: saveResponseRoutine,
-    getResponse: getResponseRoutine
+    getResponse: getResponseRoutine,
+    loadSections: loadSectionsByQuestionnaireRoutine,
+    loadSavedQuestionnaire: loadSavedSectionsByQuestionnaireRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireResponse);
