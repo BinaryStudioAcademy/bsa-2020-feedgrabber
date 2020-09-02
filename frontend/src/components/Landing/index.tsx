@@ -2,6 +2,7 @@ import React from 'react';
 import './style.sass';
 import { Link } from 'react-router-dom';
 import { Button, Menu } from 'semantic-ui-react';
+import {useTranslation} from "react-i18next";
 
 export type LandingProps = {
   loggedIn: boolean;
@@ -13,6 +14,7 @@ const toSignUp = {
 };
 
 const LandingPage: React.FunctionComponent<LandingProps> = () => {
+  const [t] = useTranslation();
   return (
     <>
       <section className='landing_face'>
@@ -26,21 +28,20 @@ const LandingPage: React.FunctionComponent<LandingProps> = () => {
             FeedGrabber
           </Menu.Item>
           <Menu.Item position='right' as={Link} to='/auth'>
-            Sign In
+            {t("Sign In")}
           </Menu.Item>
         </Menu>
         <div className='face'>
           <div className='face_card'>
             <h2 className='face_card_header'>
-              Inspire employees to become better as you see it
+              {t("Inspire employees to become better as you see it")}
             </h2>
             <div className='face_card_body'>
-              Reviews = opportunity. Start giving professional feedbacks right
-              now.
+              {t("Reviews = opportunity")}
             </div>
             <div className='face_card_actions'>
               <Link to={toSignUp}>
-                <Button>Make some fire!</Button>
+                <Button>{t("Make some fire!")}</Button>
               </Link>
             </div>
           </div>

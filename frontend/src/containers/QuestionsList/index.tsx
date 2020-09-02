@@ -6,6 +6,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionsRoutine} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
 import UIButton from 'components/UI/UIButton';
+import { useTranslation } from 'react-i18next';
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -13,6 +14,7 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 
 const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuestions, result}) => {
     const history = useHistory();
+    const [t] = useTranslation();
 
     useEffect(() => {
         loadQuestions();
@@ -24,12 +26,12 @@ const QuestionsList: FC<QuestionsListProps> = ({questions, isLoading, loadQuesti
 
     return (
         <>
-            <UIPageTitle title="Questions"/>
+            <UIPageTitle title={t("Questions")}/>
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
-                        <UIButton center primary title="Add new" onClick={() => handleClick("new")}/>
-                        <br/>
+                        <UIButton center primary title={t("Add new")} onClick={() => handleClick("new")}/>
+                        <br />
                         {(questions.map((question, index) => {
                             const match = result
                                 .questions

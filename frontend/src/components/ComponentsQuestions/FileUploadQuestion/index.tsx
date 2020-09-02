@@ -6,6 +6,7 @@ import {ErrorMessage} from "formik";
 import {IGenericQuestionComponent, invalidState, useInitValue, validState} from "../IQuestionInputContract";
 import {IFileUploadAnswerDetails} from "../../../models/forms/Questions/IQuesion";
 import {fileTypesArray} from "./types";
+import {useTranslation} from "react-i18next";
 
 const options = fileTypesArray.map(option => {
     return {
@@ -17,6 +18,8 @@ const options = fileTypesArray.map(option => {
 
 const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
     ({value: propValue, onValueChange}) => {
+        const [ t ] = useTranslation();
+
         const values = useInitValue(
             {value: {filesType: "", filesNumber: 1, filesSize: 10}, isCompleted: false},
             propValue,
@@ -39,10 +42,10 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
         return (
             <div className={styles.fileUploadQuestion}>
             <div className={styles.questionField}>
-                <span className={styles.description}>Type of files</span>
+                <span className={styles.description}>{t("Type of files")}</span>
                 <Dropdown
                     error={!values.filesType}
-                    className={styles.inputField} name="filesType" selection placeholder="Choose file type"
+                    className={styles.inputField} name="filesType" selection placeholder={t("Choose file type")}
                     options={options} value={values.filesType}
                     onChange={(e, data) => {
                         onValueChange(validState({
@@ -56,7 +59,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 </div>
             </div>
             <QuestionField
-                text={"Maximum number of files"} name={"filesNumber"} type={"number"}
+                text={t("Maximum number of files")} name={"filesNumber"} type={"number"}
                 inputProps={{min: 1, max: 10}} value={values.filesNumber}
                 onChange={(e, data) => {
                     check({
@@ -66,7 +69,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                 }}
             />
             <QuestionField
-                text={"Maximum files size, MB"} name={"filesSize"} type={"number"}
+                text={t("Maximum files size")} name={"filesSize"} type={"number"}
                 inputProps={{min: 1}}
                 value={values.filesSize}
                 onChange={(e, data) => {

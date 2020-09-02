@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Formik} from 'formik';
 import UIButton from "../../UI/UIButton";
 import UITextInput from "../../UI/UITextInput/UITextInput";
@@ -9,6 +9,7 @@ import * as yup from "yup";
 import {connect, ConnectedProps} from "react-redux";
 import {getUserRoutine} from "../../../sagas/auth/routines";
 import {updateUserPasswordRoutine, updateUserUsernameRoutine} from "../../../sagas/user/routines";
+import {useTranslation} from "react-i18next";
 import validation from "../../../helpers/validation.helper";
 
 const usernameSchema = yup.object().shape({
@@ -31,6 +32,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
        updatePassword,
        getUser
      }) => {
+      const [t] = useTranslation();
         useEffect(() => {
             !user && getUser();
         }, [getUser, user]);
@@ -47,7 +49,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
       return (
           !isLoading && !!user &&
           <>
-            <h4 className={styles.header}> Change your username</h4>
+            <h4 className={styles.header}>{t("Change your username")}</h4>
             <Formik
                 enableReinitialize
                 initialValues={initialUsername}
@@ -59,7 +61,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
               {formik => (
                   <Form onSubmit={formik.handleSubmit}>
                     <UITextInput labelText={'Username'}
-                                 placeholder={'Type your username...'}
+                                 placeholder={t('Type your username...')}
                                  name='username'
                                  value={formik.values.username}
                                  error={formik.touched.username && formik.errors.username}
@@ -69,12 +71,12 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                     />
                     <UIButton disabled={!!formik.errors.username}
                               submit
-                              title={'Update Username'}/>
+                              title={t('Update Username')}/>
                   </Form>
               )}
             </Formik>
 
-            <h4 className={styles.header}>Change your password</h4>
+            <h4 className={styles.header}>{t("Change your password")}</h4>
             <Formik
                 // enableReinitialize
                 initialValues={initialPassword}
@@ -91,7 +93,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                     formik.handleSubmit(event);
                   }}>
                     <UITextInput password
-                                 labelText={'Old Password'}
+                                 labelText={t("Old Password")}
                                  placeholder={''}
                                  name='oldPassword'
                                  value={formik.values.oldPassword}
@@ -99,21 +101,21 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                                  onBlur={formik.handleBlur}
                     />
                     <UITextInput password
-                                 labelText={'New Password'}
+                                 labelText={t("New Password")}
                                  placeholder={''}
                                  name='newPassword'
                                  value={formik.values.newPassword}
                                  onChange={formik.handleChange}
-                                 error={formik.touched.newPassword && formik.errors.newPassword}
+                                 error={formik.touched.newPassword && t(formik.errors.newPassword)}
                                  onBlur={formik.handleBlur}
                     />
                     <UITextInput password
-                                 labelText={'Repeat New Password'}
+                                 labelText={t("Repeat New Password")}
                                  placeholder={''}
                                  name='newPasswordAgain'
                                  value={formik.values.newPasswordAgain}
                                  onChange={formik.handleChange}
-                                 error={formik.touched.newPasswordAgain && formik.errors.newPasswordAgain}
+                                 error={formik.touched.newPasswordAgain && t(formik.errors.newPasswordAgain)}
                                  // onBlur={() => {
                                  //   if (formik.values.newPasswordAgain !== formik.values.newPassword) {
                                  //     formik.setFieldError('newPasswordAgain', 'Password must match');
@@ -128,7 +130,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
                         || formik.errors.newPassword
                         || formik.errors.newPasswordAgain)}
                               submit
-                              title={'Update password'}/>
+                              title={t("Update password")}/>
 
                   </Form>
               )}

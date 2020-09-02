@@ -7,6 +7,7 @@ import UICardBlock from "../../components/UI/UICardBlock";
 import {Formik} from "formik";
 import UIButton from "../../components/UI/UIButton";
 import {ITeam, ITeamCreate, ITeamUpdate} from "../../models/teams/ITeam";
+import { useTranslation } from "react-i18next";
 
 interface ITeamMetadataBlockProps {
   isNew: boolean;
@@ -44,12 +45,14 @@ const TeamMetadataBlock: React.FunctionComponent<ITeamMetadataBlockProps> = (
     }
   };
 
+  const [t] = useTranslation();
+
   return (
     <UIColumn wide>
       <LoaderWrapper loading={!isNew && (!currentTeam || isLoadingTeam)}>
         <UICard>
           <UICardBlock>
-            <h3>Metadata</h3>
+            <h3>{t("Metadata")}</h3>
           </UICardBlock>
           <UICardBlock>
             <Formik
@@ -67,11 +70,11 @@ const TeamMetadataBlock: React.FunctionComponent<ITeamMetadataBlockProps> = (
                 const error = errors.name || currentTeamError;
                 return (
                   <form onSubmit={handleSubmit}>
-                    <label>Team name</label>
+                    <label>{t("Team name")}</label>
                     <input
                       id="name"
                       name="name"
-                      placeholder="Team name"
+                      placeholder={t("Team name")}
                       type="text"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -79,7 +82,7 @@ const TeamMetadataBlock: React.FunctionComponent<ITeamMetadataBlockProps> = (
                     />
                     {error && <div>{error}<br/><br/></div>}
                     <UIButton
-                      title={isNew ? "Add" : "Update"}
+                      title={isNew ? t("Add") : t("Update")}
                       onClick={handleSubmit}
                       submit
                       loading={isLoadingRequest}

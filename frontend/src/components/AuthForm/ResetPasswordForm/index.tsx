@@ -9,6 +9,7 @@ import styled from "styled-components";
 import img from "../../../assets/images/bg-pattern.jpg";
 
 import styles from "./styles.module.sass";
+import {useTranslation} from "react-i18next";
 
 const validationSchema = yup.object().shape({
     password: yup
@@ -45,6 +46,7 @@ const StyledForm = styled(Form)`
 
 const ResetPasswordForm: FC<FormProps & {match}> =
     ({resetPass, match}) => {
+        const [ t ] = useTranslation();
         return (
             <Formik
                 initialValues={{password: '', passwordRepeat: ''}}
@@ -75,11 +77,11 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                                     FeedGrabber
                                 </Menu.Item>
                                 <Menu.Item position="right" as={Link} to="/auth">
-                                    Sign In
+                                    {t("Sign In")}
                                 </Menu.Item>
                             </Menu>
                             <StyledForm onSubmit={handleSubmit} autoComplete='off' error={!!errorText}>
-                                <Header as="h3">Enter new password</Header>
+                                <Header as="h3">{t("Enter new password")}</Header>
                                 <Form.Input name="password" type="password" placeholder="Password"
                                             onChange={handleChange} onBlur={handleBlur} icon="key"
                                 />
@@ -90,7 +92,7 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                                 <Message
                                     style={{width: '70%', margin: '10px auto'}}
                                     error
-                                    content={errorText}
+                                    content={t(errorText)}
                                 />
                                 <Button disabled={!!errors.password || !!errors.passwordRepeat}
                                         primary

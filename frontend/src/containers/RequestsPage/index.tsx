@@ -6,6 +6,7 @@ import {RequestItem} from "./RequestItem";
 import {Card, Tab} from "semantic-ui-react";
 import {IRequestShort} from "models/report/IReport";
 import {closeRequestRoutine} from "../../sagas/request/routines";
+import { useTranslation } from "react-i18next";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
@@ -13,6 +14,7 @@ import UIColumn from "../../components/UI/UIColumn";
 const RequestsPage: FC<RequestPageProps & { match }> = (
     {loadRequests, match, requests, isLoading, closeRequest}) => {
 
+    const [t] = useTranslation();
     const [open, setOpen] = useState([] as IRequestShort[]);
     const [closed, setClosed] = useState([] as IRequestShort[]);
     const qId = match.params.id;
@@ -28,7 +30,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
 
     const panes = [
         {
-            menuItem: {key: 'opened', icon: 'eye', content: 'Opened requests'},
+            menuItem: {key: 'opened', icon: 'eye', content: t('Opened requests')},
             render: () => <Tab.Pane loading={isLoading}>
                 <Card.Group itemsPerRow={2}>
                     {open.map(r => (
@@ -39,7 +41,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
             </Tab.Pane>
         },
         {
-            menuItem: {key: 'closed', icon: 'lock', content: 'Closed requests'},
+            menuItem: {key: 'closed', icon: 'lock', content: t('Closed requests')},
             render: () => <Tab.Pane>
                 <Card.Group itemsPerRow={2}>
                     {closed.map(r => (
@@ -51,7 +53,7 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
 
     return (
         <>
-            <UIPageTitle title="Track pending/closed requests"/>
+            <UIPageTitle title={t("Track pending/closed requests")}/>
             <br />
             <br />
             <UIContent>

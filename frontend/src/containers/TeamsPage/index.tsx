@@ -18,6 +18,7 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
 import {Permissions} from "../../components/AccessManager/rbac-rules";
 import AccessManager from "../../components/AccessManager";
+import { useTranslation } from 'react-i18next';
 
 const TeamsPage: FC<ITeamsPageProps> = (
     {
@@ -41,15 +42,17 @@ const TeamsPage: FC<ITeamsPageProps> = (
         history.push(`/teams/${id}`);
     };
 
+    const [t] = useTranslation();
+
     return (
         <>
-            <UIPageTitle title="Teams List"/>
+            <UIPageTitle title={t("Teams List")}/>
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
                         <AccessManager staticPermission={Permissions.createTeams}>
                             <UIButton
-                                title="Add Team"
+                                title={t("Add Team")}
                                 onClick={() => handleRedirect("new")}
                                 center
                                 primary
@@ -72,15 +75,15 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                             display: 'inline-flex',
                                             alignItems: 'center'
                                         }
-                                    }>{match && 'Matches searched query'}</span>
+                                    }>{match && t('Matches searched query')}</span>
                                 </UICardBlock>
                                 <UICardBlock>
                                     <Icon name="users"/>{team.membersAmount} Member(s)
                                 </UICardBlock>
                                 <AccessManager staticPermission={Permissions.manageTeams}>
                                     <UICardBlock>
-                                        <UIButton title="Manage" onClick={() => handleRedirect(team.id)}/>
-                                        <UIButton title="Delete" secondary loading={team.deleteLoading}
+                                        <UIButton title={t("Manage")} onClick={() => handleRedirect(team.id)}/>
+                                        <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
                                                   disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
                                     </UICardBlock>
                                 </AccessManager>

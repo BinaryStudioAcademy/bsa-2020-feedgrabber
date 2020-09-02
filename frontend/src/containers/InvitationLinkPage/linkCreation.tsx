@@ -5,6 +5,7 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Formik} from "formik";
 import UIButton from "../../components/UI/UIButton";
+import {useTranslation} from "react-i18next";
 
 interface IInvitationBlockProps {
   isLoading?: boolean;
@@ -16,8 +17,8 @@ interface IInvitationBlockProps {
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email()
-    .required()
+    .email("Email must be valid")
+    .required("Email is required")
 });
 
 const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = (
@@ -27,6 +28,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
     sendInvitation
   }
 ) => {
+  const [t] = useTranslation();
   const emailInput = useRef(null);
 
   const onSubmit = values => {
@@ -38,7 +40,7 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
     <UIColumn wide>
       <UICard>
         <UICardBlock>
-          <h3>Send New Invitation</h3>
+          <h3>{t("Send New Invitation")}</h3>
         </UICardBlock>
         <UICardBlock>
           <Formik
@@ -60,16 +62,16 @@ const InvitationCreationBlock: React.FunctionComponent<IInvitationBlockProps> = 
                   <input
                     id="email"
                     name="email"
-                    placeholder="Invitation email"
+                    placeholder={t("Invitation email")}
                     type="text"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.email}
                     ref={emailInput}
                   />
-                  {error && <div>{error}<br/><br/></div>}
+                  {error && <div>{t(error)}<br/><br/></div>}
                   <UIButton
-                    title={"Send"}
+                    title={t("Send")}
                     onClick={handleSubmit}
                     submit
                     loading={isLoading}

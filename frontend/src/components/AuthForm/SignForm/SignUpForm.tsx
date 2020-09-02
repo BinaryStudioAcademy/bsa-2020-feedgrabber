@@ -8,6 +8,7 @@ import {registerRoutine} from "../../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
+import {useTranslation} from "react-i18next";
 
 const schema = yup.object().shape({
     companyName: yup
@@ -43,6 +44,7 @@ const schema = yup.object().shape({
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
     const {signUp, className, error} = props;
+    const [ t ] = useTranslation();
 
     return (
         <Formik
@@ -75,8 +77,8 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
-                        <Typography fontWeight="bold" variant="h4">Create Account</Typography>
-                        <Typography variant="body2">or use your email for registration</Typography>
+                        <Typography fontWeight="bold" variant="h4">{t("Create Account")}</Typography>
+                        <Typography variant="body2">{t("or use your email for registration")}</Typography>
                         <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -94,13 +96,13 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         {
-                            errorText && <Message attached="top" error size="tiny" content={errorText}/>
+                            errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">
-                            Sign Up
+                            {t("Sign Up")}
                         </Button>
                     </form>);}}
         </Formik>

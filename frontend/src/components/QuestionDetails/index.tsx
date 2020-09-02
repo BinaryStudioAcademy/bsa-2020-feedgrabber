@@ -13,6 +13,7 @@ import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI"
 import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {defaultQuestionValues} from "./defaultValues";
+import { useTranslation } from "react-i18next";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
@@ -34,6 +35,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
     const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle?.length > 0);
     const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(true);
     const [addedCategories, setNewCategories] = useState([]);
+    const [t] = useTranslation();
 
     useEffect(() => {
         if(onValueChange) {
@@ -161,13 +163,13 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <Form.Input
                                     className={styles.question_input}
                                     fluid
-                                    placeholder="Type your question"
+                                    placeholder={t("Type your question")}
                                     type="text"
                                     value={formik.values.name}
                                     name="name"
                                     error={
                                         formik.touched.name && formik.errors.name
-                                            ? formik.errors.name
+                                            ? t(formik.errors.name)
                                             : undefined
                                     }
                                     onChange={(e, {value}) => {
@@ -185,10 +187,10 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <QuestionDetailsOptions question={question} setQuestionType={setQuestionType}/>
                             </div>
                             <Form.Dropdown
-                                placeholder='Choose category or type custom'
+                                placeholder={t('Choose category or type custom')}
                                 closeOnBlur
                                 allowAdditions
-                                additionLabel='Add new category: '
+                                additionLabel={t('Add new category: ')}
                                 onChange={(e, {value}) => {
                                     setCategoryIsValid(true);
                                     handleQuestionUpdate({...question, categoryTitle: value as string});
@@ -206,7 +208,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 search
                                 selection
                                 error={formik.touched.categoryTitle && formik.errors.categoryTitle
-                                    ? formik.errors.categoryTitle
+                                    ? t(formik.errors.categoryTitle)
                                     : undefined}
                                 options={categoriesOptions(
                                     [...addedCategories, ...categories])}
@@ -238,7 +240,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 {/* />*/}
                                 {/* }*/}
                                 <Popup
-                                    content="Required"
+                                    content={t("Required")}
                                     trigger={
                                         <Checkbox
                                             toggle
