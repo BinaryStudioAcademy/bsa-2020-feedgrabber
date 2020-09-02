@@ -44,6 +44,10 @@ public class NewsService {
                 .collect(Collectors.toList());
     }
 
+    public Long getCountByCompanyId(UUID companyId) {
+        return newsRepository.countAllByCompanyId(companyId);
+    }
+
     public NewsDto create(NewsCreateDto newsCreateDto) throws NotFoundException {
         var image = imageRepository.findById(newsCreateDto.getImageId())
                 .orElseThrow(NotFoundException::new);
