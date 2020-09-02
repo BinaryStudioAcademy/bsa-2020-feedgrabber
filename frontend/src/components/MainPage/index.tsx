@@ -12,6 +12,8 @@ import LoaderWrapper from 'components/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import {Tab} from "semantic-ui-react";
+import NewsList from 'components/NewsList';
+import { INewsItem } from 'models/news';
 
 interface IItem {
     id: string;
@@ -23,7 +25,7 @@ interface IItem {
 interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
     reportsList?: IItem[];
-    newsList?: IItem[];
+    newsList?: INewsItem[];
     isLoading: boolean;
 
     loadQuestionnaires(): void;
@@ -35,7 +37,7 @@ const MainPage: FC<IMainPageProps> =
     ({
          questionnaireList,
          reportsList = [],
-         newsList = [],
+         newsList,
          isLoading,
          loadQuestionnaires
      }) => {
@@ -161,27 +163,17 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company News Feed</h3>
+                                <h3>My Requests</h3>
                             </UICardBlock>
-                            {newsList.length === 0 ?
-                                <UICardBlock>
-                                    No news for now, we'll notify you
-                                </UICardBlock> :
-                            newsList.map(item => (
-                                <UICardBlock key={item.id}>
-                                    {item.header && <h4>{item.header}</h4>}
-                                    {item.content && <p>{item.content}</p>}
-                                    {item.author && <p><b>{item.author}</b></p>}
-                                </UICardBlock>
-                            ))}
+                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
                         </UICard>
                     </UIColumn>
                     <UIColumn wide>
                         <UICard>
                             <UICardBlock>
-                                <h3>My Requests</h3>
+                                <h3>Company News Feed</h3>
                             </UICardBlock>
-                            <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
+                            <NewsList/>
                         </UICard>
                     </UIColumn>
                 </UIContent>

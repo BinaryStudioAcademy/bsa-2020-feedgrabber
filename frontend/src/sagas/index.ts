@@ -15,6 +15,7 @@ import notificationsSagas from "./notifications/sagas";
 import sectionSagas from './sections/sagas';
 import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
+import newsSagas from './news/sagas';
 import searchSagas from "./search/sagas";
 import companyFeedSaga from './companyFeed/sagas';
 
@@ -37,6 +38,7 @@ export default function* rootSaga() {
         roleSagas(),
         sectionSagas(),
         searchSagas(),
-        companyFeedSaga()
+        companyFeedSaga(),
+        newsSagas()
     ]);
 }
