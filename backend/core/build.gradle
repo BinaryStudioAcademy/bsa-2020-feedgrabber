@@ -45,7 +45,7 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.5.Final'
 	compile group: 'org.hibernate', name: 'hibernate-search-elasticsearch', version: '5.11.5.Final'
 
-	runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:postgresql'
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'

@@ -13,6 +13,7 @@ import {INotificationsState} from "../reducers/notifications";
 import {IQuestionnaireResponseState} from "./forms/Response/types";
 import {IRoleState} from "../reducers/role/reducer";
 import {ISectionsState} from "../reducers/section/reducer";
+import {ISearchResultState} from "./search/Search";
 
 export interface IAppState {
     toastr: any;
@@ -32,4 +33,5 @@ export interface IAppState {
     companyFeed: ICompanyFeedState;
     isLoading: boolean;
     notifications: INotificationsState;
+    search: ISearchResultState;
 }

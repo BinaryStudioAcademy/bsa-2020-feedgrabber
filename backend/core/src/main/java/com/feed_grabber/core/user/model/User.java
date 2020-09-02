@@ -1,17 +1,34 @@
 package com.feed_grabber.core.user.model;
 
 import com.feed_grabber.core.company.Company;
-import com.feed_grabber.core.request.model.Request;
-import com.feed_grabber.core.role.Role;
+import com.feed_grabber.core.role.model.Role;
 import com.feed_grabber.core.team.model.Team;
 import lombok.*;
+import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
+import org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Indexed
+@AnalyzerDef(name = "autocompleteEdgeAnalyzer",
+        tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
+        filters = {
+                @TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
+                        @Parameter(name = "pattern",value = "([^a-zA-Z0-9\\.])"),
+                        @Parameter(name = "replacement", value = " "),
+                        @Parameter(name = "replace", value = "all") }),
+                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                @TokenFilterDef(factory = EdgeNGramFilterFactory.class, params = {
+                        @Parameter(name = "minGramSize", value = "1"),
+                        @Parameter(name = "maxGramSize", value = "50") }) })
 @Entity
 @Data
 @NoArgsConstructor
@@ -31,9 +48,13 @@ public class User {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "email")
     private String email;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "username")
     private String username;
 
@@ -58,6 +79,7 @@ public class User {
     @Builder.Default
     private Role role = new Role();
 
+    @IndexedEmbedded(depth = 2)
     @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserProfile userProfile;
