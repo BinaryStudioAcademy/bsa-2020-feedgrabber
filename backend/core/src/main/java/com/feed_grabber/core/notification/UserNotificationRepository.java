@@ -3,8 +3,10 @@ package com.feed_grabber.core.notification;
 import com.feed_grabber.core.notification.dto.NotificationResponseDto;
 import com.feed_grabber.core.notification.model.UserNotification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +34,10 @@ public interface UserNotificationRepository extends JpaRepository<UserNotificati
     )
     Optional<NotificationResponseDto> findNotificationById(UUID notificationId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE UserNotification un " +
+            "SET un.isClosed = true WHERE un.user.id = :userId")
     void deleteAllNotificationsByUserId(UUID userId);
 
     Optional<UserNotification> findByUserIdAndRequestId(UUID userId,UUID requestId);

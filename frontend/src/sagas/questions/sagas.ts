@@ -17,16 +17,11 @@ import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {updateQuestions} from "../../helpers/array.helper";
 import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
 
-export function parseQuestion(rawQuestion) {
-    const details = rawQuestion.details
-        ? JSON.parse(rawQuestion.details as string)
-        : {};
-    return {
+export const parseQuestion = rawQuestion => ({
         ...rawQuestion,
         type: rawQuestion.type,
-        details
-    };
-}
+        details: JSON.parse(rawQuestion.details) ?? {}
+});
 
 function* getAll() {
     try {
@@ -98,6 +93,7 @@ function* saveOrUpdateQuestion(action) {
             ? yield call(apiClient.put, `/api/questions`, action.payload)
             : yield call(apiClient.post, `/api/questions`, action.payload);
         const question: IQuestion = parseQuestion(res.data.data);
+
         yield put(saveQuestionRoutine.success(question));
         const questions = action.payload?.questionnaireQuestions;
 
@@ -123,7 +119,6 @@ function* deleteOneByQuestionnaireId(action) {
             apiClient.delete, `/api/questions/questionnaires/${questionId}/${questionnaireId}`,
             action.payload
         );
-
         // const questions = res.data.data.map(q => parseQuestion(q));
 
         // yield put(deleteFromQuestionnaireRoutine.success(questions));
@@ -156,7 +151,6 @@ function* getBySectionId(action) {
 }
 
 export default function* questionSagas() {
-
     yield all([
         yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
         yield takeEvery(loadQuestionByIdRoutine.TRIGGER, getById),

@@ -11,8 +11,9 @@ import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
 import { ISection } from "models/forms/Sections/types";
 
 export interface ISectionsState {
+    questionnaireId?: string;
     list?: ISection[];
-    current?: ISection; 
+    current?: ISection;
     isLoading?: boolean;
 }
 
@@ -36,7 +37,8 @@ const sectionsReducer = (state: IAppState["sections"] = initialValues, {type, pa
         case loadQuestionsBySectionRoutine.TRIGGER:
             return {
                 ...state,
-                isLoading: true
+                isLoading: true,
+                questionnaireId: payload
             };
         case loadSectionsByQuestionnaireRoutine.SUCCESS:
         case loadSavedSectionsByQuestionnaireRoutine.SUCCESS:
