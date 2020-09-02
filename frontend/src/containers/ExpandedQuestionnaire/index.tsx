@@ -7,7 +7,6 @@ import QuestionMenu from "../../components/QuestionMenu";
 
 import {
   createSectionRoutine,
-  loadSectionsByQuestionnaireRoutine,
   deleteQuestionFromSectionRoutine
 } from 'sagas/sections/routines';
 import {
@@ -22,6 +21,7 @@ import {Header} from "semantic-ui-react";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {toastr} from "react-redux-toastr";
+import {loadOneNotSavedQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
@@ -128,7 +128,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
+    loadQuestionnaire: loadOneNotSavedQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
