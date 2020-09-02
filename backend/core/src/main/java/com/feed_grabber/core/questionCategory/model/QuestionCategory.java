@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -30,6 +32,8 @@ public class QuestionCategory {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 

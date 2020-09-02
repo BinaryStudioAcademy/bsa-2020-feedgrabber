@@ -16,6 +16,9 @@ class Sender {
     @Value("\${rabbitmq.routing-key-response}")
     private val routingKey: String? = null
 
+    @Value("\${rabbitmq.routing-key-response-links}")
+    private val linksResponseRoutingKey: String? = null
+
     @Autowired
     private val template: RabbitTemplate? = null
 
@@ -23,6 +26,12 @@ class Sender {
         println(" [x] Sending...")
         template!!.convertAndSend(exchange!!, routingKey!!, text)
         println(" [x] Sent $text")
+    }
+
+    fun sendLinks(links: ReportFilesResponseDto) {
+        println(" [x] Sending generated file links to backend")
+        template!!.convertAndSend(exchange!!, linksResponseRoutingKey!!, links)
+        println(" [x] Sent generated file links to backend")
     }
 
 }

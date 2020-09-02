@@ -18,12 +18,12 @@ import {
 } from "./routines";
 
 function* getUser() {
-    try {
-        const res: IGeneric<IUserInfo> = yield call(apiClient.get, `/api/user`);
-        yield put(getUserRoutine.success(res.data.data));
-    } catch (error) {
-        yield put(getUserRoutine.failure(error));
-    }
+  try {
+    const res: IGeneric<IUserInfo> = yield call(apiClient.get, `/api/user`);
+    yield put(getUserRoutine.success(res.data.data));
+  } catch (error) {
+    yield put(getUserRoutine.failure(error));
+  }
 }
 
 function* uploadAvatar(action) {
@@ -59,38 +59,38 @@ function* editUserProfile(action) {
 }
 
 function* getUserShort(action) {
-    try {
-        const res: IGeneric<IUserShort> =
-            yield call(apiClient.get,
-                `/api/user/short?email=${action.payload.email}&companyId=${action.payload.companyId}`);
-        yield put(getUserShortRoutine.success(res.data.data));
-    }catch(error) {
-        yield put(getUserShortRoutine.failure(error));
-    }
+  try {
+    const res: IGeneric<IUserShort> =
+        yield call(apiClient.get,
+            `/api/user/short?email=${action.payload.email}&companyId=${action.payload.companyId}`);
+    yield put(getUserShortRoutine.success(res.data.data));
+  } catch (error) {
+    yield put(getUserShortRoutine.failure(error));
+  }
 
 }
 
 function* sendEmailPassReset(action) {
-    try {
-        // payload: {companyId, userEmail}
-        yield call(apiClient.post, '/api/user/email/reset', action.payload);
-        yield call(toastr.info, ("Check your email"));
-    } catch (e) {
-        yield call(toastr.error, ("Something went wrong, try again"));
-        console.log(e);
-    }
+  try {
+    // payload: {companyId, userEmail}
+    yield call(apiClient.post, '/api/user/email/reset', action.payload);
+    yield call(toastr.info, ("Check your email"));
+  } catch (e) {
+    yield call(toastr.error, ("Something went wrong, try again"));
+    console.log(e);
+  }
 }
 
 function* passwordReset(action) {
-    try {
-        // payload: {token, password}
-        yield call(apiClient.post, '/api/user/reset', action.payload);
-        yield call(toastr.success, ("Your password was updated!"));
-    } catch (e) {
-        yield call(toastr.error, ("Something went wrong, try again"));
-        console.log(e);
-    }
-    yield call(history.push, '/auth');
+  try {
+    // payload: {token, password}
+    yield call(apiClient.post, '/api/user/reset', action.payload);
+    yield call(toastr.success, ("Your password was updated!"));
+  } catch (e) {
+    yield call(toastr.error, ("Something went wrong, try again"));
+    console.log(e);
+  }
+  yield call(history.push, '/auth');
 }
 
 function* updateUsername(action) {
@@ -109,13 +109,17 @@ function* updatePassword(action) {
     yield put(updateUserPasswordRoutine.success(res.data.data));
     toastr.success('Password updated successfully');
   } catch (error) {
-    toastr.error('Unable to update password');
+    if (error.response?.status === 404) {
+      toastr.error('Wrong password');
+    } else {
+      toastr.error('Unable to update password');
+    }
   }
 }
 
 function* getSettings() {
   try {
-    const res: IGeneric<IUserSettings> = yield call(apiClient.get,  '/api/user/settings');
+    const res: IGeneric<IUserSettings> = yield call(apiClient.get, '/api/user/settings');
     yield put(getUserSettingsRoutine.success(res.data.data));
   } catch (error) {
     toastr.error('Unable to load settings');
@@ -124,7 +128,7 @@ function* getSettings() {
 
 function* updateSettings(action) {
   try {
-    const res: IGeneric<IUserSettings> = yield call(apiClient.post,  '/api/user/settings', action.payload);
+    const res: IGeneric<IUserSettings> = yield call(apiClient.post, '/api/user/settings', action.payload);
     yield put(getUserSettingsRoutine.success(res.data.data));
   } catch (error) {
     toastr.error('Unable to load settings');
@@ -132,16 +136,16 @@ function* updateSettings(action) {
 }
 
 export default function* userSagas() {
-    yield all([
-        yield takeEvery(getUserRoutine.TRIGGER, getUser),
-        yield takeEvery(sendEmailToResetPasswordRoutine.TRIGGER, sendEmailPassReset),
-        yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset),
-        yield takeEvery(editUserProfileRoutine.TRIGGER, editUserProfile),
-        yield takeEvery(uploadUserAvatarRoutine.TRIGGER, uploadAvatar),
-        yield takeEvery(getUserShortRoutine.TRIGGER, getUserShort),
-        yield takeEvery(updateUserPasswordRoutine.TRIGGER, updatePassword),
-        yield takeEvery(updateUserUsernameRoutine.TRIGGER, updateUsername),
-        yield takeEvery(getUserSettingsRoutine.TRIGGER, getSettings),
-        yield takeEvery(updateUserSettingsRoutine.TRIGGER, updateSettings)
-    ]);
+  yield all([
+    yield takeEvery(getUserRoutine.TRIGGER, getUser),
+    yield takeEvery(sendEmailToResetPasswordRoutine.TRIGGER, sendEmailPassReset),
+    yield takeEvery(resetPasswordRoutine.TRIGGER, passwordReset),
+    yield takeEvery(editUserProfileRoutine.TRIGGER, editUserProfile),
+    yield takeEvery(uploadUserAvatarRoutine.TRIGGER, uploadAvatar),
+    yield takeEvery(getUserShortRoutine.TRIGGER, getUserShort),
+    yield takeEvery(updateUserPasswordRoutine.TRIGGER, updatePassword),
+    yield takeEvery(updateUserUsernameRoutine.TRIGGER, updateUsername),
+    yield takeEvery(getUserSettingsRoutine.TRIGGER, getSettings),
+    yield takeEvery(updateUserSettingsRoutine.TRIGGER, updateSettings)
+  ]);
 }

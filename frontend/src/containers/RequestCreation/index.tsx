@@ -265,7 +265,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                   .filter(team => respondentPattern
                                     ? team.name.includes(respondentPattern)
                                     : true)
-                                  .map(team => (
+                                  .map(team => team.membersAmount > 0 && (
                                     <UITeamItemCard
                                         key={team.id}
                                         team={team}
