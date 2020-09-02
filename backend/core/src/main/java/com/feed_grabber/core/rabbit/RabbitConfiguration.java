@@ -29,10 +29,20 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Value("${rabbitmq.queue.response}")
     private String queue;
 
+    @Value("${rabbitmq.routing-key-response-links}")
+    private String linksRoutingKey;
+
+    @Value("${rabbitmq.queue.response.links}")
+    private String linksQueue;
 
     @Bean
     public Queue queue() {
         return new Queue(queue, true);
+    }
+
+    @Bean
+    public Queue linksQueue() {
+        return new Queue(linksQueue, true);
     }
 
 
@@ -44,6 +54,11 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    }
+
+    @Bean
+    public Binding bindingLinks(Queue linksQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(linksQueue).to(exchange).with(linksRoutingKey);
     }
 
     @Bean

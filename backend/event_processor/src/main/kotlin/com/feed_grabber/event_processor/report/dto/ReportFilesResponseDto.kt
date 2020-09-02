@@ -4,5 +4,5 @@ import java.util.*
 
 data class ReportFilesResponseDto(
         val requestId: UUID,
-        val pptReport: ReportFileCreationDto?,
-        val excelReport: ReportFileCreationDto?)
+        val excelReportLink: String?,
+        val pptReportLink: String?)
