@@ -131,6 +131,7 @@ public class QuestionService {
 
     public QuestionDto update(QuestionUpdateDto dto)
             throws QuestionNotFoundException, CompanyNotFoundException {
+        if(dto.getDetails().equals(""))dto.setDetails("{}");
         var question = this.updateModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
