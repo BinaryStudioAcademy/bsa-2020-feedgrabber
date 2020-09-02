@@ -32,6 +32,7 @@ export default function* rootSaga() {
         invitationSignUpSagas(),
         categorieSagas(),
         companiesSaga(),
+        companyFeedSaga(),
         requestSaga(),
         notificationsSagas(),
         responseSagas(),

@@ -1,12 +1,14 @@
 import {all, call, put, takeEvery} from "redux-saga/effects";
 import apiClient from "../../helpers/apiClient";
 import {toastr} from 'react-redux-toastr';
-import {searchOverAllEntities} from "./routines";
+import {searchOverAllEntities, updateSearchQuery} from "./routines";
 import {IGeneric} from "../../models/IGeneric";
 import {ISearchResult} from "../../models/search/Search";
 
 function* searchOverAll(action) {
     try {
+        yield put(updateSearchQuery.success(action.payload));
+
         const res: IGeneric<ISearchResult> = yield call(apiClient.get, `/api/search?query=${action.payload}`);
 
         yield put(searchOverAllEntities.success(res.data.data));

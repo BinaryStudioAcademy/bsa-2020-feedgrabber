@@ -1,6 +1,5 @@
 import React, {FC} from "react";
-
-import {Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
+import {Image, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";

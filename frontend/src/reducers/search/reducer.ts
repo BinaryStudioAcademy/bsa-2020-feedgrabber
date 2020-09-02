@@ -1,6 +1,6 @@
 import {ISearchResultState} from "../../models/search/Search";
 import {IAppState} from "../../models/IAppState";
-import {searchOverAllEntities} from "../../sagas/search/routines";
+import {searchOverAllEntities, updateSearchQuery} from "../../sagas/search/routines";
 
 const initialState: ISearchResultState = {
     result: {
@@ -10,7 +10,8 @@ const initialState: ISearchResultState = {
         reports: [],
         users: []
     },
-    isLoading: false
+    isLoading: false,
+    searchQuery: ''
 };
 
 const searchReducer = (state: IAppState['search'] = initialState, {type, payload}) => {
@@ -30,6 +31,16 @@ const searchReducer = (state: IAppState['search'] = initialState, {type, payload
             return {
                 ...state,
                 isLoading: true
+            };
+        case updateSearchQuery.SUCCESS:
+            return {
+                ...state,
+                searchQuery: payload
+            };
+        case updateSearchQuery.FAILURE:
+            return {
+                ...state,
+                searchQuery: ''
             };
         default:
             return state;

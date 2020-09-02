@@ -39,13 +39,26 @@ const QuestionnaireList: FC<Props> = (
         showModal,
         hideModal,
         setPagination,
-        clearOneQuestionnaire
+        clearOneQuestionnaire,
+        result
     }
 ) => {
-    const mapItemToJSX = (item: IQuestionnaire) => (
-        <UICard>
-            <UICardBlock className={styles.cardBlockWrapper}>
+    const mapItemToJSX = (item: IQuestionnaire) => {
+        const match = result
+            .questionnaires
+            .map(q => q.id)
+            .includes(item.id);
+        return <UICard>
+            <UICardBlock className={`${styles.cardBlockWrapper} ${match && styles.searched}`}>
                 <h3>{item.title}</h3>
+                <span
+                    style={
+                        {
+                            fontSize: '0.8rem',
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                        }
+                    }>{match && 'Matches searched query!'}</span>
                 <div className={styles.cardIconWrapper}>
                   <Popup
                     content="New request"
@@ -109,8 +122,8 @@ const QuestionnaireList: FC<Props> = (
                   />
                 </div>
             </UICardBlock>
-        </UICard>
-    );
+        </UICard>;
+    };
 
     return (
         <>
@@ -151,7 +164,8 @@ const mapStateToProps = (rootState: IAppState) => ({
     modalQuestionnaire: rootState.questionnaires.list.modalQuestionnaire,
     isLoading: rootState.questionnaires.list.isLoading,
     modalLoading: rootState.questionnaires.list.modalLoading,
-    modalError: rootState.questionnaires.list.modalError
+    modalError: rootState.questionnaires.list.modalError,
+    result: rootState.search.result
 });
 
 const mapDispatchToProps = {
