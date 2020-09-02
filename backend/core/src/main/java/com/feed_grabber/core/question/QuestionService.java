@@ -93,6 +93,8 @@ public class QuestionService {
         if (dto.getQuestionnaireId().isPresent()) {
             var questionnaire = anketRep.findById(dto.getQuestionnaireId().get())
                     .orElseThrow(QuestionnaireNotFoundException::new);
+            questionnaire.getQuestions().add(savedQuestion);
+            anketRep.save(questionnaire);
 
             Section section;
             if (dto.getSectionId().isEmpty()) {

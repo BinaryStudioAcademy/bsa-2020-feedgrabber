@@ -237,7 +237,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                   </h4>
                                 </div>
 
-                                {selectTeams && teams.map(team => (
+                                {selectTeams && teams.map(team => team.membersAmount > 0 && (
                                     <UITeamItemCard
                                         key={team.id}
                                         team={team}

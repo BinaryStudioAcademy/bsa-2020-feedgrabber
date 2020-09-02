@@ -21,7 +21,7 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
-import {Icon} from "semantic-ui-react";
+import {Icon, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
 
 const QuestionnaireList: FC<Props> = (
@@ -47,36 +47,66 @@ const QuestionnaireList: FC<Props> = (
             <UICardBlock className={styles.cardBlockWrapper}>
                 <h3>{item.title}</h3>
                 <div className={styles.cardIconWrapper}>
-                    <Icon
-                        name="plus"
+                  <Popup
+                    content="New request"
+                    position="top center"
+                    trigger={
+                      <Icon
+                        name="share alternate"
                         onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content="Show requests and reports"
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="chart bar"
                         onClick={() => {
-                            history.push(`/questionnaires/${item.id}/requests`);
+                          history.push(`/questionnaires/${item.id}/requests`);
                         }}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content="Manage questions"
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="settings"
                         onClick={() => {
-                            clearOneQuestionnaire();
-                            history.push(`/questionnaires/${item.id}`);
+                          clearOneQuestionnaire();
+                          history.push(`/questionnaires/${item.id}`);
                         }}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content="Change title"
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="edit"
                         onClick={() => showModal(item)}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content="Delete questionnaire"
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="trash"
                         onClick={() => deleteQuestionnaire(item.id)}
                         className={styles.cardIcon}
-                    />
+                      />
+                    }
+                  />
                 </div>
             </UICardBlock>
         </UICard>
