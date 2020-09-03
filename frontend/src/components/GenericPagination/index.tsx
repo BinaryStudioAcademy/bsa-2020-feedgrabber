@@ -75,7 +75,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
           <div className={styles.listWrapper}>
             {pagination?.items?.length > 0
               ? pagination.items.map(i => mapItemToJSX(i))
-              : <div className={styles.paginationNoItems}>No items</div>}
+              : <div className={styles.paginationNoItems}><h1>No items</h1></div>}
           </div>
         </div>
       </LoaderWrapper>
