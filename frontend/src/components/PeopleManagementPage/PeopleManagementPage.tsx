@@ -5,18 +5,20 @@ import UIPageTitleToggle from "../../components/UI/UIPageTitleToggle";
 import TeamsPage from "../../containers/TeamsPage";
 import CompanyUsersList from "../../containers/UserList";
 
-const PeopleManagementPage: FC = () => {
-    const [firstOptionActive, setFirstOptionActive] = useState(true);
+const PeopleManagementPage: FC<{ match }> = ({match}) => {
     const [t] = useTranslation();
-    const toggle = () => setFirstOptionActive(!firstOptionActive);
-
     return (
         <>
-            <UIPageTitleToggle firstOption={t("Teams")} secondOption={t("Company employees")} togglePanel={toggle}/>
+            <UIPageTitleToggle
+                firstOption={t("Teams")}
+                firstOptionLink={"/people/teams"}
+                secondOption={t("Company employees")}
+                secondOptionLink={"/people/employees"}
+            />
             <UIContent>
-                {firstOptionActive &&
+                {match.params.tab==='teams' &&
                 <TeamsPage/>}
-                {!firstOptionActive &&
+                {match.params.tab==='employees' &&
                 <CompanyUsersList/>}
             </UIContent>
         </>

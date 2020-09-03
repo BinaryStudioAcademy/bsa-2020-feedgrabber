@@ -1,25 +1,52 @@
 import React, {FC, useState} from "react";
 import styles from "./styles.module.sass";
-import {classNames} from "react-select/src/utils";
+import {Permissions} from "../../AccessManager/rbac-rules";
+import {history} from "../../../helpers/history.helper";
+import AccessManager from "../../AccessManager";
 
 export interface IUIPageTitleProps {
     firstOption: string;
+    firstOptionLink: string;
     secondOption: string;
-
-    togglePanel(): void;
+    secondOptionLink: string;
 }
 
-const UIPageTitleToggle: FC<IUIPageTitleProps> = ({firstOption, secondOption, togglePanel}) => {
+const UIPageTitleToggle: FC<IUIPageTitleProps> = (
+    {
+        firstOption,
+        firstOptionLink,
+        secondOption,
+        secondOptionLink
+    }) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
-    return (
-        <div className={`${styles.pageTitleWrapper} ${activeIndex === 1 ? styles.titleReverse : ""}`}>
-            <h2 className={`${styles.pageTitle} ${activeIndex === 0 ? styles.active : ""}`}
-                onClick={() => setActiveIndex(0)}>{firstOption}</h2>
+    const secondOptionView = () => (
+        <>
             <h2 className={styles.slash}>/</h2>
             <h2 className={`${styles.pageTitle} ${activeIndex === 1 ? styles.active : ""}`}
-                onClick={() => setActiveIndex(1)}>{secondOption}</h2>
+                onClick={() => {
+                    setActiveIndex(1);
+                    history.push(secondOptionLink);
+                }}>{secondOption}</h2>
+        </>
+    );
+
+    return (
+        <div className={styles.pageTitleWrapper}>
+            <h2 className={`${styles.pageTitle} ${activeIndex === 0 ? styles.active : ""}`}
+                onClick={() => {
+                    setActiveIndex(0);
+                    history.push(firstOptionLink);
+                }}>{firstOption}</h2>
+            <AccessManager staticPermission={Permissions.blockUserAccount}>
+                <h2 className={styles.slash}>/</h2>
+                <h2 className={`${styles.pageTitle} ${activeIndex === 1 ? styles.active : ""}`}
+                    onClick={() => {
+                        setActiveIndex(1);
+                        history.push(secondOptionLink);
+                    }}>{secondOption}</h2>
+            </AccessManager>
         </div>
     );
 };
