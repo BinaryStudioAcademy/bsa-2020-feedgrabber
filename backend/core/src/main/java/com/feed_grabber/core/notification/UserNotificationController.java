@@ -29,11 +29,10 @@ public class UserNotificationController {
     }
 
     @ApiOperation("Delete notification for user from token by requestId")
-    @DeleteMapping("/delete/{requestId}")
+    @DeleteMapping("/delete/{notificationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteNotification(@PathVariable UUID requestId) throws NotFoundException {
-        UUID userId = TokenService.getUserId();
-        userNotificationService.deleteNotificationByRequestIdAndUserId(requestId, userId);
+    public void deleteNotification(@PathVariable UUID notificationId) throws NotFoundException {
+        userNotificationService.closeNotification(notificationId);
     }
 
     @ApiOperation("Delete all notifications for user from token")
@@ -42,6 +41,13 @@ public class UserNotificationController {
     public void deleteNotificationsAll() {
         UUID userId = TokenService.getUserId();
         userNotificationService.deleteAllNotificationsByUserId(userId);
+    }
+
+    @ApiOperation("Mark notification as read")
+    @PutMapping("/{id}/read")
+    @ResponseStatus(HttpStatus.OK)
+    public void readNotification(@PathVariable UUID id) throws NotFoundException {
+        userNotificationService.markAsRead(id);
     }
 
 }

@@ -1,9 +1,9 @@
 import React, { FC, useState } from "react";
-import { Label, Tab, Button } from "semantic-ui-react";
+import { Tab, Button } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import InternalStorageUpload from "./InternalStorageUpload";
 import { IQuestionResponse } from "../../../models/IQuestionResponse";
-import { IFileUploadQuestion, QuestionType } from "../../../models/forms/Questions/IQuesion";
+import { IFileUploadQuestion } from "../../../models/forms/Questions/IQuesion";
 import { fileTypes as allTypes } from "../../ComponentsQuestions/FileUploadQuestion/types";
 import ImageUrl from "./ImageUrl";
 import VideoUrl from "./UrlVideo";
@@ -41,7 +41,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
         setError(`Maximum number of files ${filesNumber}`);
         return;
       }
-      newFiles = deleteNotAllowedFiles(newFiles);
+      deleteNotAllowedFiles(newFiles);
 
       await uploadFiles(addedFiles);
       answerHandler?.(
@@ -74,7 +74,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
         promises.push(uploadFile(file));
       }
       (await Promise.all(promises))
-        .map(res => {
+        .forEach(res => {
           console.log(res);
           setFiles([...files, res]);
         });
@@ -126,7 +126,10 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
            <div>{file.name}</div>
            {response === undefined
              ? <Button icon='close' onClick={() => deleteFile(file.id)} size="tiny" />
-             : <a href={file.link} target="_blank"><Button icon="angle double right" size="tiny"/></a>}
+             : <a href={file.link} target="_blank" rel={'noopener noreferrer'} >
+                <Button icon="angle double right" size="tiny"/>
+               </a>
+           }
           </div>
         );
       });

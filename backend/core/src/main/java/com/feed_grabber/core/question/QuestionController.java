@@ -99,7 +99,7 @@ public class QuestionController {
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<QuestionDto>> addExisting(@RequestBody AddExistingQuestionsDto dto)
-            throws QuestionNotFoundException, QuestionnaireNotFoundException {
+            throws QuestionnaireNotFoundException {
 
         return new AppResponse<>(questionService.addExistingQuestion(dto));
     }
@@ -113,6 +113,8 @@ public class QuestionController {
     }
 
 
+    @ApiOperation(value = "Move question to section",
+            notes = "Provide section id and list of indexes of questions in this section")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/index")
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
@@ -128,16 +130,19 @@ public class QuestionController {
     public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(
             @PathVariable UUID questionId,
             @PathVariable UUID questionnaireId
-    ){
+    ) throws QuestionnaireNotFoundException {
 
         questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
 
         return new AppResponse<>(questionService.getAllByQuestionnaireId(questionnaireId));
     }
 
+    @ApiOperation(value = "Get all questions from one section",
+            notes = "Provide id in the path to get questions")
     @GetMapping("/sections/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<QuestionDto>> getAllBySection(@PathVariable UUID id) {
         return new AppResponse<>(questionService.getAllBySection(id));
     }
+
 }

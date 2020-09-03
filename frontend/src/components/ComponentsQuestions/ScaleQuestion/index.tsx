@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Dropdown } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import {
     IGenericQuestionComponent,
     useInitValue,
@@ -7,6 +7,7 @@ import {
   } from "../IQuestionInputContract";
 import styles from './styles.module.sass';
 import {IScaleDetails} from "../../../models/forms/Questions/IQuesion";
+import { useTranslation } from 'react-i18next';
 
 const getOptions = (from: number, to: number) => {
     const options: Array<any> = [];
@@ -35,6 +36,7 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
          onValueChange
     );
 
+    const [t] = useTranslation();
     return (
         <div className={styles.container}>
             <div className={[styles.dropdown, styles.container].join(' ')}>
@@ -61,7 +63,7 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
             <div className={styles.container}>
                 <div className={styles.description}>
                     <div className={styles.number}><span>1</span></div>
-                    <input type="text" placeholder="description (optional)"
+                    <input type="text" placeholder={t("description (optional)")}
                             name="minDescription"
                             value= {values.minDescription}
                             onChange = {event => {
@@ -73,7 +75,7 @@ const ScaleQuestion: IGenericQuestionComponent<IScaleDetails> = ({
                 </div>
                 <div className={styles.description}>
                     <div className={styles.number}><span>2</span></div>
-                    <input type="text" placeholder="description (optional)"
+                    <input type="text" placeholder={t("description (optional)")}
                             name="maxDescription"
                             value= {values.maxDescription}
                             onChange = {event => onValueChange(

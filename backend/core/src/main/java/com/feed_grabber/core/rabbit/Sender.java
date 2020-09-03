@@ -21,12 +21,6 @@ public class Sender {
     @Value("${rabbitmq.routing-key}")
     private String routingKey;
 
-    @Value("${rabbitmq.routing-key-report-excel}")
-    private String excelReportGenerationRoutingKey;
-
-    @Value("${rabbitmq.routing-key-report-ppt}")
-    private String pptReportGenerationRoutingKey;
-
     @Value("${rabbitmq.routing-key-report-close}")
     private String reportCloseRoutingKey;
 
@@ -41,18 +35,6 @@ public class Sender {
         log.info(" [x] Sending...");
         this.template.convertAndSend(exchange, routingKey, new MailEntity(MailType.valueOf(type), message, email));
         log.info(" [x] Sent '{}'", message);
-    }
-
-    public void sendExcelReportGenerationRequest(UUID requestId) {
-        log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, excelReportGenerationRoutingKey, requestId);
-        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
-    }
-
-    public void sendPPTReportGenerationRequest(UUID requestId) {
-        log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, pptReportGenerationRoutingKey, requestId);
-        log.info(" [x] Sent excel report generation request for request with id: '{}'", requestId);
     }
 
     public void sendReportCloseRequest(UUID requestId, Date closeDate) {

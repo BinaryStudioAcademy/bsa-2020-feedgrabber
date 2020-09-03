@@ -1,21 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, Divider, Dropdown, Form, Icon, Popup, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Form, Icon, Popup, Segment} from "semantic-ui-react";
 import {Formik} from "formik";
 import styles from "./styles.module.sass";
 import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IComponentState} from "../ComponentsQuestions/IQuestionInputContract";
 import CheckboxQuestion from "../ComponentsQuestions/CheckboxQuestion";
-// import MultichoiseQuestion from "../ComponentsQuestions/MultichoiseQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
 import DateSelectionQuestionUI from "../ComponentsQuestions/DateSelectionQuestionUI";
 import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
 import {mainSchema} from "./schemas";
-// import {questionTypeOptions} from "./questionTypeOptions";
 import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI";
 import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {defaultQuestionValues} from "./defaultValues";
-import {string} from "prop-types";
+import { useTranslation } from "react-i18next";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
@@ -33,10 +31,11 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                                  onDelete
                                              }) => {
     const [question, setQuestion] = useState<IQuestion>(currentQuestion);
-    const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name.length > 0);
-    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle.length > 0);
+    const [nameIsValid, setNameIsValid] = useState<boolean>(currentQuestion.name?.length > 0);
+    const [categoryIsValid, setCategoryIsValid] = useState<boolean>(currentQuestion.categoryTitle?.length > 0);
     const [innerFormIsValid, setInnerFormIsValid] = useState<boolean>(true);
     const [addedCategories, setNewCategories] = useState([]);
+    const [t] = useTranslation();
 
     useEffect(() => {
         if(onValueChange) {
@@ -164,13 +163,13 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <Form.Input
                                     className={styles.question_input}
                                     fluid
-                                    placeholder="Type your question"
+                                    placeholder={t("Type your question")}
                                     type="text"
                                     value={formik.values.name}
                                     name="name"
                                     error={
                                         formik.touched.name && formik.errors.name
-                                            ? formik.errors.name
+                                            ? t(formik.errors.name)
                                             : undefined
                                     }
                                     onChange={(e, {value}) => {
@@ -188,10 +187,10 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 <QuestionDetailsOptions question={question} setQuestionType={setQuestionType}/>
                             </div>
                             <Form.Dropdown
-                                placeholder='Choose category or type custom'
+                                placeholder={t('Choose category or type custom')}
                                 closeOnBlur
                                 allowAdditions
-                                additionLabel='Add new category: '
+                                additionLabel={t('Add new category: ')}
                                 onChange={(e, {value}) => {
                                     setCategoryIsValid(true);
                                     handleQuestionUpdate({...question, categoryTitle: value as string});
@@ -209,7 +208,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 search
                                 selection
                                 error={formik.touched.categoryTitle && formik.errors.categoryTitle
-                                    ? formik.errors.categoryTitle
+                                    ? t(formik.errors.categoryTitle)
                                     : undefined}
                                 options={categoriesOptions(
                                     [...addedCategories, ...categories])}
@@ -241,7 +240,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 {/* />*/}
                                 {/* }*/}
                                 <Popup
-                                    content="Required"
+                                    content={t("Required")}
                                     trigger={
                                         <Checkbox
                                             toggle

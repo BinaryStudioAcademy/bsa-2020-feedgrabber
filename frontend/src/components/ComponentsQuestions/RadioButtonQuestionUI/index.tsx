@@ -8,12 +8,14 @@ import {
 } from "../IQuestionInputContract";
 import {IRadioButtonAnswerDetails} from "../../../models/forms/Questions/IQuesion";
 import {replaceAtIndex} from "../../../helpers/array.helper";
+import {useTranslation} from "react-i18next";
 
 const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails> = ({
                                                                                          value: propValue, onValueChange
                                                                                      }) => {
+    const [ t ] = useTranslation();
     const value = useInitValue(
-        {value: {answerOptions: ["Option 1"], includeOther: false}, isCompleted: false},
+        {value: {answerOptions: [`${t("Option")} 1`], includeOther: false}, isCompleted: false},
         propValue,
         onValueChange
     );
@@ -40,7 +42,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                         icon="circle outline"
                         transparent
                         iconPosition="left"
-                        placeholder="Type answer here..."
+                        placeholder={t("Type answer here...")}
                         type="text"
                         value={answer}
                         error={isFieldTouched[index] &&
@@ -92,7 +94,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                 <div className={"option-container unselected"}>
                     <div>
                         <Icon className="action" name={"circle outline"}/>
-                        <span>Other...</span>
+                        <span>{t("Other")}</span>
                     </div>
                     <Icon className={"close-icon"} name={"x"} onClick={() => {
                         onValueChange(
@@ -118,7 +120,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                             })
                         );
                         setIsFieldTouched(isFieldTouched.concat(false));
-                    }}>Add new answer</span>}
+                    }}>{t("Add new answer")}</span>}
                     {!value.includeOther && (
                         <span>
                             {value.answerOptions.length!==10 && <span> or </span>}
@@ -130,7 +132,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                    })
                                );
                            }
-                           }> add "Other"
+                           }> {t("Add Other option")}
                            </span>
                         </span>
                     )}

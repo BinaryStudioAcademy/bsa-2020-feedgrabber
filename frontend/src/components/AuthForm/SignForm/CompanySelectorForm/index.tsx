@@ -12,6 +12,7 @@ import Input from "../Input/index";
 import styles from './styles.module.sass';
 import Button from "../Button";
 import {Grid, Header, Icon, Message, Segment, Button as SemanticButton} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
 
 const validationSchema = yup.object().shape({
     email: yup
@@ -33,8 +34,10 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
          chooseCompany,
          dropCompany
      }) => {
+        const [ t ] = useTranslation();
+
         const companies = !companiesList ? null
-            : companiesList.length === 0 ? <Message color='blue'>No companies found. Create your own :)</Message>
+            : companiesList.length === 0 ? <Message color='blue'>{t("No companies found. Create your own :)")}</Message>
                 : companiesList.map(
                     (company, index) => (
                         <Segment key={index}>
@@ -65,11 +68,11 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
                 }}
             >
                 {formik => {
-                    const errorText = formik.errors.email;
+                    const errorText = formik.touched.email && formik.errors.email;
                     return (
                         <form onSubmit={formik.handleSubmit} className={className} autoComplete='off'>
-                            <Typography fontWeight="bold" variant="h4">Sign In</Typography>
-                            <Typography variant="body2">Enter Email to get your companies</Typography>
+                            <Typography fontWeight="bold" variant="h4">{t("Sign In")}</Typography>
+                            <Typography variant="body2">{t("Enter Email to get your companies")}</Typography>
                             <Input name="email"
                                    disabled={!!companiesList}
                                    placeholder="Email"
@@ -81,13 +84,13 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
                                 {content}
                             </div>
                             {
-                                errorText && <Message attached="top" error size="small" content={errorText}/>
+                                errorText && <Message attached="top" error size="small" content={t(errorText)}/>
                             }
                             {!companiesList ? (
                                     <Button variant='secondary'
                                             type='submit'
                                             marginTop='1.17rem'>
-                                        Log in
+                                        {t("Log in")}
                                     </Button>)
                                 : (<Button variant='secondary'
                                            type='button'
@@ -96,7 +99,7 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
                                                dropCompany();
                                            }}
                                            marginTop='1.17rem'>
-                                    Change email
+                                    {t("Change email")}
                                 </Button>)
                             }
 

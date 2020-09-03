@@ -4,6 +4,7 @@ import React, { FC, useState } from "react";
 import { Input, InputOnChangeData } from "semantic-ui-react";
 import { IAnswerBody } from '../../../models/forms/Response/types';
 import styles from "./styles.module.sass";
+import { useTranslation } from "react-i18next";
 
 export interface IFreeTextResponse {
     response?: IAnswerBody;
@@ -14,6 +15,7 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextRe
     response
 }) => {
     const [invalidMessage, setInvalidMessage] = useState('');
+    const [t] = useTranslation();
 
     const validate = (value: string) => {
         value.trim() ? setInvalidMessage('') : setInvalidMessage('Cannot be blank');
@@ -26,7 +28,7 @@ export const FreeTextResponse: FC<IQuestionResponse<ITextQuestion> & IFreeTextRe
     };
     return <Input
         onChange={handleChange}
-        placeholder='Answer field'
+        placeholder={t('Answer field')}
         disabled={!!response && !answerHandler}
         defaultValue={response || ''}
         error={!!invalidMessage}

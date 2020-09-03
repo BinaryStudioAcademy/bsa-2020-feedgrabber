@@ -1,0 +1,1 @@
+alter table question_questionnaire drop column order_index

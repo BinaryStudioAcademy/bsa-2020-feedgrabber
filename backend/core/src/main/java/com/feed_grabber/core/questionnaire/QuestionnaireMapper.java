@@ -25,5 +25,7 @@ public interface QuestionnaireMapper {
     @Mapping(source = "createDto.title", target = "title")
     @Mapping(target = "questions", ignore = true)
     @Mapping(target = "sections", ignore = true)
+    @Mapping(target = "requests", ignore = true)
+    @Mapping(target = "editingEnabled", ignore = true)
     Questionnaire questionnaireCreateDtoToModel(QuestionnaireCreateDto createDto, Company company);
 }

@@ -8,12 +8,13 @@ import {registerRoutine} from "../../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
+import {useTranslation} from "react-i18next";
 
 const schema = yup.object().shape({
     companyName: yup
         .string()
         .required("Company name required")
-        .min(3, "Company name too short!")
+        .min(2, "Company name too short!")
         .max(40, "Company name too long!")
         .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
             "Company name must be valid"),
@@ -35,14 +36,15 @@ const schema = yup.object().shape({
     username: yup
         .string()
         .required("Username required")
-        .min(5, "Username too short!")
-        .max(15, "Username too long!")
+        .min(3, "Username too short!")
+        .max(20, "Username too long!")
         .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
             "Username must be valid")
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
     const {signUp, className, error} = props;
+    const [ t ] = useTranslation();
 
     return (
         <Formik
@@ -59,19 +61,24 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
             }
         >
             {({
+                  touched,
                   errors,
                   values,
                   handleChange,
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.email ||
-                    errors.companyName || errors.password || errors.passwordRepeat || error;
+                const errorText = (touched.username && errors.username)
+                    || (touched.email && errors.email)
+                    || (touched.companyName && errors.companyName)
+                    || (touched.password && errors.password)
+                    || (touched.passwordRepeat && errors.passwordRepeat)
+                    || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
-                        <Typography fontWeight="bold" variant="h4">Create Account</Typography>
-                        <Typography variant="body2">or use your email for registration</Typography>
+                        <Typography fontWeight="bold" variant="h4">{t("Create Account")}</Typography>
+                        <Typography variant="body2">{t("or use your email for registration")}</Typography>
                         <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -89,13 +96,13 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         {
-                            errorText && <Message attached="top" error size="tiny" content={errorText}/>
+                            errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">
-                            Sign Up
+                            {t("Sign Up")}
                         </Button>
                     </form>);}}
         </Formik>

@@ -1,6 +1,7 @@
 import React, {createRef, FC, RefObject, useState} from "react";
 import "./styles.sass";
 import {Icon} from "semantic-ui-react";
+import { useTranslation } from "react-i18next";
 
 interface IDropzoneProps {
   disabled: boolean;
@@ -55,6 +56,8 @@ const Dropzone: FC<IDropzoneProps> = ({ disabled, onFilesAdded, className }) => 
     return array;
   };
 
+  const [t] = useTranslation();
+
   return (
       <div className={className}>
         <div
@@ -73,7 +76,7 @@ const Dropzone: FC<IDropzoneProps> = ({ disabled, onFilesAdded, className }) => 
               onChange={handleFilesAdded}
           />
           <Icon name="cloud upload" size="big" />
-          <span>Upload Files</span>
+          <span>{t("Upload Files")}</span>
         </div>
       </div>
   );

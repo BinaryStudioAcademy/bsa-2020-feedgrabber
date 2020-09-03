@@ -78,7 +78,7 @@ public class QuestionnaireService {
 
         var savedQuestionnaire = questionnaireRepository.save(questionnaire);
 
-        var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId()));
+        var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId(), 0));
 
         return QuestionnaireMapper.MAPPER
                 .questionnaireToQuestionnaireDto(savedQuestionnaire);

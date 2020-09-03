@@ -23,4 +23,6 @@ public class ReportDetailsDto {
     private List<ResponseDetailsDto> responses;
     private Date requestCreationDate;
     private Date requestExpirationDate;
+    private String excelReportLink;
+    private String pptReportLink;
 }

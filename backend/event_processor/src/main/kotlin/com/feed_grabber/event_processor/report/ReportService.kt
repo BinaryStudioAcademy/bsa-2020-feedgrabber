@@ -12,7 +12,8 @@ import java.util.*
 
 @Service
 class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = jacksonObjectMapper()) {
-    fun parseAndSaveReport(dto: DataForReport) = repository.save(parseIncomingData(dto))
+
+    fun saveReport(report: Report) = repository.save(report)
 
     fun getFrontendData(requestId: UUID): FrontendReportData = projectionToDto(repository.getProjection(requestId))
 
@@ -33,7 +34,7 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
         dto.apply {
             return Report(requestId, questions.filterNotNull(), questionnaire,
                     requestCreationDate, requestExpirationDate,
-                    requestMaker, targetUser, "", "")
+                    requestMaker, targetUser, null, null)
         }
     }
 
@@ -43,15 +44,15 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))
-            })
+            }, report.excelLink, report.powerPointLink)
 
-    fun reportToDto(report: Report): FrontendReportData = FrontendReportData(
+    fun reportToDto(report: Report) = FrontendReportData(
             report.questionnaire,
             report.questions?.map {
                 QuestionInfo(it.id, it.title, it.type,
                         countAnswers(it.type, it.answers),
                         mapAnswers(it.type, it.answers))
-            })
+            }, report.excelLink, report.powerPointLink)
 
 
     fun mapAnswers(type: QuestionTypes, dbAnswers: QuestionAnswersDB?): QuestionReportData? {
@@ -165,5 +166,6 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
             }
         }
     }
+
 }
 

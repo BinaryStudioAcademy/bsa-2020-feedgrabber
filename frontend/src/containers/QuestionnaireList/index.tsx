@@ -21,8 +21,9 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
-import {Icon} from "semantic-ui-react";
+import {Icon, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
+import {useTranslation} from "react-i18next";
 
 const QuestionnaireList: FC<Props> = (
     {
@@ -39,48 +40,92 @@ const QuestionnaireList: FC<Props> = (
         showModal,
         hideModal,
         setPagination,
-        clearOneQuestionnaire
+        clearOneQuestionnaire,
+        result
     }
 ) => {
-    const mapItemToJSX = (item: IQuestionnaire) => (
-        <UICard>
-            <UICardBlock className={styles.cardBlockWrapper}>
+    const [t] = useTranslation();
+    const mapItemToJSX = (item: IQuestionnaire) => {
+        const match = result
+            .questionnaires
+            .map(q => q.id)
+            .includes(item.id);
+        return <UICard>
+            <UICardBlock className={`${styles.cardBlockWrapper} ${match && styles.searched}`}>
                 <h3>{item.title}</h3>
+                <span
+                    style={
+                        {
+                            fontSize: '0.8rem',
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                        }
+                    }>{match && 'Matches searched query!'}</span>
                 <div className={styles.cardIconWrapper}>
-                    <Icon
-                        name="plus"
+                  <Popup
+                    content={t("New request")}
+                    position="top center"
+                    trigger={
+                      <Icon
+                        name="share alternate"
                         onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content={t("Show requests and reports")}
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="chart bar"
                         onClick={() => {
-                            history.push(`/questionnaires/${item.id}/requests`);
+                          history.push(`/questionnaires/${item.id}/requests`);
                         }}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content={t("Manage questions")}
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="settings"
                         onClick={() => {
-                            clearOneQuestionnaire();
-                            history.push(`/questionnaires/${item.id}`);
+                          clearOneQuestionnaire();
+                          history.push(`/questionnaires/${item.id}`);
                         }}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content={t("Change title")}
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="edit"
                         onClick={() => showModal(item)}
                         className={styles.cardIcon}
-                    />
-                    <Icon
+                      />
+                    }
+                  />
+                  <Popup
+                    content={t("Delete questionnaire")}
+                    position="top center"
+                    trigger={
+                      <Icon
                         name="trash"
                         onClick={() => deleteQuestionnaire(item.id)}
                         className={styles.cardIcon}
-                    />
+                      />
+                    }
+                  />
                 </div>
             </UICardBlock>
-        </UICard>
-    );
+        </UICard>;
+    };
 
     return (
         <>
@@ -93,11 +138,11 @@ const QuestionnaireList: FC<Props> = (
                 updateQuestionnaire={updateQuestionnaire}
                 modalError={modalError}
             />
-            <UIPageTitle title="Questionnaires"/>
+            <UIPageTitle title={t("Questionnaires")}/>
             <UIContent>
                 <UIColumn wide>
                     <UIButton
-                        title="Add Questionnaire"
+                        title={t("Add Questionnaire")}
                         onClick={() => showModal(undefined)}
                         center
                         primary
@@ -121,7 +166,8 @@ const mapStateToProps = (rootState: IAppState) => ({
     modalQuestionnaire: rootState.questionnaires.list.modalQuestionnaire,
     isLoading: rootState.questionnaires.list.isLoading,
     modalLoading: rootState.questionnaires.list.modalLoading,
-    modalError: rootState.questionnaires.list.modalError
+    modalError: rootState.questionnaires.list.modalError,
+    result: rootState.search.result
 });
 
 const mapDispatchToProps = {

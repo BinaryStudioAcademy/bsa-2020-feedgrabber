@@ -1,6 +1,6 @@
 import React, {FC, useState} from "react";
 import {IQuestionResponse} from "../../../models/IQuestionResponse";
-import {ICheckboxQuestion, QuestionType} from "../../../models/forms/Questions/IQuesion";
+import {ICheckboxQuestion} from "../../../models/forms/Questions/IQuesion";
 import {Checkbox} from "semantic-ui-react";
 import {IAnswerBody} from '../../../models/forms/Response/types';
 

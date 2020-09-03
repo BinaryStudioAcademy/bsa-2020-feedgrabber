@@ -1,9 +1,7 @@
-import React, { FC, useState, useCallback, useEffect } from "react";
+import React, { FC } from "react";
 import { Header} from "semantic-ui-react";
-import ResponseQuestion from "components/ResponseQuestion";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
-import QuestionCard from "components/QuestionnaireOrderDraggableView/QuestionCard";
 import { ISection } from "models/forms/Sections/types";
 import UISection from "components/UI/UISectionCard";
 import SectionBlock from "components/SectionBlock";
@@ -11,9 +9,9 @@ import { updateSectionsRoutine,
    addQuestionToSectionRoutine,
     deleteQuestionFromSectionRoutine,
     updateSectionRoutine } from "sagas/sections/routines";
-import { IAppState } from "models/IAppState";
 import { connect } from "react-redux";
 import SectionQuestionList from "./QuestionnaireList";
+import {useTranslation} from "react-i18next";
 
 interface IIndex  {
   // questionnaireId: string;
@@ -47,12 +45,12 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   addQuestionToSection,
   deleteQuestionFromSection
 }) => {
-
+  const [t] = useTranslation();
   const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
     if (sectionId !== prevSectionId) {
-      const updatedSections = sections.map(section => { 
-      if(section.id === sectionId) { 
-        return {...section, 
+      const updatedSections = sections.map(section => {
+      if(section.id === sectionId) {
+        return {...section,
           questions: [...section.questions, question]
         };}
       else if(section.id === prevSectionId) {
@@ -76,7 +74,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      {sections && sections.map(section => 
+      {sections && sections.map(section =>
       <SectionBlock id={section.id}>
       <UISection section={section} onChanged={handleChapterChange}/>
       {section.questions.length ?
@@ -87,7 +85,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
         indexQuestions={indexQuestions}
         />
         : <Header as='h3'>
-          Add questions
+          {t("Add questions")}
         </Header>}
         </SectionBlock>
       )}

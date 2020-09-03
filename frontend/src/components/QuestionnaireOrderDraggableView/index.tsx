@@ -3,6 +3,7 @@ import QuestionCard from './QuestionCard';
 import {IQuestion} from "models/forms/Questions/IQuesion";
 import {Button, Dimmer, Loader} from 'semantic-ui-react';
 import styles from './styles.module.sass';
+import {useTranslation} from "react-i18next";
 
 export interface IQuestionnaireOrderViewProps {
   questions: IQuestion[];
@@ -46,6 +47,7 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
                                                                                  save
 }) => {
   const [cards, setCards] = useState<IQuestion[]>(propQuest);
+  const [t] = useTranslation();
 
     const handleSaveButton = () => {
       const questions = cards.map((card, i) => { return {...card, index: i}; });
@@ -75,7 +77,7 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
           index={index}
           id={card.id}
           question={card}
-          moveCard={null}
+          moveCard={moveCard}
           prevSectionId={null}
         />
       );
@@ -83,7 +85,7 @@ export const QuestionnaireOrderView: React.FC<IQuestionnaireOrderViewProps> = ({
 
     return (
       <div className={styles.container}>
-        <h3>Questions</h3>
+        <h3>{t("Questions")}</h3>
         <div className={styles.questionsContainer}>
           {isLoading
             ? <Dimmer active inverted>

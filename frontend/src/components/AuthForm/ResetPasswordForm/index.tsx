@@ -9,13 +9,16 @@ import styled from "styled-components";
 import img from "../../../assets/images/bg-pattern.jpg";
 
 import styles from "./styles.module.sass";
+import {useTranslation} from "react-i18next";
 
 const validationSchema = yup.object().shape({
     password: yup
         .string()
         .required("Password required")
-        .min(6, "Password too short!")
-        .max(30, "Password too long!"),
+        .min(8, "Password too short!")
+        .max(16, "Password too long!")
+        .matches(/^\w[A-Za-z\d!#$%&'*+\-/=?^_`{}]+$/,
+            "Password contains at least 8 characters ( letters, digits and !#$%&'*+-/=?^_`{} )"),
     passwordRepeat: yup
         .string()
         .required("Repeat password")
@@ -43,6 +46,7 @@ const StyledForm = styled(Form)`
 
 const ResetPasswordForm: FC<FormProps & {match}> =
     ({resetPass, match}) => {
+        const [ t ] = useTranslation();
         return (
             <Formik
                 initialValues={{password: '', passwordRepeat: ''}}
@@ -73,11 +77,11 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                                     FeedGrabber
                                 </Menu.Item>
                                 <Menu.Item position="right" as={Link} to="/auth">
-                                    Sign In
+                                    {t("Sign In")}
                                 </Menu.Item>
                             </Menu>
                             <StyledForm onSubmit={handleSubmit} autoComplete='off' error={!!errorText}>
-                                <Header as="h3">Enter new password</Header>
+                                <Header as="h3">{t("Enter new password")}</Header>
                                 <Form.Input name="password" type="password" placeholder="Password"
                                             onChange={handleChange} onBlur={handleBlur} icon="key"
                                 />
@@ -88,7 +92,7 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                                 <Message
                                     style={{width: '70%', margin: '10px auto'}}
                                     error
-                                    content={errorText}
+                                    content={t(errorText)}
                                 />
                                 <Button disabled={!!errors.password || !!errors.passwordRepeat}
                                         primary

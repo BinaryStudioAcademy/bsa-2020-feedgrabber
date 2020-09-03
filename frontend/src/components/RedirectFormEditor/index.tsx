@@ -5,11 +5,14 @@ import {saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines
 import {history} from "../../helpers/history.helper";
 import {toastr} from 'react-redux-toastr';
 import moment from "moment";
-import {Modal, Button, Icon, Input} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
+import {Modal, Input} from "semantic-ui-react";
+import UIButton from "../UI/UIButton";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     const [title, setTitle] = useState<string>(`New Form created ${moment().calendar()}`);
     const [open, setOpen] = useState<boolean>(!current.id);
+    const [t] = useTranslation();
 
     function handleCancel() {
         history.goBack();
@@ -35,8 +38,8 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     >
         <Modal.Content>
             <Modal.Description as="h3">
-                <p>Looks like you don't have currently edited form</p>
-                Let's create new right now!
+                <p>{t("Looks like you don't have currently edited form")}</p>
+                {t("Let's create new right now!")}
             </Modal.Description>
             <Input
                 icon='hashtag'
@@ -49,9 +52,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
             />
         </Modal.Content>
         <Modal.Actions>
-            <Button primary onClick={handleSubmit}>
-                Create <Icon name='chevron right' />
-            </Button>
+           <UIButton title={t("Create")} primary onClick={handleSubmit}/>
         </Modal.Actions>
     </Modal>
     );

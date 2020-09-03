@@ -5,11 +5,15 @@ import com.feed_grabber.core.user.model.User;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Indexed
 @Data
 @Entity
 @Table(name = "teams")
@@ -29,12 +33,19 @@ public class Team {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "name")
     private String name;
 
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "lead_id")
+    private User lead;
 
     @ManyToMany(
             cascade = {
@@ -46,6 +57,6 @@ public class Team {
             joinColumns = {@JoinColumn(name = "team_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
 }

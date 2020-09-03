@@ -12,14 +12,9 @@ import java.util.UUID;
 @Data
 public class UserProfileEditDto {
     @NotNull
-    private UUID userId;
-    @NotNull
-    private String userName;
-    @NotNull
     private String firstName;
     @NotNull
     private String lastName;
-
+    @NotNull
     private String phoneNumber;
-    private String avatar;
 }

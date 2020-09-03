@@ -6,7 +6,7 @@ import {loadInvitationSingUpRoutine, registerInvitationSingUpRoutine} from "../.
 import {IInvitationSignUpData, IRegisterInvitationSignUpData} from "../../reducers/invitationSignUp/reducer";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {Formik} from "formik";
-import { Input, Menu, Message } from "semantic-ui-react";
+import { Menu, Message } from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import img from "../../assets/images/bg-pattern.jpg";
 import styled from "styled-components";
@@ -15,6 +15,8 @@ import {theme} from "../../components/AuthForm/SignForm/Theme";
 import styles from './styles.module.sass';
 import Typography from "../../components/AuthForm/SignForm/Typography";
 import Button from "components/AuthForm/SignForm/Button";
+import {useTranslation} from "react-i18next";
+import Input from "../../components/AuthForm/SignForm/Input";
 
 const StyledMenu = styled(Menu)`
   background-color: transparent !important;
@@ -110,7 +112,11 @@ const schema = yup.object().shape({
         .min(5, "Username too short!")
         .max(15, "Username too long!")
         .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
-            "Username must be valid")
+            "Username must be valid"),
+    passwordRepeat: yup
+        .string()
+        .required("Repeat password")
+        .oneOf([yup.ref('password')], 'Passwords must match')
 });
 
 const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
@@ -130,6 +136,8 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
             loadInvitationData(match.params.id);
         }
     }, [invitationData, loadInvitationData, match]);
+
+    const [t] = useTranslation();
 
     return (
         <>
@@ -151,23 +159,34 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                 {invitationData && (
                                     <>
                                         <h1 className={styles.pageTitle}>
-                                            {invitationData.expired && <>Unfortunately,<br/>this link has been
-                                                expired</>}
-                                            {invitationData.accepted && <>You have already registered<br/>using this
-                                                link</>}
+                                            {invitationData.expired &&
+                                            <>
+                                                {t("Unfortunately")},<br/>
+                                                {t("this link has been expired")}
+                                                <br/>
+                                                <br/>
+                                                <Link to={"/layout"}> {t("Go to main page")} </Link>
+                                            </>}
+                                            {invitationData.accepted && <>
+                                                {t("You have already registered")}<br/>
+                                                {t("using this link")}
+                                                <br/>
+                                                <br/>
+                                                <Link to={"/layout"}> {t("Go to main page")} </Link>
+                                            </>}
                                         </h1>
                                         {!invitationData.expired && !invitationData.accepted && (
                                             <>
                                             <div className={styles.formWrapper}>
                                                 <div className={styles.formContent}>
                                                     <Typography fontWeight="bold" variant="h4">
-                                                        Create Account
+                                                        {t("Create Account")}
                                                     </Typography>
                                                     <Typography variant="body2">
-                                                        by this invitation link.
+                                                        {t("by this invitation link.")}
                                                     </Typography>
                                                     <Formik
-                                                        initialValues={{password: '', username: ''}}
+                                                        initialValues={{password: '', username: '', passwordRepeat: ''}}
                                                         validationSchema={schema}
                                                         onSubmit={values => {
                                                             registerByInvitation({
@@ -179,13 +198,16 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                                         }
                                                     >
                                                         {({
+                                                            touched,
                                                               errors,
                                                               values,
                                                               handleChange,
                                                               handleBlur,
                                                               handleSubmit
                                                           }) => {
-                                                            const errorText = errors.username || errors.password
+                                                            const errorText = (touched.username && errors.username)
+                                                                || (touched.password && errors.password)
+                                                                || (touched.passwordRepeat && errors.passwordRepeat)
                                                                 || error;
 
                                                             return (
@@ -194,30 +216,34 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                                                            value={values.username}
                                                                            onChange={handleChange}
                                                                            onBlur={handleBlur}
-                                                                           className={styles.invitationInput}
                                                                     />
                                                                     <Input name="password" type="password"
-                                                                           placeholder="Password"
+                                                                           placeholder={t("Password")}
                                                                            value={values.password}
                                                                            onChange={handleChange}
                                                                            onBlur={handleBlur}
-                                                                           className={styles.invitationInput}
+                                                                    />
+                                                                    <Input name="passwordRepeat" type="password"
+                                                                           placeholder={t("Confirm password")}
+                                                                           value={values.passwordRepeat}
+                                                                           onChange={handleChange}
+                                                                           onBlur={handleBlur}
                                                                     />
                                                                     {
                                                                         errorText &&
                                                                         <Message className={styles.errorMessage}
                                                                                  attached="top" error
-                                                                                 size="small" content={errorText}/>
+                                                                                 size="small" content={t(errorText)}/>
                                                                     }
                                                                     <Button
                                                                         className={styles.submitButton}
                                                                         loading={registerLoading}
-                                                                        disabled={!!errorText && errorText !== error
+                                                                        disabled={(!!errorText && errorText !== error)
                                                                         || registerLoading}
                                                                         variant="secondary"
                                                                         type="submit"
                                                                     >
-                                                                        Sign Up
+                                                                        {t("Sign Up")}
                                                                     </Button>
                                                                 </form>);
                                                         }}
@@ -228,8 +254,10 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                                  <Overlay>
                                                     <OverlayPanel>
                                                         <Typography fontWeight="bold" variant="h4" color="white">
-                                                            Welcome to {invitationData.companyName},
-                                                            <br/>{invitationData.email}!
+                                                            {t("Welcome to")} <br /> {invitationData.companyName}!
+                                                        </Typography>
+                                                        <Typography variant="body" color="white">
+                                                         {t("Enter your personal details and start journey with us")} ;)
                                                         </Typography>
                                                     </OverlayPanel>
                                                  </Overlay>
@@ -240,7 +268,10 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                 )}
                                 {loadFailed && (
                                     <h1 className={styles.pageError}>
-                                        Unable to load data.<br/>Maybe, the link is not relevant
+                                        {t("Unable to load data")}.<br/>{t("Maybe, the link is not relevant")}
+                                        <br/>
+                                        <br/>
+                                        <Link to={"/layout"}> {t("Go to main page")} </Link>
                                     </h1>
                                 )}
                             </LoaderWrapper>

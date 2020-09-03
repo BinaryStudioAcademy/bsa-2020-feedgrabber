@@ -12,6 +12,7 @@ import CompanySelectorForm from "./CompanySelectorForm";
 import styles from "./CompanySelectorForm/styles.module.sass";
 import {dropCompanyRoutine} from "../../../sagas/companies/routines";
 import LoaderWrapper from "../../LoaderWrapper";
+import {useTranslation} from "react-i18next";
 
 const schema = yup.object().shape({
     password: yup
@@ -34,6 +35,7 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
     userName,
     loadUserName
 }) => {
+    const [ t ] = useTranslation();
 
     useEffect(() => {
       if(company && userEmail) {
@@ -77,38 +79,42 @@ const SignInForm: FC<SignInFormProps & { className: string }> = ({
             }}
         >
             {({
+                  touched,
                   values,
                   errors,
                   handleChange,
                   handleBlur,
                   handleSubmit
               }) => {
-                const errorText = errors.username || errors.password || error;
+                const errorText = (touched.username && errors.username)
+                    || (touched.password && errors.password)
+                    || error;
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
-                        <Typography fontWeight="bold" variant="h4">Sign In</Typography>
-                        <Typography variant="body2">or use your account</Typography>
+                        <Typography fontWeight="bold" variant="h4">{t("Sign In")}</Typography>
+                        <Typography variant="body2">{t("or use your account")}</Typography>
                         <Input name="username" placeholder="Username" value={values.username}
                                disabled
                         />
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
+                        {/* eslint-disable-next-line */ }
                         <a href="#"
                             onClick={() => resetPassword({userEmail, companyId: company.id})}
-                        >Reset password</a>
+                        >{t("Reset password")}</a>
                         {
                             companyCard
                         }
                         {
-                            errorText && <Message attached="top" error size="small" content={errorText}/>
+                            errorText && <Message attached="top" error size="small" content={t(errorText)}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">
-                            Sign In
+                            {t("Sign In")}
                         </Button>
                     </form>);
             }}

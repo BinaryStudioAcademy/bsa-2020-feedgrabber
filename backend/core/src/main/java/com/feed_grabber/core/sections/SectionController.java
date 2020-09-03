@@ -42,6 +42,7 @@ public class SectionController {
         return new AppResponse<>(sectionService.getByQuestionnaire(id));
     }
 
+    @ApiOperation(value = "Update section by id and providing section title and description")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<SectionDto> update(@PathVariable UUID id, @RequestBody SectionUpdateDto dto)
@@ -49,6 +50,7 @@ public class SectionController {
         return new AppResponse<>(sectionService.update(id, dto));
     }
 
+    @ApiOperation(value = "Add new question to the section", notes = "Provide both id: section and question")
     @PutMapping("/question/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<SectionQuestionsDto> addQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
@@ -56,11 +58,14 @@ public class SectionController {
         return new AppResponse<>(sectionService.addQuestion(sectionId, id));
     }
 
-    @DeleteMapping("/question/{id}")
+    @DeleteMapping("/question/{questionId}")
+    @ApiOperation(value = "Delete question from section", notes = "Provide both id: section and question")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<SectionQuestionsDto> deleteQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
+    public AppResponse<SectionQuestionsDto> deleteQuestion(
+            @PathVariable UUID questionId,
+            @RequestParam UUID sectionId)
             throws SectionNotFoundException, QuestionNotFoundException {
-        return new AppResponse<>(sectionService.deleteQuestion(sectionId, id));
+        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId));
     }
 
 }

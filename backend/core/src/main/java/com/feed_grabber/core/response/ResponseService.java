@@ -38,7 +38,7 @@ public class ResponseService {
     public Optional<ResponseDto> update(ResponseUpdateDto dto) throws DeadlineExpiredException, NotFoundException{
         var response = responseRepository.findById(dto.getId()).orElseThrow(ResponseNotFoundException::new);
         var request = response.getRequest();
-        if (!request.isChangeable()) {
+        if (!request.isChangeable() && response.getPayload() != null) {
             return Optional.of(ResponseMapper.MAPPER.responseToDto(response));
         }
 
