@@ -4,6 +4,7 @@ import styles from './styles.module.sass';
 import {IQuestionResponse} from "../../../models/IQuestionResponse";
 import {IRadioQuestion} from "../../../models/forms/Questions/IQuesion";
 import {IAnswerBody} from '../../../models/forms/Response/types';
+import { useTranslation } from "react-i18next";
 
 export interface IRadioResponse {
     response?: IAnswerBody;
@@ -46,6 +47,8 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         setAnswer({...answer, other: value});
     };
 
+    const [t] = useTranslation();
+
     return (
         <div>
             {question.details.answerOptions.map((option, index) => (
@@ -75,7 +78,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                         fluid
                         transparent
                         defaultValue={other}
-                        placeholder="Or enter your variant here..."
+                        placeholder={t("Or enter your variant here...")}
                         error={answer === other && !!otherIsInvalid && !response}
                         onChange={event => handleOther(event.target.value)}
                     />

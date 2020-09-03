@@ -7,12 +7,14 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
 import {Button, Header, Icon, Label, Popup, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
+import { useTranslation } from "react-i18next";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
         const {name, categoryTitle, type, id} = question;
         const [editor, setEditor] = useState(false);
         const detailsPage = useRef(null);
+        const [t] = useTranslation();
         const [style, setStyle] = useState(styles.container);
 
         useEffect(() => {
@@ -37,10 +39,10 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                         on='click'>
                         <Popup
                             trigger={<Button color='blue'
-                                             content='I know what I do!'
+                                             content={t('I know what I do!')}
                                              fluid
                                              onClick={handleSegmentClick}/>}
-                            content='It may affect answers that have been given before!!!'
+                            content={t('It may affect answers that have been given before!!!')}
                             position='top center'
                             size='tiny'
                             inverted

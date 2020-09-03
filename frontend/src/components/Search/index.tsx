@@ -5,6 +5,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {searchOverAllEntities} from "../../sagas/search/routines";
 import styles from "./styles.module.sass";
 import {history} from "../../helpers/history.helper";
+import {useTranslation} from "react-i18next";
 
 interface IResult {
     count: number;
@@ -15,6 +16,7 @@ interface IResult {
 const Search: FC<SearchProps> = ({isLoading, result, searchAll, searchQuery}) => {
 
     const [options, setOptions] = useState([]);
+    const [t] = useTranslation();
 
     useEffect(() => {
         const temp: IResult[] = [];
@@ -62,7 +64,7 @@ const Search: FC<SearchProps> = ({isLoading, result, searchAll, searchQuery}) =>
 
     return (
         <SearchSemantic onSearchChange={handleChange}
-                        placeholder='Search...'
+                        placeholder={t('Search...')}
                         size="small"
                         results={options}
                         value={searchQuery}

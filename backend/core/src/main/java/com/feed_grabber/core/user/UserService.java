@@ -21,10 +21,11 @@ import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.model.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
+import com.feed_grabber.core.search.SearchRepository;
+import com.feed_grabber.core.search.dto.PagedResponseDto;
 import com.feed_grabber.core.user.dto.*;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
-import com.feed_grabber.core.user.model.UserProfile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,6 +47,7 @@ public class UserService implements UserDetailsService {
     private final CompanyRepository companyRepository;
     private final InvitationRepository invitationRepository;
     private final InvitationService invitationService;
+    private final SearchRepository searchRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,12 +61,14 @@ public class UserService implements UserDetailsService {
                        CompanyRepository companyRepository,
                        InvitationRepository invitationRepository,
                        InvitationService invitationService,
+                       SearchRepository searchRepository,
                        VerificationTokenService verificationTokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.invitationRepository = invitationRepository;
         this.invitationService = invitationService;
+        this.searchRepository = searchRepository;
         this.verificationTokenService = verificationTokenService;
     }
 
@@ -274,39 +278,43 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDetailsResponseDTO> searchByQuery(
-            UUID companyId,
-            String query,
-            Integer page,
-            Integer size) {
-        var parts = query.split(" ");
-        var pageable = PageRequest.of(page, size);
-        var users = parts.length == 1
-                ? userRepository.findByLastNameBeginAndCompanyId(
-                        companyId,
-                        query.toLowerCase() + "%",
-                        pageable)
-                : userRepository.findByNameAndLastNameAndCompanyId(
-                        companyId,
-                        parts[1].toLowerCase() + "%",
-                        parts[0].toLowerCase(),
-                        pageable);
-        return users.stream()
-                .map(UserMapper.MAPPER::detailedFromUser)
-                .collect(Collectors.toList());
+    public PagedResponseDto<UserDetailsResponseDTO> searchByQuery(String query, Integer page, Integer size){
+        return searchRepository.getUsersList(query, Optional.of(page), Optional.of(size));
     }
+
+//    public List<UserDetailsResponseDTO> searchByQuery(
+//            UUID companyId,
+//            String query,
+//            Integer page,
+//            Integer size) {
+//        var parts = query.split(" ");
+//        var pageable = PageRequest.of(page, size);
+//        var users = parts.length == 1
+//                ? userRepository.findByLastNameBeginAndCompanyId(
+//                        companyId,
+//                        query.toLowerCase() + "%",
+//                        pageable)
+//                : userRepository.findByNameAndLastNameAndCompanyId(
+//                        companyId,
+//                        parts[1].toLowerCase() + "%",
+//                        parts[0].toLowerCase(),
+//                        pageable);
+//        return users.stream()
+//                .map(UserMapper.MAPPER::detailedFromUser)
+//                .collect(Collectors.toList());
+//    }
 
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
     }
 
-    public Long getCountByQuery(UUID companyId, String query) {
-        var parts = query.split(" ");
-        return parts.length == 1
-                ? userRepository.countByNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
-                : userRepository.countByLastNameAndNameAndCompanyId(
-                        companyId, parts[1].toLowerCase() + "%", parts[0].toLowerCase());
-    }
+//    public Long getCountByQuery(UUID companyId, String query) {
+//        var parts = query.split(" ");
+//        return parts.length == 1
+//                ? userRepository.countByNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
+//                : userRepository.countByLastNameAndNameAndCompanyId(
+//                        companyId, parts[1].toLowerCase() + "%", parts[0].toLowerCase());
+//    }
 
 //    @Transactional
 //    public void editUserProfile(UserProfileEditDto dto) throws NotFoundException {

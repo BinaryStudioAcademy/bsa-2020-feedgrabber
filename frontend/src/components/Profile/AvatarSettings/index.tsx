@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState} from "react";
 import { Grid, Image, Button } from 'semantic-ui-react';
 import ImageCropModal from "../../ImageCropModal";
+import {useTranslation} from "react-i18next";
 
 interface IAvatarSettingsProps {
   avatar?: string;
@@ -14,6 +15,7 @@ const AvatarSettings: React.FC<IAvatarSettingsProps> = ({ avatar, save}) => {
 
   const [src, setSource] = useState<string | ArrayBuffer>(undefined);
   const [fileName, setFileName] = useState('avatar');
+  const [t] = useTranslation();
 
   const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -37,7 +39,7 @@ const AvatarSettings: React.FC<IAvatarSettingsProps> = ({ avatar, save}) => {
             <Image centered src={avatar ?? defaultAvatar} size="medium" circular />
             <br />
             <Button icon as="label" color="teal" size="small">
-              <span>Set image</span>
+              <span>{t("Set image")}</span>
               <input name="image" type="file" onChange={onSelectFile} hidden />
             </Button>
           </Grid.Column>

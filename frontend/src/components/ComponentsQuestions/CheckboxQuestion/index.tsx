@@ -5,16 +5,18 @@ import CustomInput from "./CustomInput";
 import { IGenericQuestionComponent, invalidState, useInitValue, validState } from "../IQuestionInputContract";
 import { ICheckboxAnswerDetails, IRadioButtonAnswerDetails } from "../../../models/forms/Questions/IQuesion";
 import { replaceAtIndex } from "../../../helpers/array.helper";
+import {useTranslation} from "react-i18next";
 
 const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
   value: propValue,
   onValueChange
 }) => {
+  const [ t ] = useTranslation();
 
   const value = useInitValue(
     {
       value: {
-        answerOptions: ["Option 1"],
+        answerOptions: [`${t("Option")} 1`],
         includeOther: false
       },
       isCompleted: false
@@ -42,12 +44,12 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
                 onValueChange(
                   invalidState({
                     ...value,
-                    answerOptions: value.answerOptions.concat(`Option ${value.answerOptions.length + 1}`)
+                    answerOptions: value.answerOptions.concat(`${t("Option")} ${value.answerOptions.length + 1}`)
                   })
                 );
               }}
       >
-        'Add new option'
+        {t("Add new option")}
       </button>}
 
       <button type={'button'}
@@ -59,7 +61,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
                 setIsFieldTouched(isFieldTouched.concat(false));
               }}
       >
-        Add Other option
+        {t("Add Other option")}
       </button>
     </div>
   );
@@ -72,7 +74,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
       <CustomInput
         disabled
         type="text"
-        value={"Other..."}
+        value={t("Other")}
       />
       <button
         className={styles.centerContent}
@@ -98,7 +100,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
             </div>
             <CustomInput
               type="text"
-              placeholder="Type answer here..."
+              placeholder={t("Type answer here...")}
               name={`answers.${index}`}
               value={answer}
               error={isFieldTouched[index] &&

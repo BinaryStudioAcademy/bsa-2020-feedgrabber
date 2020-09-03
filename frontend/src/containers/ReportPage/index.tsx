@@ -24,6 +24,7 @@ import DateSelectionReport from "./DateSelectionReport";
 import { FileQuestionReport } from './FileQuestionReport';
 import { Link } from 'react-router-dom';
 import styles from './styles.module.sass';
+import { useTranslation } from 'react-i18next';
 import UIContent from "../../components/UI/UIContent";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIColumn from "../../components/UI/UIColumn";
@@ -44,9 +45,11 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     loadUsersReports(match.params.id);
   }, [loadReport, match.params.id, loadUsersReports]);
 
+  const [t] = useTranslation();
+
   const panes = [
     {
-      menuItem: 'Overall',
+      menuItem: t('Overall'),
       render: () => (
         <Tab.Pane>
           <LoaderWrapper loading={isLoadingReport}>
@@ -58,11 +61,11 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                   <div>
                     <Label as='a' color='blue' image className={styles.excel} href={report.excelLink.link}>
                       <img src='https://i.imgur.com/hUTbkcP.png' alt="" />
-                      Excel report
+                      Excel {t("report")}
                     </Label>
                     <Label as='a' color='blue' image href={report.powerPointLink.link}>
                       <img src='https://i.imgur.com/fs4C1Yy.png' alt="" />
-                      PowerPoint report
+                      PowerPoint {t("report")}
                     </Label>
                   </div>
                 }
@@ -70,7 +73,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                   <UICardBlock key={q.id}>
                     <h3>{q.title}</h3>
                     <p>
-                      <b>{q.answers} answers</b>
+                      <b>{q.answers} {t("answers")}</b>
                     </p>
                     {renderQuestionData(q)}
                   </UICardBlock>
@@ -82,7 +85,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
       )
     },
     {
-      menuItem: 'Respondents',
+      menuItem: t('Respondents'),
       render: () => (
         <Tab.Pane>
           <LoaderWrapper loading={isLoadingUsersReports}>
@@ -98,7 +101,7 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
 
   return (
     <>
-      <UIPageTitle title="View Report Info" />
+      <UIPageTitle title={t("View Report Info")} />
       <br />
       <br />
       <UIContent>

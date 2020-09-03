@@ -26,6 +26,7 @@ const employee: IRole = {
         "/",
         "/profile",
         "/profile/settings",
+        "/profile/security",
         "/requests",
         "/help",
         "/editor",

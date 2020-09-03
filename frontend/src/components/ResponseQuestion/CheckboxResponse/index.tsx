@@ -5,6 +5,7 @@ import {Checkbox, Input} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {replaceAtIndex} from "../../../helpers/array.helper";
 import {IAnswerBody} from '../../../models/forms/Response/types';
+import { useTranslation } from "react-i18next";
 
 export interface ICheckboxResponse {
     response?: IAnswerBody;
@@ -49,6 +50,8 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
         // eslint-disable-next-line
     }, [boxes, other]);
 
+    const [t] = useTranslation();
+
     return (
         <div className={styles.boxes}>
             {boxes.map((v, i) => {
@@ -79,7 +82,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
                         disabled={response !== undefined && !answerHandler}
                         className={styles.otherInput}
                         defaultValue={other.value}
-                        placeholder='Other option...'
+                        placeholder={t('Other option...')}
                         error={other.checked && !other.value}
                         onChange={(e, {value}) => {
                             setOther(() => {

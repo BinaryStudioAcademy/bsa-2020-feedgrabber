@@ -8,7 +8,7 @@ import {registerRoutine} from "../../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../../models/IAppState";
-import LoaderWrapper from 'components/LoaderWrapper';
+import {useTranslation} from "react-i18next";
 
 const schema = yup.object().shape({
     companyName: yup
@@ -43,7 +43,8 @@ const schema = yup.object().shape({
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error, company, isLoadingCompany} = props;
+    const {signUp, className, error} = props;
+    const [ t ] = useTranslation();
 
     return (
         <Formik
@@ -80,27 +81,17 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
-                        <Typography fontWeight="bold" variant="h4">Create Account</Typography>
-                        <Typography variant="body2">or use your email for registration</Typography>
+                        <Typography fontWeight="bold" variant="h4">{t("Create Account")}</Typography>
+                        <Typography variant="body2">{t("or use your email for registration")}</Typography>
                         <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
-                        <LoaderWrapper loading={isLoadingCompany}>
-                            {company ? 
-                            <>
-                            <Input name="email" placeholder="Email" value={values.username +"@"+ company.emailDomain}
-                                onChange={values.email=values.username +"@"+company.emailDomain}
-                                onBlur={handleBlur} disabled
-                            /> 
-                            {setCompanyName(company.name)}
-                            </> : <>
-                            <Input name="email" placeholder="Email" value={values.email}
-                                onChange={handleChange} onBlur={handleBlur}/>
-                            <Input name="companyName" placeholder="Company" value={values.companyName}
+                        <Input name="email" placeholder="Email" value={values.email}
                             onChange={handleChange} onBlur={handleBlur}
-                            /> </>
-                            }
-                        </LoaderWrapper>
+                        />
+                        <Input name="companyName" placeholder="Company" value={values.companyName}
+                        onChange={handleChange} onBlur={handleBlur}
+                        /> 
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -109,13 +100,13 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         {
-                            errorText && <Message attached="top" error size="tiny" content={errorText}/>
+                            errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">
-                            Sign Up
+                            {t("Sign Up")}
                         </Button>
                     </form>);}}
         </Formik>
@@ -125,8 +116,6 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
     error: state.user.error?.register,
-    company: state.company.currentCompany,
-    isLoadingCompany: state.company.isLoading
 });
 
 const mapDispatch = {

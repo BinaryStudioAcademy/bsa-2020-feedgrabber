@@ -12,6 +12,7 @@ import {
 import InvitationsListBlock from "./linksList";
 import DomainCreationBlock from "./emailDomainCreation";
 import UIColumn from "components/UI/UIColumn";
+import {useTranslation} from "react-i18next";
 
 const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
   {
@@ -29,9 +30,10 @@ const InvitationLinkPage: FunctionComponent<IInvitationLinkProps> = (
     company
   }
 ) => {
+  const [t] = useTranslation();
   return (
     <>
-      <UIPageTitle title="Invitations" />
+      <UIPageTitle title={t("Invitations")} />
       <UIContent>
         <UIColumn>
           <InvitationCreationBlock
