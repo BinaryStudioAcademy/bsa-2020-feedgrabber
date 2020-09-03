@@ -14,6 +14,7 @@ const PeopleManagementPage: FC<{ match }> = ({match}) => {
                 firstOptionLink={"/people/teams"}
                 secondOption={t("Company employees")}
                 secondOptionLink={"/people/employees"}
+                firstIsSelected={match.params.tab==='teams'}
             />
             <UIContent>
                 {match.params.tab==='teams' &&

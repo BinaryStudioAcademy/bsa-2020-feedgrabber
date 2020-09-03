@@ -9,6 +9,7 @@ export interface IUIPageTitleProps {
     firstOptionLink: string;
     secondOption: string;
     secondOptionLink: string;
+    firstIsSelected: boolean;
 }
 
 const UIPageTitleToggle: FC<IUIPageTitleProps> = (
@@ -16,34 +17,24 @@ const UIPageTitleToggle: FC<IUIPageTitleProps> = (
         firstOption,
         firstOptionLink,
         secondOption,
+        firstIsSelected,
         secondOptionLink
     }) => {
 
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const secondOptionView = () => (
-        <>
-            <h2 className={styles.slash}>/</h2>
-            <h2 className={`${styles.pageTitle} ${activeIndex === 1 ? styles.active : ""}`}
-                onClick={() => {
-                    setActiveIndex(1);
-                    history.push(secondOptionLink);
-                }}>{secondOption}</h2>
-        </>
-    );
+    const [selectedFirst, setFirstIsSelected] = useState(firstIsSelected);
 
     return (
         <div className={styles.pageTitleWrapper}>
-            <h2 className={`${styles.pageTitle} ${activeIndex === 0 ? styles.active : ""}`}
+            <h2 className={`${styles.pageTitle} ${selectedFirst ? styles.active : ""}`}
                 onClick={() => {
-                    setActiveIndex(0);
+                    setFirstIsSelected(true);
                     history.push(firstOptionLink);
                 }}>{firstOption}</h2>
             <AccessManager staticPermission={Permissions.blockUserAccount}>
                 <h2 className={styles.slash}>/</h2>
-                <h2 className={`${styles.pageTitle} ${activeIndex === 1 ? styles.active : ""}`}
+                <h2 className={`${styles.pageTitle} ${!selectedFirst ? styles.active : ""}`}
                     onClick={() => {
-                        setActiveIndex(1);
+                        setFirstIsSelected(false);
                         history.push(secondOptionLink);
                     }}>{secondOption}</h2>
             </AccessManager>
