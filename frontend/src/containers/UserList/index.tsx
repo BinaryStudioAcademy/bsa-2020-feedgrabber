@@ -18,6 +18,7 @@ import styles from './styles.module.sass';
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
 import SwitchRoleModal, {IRoleSwitchDto} from "../../components/SwitchRoleModal";
+import { useTranslation } from 'react-i18next';
 import {ISearchResult} from "../../models/search/Search";
 
 const defaultSize = 10;
@@ -77,6 +78,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
         />
     );
 
+    const [t] = useTranslation();
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearch, setIsSearch] = useState(false);
 
@@ -111,18 +113,18 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
         <div className={styles.searchContainer}>
             <Input style={{width: '450px'}}
                    icon={{name: 'search', circular: true, link: true, onClick: handleSearch}}
-                   placeholder='Search employee'
+                   placeholder={t('Search employee')}
                    value={searchQuery}
                    onKeyPress={onKeyPressed}
                    onChange={handleChange}
             />
-            <Button onClick={handleClear} color='blue' size={"small"}>clear</Button>
+            <Button onClick={handleClear} color='blue' size={"small"}>{t("clear")}</Button>
         </div>
     );
 
     return (
         <>
-            <UIPageTitle title="Users"/>
+            <UIPageTitle title={t("Users")}/>
             <UIContent>
                 <UIColumn>
                     {search()}

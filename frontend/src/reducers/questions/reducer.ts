@@ -56,7 +56,7 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
                     isLoading: false
                 }
             };
-        case deleteFromQuestionnaireRoutine.TRIGGER:
+        case deleteFromQuestionnaireRoutine.SUCCESS:
             if (state.current.id === payload) return {...state, current: {}};
             else return state;
         case loadQuestionByIdRoutine.SUCCESS:

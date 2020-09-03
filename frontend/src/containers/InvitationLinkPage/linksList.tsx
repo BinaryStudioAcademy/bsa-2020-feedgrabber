@@ -7,6 +7,7 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 import styles from './styles.module.sass';
 import UIButton from "../../components/UI/UIButton";
 import {Icon} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
 
 interface IInvitationsListBlockProps {
   invitationsList?: IInvitation[];
@@ -32,11 +33,12 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
       loadInvitations();
   }, [loadInvitations]);
 
+  const [t] = useTranslation();
   return (
     <UIColumn wide>
       <UICard>
         <UICardBlock>
-          <h3>Sent Invitations</h3>
+          <h3>{t("Sent Invitations")}</h3>
         </UICardBlock>
         <LoaderWrapper loading={loadingList}>
           {invitationsList && invitationsList.map(i => (
@@ -53,14 +55,14 @@ const InvitationsListBlock: React.FunctionComponent<IInvitationsListBlockProps> 
               <div>
                 {i.expired && (
                   <UIButton
-                    title="Resend"
+                    title={t("Resend")}
                     onClick={() => resendInvitation(i.email)}
                     loading={i.isResending}
                     disabled={i.isResending}
                   />)}
                 {!i.accepted && (
                   <UIButton
-                    title="Delete"
+                    title={t("Delete")}
                     secondary
                     onClick={() => deleteInvitation(i.email)}
                     loading={i.isDeleting}

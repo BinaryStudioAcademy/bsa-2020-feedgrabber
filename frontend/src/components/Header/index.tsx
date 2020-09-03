@@ -1,4 +1,5 @@
 import React, {FC} from "react";
+
 import {Image, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
@@ -14,6 +15,7 @@ import Search from "../Search";
 import AccessManager from "../AccessManager";
 import {Permissions} from "../AccessManager/rbac-rules";
 import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
+import {useTranslation} from "react-i18next";
 
 const StyledItem = styled(Menu.Item)`
     font-size: 1.15em !important;
@@ -35,7 +37,7 @@ const defaultAvatar =
     "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
 const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
-
+    const [t] = useTranslation();
     return (
         <div className={styles.headerWrapper}>
             <div className={styles.headerContent}>
@@ -48,10 +50,10 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                     <div className={styles.navLinks}>
                         <NavLink exact to="/editor"
                                  className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-                            Form Editor
+                            {t("Form Creator")}
                         </NavLink>
                         <a href="/#" className={styles.headerMenuItem}>
-                            Create Request
+                            {t("Send Request")}
                         </a>
                     </div>
                 </div>
@@ -66,25 +68,25 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                         <StyledMenu vertical>
                             <StyledItem onClick={() => history.push('/profile')}>
                                 <RiUserReceived2Line size="1.3em" color="white"/>&nbsp;&nbsp;
-                                <strong>{user.userName}</strong>
+                              <strong>{user.userName}</strong>
                             </StyledItem>
                             <StyledItem onClick={() => history.push('/profile/settings')}>
-                                <RiSettings5Line size="1.3em" color="white"/>&nbsp;&nbsp; Settings
+                                <RiSettings5Line size="1.3em" color="white"/>&nbsp;&nbsp; {t("Settings")}
                             </StyledItem>
                             <AccessManager staticPermission={Permissions.generateInviteLinks}>
                                 <StyledItem onClick={() => history.push('/invitations')}>
-                                    <RiMailSendLine size="1.3em" color="white"/>&nbsp;&nbsp; Invitations
+                                    <RiMailSendLine size="1.3em" color="white"/>&nbsp;&nbsp; {t("Invitations")}
                                 </StyledItem>
                             </AccessManager>
                             <StyledItem onClick={logout}>
-                                <RiLogoutBoxRLine size="1.3em" color="white"/>&nbsp;&nbsp; Logout
+                                <RiLogoutBoxRLine size="1.3em" color="white"/>&nbsp;&nbsp; {t("Logout")}
                             </StyledItem>
                         </StyledMenu>
                     </Popup>
                 </div>
             </div>
         </div>
-    );
+  );
 };
 
 const mapStateToProps = (state: IAppState) => ({
@@ -93,8 +95,8 @@ const mapStateToProps = (state: IAppState) => ({
     toggled: state.app.showMenu
 });
 const mapDispatchToProps = {
-    logout: logoutRoutine,
-    toggleMenu: toggleMenuRoutine
+  logout: logoutRoutine,
+  toggleMenu: toggleMenuRoutine
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;

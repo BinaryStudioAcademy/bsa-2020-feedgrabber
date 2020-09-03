@@ -4,6 +4,7 @@ import {Formik} from "formik";
 import * as yup from 'yup';
 import styles from './styles.module.sass';
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
+import {useTranslation} from "react-i18next";
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;
@@ -46,9 +47,11 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
       });
   };
 
+  const [t] = useTranslation();
+
   return (
     <Modal open={modalShown} size="small" onClose={hideModal}>
-      <ModalHeader>{modalQuestionnaire ? 'Edit questionnaire' : 'Add questionnaire'}</ModalHeader>
+      <ModalHeader>{modalQuestionnaire ? t('Edit questionnaire') : t('Add questionnaire')}</ModalHeader>
       {modalError && <div className={styles.modalError}>{modalError}</div>}
       <ModalContent>
         <Formik
@@ -69,7 +72,7 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
                 <label>Title</label>
                 <Form.Input
                   fluid
-                  placeholder="Title"
+                  placeholder={t("Title")}
                   type="text"
                   name="title"
                   error={touched.title && errors.title ? errors.title : undefined}
@@ -80,10 +83,10 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
               </Form.Field>
               <Button type="submit" color="teal" size="large" primary
                       loading={isLoading} disabled={isLoading}>
-                Save
+                {t("Save")}
               </Button>
               <Button type="button" size="large" onClick={hideModal}>
-                Cancel
+                {t("Cancel")}
               </Button>
             </Form>
           )}

@@ -3,6 +3,7 @@ import {Formik} from 'formik';
 import {Button, Form, Segment} from 'semantic-ui-react';
 import * as yup from 'yup';
 import UserSelection from './UserSelection';
+import { useTranslation } from 'react-i18next';
 
 const schema = yup.object().shape({
     teamName: yup
@@ -16,6 +17,7 @@ const schema = yup.object().shape({
 });
 
 const TeamForm: FC = () => {
+    const [t] = useTranslation();
     //  TODO pass users to UserSelection from store
     return (
         <Formik
@@ -41,9 +43,9 @@ const TeamForm: FC = () => {
                             fluid
                             icon="group"
                             iconPosition="left"
-                            placeholder="Team Name"
+                            placeholder={t("Team Name")}
                             name="teamName"
-                            error={touched.teamName && errors.teamName ? errors.teamName : null}
+                            error={touched.teamName && errors.teamName ? t(errors.teamName) : null}
                             onChange={handleChange}
                             onBlur={handleBlur}
                         />
@@ -52,7 +54,7 @@ const TeamForm: FC = () => {
                                 color="teal"
                                 primary
                                 fluid size="large"
-                                content="Create"
+                                content={t("Create")}
                         />
                     </Segment>
                 </Form>

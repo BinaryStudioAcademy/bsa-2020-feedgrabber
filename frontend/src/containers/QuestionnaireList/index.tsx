@@ -23,6 +23,7 @@ import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
 import {Icon, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
+import {useTranslation} from "react-i18next";
 
 const QuestionnaireList: FC<Props> = (
     {
@@ -43,6 +44,7 @@ const QuestionnaireList: FC<Props> = (
         result
     }
 ) => {
+    const [t] = useTranslation();
     const mapItemToJSX = (item: IQuestionnaire) => {
         const match = result
             .questionnaires
@@ -61,7 +63,7 @@ const QuestionnaireList: FC<Props> = (
                     }>{match && 'Matches searched query!'}</span>
                 <div className={styles.cardIconWrapper}>
                   <Popup
-                    content="New request"
+                    content={t("New request")}
                     position="top center"
                     trigger={
                       <Icon
@@ -72,7 +74,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Show requests and reports"
+                    content={t("Show requests and reports")}
                     position="top center"
                     trigger={
                       <Icon
@@ -85,7 +87,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Manage questions"
+                    content={t("Manage questions")}
                     position="top center"
                     trigger={
                       <Icon
@@ -99,7 +101,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Change title"
+                    content={t("Change title")}
                     position="top center"
                     trigger={
                       <Icon
@@ -110,7 +112,7 @@ const QuestionnaireList: FC<Props> = (
                     }
                   />
                   <Popup
-                    content="Delete questionnaire"
+                    content={t("Delete questionnaire")}
                     position="top center"
                     trigger={
                       <Icon
@@ -136,11 +138,11 @@ const QuestionnaireList: FC<Props> = (
                 updateQuestionnaire={updateQuestionnaire}
                 modalError={modalError}
             />
-            <UIPageTitle title="Questionnaires"/>
+            <UIPageTitle title={t("Questionnaires")}/>
             <UIContent>
                 <UIColumn wide>
                     <UIButton
-                        title="Add Questionnaire"
+                        title={t("Add Questionnaire")}
                         onClick={() => showModal(undefined)}
                         center
                         primary

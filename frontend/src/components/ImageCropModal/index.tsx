@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Modal, Button } from 'semantic-ui-react';
+import {useTranslation} from "react-i18next";
 
 interface IImageCropModalProps {
   close(): void;
@@ -12,6 +13,7 @@ interface IImageCropModalProps {
 
 const ImageCropModal: React.FC<IImageCropModalProps> = ({ close, save, src, fileName }) => {
   const [imgRef, setImageRef] = useState<HTMLImageElement>(undefined);
+  const [t] = useTranslation();
 
   const initCrop = {
     x: 10,
@@ -50,7 +52,7 @@ const ImageCropModal: React.FC<IImageCropModalProps> = ({ close, save, src, file
           reject(new Error('Canvas is empty'));
           return;
         }
-        
+
         resolve(blob);
       }, 'image/jpeg', 1);
     });
@@ -80,10 +82,10 @@ const ImageCropModal: React.FC<IImageCropModalProps> = ({ close, save, src, file
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={close}>
-          <span>Cancel</span>
+          <span>{t("Cancel")}</span>
         </Button>
         <Button color="teal" onClick={saveImage}>
-          <span>Confirm</span>
+          <span>{t("Confirm")}</span>
         </Button>
       </Modal.Actions>
     </Modal>

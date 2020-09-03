@@ -4,10 +4,7 @@ import styles from './styles.module.sass';
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
-import {
-    createSectionRoutine,
-    loadSectionsByQuestionnaireRoutine
-} from 'sagas/sections/routines';
+import { createSectionRoutine } from 'sagas/sections/routines';
 import {
     indexQuestionsRoutine,
     loadQuestionByIdRoutine,
@@ -20,6 +17,7 @@ import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {toastr} from "react-redux-toastr";
+import {loadOneNotSavedQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 
@@ -43,11 +41,11 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     const [question, setQuestion] = useState<IQuestion>();
     if (!question) {
-        loadQuestion({ id: "" });
+        loadQuestion({id: ""});
     }
 
     useEffect(() => {
-      loadQuestionnaire(match.params.id);
+        loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
     const handleDeleteQuestion = () => {
@@ -75,7 +73,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             sectionId: section.id,
             index: section.questions.length
         });
-      };
+    };
 
     const handleAddSection = () => createSection({questionnaireId: match.params.id, index: sections.length});
 
@@ -96,7 +94,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     return (
         <>
-            <UIPageTitle title={questionnaire.title} />
+            <UIPageTitle title="" />
             {questionnaire && (
                 <div className={styles.formDetails}>
                     <LoaderWrapper loading={isLoading}>
@@ -131,7 +129,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
+    loadQuestionnaire: loadOneNotSavedQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
     toggleMenu: toggleMenuRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,

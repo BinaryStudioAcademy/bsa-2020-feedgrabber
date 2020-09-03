@@ -16,6 +16,7 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {updateQuestions} from "../../helpers/array.helper";
 import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import { loadOneNotSavedQuestionnaireRoutine } from "sagas/qustionnaires/routines";
 
 export const parseQuestion = rawQuestion => ({
         ...rawQuestion,
@@ -117,7 +118,8 @@ function* deleteOneByQuestionnaireId(action) {
             apiClient.delete, `/api/questions/questionnaires/${questionId}/${questionnaireId}`,
             action.payload
         );
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
+      yield put(deleteFromQuestionnaireRoutine.success(questionId));
+      yield put(loadOneNotSavedQuestionnaireRoutine.trigger(questionnaireId));
     } catch (e) {
         yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
         toastr.error("Unable to delete question");

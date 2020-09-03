@@ -6,6 +6,7 @@ import {Button, Card, Icon, Modal, Progress} from "semantic-ui-react";
 import Header from "semantic-ui-react/dist/commonjs/elements/Header";
 import {closeRequestRoutine} from "../../../sagas/request/routines";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 type Props = {
     request: IRequestShort;
@@ -16,12 +17,13 @@ type Props = {
 
 export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questionnaireId}) => {
     const [open, setOpen] = useState(false);
+    const [t] = useTranslation();
 
     function handleClick() {
         if (isClosed) {
             history.push(`/report/${request.requestId}`);
         } else {
-            toastr.info("Request is in progress");
+            toastr.info(t("Request is in progress"));
             setOpen(true);
         }
     }
@@ -35,11 +37,11 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
     const getProgressBar = () => (
         isClosed ?
             <Progress percent={calcDate(request.expirationDate, request.creationDate, request.closeDate)}
-                      success label={`Closed ${moment(request.closeDate).calendar()}`}/>
+                      success label={`${t("Closed")} ${moment(request.closeDate).calendar()}`}/>
             : <Progress active percent={calcDate(request.expirationDate, request.creationDate)}
                         label={request.expirationDate
-                            ? `Deadline on ${moment(request.expirationDate).calendar()}`
-                            : 'Without expiration'}
+                            ? `${("Deadline on")} ${moment(request.expirationDate).calendar()}`
+                            : t("Without expiration")}
                         color="blue"
             />
     );
@@ -48,13 +50,13 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
         <>
             <Card fluid raised={true} onClick={handleClick} color="blue">
                 <Card.Content textAlign="center">
-                    <Card.Header>Created by {request.requestMaker.username}</Card.Header>
+                    <Card.Header>{t("Created by")} {request.requestMaker.username}</Card.Header>
                     <Card.Meta>{moment(request.creationDate).calendar()}</Card.Meta>
                 </Card.Content>
                 <Card.Content extra>
                     {getProgressBar()}
                     <Icon name='user'/>
-                    {request.userCount} Attended
+                    {request.userCount} {t("Attended")}
                 </Card.Content>
             </Card>
             <Modal
@@ -66,15 +68,17 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
             >
                 <Header icon='archive' content='Close Request & View Report'/>
                 <Modal.Content>
-                    <p>Do you really want to <strong style={{color: "red"}}>close the request?</strong></p>
-                    Respondents <strong>won't be able to answer</strong> anymore.
+                    <p>{t("Do you really want to")}
+                        <strong style={{color: "red"}}>{t("close the request?")}</strong>
+                    </p>
+                    {t("Respondents")} <strong>{t("won't be able to answer")}</strong> {t("anymore")}.
                 </Modal.Content>
                 <Modal.Actions>
                     <Button basic color='green' inverted onClick={() => setOpen(false)}>
-                        <Icon name='remove' /> No
+                        <Icon name='remove' /> {("No")}
                     </Button>
                     <Button color='red' inverted onClick={handleRequestClose}>
-                        <Icon name='checkmark' /> Yes
+                        <Icon name='checkmark' /> {t("Yes")}
                     </Button>
                 </Modal.Actions>
             </Modal>

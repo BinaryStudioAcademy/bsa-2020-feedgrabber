@@ -14,6 +14,7 @@ import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import {IReportShort} from 'models/report/IReport';
 import {Tab} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
 import { Link } from 'react-router-dom';
 import NewsList from 'components/NewsList';
 import { INewsItem } from 'models/news';
@@ -46,8 +47,8 @@ const MainPage: FC<IMainPageProps> =
          loadQuestionnaires,
          loadReports
      }) => {
-
-        const [panes, setPanes] = useState([]);
+        const [t] = useTranslation();
+        const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
 
         const handleAnswerClick = requestId => {
             history.push(`/response/${requestId}`);
@@ -68,7 +69,7 @@ const MainPage: FC<IMainPageProps> =
         useEffect(() => {
             setPanes([
                 {
-                    menuItem: {key: 'opened', icon: 'eye', content: 'Pending'},
+                    menuItem: {key: 'opened', icon: 'eye', content: t('Pending')},
                     render: () => <Tab.Pane loading={isLoading}
                                             style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
@@ -83,26 +84,26 @@ const MainPage: FC<IMainPageProps> =
                                     }) => (
                                     <UICardBlock key={requestId}>
                                         <p>{expirationDate
-                                            ? `Deadline at ${expirationDate.toUTCString()}`
-                                            : 'No deadline for this request'}</p>
+                                            ? `${t("Deadline at")} ${expirationDate.toUTCString()}`
+                                            : t('No deadline for this request')}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
                                         {((expirationDate?.valueOf() || Number.MAX_VALUE)
                                             > new Date().valueOf() || !expirationDate)
-                                            ? <UIButton title="Answer"
+                                            ? <UIButton title={t("Answer")}
                                                         primary
                                                         onClick={() =>
                                                             handleAnswerClick(requestId)}/>
-                                            : <p>Expired {new Date(new Date().valueOf()
-                                                - expirationDate?.valueOf()).getHours()} hours ago</p>}
+                                            : <p>{t("Expired")} {new Date(new Date().valueOf()
+                                                - expirationDate?.valueOf()).getHours()} {t("hours ago")}</p>}
                                     </UICardBlock>
                                 ))}
                         </LoaderWrapper>
                     </Tab.Pane>
                 },
                 {
-                    menuItem: {key: 'closed', icon: 'lock', content: 'Closed'},
+                    menuItem: {key: 'closed', icon: 'lock', content: t('Closed')},
                     render: () => <Tab.Pane style={{border: 'none', paddingTop: 0}}>
                         <LoaderWrapper loading={isLoading}>
                             {questionnaireList?.filter(r => r.closeDate ||
@@ -119,8 +120,8 @@ const MainPage: FC<IMainPageProps> =
                                     }) => (
                                     <UICardBlock key={requestId}>
                                         <p>{expirationDate
-                                            ? `Deadline on ${expirationDate.toUTCString()}`
-                                            : 'No deadline for this request'}</p>
+                                            ? `${t("Deadline at")} ${expirationDate.toUTCString()}`
+                                            : t('No deadline for this request')}</p>
                                         {questionnaire.title && <h4>{questionnaire.title}</h4>}
                                         {questionnaire.description && <p>{questionnaire.description}</p>}
                                         {questionnaire.companyName && <p><b>{questionnaire.companyName}</b></p>}
@@ -128,15 +129,15 @@ const MainPage: FC<IMainPageProps> =
                                             > new Date().valueOf() && !closeDate)
                                             ? <UIButton
                                                 primary
-                                                title={changeable ? "Change my answer" : "Show answers"}
+                                                title={changeable ? t("Change my answer") : t("Show answers")}
                                                 onClick={() =>
                                                     handleModifyAnswerClick(
                                                         requestId,
                                                         responseId)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
-                                                ? <p>Force closed on {new Date(closeDate).toUTCString()}</p>
-                                                : <p>Expired {new Date(new Date().valueOf()
-                                                    - expirationDate?.valueOf()).getHours()} hours ago</p>}
+                                                ? <p>{t("Force closed on")} {new Date(closeDate).toUTCString()}</p>
+                                                : <p>{t("Expired")} {new Date(new Date().valueOf()
+                                                    - expirationDate?.valueOf()).getHours()} {t("hours ago")}</p>}
                                     </UICardBlock>
                                 ))}
                         </LoaderWrapper>
@@ -148,23 +149,23 @@ const MainPage: FC<IMainPageProps> =
 
         return (
             <>
-                <UIPageTitle title="Home"/>
+                <UIPageTitle title={t("Home")}/>
                 <UIContent>
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>My Reports</h3>
+                                <h3>{t("My Reports")}</h3>
                             </UICardBlock>
                             {reportsList.length === 0 ?
                               <UICardBlock>
-                                No reports for now, we'll notify you
+                                {t("No reports for now, we'll notify you")}
                               </UICardBlock> :
                               reportsList.map(item => (
                                 <UICardBlock key={item.id}>
                                     {item.title && <h4>{item.title}</h4>}
                                     {item.closeDate && <p>{item.closeDate}</p>}
                                     {item.author && <p><b>{item.author}</b></p>}
-                                    <Link to={`/report/${item.id}`}><UIButton title="Details"/></Link>
+                                    <Link to={`/report/${item.id}`}><UIButton title={t("Details")}/></Link>
                                 </UICardBlock>
                               ))}
                         </UICard>
@@ -172,7 +173,7 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn>
                         <UICard>
                             <UICardBlock>
-                                <h3>My Requests</h3>
+                                <h3>{t("My Requests")}</h3>
                             </UICardBlock>
                             <Tab menu={{secondary: true, pointing: true}} panes={panes}/>
                         </UICard>
@@ -180,7 +181,7 @@ const MainPage: FC<IMainPageProps> =
                     <UIColumn wide>
                         <UICard>
                             <UICardBlock>
-                                <h3>Company News Feed</h3>
+                                <h3>{t("Company News Feed")}</h3>
                             </UICardBlock>
                             <NewsList/>
                         </UICard>
