@@ -13,8 +13,8 @@ function* loadUserList(action: any) {
     const store = yield select();
     const {page, size} = store.users.pagination;
     const api = query 
-      ? `api/user/search/?page=${page}&size=${size}&query=${query}` 
-      : `api/user/all/?page=${page}&size=${size}`;
+      ? `/api/user/search/?page=${page}&size=${size}&query=${query}`
+      : `/api/user/all/?page=${page}&size=${size}`;
     const res = yield call(apiClient.get, api);
     const items = res.data.data;
 
@@ -28,7 +28,7 @@ function* loadUserList(action: any) {
 function* deleteUserFromCompany(action: any) {
   try {
     const id: string = action.payload;
-    yield call(apiClient.put, `api/user/${id}/removeCompany`);
+    yield call(apiClient.put, `/api/user/${id}/removeCompany`);
 
     yield put(removeUserFromCompanyRoutine.success());
     toastr.success("Employee fired");
