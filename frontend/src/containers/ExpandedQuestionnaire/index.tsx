@@ -4,9 +4,8 @@ import styles from './styles.module.sass';
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
-
 import {
-    createSectionRoutine, deleteQuestionFromSectionRoutine,
+    createSectionRoutine,
     loadSectionsByQuestionnaireRoutine
 } from 'sagas/sections/routines';
 import {
@@ -18,7 +17,6 @@ import {
 
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {Header} from "semantic-ui-react";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {toastr} from "react-redux-toastr";
@@ -52,10 +50,16 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
       loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
-    const handleDeleteQuestion = () => deleteQuestion({
-      questionId: question.id,
-      questionnaireId: questionnaire.id
-    });
+    const handleDeleteQuestion = () => {
+      if(!question.id) {
+        toastr.info("Choose question");
+        return;
+      }
+      deleteQuestion({
+        questionId: question.id,
+        questionnaireId: questionnaire.id
+      });
+    };
 
     useEffect(() => {
         setQuestion(currentQuestion);
@@ -130,7 +134,7 @@ const mapDispatchToProps = {
     loadQuestionnaire: loadSectionsByQuestionnaireRoutine,
     saveQuestion: saveQuestionRoutine,
     toggleMenu: toggleMenuRoutine,
-    deleteQuestion: deleteQuestionFromSectionRoutine,
+    deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,
     indexQuestions: indexQuestionsRoutine,
     loadQuestion: loadQuestionByIdRoutine

@@ -113,7 +113,6 @@ function* saveOrUpdateQuestion(action) {
 function* deleteOneByQuestionnaireId(action) {
     try {
         const {questionId, questionnaireId} = action.payload;
-        console.log(action.payload);
         yield call(
             apiClient.delete, `/api/questions/questionnaires/${questionId}/${questionnaireId}`,
             action.payload
