@@ -51,9 +51,9 @@ public class UserController {
             notes = "You should not to provide an id, it will be got from token service")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<UserDetailsResponseDTO> getUserDetails() {
+    public AppResponse<UserDetailsResponseDTO> getUserDetails() throws UserNotFoundException {
         var id = TokenService.getUserId();
-        return new AppResponse<>(userService.getUserDetails(id).orElseThrow());
+        return new AppResponse<>(userService.getUserDetails(id).orElseThrow(UserNotFoundException::new));
     }
 
     @ApiOperation(value = "Get all users",

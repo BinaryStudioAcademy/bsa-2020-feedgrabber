@@ -18,13 +18,18 @@ const initialState = {
 };
 
 const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
-    if (type === loginRoutine.SUCCESS
-        || type === registerRoutine.SUCCESS) {
+    if (type === loginRoutine.SUCCESS) {
         return {
             ...state,
             info: undefined,  // to load user details after login, currently - different DTO after login and getUser
             isLoading: false,
             error: {}
+        };
+    }
+    if(type === registerRoutine.SUCCESS) {
+        return {
+            ...state,
+            isRegisteredSuccess: payload
         };
     }
     if (type === getUserRoutine.SUCCESS) {
@@ -40,7 +45,9 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
         || type === getUserRoutine.TRIGGER) {
         return {
             ...state,
-            isLoading: true
+            isLoading: true,
+            isRegisteredSuccess: null,
+            error: {}
         };
     }
     if (type === logoutRoutine.SUCCESS) {
