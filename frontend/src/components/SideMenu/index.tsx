@@ -5,7 +5,7 @@ import styles from './styles.module.sass';
 import {Permissions} from "../AccessManager/rbac-rules";
 import AccessManager from "../AccessManager";
 import {useTranslation} from "react-i18next";
-import {RiDashboardLine, RiHome2Line, RiListSettingsLine, RiTeamLine} from "react-icons/ri";
+import {RiDashboardLine, RiHome2Line, RiListSettingsLine, RiTeamLine, RiUser3Line} from "react-icons/ri";
 import {AiOutlineQuestion} from "react-icons/ai";
 
 interface ISideMenuProps {
@@ -14,7 +14,7 @@ interface ISideMenuProps {
     toggleMenu(): void;
 }
 
-const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu}) => {
+const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded}) => {
     const [t] = useTranslation();
     return (
         <div className={`${styles.menuWrapper} ${expanded ? styles.menuWrapperOpen : styles.menuWrapperClosed}`}>
@@ -45,7 +45,7 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
                 </AccessManager>
                 <AccessManager staticPermission={Permissions.blockUserAccount}>
                     <NavLink to="/employees" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-                        <RiTeamLine className={styles.menuItemIcon} size="1.3em" color="white"/>
+                        <RiUser3Line className={styles.menuItemIcon} size="1.3em" color="white"/>
                         <span className={styles.menuItemTitle}>{t("Employees")}</span>
                     </NavLink>
                 </AccessManager>
