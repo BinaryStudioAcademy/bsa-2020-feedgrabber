@@ -42,7 +42,7 @@ public class RequestService {
     private final UserNotificationRepository userNotificationRepository;
     private final NotificationService notificationService;
     private final FileRepository fileRepository;
-    private final Sender emailSender;
+    private final Sender sender;
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
@@ -52,7 +52,7 @@ public class RequestService {
                           UserNotificationRepository userNotificationRepository,
                           NotificationService notificationService,
                           FileRepository fileRepository,
-                          Sender emailSender) {
+                          Sender sender) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
@@ -61,7 +61,7 @@ public class RequestService {
         this.userNotificationRepository = userNotificationRepository;
         this.notificationService = notificationService;
         this.fileRepository = fileRepository;
-        this.emailSender = emailSender;
+        this.sender = sender;
     }
 
     public UUID createNew(CreateRequestDto dto) throws NotFoundException {
@@ -133,12 +133,9 @@ public class RequestService {
             }
         }
 
-//        Date closeDate = request.getCloseDate();
-//        closeDate.set
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(closeDate);
-//        calendar.setTimeInMillis(closeDate.getTime() + 82800000L);
-        emailSender.sendReportCloseRequest(request.getId(), request.getCloseDate());
+		if (request.getExpirationDate() != null) {
+        	sender.sendReportCloseRequest(request.getId(), request.getExpirationDate());
+		}
 
         return request.getId();
     }
@@ -189,6 +186,10 @@ public class RequestService {
         var request = requestRepository
                 .findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request not found"));
+
+		if (request.getCloseDate() != null) {
+			return request.getCloseDate();
+		}
 
         request.setCloseDate(new Date());
         var closeDate = requestRepository.save(request).getCloseDate();
