@@ -11,6 +11,7 @@ import com.feed_grabber.core.file.dto.S3FileCreationDto;
 import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
@@ -23,6 +24,7 @@ import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.lang.ref.Cleaner;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,7 @@ public class RequestService {
     private final UserNotificationRepository userNotificationRepository;
     private final NotificationService notificationService;
     private final FileRepository fileRepository;
+    private final Sender emailSender;
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
@@ -44,7 +47,8 @@ public class RequestService {
                           ResponseRepository responseRepository,
                           UserNotificationRepository userNotificationRepository,
                           NotificationService notificationService,
-                          FileRepository fileRepository) {
+                          FileRepository fileRepository,
+                          Sender emailSender) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
@@ -53,6 +57,7 @@ public class RequestService {
         this.userNotificationRepository = userNotificationRepository;
         this.notificationService = notificationService;
         this.fileRepository = fileRepository;
+        this.emailSender = emailSender;
     }
 
     public UUID createNew(CreateRequestDto dto) throws QuestionCategoryNotFoundException, UserNotFoundException {
@@ -117,6 +122,13 @@ public class RequestService {
                     "notify",
                     toSendNotification);
         }
+
+//        Date closeDate = request.getCloseDate();
+//        closeDate.set
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(closeDate);
+//        calendar.setTimeInMillis(closeDate.getTime() + 82800000L);
+        emailSender.sendReportCloseRequest(request.getId(), request.getCloseDate());
 
         return request.getId();
     }
