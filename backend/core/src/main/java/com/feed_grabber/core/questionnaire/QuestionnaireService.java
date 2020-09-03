@@ -10,7 +10,6 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsExcepti
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.SectionService;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
-import com.feed_grabber.core.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -46,15 +45,15 @@ public class QuestionnaireService {
 //        return questionnaireRepository.count();
 //    }
 
-    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
-        return questionnaireRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size, boolean archived) {
+        return questionnaireRepository.findAllByCompanyIdAndArchived(companyId, archived, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
-    public Long getCountByCompanyId(UUID companyId) {
-        return questionnaireRepository.countAllByCompanyId(companyId);
+    public Long getCountByCompanyId(UUID companyId, boolean archived) {
+        return questionnaireRepository.countAllByCompanyIdAndArchived(companyId, archived);
     }
 
     public Optional<QuestionnaireDto> getOne(UUID id) {
@@ -97,6 +96,7 @@ public class QuestionnaireService {
 
         questionnaire.setCompany(company);
         questionnaire.setTitle(updateDto.getTitle());
+        questionnaire.setArchived(updateDto.isArchived());
         questionnaire = questionnaireRepository.save(questionnaire);
         return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }

@@ -13,9 +13,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UUID> {
-    List<Questionnaire> findAllByCompanyId(UUID companyId, Pageable pageable);
+    List<Questionnaire> findAllByCompanyIdAndArchived(UUID companyId, boolean archived, Pageable pageable);
 
-    Long countAllByCompanyId(UUID companyId);
+    Long countAllByCompanyIdAndArchived(UUID companyId, boolean archived);
 
     boolean existsByTitleAndCompanyIdAndIdIsNot(String title, UUID CompanyId, UUID id);
     boolean existsByTitleAndCompanyId(String title, UUID CompanyId);

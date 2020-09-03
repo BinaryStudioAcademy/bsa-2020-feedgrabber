@@ -3,7 +3,7 @@ import {toastr} from 'react-redux-toastr';
 import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
-    hideModalQuestionnaireRoutine, loadOneNotSavedQuestionnaireRoutine,
+    hideModalQuestionnaireRoutine, loadArchivedQuestionnairesRoutine, loadOneNotSavedQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
     loadQuestionnairesRoutine,
     saveAndGetQuestionnaireRoutine,
@@ -27,6 +27,20 @@ function* loadQuestionnairesList() {
         yield put(loadQuestionnairesRoutine.success(items));
     } catch (error) {
         yield put(loadQuestionnairesRoutine.failure(error));
+        toastr.error("Unable to fetch data");
+    }
+}
+
+function* loadArchivedQuestionnaires() {
+    try {
+        const store = yield select();
+        const {page, size} = store.questionnaires.archived.pagination;
+        const res = yield call(apiClient.get, `/api/questionnaires?page=${page}&size=${size}&archived=true`);
+        const items = res.data.data;
+
+        yield put(loadArchivedQuestionnairesRoutine.success(items));
+    } catch (error) {
+        yield put(loadArchivedQuestionnairesRoutine.failure(error));
         toastr.error("Unable to fetch data");
     }
 }
@@ -128,6 +142,7 @@ export default function* questionnairesSagas() {
         yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
         yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
         yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire),
-        yield takeEvery(loadOneNotSavedQuestionnaireRoutine.TRIGGER, loadOneNotSavedQuestionnaire)
+        yield takeEvery(loadOneNotSavedQuestionnaireRoutine.TRIGGER, loadOneNotSavedQuestionnaire),
+        yield takeEvery(loadArchivedQuestionnairesRoutine.TRIGGER, loadArchivedQuestionnaires)
     ]);
 }

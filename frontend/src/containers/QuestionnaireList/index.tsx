@@ -1,9 +1,9 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
-    hideModalQuestionnaireRoutine,
-    loadQuestionnairesRoutine,
+    hideModalQuestionnaireRoutine, loadArchivedQuestionnairesRoutine,
+    loadQuestionnairesRoutine, setQuestionnaireArchivePaginationRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine
@@ -21,19 +21,21 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
-import {Icon, Popup} from "semantic-ui-react";
+import {Icon, Modal, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import {useTranslation} from "react-i18next";
 
 const QuestionnaireList: FC<Props> = (
     {
         pagination,
+        archivePagination,
         modalQuestionnaire,
         modalShown,
         isLoading,
         modalLoading,
         modalError,
         loadQuestionnaires,
+        loadArchivedQuestionnaires,
         deleteQuestionnaire,
         addQuestionnaire,
         updateQuestionnaire,
@@ -41,10 +43,13 @@ const QuestionnaireList: FC<Props> = (
         hideModal,
         setPagination,
         clearOneQuestionnaire,
-        result
+        result,
+        isArchiveLoading,
+        setArchivePagination
     }
 ) => {
     const [t] = useTranslation();
+    const [showArchived, setShowArchived] = useState(false);
     const mapItemToJSX = (item: IQuestionnaire) => {
         const match = result
             .questionnaires
@@ -61,68 +66,110 @@ const QuestionnaireList: FC<Props> = (
                             alignItems: 'center'
                         }
                     }>{match && 'Matches searched query!'}</span>
-                <div className={styles.cardIconWrapper}>
-                  <Popup
-                    content={t("New request")}
-                    position="top center"
-                    trigger={
-                      <Icon
-                        name="share alternate"
-                        onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
-                        className={styles.cardIcon}
+                {!showArchived
+                    ? <div className={styles.cardIconWrapper}>
+                      <Popup
+                        content={t("New request")}
+                        position="top center"
+                        trigger={
+                          <Icon
+                            name="share alternate"
+                            onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
+                            className={styles.cardIcon}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Popup
-                    content={t("Show requests and reports")}
-                    position="top center"
-                    trigger={
-                      <Icon
-                        name="chart bar"
-                        onClick={() => {
-                          history.push(`/questionnaires/${item.id}/requests`);
-                        }}
-                        className={styles.cardIcon}
+                      <Popup
+                        content={t("Manage questions")}
+                        position="top center"
+                        trigger={
+                          <Icon
+                            name="settings"
+                            onClick={() => {
+                              clearOneQuestionnaire();
+                              history.push(`/questionnaires/${item.id}`);
+                            }}
+                            className={styles.cardIcon}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Popup
-                    content={t("Manage questions")}
-                    position="top center"
-                    trigger={
-                      <Icon
-                        name="settings"
-                        onClick={() => {
-                          clearOneQuestionnaire();
-                          history.push(`/questionnaires/${item.id}`);
-                        }}
-                        className={styles.cardIcon}
+                      <Popup
+                          content={t("Show requests and reports")}
+                          position="top center"
+                          trigger={
+                              <Icon
+                                  name="chart bar"
+                                  onClick={() => {
+                                      history.push(`/questionnaires/${item.id}/requests`);
+                                  }}
+                                  className={styles.cardIcon}
+                              />
+                          }
                       />
-                    }
-                  />
-                  <Popup
-                    content={t("Change title")}
-                    position="top center"
-                    trigger={
-                      <Icon
-                        name="edit"
-                        onClick={() => showModal(item)}
-                        className={styles.cardIcon}
+                      <Popup
+                        content={t("Change title")}
+                        position="top center"
+                        trigger={
+                          <Icon
+                            name="edit"
+                            onClick={() => showModal(item)}
+                            className={styles.cardIcon}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Popup
-                    content={t("Delete questionnaire")}
-                    position="top center"
-                    trigger={
-                      <Icon
-                        name="trash"
-                        onClick={() => deleteQuestionnaire(item.id)}
-                        className={styles.cardIcon}
+                      <Popup
+                          content={t("Archive")}
+                          position="top center"
+                          trigger={
+                              <Icon
+                                  name="archive"
+                                  onClick={() => updateQuestionnaire({...item, archived: true})}
+                                  className={styles.cardIcon}
+                              />
+                          }
                       />
-                    }
-                  />
-                </div>
+                    </div>
+                    : <div className={styles.cardIconWrapper}>
+                        <Popup
+                            content={t("Show requests and reports")}
+                            position="top center"
+                            trigger={
+                                <Icon
+                                    name="chart bar"
+                                    onClick={() => {
+                                        history.push(`/questionnaires/${item.id}/requests`);
+                                    }}
+                                    className={styles.cardIcon}
+                                />
+                            }
+                        />
+                        <Popup
+                            content={t("Unarchive")}
+                            position="top center"
+                            trigger={
+                                <Icon
+                                    name="undo"
+                                    onClick={() => {
+                                        updateQuestionnaire({ ...item, archived: false });
+                                        loadArchivedQuestionnaires();
+                                    }}
+                                    className={styles.cardIcon}
+                                />
+                            }
+                        />
+                        <Popup
+                            content={t("Delete questionnaire")}
+                            position="top center"
+                            trigger={
+                                <Icon
+                                    name="trash"
+                                    onClick={() => deleteQuestionnaire(item.id)}
+                                    className={styles.cardIcon}
+                                />
+                            }
+                        />
+                    </div>
+                }
             </UICardBlock>
         </UICard>;
     };
@@ -141,19 +188,35 @@ const QuestionnaireList: FC<Props> = (
             <UIPageTitle title={t("Questionnaires")}/>
             <UIContent>
                 <UIColumn wide>
+                    <span className={styles.rightFloated}>
+                        <UIButton title={t("Archived")}
+                                  secondary
+                                  onClick={() => setShowArchived(!showArchived)}/>
+                    </span>
                     <UIButton
                         title={t("Add Questionnaire")}
                         onClick={() => showModal(undefined)}
                         center
                         primary
                     />
-                    <GenericPagination
-                        isLoading={isLoading}
-                        pagination={pagination}
-                        setPagination={setPagination}
-                        loadItems={loadQuestionnaires}
-                        mapItemToJSX={mapItemToJSX}
-                    />
+                    {!showArchived
+                        ? <GenericPagination isLoading={isLoading} pagination={pagination} setPagination={setPagination}
+                                           loadItems={loadQuestionnaires} mapItemToJSX={mapItemToJSX} />
+                        :
+                        <Modal
+                            open={showArchived}
+                            onClose={() => setShowArchived(false)}
+                        >
+                            <Modal.Header>{t("Archived")}</Modal.Header>
+                            <GenericPagination
+                                isLoading={isArchiveLoading}
+                                pagination={archivePagination}
+                                setPagination={setArchivePagination}
+                                loadItems={loadArchivedQuestionnaires}
+                                mapItemToJSX={mapItemToJSX}
+                            />
+                        </Modal>
+                    }
                 </UIColumn>
             </UIContent>
         </>
@@ -162,9 +225,11 @@ const QuestionnaireList: FC<Props> = (
 
 const mapStateToProps = (rootState: IAppState) => ({
     pagination: rootState.questionnaires.list.pagination,
+    archivePagination: rootState.questionnaires.archived.pagination,
     modalShown: rootState.questionnaires.list.modalShown,
     modalQuestionnaire: rootState.questionnaires.list.modalQuestionnaire,
     isLoading: rootState.questionnaires.list.isLoading,
+    isArchiveLoading: rootState.questionnaires.archived.isLoading,
     modalLoading: rootState.questionnaires.list.modalLoading,
     modalError: rootState.questionnaires.list.modalError,
     result: rootState.search.result
@@ -172,13 +237,15 @@ const mapStateToProps = (rootState: IAppState) => ({
 
 const mapDispatchToProps = {
     loadQuestionnaires: loadQuestionnairesRoutine,
+    loadArchivedQuestionnaires: loadArchivedQuestionnairesRoutine,
     deleteQuestionnaire: deleteQuestionnaireRoutine,
     addQuestionnaire: addQuestionnaireRoutine,
     updateQuestionnaire: updateQuestionnaireRoutine,
     showModal: showModalQuestionnaireRoutine,
     hideModal: hideModalQuestionnaireRoutine,
     setPagination: setQuestionnairePaginationRoutine,
-    clearOneQuestionnaire: clearOneQuestionnaireRoutine
+    clearOneQuestionnaire: clearOneQuestionnaireRoutine,
+    setArchivePagination: setQuestionnaireArchivePaginationRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

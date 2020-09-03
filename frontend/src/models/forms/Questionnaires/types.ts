@@ -3,6 +3,7 @@ import { IQuestion } from "../Questions/IQuesion";
 
 export interface IQuestionnairesState {
   list?: IQuestionnairesListState;
+  archived?: IQuestionnairesListState;
   current?: {
     get?: IQuestionnaire;
     questions?: IQuestion[];

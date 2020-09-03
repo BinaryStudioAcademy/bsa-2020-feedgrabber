@@ -11,3 +11,5 @@ export const loadOneQuestionnaireRoutine = createRoutine('QUESTIONNAIRE:LOAD_ONE
 export const loadOneNotSavedQuestionnaireRoutine = createRoutine('QUESTIONNAIRE:LOAD_ONE_NOT_SAVED');
 export const saveAndGetQuestionnaireRoutine = createRoutine<{title: string}>('QUESTIONNAIRE:LOAD_ONE_AND_GET');
 export const setCurrentIdRoutine = createRoutine('QUESTIONNAIRE:SET_CURRENT_ID');
+export const loadArchivedQuestionnairesRoutine = createRoutine('QUESTIONNAIRE:LOAD_ARCHIVED_QUESTIONNAIRE');
+export const setQuestionnaireArchivePaginationRoutine = createRoutine('QUESTIONNAIRE:SET_ARCHIVE_PAGINATION');

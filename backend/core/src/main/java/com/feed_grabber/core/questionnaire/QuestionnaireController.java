@@ -38,12 +38,13 @@ public class QuestionnaireController {
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<DataList<QuestionnaireDto>> getAll(
             @RequestParam Integer page,
-            @RequestParam Integer size
+            @RequestParam Integer size,
+            @RequestParam(defaultValue = "false") boolean archived
     ) {
         var companyId = TokenService.getCompanyId();
         var dataList = new DataList<>(
-                questionnaireService.getAllByCompanyId(companyId, page, size),
-                questionnaireService.getCountByCompanyId(companyId),
+                questionnaireService.getAllByCompanyId(companyId, page, size, archived),
+                questionnaireService.getCountByCompanyId(companyId, archived),
                 page,
                 size
         );
