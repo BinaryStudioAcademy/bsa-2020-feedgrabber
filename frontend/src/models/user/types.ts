@@ -30,6 +30,8 @@ export interface IUserShort {
     id: string;
     avatar?: string;
     username: string;
+    firstName?: string;
+    lastName?: string
     selected?: boolean;
     loading?: boolean;
 }
