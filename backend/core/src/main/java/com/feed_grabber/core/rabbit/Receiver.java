@@ -37,6 +37,6 @@ public class Receiver {
 
 	@RabbitListener(queues = "${rabbitmq.queue.request.close}")
 	public void closeRequest(UUID requestId) throws NotFoundException {
-        requestService.closeNow(requestId);
+        requestService.close(requestId);
 	}
 }

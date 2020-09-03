@@ -206,6 +206,36 @@ public class RequestService {
         return closeDate;
     }
 
+	public Date close(UUID requestId) throws NotFoundException {
+		var date = closeNow(requestId);
+		var request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("Request not found"));
+
+		User[] users = {request.getTargetUser(), request.getRequestMaker()};
+
+        Map<UUID, UUID> userIdNotificationId = new HashMap<>();
+        for (User user : users)
+            userIdNotificationId.put(user.getId(),
+                    userNotificationRepository.save(UserNotification
+                            .builder()
+                            .request(request)
+                            .text("Request " + request.getQuestionnaire().getTitle() + " was closed")
+                            .isClosed(true)
+                            .isRead(false)
+                            .type(MessageTypes.plain_text)
+                            .user(user)
+                            .build()).getId());
+        for (UUID userId : userIdNotificationId.keySet()) {
+            notificationService.sendMessageToConcreteUser(
+                    userId.toString(),
+                    "notify",
+                    userNotificationRepository
+                            .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
+            );
+        }
+		return date;
+	}
+
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
         return requestRepository.findAllByQuestionnaireId(id)
                 .stream()
