@@ -29,8 +29,14 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Value("${rabbitmq.queue.response}")
     private String queue;
 
+	@Value("${rabbitmq.queue.request.close}")
+	private String requestCloseQueue;
+
     @Value("${rabbitmq.routing-key-response-links}")
     private String linksRoutingKey;
+
+	@Value("${rabbitmq.routing-key-request-close}")
+	private String requestCloseRoutingKey;
 
     @Value("${rabbitmq.queue.response.links}")
     private String linksQueue;
@@ -45,6 +51,10 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
         return new Queue(linksQueue, true);
     }
 
+	@Bean
+	public Queue requestCloseQueue() {
+		return new Queue(requestCloseQueue, true);
+	}
 
     @Bean
     public TopicExchange exchange() {
@@ -53,11 +63,19 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
 
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
+		System.out.println("|||||||||||||||||| " + queue + " ||||||||||||||||||||");
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
+	@Bean
+	public Binding bindCloseRequest(Queue requestCloseQueue, TopicExchange exchange) {
+		System.out.println("================== " + requestCloseQueue + " ====================");
+		return BindingBuilder.bind(requestCloseQueue).to(exchange).with(requestCloseRoutingKey);
+	}
+
     @Bean
     public Binding bindingLinks(Queue linksQueue, TopicExchange exchange) {
+		System.out.println("------------------ " + linksQueue + " --------------------");
         return BindingBuilder.bind(linksQueue).to(exchange).with(linksRoutingKey);
     }
 

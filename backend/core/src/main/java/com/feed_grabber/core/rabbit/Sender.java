@@ -21,8 +21,8 @@ public class Sender {
     @Value("${rabbitmq.routing-key}")
     private String routingKey;
 
-    @Value("${rabbitmq.routing-key-report-close}")
-    private String reportCloseRoutingKey;
+    @Value("${rabbitmq.routing-key-request-close}")
+    private String requestCloseRoutingKey;
 
     private final RabbitTemplate template;
 
@@ -38,8 +38,8 @@ public class Sender {
     }
 
     public void sendReportCloseRequest(UUID requestId, Date closeDate) {
-        log.info(" [x] Sending...");
-        this.template.convertAndSend(exchange, reportCloseRoutingKey, new CloseRequest(requestId, closeDate));
+        log.info(" [x] Sending a new job to event processor...");
+        this.template.convertAndSend(exchange, requestCloseRoutingKey, new CloseRequest(requestId, closeDate));
         log.info(" [x] Sent request for closing request with id {} at {}", requestId, closeDate);
     }
 
