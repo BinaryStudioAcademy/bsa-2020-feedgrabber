@@ -36,6 +36,9 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.queue.report.ppt}")
     private lateinit var pptReportQueue: String
 
+    @Value("\${rabbitmq.queue.report.close}")
+    private lateinit var reportCloseQueue: String
+
     @Value("\${rabbitmq.routing-key-report-excel}")
     private val reportRoutingKey: String? = null
 
@@ -55,6 +58,11 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Bean
     fun pptReportQueue(): Queue? {
         return Queue(pptReportQueue, true)
+    }
+
+    @Bean
+    fun reportCloseQueue(): Queue? {
+        return Queue(reportCloseQueue, true)
     }
 
     @Bean
