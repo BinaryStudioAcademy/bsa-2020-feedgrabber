@@ -15,7 +15,7 @@ class ScheduleService(
     fun scheduleCloseRequestJob(requestId: UUID, closeDate: Date) {
         println("Add new job")
         val newJob: JobDetail = buildCloseReportJob(requestId, closeDate)
-        val date: Date = scheduler.scheduleJob(newJob, getTrigger(newJob));
+        val date: Date = scheduler.scheduleJob(newJob, getTrigger(newJob, closeDate))
         println("New job scheduled: $date")
     }
 }

@@ -16,7 +16,7 @@ class CloseReportJob: Job {
 fun buildCloseReportJob(requestId: UUID, closeDate: Date): JobDetail {
     val map = JobDataMap()
     map["requestId"] = requestId
-    map["closeDate"] = closeDate
+    map["closeDate"] = closeDate // delete in production
     return JobBuilder.newJob()
             .ofType(CloseReportJob::class.java)
             .usingJobData(map)
