@@ -31,7 +31,7 @@ export interface IUserShort {
     avatar?: string;
     username: string;
     firstName?: string;
-    lastName?: string
+    lastName?: string;
     selected?: boolean;
     loading?: boolean;
 }
