@@ -12,14 +12,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UUID> {
-    List<Questionnaire> findAllByCompanyIdAndDeleted(UUID companyId, boolean isDeleted, Pageable pageable);
+
+    @Query("SELECT q FROM Questionnaire q inner join q.company c" +
+            " where c.id = :companyId and q.isDeleted = false ")
+    List<Questionnaire> findAllByCompanyId(UUID companyId, Pageable pageable);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE Questionnaire q SET q.isDeleted = true WHERE q.id = :id")
     void softDeleteById(UUID id);
 
-    Long countAllByCompanyIdAndDeleted(UUID companyId, boolean isDeleted);
+
+    @Query("SELECT COUNT(q) FROM Questionnaire q inner join q.company c" +
+            " where c.id = :companyId and q.isDeleted = false ")
+    Long countAllByCompanyId(UUID companyId);
 
     boolean existsByTitleAndCompanyIdAndIdIsNot(String title, UUID CompanyId, UUID id);
 
