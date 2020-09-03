@@ -24,6 +24,9 @@ const replaceWithCompanyName = (companyName: string | undefined) => {
 
 export const getSubdomainFromDomain = () => {
   const {hostname} = window.location;
-  const subdomain = hostname.replace(`.${env.baseHost}`, '');
-  return subdomain === '' ? null : subdomain;
+  if(hostname === env.baseHost) {
+    return null;
+  } else {
+    return hostname.replace(`.${env.baseHost}`, '');
+  }
 };

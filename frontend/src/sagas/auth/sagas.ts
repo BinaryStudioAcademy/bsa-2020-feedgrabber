@@ -5,6 +5,7 @@ import {history} from "../../helpers/history.helper";
 import {deleteTokens, saveTokens} from '../../security/authProvider';
 import {IAuthResponse} from "../../models/auth/types";
 import {IGeneric} from "../../models/IGeneric";
+import {redirectToMain} from "../../helpers/subdomain.helper";
 
 function* auth(action) {
     const isLogin = action.type === loginRoutine.TRIGGER;
@@ -27,6 +28,7 @@ function* auth(action) {
 
 function* logout() {
     yield call(deleteTokens);
+    yield call(redirectToMain);
     yield put(logoutRoutine.success());
     yield call(history.push, "/landing");
 }

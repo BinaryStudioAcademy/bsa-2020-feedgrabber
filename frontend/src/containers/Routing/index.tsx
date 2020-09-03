@@ -49,7 +49,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <GuestRoute exact path="/auth" component={SignForm}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
-                    <Route exact path="/error" component={ErrorPage}/>
+                    <Route exact path="/error" render={ props => <ErrorPage {...props}/>}/>
                     <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
                     <PrivateRoute exact path="/" component={MainPage}/>
                     <PrivateRoute exact path="/profile" component={() => <Profile mode='profile'/>}/>

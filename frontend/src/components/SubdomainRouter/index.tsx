@@ -21,24 +21,32 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
             fetchCompany();
             return;
         }
+        if (isLogged) {
+            redirectToCompany(company);
+        }
+
         const subdomain = getSubdomainFromDomain();
-        if(!isLogged && subdomain && !company && !error) {
+        if(!subdomain) {
+            return;
+        }
+
+        if(!isLogged && !company && !error) {
             fetchCompanyBySubdomain(subdomain);
             return;
         }
 
-        if (isLogged) {
-            redirectToCompany(company);
+        if(!isLogged && !company) {
+            history.push({
+                pathname: '/error',
+                state: {text: 'This company does not exist. Sign in to existing or create you own'}
+            });
         }
-        
-        if(!isLogged && error) {
-            history.push('/error');
-        }
-        
-        if(!isLogged && company) {
+
+        if(!isLogged && !!company) {
             history.push('/auth');
         }
     }, [isLogged, company, fetchCompany, fetchCompanyBySubdomain, error]);
+
     return (
         <>
             {children}
