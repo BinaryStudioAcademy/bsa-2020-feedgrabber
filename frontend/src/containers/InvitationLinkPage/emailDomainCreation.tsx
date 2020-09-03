@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { setEmailDomainRoutine } from 'sagas/companies/routines';
 import { connect } from 'react-redux';
 import { ICompanyDomain } from 'models/companies/ICompanyDomain';
 import UICard from 'components/UI/UICard';
 import UICardBlock from 'components/UI/UICardBlock';
-import { Input } from 'semantic-ui-react';
+import { Input, Modal } from 'semantic-ui-react';
 import UIButton from 'components/UI/UIButton';
 import styles from './styles.module.sass';
 import { Formik } from 'formik';
@@ -26,6 +26,8 @@ const validationSchema = yup.object().shape({
 
 const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setCompanyDomain}) => {
 
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
     const handleSave = values => {
         const payload = {
             id: company.id,
@@ -40,6 +42,28 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
             emailDomain: null
         };
         setCompanyDomain(payload);
+    };
+
+    const confirmationModal = () => {
+        return (<Modal
+            size="tiny"
+            open={showConfirmationModal}
+            closeOnDimmerClick
+            onClose={() => setShowConfirmationModal(false)}
+        >
+            <Modal.Header>
+                Do you really want to delete current email domain? 
+                Employees won`t able to register with it anymore
+            </Modal.Header>
+            <Modal.Actions>
+                <UIButton title="Yes"
+                        onClick={() => {
+                            setShowConfirmationModal(false);
+                            handleDelete();
+                        }}/>
+                <UIButton title="No" submit onClick={() => setShowConfirmationModal(false)}/>
+            </Modal.Actions>
+        </Modal>);
     };
 
     const componentWithoutDomain = (
@@ -76,9 +100,9 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
         <UICardBlock>
             <span className={styles.info}>Now you can tell employees that they can sign up on <br/>
             <a href={`${company?.subdomainName}.feedgrabber.com`}> {company?.subdomainName}.feedgrabber.com </a><br/>
-            using there corporate email: <code>username@{company?.emailDomain}</code></span>
+            using there corporate email: <code>@{company?.emailDomain}</code></span>
             <br/>
-            <UIButton title="Delete" onClick={handleDelete}/>
+            <UIButton title="Delete" onClick={() => setShowConfirmationModal(true)}/>
         </UICardBlock>
     );
 
@@ -88,6 +112,7 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
                 <h3>Domain name for corporate email</h3>
             </UICardBlock>
             {company?.emailDomain === null ? componentWithoutDomain : componentWithDomain }
+            {confirmationModal()}
         </UICard>
     );
 };
