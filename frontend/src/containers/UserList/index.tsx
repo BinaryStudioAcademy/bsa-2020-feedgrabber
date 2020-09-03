@@ -20,6 +20,7 @@ import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "
 import SwitchRoleModal, {IRoleSwitchDto} from "../../components/SwitchRoleModal";
 import { useTranslation } from 'react-i18next';
 import {ISearchResult} from "../../models/search/Search";
+import UIButton from "../../components/UI/UIButton";
 
 const defaultSize = 10;
 
@@ -112,13 +113,19 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     const search = () => (
         <div className={styles.searchContainer}>
             <Input style={{width: '450px'}}
-                   icon={{name: 'search', circular: true, link: true, onClick: handleSearch}}
+                   icon={{
+                     name: 'search',
+                     circular: true,
+                     link: true,
+                     onClick: handleSearch,
+                     style: {boxShadow: "none"}
+                   }}
                    placeholder={t('Search employee')}
                    value={searchQuery}
                    onKeyPress={onKeyPressed}
                    onChange={handleChange}
             />
-            <Button onClick={handleClear} color='blue' size={"small"}>{t("clear")}</Button>
+            <UIButton onClick={handleClear} title={t("clear")} primary/>
         </div>
     );
 
