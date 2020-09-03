@@ -1,5 +1,5 @@
 import React from "react";
-import styled, {css, keyframes, StyleSheetManager} from "styled-components";
+import styled, {css} from "styled-components";
 import {theme} from "../AuthForm/SignForm/Theme";
 import SignUpByEmailForm from "./SignUpByEmailForm";
 import Typography from '../AuthForm/SignForm/Typography';

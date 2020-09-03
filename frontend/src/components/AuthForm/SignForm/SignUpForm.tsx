@@ -74,10 +74,6 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                     || (touched.password && errors.password)
                     || (touched.passwordRepeat && errors.passwordRepeat)
                     || error;
-                
-                const setCompanyName = (companyName: string) => {
-                    values.companyName = companyName;
-                };
 
                 return (
                     <form className={className} onSubmit={handleSubmit} autoComplete="off">
@@ -115,7 +111,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error?.register,
+    error: state.user.error?.register
 });
 
 const mapDispatch = {

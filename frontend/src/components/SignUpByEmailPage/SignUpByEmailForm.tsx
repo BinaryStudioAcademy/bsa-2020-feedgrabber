@@ -5,10 +5,9 @@ import Button from '../AuthForm/SignForm/Button';
 import {Formik} from "formik";
 import * as yup from "yup";
 import {registerByEmailRoutine} from "../../sagas/auth/routines";
-import {connect, ConnectedProps} from "react-redux";
+import {connect} from "react-redux";
 import {Message} from "semantic-ui-react";
 import {IAppState} from "../../models/IAppState";
-import LoaderWrapper from 'components/LoaderWrapper';
 import { ICompanyDomain } from 'models/companies/ICompanyDomain';
 
 const schema = yup.object().shape({
