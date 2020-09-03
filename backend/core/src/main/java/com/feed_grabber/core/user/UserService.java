@@ -6,6 +6,7 @@ import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
+import com.feed_grabber.core.auth.exceptions.WrongCorporateEmailException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
@@ -350,16 +351,23 @@ public class UserService implements UserDetailsService {
 
     // move to helper service
     private String getSubdomain(String email) {
-        return email.split("\\@")[1];
+        return email.split("@")[1];
     }
 
-    public UUID createInCompanyByEmail(UserRegisterDTO registerDto) throws CompanyNotFoundException {
+    public UUID createInCompanyByEmail(UserRegisterDTO registerDto)
+            throws CompanyNotFoundException, WrongCorporateEmailException {
         var company = companyRepository
-                .findCompanyBySubdomainName(getSubdomain(registerDto.getEmail()))
+                .findCompanyByName(registerDto.getCompanyName())
                 .orElseThrow(CompanyNotFoundException::new);
-        userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
+        if (!getSubdomain(registerDto.getEmail()).equals(company.getEmailDomain())) {
+            throw new WrongCorporateEmailException();
+        }
+        var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
                 registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
-        ).orElseThrow(UserAlreadyExistsException::new);
+        );
+        if (existing.isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
         var role = roleRepository.findByCompanyIdAndSystemRole(company.getId(), SystemRole.employee)
                 .orElseThrow();
         var user = userRepository.save(User.builder()

@@ -30,6 +30,7 @@ import RespondentReport from "../ReportPage/RespondentReport";
 import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
 import ErrorPage from "../ErrorPage";
+import SignUpByEmailPage from 'components/SignUpByEmailPage';
 
 // just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
@@ -47,6 +48,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                 <Switch>
                     <GuestRoute exact path="/layout" component={Landing}/>
                     <GuestRoute exact path="/auth" component={SignForm}/>
+                    <GuestRoute exact path="/auth/email" component={SignUpByEmailPage}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
                     <Route exact path="/error" render={ props => <ErrorPage {...props}/>}/>

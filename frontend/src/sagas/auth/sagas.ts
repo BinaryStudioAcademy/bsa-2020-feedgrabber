@@ -1,5 +1,5 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {loginRoutine, logoutRoutine, registerRoutine} from './routines';
+import {loginRoutine, logoutRoutine, registerRoutine, registerByEmailRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import {history} from "../../helpers/history.helper";
 import {deleteTokens, saveTokens} from '../../security/authProvider';
@@ -9,13 +9,11 @@ import {redirectToMain} from "../../helpers/subdomain.helper";
 
 function* auth(action) {
     const isLogin = action.type === loginRoutine.TRIGGER;
-    let endpoint = isLogin ? 'login' : 'register';
+    const endpoint = isLogin ? 'login' : 'register';
     const routine = isLogin ? loginRoutine : registerRoutine;
-    const {userDto, byEmail} = action.payload;
-    endpoint += byEmail ? '/byEmail' : '';
 
     try {
-        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/${endpoint}`, userDto);
+        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/${endpoint}`, action.payload);
         const {user, refreshToken, accessToken} = res.data.data;
 
         yield put(routine.success(user));
@@ -23,6 +21,19 @@ function* auth(action) {
         yield call(history.push, "/");
     } catch (error) {
         yield put(routine.failure(error.response?.data?.error || "No response"));
+    }
+}
+
+function* registerByEmail(action) {
+    try {
+        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/registerByEmail`, action.payload);
+        const {user, refreshToken, accessToken} = res.data.data;
+
+        yield put(registerByEmailRoutine.success(user));
+        yield call(saveTokens, {accessToken, refreshToken});
+        yield call(history.push, "/");
+    } catch (error) {
+        yield put(registerByEmailRoutine.failure(error.response?.data?.error || "No response"));
     }
 }
 
@@ -37,6 +48,7 @@ export default function* authSaga() {
     yield all([
         yield takeEvery(loginRoutine.TRIGGER, auth),
         yield takeEvery(registerRoutine.TRIGGER, auth),
-        yield takeEvery(logoutRoutine.TRIGGER, logout)
+        yield takeEvery(logoutRoutine.TRIGGER, logout),
+        yield takeEvery(registerByEmailRoutine.TRIGGER, registerByEmail)
     ]);
 }

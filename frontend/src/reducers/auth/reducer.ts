@@ -3,7 +3,8 @@ import {
     loginRoutine,
     logoutRoutine,
     registerRoutine,
-    getUserShortRoutine
+    getUserShortRoutine,
+    registerByEmailRoutine
 } from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
 import {
@@ -19,7 +20,8 @@ const initialState = {
 
 const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
     if (type === loginRoutine.SUCCESS
-        || type === registerRoutine.SUCCESS) {
+        || type === registerRoutine.SUCCESS
+        || type === registerByEmailRoutine.SUCCESS) {
         return {
             ...state,
             info: undefined,  // to load user details after login, currently - different DTO after login and getUser
@@ -37,7 +39,8 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
     }
     if (type === loginRoutine.TRIGGER
         || type === registerRoutine.TRIGGER
-        || type === getUserRoutine.TRIGGER) {
+        || type === getUserRoutine.TRIGGER
+        || type === registerByEmailRoutine.TRIGGER) {
         return {
             ...state,
             isLoading: true
@@ -50,7 +53,8 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             isLoading: false
         };
     }
-    if (type === registerRoutine.FAILURE) {
+    if (type === registerRoutine.FAILURE
+        || type === registerByEmailRoutine.FAILURE) {
         return {
             ...state,
             error: {...state.error, register: payload},

@@ -1,23 +1,17 @@
 import React, {FC} from 'react';
-import Typography from './Typography';
-import Input from './Input';
-import Button from './Button';
+import Typography from '../AuthForm/SignForm/Typography';
+import Input from '../AuthForm/SignForm/Input';
+import Button from '../AuthForm/SignForm/Button';
 import {Formik} from "formik";
 import * as yup from "yup";
-import {registerRoutine} from "../../../sagas/auth/routines";
+import {registerByEmailRoutine} from "../../sagas/auth/routines";
 import {connect, ConnectedProps} from "react-redux";
 import {Message} from "semantic-ui-react";
-import {IAppState} from "../../../models/IAppState";
+import {IAppState} from "../../models/IAppState";
 import LoaderWrapper from 'components/LoaderWrapper';
+import { ICompanyDomain } from 'models/companies/ICompanyDomain';
 
 const schema = yup.object().shape({
-    companyName: yup
-        .string()
-        .required("Company name required")
-        .min(2, "Company name too short!")
-        .max(40, "Company name too long!")
-        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
-            "Company name must be valid"),
     email: yup
         .string()
         .email("Email must be valid")
@@ -42,8 +36,14 @@ const schema = yup.object().shape({
             "Username must be valid")
 });
 
-const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error, company, isLoadingCompany} = props;
+interface ISignUpFormProps {
+    error: string;
+    company: ICompanyDomain;
+    signUp(action: {}): void;
+}
+
+const SignUpByEmailForm: FC<ISignUpFormProps & {className: string}> = props => {
+    const {signUp, className, error, company} = props;
 
     return (
         <Formik
@@ -53,7 +53,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                 signUp({
                     email: values.email,
                     password: values.password,
-                    companyName: values.companyName,
+                    companyName: company.name,
                     username: values.username
                 });
             }
@@ -69,38 +69,21 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
               }) => {
                 const errorText = (touched.username && errors.username)
                     || (touched.email && errors.email)
-                    || (touched.companyName && errors.companyName)
                     || (touched.password && errors.password)
                     || (touched.passwordRepeat && errors.passwordRepeat)
                     || error;
-                
-                const setCompanyName = (companyName: string) => {
-                    values.companyName = companyName;
-                };
 
                 return (
-                    <form className={className} onSubmit={handleSubmit} autoComplete="off">
+                        <form className={className} onSubmit={handleSubmit} autoComplete="off">
                         <Typography fontWeight="bold" variant="h4">Create Account</Typography>
                         <Typography variant="body2">or use your email for registration</Typography>
                         <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
-                        <LoaderWrapper loading={isLoadingCompany}>
-                            {company ? 
-                            <>
-                            <Input name="email" placeholder="Email" value={values.username +"@"+ company.emailDomain}
-                                onChange={values.email=values.username +"@"+company.emailDomain}
-                                onBlur={handleBlur} disabled
-                            /> 
-                            {setCompanyName(company.name)}
-                            </> : <>
-                            <Input name="email" placeholder="Email" value={values.email}
-                                onChange={handleChange} onBlur={handleBlur}/>
-                            <Input name="companyName" placeholder="Company" value={values.companyName}
-                            onChange={handleChange} onBlur={handleBlur}
-                            /> </>
-                            }
-                        </LoaderWrapper>
+                        <Input name="email" placeholder="Corporate email" value={values.email }
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -117,25 +100,19 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                 marginTop="1.17rem">
                             Sign Up
                         </Button>
-                    </form>);}}
+                    </form>
+                    );}}
         </Formik>
     );
 };
 
 const mapState = (state: IAppState) => ({
-    isLoading: state.user.isLoading,
-    error: state.user.error?.register,
-    company: state.company.currentCompany,
-    isLoadingCompany: state.company.isLoading
+    error: state.user.error?.register
 });
 
 const mapDispatch = {
-    signUp: registerRoutine
+    signUp: registerByEmailRoutine
 };
 
-const connector = connect(mapState, mapDispatch);
-
-type SignUpFormProps = ConnectedProps<typeof connector>;
-
-export default connector(SignUpForm);
+export default connect(mapState, mapDispatch)(SignUpByEmailForm);
 

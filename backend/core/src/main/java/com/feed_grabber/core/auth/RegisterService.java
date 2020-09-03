@@ -4,6 +4,7 @@ import com.feed_grabber.core.auth.dto.UserRegisterDTO;
 import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
+import com.feed_grabber.core.auth.exceptions.WrongCorporateEmailException;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
@@ -35,7 +36,8 @@ public class RegisterService {
         return userService.createInCompany(dto);
     }
 
-    public UUID registerUserByEmail(UserRegisterDTO userRegisterDTO) throws WrongCompanyNameException, CompanyNotFoundException {
+    public UUID registerUserByEmail(UserRegisterDTO userRegisterDTO)
+            throws CompanyNotFoundException, WrongCorporateEmailException {
         userRegisterDTO.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));
         return userService.createInCompanyByEmail(userRegisterDTO);
     }

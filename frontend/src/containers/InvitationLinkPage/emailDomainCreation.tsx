@@ -20,6 +20,8 @@ const validationSchema = yup.object().shape({
     emailDomain: yup
       .string()
       .required("Please, write domain name before saving")
+      .matches(/^(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/,
+      "Enter valid domain name")
   });
 
 const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setCompanyDomain}) => {
@@ -27,7 +29,7 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
     const handleSave = values => {
         const payload = {
             id: company.id,
-            emailDomain: values.emailDomain + ".com"
+            emailDomain: values.emailDomain
         };
         setCompanyDomain(payload);
     };
@@ -49,7 +51,7 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
             >
                 {formik => 
                     <form>
-                        Write company email domain name <i>(e.g. binary-academy) </i>
+                        Write company email domain name <i>(e.g. binary-academy.com) </i>
                         <br/>
                     <Input id="emailDomain"
                         name="emailDomain"
@@ -74,7 +76,7 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
         <UICardBlock>
             <span className={styles.info}>Now you can tell employees that they can sign up on <br/>
             <a href={`${company?.subdomainName}.feedgrabber.com`}> {company?.subdomainName}.feedgrabber.com </a><br/>
-            using this pattern: <code>username@{company?.emailDomain}</code></span>
+            using there corporate email: <code>username@{company?.emailDomain}</code></span>
             <br/>
             <UIButton title="Delete" onClick={handleDelete}/>
         </UICardBlock>

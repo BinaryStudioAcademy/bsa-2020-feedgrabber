@@ -43,7 +43,7 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
         }
 
         if(!isLogged && !!company) {
-            history.push('/auth');
+            history.push('/auth/email');
         }
     }, [isLogged, company, fetchCompany, fetchCompanyBySubdomain, error]);
 
