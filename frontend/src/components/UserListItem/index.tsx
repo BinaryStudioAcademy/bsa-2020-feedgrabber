@@ -47,16 +47,15 @@ const UserListItem: FC<IUserListItemProps> = (
                 Do you really want to fire {firstName && lastName ? `${lastName} ${firstName}` : `${userName} ?`}
             </Modal.Header>
             <Modal.Actions>
-                <Button negative onClick={() => setShowConfirmationModal(false)}>
+                <Button onClick={() => setShowConfirmationModal(false)}>
                     No
                 </Button>
-                <Button positive
+                <UIButton secondary
                         onClick={() => {
                             setShowConfirmationModal(false);
                             fire(id);
-                        }}>
-                    Yes
-                </Button>
+                        }}
+                title={'Yes'}/>
             </Modal.Actions>
         </Modal>);
     };

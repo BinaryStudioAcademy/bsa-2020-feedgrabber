@@ -5,6 +5,7 @@ import {Button, Header, Modal, Select, Loader} from "semantic-ui-react";
 import {IRoleShort} from "../../models/role/Role";
 import {IUserInfo} from "../../models/user/types";
 import {useTranslation} from "react-i18next";
+import UIButton from "../UI/UIButton";
 
 export interface IRoleSwitchDto {
     userId: string;
@@ -77,17 +78,14 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
                     </div>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button negative onClick={() => setSelectedUser(null)}>
-                        {t("Discard changes")}
-                    </Button>
-                    <Button
-                        positive
+                    <UIButton secondary onClick={() => setSelectedUser(null)} title={t("Discard changes")}/>
+                    <UIButton
+                        submit
                         disabled={selectedRoleId === selectedUser.roleId}
                         onClick={() => changeRole({userId: selectedUser.id, roleId: selectedRoleId})}
                         loading={isChanging}
-                    >
-                        {t("Change")}
-                    </Button>
+                        title={'Change'}
+                    />
                 </Modal.Actions>
             </>
             }
