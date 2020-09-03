@@ -19,6 +19,7 @@ import {history} from "../../helpers/history.helper";
 import {Permissions} from "../../components/AccessManager/rbac-rules";
 import AccessManager from "../../components/AccessManager";
 import { useTranslation } from 'react-i18next';
+import styles from './styles.module.sass';
 
 const TeamsPage: FC<ITeamsPageProps> = (
     {
@@ -54,7 +55,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                 title={t("Add Team")}
                                 onClick={() => handleRedirect("new")}
                                 center
-                                primary
+                                submit
                             />
                         </AccessManager>
                     </UIColumn>
@@ -67,7 +68,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                         return <UIColumn key={team.id}>
                             <UICard searched={match}>
                                 <UICardBlock>
-                                    <h3>{team.name}</h3>
+                                    <h3 className={styles.teamHeader}>{team.name}</h3>
                                     <span style={
                                         {
                                             fontSize: '0.8rem',
@@ -77,7 +78,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                     }>{match && t('Matches searched query')}</span>
                                 </UICardBlock>
                                 <UICardBlock>
-                                    <Icon name="users"/>{team.membersAmount} Member(s)
+                                    <Icon color={"grey"} name="users"/>{team.membersAmount} Member(s)
                                 </UICardBlock>
                                 <AccessManager staticPermission={Permissions.manageTeams}>
                                     <UICardBlock>

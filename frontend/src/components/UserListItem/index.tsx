@@ -47,9 +47,7 @@ const UserListItem: FC<IUserListItemProps> = (
                 Do you really want to fire {firstName && lastName ? `${lastName} ${firstName}` : `${userName} ?`}
             </Modal.Header>
             <Modal.Actions>
-                <Button onClick={() => setShowConfirmationModal(false)}>
-                    No
-                </Button>
+                <UIButton onClick={() => setShowConfirmationModal(false)} title={'No'}/>
                 <UIButton secondary
                         onClick={() => {
                             setShowConfirmationModal(false);
@@ -85,10 +83,10 @@ const UserListItem: FC<IUserListItemProps> = (
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>
-                    {/* {role !== 'company_owner' &&*/}
-                    <UIButton primary title={'Switch role'} onClick={() => setSelectedUser(user)}/>
-                    {/* {role !== 'company_owner' &&*/}
-                    <UIButton secondary title={'Fire'} onClick={() => setShowConfirmationModal(true)}/>
+                     {role !== 'company_owner' &&
+                    <UIButton title={'Switch role'} onClick={() => setSelectedUser(user)}/>}
+                   {role !== 'company_owner' &&
+                    <UIButton secondary title={'Fire'} onClick={() => setShowConfirmationModal(true)}/>}
                 </div>
 
             </div>
