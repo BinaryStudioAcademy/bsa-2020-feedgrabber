@@ -18,7 +18,6 @@ import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
-import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnaireResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
@@ -32,6 +31,7 @@ import RedirectFormEditor from "../../components/RedirectFormEditor";
 
 // just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
+import QuestionDetailsContainer from "../QuestionDetailsContainer";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
@@ -73,7 +73,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                                   component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
                     <PrivateRoute exact path="/employees" component={UserList}/>
-                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
+                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsContainer}/>
                     <PrivateRoute exact path="/invitations" component={InvitationLinkPage}/>
                     <Route path="/*">
                         <Redirect to="/layout"/>
