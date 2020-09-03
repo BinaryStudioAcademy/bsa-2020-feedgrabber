@@ -133,9 +133,9 @@ public class RequestService {
             }
         }
 
-		if (request.getExpirationDate() != null) {
-        	sender.sendReportCloseRequest(request.getId(), request.getExpirationDate());
-		}
+        if (request.getExpirationDate() != null) {
+            sender.sendReportCloseRequest(request.getId(), request.getExpirationDate());
+        }
 
         return request.getId();
     }
@@ -187,9 +187,9 @@ public class RequestService {
                 .findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request not found"));
 
-		if (request.getCloseDate() != null) {
-			return request.getCloseDate();
-		}
+        if (request.getCloseDate() != null) {
+            return request.getCloseDate();
+        }
 
         request.setCloseDate(new Date());
         var closeDate = requestRepository.save(request).getCloseDate();
@@ -206,12 +206,12 @@ public class RequestService {
         return closeDate;
     }
 
-	public Date close(UUID requestId) throws NotFoundException {
-		var date = closeNow(requestId);
-		var request = requestRepository.findById(requestId)
+    public Date close(UUID requestId) throws NotFoundException {
+        var date = closeNow(requestId);
+        var request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request not found"));
 
-		User[] users = {request.getTargetUser(), request.getRequestMaker()};
+        User[] users = {request.getTargetUser(), request.getRequestMaker()};
 
         Map<UUID, UUID> userIdNotificationId = new HashMap<>();
         for (User user : users)
@@ -233,8 +233,8 @@ public class RequestService {
                             .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
             );
         }
-		return date;
-	}
+        return date;
+    }
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
         return requestRepository.findAllByQuestionnaireId(id)

@@ -38,9 +38,9 @@ public class Sender {
     }
 
     public void sendReportCloseRequest(UUID requestId, Date closeDate) {
-        log.info(" [x] Sending a new job to event processor...");
+        log.info(" [x] Sending...");
         this.template.convertAndSend(exchange, requestCloseRoutingKey, new CloseRequest(requestId, closeDate));
-        log.info(" [x] Sent request for closing request with id {} at {}", requestId, closeDate);
+        log.info(" [x] Sent message for closing request with id {} at {}", requestId, closeDate);
     }
 
 }

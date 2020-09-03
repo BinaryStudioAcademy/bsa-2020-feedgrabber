@@ -57,7 +57,7 @@ class RabbitConfiguration: RabbitListenerConfigurer {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
     }
 
-	@Bean
+    @Bean
     fun bindCloseRequest(requestCloseQueue: Queue?, exchange: TopicExchange?): Binding? {
         return BindingBuilder.bind(requestCloseQueue).to(exchange).with(closeRequestRoutingKey)
     }

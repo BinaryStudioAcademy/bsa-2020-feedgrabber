@@ -22,12 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Receiver {
 
     private final UserNotificationService notificationService;
-	private final RequestService requestService;
+    private final RequestService requestService;
 
     @Autowired
     public Receiver(UserNotificationService notificationService, RequestService requestService) {
         this.notificationService = notificationService;
-		this.requestService = requestService;
+        this.requestService = requestService;
     }
 
     @RabbitListener(queues = "${rabbitmq.queue.response.links}")
@@ -35,8 +35,8 @@ public class Receiver {
         notificationService.saveAndSendReportNotification(links);
     }
 
-	@RabbitListener(queues = "${rabbitmq.queue.request.close}")
-	public void closeRequest(UUID requestId) throws NotFoundException {
+    @RabbitListener(queues = "${rabbitmq.queue.request.close}")
+    public void closeRequest(UUID requestId) throws NotFoundException {
         requestService.close(requestId);
-	}
+    }
 }
