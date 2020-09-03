@@ -36,9 +36,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findAllByCompanyId(UUID companyId, Pageable pageable);
 
     @Query(value = "select * from users u inner join companies c on u.company_id = c.id " +
-            "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +
-            "and (lower(p.last_name) like :name or lower(p.first_name) like :name) order by p.last_name, u.username ",
-            nativeQuery = true)
+        "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +
+        "and (lower(p.last_name) like :name or lower(p.first_name) like :name) order by p.last_name, u.username ",
+        nativeQuery = true)
     List<User> findByLastNameBeginAndCompanyId(UUID companyId, String name, Pageable pageable);
 
     @Query(value = "select * from users u inner join companies c on u.company_id = c.id " +
