@@ -17,15 +17,13 @@ import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
-import com.feed_grabber.core.role.Role;
+import com.feed_grabber.core.role.model.Role;
 import com.feed_grabber.core.role.RoleRepository;
 import com.feed_grabber.core.role.SystemRole;
-import com.feed_grabber.core.user.dto.UserCreateDto;
-import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
-import com.feed_grabber.core.user.dto.UserDto;
-import com.feed_grabber.core.user.dto.UserShortDto;
+import com.feed_grabber.core.user.dto.*;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
+import com.feed_grabber.core.user.model.UserProfile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -275,9 +273,57 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    public List<UserDetailsResponseDTO> searchByQuery(
+            UUID companyId,
+            String query,
+            Integer page,
+            Integer size) {
+        var parts = query.split(" ");
+        var pageable = PageRequest.of(page, size);
+        var users = parts.length == 1
+                ? userRepository.findByLastNameBeginAndCompanyId(
+                        companyId,
+                        query.toLowerCase() + "%",
+                        pageable)
+                : userRepository.findByNameAndLastNameAndCompanyId(
+                        companyId,
+                        parts[1].toLowerCase() + "%",
+                        parts[0].toLowerCase(),
+                        pageable);
+        return users.stream()
+                .map(UserMapper.MAPPER::detailedFromUser)
+                .collect(Collectors.toList());
+    }
+
     public Long getCountByCompanyId(UUID companyId) {
         return userRepository.countAllByCompanyId(companyId);
     }
+
+    public Long getCountByQuery(UUID companyId, String query) {
+        var parts = query.split(" ");
+        return parts.length == 1
+                ? userRepository.countByNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
+                : userRepository.countByLastNameAndNameAndCompanyId(
+                        companyId, parts[1].toLowerCase() + "%", parts[0].toLowerCase());
+    }
+
+//    @Transactional
+//    public void editUserProfile(UserProfileEditDto dto) throws NotFoundException {
+//        var user = userRepository.findById(dto.getUserId())
+//                .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
+//        if (user.getUserProfile() == null) {
+//            var savedProfile = profileRepository.save(new UserProfile(user));
+//            user.setUserProfile(savedProfile);
+//        }
+//        var profile = user.getUserProfile();
+//        var avatar = imageRepository.findByLink(dto.getAvatar()).orElseThrow(NotFoundException::new);
+//        profile.setAvatar(avatar);
+//        profile.setFirstName(dto.getFirstName());
+//        profile.setLastName(dto.getLastName());
+//        profile.setPhoneNumber(dto.getPhoneNumber());
+//        user.setUsername(dto.getUserName());
+//        userRepository.save(user);
+//    }
 
     public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {
         return UserMapper.MAPPER.shortFromUser(

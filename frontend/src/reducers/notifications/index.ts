@@ -5,6 +5,7 @@ import {
   loadNotificationsRoutine,
   receiveNotificationRoutine
 } from "../../sagas/notifications/routines";
+import {MessageTypes} from "../../components/NotificationMenu";
 
 export interface INotification {
   id: string;
@@ -12,6 +13,8 @@ export interface INotification {
   date: Date;
   requestId: string;
   questionnaireId: string;
+  messageType: MessageTypes;
+  payload?: string;
   isRead: boolean;
 }
 
@@ -49,7 +52,7 @@ const notificationReducer = (state: IAppState['notifications'] = initialState, {
     case(deleteNotificationRoutine.TRIGGER):
       return {
         ...state,
-        notifications: state.notifications.filter(notification => notification.requestId !== payload)
+        notifications: state.notifications.filter(notification => notification.id !== payload)
       };
       case(deleteAllNotificationsRoutine.TRIGGER):
       return {

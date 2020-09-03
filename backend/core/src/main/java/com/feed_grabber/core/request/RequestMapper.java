@@ -25,6 +25,7 @@ public interface RequestMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
+    @Mapping(source = "dto.sendToTargetUser", target = "sendToTarget")
     @Mapping(target = "responses", ignore = true)
     @Mapping(target = "closeDate", ignore = true)
     @Mapping(target = "excelReport", ignore = true)

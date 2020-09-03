@@ -3,7 +3,7 @@ import {toastr} from 'react-redux-toastr';
 import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
-    hideModalQuestionnaireRoutine,
+    hideModalQuestionnaireRoutine, loadOneNotSavedQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
     loadQuestionnairesRoutine,
     saveAndGetQuestionnaireRoutine,
@@ -14,7 +14,7 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
 import {saveQuestionRoutine} from "../questions/routines";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {loadSavedSectionsByQuestionnaireRoutine} from "../sections/routines";
+import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from "../sections/routines";
 import {loadNotificationsRoutine} from "../notifications/routines";
 
 function* loadQuestionnairesList() {
@@ -97,6 +97,17 @@ function* loadOneQuestionnaire(action) {
     }
 }
 
+function* loadOneNotSavedQuestionnaire(action) {
+    try {
+        const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
+        yield put(loadOneQuestionnaireRoutine.success(res.data.data));
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload));
+    } catch (error) {
+        yield put(loadOneQuestionnaireRoutine.failure(error));
+        toastr.error("Unable to fetch data");
+    }
+}
+
 // function* loadRequestedQuestionnaires() {
 //   try {
 //     const result: IGeneric<IRequest[]> = yield call(apiClient.get, `/api/request/pending`);
@@ -116,6 +127,7 @@ export default function* questionnairesSagas() {
         yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
         yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
         yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
-        yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire)
+        yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire),
+        yield takeEvery(loadOneNotSavedQuestionnaireRoutine.TRIGGER, loadOneNotSavedQuestionnaire)
     ]);
 }

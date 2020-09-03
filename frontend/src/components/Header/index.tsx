@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {Icon, Image, Input, Menu, Popup} from "semantic-ui-react";
+import {Image, Menu, Popup} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
 import {history} from "../../helpers/history.helper";
 import styles from "./styles.module.sass";
@@ -10,6 +10,7 @@ import {IAppState} from "../../models/IAppState";
 import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
+import Search from "../Search";
 import AccessManager from "../AccessManager";
 import {Permissions} from "../AccessManager/rbac-rules";
 import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
@@ -33,14 +34,15 @@ const StyledMenu = styled(Menu)`
 const defaultAvatar =
     "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 
-const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
+const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
 
     return (
         <div className={styles.headerWrapper}>
             <div className={styles.headerContent}>
                 <div className={styles.headerPart}>
                     <div className={styles.headerTitle}>
-                        <img onClick={toggleMenu} alt="FeedGrabber" className={styles.headerLogo} src={icon}/>
+                        <img onClick={() => toggleMenu(!toggled)} alt="FeedGrabber" className={styles.headerLogo}
+                             src={icon}/>
                         <h1 className={styles.headerServiceName} onClick={() => history.push('/')}>FeedGrabber</h1>
                     </div>
                     <div className={styles.navLinks}>
@@ -54,8 +56,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
                     </div>
                 </div>
                 <div className={styles.headerPart}>
-                    <Input placeholder='Search...' size="small" transparent inverted
-                           icon={<Icon name='search' inverted link/>}/>
+                    <Search/>
                     <div className={styles.headerBellWrapper}>
                         <NotificationMenu/>
                     </div>
@@ -88,7 +89,8 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing}) => {
 
 const mapStateToProps = (state: IAppState) => ({
     user: state.user.info,
-    isEditing: !!state.questionnaires.current.get.id
+    isEditing: !!state.questionnaires.current.get.id,
+    toggled: state.app.showMenu
 });
 const mapDispatchToProps = {
     logout: logoutRoutine,

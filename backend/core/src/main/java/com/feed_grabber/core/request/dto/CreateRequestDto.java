@@ -33,5 +33,7 @@ public class CreateRequestDto {
 
     private Boolean generateReport = true;
 
+    private Boolean sendToTargetUser = false;
+
     private boolean changeable = false;
 }

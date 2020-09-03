@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles.module.sass';
-import PhoneInput from 'react-phone-number-input/input';
+import PhoneInput from 'react-phone-input-2';
 
 type InputProps = React.ComponentProps<'input'> &
     {
@@ -8,6 +8,8 @@ type InputProps = React.ComponentProps<'input'> &
       error?: string;
       password?: boolean;
       phoneNumber?: boolean;
+      onChange: any;
+      value: string;
     }
 
 const UITextInput: React.FC<InputProps> =
@@ -16,6 +18,8 @@ const UITextInput: React.FC<InputProps> =
        error,
        password,
        phoneNumber,
+       onChange,
+        value,
        ...rest
      }) => {
 
@@ -24,8 +28,17 @@ const UITextInput: React.FC<InputProps> =
             <label>
               <div className={styles.labelText}>{error ? error : labelText}</div>
               {!phoneNumber ?
-                  <input className={error && styles.errored} type={password ? 'password' : 'text'} {...rest}/>
-                : <PhoneInput className={error && styles.errored} {...rest}/>
+                  <input className={error && styles.errored}
+                         type={password ? 'password' : 'text'}
+                         onChange={onChange}
+                         value={value}
+                         {...rest}/>
+                  : <PhoneInput inputClass={error && styles.errored}
+                                specialLabel={null}
+                                prefix={'+'}
+                                placeholder={'+38 (099) 999 99 99'}
+                                value={value}
+                                onChange={onChange}/>
               }
             </label>
           </div>
