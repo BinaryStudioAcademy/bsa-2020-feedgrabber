@@ -27,9 +27,15 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
             " where c.id = :companyId and q.isDeleted = false ")
     Long countAllByCompanyId(UUID companyId);
 
-    boolean existsByTitleAndCompanyIdAndIdIsNot(String title, UUID CompanyId, UUID id);
+    @Query("select case when count(q)> 0 then true else false end " +
+            "from Questionnaire q inner join Company c on c.id = q.company.id" +
+            " where q.title = :title and c.id = :companyId and q.id <> :id and q.isDeleted = false ")
+    boolean existsByTitleAndCompanyIdAndIdIsNot(String title, UUID companyId, UUID id);
 
-    boolean existsByTitleAndCompanyId(String title, UUID CompanyId);
+    @Query("select case when count(q)> 0 then true else false end " +
+            "from Questionnaire q inner join Company c on c.id = q.company.id" +
+            " where q.title = :title and c.id = :companyId and q.isDeleted = false")
+    boolean existsByTitleAndCompanyId(String title, UUID companyId);
 
     @Query("select q from Questionnaire q join Request r on q = r.questionnaire" +
             " join User u on u.id = :id where q.isDeleted = false ")
