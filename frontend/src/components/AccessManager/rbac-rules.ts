@@ -32,8 +32,8 @@ const employee: IRole = {
         "/assign",
         "/pending",
         "/company",
-        "/teams",
-        "/teams/:id",
+        "/people/teams",
+        "/people/teams/:id",
         "/report/:id",
         "/report/:id/:respondent/:username",
         "/response/:id"

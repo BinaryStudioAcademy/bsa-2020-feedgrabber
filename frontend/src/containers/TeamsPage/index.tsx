@@ -39,14 +39,13 @@ const TeamsPage: FC<ITeamsPageProps> = (
 
     const handleRedirect = (id: string): void => {
         clearCurrentTeam();
-        history.push(`/teams/${id}`);
+        history.push(`/people/teams/${id}`);
     };
 
     const [t] = useTranslation();
 
     return (
         <>
-            <UIPageTitle title={t("Teams List")}/>
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>

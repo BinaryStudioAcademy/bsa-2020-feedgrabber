@@ -32,6 +32,7 @@ import RedirectFormEditor from "../../components/RedirectFormEditor";
 
 // just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
+import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
@@ -60,8 +61,9 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
                     <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>
                     <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
-                    <PrivateRoute exact path="/teams" component={TeamsPage}/>
-                    <PrivateRoute exact path="/teams/:id" component={TeamDetailsPage}/>
+                    <PrivateRoute exact path="/people" component={PeopleManagementPage}/>
+                    <PrivateRoute exact path="/people/teams" component={TeamsPage}/>
+                    <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
                     <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire}/>
                     <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview}/>
@@ -72,7 +74,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path={["/response/:id/", "/response/:id/modify/:responseId/"]}
                                   component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
-                    <PrivateRoute exact path="/employees" component={UserList}/>
+                    <PrivateRoute exact path="/people/employees" component={UserList}/>
                     <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
                     <PrivateRoute exact path="/invitations" component={InvitationLinkPage}/>
                     <Route path="/*">

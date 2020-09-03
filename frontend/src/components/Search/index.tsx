@@ -45,7 +45,7 @@ const Search: FC<SearchProps> = ({isLoading, result, searchAll, searchQuery}) =>
             temp.push({
                 count: result.teams.length,
                 title: 'Teams',
-                route: '/teams'
+                route: '/people/teams'
             });
         }
         if (result?.reports) {
