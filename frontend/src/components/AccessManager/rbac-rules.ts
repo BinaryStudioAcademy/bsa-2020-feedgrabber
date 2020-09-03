@@ -68,7 +68,7 @@ const hr: IRole = {
 const companyOwner: IRole = {
     endpoints: [
         ...hr.endpoints,
-        "/employees",
+        "/people/employees",
         "/invitations",
         "companyOwnerEndpointAccess"
     ],
