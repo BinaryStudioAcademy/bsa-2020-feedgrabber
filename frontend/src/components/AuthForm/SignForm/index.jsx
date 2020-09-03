@@ -9,6 +9,7 @@ import Button from "./Button";
 import img from "./../../../assets/images/bg-pattern.jpg";
 import {Menu} from "semantic-ui-react";
 import {Link} from "react-router-dom";
+import {withTranslation} from "react-i18next";
 
 const Root = styled.div`
   background-image: url(${img});
@@ -174,6 +175,7 @@ class SignForm extends React.Component {
   }
 
   render() {
+    const t = this.props.t;
     return (
       <>
         <StyledMenu fixed='top'>
@@ -200,33 +202,33 @@ class SignForm extends React.Component {
               <Overlay signUpActive={this.state.signUpActive}>
                 <OverlayPanelRight signUpActive={this.state.signUpActive}>
                   <Typography fontWeight="bold" variant="h4" color="white">
-                    Welcome Back!
+                    {t("Welcome Back!")}
                   </Typography>
                   <Typography variant="body" color="white">
-                    To keep connected with us please login with your personal info
+                    {t("To keep connected")}
                   </Typography>
                   <Button
                     onClick={this.toggleSignPanel}
                     variant="transparent"
                     marginTop="1.17rem"
                   >
-                    Sign Up
+                    {t("Sign Up")}
                   </Button>
                 </OverlayPanelRight>
 
                 <OverlayPanelLeft signUpActive={this.state.signUpActive}>
                   <Typography fontWeight="bold" variant="h4" color="white">
-                    Hello, Friend!
+                    {t("Hello, Friend!")}
                   </Typography>
                   <Typography variant="body" color="white">
-                    Enter your personal details and start journey with us
+                    {t("Enter your personal details")}
                   </Typography>
                   <Button
                     onClick={this.toggleSignPanel}
                     variant="transparent"
                     marginTop="1.17rem"
                   >
-                    Sign In
+                    {t("Sign In")}
                   </Button>
                 </OverlayPanelLeft>
               </Overlay>
@@ -238,4 +240,4 @@ class SignForm extends React.Component {
   }
 }
 
-export default SignForm;
+export default withTranslation()(SignForm);

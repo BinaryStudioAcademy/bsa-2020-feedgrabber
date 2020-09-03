@@ -2,12 +2,8 @@ package com.feed_grabber.event_processor.report.ppt
 
 import com.feed_grabber.event_processor.fileStorage.AmazonS3ClientService
 import com.feed_grabber.event_processor.rabbit.Sender
-import com.feed_grabber.event_processor.report.ReportApiHelper
-import com.feed_grabber.event_processor.report.ReportService
-import com.feed_grabber.event_processor.report.dto.DataForReport
 import com.feed_grabber.event_processor.report.dto.QuestionTypes
-import com.feed_grabber.event_processor.report.dto.QuestionnaireDto
-import com.feed_grabber.event_processor.report.dto.UserDto
+import com.feed_grabber.event_processor.report.dto.ReportFileCreationDto
 import com.feed_grabber.event_processor.report.model.*
 import org.apache.poi.sl.usermodel.Placeholder
 import org.apache.poi.xslf.usermodel.SlideLayout
@@ -17,27 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.awt.Color
 import java.awt.Rectangle
-import java.io.File
-import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.io.*
+
 import java.util.*
 
 
 @Service
 class PowerPointReport(
-        @Autowired private val apiHelper: ReportApiHelper,
-        @Autowired private val parser: ReportService,
         @Autowired private val client: AmazonS3ClientService,
         @Autowired private val chartSlideCreator: ChartSlide,
         @Autowired private val sender: Sender
 ) {
-    fun create(requestId: UUID) {
-        val data: DataForReport = apiHelper.fetchReportData(requestId)
-        val report = parser.parseIncomingData(data)
+
+    fun create(report: Report): ReportFileCreationDto? {
         if (report.questions == null) {
-            return
+            return null
         }
 
         val ppt = XMLSlideShow()
@@ -85,14 +75,14 @@ class PowerPointReport(
 
         }
 
-        val file = File("${UUID.randomUUID()}-ppt-report.pptx")
-        val fileOut = FileOutputStream(file)
-        ppt.write(fileOut)
-        fileOut.close()
+        val stream = ByteArrayOutputStream()
+        ppt.write(stream)
         ppt.close()
-        val response = client.uploadReport(file, requestId)
-        sender.sendPPTReportURL(response)
-        file.delete()
+
+        val inputStream: InputStream = ByteArrayInputStream(stream.toByteArray())
+        val response = client.uploadReport(inputStream, report.id, "${UUID.randomUUID()}-ppt-report.pptx")
+
+        return response
     }
 
     private fun createTitleSlide(slideShow: XMLSlideShow, text: String) {
@@ -193,8 +183,6 @@ class PowerPointReport(
         }
         return variants
     }
-
-
 
 }
 

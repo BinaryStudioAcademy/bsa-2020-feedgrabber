@@ -10,12 +10,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Indexed
 @Entity
 @Data
 @NoArgsConstructor
@@ -32,6 +35,8 @@ public class Questionnaire {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Field
+    @Analyzer(definition = "autocompleteEdgeAnalyzer")
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -45,6 +50,7 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 

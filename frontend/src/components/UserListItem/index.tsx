@@ -4,10 +4,12 @@ import styles from './styles.module.sass';
 import {Button, Image, Modal} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
 import {IUserInfo} from "../../models/user/types";
+import {ISearchResult} from "../../models/search/Search";
 
 interface IUserListItemProps {
     user: IUserInfo;
     roleState: IRoleState;
+    result?: ISearchResult;
 
     fire(id: string): void;
 
@@ -23,14 +25,15 @@ const UserListItem: FC<IUserListItemProps> = (
     {
         user,
         fire,
-        setSelectedUser
+        setSelectedUser,
+        result
     }
 ) => {
     const {id, firstName, lastName, role, avatar, userName, phoneNumber} = user;
 
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    const info = firstName && lastName ? `${firstName} ${lastName}` : `${userName}`;
+    const info = firstName && lastName ? `${lastName} ${firstName}` : `${userName}`;
 
     const confirmationModal = () => {
         return (<Modal
@@ -40,7 +43,7 @@ const UserListItem: FC<IUserListItemProps> = (
             onClose={() => setShowConfirmationModal(false)}
         >
             <Modal.Header>
-                Do you really want to fire {firstName && lastName ? `${firstName} ${lastName}` : `${userName} ?`}
+                Do you really want to fire {firstName && lastName ? `${lastName} ${firstName}` : `${userName} ?`}
             </Modal.Header>
             <Modal.Actions>
                 <Button negative onClick={() => setShowConfirmationModal(false)}>
@@ -57,16 +60,31 @@ const UserListItem: FC<IUserListItemProps> = (
         </Modal>);
     };
 
+    const match = result
+        ?.users
+        .map(u => u.id)
+        .includes(id);
+
     return (
         <>
-            <div className={styles.listItem}>
+            <div className={`${styles.listItem} ${match && styles.searched}`}>
                 <div className={styles.userImage}>
                     <Image src={avatar ?? defaultAvatar} size='tiny' circular/>
                 </div>
                 <div className={styles.info}>
                     <h3 className={styles.paginationListItemHeader}>{info}</h3>
-                    <p className={styles.paginationListItemDescription}>{role.replace("_"," ")}</p>
+                    <p className={styles.paginationListItemDescription}>{role.replace("_", " ")}</p>
                     <p className={styles.paginationListItemDescription}>{phoneNumber}</p>
+                    <p style={
+                        {
+                            fontSize: '0.8rem',
+                            display: 'inline-flex',
+                            alignItems: 'center'
+                        }
+                    }
+                       className={styles.paginationListItemDescription}>
+                        {match && 'Matches searched query!'}
+                    </p>
                 </div>
                 <div className={styles.buttonContainer}>
                     <div className={styles.button}>
@@ -77,7 +95,6 @@ const UserListItem: FC<IUserListItemProps> = (
                         <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
                     </div>
                 </div>
-
             </div>
             {confirmationModal()}
         </>

@@ -8,7 +8,7 @@ import {history} from "../../helpers/history.helper";
 
 function* loadInvitationSignUp(action: any) {
   try {
-    const res = yield call(apiClient.get, `http://localhost:5000/api/invitations/sign-up/${action.payload}`);
+    const res = yield call(apiClient.get, `/api/invitations/sign-up/${action.payload}`);
     const invitationData: IInvitationSignUpData = res.data.data;
 
     yield put(loadInvitationSingUpRoutine.success(invitationData));
@@ -19,7 +19,7 @@ function* loadInvitationSignUp(action: any) {
 
 function* registerInvitationSignUp(action: any) {
   try {
-    const res = yield call(apiClient.post, `http://localhost:5000/api/auth/invitation`, action.payload);
+    const res = yield call(apiClient.post, `/api/auth/invitation`, action.payload);
 
     const {user, refreshToken, accessToken} = res.data.data;
 

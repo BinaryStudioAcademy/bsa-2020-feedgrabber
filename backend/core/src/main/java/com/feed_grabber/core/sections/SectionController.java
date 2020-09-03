@@ -63,10 +63,9 @@ public class SectionController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<SectionQuestionsDto> deleteQuestion(
             @PathVariable UUID questionId,
-            @RequestParam UUID sectionId,
-            @RequestParam UUID questionnaireId)
-            throws SectionNotFoundException, QuestionNotFoundException, QuestionnaireNotFoundException {
-        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId, questionnaireId));
+            @RequestParam UUID sectionId)
+            throws SectionNotFoundException, QuestionNotFoundException {
+        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId));
     }
 
 }

@@ -30,6 +30,9 @@ import RespondentReport from "../ReportPage/RespondentReport";
 import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
 
+// just for demo
+import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
+
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
 
@@ -56,6 +59,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
                     <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>
+                    <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/teams" component={TeamsPage}/>
                     <PrivateRoute exact path="/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>

@@ -15,6 +15,7 @@ import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import TeamMetadataBlock from "./metadataBlock";
 import TeamUsersBlock from "./usersBlock";
+import { useTranslation } from 'react-i18next';
 
 const TeamDetailsPage: FC<Props & { match }> = (
     {
@@ -36,6 +37,7 @@ const TeamDetailsPage: FC<Props & { match }> = (
         isLoadingToggleLead
     }
 ) => {
+    const [t] = useTranslation();
     const [isNew, setIsNew] = useState<boolean>(match.params.id === "new");
 
     // load users
@@ -61,7 +63,7 @@ const TeamDetailsPage: FC<Props & { match }> = (
 
     return (
         <>
-            <UIPageTitle title={isNew ? "Add Team" : "Edit Team"}/>
+            <UIPageTitle title={isNew ? t("Add Team") : t("Edit Team")}/>
             <UIContent>
                 <TeamMetadataBlock
                     isNew={isNew}
@@ -85,10 +87,10 @@ const TeamDetailsPage: FC<Props & { match }> = (
                         <UIColumn>
                             <UICard>
                                 <UICardBlock>
-                                    <h3>Requests</h3>
+                                    <h3>{t("Requests")}</h3>
                                 </UICardBlock>
                                 <UICardBlock>
-                                    <p>Here could be requests or something else</p>
+                                    <p>{t("Here could be requests or something else")}</p>
                                 </UICardBlock>
                             </UICard>
                         </UIColumn>

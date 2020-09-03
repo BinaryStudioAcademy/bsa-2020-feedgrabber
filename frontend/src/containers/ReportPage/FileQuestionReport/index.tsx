@@ -2,12 +2,14 @@ import PieChartTemplate from "components/ReportTemplates/PieChartTemplate";
 import { getRandomColor } from "helpers/colors.helper";
 import { IQuestionReportFileData } from "models/report/IReport";
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface IFileQuestionReportProps {
     data: IQuestionReportFileData;
 }
 
 export const FileQuestionReport: FC<IFileQuestionReportProps> = ({ data }) => {
+    const [t] = useTranslation();
     return <PieChartTemplate
         data={data.options.map(o => o.amount)}
         labels={data.options.map(o => o.type)}
@@ -23,7 +25,7 @@ export const FileQuestionReport: FC<IFileQuestionReportProps> = ({ data }) => {
                         const initial = data.options.find(option => option.type === type);
                         return [
                             `${type}: ${initial?.amount}`,
-                            `average size: ${Math.round(initial?.sizes
+                            `${t("average size")}: ${Math.round(initial?.sizes
                                 .reduce((o1, o2) => o2 += o1) / initial?.sizes.length)} Mb`
                         ];
                     }

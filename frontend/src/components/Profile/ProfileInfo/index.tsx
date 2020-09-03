@@ -10,24 +10,13 @@ import UIButton from "../../UI/UIButton";
 import UITextInput from "../../UI/UITextInput/UITextInput";
 import styles from './styles.module.sass';
 import {editUserProfileRoutine, uploadUserAvatarRoutine} from "../../../sagas/user/routines";
+import {useTranslation} from "react-i18next";
+import validation from "../../../helpers/validation.helper";
 
 const validationSchema = yup.object().shape({
-  firstName: yup
-      .string()
-      .min(1, "Too short first name")
-      .max(40, "Too long first name")
-      .matches(/^\w([A-Za-zА-Яа-я.])([ \-`,]?[A-Za-zА-Яа-я.])*$/,
-          "First name is invalid"),
-  lastName: yup
-      .string()
-      .min(1, "Too short last name")
-      .max(40, "Too long last name")
-      .matches(/^\w([A-Za-zА-Яа-я.])([ \-`,]?[A-Za-zА-Яа-я.])*$/,
-          "Last name is invalid"),
-  phoneNumber: yup
-      .string()
-      .min(7, "Too short phone number")
-      .max(20, "Too long phone number")
+  firstName: validation.firstName,
+  lastName: validation.lastName,
+  phoneNumber: validation.phoneNumber
 });
 
 const defaultAvatar =
@@ -41,9 +30,12 @@ const ProfileInfo: FC<ProfileInfoProps> =
        uploadImage,
        getUser
      }) => {
-      useEffect(() => getUser, [getUser]);
+      useEffect(() => {
+          !user && getUser();
+      }, [getUser, user]);
       const [src, setSource] = useState<string | ArrayBuffer>(undefined);
       const [fileName, setFileName] = useState('avatar');
+      const [t] = useTranslation();
 
       const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -70,7 +62,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                 <Button size='small'
                         as='label'
                         basic>
-                  Update
+                  {t("Update")}
                   <input name="image" type="file" onChange={onSelectFile} hidden/>
                 </Button>
                 <Button content='Delete'
@@ -118,37 +110,41 @@ const ProfileInfo: FC<ProfileInfoProps> =
                   setFieldValue
                 }) => (
                   <Form name="userForm" onSubmit={handleSubmit}>
-                    <UITextInput labelText={'First Name'}
-                                 placeholder={'Type your first name...'}
+                    <UITextInput labelText={t('First Name')}
+                                 placeholder={t('Type your first name...')}
                                  name='firstName'
                                  value={values.firstName}
                                  onChange={handleChange}
-                                 error={touched.firstName && errors.firstName}
+                                 error={touched.firstName && t(errors.firstName)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('firstName', null)}
                     />
-                    <UITextInput labelText={'Last Name'}
-                                 placeholder={'Type your last name...'}
+                    <UITextInput labelText={t('Last Name')}
+                                 placeholder={t('Type your last name...')}
                                  name='lastName'
                                  value={values.lastName}
                                  onChange={handleChange}
-                                 error={touched.lastName && errors.lastName}
+                                 error={touched.lastName && t(errors.lastName)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('lastName', null)}
                     />
-                    <UITextInput labelText={'Phone'}
+                    <UITextInput
+                        labelText={t('Phone')}
                                  placeholder={'+380 99 999 99 99'}
                                  name='phoneNumber'
                                  value={values.phoneNumber}
-                                 onChange={value => setFieldValue('phoneNumber', value)}
-                                 error={touched.phoneNumber && errors.phoneNumber}
+                                 onChange={value => {
+                                   console.log(value);
+                                   setFieldValue('phoneNumber', value);
+                                 }}
+                                 error={touched.phoneNumber && t(errors.phoneNumber)}
                                  onBlur={handleBlur}
                                  onClick={() => setFieldError('phoneNumber', null)}
                                  phoneNumber
                     />
                     <UIButton disabled={!!(errors.firstName || errors.lastName || errors.phoneNumber)}
                               submit
-                              title={'Save'}/>
+                              title={t('Save')}/>
 
                   </Form>
               )}

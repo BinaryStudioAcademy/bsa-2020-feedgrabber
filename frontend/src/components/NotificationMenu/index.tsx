@@ -14,10 +14,28 @@ import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
-import moment from "moment";
-import {useHistory} from "react-router-dom";
 import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
+import {useTranslation} from "react-i18next";
+import RequestNotification from "./notificationTypes/RequestNotification";
+import ReportsNotification from "./notificationTypes/ReportsNotification";
+
+export enum MessageTypes {
+    plainText = 'plain_text',
+    reports = 'reports'
+}
+
+export interface INotificationProps {
+    notification: INotification;
+
+    deleteNotification(id: string): void;
+
+    setShown(value: boolean): void;
+
+    readNotification(id: string): void;
+
+    getResponse(id: string): void;
+}
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
     {
@@ -31,10 +49,32 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         getResponse,
         readNotification
     }) => {
+    const [t] = useTranslation();
     const [shown, setShown] = useState(false);
 
     const ref = useRef(null);
     useOutsideAlerter(ref, () => shown && setShown(false));
+
+    const getNotification = (notification: INotification) => {
+        switch (notification.messageType) {
+            case MessageTypes.plainText:
+                return (<RequestNotification
+                    key ={notification.id}
+                    notification={notification}
+                    deleteNotification={deleteNotification}
+                    readNotification={readNotification}
+                    getResponse={getResponse}
+                    setShown={setShown}/>);
+            case MessageTypes.reports:
+                return (<ReportsNotification
+                    key ={notification.id}
+                    notification={notification}
+                    deleteNotification={deleteNotification}
+                    getResponse={getResponse}
+                    readNotification={readNotification}
+                    setShown={setShown}/>);
+        }
+    };
 
     useEffect(() => {
         loadNotifications();
@@ -45,8 +85,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         receiveNotification(notification);
         toastr.info(notification.text);
     }, true);
-
-    const history = useHistory();
 
     return (
         <div ref={ref}>
@@ -59,7 +97,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
             </div>
             {shown &&
             <div className={styles.notificationsContainer}>
-                <div className={`${styles.header} ${styles.notifyHeader}`}><h4>Notifications</h4>
+                <div className={`${styles.header} ${styles.notifyHeader}`}><h4>{t("Notifications")}</h4>
                     {notifications.length > 1 &&
                     <Icon
                         className={styles.removeAll}
@@ -70,35 +108,12 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     {
                         notifications.length === 0 &&
                         <div className={styles.noNotifications}>
-                            No notifications yet(
+                            {t("No notifications yet")}
                         </div>
                     }
                     {
-                        notifications.map(notification => (
-                            <div key={notification.id}
-                                 className={styles.notification}>
-                                <div className={styles.text}
-                                     onClick={() => {
-                                         getResponse(notification.requestId);
-                                         history.push(`/response/${notification.questionnaireId}`);
-                                         readNotification(notification.id);
-                                         setShown(false);
-                                     }}>
-                                    <div>{notification.text?.substr(0, 54)}</div>
-                                    <div className={styles.date}>{moment(notification.date).fromNow()}</div>
-                                </div>
-                                <div className={styles.button}
-                                     title='Delete'
-                                     onClick={() => {
-                                         deleteNotification(notification.requestId);
-                                     }}>
-                                    <div>
-                                        x
-                                    </div>
-                                </div>
-                                {!notification.isRead && <div className={styles.readMark}/>}
-                            </div>
-                        ))}
+                        notifications.map(notification => getNotification(notification))
+                    }
                 </LoaderWrapper>
             </div>
             }

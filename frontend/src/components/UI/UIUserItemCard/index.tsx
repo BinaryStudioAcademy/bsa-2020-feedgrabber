@@ -26,7 +26,7 @@ const UIUserItemCard: FC<IUIUserItemCardProps> =
              onClick={onClick}>
           <div className={styles.userAvatar}><Image src={avatar ? avatar : defaultAvatar} size='large' circular/></div>
           <div className={styles.userNames}>
-            {(firstName !== undefined ? firstName : '') + ' ' + (lastName !== undefined ? lastName : '')}
+            {(lastName !== undefined ? lastName : '') + ' ' + (firstName !== undefined ? firstName : '')}
           </div>
           <div className={styles.userInfo}>{userInfo}</div>
         </div>

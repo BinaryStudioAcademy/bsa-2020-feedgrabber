@@ -4,6 +4,7 @@ import styles from './styles.module.sass';
 import {Button, Header, Modal, Select, Loader} from "semantic-ui-react";
 import {IRoleShort} from "../../models/role/Role";
 import {IUserInfo} from "../../models/user/types";
+import {useTranslation} from "react-i18next";
 
 export interface IRoleSwitchDto {
     userId: string;
@@ -35,7 +36,7 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
 
     }
 ) => {
-
+    const [t] = useTranslation();
     const [selectedRoleId, setSelectedRoleId] = useState("");
 
     useEffect(() => {
@@ -59,12 +60,12 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
             {!isLoading &&
             <>
                 <Modal.Header>
-                    Role selection for user {selectedUser.firstName && selectedUser.lastName ?
+                    {t("Role selection for user")} {selectedUser.firstName && selectedUser.lastName ?
                     `${selectedUser.firstName} ${selectedUser.lastName}` : `${selectedUser.userName}`}
                 </Modal.Header>
                 <Modal.Content>
                     <div className={styles.container}>
-                        <Header>Select new role</Header>
+                        <Header>{t("Select new role")}</Header>
                         <Select compact
                                 className={styles.dropdown}
                                 options={companyRoles.map(r => ({key: r.id, value: r.id, text: r.name}))}
@@ -77,7 +78,7 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
                 </Modal.Content>
                 <Modal.Actions>
                     <Button negative onClick={() => setSelectedUser(null)}>
-                        Discard changes
+                        {t("Discard changes")}
                     </Button>
                     <Button
                         positive
@@ -85,7 +86,7 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
                         onClick={() => changeRole({userId: selectedUser.id, roleId: selectedRoleId})}
                         loading={isChanging}
                     >
-                        Change
+                        {t("Change")}
                     </Button>
                 </Modal.Actions>
             </>

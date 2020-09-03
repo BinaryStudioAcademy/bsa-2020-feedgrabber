@@ -4,18 +4,19 @@ import './styles.sass';
 import {IAppState} from "../../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {getUserSettingsRoutine, updateUserSettingsRoutine} from "../../../sagas/user/routines";
+import { useTranslation } from 'react-i18next';
 
 const languages = [
   {
     key: 'English',
     text: 'English',
-    value: 'English',
+    value: 'english',
     image: {avatar: true, src: 'https://www.countryflags.io/gb/flat/64.png'}
   },
   {
     key: 'Ukrainian',
-    text: 'Ukrainian',
-    value: 'Ukrainian',
+    text: 'Українська',
+    value: 'ukrainian',
     image: {avatar: true, src: 'https://www.countryflags.io/ua/flat/64.png'}
   }
 ];
@@ -28,8 +29,15 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
     }
 ) => {
   useEffect(() => {
-    getSettings();
-  }, [getSettings]);
+   !settings && getSettings();
+  }, [getSettings, settings]);
+
+  const [t, i18n] = useTranslation();
+
+  const handleLanguageChange = (event, data) => {
+    updateSettings({...settings, language: data.value});
+    i18n.changeLanguage(data.value);
+  };
 
   return (
       <>{
@@ -39,7 +47,7 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
             <Form>
               <Header as='h4'>
                 <Icon name='translate'/>
-                <Header.Content>Language settings</Header.Content>
+                <Header.Content>{t("Language settings")}</Header.Content>
               </Header>
               <br/>
               <Dropdown
@@ -49,19 +57,17 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
                   value={settings.language}
                   options={languages}
                   className='icon'
-                  onChange={(event, data) => {
-                    updateSettings({...settings, language: data.value});
-                  }}
+                  onChange={handleLanguageChange}
               />
               <br/>
               <Header as='h4'>
                 <Icon name='bell'/>
-                <Header.Content>Notifications</Header.Content>
+                <Header.Content>{t("Notifications")}</Header.Content>
               </Header>
               <br/>
               <Checkbox checked={settings.enableNotifications}
                         toggle
-                        label={"Turn on notifications"}
+                        label={t("Turn on notifications")}
                         onChange={(event, data) => {
                           updateSettings({...settings, enableNotifications: data.checked});
                         }}/>

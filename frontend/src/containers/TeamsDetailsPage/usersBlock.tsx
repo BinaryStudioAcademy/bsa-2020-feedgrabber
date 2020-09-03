@@ -8,6 +8,7 @@ import {ITeam, ITeamLeadToggle, ITeamUserToggle} from "../../models/teams/ITeam"
 import styles from "./styles.module.sass";
 import {Icon, Image} from "semantic-ui-react";
 import {IUserShort} from "../../models/user/types";
+import { useTranslation } from "react-i18next";
 
 interface ITeamUsersBlockProps {
   currentTeam?: ITeam;
@@ -32,6 +33,7 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
     isLoadingLeadToggle
   }
 ) => {
+  const [t] = useTranslation();
   const isUserTeamLead = (user: IUserShort) => {
     return user.id === currentTeam?.teamLeadId;
   };
@@ -41,7 +43,7 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
       <LoaderWrapper loading={isLoadingUsers}>
         <UICard>
           <UICardBlock>
-            <h3>Users</h3>
+            <h3>{t("Users")}</h3>
           </UICardBlock>
           {(companyUsers || []).map(user => (
             <UICardBlock key={user.id} className={styles.toggleCardBlock}>
@@ -62,7 +64,7 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
               </div>
               {currentTeam && (
                 <UIButton
-                  title={user.selected ? "Remove" : "Add"}
+                  title={user.selected ? t("Remove") : t("Add")}
                   secondary={user.selected}
                   loading={user.loading}
                   disabled={user.loading}

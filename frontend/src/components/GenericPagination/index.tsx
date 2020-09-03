@@ -4,6 +4,7 @@ import ReactPaginate from 'react-paginate';
 import styles from './styles.module.sass';
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import LoaderWrapper from "../LoaderWrapper";
+import {useTranslation} from "react-i18next";
 
 interface IGenericPaginationProps {
   isLoading: boolean;
@@ -26,6 +27,8 @@ const GenericPagination: FC<IGenericPaginationProps> = (
     loadItems
   }
 ) => {
+  const [t] = useTranslation();
+
   const getPageCount = () => {
     return pagination
       ? Math.ceil(pagination.total / pagination.size)
@@ -66,7 +69,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
             >
               {sizeOptions.map(o => <option key={o}>{o}</option>)}
             </select>
-            &nbsp;items per page
+            &nbsp;{t("items per page")}
           </div>
         </div>
       )}
