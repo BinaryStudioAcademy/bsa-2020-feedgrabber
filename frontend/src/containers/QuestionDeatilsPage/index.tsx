@@ -9,7 +9,7 @@ import {
 } from "../../sagas/questions/routines";
 import { useHistory } from "react-router-dom";
 import QuestionDetails from "../../components/QuestionDetails";
-import { Button, Loader } from "semantic-ui-react";
+import { Loader } from "semantic-ui-react";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";

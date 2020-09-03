@@ -13,7 +13,7 @@ import {
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
-import {Button, Input} from 'semantic-ui-react';
+import {Input} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
