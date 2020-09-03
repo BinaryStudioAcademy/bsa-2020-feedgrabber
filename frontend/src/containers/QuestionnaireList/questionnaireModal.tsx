@@ -45,6 +45,7 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
       : addQuestionnaire({
         title: values.title
       });
+    hideModal();
   };
 
   const [t] = useTranslation();
