@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
+import java.util.UUID
+
 @Component
 class Sender {
     @Value("\${rabbitmq.exchange}")
@@ -18,6 +20,9 @@ class Sender {
 
     @Value("\${rabbitmq.routing-key-response-links}")
     private val linksResponseRoutingKey: String? = null
+
+    @Value("\${rabbitmq.routing-key-request-close}")
+    private val closeRequestRoutingKey: String? = null
 
     @Autowired
     private val template: RabbitTemplate? = null
@@ -32,6 +37,12 @@ class Sender {
         println(" [x] Sending generated file links to backend")
         template!!.convertAndSend(exchange!!, linksResponseRoutingKey!!, links)
         println(" [x] Sent generated file links to backend")
+    }
+
+    fun closeRequestNow(requestId: UUID) {
+        println(" [x] Sending requestId for closing request")
+        template!!.convertAndSend(exchange!!, closeRequestRoutingKey!!, requestId)
+        println(" [x] Sent requestId")
     }
 
 }

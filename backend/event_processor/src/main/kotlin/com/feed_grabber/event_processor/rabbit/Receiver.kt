@@ -3,6 +3,7 @@ package com.feed_grabber.event_processor.rabbit
 import com.feed_grabber.event_processor.email.EmailSender
 import com.feed_grabber.event_processor.schedule.ScheduleService
 import com.feed_grabber.event_processor.rabbit.entityExample.MailEntity
+import com.feed_grabber.event_processor.rabbit.entityExample.CloseRequest
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -19,7 +20,7 @@ class Receiver(
         emailSender.sendMail(mailEntity)
     }
 
-    @RabbitListener(queues = ["\${rabbitmq.queue.report.close}"])
+    @RabbitListener(queues = ["\${rabbitmq.queue.request.close}"])
     fun receiveCloseRequest(closeRequest: CloseRequest) {
         scheduleService.scheduleCloseRequestJob(closeRequest.getRequestId(), closeRequest.getCloseDate())
     }
