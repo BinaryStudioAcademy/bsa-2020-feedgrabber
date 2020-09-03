@@ -1,10 +1,11 @@
 import React, {FC, useState} from "react";
 
 import styles from './styles.module.sass';
-import {Button, Image, Modal} from "semantic-ui-react";
+import {Button, Icon, Image, Modal} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
 import {IUserInfo} from "../../models/user/types";
 import {ISearchResult} from "../../models/search/Search";
+import UIButton from "../UI/UIButton";
 
 interface IUserListItemProps {
     user: IUserInfo;
@@ -71,30 +72,26 @@ const UserListItem: FC<IUserListItemProps> = (
                 <div className={styles.userImage}>
                     <Image src={avatar ?? defaultAvatar} size='tiny' circular/>
                 </div>
+                <div className={styles.header}>
+                    <h3 className={styles.fullName}>{info}</h3>
+                </div>
                 <div className={styles.info}>
-                    <h3 className={styles.paginationListItemHeader}>{info}</h3>
-                    <p className={styles.paginationListItemDescription}>{role.replace("_", " ")}</p>
-                    <p className={styles.paginationListItemDescription}>{phoneNumber}</p>
-                    <p style={
-                        {
-                            fontSize: '0.8rem',
-                            display: 'inline-flex',
-                            alignItems: 'center'
-                        }
-                    }
-                       className={styles.paginationListItemDescription}>
-                        {match && 'Matches searched query!'}
-                    </p>
+                    {firstName && lastName && <div className={styles.infoItem}>
+                        <Icon color={"grey"} name='at'/>
+                        <p>{userName}</p>
+                    </div>}
+                    <div className={styles.infoItem}>
+                        <Icon color={"grey"} name='briefcase'/>
+                        <p>{role.replace("_", " ")}</p>
+                    </div>
                 </div>
                 <div className={styles.buttonContainer}>
-                    <div className={styles.button}>
-                        {role !== 'company_owner' && <Button onClick={() => setSelectedUser(user)}>Change role</Button>}
-                    </div>
-                    <div className={styles.button}>
-                        {role !== 'company_owner' &&
-                        <Button color={"red"} onClick={() => setShowConfirmationModal(true)}>Fire</Button>}
-                    </div>
+                    {/* {role !== 'company_owner' &&*/}
+                    <UIButton primary title={'Switch role'} onClick={() => setSelectedUser(user)}/>
+                    {/* {role !== 'company_owner' &&*/}
+                    <UIButton secondary title={'Fire'} onClick={() => setShowConfirmationModal(true)}/>
                 </div>
+
             </div>
             {confirmationModal()}
         </>
