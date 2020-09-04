@@ -388,12 +388,12 @@ public class UserService implements UserDetailsService {
                 .email(registerDto.getEmail())
                 .username(registerDto.getUsername())
                 .password(registerDto.getPassword())
-                .isEnabled(true)
+                .isEnabled(false)
                 .role(role)
                 .company(company)
                 .build()
         );
-
+        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return company.getId();
     }
 }
