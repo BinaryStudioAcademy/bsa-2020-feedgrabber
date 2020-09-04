@@ -45,7 +45,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                     <div className={styles.headerTitle}>
                         <img onClick={() => toggleMenu(!toggled)} alt="FeedGrabber" className={styles.headerLogo}
                              src={icon}/>
-                        <h1 className={styles.headerServiceName} onClick={() => history.push('/')}>FeedGrabber</h1>
+                        <h1 className={styles.headerServiceName} onClick={() => history.push('/home')}>FeedGrabber</h1>
                     </div>
                     <div className={styles.navLinks}>
                         <NavLink exact to="/editor"

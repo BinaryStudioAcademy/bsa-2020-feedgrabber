@@ -14,7 +14,7 @@ function* login(action) {
 
         yield put(loginRoutine.success(user));
         yield call(saveTokens, {accessToken, refreshToken});
-        yield call(history.push, "/");
+        yield call(history.push, "/home");
     } catch (error) {
         yield put(loginRoutine.failure(error.response?.data?.error || "No response"));
     }
@@ -33,7 +33,7 @@ function* logout() {
     yield call(deleteTokens);
     yield call(redirectToMain);
     yield put(logoutRoutine.success());
-    yield call(history.push, "/landing");
+    yield call(history.push, "/");
 }
 
 export default function* authSaga() {
