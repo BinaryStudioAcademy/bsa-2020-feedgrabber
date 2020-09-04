@@ -31,12 +31,9 @@ function* signup(action) {
 
 function* signUpByEmail(action) {
     try {
-        const res: IGeneric<IAuthResponse> = yield call(apiClient.post, `/api/auth/registerByEmail`, action.payload);
-        const {user, refreshToken, accessToken} = res.data.data;
-
-        yield put(registerByEmailRoutine.success(user));
-        yield call(saveTokens, {accessToken, refreshToken});
-        yield call(history.push, "/");
+        const res: IGeneric<IRegisterResponse> = 
+        yield call(apiClient.post, `/api/auth/registerByEmail`, action.payload);
+        yield put(registerByEmailRoutine.success(res.data.data.success));
     } catch (error) {
         yield put(registerByEmailRoutine.failure(error.response?.data?.error || "No response"));
     }

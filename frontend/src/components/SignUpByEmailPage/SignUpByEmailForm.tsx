@@ -37,12 +37,13 @@ const schema = yup.object().shape({
 
 interface ISignUpFormProps {
     error: string;
+    success: boolean;
     company: ICompanyDomain;
     signUp(action: {}): void;
 }
 
 const SignUpByEmailForm: FC<ISignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error, company} = props;
+    const {signUp, className, error, company, success} = props;
 
     return (
         <Formik
@@ -93,6 +94,11 @@ const SignUpByEmailForm: FC<ISignUpFormProps & {className: string}> = props => {
                         {
                             errorText && <Message attached="top" error size="tiny" content={errorText}/>
                         }
+                        {
+                            success && <Message attached="top"
+                                                positive
+                                                content={"Account created!\n Check your email"}/>
+                        }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
@@ -106,7 +112,8 @@ const SignUpByEmailForm: FC<ISignUpFormProps & {className: string}> = props => {
 };
 
 const mapState = (state: IAppState) => ({
-    error: state.user.error?.register
+    error: state.user.error?.register,
+    success: state.user.isRegisteredSuccess
 });
 
 const mapDispatch = {

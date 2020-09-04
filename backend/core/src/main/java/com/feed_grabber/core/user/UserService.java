@@ -388,6 +388,7 @@ public class UserService implements UserDetailsService {
                 .email(registerDto.getEmail())
                 .username(registerDto.getUsername())
                 .password(registerDto.getPassword())
+                .isEnabled(true)
                 .role(role)
                 .company(company)
                 .build()

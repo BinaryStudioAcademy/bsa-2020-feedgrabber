@@ -19,8 +19,7 @@ const initialState = {
 };
 
 const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
-    if (type === loginRoutine.SUCCESS
-        || type === registerByEmailRoutine.SUCCESS) {
+    if (type === loginRoutine.SUCCESS) {
         return {
             ...state,
             info: undefined,  // to load user details after login, currently - different DTO after login and getUser
@@ -28,7 +27,8 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             error: {}
         };
     }
-    if(type === registerRoutine.SUCCESS) {
+    if(type === registerRoutine.SUCCESS
+        || type === registerByEmailRoutine.SUCCESS) {
         return {
             ...state,
             isRegisteredSuccess: payload
