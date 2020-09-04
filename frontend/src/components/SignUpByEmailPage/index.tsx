@@ -128,7 +128,7 @@ const SignUpByEmailPage: React.FC<SignUpFormProps> = props => {
                                 Welcome to <br /> {company?.name}!
                             </Typography>
                             <Typography variant="body" color="white">
-                                Enter your personal details and start journey with us ;)
+                                Sign up and start journey with us ;)
                             </Typography>
                         </OverlayPanel>
                     </Overlay>

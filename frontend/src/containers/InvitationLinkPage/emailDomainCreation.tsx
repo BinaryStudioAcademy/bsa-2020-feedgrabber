@@ -53,7 +53,7 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
         >
             <Modal.Header>
                 Do you really want to delete current email domain? 
-                Employees won`t able to register with it anymore
+                Employees won`t able to register with there corporate emails anymore
             </Modal.Header>
             <Modal.Actions>
                 <UIButton title="Yes"
@@ -99,7 +99,8 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
     const componentWithDomain = (
         <UICardBlock>
             <span className={styles.info}>Now you can tell employees that they can sign up on <br/>
-            <a href={`${company?.subdomainName}.feedgrabber.com`}> {company?.subdomainName}.feedgrabber.com </a><br/>
+            <a href={`${company?.subdomainName}.feedgraber.online`}> 
+            {company?.subdomainName}.feedgraber.online </a><br/>
             using there corporate email: <code>@{company?.emailDomain}</code></span>
             <br/>
             <UIButton title="Delete" onClick={() => setShowConfirmationModal(true)}/>

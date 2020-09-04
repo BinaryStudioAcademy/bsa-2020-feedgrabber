@@ -75,7 +75,7 @@ const SignUpByEmailForm: FC<ISignUpFormProps & {className: string}> = props => {
                 return (
                         <form className={className} onSubmit={handleSubmit} autoComplete="off">
                         <Typography fontWeight="bold" variant="h4">Create Account</Typography>
-                        <Typography variant="body2">or use your email for registration</Typography>
+                        <Typography variant="body2">use your corporate email</Typography>
                         <Input name="username" placeholder="Username" value={values.username}
                                onChange={handleChange} onBlur={handleBlur}
                         />
