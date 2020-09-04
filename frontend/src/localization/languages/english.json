@@ -1,13 +1,15 @@
 {
   "translations": {
     "PENDING FEEDBACKS": "PENDING FEEDBACKS",
-    "Form Editor": "Form Editor",
-    "Create Request": "Create Request",
+    "Form Creator": "Form Creator",
+    "Send Request": "Send Request",
     "ASSIGN FEEDBACKS": "ASSIGN FEEDBACKS",
     "Profile": "Profile",
     "Settings": "Settings",
     "Requests": "Requests",
     "Logout": "Logout",
+
+    "No items": "No items",
 
     "Home": "Home",
     "Company Dashboard": "Company Dashboard",

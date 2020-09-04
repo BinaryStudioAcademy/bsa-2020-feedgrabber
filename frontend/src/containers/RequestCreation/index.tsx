@@ -135,11 +135,14 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                     users
                                       .filter(user => targetUserPattern
                                         ? user.username.includes(targetUserPattern)
+                                          || `${user.firstName} ${user.lastName}`.includes(targetUserPattern)
                                         : true)
                                       .map(user => (
                                         <UIUserItemCard
                                             key={user.id}
-                                            firstName={'username: ' + user.username}
+                                            firstName={user.firstName}
+                                            lastName={user.lastName}
+                                            userInfo={'username: ' + user.username}
                                             avatar={user.avatar}
                                             onClick={() => {
                                               formik.setFieldValue('targetUserId',
@@ -287,11 +290,15 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 {!selectTeams && users
                                   .filter(user => respondentPattern
                                     ? user.username.includes(respondentPattern)
+                                      || `${user.firstName} ${user.lastName}`.includes(respondentPattern)
                                     : true)
                                   .map(user => (
                                     <UIUserItemCard
                                         key={user.id}
                                         avatar={user.avatar}
+                                        username={user.username}
+                                        firstName={user.firstName}
+                                        lastName={user.lastName}
                                         userInfo={'Username: ' + user.username}
                                         selected={formik.values.chosenUsers.includes(user)}
                                         onClick={() => {

@@ -1,13 +1,15 @@
 {
   "translations": {
     "PENDING FEEDBACKS": "ОЧІКУЮЩІ ВІДГУКИ",
-    "Form Editor": "Створення форми",
-    "Create Request": "Створити запит",
+    "Form Creator": "Створення форми",
+    "Send Request": "Створити запит",
     "ASSIGN FEEDBACKS": "НАЗНАЧИТИ ВІДГУК",
     "Profile": "Профіль",
     "Settings": "Налаштування",
     "Requests": "Запит",
     "Logout": "Вийти",
+
+    "No items": "Список порожній",
 
     "Home": "Домашня",
     "Company Dashboard": "Дошка компанії",

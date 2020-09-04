@@ -50,10 +50,10 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                     <div className={styles.navLinks}>
                         <NavLink exact to="/editor"
                                  className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-                            {t("Form Editor")}
+                            {t("Form Creator")}
                         </NavLink>
                         <a href="/#" className={styles.headerMenuItem}>
-                            {t("Create Request")}
+                            {t("Send Request")}
                         </a>
                     </div>
                 </div>
