@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UUID> {
     @Query("SELECT q FROM Questionnaire q inner join q.company c" +
             " where c.id = :companyId and q.archived = :archived and q.isDeleted = false ")
-    List<Questionnaire> findAllByCompanyId(UUID companyId, boolean archived, Pageable pageable);
+    List<Questionnaire> findAllByCompanyId(UUID companyId, @Param("archived") boolean archived, Pageable pageable);
 
     @Modifying
     @Transactional
@@ -24,7 +25,7 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
 
     @Query("SELECT COUNT(q) FROM Questionnaire q inner join q.company c" +
             " where c.id = :companyId and q.archived = :archived and q.isDeleted = false ")
-    Long countAllByCompanyId(UUID companyId, boolean archived);
+    Long countAllByCompanyId(UUID companyId, @Param("archived") boolean archived);
 
     @Query("select case when count(q)> 0 then true else false end " +
             "from Questionnaire q inner join Company c on c.id = q.company.id" +
