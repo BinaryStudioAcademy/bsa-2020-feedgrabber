@@ -138,7 +138,6 @@
     "Respondents": "Респонденти",
     "View Report Info": "Переглянути звіт",
 
-    "Send Request": "Відправити запит",
     "Select deadline date!": "Оберіть кінцевий термін!",
     "Select at least one user or team": "Виберіть принаймні одного користувача чи команду",
     "Assign target user": "Призначити користувача",
@@ -276,6 +275,10 @@
     "Delete questionnaire": "Видалити опитник",
 
     "Edit questionnaire": "Редагувати опитник",
-    "Add questionnaire": "Створити опитник"
+    "Add questionnaire": "Створити опитник",
+
+    "Archive": "Архівувати",
+    "Unarchive": "Розархівувати",
+    "Archived": "Архів"
   }
 }
