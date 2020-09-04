@@ -28,6 +28,7 @@ import InvitationLinkPage from "../InvitationLinkPage";
 import RespondentReport from "../ReportPage/RespondentReport";
 import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
+import ErrorPage from "../ErrorPage";
 
 // just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
@@ -48,6 +49,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <GuestRoute exact path="/auth" component={SignForm}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
+                    <Route exact path="/error" render={ props => <ErrorPage {...props}/>}/>
                     <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
                     <PrivateRoute exact path="/" component={MainPage}/>
                     <PrivateRoute exact path="/profile" component={() => <Profile mode='profile'/>}/>
