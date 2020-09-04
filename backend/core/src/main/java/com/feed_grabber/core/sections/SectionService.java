@@ -1,6 +1,9 @@
 package com.feed_grabber.core.sections;
 
+import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionRepository;
+import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
@@ -9,10 +12,12 @@ import com.feed_grabber.core.sections.dto.SectionDto;
 import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
 import com.feed_grabber.core.sections.dto.SectionUpdateDto;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
+import com.feed_grabber.core.sections.model.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,14 +64,23 @@ public class SectionService {
         return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
     }
 
-    public SectionQuestionsDto deleteQuestion(UUID sectionId, UUID questionId)
-            throws SectionNotFoundException, QuestionNotFoundException
-    {
-        var section = sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
-        questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
-        sectionRepository.deleteQuestion(sectionId, questionId);
+    public List<QuestionDto> getSectionQuestions(UUID sectionId) throws NotFoundException {
+        return parseQuestions(sectionRepository.findById(sectionId));
+    }
 
-        return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
+    private List<QuestionDto> parseQuestions(Optional<Section> section) throws NotFoundException {
+                return section
+                .map(Section::getQuestions)
+                .map(q -> q.stream()
+                        .map(q2 -> QuestionMapper.MAPPER.questionToQuestionDto(q2.getQuestion()))
+                        .collect(Collectors.toList())
+                )
+                .orElseThrow(NotFoundException::new);
+    }
+
+    public List<QuestionDto> deleteQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
+        sectionRepository.deleteQuestion(sectionId, questionId);
+        return parseQuestions(sectionRepository.findById(sectionId));
     }
 
     public SectionDto update(UUID id, SectionUpdateDto dto) throws SectionNotFoundException {

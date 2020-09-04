@@ -73,12 +73,12 @@ function* getByQuestionnaireId(action) {
 }
 
 function* addFromExisting(action) {
-    // payload: {questionnaireId; questions}}
+    // payload: {questionnaireId; questions, sectionId}}
     try {
         yield call(apiClient.patch, `/api/questions`, action.payload);
 
         yield put(addSelectedQuestionsRoutine.success());
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
+        yield put(loadQuestionsBySectionRoutine.trigger(action.payload.sectionId));
     } catch (e) {
         yield put(addSelectedQuestionsRoutine.failure(e.data.error));
         toastr.error("Something went wrong, try again");
@@ -95,9 +95,9 @@ function* updateQuestion(action) {
         if (!questions) {
             return;
         }
-        // const newQuestions = updateQuestions(questions, question);
+        const newQuestions = updateQuestions(questions, question);
 
-        // yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
+        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
         yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());

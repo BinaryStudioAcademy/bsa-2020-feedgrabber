@@ -1,6 +1,11 @@
 package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.question.QuestionService;
+import com.feed_grabber.core.question.dto.QuestionDto;
+import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
@@ -21,10 +26,12 @@ import java.util.UUID;
 public class SectionController {
 
     private final SectionService sectionService;
+    private final QuestionService questionService;
 
     @Autowired
-    public SectionController(SectionService sectionService) {
+    public SectionController(SectionService sectionService, QuestionService questionService) {
         this.sectionService = sectionService;
+        this.questionService = questionService;
     }
 
     @ApiOperation("Create new section")
@@ -58,13 +65,18 @@ public class SectionController {
         return new AppResponse<>(sectionService.addQuestion(sectionId, id));
     }
 
+    @PostMapping("/{id}/question")
+    public AppResponse<List<QuestionDto>> updateQuestion(@PathVariable UUID id, @RequestBody QuestionUpdateDto dto) throws NotFoundException {
+        questionService.update(dto);
+        return new AppResponse<>(sectionService.getSectionQuestions(id));
+    }
+
     @DeleteMapping("/question/{questionId}")
     @ApiOperation(value = "Delete question from section", notes = "Provide both id: section and question")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<SectionQuestionsDto> deleteQuestion(
+    public AppResponse<List<QuestionDto>> deleteQuestion(
             @PathVariable UUID questionId,
-            @RequestParam UUID sectionId)
-            throws SectionNotFoundException, QuestionNotFoundException {
+            @RequestParam UUID sectionId) throws NotFoundException {
         return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId));
     }
 

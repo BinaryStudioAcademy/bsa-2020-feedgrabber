@@ -132,7 +132,7 @@ public class QuestionService {
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
-    public Question updateModel(QuestionUpdateDto dto) throws QuestionNotFoundException, CompanyNotFoundException {
+    private Question updateModel(QuestionUpdateDto dto) throws QuestionNotFoundException, CompanyNotFoundException {
         var question = quesRep
                 .findById(dto.getId())
                 .orElseThrow(QuestionNotFoundException::new);

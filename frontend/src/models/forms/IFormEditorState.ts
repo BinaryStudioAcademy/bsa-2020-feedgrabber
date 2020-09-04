@@ -1,6 +1,6 @@
 import {IQuestionnaire} from "./Questionnaires/types";
-import {ISectionsState} from "../../reducers/section/reducer";
 import {IQuestion} from "./Questions/IQuesion";
+import {ISectionsState} from "../../reducers/formEditor/reducer";
 
 export interface IFormEditorState {
     questionnaire: IQuestionnaire;

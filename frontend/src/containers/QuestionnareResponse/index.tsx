@@ -17,9 +17,9 @@ import {
   loadSectionsByQuestionnaireRoutine,
   loadSavedSectionsByQuestionnaireRoutine
 } from 'sagas/sections/routines';
-import { ISection } from 'models/forms/Sections/types';
 import LoaderWrapper from 'components/LoaderWrapper';
 import { Translation } from 'react-i18next';
+import {ISection} from "../../reducers/formEditor/reducer";
 
 interface IComponentState {
     question: IQuestion;
