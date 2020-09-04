@@ -31,7 +31,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         questionnaire,
         sections,
         loadQuestionnaire,
-        questionnaireQuestions,
         saveQuestion,
         deleteQuestion,
         currentQuestion,
@@ -66,7 +65,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         saveQuestion({
             ...defaultQuestion,
             questionnaireId: match.params.id,
-            questionnaireQuestions,
             sectionId: section.id,
             index: section.questions.length
         });
@@ -84,14 +82,13 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             id: "",
             name: `${question.name} (copy)`,
             questionnaireId: match.params.id,
-            sectionId: currentSection ? currentSection.id : sections[0].id,
-            questionnaireQuestions
+            sectionId: currentSection ? currentSection.id : sections[0].id
         });
     };
 
     return (
         <>
-            <UIPageTitle title="" />
+            <UIPageTitle title=""/>
             {questionnaire && (
                 <div className={styles.formDetails}>
                     <LoaderWrapper loading={isLoading}>
@@ -118,11 +115,10 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
 const mapStateToProps = (rootState: IAppState) => ({
     currentQuestion: rootState.questions.current,
-    questionnaire: rootState.questionnaires.current.get,
-    isLoading: rootState.sections.isLoading,
-    sections: rootState.sections.list,
-    questionnaireQuestions: rootState.questionnaires.current.questions,
-    currentSection: rootState.sections.current
+    questionnaire: rootState.formEditor.questionnaire,
+    isLoading: rootState.formEditor.isLoading,
+    sections: rootState.formEditor.sections.list,
+    currentSection: rootState.formEditor.sections.current
 });
 
 const mapDispatchToProps = {

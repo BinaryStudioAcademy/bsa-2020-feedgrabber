@@ -67,8 +67,8 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     };
 
 const mapState = (state: IAppState) => ({
-    nowModifying: state.questions.current,
-    isModifyingEnabled: state.questionnaires.current.get.isEditingEnabled
+    nowModifying: state.formEditor.currentQuestion,
+    isModifyingEnabled: state.formEditor.questionnaire.isEditingEnabled
 });
 
 const mapDispatch = {

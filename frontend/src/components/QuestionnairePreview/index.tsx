@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { Header} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
-import { ISection } from "models/forms/Sections/types";
 import UISection from "components/UI/UISectionCard";
 import SectionBlock from "components/SectionBlock";
 import { updateSectionsRoutine,
@@ -12,6 +11,7 @@ import { updateSectionsRoutine,
 import { connect } from "react-redux";
 import SectionQuestionList from "./QuestionnaireList";
 import {useTranslation} from "react-i18next";
+import {ISection} from "../../reducers/formEditor/reducer";
 
 interface IIndex  {
   // questionnaireId: string;

@@ -221,12 +221,12 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
 }
 
 const mapStateToProps = (state: IAppState) => ({
-    questions: state.questionnaires.current.questions,
-    title: state.questionnaires.current.get.title,
-    description: state.questionnaires.current.get.description,
+    questions: state.formEditor.sections.list.map(s => s.questions).flat(),
+    title: state.formEditor.questionnaire.title,
+    description: state.formEditor.questionnaire.description,
     response: state.questionnaireResponse.current,
-    sections: state.sections.list,
-    isLoading: state.sections.isLoading
+    sections: state.formEditor.sections.list,
+    isLoading: state.formEditor.isLoading
 });
 
 const mapDispatchToProps = {
