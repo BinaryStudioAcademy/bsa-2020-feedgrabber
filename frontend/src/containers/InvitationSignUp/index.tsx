@@ -142,7 +142,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
     return (
         <>
             <StyledMenu fixed='top'>
-                <Menu.Item as={Link} to='/layout' header style={{padding: '10px 27px 10px 27px'}}>
+                <Menu.Item as={Link} to='/' header style={{padding: '10px 27px 10px 27px'}}>
                     <img
                         style={{borderRadius: 10, paddingRight: 10}}
                         src={require('../../assets/images/icon_bg.jpg')}
@@ -165,14 +165,14 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                                 {t("this link has been expired")}
                                                 <br/>
                                                 <br/>
-                                                <Link to={"/layout"}> {t("Go to main page")} </Link>
+                                                <Link to={"/"}> {t("Go to main page")} </Link>
                                             </>}
                                             {invitationData.accepted && <>
                                                 {t("You have already registered")}<br/>
                                                 {t("using this link")}
                                                 <br/>
                                                 <br/>
-                                                <Link to={"/layout"}> {t("Go to main page")} </Link>
+                                                <Link to={"/"}> {t("Go to main page")} </Link>
                                             </>}
                                         </h1>
                                         {!invitationData.expired && !invitationData.accepted && (
@@ -271,7 +271,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
                                         {t("Unable to load data")}.<br/>{t("Maybe, the link is not relevant")}
                                         <br/>
                                         <br/>
-                                        <Link to={"/layout"}> {t("Go to main page")} </Link>
+                                        <Link to={"/"}> {t("Go to main page")} </Link>
                                     </h1>
                                 )}
                             </LoaderWrapper>

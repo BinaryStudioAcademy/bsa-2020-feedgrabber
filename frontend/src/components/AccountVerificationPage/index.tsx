@@ -31,7 +31,7 @@ const AccountVerificationPage = () => {
       {result === false && <span>{t("Your account already activated or you use a bad link.")}</span>}
       {result === true && <span>{t("Account activated!")}</span>}
       {isLogged
-        ? <Link to="/" className={styles.account_verification_page_link}>{t("Go to main page...")}</Link>
+        ? <Link to="/home" className={styles.account_verification_page_link}>{t("Go to main page...")}</Link>
         : <Link to="/auth" className={styles.account_verification_page_link}>{t("Login...")}</Link>}
     </div>
   );

@@ -19,7 +19,7 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded}) => {
     return (
         <div className={`${styles.menuWrapper} ${expanded ? styles.menuWrapperOpen : styles.menuWrapperClosed}`}>
             <div className={styles.menuContent}>
-                <NavLink exact to="/" className={styles.menuItem} activeClassName={styles.menuItemActive}>
+                <NavLink exact to="/home" className={styles.menuItem} activeClassName={styles.menuItemActive}>
                     <RiHome2Line size="1.3em" color="white" className={styles.menuItemIcon}/>
                     <span className={styles.menuItemTitle}>{t("Home")}</span>
                 </NavLink>
