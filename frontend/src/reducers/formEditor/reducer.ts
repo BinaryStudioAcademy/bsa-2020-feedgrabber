@@ -16,11 +16,7 @@ import {
     loadQuestionsRoutine,
     saveQuestionRoutine
 } from "sagas/questions/routines";
-import {
-    loadOneQuestionnaireRoutine,
-    saveAndGetQuestionnaireRoutine,
-    setCurrentIdRoutine
-} from "../../sagas/qustionnaires/routines";
+import {loadOneQuestionnaireRoutine, saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 
 const init = {
     questionnaire: {} as IQuestionnaire,
@@ -80,13 +76,14 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 sections: state.sections.list.map(s => s.id === payload.id ? {...s, questions: payload.questions} : s),
                 isLoading: false
             };
-        case setCurrentIdRoutine.TRIGGER:
-            return {
-                ...state,
-                questionnaire: {...state.questionnaire, id: payload}
-            };
         case loadOneQuestionnaireRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
+        case loadQuestionsRoutine.TRIGGER:
+        case loadQuestionByIdRoutine.TRIGGER:
+        case saveQuestionRoutine.TRIGGER:
+        case loadSectionsByQuestionnaireRoutine.TRIGGER:
+        case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
+        case loadQuestionsBySectionRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
@@ -97,12 +94,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case loadSavedSectionsByQuestionnaireRoutine.FAILURE:
         case loadQuestionsBySectionRoutine.FAILURE:
         case loadOneQuestionnaireRoutine.FAILURE:
-        case loadQuestionsRoutine.TRIGGER:
-        case loadQuestionByIdRoutine.TRIGGER:
-        case saveQuestionRoutine.TRIGGER:
-        case loadSectionsByQuestionnaireRoutine.TRIGGER:
-        case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
-        case loadQuestionsBySectionRoutine.TRIGGER:
         case loadQuestionByIdRoutine.FAILURE:
         case loadQuestionsRoutine.FAILURE:
         case saveQuestionRoutine.FAILURE:
