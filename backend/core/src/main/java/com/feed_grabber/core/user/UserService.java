@@ -131,6 +131,7 @@ public class UserService implements UserDetailsService {
                 .email(userRegisterDTO.getEmail())
                 .username(userRegisterDTO.getUsername())
                 .password(userRegisterDTO.getPassword())
+                .isEnabled(false)
                 .role(roles.get(0))
                 .company(company)
                 .build()
@@ -164,6 +165,7 @@ public class UserService implements UserDetailsService {
                 .email(email)
                 .username(registerDto.getUsername())
                 .password(registerDto.getPassword())
+                .isEnabled(true)
                 .role(role)
                 .company(company)
                 .build()
@@ -238,7 +240,7 @@ public class UserService implements UserDetailsService {
                         new org.springframework.security.core.userdetails.User(
                                 u.getUsername(),
                                 u.getPassword(),
-                                true,  // u.getIsEnabled(), //TODO replace true to enable email authorization
+                                u.getIsEnabled(),
                                 true,
                                 true,
                                 true,

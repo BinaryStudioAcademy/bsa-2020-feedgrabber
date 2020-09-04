@@ -1,5 +1,6 @@
 export interface IUserState {
     isLoading?: boolean;
+    isRegisteredSuccess?: boolean;
     info?: IUserInfo;
     error?: IUserErrors;
     shortInfo?: IUserShort;
