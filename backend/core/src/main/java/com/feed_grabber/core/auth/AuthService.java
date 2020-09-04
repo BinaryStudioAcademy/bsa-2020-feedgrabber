@@ -10,6 +10,7 @@ import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,8 @@ public class AuthService {
 
         } catch (BadCredentialsException e) {
             throw new WrongCredentialsException("Incorrect password");
+        } catch (DisabledException e) {
+            throw new WrongCredentialsException("Activate your account");
         }
 
         var user = userRepository

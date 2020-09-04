@@ -1,9 +1,11 @@
 import React, {FC, useState} from 'react';
 import {
-    addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
-    hideModalQuestionnaireRoutine, loadArchivedQuestionnairesRoutine,
-    loadQuestionnairesRoutine, setQuestionnaireArchivePaginationRoutine,
+    hideModalQuestionnaireRoutine,
+    loadQuestionnairesRoutine,
+    saveAndGetQuestionnaireRoutine,
+    loadArchivedQuestionnairesRoutine,
+    setQuestionnaireArchivePaginationRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine
@@ -239,7 +241,7 @@ const mapDispatchToProps = {
     loadQuestionnaires: loadQuestionnairesRoutine,
     loadArchivedQuestionnaires: loadArchivedQuestionnairesRoutine,
     deleteQuestionnaire: deleteQuestionnaireRoutine,
-    addQuestionnaire: addQuestionnaireRoutine,
+    addQuestionnaire: saveAndGetQuestionnaireRoutine,
     updateQuestionnaire: updateQuestionnaireRoutine,
     showModal: showModalQuestionnaireRoutine,
     hideModal: hideModalQuestionnaireRoutine,

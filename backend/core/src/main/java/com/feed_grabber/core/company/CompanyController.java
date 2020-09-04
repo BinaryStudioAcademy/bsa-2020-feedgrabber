@@ -27,7 +27,7 @@ public class CompanyController {
         this.companyService = userService;
     }
 
-    @ApiOperation(value = "Get details for one company", notes = "id of the company is got from the token")
+    @ApiOperation(value = "Get user`s company details", notes = "id of the company is got from the token")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<CompanyDto> getCompanyDetails() {
@@ -35,7 +35,7 @@ public class CompanyController {
         return new AppResponse<>(companyService.getById(id).orElseThrow());
     }
 
-    @ApiOperation(value = "Get details for one company by email", notes = "Provide an email")
+    @ApiOperation(value = "Get list of companies, where user is registered by email", notes = "Provide an email")
     @GetMapping("/user-companies")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<List<CompanyDomainDto>> getCompaniesByEmail(
@@ -51,4 +51,11 @@ public class CompanyController {
         var id = TokenService.getCompanyId();
         return new AppResponse<>(companyService.getCompanyDomain(id));
     }
+
+    @GetMapping("/by-subdomain")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<CompanyDomainDto> getCompanyByDomain(@RequestParam String subdomain) throws CompanyNotFoundException {
+        return new AppResponse<>(companyService.getCompanyDomain(subdomain));
+    }
+
 }

@@ -1,5 +1,4 @@
-html, body
-  height: 100%
+$type-dropdown-color: #5E6991
 
 .question_container
     display: flex
@@ -11,7 +10,6 @@ html, body
 .question_form
     //border: 5px solid hsla(0,0%,80%,.58)
     border-radius: 10px
-    padding: 20px
     height: fit-content
     width: 50vw
     //backdrop-filter: blur(10px)
@@ -38,18 +36,18 @@ html, body
     position: relative
 
 .question_details_dropdown > *
-    border: 1.5px solid #00F !important
-    color: #00F !important
+    border: 1.5px solid $type-dropdown-color !important
+    color: $type-dropdown-color !important
 
 .question_input
     display: inline-block
     width: 60%
 
 .option
-    color: #00F
+    color: $type-dropdown-color
 
 .actions
-    color: #00F
+    color: $type-dropdown-color
     display: flex
     justify-content: flex-end
     align-items: center

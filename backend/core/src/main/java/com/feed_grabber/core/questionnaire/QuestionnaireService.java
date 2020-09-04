@@ -46,14 +46,14 @@ public class QuestionnaireService {
 //    }
 
     public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size, boolean archived) {
-        return questionnaireRepository.findAllByCompanyIdAndArchived(companyId, archived, PageRequest.of(page, size))
+        return questionnaireRepository.findAllByCompanyId(companyId, archived, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
     public Long getCountByCompanyId(UUID companyId, boolean archived) {
-        return questionnaireRepository.countAllByCompanyIdAndArchived(companyId, archived);
+        return questionnaireRepository.countAllByCompanyId(companyId, archived);
     }
 
     public Optional<QuestionnaireDto> getOne(UUID id) {
@@ -102,6 +102,6 @@ public class QuestionnaireService {
     }
 
     public void delete(UUID id) {
-        questionnaireRepository.deleteById(id);
+        questionnaireRepository.softDeleteById(id);
     }
 }

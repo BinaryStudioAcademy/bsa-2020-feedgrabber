@@ -32,7 +32,7 @@ function* loadCurrentTeam(action: any) {
   } catch (error) {
     yield put(loadCurrentTeamRoutine.failure());
     toastr.error("Unable to load team");
-    history.push("/teams");
+    history.push("/people/teams");
   }
 }
 
@@ -42,7 +42,7 @@ function* createTeam(action: any) {
     const data = response.data.data;
     yield put(createTeamRoutine.success(data));
     yield put(loadTeamsRoutine.trigger());
-    history.replace(`/teams/${data.id}`);
+    history.replace(`/people/teams/${data.id}`);
     toastr.success("Team added");
   } catch (errorResponse) {
     yield put(createTeamRoutine.failure(errorResponse.data?.error || "No response"));
