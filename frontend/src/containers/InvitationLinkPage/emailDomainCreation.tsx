@@ -10,6 +10,7 @@ import styles from './styles.module.sass';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { IAppState } from 'models/IAppState';
+import {env} from "../../env";
 
 interface IDomainCreationBlockProps {
     company?: ICompanyDomain;
@@ -96,12 +97,23 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
         </UICardBlock>
     );
 
+    const getLink = () => {
+        const {hostname} = window.location;
+        if (hostname.split(".").pop() === 'localhost') {
+            const fullNewHostName = env.basePort
+            ? hostname + ':' + env.basePort
+            : hostname;
+            return fullNewHostName;
+        }
+        return hostname;
+    };
+
     const componentWithDomain = (
         <UICardBlock>
             <span className={styles.info}>Now you can tell employees that they can sign up on <br/>
-            <a href={`${company?.subdomainName}.feedgraber.online`}> 
-            {company?.subdomainName}.feedgraber.online </a><br/>
-            using there corporate email: <code>@{company?.emailDomain}</code></span>
+            <a href={getLink()}> 
+            {getLink()} </a><br/>
+            using there corporate email: <code>@{company?.emailDomain}</code></span>s
             <br/>
             <UIButton title="Delete" onClick={() => setShowConfirmationModal(true)}/>
         </UICardBlock>
