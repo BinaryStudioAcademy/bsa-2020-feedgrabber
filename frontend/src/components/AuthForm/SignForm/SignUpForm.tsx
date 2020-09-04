@@ -43,7 +43,7 @@ const schema = yup.object().shape({
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error} = props;
+    const {signUp, className, error, success} = props;
     const [ t ] = useTranslation();
 
     return (
@@ -98,6 +98,11 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                         {
                             errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
                         }
+                        {
+                            success && <Message attached="top"
+                                                positive
+                                                content={"Account created!\n Check your email"}/>
+                        }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
                                 type="submit"
@@ -111,7 +116,8 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error?.register
+    error: state.user.error?.register,
+    success: state.user.isRegisteredSuccess
 });
 
 const mapDispatch = {

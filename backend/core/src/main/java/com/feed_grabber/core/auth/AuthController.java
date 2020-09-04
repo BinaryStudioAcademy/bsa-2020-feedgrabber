@@ -35,10 +35,19 @@ public class AuthController {
     @ApiOperation(value = "Register new user", notes = "Provide an email, username, companyName and password to register")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) throws WrongCompanyNameException, CompanyAlreadyExistsException {
+    public AppResponse<RegisterUserResponseDto> register(@RequestBody UserRegisterDTO dto)
+            throws WrongCompanyNameException, CompanyAlreadyExistsException {
+        registerService.registerUser(dto);
+        return new AppResponse<>(new RegisterUserResponseDto(true));
+    }
+
+    @ApiOperation(value = "Register new user by invitation", notes = "Provide an email, username, invitationId and password to register")
+    @PostMapping("/invitation")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException, InvitationExpiredException {
         var pass = dto.getPassword();
-        var companyId = registerService.registerUser(dto);
-        
+        var companyId = registerService.registerUserByInvitation(dto);
+
         var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
         return login(loginDto);
     }
@@ -51,17 +60,6 @@ public class AuthController {
             throws CompanyNotFoundException, WrongCorporateEmailException {
         var pass = dto.getPassword();
         var companyId = registerService.registerUserByEmail(dto);
-
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
-        return login(loginDto);
-    }
-
-    @ApiOperation(value = "Register new user by invitation", notes = "Provide an email, username, invitationId and password to register")
-    @PostMapping("/invitation")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserResponseDTO> registerByInvitation(@RequestBody UserRegisterInvitationDTO dto) throws InvitationNotFoundException, InvitationExpiredException {
-        var pass = dto.getPassword();
-        var companyId = registerService.registerUserByInvitation(dto);
 
         var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
         return login(loginDto);

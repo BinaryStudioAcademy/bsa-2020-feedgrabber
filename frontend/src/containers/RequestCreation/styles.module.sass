@@ -1,3 +1,5 @@
+$selected-option-color: #5E6991
+
 .yesNoHeader
   span
     margin-left: 20px
@@ -11,14 +13,9 @@
   border-bottom: 2px solid rgb(169, 169, 169)
   transition: border-bottom 0.2s, color 0.2s
 
-  &:hover
-    color: #1A0EDA
-    border-bottom: 2px solid #1A0EDA
-
-
 .selected
-  color: #1A0EDA
-  border-bottom: 2px solid #1A0EDA
+  color: $selected-option-color
+  border-bottom: 2px solid $selected-option-color
 
 .selectHeader
   height: 60px

@@ -1,10 +1,11 @@
 import React, {FC} from 'react';
-import {Button, Form, Modal, ModalContent, ModalHeader} from "semantic-ui-react";
+import {Form, Modal, ModalContent, ModalHeader} from "semantic-ui-react";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import styles from './styles.module.sass';
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {useTranslation} from "react-i18next";
+import UIButton from "../../components/UI/UIButton";
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;
@@ -45,6 +46,7 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
       : addQuestionnaire({
         title: values.title
       });
+    hideModal();
   };
 
   const [t] = useTranslation();
@@ -81,13 +83,8 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
                   value={values.title}
                 />
               </Form.Field>
-              <Button type="submit" color="teal" size="large" primary
-                      loading={isLoading} disabled={isLoading}>
-                {t("Save")}
-              </Button>
-              <Button type="button" size="large" onClick={hideModal}>
-                {t("Cancel")}
-              </Button>
+              <UIButton submit loading={isLoading} disabled={isLoading} title={t("Save")}/>
+              <UIButton secondary onClick={hideModal} title={t("Cancel")}/>
             </Form>
           )}
         </Formik>
