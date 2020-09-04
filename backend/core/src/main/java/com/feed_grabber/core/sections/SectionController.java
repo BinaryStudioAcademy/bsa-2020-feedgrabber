@@ -28,7 +28,6 @@ public class SectionController {
     private final SectionService sectionService;
     private final QuestionService questionService;
 
-    @Autowired
     public SectionController(SectionService sectionService, QuestionService questionService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
@@ -60,8 +59,7 @@ public class SectionController {
     @ApiOperation(value = "Add new question to the section", notes = "Provide both id: section and question")
     @PutMapping("/question/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<SectionQuestionsDto> addQuestion(@PathVariable UUID id, @RequestParam UUID sectionId)
-            throws SectionNotFoundException, QuestionNotFoundException {
+    public AppResponse<List<QuestionDto>> addQuestion(@PathVariable UUID id, @RequestParam UUID sectionId) throws NotFoundException {
         return new AppResponse<>(sectionService.addQuestion(sectionId, id));
     }
 

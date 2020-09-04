@@ -53,15 +53,12 @@ public class SectionService {
                         SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId())))
                 .collect(Collectors.toList());
     }
-
-    public SectionQuestionsDto addQuestion(UUID sectionId, UUID questionId) throws SectionNotFoundException, QuestionNotFoundException {
+    public List<QuestionDto> addQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
         var section = sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
 
-        questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
+        sectionRepository.addQuestion(sectionId, questionId, section.getQuestions().size());
 
-        sectionRepository.addQuestion(sectionId, questionId, Integer.MAX_VALUE);
-
-        return SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId()));
+        return parseQuestions(Optional.of(section));
     }
 
     public List<QuestionDto> getSectionQuestions(UUID sectionId) throws NotFoundException {
@@ -69,7 +66,7 @@ public class SectionService {
     }
 
     private List<QuestionDto> parseQuestions(Optional<Section> section) throws NotFoundException {
-                return section
+        return section
                 .map(Section::getQuestions)
                 .map(q -> q.stream()
                         .map(q2 -> QuestionMapper.MAPPER.questionToQuestionDto(q2.getQuestion()))

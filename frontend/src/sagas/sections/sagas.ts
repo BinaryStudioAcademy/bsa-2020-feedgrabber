@@ -1,20 +1,19 @@
 import apiClient from "../../helpers/apiClient";
-import {call, takeEvery, all, put} from 'redux-saga/effects';
+import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
-    createSectionRoutine,
-    loadSectionsByQuestionnaireRoutine,
     addQuestionToSectionRoutine,
+    createSectionRoutine,
     deleteQuestionFromSectionRoutine,
-    updateSectionRoutine,
+    loadSavedSectionsByQuestionnaireRoutine,
+    loadSectionsByQuestionnaireRoutine,
     updateQuestionsOrderRoutine,
-    loadSavedSectionsByQuestionnaireRoutine
+    updateSectionRoutine
 } from "./routines";
 
 import {parseQuestion} from "sagas/questions/sagas";
 import {IGeneric} from "../../models/IGeneric";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
-import { setCurrentIdRoutine } from "sagas/qustionnaires/routines";
 import {ISection} from "../../reducers/formEditor/reducer";
 
 function parseSectionWithQuestion(section) {
@@ -25,26 +24,21 @@ function parseSectionWithQuestion(section) {
     };
 }
 
-export function updatedSections(sections, newSection) {
-    return sections.map(section => section.id === newSection ? parseSectionWithQuestion(newSection) : section);
-}
-
 function* createSection(action) {
     try {
         const result = yield call(apiClient.post, `/api/section`, action.payload);
         yield put(createSectionRoutine.success(result.data.data));
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (error) {
+        toastr.error("Can't create section");
         yield put(createSectionRoutine.failure());
     }
 }
 
-function* loadAllSectionsAndQuestionsByQuestionnaire(action) {
+function* loadSections(action) {
     try {
         const result = yield call(apiClient.get, `/api/section/questionnaire/${action.payload}`);
         const sections = result.data.data.map(section => parseSectionWithQuestion(section));
         yield put(loadSectionsByQuestionnaireRoutine.success(sections));
-      yield put(setCurrentIdRoutine(action.payload));
     } catch (error) {
         yield put(loadSectionsByQuestionnaireRoutine.failure());
         toastr.error("Couldn`t load sections");
@@ -53,12 +47,9 @@ function* loadAllSectionsAndQuestionsByQuestionnaire(action) {
 
 function* addQuestionToSection(action) {
     try {
-        const {sectionId, questionId, questionnaireId} = action.payload;
+        const {sectionId, questionId} = action.payload;
         const result = yield call(apiClient.put, `/api/section/question/${questionId}?sectionId=${sectionId}`);
-        yield put(addQuestionToSectionRoutine.success(result.data.data));
-        if (questionnaireId) {
-            yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
-        }
+        yield put(addQuestionToSectionRoutine.success({sectionId, questionId, questions: result.data.data}));
     } catch (error) {
         yield put(addQuestionToSectionRoutine.failure());
     }
@@ -66,11 +57,9 @@ function* addQuestionToSection(action) {
 
 function* deleteQuestionFromSection(action) {
     try {
-        const  {sectionId, questionId } = action.payload;
-        const result = yield call(
-          apiClient.delete,
-          `/api/section/question/${questionId}?sectionId=${sectionId}`);
-        yield put(deleteQuestionFromSectionRoutine.success(result.data.data));
+        const {sectionId, questionId} = action.payload;
+        const result = yield call( apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
+        yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: result.data.data}));
     } catch (error) {
         yield put(deleteQuestionFromSectionRoutine.failure());
     }
@@ -103,8 +92,9 @@ function* loadSaved(action) {
         const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
 
         sections.forEach(s => s.questions.filter(q => {
-            if (answers.find(a => a.questionId === q.id)) {
-                q['answer'] = answers.find(a => a.questionId === q.id).body;
+            const answer = answers.find(a => a.questionId === q.id);
+            if (answer) {
+                q.answer = answer.body;
                 return q;
             } else {
                 return false;
@@ -122,7 +112,7 @@ function* loadSaved(action) {
 export default function* sectionSagas() {
     yield all([
         yield takeEvery(createSectionRoutine.TRIGGER, createSection),
-        yield takeEvery(loadSectionsByQuestionnaireRoutine.TRIGGER, loadAllSectionsAndQuestionsByQuestionnaire),
+        yield takeEvery(loadSectionsByQuestionnaireRoutine.TRIGGER, loadSections),
         yield takeEvery(addQuestionToSectionRoutine.TRIGGER, addQuestionToSection),
         yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
