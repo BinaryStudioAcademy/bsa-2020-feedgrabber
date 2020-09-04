@@ -18,7 +18,7 @@ import styles from './styles.module.sass';
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
 import SwitchRoleModal, {IRoleSwitchDto} from "../../components/SwitchRoleModal";
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {ISearchResult} from "../../models/search/Search";
 import UIButton from "../../components/UI/UIButton";
 
@@ -131,19 +131,16 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 
     return (
         <>
-            <UIPageTitle title={t("Users")}/>
-            <UIContent>
-                <UIColumn>
-                    {search()}
-                    <GenericPagination
-                        isLoading={isLoading}
-                        pagination={pagination}
-                        setPagination={setPagination}
-                        loadItems={loadItems}
-                        mapItemToJSX={mapItemToJSX}
-                    />
-                </UIColumn>
-            </UIContent>
+            <UIColumn>
+                {search()}
+                <GenericPagination
+                    isLoading={isLoading}
+                    pagination={pagination}
+                    setPagination={setPagination}
+                    loadItems={loadItems}
+                    mapItemToJSX={mapItemToJSX}
+                />
+            </UIColumn>
             {roleState.selectedUser &&
             <SwitchRoleModal
                 changeRole={changeUserRole}

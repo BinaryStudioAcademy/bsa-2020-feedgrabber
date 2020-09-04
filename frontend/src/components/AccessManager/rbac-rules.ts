@@ -26,14 +26,15 @@ const employee: IRole = {
         "/",
         "/profile",
         "/profile/settings",
+        "/profile/security",
         "/requests",
         "/help",
         "/editor",
         "/assign",
         "/pending",
         "/company",
-        "/teams",
-        "/teams/:id",
+        "/people/teams",
+        "/people/teams/:id",
         "/report/:id",
         "/report/:id/:respondent/:username",
         "/response/:id"
@@ -68,7 +69,7 @@ const hr: IRole = {
 const companyOwner: IRole = {
     endpoints: [
         ...hr.endpoints,
-        "/employees",
+        "/people/employees",
         "/invitations",
         "companyOwnerEndpointAccess"
     ],
