@@ -15,7 +15,7 @@ import {parseQuestion} from "sagas/questions/sagas";
 import {IGeneric} from "../../models/IGeneric";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 import { setCurrentIdRoutine } from "sagas/qustionnaires/routines";
-import {ISection} from "../../reducers/section/reducer";
+import {ISection} from "../../reducers/formEditor/reducer";
 
 function parseSectionWithQuestion(section) {
     const questions = section.questions.map(q => parseQuestion(q));

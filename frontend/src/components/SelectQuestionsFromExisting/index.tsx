@@ -87,11 +87,11 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestions: state.questionnaires.current.questions,
+    currentQuestions: state.formEditor.sections.list.flatMap(s => s.questions),
     isLoading: state.questions.isLoading,
-    qnId: state.questionnaires.current.get.id,
+    qnId: state.formEditor.questionnaire.id,
     questions: state.questions.list,
-    currentSection: state.sections.current
+    currentSection: state.formEditor.sections.current
 });
 
 const mapDispatch = {

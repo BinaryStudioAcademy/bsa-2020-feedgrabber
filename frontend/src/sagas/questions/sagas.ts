@@ -90,18 +90,9 @@ function* updateQuestion(action) {
         const res = yield call(apiClient.put, `/api/questions`, action.payload);
 
         yield put(updateQuestionRoutine.success(parseQuestion(res.data.data)));
-        const questions = action.payload?.questionnaireQuestions;
-
-        if (!questions) {
-            return;
-        }
-        const newQuestions = updateQuestions(questions, question);
-
-        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (e) {
-        yield put(saveQuestionRoutine.failure());
-        toastr.error("Question wasn't saved");
+        yield put(updateQuestionRoutine.failure());
+        toastr.error("Question wasn't updated");
     }
 }
 

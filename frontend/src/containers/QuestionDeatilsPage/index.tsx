@@ -3,7 +3,7 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {loadQuestionByIdRoutine, saveQuestionRoutine} from "../../sagas/questions/routines";
+import {loadQuestionByIdRoutine, saveQuestionRoutine, updateQuestionRoutine} from "../../sagas/questions/routines";
 import QuestionDetails from "../../components/QuestionDetails";
 import {Loader} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
@@ -16,9 +16,10 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadQuestion,
         isLoading,
         saveQuestion,
+        updateQuestion,
         loadCategories,
         questionnaireId,
-        questionnaireQuestions,
+        sectionId,
         categories,
         match,
         isPreview
@@ -35,16 +36,16 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         setQuestion(value);
     };
 
-    const onSubmit = questionToSave => {
+    const onSubmit = question => {
         if (isQuestionDetailsValid) {
             match.params.id !== "new" ?
                 saveQuestion({
-                    ...questionToSave,
+                    ...question,
                     questionnaireId,
-                    questionnaireQuestions
+                    sectionId
                 }) :
-                saveQuestion({
-                    ...questionToSave
+                updateQuestion({
+                    ...question
                 });
         }
     };
@@ -94,14 +95,15 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 
 const mapState = (state: IAppState) => ({
     currentQuestion: state.questions.current,
-    isLoading: state.questions.categories.isLoading,
-    categories: state.questions.categories.list,
-    questionnaireId: state.sections.questionnaireId,
-    questionnaireQuestions: state.questionnaires.current.questions
+    isLoading: state.categories.isLoading,
+    categories: state.categories.list,
+    questionnaireId: state.formEditor.questionnaire.id,
+    sectionId: state.formEditor.sections.current.id
 });
 
 const mapDispatch = {
     saveQuestion: saveQuestionRoutine,
+    updateQuestion: updateQuestionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
     loadCategories: loadCategoriesRoutine
 };
