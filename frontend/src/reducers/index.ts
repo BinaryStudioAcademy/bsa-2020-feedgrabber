@@ -15,28 +15,30 @@ import companyReducer from "./companies/reducer";
 import companyFeedReducer from "./companyFeed/reducer";
 import notificationReducer from "./notifications";
 import responseReducer from "./questionnaireResponse/reducer";
-import sectionsReducer from './section/reducer';
 import newsReducer from './news/reducer';
 import searchReducer from "./search/reducer";
+import categoriesReducer from "./categories/reducer";
+import formEditorReducer from "./formEditor/reducer";
 
 export default combineReducers({
-  toastr,
-  users: usersReducer,
-  user: authAndProfileReducer,
-  invitation: invitationReducer,
-  invitationSignUp: invitationSignUpReducer,
-  questionnaires: questionnairesReducer,
-  questionnaireReports: questionnaireReportReducer,
-  questions: questionsReducer,
-  sections: sectionsReducer,
-  questionnaireResponse: responseReducer,
-  teams: teamsReducer,
-  expandedQuestionnaire: expandedQuestionnaireReducer,
-  app:appReducer,
-  company: companyReducer,
-  companyFeed: companyFeedReducer,
-  notifications: notificationReducer,
-  role: roleReducer,
-  news: newsReducer,
-  search: searchReducer
+    toastr,
+    users: usersReducer,
+    user: authAndProfileReducer,
+    invitation: invitationReducer,
+    categories: categoriesReducer,
+    invitationSignUp: invitationSignUpReducer,
+    questionnaires: questionnairesReducer,
+    questionnaireReports: questionnaireReportReducer,
+    questions: questionsReducer,
+    questionnaireResponse: responseReducer,
+    formEditor: formEditorReducer,
+    teams: teamsReducer,
+    expandedQuestionnaire: expandedQuestionnaireReducer,
+    app: appReducer,
+    company: companyReducer,
+    companyFeed: companyFeedReducer,
+    notifications: notificationReducer,
+    role: roleReducer,
+    news: newsReducer,
+    search: searchReducer
 });

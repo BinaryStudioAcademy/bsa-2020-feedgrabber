@@ -97,9 +97,9 @@ function* updateQuestion(action) {
         if (!questions) {
             return;
         }
-        const newQuestions = updateQuestions(questions, question);
+        // const newQuestions = updateQuestions(questions, question);
 
-        yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
+        // yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
         yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());

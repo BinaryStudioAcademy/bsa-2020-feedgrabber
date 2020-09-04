@@ -5,21 +5,16 @@ import {
 } from "sagas/questions/routines";
 import { IAppState } from "models/IAppState";
 import { IQuestion } from "../../models/forms/Questions/IQuesion";
-import { ICategoriesState } from "models/categories/ICategorie";
 import { loadCategoriesRoutine } from "sagas/categories/routines";
 
 export interface IQuestionsState {
     list?: IQuestion[];
     current?: IQuestion;
-    categories?: ICategoriesState;
     isLoading?: boolean;
 }
 
 const initialState: IAppState['questions'] = {
     list: [] as IQuestion[],
-    categories: {
-        list: [] as string[]
-    } as ICategoriesState,
     current: {} as IQuestion,
     isLoading: false
 };
@@ -31,30 +26,6 @@ const questionsReducer = (state: IQuestionsState = initialState, { type, payload
                 ...state,
                 list: payload,
                 isLoading: false
-            };
-        case loadCategoriesRoutine.SUCCESS:
-            return {
-                ...state,
-                categories: {
-                    list: payload,
-                    isLoading: false
-                }
-            };
-        case loadCategoriesRoutine.TRIGGER:
-            return {
-                ...state,
-                categories: {
-                    list: state.categories.list,
-                    isLoading: true
-                }
-            };
-        case loadCategoriesRoutine.FAILURE:
-            return {
-                ...state,
-                categories: {
-                    list: [],
-                    isLoading: false
-                }
             };
         case deleteFromQuestionnaireRoutine.TRIGGER:
             if (state.current.id === payload) return {...state, current: {}};

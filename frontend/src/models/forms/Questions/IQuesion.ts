@@ -49,6 +49,7 @@ export interface IQuestionBase<TDetails> {
     answer: IAnswerBody;
     isReused: boolean;
     top?: number;
+    sectionId?: string;
     right?: number;
     isRequired: boolean;
 }

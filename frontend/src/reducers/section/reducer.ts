@@ -8,7 +8,7 @@ import {
     deleteQuestionFromSectionRoutine, loadSavedSectionsByQuestionnaireRoutine
 } from "sagas/sections/routines";
 import { loadQuestionsBySectionRoutine } from "sagas/questions/routines";
-import { ISection } from "models/forms/Sections/types";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 export interface ISectionsState {
     questionnaireId?: string;
@@ -23,7 +23,14 @@ const initialValues = {
     isLoading: false
 };
 
-const sectionsReducer = (state: IAppState["sections"] = initialValues, {type, payload}) => {
+export interface ISection {
+    id?: string;
+    title: string;
+    description?: string;
+    questions?: IQuestion[];
+}
+
+const sectionsReducer = (state: IAppState["formEditor"]["sections"] = initialValues, {type, payload}) => {
     switch(type) {
         case setCurrentSectionRoutine.TRIGGER:
         case createSectionRoutine.SUCCESS:

@@ -12,9 +12,10 @@ import {IQuestionnaireReportsState} from "../reducers/questionnaireReport/reduce
 import {INotificationsState} from "../reducers/notifications";
 import {IQuestionnaireResponseState} from "./forms/Response/types";
 import {IRoleState} from "../reducers/role/reducer";
-import {ISectionsState} from "../reducers/section/reducer";
 import { INewsFeedState } from "./news";
 import {ISearchResultState} from "./search/Search";
+import {IFormEditorState} from "./forms/IFormEditorState";
+import {ICategoriesState} from "../reducers/categories/reducer";
 
 export interface IAppState {
     toastr: any;
@@ -24,10 +25,11 @@ export interface IAppState {
     users: IUsersState;
     role: IRoleState;
     questionnaires: IQuestionnairesState;
+    formEditor: IFormEditorState;
     questionnaireReports: IQuestionnaireReportsState;
     questionnaireResponse: IQuestionnaireResponseState;
     questions: IQuestionsState;
-    sections: ISectionsState;
+    categories: ICategoriesState;
     app: IAdditionalState;
     teams: ITeamsState;
     company: ICompanyState;
