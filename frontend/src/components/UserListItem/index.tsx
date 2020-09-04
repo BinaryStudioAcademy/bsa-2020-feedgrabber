@@ -1,7 +1,7 @@
 import React, {FC, useState} from "react";
 
 import styles from './styles.module.sass';
-import {Button, Icon, Image, Modal} from "semantic-ui-react";
+import {Icon, Image, Modal} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
 import {IUserInfo} from "../../models/user/types";
 import {ISearchResult} from "../../models/search/Search";
@@ -30,7 +30,7 @@ const UserListItem: FC<IUserListItemProps> = (
         result
     }
 ) => {
-    const {id, firstName, lastName, role, avatar, userName, phoneNumber} = user;
+    const {id, firstName, lastName, role, avatar, userName} = user;
 
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 

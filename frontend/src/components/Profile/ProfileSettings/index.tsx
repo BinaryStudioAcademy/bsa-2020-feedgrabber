@@ -61,7 +61,7 @@ const ProfileSettings: FunctionComponent<IProfileSetting> = (
               />
               <br/>
               <Header as='h4'>
-                <Icon name='bell'/>
+                <Icon name='bell outline'/>
                 <Header.Content>{t("Notifications")}</Header.Content>
               </Header>
               <br/>

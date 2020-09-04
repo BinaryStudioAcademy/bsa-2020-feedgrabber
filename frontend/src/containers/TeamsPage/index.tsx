@@ -2,12 +2,11 @@ import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {IAppState} from "../../models/IAppState";
 import {
-    clearCurrentTeamRoutine,
-    deleteTeamRoutine,
-    loadCompanyUsersRoutine,
-    loadTeamsRoutine
+  clearCurrentTeamRoutine,
+  deleteTeamRoutine,
+  loadCompanyUsersRoutine,
+  loadTeamsRoutine
 } from "../../sagas/teams/routines";
-import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
@@ -22,28 +21,28 @@ import { useTranslation } from 'react-i18next';
 import styles from './styles.module.sass';
 
 const TeamsPage: FC<ITeamsPageProps> = (
-    {
-        teams,
-        loadTeams,
-        loadUsers,
-        deleteTeam,
-        clearCurrentTeam,
-        isLoading,
-        result
-    }
+  {
+    teams,
+    loadTeams,
+    loadUsers,
+    deleteTeam,
+    clearCurrentTeam,
+    isLoading,
+    result
+  }
 ) => {
-    useEffect(() => {
-        if (!teams && !isLoading) {
-            loadTeams();
-        }
-    }, [teams, isLoading, loadTeams, loadUsers]);
+  useEffect(() => {
+    if (!teams && !isLoading) {
+      loadTeams();
+    }
+  }, [teams, isLoading, loadTeams, loadUsers]);
 
-    const handleRedirect = (id: string): void => {
-        clearCurrentTeam();
-        history.push(`/people/teams/${id}`);
-    };
+  const handleRedirect = (id: string): void => {
+    clearCurrentTeam();
+    history.push(`/teams/${id}`);
+  };
 
-    const [t] = useTranslation();
+  const [t] = useTranslation();
 
     return (
         <>
@@ -60,7 +59,9 @@ const TeamsPage: FC<ITeamsPageProps> = (
                         </AccessManager>
                     </UIColumn>
 
-                    {(teams || []).map(team => {
+                  {teams &&
+                  (teams.length > 0
+                    ? teams.map(team => {
                         const match = result
                             .teams
                             .map(t => t.id)
@@ -88,28 +89,27 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                     </UICardBlock>
                                 </AccessManager>
                             </UICard>
-                        </UIColumn>;
-                    })}
+                        </UIColumn>;})
+                      : <div className={styles.noItemsLabel}>{t("No items")}</div>
+                  )}
                 </LoaderWrapper>
             </UIContent>
         </>
     );
 };
 
-const mapState = (state: IAppState) => {
-    return {
-        teams: state.teams.teams,
-        companyUsers: state.teams.companyUsers,
-        isLoading: state.teams.isLoading,
-        result: state.search.result
-    };
-};
+const mapState = (state: IAppState) => ({
+  teams: state.teams.teams,
+  companyUsers: state.teams.companyUsers,
+  isLoading: state.teams.isLoading,
+  result: state.search.result
+});
 
 const mapDispatch = {
-    loadTeams: loadTeamsRoutine,
-    loadUsers: loadCompanyUsersRoutine,
-    deleteTeam: deleteTeamRoutine,
-    clearCurrentTeam: clearCurrentTeamRoutine
+  loadTeams: loadTeamsRoutine,
+  loadUsers: loadCompanyUsersRoutine,
+  deleteTeam: deleteTeamRoutine,
+  clearCurrentTeam: clearCurrentTeamRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

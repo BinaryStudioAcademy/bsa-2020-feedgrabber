@@ -14,7 +14,7 @@ interface ISideMenuProps {
     toggleMenu(): void;
 }
 
-const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu}) => {
+const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded}) => {
     const [t] = useTranslation();
     return (
         <div className={`${styles.menuWrapper} ${expanded ? styles.menuWrapperOpen : styles.menuWrapperClosed}`}>

@@ -9,11 +9,12 @@ import {
 } from "../../sagas/questions/routines";
 import { useHistory } from "react-router-dom";
 import QuestionDetails from "../../components/QuestionDetails";
-import { Button, Loader } from "semantic-ui-react";
+import { Loader } from "semantic-ui-react";
 import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import UIButton from "../../components/UI/UIButton";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
@@ -79,7 +80,9 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     };
 
     return (
-        <div className={`${styles.question_container} ${isPreview ? styles.question_container_preview : ''}`}>
+        <div className={
+          `${styles.question_container} ${isPreview ? styles.question_container_preview :  styles.question_expanded}`
+        }>
             {isLoading && (
                 <Loader active inline='centered' />
             )}
@@ -92,15 +95,13 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                         onValueChange={handleQuestionDetailsUpdate}
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
-                        <Button className="ui button" color="red" onClick={onClose}>
-                            {t("Cancel")}
-                        </Button>
-                        <Button className="ui button"
-                            color="green"
-                            disabled={!isQuestionDetailsValid}
-                            onClick={onSubmit}>
-                            {t("Save")}
-                        </Button>
+                        <UIButton title={t("Cancel")} primary onClick={onClose} />
+                        <UIButton
+                          title={t("Save")}
+                          submit
+                          onClick={onSubmit}
+                          disabled={!isQuestionDetailsValid}
+                        />
                     </div>
                 </div>
             )}

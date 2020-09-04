@@ -10,10 +10,8 @@ import {
     removeUserFromCompanyRoutine,
     setUsersPaginationRoutine
 } from "../../sagas/users/routines";
-import UIPageTitle from "../../components/UI/UIPageTitle";
-import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
-import {Button, Input} from 'semantic-ui-react';
+import {Input} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
@@ -113,13 +111,19 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     const search = () => (
         <div className={styles.searchContainer}>
             <Input style={{width: '450px'}}
-                   icon={{name: 'search', circular: true, link: true, onClick: handleSearch}}
+                   icon={{
+                     name: 'search',
+                     circular: true,
+                     link: true,
+                     onClick: handleSearch,
+                     style: {boxShadow: "none"}
+                   }}
                    placeholder={t('Search employee')}
                    value={searchQuery}
                    onKeyPress={onKeyPressed}
                    onChange={handleChange}
             />
-            <UIButton onClick={handleClear} secondary title={t("clear")}/>
+            <UIButton onClick={handleClear} title={t("clear")} primary/>
         </div>
     );
 
