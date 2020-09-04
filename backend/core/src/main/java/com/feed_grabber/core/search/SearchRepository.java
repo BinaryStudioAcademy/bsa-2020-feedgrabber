@@ -23,10 +23,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
+import static com.feed_grabber.core.auth.security.TokenService.getUserId;
 
 @Repository
 public class SearchRepository {
@@ -36,19 +38,25 @@ public class SearchRepository {
         this.entityManager = entityManager;
     }
 
-    private FullTextQuery getFullTextQuery(Class<?> initial, String query, String... fields) {
+    private FullTextQuery getFullTextQuery(Class<?> initial, Map<String, String[]> map) {
         var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        return fullTextEntityManager.createFullTextQuery(
-                fullTextEntityManager
-                        .getSearchFactory()
-                        .buildQueryBuilder()
-                        .forEntity(initial)
-                        .get()
-                        .keyword()
-                        .onFields(fields)
-                        .matching(query)
-                        .createQuery()
-                , initial);
+        var qb = fullTextEntityManager
+                .getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity(initial)
+                .get();
+        var bj = fullTextEntityManager
+                .getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity(initial)
+                .get()
+                .bool();
+
+        map.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()));
+
+        var q = bj.createQuery();
+
+        return fullTextEntityManager.createFullTextQuery(q, initial);
     }
 
     public SearchDto findAllByQuery(String query) {
@@ -66,21 +74,25 @@ public class SearchRepository {
     public PagedResponseDto<UserDetailsResponseDTO> getUsersList(String query
             , Optional<Integer> page
             , Optional<Integer> size) {
+
         var userQuery = getFullTextQuery(
                 User.class
-                , query
-                , "email"
-                , "username"
-                , "userProfile.firstName"
-                , "userProfile.lastName"
-                , "userProfile.phoneNumber");
+                , Map.of(query
+                        , new String[]{"email"
+                                , "username"
+                                , "userProfile.firstName"
+                                , "userProfile.lastName"
+                                , "userProfile.phoneNumber"}
+                        , getCompanyId().toString()
+                        , new String[]{"company.idCopy"}));
+
         if (page.isPresent() && size.isPresent()) {
             userQuery.setMaxResults(size.get());
             userQuery.setFirstResult(page.get() * size.get());
         }
+
         return new PagedResponseDto<>(((List<User>) userQuery.getResultList())
                 .stream()
-                .filter(u -> u.getCompany().getId().equals(getCompanyId()))
                 .map(UserMapper.MAPPER::detailedFromUser)
                 .collect(Collectors.toList())
                 , (long) userQuery.getResultSize());
@@ -92,9 +104,11 @@ public class SearchRepository {
             , Optional<Integer> size) {
         var questionQuery = getFullTextQuery(
                 Question.class
-                , query
-                , "text"
-                , "category.title");
+                , Map.of(query
+                        , new String[]{"text"
+                                , "category.title"}
+                        , getCompanyId().toString()
+                        , new String[]{"company.idCopy"}));
         if (page.isPresent() && size.isPresent()) {
             questionQuery.setMaxResults(size.get());
             questionQuery.setFirstResult(page.get() * size.get());
@@ -112,9 +126,11 @@ public class SearchRepository {
             , Optional<Integer> size) {
         var questionnaireQuery = getFullTextQuery(
                 Questionnaire.class
-                , query
-                , "title"
-                , "company.name");
+                , Map.of(query
+                        , new String[]{"title"
+                                , "company.name"}
+                        , getCompanyId().toString()
+                        , new String[]{"company.idCopy"}));
         if (page.isPresent() && size.isPresent()) {
             questionnaireQuery.setMaxResults(size.get());
             questionnaireQuery.setFirstResult(page.get() * size.get());
@@ -132,8 +148,10 @@ public class SearchRepository {
             , Optional<Integer> size) {
         var reportQuery = getFullTextQuery(
                 Request.class
-                , query
-                , "questionnaire.title");
+                , Map.of(query
+                        , new String[]{"questionnaire.title"}
+                        , getUserId().toString()
+                        , new String[]{"targetUser.idCopy"}));
         if (page.isPresent() && size.isPresent()) {
             reportQuery.setMaxResults(size.get());
             reportQuery.setFirstResult(page.get() * size.get());
@@ -151,9 +169,11 @@ public class SearchRepository {
             , Optional<Integer> size) {
         var teamQuery = getFullTextQuery(
                 Team.class
-                , query
-                , "name"
-                , "company.name");
+                , Map.of(query
+                        , new String[]{"name"
+                                , "company.name"}
+                        , getCompanyId().toString()
+                        , new String[]{"company.idCopy"}));
         if (page.isPresent() && size.isPresent()) {
             teamQuery.setMaxResults(size.get());
             teamQuery.setFirstResult(page.get() * size.get());
