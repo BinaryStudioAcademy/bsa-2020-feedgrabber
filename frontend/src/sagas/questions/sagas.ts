@@ -14,7 +14,6 @@ import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {updateQuestions} from "../../helpers/array.helper";
 import {loadSectionsByQuestionnaireRoutine} from 'sagas/sections/routines';
 
 export const parseQuestion = rawQuestion => ({

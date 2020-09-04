@@ -9,6 +9,7 @@ import {Loader} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     {
@@ -102,8 +103,8 @@ const mapState = (state: IAppState) => ({
 });
 
 const mapDispatch = {
-    saveQuestion: saveQuestionRoutine,
-    updateQuestion: updateQuestionRoutine,
+    addQuestion: addQuestionToSectionRoutine,
+    updateQuestion: updateQuestionInSectionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
     loadCategories: loadCategoriesRoutine
 };

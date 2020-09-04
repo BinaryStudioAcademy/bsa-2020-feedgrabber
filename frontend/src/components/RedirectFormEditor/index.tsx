@@ -11,7 +11,7 @@ import UIButton from "../UI/UIButton";
 
 const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     const [title, setTitle] = useState<string>(`New Form created ${moment().calendar()}`);
-    const [open, setOpen] = useState<boolean>(!current.id);
+    const [open, setOpen] = useState<boolean>(!current);
     const [t] = useTranslation();
 
     function handleCancel() {
@@ -26,7 +26,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
     }
 
     useEffect(() => {
-        current.id && history.push(`/questionnaires/${current.id}`);
+        current && history.push(`/questionnaires/${current}`);
     }, [current]);
 
     return (
@@ -59,7 +59,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
 };
 
 const mapState = (state: IAppState) => ({
-    current: state.questionnaires.current.get
+    current: state.formEditor.questionnaire.id
 });
 
 const mapDispatch = {

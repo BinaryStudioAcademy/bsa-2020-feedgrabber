@@ -7,6 +7,7 @@ import {
     deleteQuestionFromSectionRoutine,
     loadSavedSectionsByQuestionnaireRoutine,
     loadSectionsByQuestionnaireRoutine,
+    updateQuestionInSectionRoutine,
     updateQuestionsOrderRoutine,
     updateSectionRoutine
 } from "./routines";
@@ -15,6 +16,7 @@ import {parseQuestion} from "sagas/questions/sagas";
 import {IGeneric} from "../../models/IGeneric";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 import {ISection} from "../../reducers/formEditor/reducer";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 function parseSectionWithQuestion(section) {
     const questions = section.questions.map(q => parseQuestion(q));
@@ -47,18 +49,35 @@ function* loadSections(action) {
 
 function* addQuestionToSection(action) {
     try {
-        const {sectionId, questionId} = action.payload;
-        const result = yield call(apiClient.put, `/api/section/question/${questionId}?sectionId=${sectionId}`);
-        yield put(addQuestionToSectionRoutine.success({sectionId, questionId, questions: result.data.data}));
+        const question: IQuestion = action.payload;
+        const result = yield call(apiClient.put, `/api/section/question/${question.sectionId}`, question);
+
+        const {first: questionId, second: questions} = result.data.data;
+        yield put(addQuestionToSectionRoutine.success({sectionId: question.sectionId, questionId, questions}));
     } catch (error) {
         yield put(addQuestionToSectionRoutine.failure());
     }
 }
 
+function* updateQuestion(action) {
+    try {
+        const question: IQuestion = action.payload;
+        const res = yield call(apiClient.post, `/api/section/${question.sectionId}`, question);
+
+        yield put(updateQuestionInSectionRoutine.success({
+            sectionId: question.sectionId,
+            questions: res.data.data,
+            questionId: question.id
+        }));
+    } catch (e) {
+        yield put(updateQuestionInSectionRoutine.failure());
+    }
+}
+
 function* deleteQuestionFromSection(action) {
     try {
-        const {sectionId, questionId} = action.payload;
-        const result = yield call( apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
+        const {sectionId, id: questionId}: IQuestion = action.payload;
+        const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
         yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: result.data.data}));
     } catch (error) {
         yield put(deleteQuestionFromSectionRoutine.failure());
@@ -115,6 +134,7 @@ export default function* sectionSagas() {
         yield takeEvery(loadSectionsByQuestionnaireRoutine.TRIGGER, loadSections),
         yield takeEvery(addQuestionToSectionRoutine.TRIGGER, addQuestionToSection),
         yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection),
+        yield takeEvery(updateQuestionInSectionRoutine.TRIGGER, updateQuestion),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder),
         yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved)

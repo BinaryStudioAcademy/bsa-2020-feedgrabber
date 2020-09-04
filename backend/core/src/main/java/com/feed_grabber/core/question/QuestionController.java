@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
@@ -118,8 +119,7 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/index")
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void index(@RequestBody QuestionIndexDto dto)
-            throws QuestionNotFoundException, SectionNotFoundException {
+    public void index(@RequestBody QuestionIndexDto dto) throws NotFoundException {
         this.questionService.index(dto);
     }
 

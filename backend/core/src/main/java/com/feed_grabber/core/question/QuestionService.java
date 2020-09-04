@@ -3,6 +3,7 @@ package com.feed_grabber.core.question;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.question.model.Question;
@@ -14,6 +15,7 @@ import com.feed_grabber.core.sections.SectionRepository;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import com.feed_grabber.core.sections.model.Section;
 import lombok.SneakyThrows;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -122,12 +124,12 @@ public class QuestionService {
         dto.getQuestions()
                 .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
 
-       anketRep.save(questionnaire);
+        anketRep.save(questionnaire);
     }
 
     public QuestionDto update(QuestionUpdateDto dto)
             throws QuestionNotFoundException, CompanyNotFoundException {
-        if (dto.getDetails().equals(""))dto.setDetails("{}");
+        if (dto.getDetails().equals("")) dto.setDetails("{}");
         var question = this.updateModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
@@ -170,16 +172,15 @@ public class QuestionService {
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
     }
 
-
-    public void index(QuestionIndexDto dto) throws QuestionNotFoundException, SectionNotFoundException {
-        for (IndexDto question : dto.getQuestions()) {
-            quesRep.findById(question.getQuestionId()).orElseThrow(QuestionNotFoundException::new);
-            sectionRepository.findById(dto.getSectionId()).orElseThrow(SectionNotFoundException::new);
-            sectionRepository.setIndex(dto.getSectionId(), question.getQuestionId(), question.getIndex());
+    public void index(QuestionIndexDto dto) throws NotFoundException {
+        try {
+            dto.getQuestions().forEach(q -> sectionRepository.setIndex(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
+        } catch (HibernateException e) {
+            throw new NotFoundException("Section or question not found");
         }
     }
 
-    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) throws QuestionnaireNotFoundException {
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) {
         var section = sectionRepository.findByQuestionnaireIdAndQuestionId(qId, questionId);
         sectionRepository.deleteQuestion(section.getId(), questionId);
 

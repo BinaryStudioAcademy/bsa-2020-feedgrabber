@@ -3,8 +3,8 @@ package com.feed_grabber.core.sections;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionRepository;
+import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
@@ -52,13 +52,6 @@ public class SectionService {
                 .map(section ->
                         SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId())))
                 .collect(Collectors.toList());
-    }
-    public List<QuestionDto> addQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
-        var section = sectionRepository.findById(sectionId).orElseThrow(SectionNotFoundException::new);
-
-        sectionRepository.addQuestion(sectionId, questionId, section.getQuestions().size());
-
-        return parseQuestions(Optional.of(section));
     }
 
     public List<QuestionDto> getSectionQuestions(UUID sectionId) throws NotFoundException {

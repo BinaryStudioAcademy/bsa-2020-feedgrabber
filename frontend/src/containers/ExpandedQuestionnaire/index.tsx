@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import styles from './styles.module.sass';
 import QuestionnairePreview from 'components/QuestionnairePreview';
@@ -6,21 +6,18 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 
 import {
+    addQuestionToSectionRoutine,
     createSectionRoutine,
-    deleteQuestionFromSectionRoutine
+    deleteQuestionFromSectionRoutine,
+    updateSectionRoutine
 } from 'sagas/sections/routines';
-import {
-    indexQuestionsRoutine,
-    loadQuestionByIdRoutine,
-    saveQuestionRoutine
-} from "sagas/questions/routines";
+import {indexQuestionsRoutine, loadQuestionByIdRoutine} from "sagas/questions/routines";
 
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/LoaderWrapper";
-import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {toastr} from "react-redux-toastr";
-import {loadOneNotSavedQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
+import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 
@@ -31,38 +28,29 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         questionnaire,
         sections,
         loadQuestionnaire,
-        saveQuestion,
+        addQuestion,
         deleteQuestion,
         currentQuestion,
         createSection,
         currentSection,
+        addQuestionToSection,
+        updateSection,
         indexQuestions,
-        loadQuestion,
-        toggleMenu
+        deleteQuestionFromSection
     }
 ) => {
-    const [question, setQuestion] = useState<IQuestion>();
-    if (!question) {
-        loadQuestion({id: ""});
-    }
-
     useEffect(() => {
         loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
     const handleDeleteQuestion = () => deleteQuestion({
-        questionId: question.id,
+        questionId: currentQuestion.id,
         questionnaireId: questionnaire.id
     });
 
-    useEffect(() => {
-        setQuestion(currentQuestion);
-        toggleMenu(false);
-    }, [currentQuestion, toggleMenu]);
-
     const addNewQuestion = () => {
-        const section = currentSection ? currentSection : sections[0];
-        saveQuestion({
+        const section = currentSection ?? sections[sections.length - 1];
+        addQuestion({
             ...defaultQuestion,
             questionnaireId: match.params.id,
             sectionId: section.id,
@@ -73,16 +61,16 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     const handleAddSection = () => createSection({questionnaireId: match.params.id, index: sections.length});
 
     const copyQuestion = () => {
-        if (!question.id) {
+        if (!currentQuestion.id) {
             toastr.info("Choose question");
             return;
         }
-        saveQuestion({
-            ...question,
-            id: "",
-            name: `${question.name} (copy)`,
-            questionnaireId: match.params.id,
-            sectionId: currentSection ? currentSection.id : sections[0].id
+        const section = currentSection ?? sections[sections.length - 1];
+        addQuestion({
+            ...currentQuestion,
+            name: `${currentQuestion.name} (copy)`,
+            sectionId: section.id,
+            index: section.questions.length
         });
     };
 
@@ -95,6 +83,9 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                         <UIContent>
                             <div className={styles.questions_container}>
                                 <QuestionnairePreview
+                                    addQuestionToSection={addQuestionToSection}
+                                    updateSection={updateSection}
+                                    deleteQuestionFromSection={deleteQuestionFromSection}
                                     indexQuestions={indexQuestions}
                                     sections={sections}
                                 />
@@ -102,7 +93,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                             <QuestionMenu
                                 addQuestion={addNewQuestion}
                                 copyQuestion={copyQuestion}
-                                currentQuestion={question ? question : defaultQuestion}
+                                currentQuestion={currentQuestion ?? defaultQuestion}
                                 onDelete={handleDeleteQuestion}
                                 addSection={handleAddSection}
                             />
@@ -113,17 +104,20 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
     );
 };
 
-const mapStateToProps = (rootState: IAppState) => ({
-    currentQuestion: rootState.questions.current,
-    questionnaire: rootState.formEditor.questionnaire,
-    isLoading: rootState.formEditor.isLoading,
-    sections: rootState.formEditor.sections.list,
-    currentSection: rootState.formEditor.sections.current
+const mapStateToProps = (state: IAppState) => ({
+    currentQuestion: state.formEditor.currentQuestion,
+    questionnaire: state.formEditor.questionnaire,
+    isLoading: state.formEditor.isLoading,
+    sections: state.formEditor.sections.list,
+    currentSection: state.formEditor.sections.current
 });
 
 const mapDispatchToProps = {
-    loadQuestionnaire: loadOneNotSavedQuestionnaireRoutine,
-    saveQuestion: saveQuestionRoutine,
+    loadQuestionnaire: loadOneQuestionnaireRoutine,
+    updateSection: updateSectionRoutine,
+    addQuestionToSection: addQuestionToSectionRoutine,
+    deleteQuestionFromSection: deleteQuestionFromSectionRoutine,
+    addQuestion: addQuestionToSectionRoutine,
     toggleMenu: toggleMenuRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,

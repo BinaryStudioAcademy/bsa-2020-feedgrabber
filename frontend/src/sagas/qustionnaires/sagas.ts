@@ -97,17 +97,6 @@ function* loadOneQuestionnaire(action) {
     }
 }
 
-function* loadOneNotSavedQuestionnaire(action) {
-    try {
-        const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
-        yield put(loadOneQuestionnaireRoutine.success(res.data.data));
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload));
-    } catch (error) {
-        yield put(loadOneQuestionnaireRoutine.failure(error));
-        toastr.error("Unable to fetch data");
-    }
-}
-
 // function* loadRequestedQuestionnaires() {
 //   try {
 //     const result: IGeneric<IRequest[]> = yield call(apiClient.get, `/api/request/pending`);
@@ -127,7 +116,6 @@ export default function* questionnairesSagas() {
         yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
         yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
         yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
-        yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire),
-        yield takeEvery(loadOneNotSavedQuestionnaireRoutine.TRIGGER, loadOneNotSavedQuestionnaire)
+        yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire)
     ]);
 }
