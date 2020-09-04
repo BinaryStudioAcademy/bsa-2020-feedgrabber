@@ -2,7 +2,7 @@ package com.feed_grabber.core.auth;
 
 import com.feed_grabber.core.auth.dto.*;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
-import com.feed_grabber.core.auth.exceptions.WrongCorporateEmailException;
+import com.feed_grabber.core.auth.exceptions.CorporateEmailException;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
@@ -56,13 +56,10 @@ public class AuthController {
             notes = "Provide an email, username, companyName and password to register")
     @PostMapping("/registerByEmail")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserResponseDTO> registerByEmail(@RequestBody UserRegisterDTO dto)
-            throws CompanyNotFoundException, WrongCorporateEmailException {
-        var pass = dto.getPassword();
-        var companyId = registerService.registerUserByEmail(dto);
-
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
-        return login(loginDto);
+    public AppResponse<RegisterUserResponseDto> registerByEmail(@RequestBody UserRegisterDTO dto)
+            throws CompanyNotFoundException, CorporateEmailException {
+        registerService.registerUserByEmail(dto);
+        return new AppResponse<>(new RegisterUserResponseDto(true));
     }
 
     @ApiOperation(value = "Login", notes = "Provide a username and password to login")

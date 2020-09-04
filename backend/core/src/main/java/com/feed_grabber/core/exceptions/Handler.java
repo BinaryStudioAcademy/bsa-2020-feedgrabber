@@ -75,8 +75,8 @@ public class Handler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .body(new AppResponse<>(ex));
     }
-    @ExceptionHandler(value = WrongCorporateEmailException.class)
-    public ResponseEntity<AppResponse<Object>> handleWrongCorporateEmailException(WrongCorporateEmailException exception) {
+    @ExceptionHandler(value = CorporateEmailException.class)
+    public ResponseEntity<AppResponse<Object>> handleWrongCorporateEmailException(CorporateEmailException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new AppResponse<>(exception));

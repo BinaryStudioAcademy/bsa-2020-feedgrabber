@@ -6,7 +6,7 @@ import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
-import com.feed_grabber.core.auth.exceptions.WrongCorporateEmailException;
+import com.feed_grabber.core.auth.exceptions.CorporateEmailException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
@@ -34,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -359,18 +360,21 @@ public class UserService implements UserDetailsService {
         verificationTokenService.deleteByUserId(userId);
     }
 
-    // move to helper service
     private String getSubdomain(String email) {
         return email.split("@")[1];
     }
 
     public UUID createInCompanyByEmail(UserRegisterDTO registerDto)
-            throws CompanyNotFoundException, WrongCorporateEmailException {
+            throws CompanyNotFoundException, CorporateEmailException {
         var company = companyRepository
                 .findCompanyByName(registerDto.getCompanyName())
                 .orElseThrow(CompanyNotFoundException::new);
+        if (StringUtils.isEmpty(company.getEmailDomain())) {
+            throw new CorporateEmailException("You can`t sign up in your company using corporate email yet." +
+                    " Wait for the invitation.");
+        }
         if (!getSubdomain(registerDto.getEmail()).equals(company.getEmailDomain())) {
-            throw new WrongCorporateEmailException();
+            throw new CorporateEmailException("Write right corporate email");
         }
         var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
                 registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
