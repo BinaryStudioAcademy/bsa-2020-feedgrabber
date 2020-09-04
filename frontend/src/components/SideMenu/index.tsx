@@ -5,7 +5,7 @@ import styles from './styles.module.sass';
 import {Permissions} from "../AccessManager/rbac-rules";
 import AccessManager from "../AccessManager";
 import {useTranslation} from "react-i18next";
-import {RiDashboardLine, RiHome2Line, RiListSettingsLine, RiTeamLine, RiUser3Line} from "react-icons/ri";
+import {RiDashboardLine, RiHome2Line, RiListSettingsLine, RiTeamLine} from "react-icons/ri";
 import {AiOutlineQuestion} from "react-icons/ai";
 
 interface ISideMenuProps {

@@ -7,7 +7,6 @@ import {
   loadCompanyUsersRoutine,
   loadTeamsRoutine
 } from "../../sagas/teams/routines";
-import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";

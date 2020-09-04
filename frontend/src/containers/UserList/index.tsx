@@ -10,8 +10,6 @@ import {
     removeUserFromCompanyRoutine,
     setUsersPaginationRoutine
 } from "../../sagas/users/routines";
-import UIPageTitle from "../../components/UI/UIPageTitle";
-import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import {Input} from 'semantic-ui-react';
 import styles from './styles.module.sass';

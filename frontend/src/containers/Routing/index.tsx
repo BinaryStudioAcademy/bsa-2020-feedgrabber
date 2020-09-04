@@ -6,7 +6,6 @@ import PrivateRoute from "../../components/PrivateRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import QuestionsList from "../QuestionsList";
-import TeamsPage from "../TeamsPage";
 import QuestionnaireList from "../QuestionnaireList";
 import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
 import {IAppState} from "../../models/IAppState";
