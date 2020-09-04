@@ -21,3 +21,12 @@ const replaceWithCompanyName = (companyName: string | undefined) => {
     window.location.replace(protocol + '//' + fullNewHostName + pathname);
   }
 };
+
+export const getSubdomainFromDomain = () => {
+  const {hostname} = window.location;
+  if(hostname === env.baseHost) {
+    return null;
+  } else {
+    return hostname.replace(`.${env.baseHost}`, '');
+  }
+};

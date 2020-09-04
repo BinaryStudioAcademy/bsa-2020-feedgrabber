@@ -36,6 +36,9 @@ public interface UserMapper {
     @Mapping(target = "roleId", source = "role.id")
     UserDetailsResponseDTO detailedFromUser(User user);
 
+    @Mapping(target = "firstName", source = "userProfile.firstName")
+    @Mapping(target = "lastName", source = "userProfile.lastName")
+    @Mapping(target = "avatar", source = "userProfile.avatar.link")
     UserShortDto shortFromUser(User user);
 
     @Mapping(target = "language", source = "userSettings.language", defaultValue = "English")

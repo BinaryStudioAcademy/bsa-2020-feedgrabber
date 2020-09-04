@@ -21,7 +21,7 @@ const AccessManager: FC<IAccessManagerProps> = (
         if (!role) {
             getUser();
         }
-    });
+    }, [getUser, role]);
 
     const permissions: IRole = rolesRules[role];
     if (!permissions)

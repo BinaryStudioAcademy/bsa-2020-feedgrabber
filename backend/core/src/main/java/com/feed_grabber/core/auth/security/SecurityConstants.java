@@ -17,6 +17,7 @@ public class SecurityConstants {
             "/api/auth/renovate",
             "/api/invitations/sign-up/**",
             "/api/company/user-companies",
+            "/api/company/by-subdomain*",
             "/v2/api-docs",
             "/configuration/ui",
             "/ws/**",

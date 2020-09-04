@@ -9,6 +9,9 @@ export interface IAuthResponse {
         companyId: string;
     };
 }
+export interface IRegisterResponse {
+    success: boolean;
+}
 
 export interface IRegisterData {
     email: string;

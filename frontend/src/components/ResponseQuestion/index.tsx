@@ -5,9 +5,9 @@ import {IQuestionResponse} from "models/IQuestionResponse";
 import React, {FC, useEffect, useRef, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
-import {Button, Header, Icon, Label, Popup, Segment} from "semantic-ui-react";
+import {Button, Header, Label, Modal, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
@@ -16,38 +16,72 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         const detailsPage = useRef(null);
         const [t] = useTranslation();
         const [style, setStyle] = useState(styles.container);
+        const [modal, setModal] = useState(false);
 
         useEffect(() => {
             id === nowModifying.id ? setStyle(styles.highlight) : setStyle(styles.container);
         }, [id, nowModifying]);
 
         const handleSegmentClick = () => {
-            setEditor(!editor);
-            const {top, right} = detailsPage.current.getBoundingClientRect();
-            loadCurrent({id: question.id, top, right});
+            if ((isModifyingEnabled && !answerHandler) || editor) {
+                setEditor(!editor);
+                const {top, right} = detailsPage.current.getBoundingClientRect();
+                loadCurrent({id: question.id, top, right});
+            }
+            setModal(true);
         };
+
+        const handleSubmit = () => {
+            if (!isModifyingEnabled && !answerHandler && !editor) {
+                setModal(true);
+            }
+        };
+
+        function handleCancel() {
+            setModal(false);
+        }
 
         return (
             <div ref={detailsPage}>
-                <Segment
-                    className={style}>
-                    {((isModifyingEnabled && !answerHandler) || editor) &&
-                    <Icon name='code' link onClick={handleSegmentClick}/>}
-                    {!isModifyingEnabled && !editor &&
-                    <Popup
-                        trigger={!answerHandler && <Icon name='code' link/>}
-                        on='click'>
-                        <Popup
-                            trigger={<Button color='blue'
-                                             content={t('I know what I do!')}
-                                             fluid
-                                             onClick={handleSegmentClick}/>}
-                            content={t('It may affect answers that have been given before!!!')}
-                            position='top center'
-                            size='tiny'
-                            inverted
-                        />
-                    </Popup>}
+                {/* <Popup*/}
+                {/*    // trigger={!answerHandler && <Icon name='code' link/>}*/}
+                {/*    isOpen={popup}*/}
+                {/*    on='click'>*/}
+                {/*    <Popup*/}
+                {/*        trigger={<Button color='blue'*/}
+                {/*                         content={t('I know what I do!')}*/}
+                {/*                         fluid*/}
+                {/*                         onClick={handleSegmentClick}/>}*/}
+                {/*        content={t('It may affect answers that have been given before!!!')}*/}
+                {/*        position='top center'*/}
+                {/*        size='tiny'*/}
+                {/*        inverted*/}
+                {/*    />*/}
+                {/* </Popup>*/}
+                <Modal
+                    open={modal}
+                    size="small"
+                    onClose={handleCancel}
+                    style={{textAlign: "center"}}>
+                    <Modal.Content>
+                        <Modal.Description as="h3">
+                            <p>{t("This question was answered already")}</p>
+                            {t("Are you sure you want to change it?")}
+                        </Modal.Description>
+                        <Modal.Actions>
+                            <Button
+                                content="Yes, I am sure"
+                                labelPosition='right'
+                                icon='checkmark'
+                                positive
+                                onClick={handleSubmit}/>
+                            <Button
+                                content="Cancel"
+                                onClick={handleCancel}/>
+                        </Modal.Actions>
+                    </Modal.Content>
+                </Modal>
+                <Segment className={style}>
                     {editor && (id === nowModifying.id)
                         ?
                         <div className={styles.scaleTop}>
@@ -56,11 +90,11 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                                 isPreview={{question: question, close: handleSegmentClick}}/>
                         </div>
                         :
-                        <>
+                        <div onClick={handleSegmentClick}>
                             {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}
                             {TypeToResponseMap.get(type.toUpperCase())?.
                             ({question, answerHandler, response: question.answer})}
-                        </>
+                        </div>
                     }
                 </Segment>
             </div>);

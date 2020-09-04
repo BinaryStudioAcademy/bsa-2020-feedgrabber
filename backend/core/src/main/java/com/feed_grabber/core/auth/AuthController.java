@@ -33,12 +33,10 @@ public class AuthController {
     @ApiOperation(value = "Register new user", notes = "Provide an email, username, companyName and password to register")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AppResponse<AuthUserResponseDTO> register(@RequestBody UserRegisterDTO dto) throws WrongCompanyNameException, CompanyAlreadyExistsException {
-        var pass = dto.getPassword();
-        var companyId = registerService.registerUser(dto);
-
-        var loginDto = new UserLoginDTO(pass, dto.getUsername(), companyId);
-        return login(loginDto);
+    public AppResponse<RegisterUserResponseDto> register(@RequestBody UserRegisterDTO dto)
+            throws WrongCompanyNameException, CompanyAlreadyExistsException {
+        registerService.registerUser(dto);
+        return new AppResponse<>(new RegisterUserResponseDto(true));
     }
 
     @ApiOperation(value = "Register new user by invitation", notes = "Provide an email, username, invitationId and password to register")
