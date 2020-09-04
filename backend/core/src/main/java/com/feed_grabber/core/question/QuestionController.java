@@ -98,10 +98,10 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<List<QuestionDto>> addExisting(@RequestBody AddExistingQuestionsDto dto)
+    public void addExisting(@RequestBody AddExistingQuestionsDto dto)
             throws QuestionnaireNotFoundException {
 
-        return new AppResponse<>(questionService.addExistingQuestion(dto));
+        questionService.addExistingQuestion(dto);
     }
 
     @ApiOperation(value = "Delete the question")

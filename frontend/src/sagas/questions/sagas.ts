@@ -75,11 +75,9 @@ function* getByQuestionnaireId(action) {
 function* addFromExisting(action) {
     // payload: {questionnaireId; questions}}
     try {
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.patch, `/api/questions`, action.payload);
+        yield call(apiClient.patch, `/api/questions`, action.payload);
 
-        const questions = res.data.data.map(q => parseQuestion(q));
-
-        yield put(addSelectedQuestionsRoutine.success(questions));
+        yield put(addSelectedQuestionsRoutine.success());
         yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
     } catch (e) {
         yield put(addSelectedQuestionsRoutine.failure(e.data.error));
