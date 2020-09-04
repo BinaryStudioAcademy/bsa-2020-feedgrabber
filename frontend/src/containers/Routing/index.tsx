@@ -17,7 +17,6 @@ import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
-import QuestionDetailsPage from "../QuestionDeatilsPage";
 import QuestionnaireResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
 import QuestionnairePreview from "../../components/QuestionnairePreview";
@@ -32,6 +31,7 @@ import ErrorPage from "../ErrorPage";
 
 // just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
+import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
@@ -74,8 +74,8 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path={["/response/:id/", "/response/:id/modify/:responseId/"]}
                                   component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
-                    <PrivateRoute exact path="/emp/e" component={UserList}/>
-                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsPage}/>
+                    <PrivateRoute exact path="/employees" component={UserList}/>
+                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsContainer}/>
                     <PrivateRoute exact path="/invitations" component={InvitationLinkPage}/>
                     <Route path="/people">
                         <Redirect to="/people/teams"/>
