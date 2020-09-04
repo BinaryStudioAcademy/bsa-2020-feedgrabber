@@ -23,13 +23,13 @@ interface IIndexObject {
 interface IQuestionnairePreviewProps {
     sections: ISection[];
 
-    indexQuestions(questions: IIndex): void;
+    indexQuestions?(questions: IIndex): void;
 
-    updateSection(action: {}): void;
+    updateSection?(action: {}): void;
 
-    addQuestionToSection(action: any): void;
+    addQuestionToSection?(action: any): void;
 
-    deleteQuestionFromSection(action: any): void;
+    deleteQuestionFromSection?(action: any): void;
 }
 
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({

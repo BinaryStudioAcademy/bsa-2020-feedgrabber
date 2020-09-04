@@ -317,15 +317,10 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   </UICard>
                 </LoaderWrapper>
               </UIColumn>
-
             </UIContent>
           </>
       );
     };
-
-interface IRouterProps {
-  id: string;
-}
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   domProps: ownProps,
@@ -333,8 +328,7 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,
-  questions: state.questionnaires.current.questions,
-  sections: state.sections.list
+  sections: state.formEditor.sections.list
 });
 
 const mapDispatchToProps = {

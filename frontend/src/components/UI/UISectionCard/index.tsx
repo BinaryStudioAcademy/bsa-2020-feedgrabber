@@ -1,6 +1,6 @@
 import React, {FC, useState} from "react";
 import styles from "./styles.module.sass";
-import { ISection } from "models/forms/Sections/types";
+import {ISection} from "../../../reducers/formEditor/reducer";
 
 export interface IUISectionProps {
     section: ISection;
@@ -14,13 +14,13 @@ const UISection: FC<IUISectionProps> = ({section, onChanged}) => {
     return (
         <div className={styles.headerContainer}>
                 <div className={["ui very padded segment", styles.sectionCard].join(' ')}>
-                    <input type="text" className={styles.title} 
+                    <input type="text" className={styles.title}
                     value={title}
                     placeholder="Title"
                     onChange={e => setTitle(e.target.value)}
                     onBlur={e => {
                         onChanged(section.id, title, description);}}/>
-                    <input type="text" className={styles.description} 
+                    <input type="text" className={styles.description}
                     value={description}
                     placeholder="Description"
                     onChange={e => setDescription(e.target.value)}

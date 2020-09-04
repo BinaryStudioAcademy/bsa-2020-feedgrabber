@@ -3,7 +3,7 @@ import {toastr} from 'react-redux-toastr';
 import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
-    hideModalQuestionnaireRoutine, loadOneNotSavedQuestionnaireRoutine,
+    hideModalQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
     loadQuestionnairesRoutine,
     saveAndGetQuestionnaireRoutine,
@@ -14,7 +14,7 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
 import {saveQuestionRoutine} from "../questions/routines";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from "../sections/routines";
+import {loadSavedSectionsByQuestionnaireRoutine} from "../sections/routines";
 import {loadNotificationsRoutine} from "../notifications/routines";
 
 function* loadQuestionnairesList() {

@@ -3,7 +3,7 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {loadQuestionByIdRoutine, saveQuestionRoutine, updateQuestionRoutine} from "../../sagas/questions/routines";
+import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import QuestionDetails from "../../components/QuestionDetails";
 import {Loader} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
@@ -16,18 +16,18 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         currentQuestion,
         loadQuestion,
         isLoading,
-        saveQuestion,
         updateQuestion,
         loadCategories,
         questionnaireId,
         sectionId,
         categories,
         match,
+        addQuestion,
         isPreview
     }) => {
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(
-        Object.keys(currentQuestion).length === 0 ? defaultQuestion : currentQuestion
+        Object.keys(currentQuestion).length ? currentQuestion : defaultQuestion
     );
     const [prevQuestion, setPrevQuestion] = useState<IQuestion>();
 
@@ -40,7 +40,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
     const onSubmit = question => {
         if (isQuestionDetailsValid) {
             match.params.id !== "new" ?
-                saveQuestion({
+                addQuestion({
                     ...question,
                     questionnaireId,
                     sectionId
@@ -95,7 +95,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestion: state.questions.current,
+    currentQuestion: state.formEditor.currentQuestion,
     isLoading: state.categories.isLoading,
     categories: state.categories.list,
     questionnaireId: state.formEditor.questionnaire.id,

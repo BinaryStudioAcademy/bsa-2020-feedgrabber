@@ -91,7 +91,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
 
 const mapStateToProps = (state: IAppState) => ({
     user: state.user.info,
-    isEditing: !!state.questionnaires.current.get.id,
+    isEditing: !!state.formEditor.questionnaire.isEditingEnabled,
     toggled: state.app.showMenu
 });
 const mapDispatchToProps = {
