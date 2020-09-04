@@ -20,25 +20,25 @@ import org.springframework.messaging.handler.annotation.support.MessageHandlerMe
 @Configuration
 @EnableRabbit
 public class RabbitConfiguration implements RabbitListenerConfigurer {
-    @Value("${rabbitmq.exchange}") // dev
+    @Value("${rabbitmq.exchange}")
     private String exchange;
 
-    @Value("${rabbitmq.routing-key-response}") // dev
+    @Value("${rabbitmq.routing-key-response}")
     private String routingKey;
 
-    @Value("${rabbitmq.queue.response}") // dev
+    @Value("${rabbitmq.queue.response}")
     private String queue;
 
     @Value("${rabbitmq.queue.request.close.receive}")
     private String requestCloseReceiveQueue;
 
-    @Value("${rabbitmq.routing-key-response-links}") // dev
+    @Value("${rabbitmq.routing-key-response-links}")
     private String linksRoutingKey;
 
     @Value("${rabbitmq.routing-key-request-close-receive}")
     private String requestCloseReceiveRoutingKey;
 
-    @Value("${rabbitmq.queue.response.links}") // dev
+    @Value("${rabbitmq.queue.response.links}")
     private String linksQueue;
 
     @Bean

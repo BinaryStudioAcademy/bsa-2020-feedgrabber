@@ -28,7 +28,6 @@ import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
-import java.lang.ref.Cleaner;
 import java.util.*;
 import java.util.stream.Collectors;
 
