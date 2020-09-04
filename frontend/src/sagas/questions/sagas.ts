@@ -1,13 +1,13 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {
     addSelectedQuestionsRoutine,
+    deleteFromQuestionnaireRoutine,
+    indexQuestionsRoutine,
     loadQuestionByIdRoutine,
     loadQuestionnaireQuestionsRoutine,
+    loadQuestionsBySectionRoutine,
     loadQuestionsRoutine,
-    indexQuestionsRoutine,
-    deleteFromQuestionnaireRoutine,
-    saveQuestionRoutine,
-    loadQuestionsBySectionRoutine
+    saveQuestionRoutine, updateQuestionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IGeneric} from 'models/IGeneric';
@@ -15,12 +15,12 @@ import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {updateQuestions} from "../../helpers/array.helper";
-import { loadSectionsByQuestionnaireRoutine } from 'sagas/sections/routines';
+import {loadSectionsByQuestionnaireRoutine} from 'sagas/sections/routines';
 
 export const parseQuestion = rawQuestion => ({
-        ...rawQuestion,
-        type: rawQuestion.type,
-        details: JSON.parse(rawQuestion.details) ?? {}
+    ...rawQuestion,
+    type: rawQuestion.type,
+    details: JSON.parse(rawQuestion.details) ?? {}
 });
 
 function* getAll() {
@@ -87,14 +87,11 @@ function* addFromExisting(action) {
     }
 }
 
-function* saveOrUpdateQuestion(action) {
+function* updateQuestion(action) {
     try {
-        const res: IGeneric<IQuestion> = action.payload?.id
-            ? yield call(apiClient.put, `/api/questions`, action.payload)
-            : yield call(apiClient.post, `/api/questions`, action.payload);
-        const question: IQuestion = parseQuestion(res.data.data);
+        const res = yield call(apiClient.put, `/api/questions`, action.payload);
 
-        yield put(saveQuestionRoutine.success(question));
+        yield put(updateQuestionRoutine.success(parseQuestion(res.data.data)));
         const questions = action.payload?.questionnaireQuestions;
 
         if (!questions) {
@@ -104,6 +101,17 @@ function* saveOrUpdateQuestion(action) {
 
         yield put(loadQuestionnaireQuestionsRoutine.success(newQuestions));
         yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
+    } catch (e) {
+        yield put(saveQuestionRoutine.failure());
+        toastr.error("Question wasn't saved");
+    }
+}
+
+function* saveQuestion(action) {
+    try {
+        const res = yield call(apiClient.post, `/api/questions`, action.payload);
+
+        yield put(saveQuestionRoutine.success(parseQuestion(res.data.data)));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());
         toastr.error("Question wasn't saved");
@@ -134,16 +142,16 @@ function* orderQuestions(action) {
 }
 
 function* getBySectionId(action) {
-  try {
-      const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
+    try {
+        const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
 
-    const questions = res.data.data.map(q => parseQuestion(q));
+        const questions = res.data.data.map(q => parseQuestion(q));
 
-    yield put(loadQuestionnaireQuestionsRoutine.success(questions));
-  } catch (e) {
-      yield put(loadQuestionnaireQuestionsRoutine.failure(e.data.error));
-      toastr.error("Unable to load questionnaire");
-  }
+        yield put(loadQuestionnaireQuestionsRoutine.success(questions));
+    } catch (e) {
+        yield put(loadQuestionnaireQuestionsRoutine.failure(e.data.error));
+        toastr.error("Unable to load questionnaire");
+    }
 }
 
 export default function* questionSagas() {
@@ -154,7 +162,8 @@ export default function* questionSagas() {
         yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
         yield takeEvery(indexQuestionsRoutine.TRIGGER, orderQuestions),
         yield takeEvery(deleteFromQuestionnaireRoutine.TRIGGER, deleteOneByQuestionnaireId),
-        yield takeEvery(saveQuestionRoutine.TRIGGER, saveOrUpdateQuestion),
+        yield takeEvery(updateQuestionRoutine.TRIGGER, updateQuestion),
+        yield takeEvery(saveQuestionRoutine.TRIGGER, saveQuestion),
         yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId)
     ]);
 }

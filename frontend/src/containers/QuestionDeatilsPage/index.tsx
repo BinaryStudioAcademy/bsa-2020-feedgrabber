@@ -1,18 +1,13 @@
-import React, { FC, useEffect, useState } from "react";
-import { IQuestion } from "../../models/forms/Questions/IQuesion";
-import { IAppState } from "models/IAppState";
-import { connect, ConnectedProps } from "react-redux";
-import { loadCategoriesRoutine } from "sagas/categories/routines";
-import {
-    loadQuestionByIdRoutine,
-    saveQuestionRoutine
-} from "../../sagas/questions/routines";
-import { useHistory } from "react-router-dom";
+import React, {FC, useEffect, useState} from "react";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import {IAppState} from "models/IAppState";
+import {connect, ConnectedProps} from "react-redux";
+import {loadCategoriesRoutine} from "sagas/categories/routines";
+import {loadQuestionByIdRoutine, saveQuestionRoutine} from "../../sagas/questions/routines";
 import QuestionDetails from "../../components/QuestionDetails";
-import { Button, Loader } from "semantic-ui-react";
-import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
+import {Loader} from "semantic-ui-react";
+import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
-import {useTranslation} from "react-i18next";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
@@ -28,30 +23,52 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         match,
         isPreview
     }) => {
-    const history = useHistory();
-    const [t] = useTranslation();
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
-  const [question, setQuestion] = useState<IQuestion>(
-    Object.keys(currentQuestion).length === 0 ? defaultQuestion : currentQuestion
-  );
+    const [question, setQuestion] = useState<IQuestion>(
+        Object.keys(currentQuestion).length === 0 ? defaultQuestion : currentQuestion
+    );
+    const [prevQuestion, setPrevQuestion] = useState<IQuestion>();
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
-        const { isCompleted, value } = state;
+        const {isCompleted, value} = state;
         setIsQuestionDetailsValid(isCompleted);
         setQuestion(value);
     };
 
+    const onSubmit = questionToSave => {
+        if (isQuestionDetailsValid) {
+            match.params.id !== "new" ?
+                saveQuestion({
+                    ...questionToSave,
+                    questionnaireId,
+                    questionnaireQuestions
+                }) :
+                saveQuestion({
+                    ...questionToSave
+                });
+        }
+    };
+
     useEffect(() => {
-      loadCategories();
+        const timer = setTimeout(() => {
+            if (prevQuestion !== question) {
+                onSubmit(question);
+                setPrevQuestion(question);
+            }
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, [question, prevQuestion, onSubmit]);
+
+    useEffect(() => {
+        loadCategories();
     }, [loadCategories]);
 
     useEffect(() => {
         if (match.params.id === 'new') {
             loadQuestion({id: ""});
-        }
-        else {
-          if (!isPreview)
-              loadQuestion({ id: match.params.id });
+        } else {
+            if (!isPreview)
+                loadQuestion({id: match.params.id});
         }
     }, [loadQuestion, match.params.id, isPreview]);
 
@@ -59,52 +76,18 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         setQuestion(currentQuestion);
     }, [currentQuestion]);
 
-    const onClose = () => {
-        isPreview ? isPreview.close() : history.push("/questions");
-    };
-
-    const onSubmit = () => {
-        if (isQuestionDetailsValid) {
-            match.params.id !== "new" ?
-            saveQuestion({
-                ...question,
-                questionnaireId,
-                questionnaireQuestions
-            }) :
-            saveQuestion({
-                ...question
-            });
-        }
-        isPreview ? isPreview.close() : history.goBack();
-    };
-
     return (
         <div className={`${styles.question_container} ${isPreview ? styles.question_container_preview : ''}`}>
-            {isLoading && (
-                <Loader active inline='centered' />
-            )}
-            {!isLoading && (
-                <div>
-                    <QuestionDetails
-                        key={question.id}
-                        currentQuestion={question}
-                        categories={categories}
-                        onValueChange={handleQuestionDetailsUpdate}
-                    />
-                    <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
-                        <Button className="ui button" color="red" onClick={onClose}>
-                            {t("Cancel")}
-                        </Button>
-                        <Button className="ui button"
-                            color="green"
-                            disabled={!isQuestionDetailsValid}
-                            onClick={onSubmit}>
-                            {t("Save")}
-                        </Button>
-                    </div>
-                </div>
-            )}
-
+            {isLoading ?
+                <Loader active inline='centered'/>
+                :
+                <QuestionDetails
+                    key={question.id}
+                    currentQuestion={question}
+                    categories={categories}
+                    onValueChange={handleQuestionDetailsUpdate}
+                />
+            }
         </div>
     );
 };
