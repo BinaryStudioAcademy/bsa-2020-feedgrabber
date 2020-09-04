@@ -20,25 +20,25 @@ import org.springframework.messaging.handler.annotation.support.MessageHandlerMe
 @Configuration
 @EnableRabbit
 public class RabbitConfiguration implements RabbitListenerConfigurer {
-    @Value("${rabbitmq.exchange}")
+    @Value("${rabbitmq.exchange}") // dev
     private String exchange;
 
-    @Value("${rabbitmq.routing-key-response}")
+    @Value("${rabbitmq.routing-key-response}") // dev
     private String routingKey;
 
-    @Value("${rabbitmq.queue.response}")
+    @Value("${rabbitmq.queue.response}") // dev
     private String queue;
 
-    @Value("${rabbitmq.queue.request.close}")
-    private String requestCloseQueue;
+    @Value("${rabbitmq.queue.request.close.receive}")
+    private String requestCloseReceiveQueue;
 
-    @Value("${rabbitmq.routing-key-response-links}")
+    @Value("${rabbitmq.routing-key-response-links}") // dev
     private String linksRoutingKey;
 
-    @Value("${rabbitmq.routing-key-request-close}")
-    private String requestCloseRoutingKey;
+    @Value("${rabbitmq.routing-key-request-close-receive}")
+    private String requestCloseReceiveRoutingKey;
 
-    @Value("${rabbitmq.queue.response.links}")
+    @Value("${rabbitmq.queue.response.links}") // dev
     private String linksQueue;
 
     @Bean
@@ -52,8 +52,8 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     }
 
     @Bean
-    public Queue requestCloseQueue() {
-        return new Queue(requestCloseQueue, true);
+    public Queue requestCloseReceiveQueue() {
+        return new Queue(requestCloseReceiveQueue, true);
     }
 
     @Bean
@@ -67,8 +67,8 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     }
 
     @Bean
-    public Binding bindCloseRequest(Queue requestCloseQueue, TopicExchange exchange) {
-        return BindingBuilder.bind(requestCloseQueue).to(exchange).with(requestCloseRoutingKey);
+    public Binding bindCloseRequest(Queue requestCloseReceiveQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(requestCloseReceiveQueue).to(exchange).with(requestCloseReceiveRoutingKey);
     }
 
     @Bean

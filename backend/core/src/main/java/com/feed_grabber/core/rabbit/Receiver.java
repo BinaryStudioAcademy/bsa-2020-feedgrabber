@@ -35,8 +35,12 @@ public class Receiver {
         notificationService.saveAndSendReportNotification(links);
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.request.close}")
-    public void closeRequest(UUID requestId) throws NotFoundException {
-        requestService.close(requestId);
+    @RabbitListener(queues = "${rabbitmq.queue.request.close.receive}")
+    public void closeRequest(UUID requestId) {
+        try {
+            requestService.close(requestId);
+        } catch(NotFoundException ex) {
+            ex.printStackTrace();
+        }
     }
 }

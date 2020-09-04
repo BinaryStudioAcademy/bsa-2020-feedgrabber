@@ -21,7 +21,7 @@ class Sender {
     @Value("\${rabbitmq.routing-key-response-links}")
     private val linksResponseRoutingKey: String? = null
 
-    @Value("\${rabbitmq.routing-key-request-close}")
+    @Value("\${rabbitmq.routing-key-request-close-receive}")
     private val closeRequestRoutingKey: String? = null
 
     @Autowired

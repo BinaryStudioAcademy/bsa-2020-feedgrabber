@@ -207,10 +207,13 @@ public class RequestService {
     }
 
     public Date close(UUID requestId) throws NotFoundException {
-        var date = closeNow(requestId);
         var request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request not found"));
+        if (request.getCloseDate() != null) {
+            return new Date();
+        }
 
+        var date = closeNow(requestId);
         User[] users = {request.getTargetUser(), request.getRequestMaker()};
 
         Map<UUID, UUID> userIdNotificationId = new HashMap<>();

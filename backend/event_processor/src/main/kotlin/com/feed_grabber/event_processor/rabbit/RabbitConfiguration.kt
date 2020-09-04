@@ -41,7 +41,6 @@ class RabbitConfiguration: RabbitListenerConfigurer {
         return Queue(queue, true)
     }
 
-
     @Bean
     fun requestCloseQueue(): Queue? {
         return Queue(requestCloseQueue, true)
