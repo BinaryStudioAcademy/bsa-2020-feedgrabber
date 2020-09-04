@@ -1,9 +1,8 @@
 import React, {FC} from 'react';
 import {
-    addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
-    loadQuestionnairesRoutine,
+    loadQuestionnairesRoutine, saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine
@@ -173,7 +172,7 @@ const mapStateToProps = (rootState: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaires: loadQuestionnairesRoutine,
     deleteQuestionnaire: deleteQuestionnaireRoutine,
-    addQuestionnaire: addQuestionnaireRoutine,
+    addQuestionnaire: saveAndGetQuestionnaireRoutine,
     updateQuestionnaire: updateQuestionnaireRoutine,
     showModal: showModalQuestionnaireRoutine,
     hideModal: hideModalQuestionnaireRoutine,

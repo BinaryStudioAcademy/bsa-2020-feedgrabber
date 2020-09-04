@@ -21,7 +21,7 @@ const feedItemMock = {
   images: [ 'https://i.imgur.com/gWFCLjG.png', 'https://i.imgur.com/wDPiXac.png' ]
 };
 
-function* loadCompanyFeed(action) {
+function* loadCompanyFeed() {
   try {
     // here will be api-call
     yield put(loadCompanyFeedRoutine.success([ feedItemMock ]));
