@@ -1,9 +1,6 @@
 package com.feed_grabber.core.question;
 
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
-import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.dto.QuestionUpdateDto;
-import com.feed_grabber.core.question.dto.QuestionUpsertDto;
+import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;

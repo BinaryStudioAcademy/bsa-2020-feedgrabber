@@ -116,7 +116,7 @@ public class QuestionController {
     @PutMapping("/index")
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public void index(@RequestBody QuestionIndexDto dto) throws NotFoundException {
-        this.questionService.index(dto);
+        questionService.index(dto);
     }
 
     @ApiOperation(value = "Delete the question by id and questionnaireId")

@@ -48,6 +48,9 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
     const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string, index: number) => {
         deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
         addQuestionToSection({sectionId: sectionId, index, questionId: question.id});
+
+        // moveQuestionToSectionAction({sectionId: sectionId, prevSectionId, questionId: question.id, index});
+
     };
 
     const handleChapterChange = (id: string, title: string, description: string) => {

@@ -120,7 +120,6 @@ public class QuestionService {
         anketRep.save(questionnaire);
     }
 
-    @Transactional
     public void addExistingQuestionBySection(AddExistingQuestionBySectionDto dto) throws NotFoundException {
 
         var indexedQuestion = dto.getQuestionIndexed();

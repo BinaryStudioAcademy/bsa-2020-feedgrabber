@@ -7,7 +7,7 @@ import {
     createSectionRoutine,
     deleteQuestionFromSectionRoutine,
     loadSavedSectionsByQuestionnaireRoutine,
-    loadSectionsByQuestionnaireRoutine,
+    loadSectionsByQuestionnaireRoutine, moveQuestionInSectionRoutine,
     updateQuestionInSectionRoutine,
     updateQuestionsOrderRoutine,
     updateSectionRoutine
@@ -113,6 +113,22 @@ function* deleteQuestionFromSection(action) {
     }
 }
 
+function* moveQuestionInsideQuestionnaire(action) {
+    try {
+        const {prevSectionId, sectionId, questionId: qId, index} = action.payload;
+        const result = yield call(apiClient.put, `/api/section/move`,
+            {questionIndexed: {questionId: qId, index}, sectionId, prevSectionId});
+        const {second: questionId, first: questions} = result.data.data;
+        yield put(moveQuestionInSectionRoutine.success({
+            sectionId,
+            questionId,
+            questions: parseQuestions(questions)
+        }));
+    } catch (error) {
+        yield put(moveQuestionInSectionRoutine.failure());
+    }
+}
+
 function* updateSection(action) {
     try {
         const result = yield call(apiClient.put, `/api/section/${action.payload.id}`, action.payload);
@@ -167,6 +183,7 @@ export default function* sectionSagas() {
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder),
         yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved),
-        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection)
+        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection),
+        yield takeEvery(moveQuestionInSectionRoutine.TRIGGER, moveQuestionInsideQuestionnaire)
     ]);
 }

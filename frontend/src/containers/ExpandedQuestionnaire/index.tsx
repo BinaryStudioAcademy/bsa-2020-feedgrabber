@@ -88,6 +88,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                                     updateOrder={updateOrder}
                                     currentQuestion={currentQuestion}
                                     deleteQuestionFromSection={deleteQuestionFromSection}
+                                    // moveQuestionToSection={moveQuestionToSection}
                                     indexQuestions={indexQuestions}
                                     sections={sections}
                                 />

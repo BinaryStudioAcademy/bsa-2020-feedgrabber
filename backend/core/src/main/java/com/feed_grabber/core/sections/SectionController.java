@@ -2,11 +2,9 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionService;
-import com.feed_grabber.core.question.dto.AddExistingQuestionBySectionDto;
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
-import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.dto.QuestionUpdateDto;
+import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.sections.dto.SectionDto;
@@ -72,6 +70,16 @@ public class SectionController {
         questionService.addExistingQuestionBySection(dto);
         return new AppResponse<>(
                 Pair.of(sectionService.getSectionQuestions(dto.getSectionId()), dto.getQuestionIndexed().getQuestionId()));
+    }
+
+    @ApiOperation(value = "Compose delete and add")
+    @PutMapping("/move")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<Pair<List<QuestionDto>, UUID>> composeAddDelete(@RequestBody AddExistingQuestionBySectionDto dto) throws NotFoundException {
+
+        deleteQuestion(dto.getQuestionIndexed().getQuestionId(), dto.getPrevSectionId().orElseThrow(NotFoundException::new));
+
+        return addQuestionFromExisting(dto);
     }
 
     @PostMapping("/{id}/question")

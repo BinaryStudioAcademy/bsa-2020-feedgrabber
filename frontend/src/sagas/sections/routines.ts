@@ -13,6 +13,7 @@ export const deleteQuestionFromSectionRoutine = createRoutine("SECTION:DELETE_QU
 export const updateSectionRoutine = createRoutine("SECTION:UPDATE");
 export const updateQuestionsOrderRoutine = createRoutine("SECTION:UPDATE_QYESTION_ORDER");
 export const loadSavedSectionsByQuestionnaireRoutine = createRoutine("SECTION:LOAD_SAVED");
+export const moveQuestionInSectionRoutine = createRoutine("SECTION:MOVE_QUESTION");
 
 type sectionQuestionAdd = {
     sectionId: string;
