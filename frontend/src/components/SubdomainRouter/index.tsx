@@ -17,13 +17,11 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
     const isLogged = useAuth();
 
     useEffect(() => {
-        if(isLogged && !company) {
+        if(isLogged && !company && !error) {
             fetchCompany();
             return;
         }
-        if (isLogged) {
-            redirectToCompany(company);
-        }
+        isLogged && !error ? redirectToCompany(company) : history.push("/error");
 
         const subdomain = getSubdomainFromDomain();
         if(!subdomain) {
