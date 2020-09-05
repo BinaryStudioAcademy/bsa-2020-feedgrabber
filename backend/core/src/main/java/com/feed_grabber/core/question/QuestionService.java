@@ -95,8 +95,6 @@ public class QuestionService {
         if (dto.getQuestionnaireId().isPresent()) {
             var questionnaire = anketRep.findById(dto.getQuestionnaireId().get())
                     .orElseThrow(QuestionnaireNotFoundException::new);
-            questionnaire.getQuestions().add(savedQuestion);
-            anketRep.save(questionnaire);
 
             Section section;
             if (dto.getSectionId().isEmpty()) {
@@ -115,11 +113,6 @@ public class QuestionService {
         var questionnaire = anketRep
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
-
-        var question = quesRep.findAllById(dto.getQuestions()
-                .stream().map(IndexDto::getQuestionId).collect(Collectors.toList()));
-
-        questionnaire.getQuestions().addAll(question);
 
         dto.getQuestions()
                 .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getQuestionId(), q.getIndex()));

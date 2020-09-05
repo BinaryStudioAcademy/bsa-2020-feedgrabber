@@ -1,6 +1,7 @@
 package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.question.QuestionMapper;
+import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
@@ -13,6 +14,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(uses ={QuestionMapper.class, QuestionnaireMapper.class})
 public interface SectionMapper {
@@ -26,6 +28,25 @@ public interface SectionMapper {
     Section createDtoToModel(SectionCreateDto dto, Questionnaire questionnaire);
 
     SectionDto modelToDto(Section section);
+
+    default SectionQuestionsDto modelToExtendedDto(Section section) {
+         return new SectionQuestionsDto(
+                 section.getId(), section.getTitle(), section.getDescription(),
+                 section.getQuestions().stream().map(i -> {
+                     var index = i.getOrderIndex();
+                     var q = i.getQuestion();
+                     return new QuestionDto(
+                             q.getId(),
+                             q.getText(),
+                             index.toString(),
+                             q.getCategory().getTitle(),
+                             q.getType(),
+                             q.getPayload(),
+                             q.isRequired()
+                     );
+                 }).collect(Collectors.toList())
+         );
+    }
 
     @Mapping(target = "questions", source = "questions")
     SectionQuestionsDto sectionAndQuestionsDto(Section section, List<Question> questions);
