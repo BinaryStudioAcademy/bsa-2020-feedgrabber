@@ -15,13 +15,13 @@ const UISection: FC<IUISectionProps> = ({section, onChanged}) => {
         <div className={styles.headerContainer}>
                 <div className={["ui very padded segment", styles.sectionCard].join(' ')}>
                     <input type="text" className={styles.title}
-                    value={title}
+                    value={title || ''}
                     placeholder="Title"
                     onChange={e => setTitle(e.target.value)}
                     onBlur={e => {
                         onChanged(section.id, title, description);}}/>
                     <input type="text" className={styles.description}
-                    value={description}
+                    value={description || ''}
                     placeholder="Description"
                     onChange={e => setDescription(e.target.value)}
                     onBlur={e => {

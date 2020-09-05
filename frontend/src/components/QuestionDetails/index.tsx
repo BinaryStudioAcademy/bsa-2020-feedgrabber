@@ -156,7 +156,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
             {formik => (
                 <div className={styles.question_container}>
                     <Form className={styles.question_form}>
-                        <Segment className={styles.question_header}>
                             <div className={styles.question_input_type}>
                                 <Form.Input
                                     className={styles.question_input}
@@ -250,7 +249,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                         />}
                                 />
                             </div>
-                        </Segment>
                     </Form>
                 </div>
             )}

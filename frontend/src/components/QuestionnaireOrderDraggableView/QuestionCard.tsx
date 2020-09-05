@@ -87,7 +87,7 @@ const QuestionCard: React.FC<ICardProps> = ({
   drag(drop(ref));
 
   return (
-    <div ref={ref}  style={{ opacity }} className={styles.question}>
+    <div ref={ref} style={{ opacity }} className={styles.question}>
       <ResponseQuestion question={question} isCurrent={isCurrent} />
     </div>
   );

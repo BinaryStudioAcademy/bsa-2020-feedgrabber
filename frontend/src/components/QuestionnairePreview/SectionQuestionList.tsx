@@ -68,7 +68,7 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
         return (
           <QuestionCard
             question={q}
-            key={index}
+            key={q.id}
             isCurrent={q.id === currentQuestion.id}
             id={q.id}
             index={index}
