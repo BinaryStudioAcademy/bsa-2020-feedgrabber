@@ -14,7 +14,7 @@ const QuestionDetailsContainer: FC<{ match }> = (
       <>
           <UIPageTitle title={t("Question details")}/>
           <UIContent >
-            <QuestionDetailsPage match={ match } isPreview={false}/>
+            <QuestionDetailsPage />
           </UIContent>
       </>
     );

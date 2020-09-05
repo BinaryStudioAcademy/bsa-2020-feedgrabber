@@ -11,7 +11,6 @@ import { IComponentState } from "../../components/ComponentsQuestions/IQuestionI
 import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
-import UIButton from "../../components/UI/UIButton";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
     {
@@ -79,6 +78,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
 const mapState = (state: IAppState) => ({
     isLoading: state.formEditor.isLoading,
     categories: state.categories.list,
+    question: state.formEditor.currentQuestion,
     questionnaireId: state.formEditor.questionnaire.id,
     sectionId: state.formEditor.sections.current.id
 });

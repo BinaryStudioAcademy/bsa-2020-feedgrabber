@@ -71,7 +71,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { is
                     {isCurrent
                         ?
                         <div className={styles.scaleTop}>
-                            <QuestionDetailsPage question={question}/>
+                            <QuestionDetailsPage />
                         </div>
                         :
                         <div onClick={handleSegmentClick}>
