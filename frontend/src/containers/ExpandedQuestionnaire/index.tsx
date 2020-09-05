@@ -8,10 +8,10 @@ import QuestionMenu from "../../components/QuestionMenu";
 import {
     addQuestionToSectionRoutine,
     createSectionRoutine,
-    deleteQuestionFromSectionRoutine,
+    deleteQuestionFromSectionRoutine, updateQuestionsOrderRoutine,
     updateSectionRoutine
 } from 'sagas/sections/routines';
-import {indexQuestionsRoutine, loadQuestionByIdRoutine} from "sagas/questions/routines";
+import {indexQuestionsRoutine} from "sagas/questions/routines";
 
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
@@ -35,6 +35,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         currentSection,
         addQuestionToSection,
         updateSection,
+        updateOrder,
         indexQuestions,
         deleteQuestionFromSection
     }
@@ -85,6 +86,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                                 <QuestionnairePreview
                                     addQuestionToSection={addQuestionToSection}
                                     updateSection={updateSection}
+                                    updateOrder={updateOrder}
+                                    currentQuestion={currentQuestion}
                                     deleteQuestionFromSection={deleteQuestionFromSection}
                                     indexQuestions={indexQuestions}
                                     sections={sections}
@@ -122,7 +125,7 @@ const mapDispatchToProps = {
     deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
     indexQuestions: indexQuestionsRoutine,
-    loadQuestion: loadQuestionByIdRoutine
+    updateOrder: updateQuestionsOrderRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

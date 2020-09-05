@@ -12,13 +12,10 @@ import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
-import {saveResponseRoutine, getResponseRoutine} from 'sagas/response/routines';
-import {
-  loadSectionsByQuestionnaireRoutine,
-  loadSavedSectionsByQuestionnaireRoutine
-} from 'sagas/sections/routines';
+import {getResponseRoutine, saveResponseRoutine} from 'sagas/response/routines';
+import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from 'sagas/sections/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
-import { Translation } from 'react-i18next';
+import {Translation} from 'react-i18next';
 import {ISection} from "../../reducers/formEditor/reducer";
 
 interface IComponentState {
@@ -75,8 +72,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     handleComponentChange(state: IComponentState) {
-        const { sections } = this.props;
-        const { currentSectionIndex } = this.state;
+        const {sections} = this.props;
+        const {currentSectionIndex} = this.state;
         const questions = sections[currentSectionIndex].questions;
         let updatedQuestions: IQuestion[] = questions;
         if (state.isAnswered) {
@@ -94,18 +91,18 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const { match, getResponse } = this.props;
+        const {match, getResponse} = this.props;
         getResponse(match.params.id);
     }
 
     componentDidUpdate() {
-        const { match, loadSections, loadSavedQuestionnaire, response } = this.props;
-        const { oldResponseId } = this.state;
+        const {match, loadSections, loadSavedQuestionnaire, response} = this.props;
+        const {oldResponseId} = this.state;
         if (oldResponseId !== response?.id) {
-            this.setState({ oldResponseId: response?.id });
+            this.setState({oldResponseId: response?.id});
             !match.params.responseId
                 ? loadSections(response.questionnaire.id)
-                : loadSavedQuestionnaire({ questionnaireId: response.questionnaire.id, responseId: response.id });
+                : loadSavedQuestionnaire({questionnaireId: response.questionnaire.id, responseId: response.id});
         }
     }
 
@@ -175,47 +172,48 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
         const {showErrors, currentSectionIndex} = this.state;
         return (
             <Translation>
-            {t =>
-                <>
-                <UIPageTitle title={t("Response")} />
-                <br />
-                <br />
-                <LoaderWrapper loading={isLoading}>
-                <UIListHeader title={sections[currentSectionIndex]?.title}
-                              description={sections[currentSectionIndex]?.description} />
-                <Formik initialValues={this.state} onSubmit={this.handleNextClick}>{formik => (
-                    <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
-                        <ul>
-                            {sections[currentSectionIndex]?.questions.map(question => {
-                                return (
-                                    <UIListItem key={question.id} name={question.name}
-                                                category={question.categoryTitle}>
-                                        <ResponseQuestion question={question} answerHandler={(data: IAnswerBody) => {
-                                            question["answer"] = data;
-                                            this.handleComponentChange({
-                                                question,
-                                                isAnswered: !!data
-                                            });
-                                        }} />
-                                        {showErrors && !question.answer ?
-                                            <div className={styles.error_message}>
-                                                {t("Please, fill the question")}</div> : null}
-                                    </UIListItem>);
-                            })}
-                        </ul>
-                        <div className={styles.submit}>
-                            {/* {currentSectionIndex !== 0 ?
+                {t =>
+                    <>
+                        <UIPageTitle title={t("Response")}/>
+                        <br/>
+                        <br/>
+                        <LoaderWrapper loading={isLoading}>
+                            <UIListHeader title={sections[currentSectionIndex]?.title}
+                                          description={sections[currentSectionIndex]?.description}/>
+                            <Formik initialValues={this.state} onSubmit={this.handleNextClick}>{formik => (
+                                <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
+                                    <ul>
+                                        {sections[currentSectionIndex]?.questions.map(question => {
+                                            return (
+                                                <UIListItem key={question.id} name={question.name}
+                                                            category={question.categoryTitle}>
+                                                    <ResponseQuestion isCurrent={false} question={question}
+                                                                      answerHandler={(data: IAnswerBody) => {
+                                                                          question["answer"] = data;
+                                                                          this.handleComponentChange({
+                                                                              question,
+                                                                              isAnswered: !!data
+                                                                          });
+                                                                      }}/>
+                                                    {showErrors && !question.answer ?
+                                                        <div className={styles.error_message}>
+                                                            {t("Please, fill the question")}</div> : null}
+                                                </UIListItem>);
+                                        })}
+                                    </ul>
+                                    <div className={styles.submit}>
+                                        {/* {currentSectionIndex !== 0 ?
                             <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
-                            {sections.length === currentSectionIndex + 1
-                                ? ((!isModifying || changeable) &&
-                                    <UIButton title={t("Send")} submit onClick={this.handleSendClick} />)
-                                : <UIButton title={t("Next")} submit />}
-                            </div>
-                        </Form>)}
-                    </Formik>
-                </LoaderWrapper>
-            </>
-            }
+                                        {sections.length === currentSectionIndex + 1
+                                            ? ((!isModifying || changeable) &&
+                                            <UIButton title={t("Send")} submit onClick={this.handleSendClick}/>)
+                                            : <UIButton title={t("Next")} submit/>}
+                                    </div>
+                                </Form>)}
+                            </Formik>
+                        </LoaderWrapper>
+                    </>
+                }
             </Translation>);
     }
 }

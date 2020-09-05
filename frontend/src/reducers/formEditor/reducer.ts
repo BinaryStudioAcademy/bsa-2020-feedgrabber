@@ -7,11 +7,13 @@ import {
     deleteQuestionFromSectionRoutine,
     loadSavedSectionsByQuestionnaireRoutine,
     loadSectionsByQuestionnaireRoutine,
-    setCurrentSectionRoutine, updateQuestionInSectionRoutine, updateSectionRoutine
+    setCurrentQuestionInSection,
+    setCurrentSectionRoutine,
+    updateQuestionInSectionRoutine,
+    updateSectionRoutine
 } from "sagas/sections/routines";
 import {
     addSelectedQuestionsRoutine,
-    loadQuestionByIdRoutine,
     loadQuestionsBySectionRoutine,
     loadQuestionsRoutine,
     saveQuestionRoutine
@@ -85,6 +87,11 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 },
                 isLoading: false
             };
+        case setCurrentQuestionInSection.TRIGGER:
+            return {
+                ...state,
+                currentQuestion: payload
+            };
         case updateQuestionInSectionRoutine.SUCCESS:
         case addQuestionToSectionRoutine.SUCCESS:
         case deleteQuestionFromSectionRoutine.SUCCESS:
@@ -107,7 +114,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case updateQuestionInSectionRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
         case loadQuestionsRoutine.TRIGGER:
-        case loadQuestionByIdRoutine.TRIGGER:
         case loadSectionsByQuestionnaireRoutine.TRIGGER:
         case createSectionRoutine.TRIGGER:
         case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
@@ -117,13 +123,14 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 isLoading: true
             };
         case addSelectedQuestionsRoutine.FAILURE:
+        case addQuestionToSectionRoutine.FAILURE:
+        case deleteQuestionFromSectionRoutine.FAILURE:
         case updateQuestionInSectionRoutine.FAILURE:
         case saveAndGetQuestionnaireRoutine.FAILURE:
         case loadSectionsByQuestionnaireRoutine.FAILURE:
         case loadSavedSectionsByQuestionnaireRoutine.FAILURE:
         case loadQuestionsBySectionRoutine.FAILURE:
         case loadOneQuestionnaireRoutine.FAILURE:
-        case loadQuestionByIdRoutine.FAILURE:
         case loadQuestionsRoutine.FAILURE:
         case saveQuestionRoutine.FAILURE:
             return {

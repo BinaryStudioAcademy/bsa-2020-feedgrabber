@@ -14,7 +14,7 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
 import {saveQuestionRoutine} from "../questions/routines";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {loadSavedSectionsByQuestionnaireRoutine} from "../sections/routines";
+import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from "../sections/routines";
 import {loadNotificationsRoutine} from "../notifications/routines";
 
 function* loadQuestionnairesList() {
@@ -90,7 +90,7 @@ function* loadOneQuestionnaire(action) {
     try {
         const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
         yield put(loadOneQuestionnaireRoutine.success(res.data.data));
-        yield put(loadSavedSectionsByQuestionnaireRoutine.trigger(action.payload));
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload));
     } catch (error) {
         yield put(loadOneQuestionnaireRoutine.failure(error));
         toastr.error("Unable to fetch data");

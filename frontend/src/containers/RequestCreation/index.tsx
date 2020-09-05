@@ -26,6 +26,7 @@ import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -82,6 +83,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   <UICard>
                     <UICardBlock>
                         <QuestionnairePreview
+                            currentQuestion={{} as IQuestion}
                             indexQuestions={indexQuestionsRoutine}
                             sections={sections}
                         />

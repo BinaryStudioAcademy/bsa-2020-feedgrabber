@@ -4,8 +4,7 @@ import styles from "./styles.module.sass";
 import {IQuestion} from "models/forms/Questions/IQuesion";
 import UISection from "components/UI/UISectionCard";
 import SectionBlock from "components/SectionBlock";
-import {connect} from "react-redux";
-import SectionQuestionList from "./QuestionnaireList";
+import SectionQuestionList from "./SectionQuestionList";
 import {useTranslation} from "react-i18next";
 import {ISection} from "../../reducers/formEditor/reducer";
 
@@ -23,9 +22,13 @@ interface IIndexObject {
 interface IQuestionnairePreviewProps {
     sections: ISection[];
 
+    currentQuestion: IQuestion;
+
     indexQuestions?(questions: IIndex): void;
 
     updateSection?(action: {}): void;
+
+    updateOrder?(action: {}): void;
 
     addQuestionToSection?(action: any): void;
 
@@ -35,6 +38,8 @@ interface IQuestionnairePreviewProps {
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
                                                                   sections,
                                                                   indexQuestions,
+                                                                  updateOrder,
+                                                                  currentQuestion,
                                                                   updateSection,
                                                                   addQuestionToSection,
                                                                   deleteQuestionFromSection
@@ -42,7 +47,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
     const [t] = useTranslation();
     const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
         deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
-        // TODO add saga for editing existing question to section
+        // TODO add saga for adding existing question to section
         addQuestionToSection({sectionId: sectionId, questionId: question.id});
     };
 
@@ -57,6 +62,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
                     <UISection section={section} onChanged={handleChapterChange}/>
                     {section.questions.length ?
                         <SectionQuestionList
+                            currentQuestion={currentQuestion}
                             sectionId={section.id}
                             questions={section.questions}
                             handleMoveQuestionToSection={moveQuestionToSection}
@@ -70,6 +76,4 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
         </div>);
 };
 
-const mapDispatch = {};
-
-export default connect(null, mapDispatch)(QuestionnairePreview);
+export default QuestionnairePreview;

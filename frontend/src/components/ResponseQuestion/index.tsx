@@ -4,14 +4,15 @@ import {IAppState} from "models/IAppState";
 import {IQuestionResponse} from "models/IQuestionResponse";
 import React, {FC, useEffect, useRef, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
-import {loadQuestionByIdRoutine} from "sagas/questions/routines";
 import {Button, Header, Label, Modal, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
+import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
 
-const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
-    ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
-        const {name, categoryTitle, type, id} = question;
+const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { isCurrent: boolean }> =
+    ({question, answerHandler, setMenuPos, setCurrentQ, isCurrent, isModifyingEnabled}) => {
+        const {name, categoryTitle, type} = question;
         const [editor, setEditor] = useState(false);
         const detailsPage = useRef(null);
         const [t] = useTranslation();
@@ -19,14 +20,14 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         const [modal, setModal] = useState(false);
 
         useEffect(() => {
-            id === nowModifying.id ? setStyle(styles.highlight) : setStyle(styles.container);
-        }, [id, nowModifying]);
+            isCurrent ? setStyle(styles.highlight) : setStyle(styles.container);
+        }, [isCurrent]);
 
         const handleSegmentClick = () => {
             if ((isModifyingEnabled && !answerHandler) || editor) {
                 setEditor(!editor);
-                const {top, right} = detailsPage.current.getBoundingClientRect();
-                loadCurrent({id: question.id, top, right});
+                setCurrentQ(question);
+                setMenuPos(detailsPage.current.getBoundingClientRect().top);
             }
             if (!isModifyingEnabled && !answerHandler && !editor) {
                 setModal(true);
@@ -36,8 +37,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
         const handleSubmit = () => {
             setModal(false);
             setEditor(!editor);
-            const {top, right} = detailsPage.current.getBoundingClientRect();
-            loadCurrent({id: question.id, top, right});
+            setMenuPos(detailsPage.current.getBoundingClientRect().top);
         };
 
         function handleCancel() {
@@ -70,12 +70,10 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                     </Modal.Content>
                 </Modal>
                 <Segment className={style}>
-                    {editor && (id === nowModifying.id)
+                    {editor && isCurrent
                         ?
                         <div className={styles.scaleTop}>
-                            <QuestionDetailsPage
-                                match={{params: {id: question.id}}}
-                                isPreview={{question: question, close: handleSegmentClick}}/>
+                            <QuestionDetailsPage match={{params: {id: question.id}}}/>
                         </div>
                         :
                         <div onClick={handleSegmentClick}>
@@ -89,15 +87,10 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     };
 
 const mapState = (state: IAppState) => ({
-    nowModifying: state.formEditor.currentQuestion,
     isModifyingEnabled: state.formEditor.questionnaire.isEditingEnabled
 });
 
-const mapDispatch = {
-    loadCurrent: loadQuestionByIdRoutine
-};
-
-const connector = connect(mapState, mapDispatch);
+const connector = connect(mapState, {setMenuPos: setFloatingMenuPos, setCurrentQ: setCurrentQuestionInSection});
 
 type ResponseQuestionProps = ConnectedProps<typeof connector>;
 

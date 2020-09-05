@@ -20,14 +20,15 @@ interface IIndexObject  {
 interface ISectionQuestionListProps {
     sectionId: string;
     questions: IQuestion[];
+    currentQuestion: IQuestion;
     indexQuestions(questions: IIndex): void;
     handleMoveQuestionToSection(sectionId: string, question: IQuestion, prevSectionId: string): void;
-
 }
 
 const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
     sectionId,
     questions,
+    currentQuestion,
     indexQuestions,
     handleMoveQuestionToSection
   }) => {
@@ -51,7 +52,7 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
         const updCards = questionCards.slice();
         updCards.splice(dragIndex, 1);
         updCards.splice(hoverIndex, 0, dragCard);
-        setQuestionCards(updCards);
+        setQuestionCards([...updCards]);
       },
       [questionCards]
     );
@@ -68,6 +69,7 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
           <QuestionCard
             question={q}
             key={index}
+            isCurrent={q.id === currentQuestion.id}
             id={q.id}
             index={index}
             moveCard={moveCard}
@@ -91,8 +93,4 @@ const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({
     );
 };
 
-const MapDispatchToProps = {
-    updateOrder: updateQuestionsOrderRoutine
-};
-
-export default connect(null, MapDispatchToProps) (SectionQuestionList);
+export default SectionQuestionList;

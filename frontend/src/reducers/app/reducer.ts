@@ -1,12 +1,14 @@
 import {IAppState} from "../../models/IAppState";
-import {toggleMenuRoutine} from "../../sagas/app/routines";
+import {setFloatingMenuPos, toggleMenuRoutine} from "../../sagas/app/routines";
 
 const initialState = {
-    showMenu: true
+    showMenu: true,
+    floatingMenuPos: 0
 };
 
 export interface IAdditionalState {
     showMenu: boolean;
+    floatingMenuPos: number;
 }
 
 const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => {
@@ -14,6 +16,12 @@ const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => 
         return {
             ...state,
             showMenu: payload
+        };
+    }
+    if (type === setFloatingMenuPos.TRIGGER) {
+        return {
+            ...state,
+            floatingMenuPos: payload
         };
     }
     return state;

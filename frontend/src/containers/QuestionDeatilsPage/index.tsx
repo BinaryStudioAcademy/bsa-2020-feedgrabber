@@ -11,10 +11,9 @@ import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
 
-const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
+const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
     {
         currentQuestion,
-        loadQuestion,
         isLoading,
         updateQuestion,
         loadCategories,
@@ -22,8 +21,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         sectionId,
         categories,
         match,
-        addQuestion,
-        isPreview
+        addQuestion
     }) => {
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
     const [question, setQuestion] = useState<IQuestion>(
@@ -65,21 +63,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
         loadCategories();
     }, [loadCategories]);
 
-    useEffect(() => {
-        if (match.params.id === 'new') {
-            loadQuestion({id: ""});
-        } else {
-            if (!isPreview)
-                loadQuestion({id: match.params.id});
-        }
-    }, [loadQuestion, match.params.id, isPreview]);
-
-    useEffect(() => {
-        setQuestion(currentQuestion);
-    }, [currentQuestion]);
-
     return (
-        <div className={`${styles.question_container} ${isPreview ? styles.question_container_preview : ''}`}>
+        <div className={`${styles.question_container}`}>
             {isLoading ?
                 <Loader active inline='centered'/>
                 :

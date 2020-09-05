@@ -14,16 +14,19 @@ import {IAppState} from "../../models/IAppState";
 const PrivateRoute = ({component: Component, showMenu, toggleMenu,
                           getSettings, user, roles = null, ...rest}) => {
     const isLogged = useAuth();
+    const { i18n } = useTranslation();
+
     const path = rest.path;
 
     useEffect(() => {
         getSettings();
     }, [getSettings]);
 
-    const { i18n } = useTranslation();
-    if (i18n.language !== user.settings?.language) {
-        i18n.changeLanguage(user.settings.language);
-    }
+    useEffect(() => {
+        if (i18n.language !== user.settings?.language) {
+            i18n.changeLanguage(user.settings.language);
+        }
+    },[i18n, user.settings]);
 
     return (
         <Route
