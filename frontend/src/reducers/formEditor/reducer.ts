@@ -2,6 +2,7 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IAppState} from "../../models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {
+    addExistingQuestionToSectionRoutine,
     addQuestionToSectionRoutine,
     createSectionRoutine,
     deleteQuestionFromSectionRoutine,
@@ -94,6 +95,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             };
         case updateQuestionInSectionRoutine.SUCCESS:
         case addQuestionToSectionRoutine.SUCCESS:
+        case addExistingQuestionToSectionRoutine.SUCCESS:
         case deleteQuestionFromSectionRoutine.SUCCESS:
             const {sectionId, questions, questionId} = payload;
             const curQ = questionId ? questions.find(q => q.id === questionId) : {};
@@ -111,6 +113,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case loadOneQuestionnaireRoutine.TRIGGER:
         case deleteQuestionFromSectionRoutine.TRIGGER:
         case addQuestionToSectionRoutine.TRIGGER:
+        case addExistingQuestionToSectionRoutine.TRIGGER:
         case updateQuestionInSectionRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
         case loadQuestionsRoutine.TRIGGER:
@@ -124,6 +127,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             };
         case addSelectedQuestionsRoutine.FAILURE:
         case addQuestionToSectionRoutine.FAILURE:
+        case addExistingQuestionToSectionRoutine.FAILURE:
         case deleteQuestionFromSectionRoutine.FAILURE:
         case updateQuestionInSectionRoutine.FAILURE:
         case saveAndGetQuestionnaireRoutine.FAILURE:

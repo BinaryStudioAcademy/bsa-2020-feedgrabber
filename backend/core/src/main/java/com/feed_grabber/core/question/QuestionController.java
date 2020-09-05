@@ -4,7 +4,6 @@ package com.feed_grabber.core.question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
@@ -12,7 +11,6 @@ import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.questionnaire.dto.QuestionDeleteDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
@@ -21,11 +19,9 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.feed_grabber.core.role.RoleConstants.*;
@@ -102,7 +98,7 @@ public class QuestionController {
     public void addExisting(@RequestBody AddExistingQuestionsDto dto)
             throws QuestionnaireNotFoundException {
 
-        questionService.addExistingQuestion(dto);
+        questionService.addExistingQuestions(dto);
     }
 
     @ApiOperation(value = "Delete the question")

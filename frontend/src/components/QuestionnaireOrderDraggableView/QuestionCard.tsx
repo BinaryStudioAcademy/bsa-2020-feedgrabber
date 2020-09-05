@@ -13,7 +13,7 @@ export interface ICardProps {
   index: number;
   moveCard(dragIndex: number, hoverIndex: number): void;
   onDropCard(): void;
-  addQuestionToSection?(sectionId: string, question: IQuestion, prevSectionId: string): void;
+  addQuestionToSection?(sectionId: string, question: IQuestion, prevSectionId: string, index: number): void;
 }
 
 export interface IDragItem {
@@ -75,7 +75,7 @@ const QuestionCard: React.FC<ICardProps> = ({
       const dropResult = monitor.getDropResult();
       if (item && dropResult) {
         const sectionId = dropResult.id as string;
-        addQuestionToSection(sectionId, question, prevSectionId);
+        addQuestionToSection(sectionId, question, prevSectionId, index);
       }
     },
     collect: (monitor: any) => ({

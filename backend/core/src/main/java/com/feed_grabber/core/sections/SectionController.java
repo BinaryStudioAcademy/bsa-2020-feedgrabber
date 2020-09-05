@@ -3,6 +3,7 @@ package com.feed_grabber.core.sections;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.QuestionService;
+import com.feed_grabber.core.question.dto.AddExistingQuestionBySectionDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
@@ -55,13 +56,22 @@ public class SectionController {
     }
 
     @ApiOperation(value = "Add new question to the section", notes = "Provide both id: section and question")
-    @PutMapping("/question/{id}")
+    @PutMapping("/question")
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<Pair<List<QuestionDto>, UUID>> addQuestion(@RequestBody QuestionCreateDto dto) throws NotFoundException {
         var id = questionService.create(dto).getId();
         return new AppResponse<>(
                 Pair.of(sectionService.getSectionQuestions(dto.getSectionId().orElseThrow(NotFoundException::new)), id)
         );
+    }
+
+    @ApiOperation(value = "Add new question to the section from existing", notes = "Provide both id: section and question")
+    @PutMapping("/add")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<Pair<List<QuestionDto>, UUID>> addQuestionFromExisting(@RequestBody AddExistingQuestionBySectionDto dto) throws NotFoundException {
+        questionService.addExistingQuestionBySection(dto);
+        return new AppResponse<>(
+                Pair.of(sectionService.getSectionQuestions(dto.getSectionId()), dto.getQuestionIndexed().getQuestionId()));
     }
 
     @PostMapping("/{id}/question")

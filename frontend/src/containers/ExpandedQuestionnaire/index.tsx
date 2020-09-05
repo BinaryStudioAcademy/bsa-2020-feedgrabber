@@ -6,6 +6,7 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 
 import {
+    addExistingQuestionToSectionRoutine,
     addQuestionToSectionRoutine,
     createSectionRoutine,
     deleteQuestionFromSectionRoutine, updateQuestionsOrderRoutine,
@@ -46,7 +47,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 
     const handleDeleteQuestion = () => deleteQuestion({
         questionId: currentQuestion.id,
-        questionnaireId: questionnaire.id
+        sectionId: currentSection.id
     });
 
     const addNewQuestion = () => {
@@ -118,7 +119,7 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
     updateSection: updateSectionRoutine,
-    addQuestionToSection: addQuestionToSectionRoutine,
+    addQuestionToSection: addExistingQuestionToSectionRoutine,
     deleteQuestionFromSection: deleteQuestionFromSectionRoutine,
     addQuestion: addQuestionToSectionRoutine,
     toggleMenu: toggleMenuRoutine,

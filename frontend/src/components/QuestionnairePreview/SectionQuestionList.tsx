@@ -22,7 +22,7 @@ interface ISectionQuestionListProps {
     questions: IQuestion[];
     currentQuestion: IQuestion;
     indexQuestions(questions: IIndex): void;
-    handleMoveQuestionToSection(sectionId: string, question: IQuestion, prevSectionId: string): void;
+    handleMoveQuestionToSection(sectionId: string, question: IQuestion, prevSectionId: string, index: number): void;
 }
 
 const SectionQuestionList: React.FC<ISectionQuestionListProps> = ({

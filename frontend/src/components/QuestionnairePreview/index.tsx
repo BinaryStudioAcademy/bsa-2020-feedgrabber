@@ -45,10 +45,9 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
                                                                   deleteQuestionFromSection
                                                               }) => {
     const [t] = useTranslation();
-    const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string) => {
+    const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string, index: number) => {
         deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
-        // TODO add saga for adding existing question to section
-        addQuestionToSection({sectionId: sectionId, questionId: question.id});
+        addQuestionToSection({sectionId: sectionId, index, questionId: question.id});
     };
 
     const handleChapterChange = (id: string, title: string, description: string) => {

@@ -21,6 +21,11 @@ public abstract class QuestionMapper {
     @Mapping(target = "index", ignore = true)
     public abstract QuestionDto questionToQuestionDto(Question question);
 
+    @Mapping(source = "question.category.title", target = "categoryTitle")
+    @Mapping(source = "question.text", target = "name")
+    @Mapping(source = "question.payload", target = "details")
+    public abstract QuestionDto questionToQuestionDtoIndexed(Question question, Integer index);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "category", target = "category")
     @Mapping(source = "createDto.name", target = "text")

@@ -109,7 +109,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public void addExistingQuestion(AddExistingQuestionsDto dto) throws QuestionnaireNotFoundException {
+    public void addExistingQuestions(AddExistingQuestionsDto dto) throws QuestionnaireNotFoundException {
         var questionnaire = anketRep
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
@@ -118,6 +118,18 @@ public class QuestionService {
                 .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
 
         anketRep.save(questionnaire);
+    }
+
+    @Transactional
+    public void addExistingQuestionBySection(AddExistingQuestionBySectionDto dto) throws NotFoundException {
+
+        var indexedQuestion = dto.getQuestionIndexed();
+
+        var question = quesRep
+                .findById(indexedQuestion.getQuestionId())
+                .orElseThrow(NotFoundException::new);
+
+        sectionRepository.addQuestion(dto.getSectionId(), question.getId(), indexedQuestion.getIndex());
     }
 
     public QuestionDto update(QuestionUpdateDto dto)

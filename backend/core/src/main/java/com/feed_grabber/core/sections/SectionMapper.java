@@ -38,7 +38,7 @@ public interface SectionMapper {
                      return new QuestionDto(
                              q.getId(),
                              q.getText(),
-                             index.toString(),
+                             index,
                              q.getCategory().getTitle(),
                              q.getType(),
                              q.getPayload(),

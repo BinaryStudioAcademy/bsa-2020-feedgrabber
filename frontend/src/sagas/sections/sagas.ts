@@ -2,6 +2,7 @@ import apiClient from "../../helpers/apiClient";
 import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
+    addExistingQuestionToSectionRoutine,
     addQuestionToSectionRoutine,
     createSectionRoutine,
     deleteQuestionFromSectionRoutine,
@@ -54,7 +55,7 @@ function* loadSections(action) {
 function* addQuestionToSection(action) {
     try {
         const question: IQuestion = action.payload;
-        const result = yield call(apiClient.put, `/api/section/question/${question.sectionId}`, question);
+        const result = yield call(apiClient.put, `/api/section/question`, question);
 
         const {second: questionId, first: questions} = result.data.data;
 
@@ -65,6 +66,25 @@ function* addQuestionToSection(action) {
         }));
     } catch (error) {
         yield put(addQuestionToSectionRoutine.failure());
+    }
+}
+
+function* addExistingQuestionToSection(action) {
+    try {
+        const {sectionId, questionId: qId, index} = action.payload;
+        const result = yield call(apiClient.put, `/api/section/add`,
+            {questionIndexed: {questionId: qId, index}, sectionId}
+        );
+
+        const {second: questionId, first: questions} = result.data.data;
+
+        yield put(addExistingQuestionToSectionRoutine.success({
+            sectionId,
+            questionId,
+            questions: parseQuestions(questions)
+        }));
+    } catch (error) {
+        yield put(addExistingQuestionToSectionRoutine.failure());
     }
 }
 
@@ -85,7 +105,7 @@ function* updateQuestion(action) {
 
 function* deleteQuestionFromSection(action) {
     try {
-        const {sectionId, id: questionId}: IQuestion = action.payload;
+        const {sectionId, questionId} = action.payload;
         const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
         yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: parseQuestions(result.data.data)}));
     } catch (error) {
@@ -146,6 +166,7 @@ export default function* sectionSagas() {
         yield takeEvery(updateQuestionInSectionRoutine.TRIGGER, updateQuestion),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder),
-        yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved)
+        yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved),
+        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection)
     ]);
 }

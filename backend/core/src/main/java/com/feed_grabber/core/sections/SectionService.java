@@ -16,6 +16,7 @@ import com.feed_grabber.core.sections.model.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,7 +63,8 @@ public class SectionService {
         return section
                 .map(Section::getQuestions)
                 .map(q -> q.stream()
-                        .map(q2 -> QuestionMapper.MAPPER.questionToQuestionDto(q2.getQuestion()))
+                        .map(q2 -> QuestionMapper.MAPPER.questionToQuestionDtoIndexed(q2.getQuestion(), q2.getOrderIndex()))
+                        .sorted(Comparator.comparing(QuestionDto::getIndex))
                         .collect(Collectors.toList())
                 )
                 .orElseThrow(NotFoundException::new);
