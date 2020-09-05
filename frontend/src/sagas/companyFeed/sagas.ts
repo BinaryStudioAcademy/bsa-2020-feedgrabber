@@ -15,7 +15,7 @@ const defaultItem = {
   images: '',
   createdAt: new Date().toLocaleString(),
   type: '',
-  user: { id: '11', username: 'mark' }
+  user: { id: '', username: '' }
 } as ICompanyFeedItem;
 
 const feedItemMock = {
