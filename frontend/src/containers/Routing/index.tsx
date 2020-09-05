@@ -28,6 +28,7 @@ import RespondentReport from "../ReportPage/RespondentReport";
 import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
 import ErrorPage from "../ErrorPage";
+import NewsList from "../../components/NewsList";
 
 // just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
@@ -60,7 +61,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/editor" component={RedirectFormEditor}/>
                     <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
-                    <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>
+                    <PrivateRoute exact path="/company" component={NewsList}/>
                     <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/people/:tab" component={PeopleManagementPage}/>
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>

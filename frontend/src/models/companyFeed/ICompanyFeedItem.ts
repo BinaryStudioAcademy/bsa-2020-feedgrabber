@@ -4,9 +4,9 @@ import {IPaginationInfo} from "../IPaginationInfo";
 export interface ICompanyFeedItem {
   id?: string;
   title: string;
-  text: string;
+  body: string;
   type: string;
-  creationDate: string;
+  createdAt: string;
   image?: string;
   user: IUserShort;
 }

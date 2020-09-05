@@ -4,6 +4,7 @@ import {
   loadCompanyFeedRoutine,
   loadCompanyFeedItemRoutine,
   saveCompanyFeedItemRoutine,
+  createCompanyFeedItemRoutine,
   setCompanyFeedPaginationRoutine
 } from "../../sagas/companyFeed/routines";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
@@ -31,12 +32,15 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
       };
     case loadCompanyFeedRoutine.TRIGGER:
     case loadCompanyFeedItemRoutine.TRIGGER:
+    case createCompanyFeedItemRoutine.TRIGGER:
+    case saveCompanyFeedItemRoutine.TRIGGER:
       return {
         ...state,
         isLoading: true
       };
     case loadCompanyFeedRoutine.FAILURE:
     case loadCompanyFeedItemRoutine.FAILURE:
+    case createCompanyFeedItemRoutine.FAILURE:
     case saveCompanyFeedItemRoutine.FAILURE:
       return {
         ...state,
@@ -49,6 +53,7 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         list: payload
       };
     case loadCompanyFeedItemRoutine.SUCCESS:
+    case createCompanyFeedItemRoutine.SUCCESS:
       return {
         ...state,
         isLoading: false,

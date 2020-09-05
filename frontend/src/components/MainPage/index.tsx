@@ -17,7 +17,6 @@ import {Tab} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import { Link } from 'react-router-dom';
 import NewsList from 'components/NewsList';
-import { INewsItem } from 'models/news';
 
 interface IItem {
     id: string;
@@ -29,7 +28,7 @@ interface IItem {
 interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
     reportsList?: IReportShort[];
-    newsList?: INewsItem[];
+//     newsList?: INewsItem[];
     isLoading: boolean;
 
     loadQuestionnaires(): void;
@@ -42,7 +41,7 @@ const MainPage: FC<IMainPageProps> =
     ({
          questionnaireList,
          reportsList = [],
-         newsList,
+//         newsList,
          isLoading,
          loadQuestionnaires,
          loadReports
