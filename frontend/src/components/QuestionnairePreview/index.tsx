@@ -59,7 +59,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
             {sections && sections.map(section =>
                 <SectionBlock id={section.id}>
                     <UISection section={section} onChanged={handleChapterChange}/>
-                    {section.questions.length ?
+                    {section.questions?.length ?
                         <SectionQuestionList
                             currentQuestion={currentQuestion}
                             sectionId={section.id}

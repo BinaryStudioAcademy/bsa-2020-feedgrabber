@@ -13,18 +13,59 @@ import RadioButtonQuestionUI from "../ComponentsQuestions/RadioButtonQuestionUI"
 import FreeTextQuestionUI from "../ComponentsQuestions/FreeTextQuestionUI";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {defaultQuestionValues} from "./defaultValues";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 interface IQuestionProps {
     currentQuestion: IQuestion;
     categories: string[];
+
     onValueChange(state: IComponentState<IQuestion>): void;
+
     onSave?(question: IQuestion);
+
+    loadCategories(x: any): void;
+
     onDelete?(question: IQuestion);
 }
 
+const renderForm = (question, handleQuestionDetailsUpdate) => {
+    switch (question.type) {
+        case QuestionType.radio:
+            return (
+                <RadioButtonQuestionUI
+                    value={question.details}
+                    onValueChange={handleQuestionDetailsUpdate}/>
+            );
+        case QuestionType.checkbox:
+            return (
+                <CheckboxQuestion
+                    onValueChange={handleQuestionDetailsUpdate}
+                    value={question.details}
+                />
+            );
+        case QuestionType.scale:
+            return (
+                <ScaleQuestion
+                    onValueChange={handleQuestionDetailsUpdate}
+                    value={question.details}
+                />
+            );
+        case QuestionType.freeText:
+            return <FreeTextQuestionUI/>;
+        case QuestionType.date:
+            return <DateSelectionQuestionUI/>;
+        case QuestionType.fileUpload:
+            return <FileUploadQuestion
+                onValueChange={handleQuestionDetailsUpdate}
+                value={question.details}
+            />;
+        default:
+            return <span className={styles.question_default}>You should choose the type of the question :)</span>;
+    }
+};
 const QuestionD: React.FC<IQuestionProps> = ({
                                                  currentQuestion,
+                                                 loadCategories,
                                                  categories,
                                                  onValueChange,
                                                  onSave,
@@ -38,7 +79,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
     const [t] = useTranslation();
 
     useEffect(() => {
-        if(onValueChange) {
+        if (onValueChange) {
             onValueChange({
                 value: question, isCompleted:
                     categoryIsValid &&
@@ -71,49 +112,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
                 innerFormIsValid &&
                 !!question.type
         });
-    };
-
-    const renderForm = () => {
-        switch (question.type) {
-            case QuestionType.radio:
-                return (
-                    <RadioButtonQuestionUI
-                        value={question.details}
-                        onValueChange={handleQuestionDetailsUpdate}/>
-                );
-            case QuestionType.checkbox:
-                return (
-                    <CheckboxQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
-            // case QuestionType.multichoice:
-            //     return (
-            //         <MultichoiseQuestion
-            //             onValueChange={handleQuestionDetailsUpdate}
-            //             value={question.details}
-            //         />
-            //     );
-            case QuestionType.scale:
-                return (
-                    <ScaleQuestion
-                        onValueChange={handleQuestionDetailsUpdate}
-                        value={question.details}
-                    />
-                );
-            case QuestionType.freeText:
-                return <FreeTextQuestionUI/>;
-            case QuestionType.date:
-                return <DateSelectionQuestionUI/>;
-            case QuestionType.fileUpload:
-                return <FileUploadQuestion
-                    onValueChange={handleQuestionDetailsUpdate}
-                    value={question.details}
-                />;
-            default:
-                return <span className={styles.question_default}>You should choose the type of the question :)</span>;
-        }
     };
 
     const setQuestionType = (data: any) => {
@@ -177,11 +175,11 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                         handleQuestionUpdate({...question, name: value as string});
                                     }}
                                     onBlur={e => {
-                                      if(e.currentTarget.value.length === 0 ) {
-                                        handleQuestionUpdate({...question, name: defaultQuestionValues.name});
-                                        setNameIsValid(true);
-                                      }
-                                      formik.handleBlur(e);
+                                        if (e.currentTarget.value.length === 0) {
+                                            handleQuestionUpdate({...question, name: defaultQuestionValues.name});
+                                            setNameIsValid(true);
+                                        }
+                                        formik.handleBlur(e);
                                     }}
                                 />
                                 <QuestionDetailsOptions question={question} setQuestionType={setQuestionType}/>
@@ -189,6 +187,7 @@ const QuestionD: React.FC<IQuestionProps> = ({
                             <Form.Dropdown
                                 placeholder={t('Choose category or type custom')}
                                 closeOnBlur
+                                onClick={loadCategories}
                                 allowAdditions
                                 additionLabel={t('Add new category: ')}
                                 onChange={(e, {value}) => {
@@ -216,17 +215,17 @@ const QuestionD: React.FC<IQuestionProps> = ({
                             />{' '}
                             <Divider/>
                             <div className={styles.question_form_answers}>
-                                {renderForm()}
+                                {renderForm(question, handleQuestionDetailsUpdate)}
                             </div>
                             <Divider/>
                             <div className={styles.actions}>
-                                { onSave &&
-                                    <span className={styles.icon}>
+                                {onSave &&
+                                <span className={styles.icon}>
                                         <Icon name="plus square outline" size="large" onClick={handleSave}/>
                                     </span>
                                 }
-                                { onDelete &&
-                                    <span className={styles.icon}>
+                                {onDelete &&
+                                <span className={styles.icon}>
                                         <Icon name="trash alternate outline" size="large" onClick={handleDelete}/>
                                     </span>
                                 }
@@ -246,8 +245,8 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                             toggle
                                             name="isRequired"
                                             checked={formik.values.isRequired}
-                                            onChange={(e, value ) =>
-                                                setQuestion({ ...question, isRequired: value.checked })}
+                                            onChange={(e, value) =>
+                                                setQuestion({...question, isRequired: value.checked})}
                                         />}
                                 />
                             </div>

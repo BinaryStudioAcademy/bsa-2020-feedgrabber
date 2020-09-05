@@ -93,9 +93,4 @@ const QuestionCard: React.FC<ICardProps> = ({
   );
 };
 
-// const MapDispatch = {
-//   addQuestionToSection: addQuestionToSectionRoutine
-// };
-
-// export default connect(null, MapDispatch)(QuestionCard);
 export default QuestionCard;

@@ -58,10 +58,6 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
         return () => clearTimeout(timer);
     }, [q, question, onSubmit]);
 
-    useEffect(() => {
-        loadCategories();
-    }, [loadCategories]);
-
     return (
         <div className={`${styles.question_container}`}>
             {isLoading ?
@@ -71,6 +67,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
                     key={question.id}
                     currentQuestion={question}
                     categories={categories}
+                    loadCategories={loadCategories}
                     onValueChange={handleQuestionDetailsUpdate}
                 />
             }
