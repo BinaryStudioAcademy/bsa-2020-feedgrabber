@@ -1,5 +1,6 @@
 .newsItemContainer {
     display: flex;
+    cursor: auto;
 }
 
 .newsItemContainer > img {
@@ -50,4 +51,14 @@
     font-size: 13px;
     position: absolute;
     bottom: 3px;
+}
+
+.icons {
+    margin-top: 10px;
+}
+
+.comments {
+    &:hover {
+        cursor: pointer;
+    }
 }

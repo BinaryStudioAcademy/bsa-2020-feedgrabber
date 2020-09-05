@@ -11,5 +11,6 @@ import org.mapstruct.factory.Mappers;
 public interface NewsMapper {
     NewsMapper MAPPER = Mappers.getMapper(NewsMapper.class);
 
+    @Mapping(target = "commentsCount", expression = "java(news.getComments().size())")
     NewsDto newsToNewsDto(News news);
 }

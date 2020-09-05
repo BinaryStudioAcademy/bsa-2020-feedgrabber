@@ -1,5 +1,6 @@
 package com.feed_grabber.core.news.model;
 
+import com.feed_grabber.core.comments.model.Comment;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.image.model.Image;
 import com.feed_grabber.core.user.model.User;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -50,6 +52,9 @@ public class News {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
+
+    @OneToMany(mappedBy = "news", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.REFRESH })
+    private List<Comment> comments;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

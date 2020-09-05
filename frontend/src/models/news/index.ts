@@ -8,6 +8,7 @@ export interface INewsItem {
     type: string;
     body: string;
     user: IUserShort;
+    commentsCount: number;
     date: string;
 }
 
