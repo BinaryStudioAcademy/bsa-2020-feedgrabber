@@ -18,19 +18,18 @@ interface INewsFeedProps {
 }
 
 const getNewsItem = (item: ICompanyFeedItem) => {
-  console.log('render');
   return (
     <UICardBlock key={item.id}
                  className={styles.newsItemContainer}>
-      {item.image
-        ? <img src={item.image} alt='' height="240" width="180"/>
+      {item.imageId
+        ? <img src={item.imageId} alt='' height="240" width="180"/>
         : <div/>
       } {/* scale 4:3 * 60*/}
       <div className={styles.detailesContainer}>
         <div className={styles.type}>{item.type}</div>
         <div className={styles.title}>{item.title}</div>
         <div className={styles.body}>{item.body}</div>
-        <div className={item.image ? styles.authorContainer : styles.authorContainerRight}>
+        <div className={item.imageId ? styles.authorContainer : styles.authorContainerRight}>
           {item.user.avatar
             ? <img src={item.user.avatar} alt='avatar' height="50" width="50"/>
             : null
@@ -51,7 +50,6 @@ const NewsList: React.FC<INewsFeedProps> = ({
   loadNews,
   setPagination
 }) => {
-  console.log(pagination);
   return (
     <div className={styles.newsItemContainer}>
       <Link to="/company/new">

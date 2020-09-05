@@ -12,7 +12,7 @@ import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
 const defaultItem = {
   title: '',
   body: '',
-  images: '',
+  imageId: null,
   createdAt: new Date().toLocaleString(),
   type: '',
   user: { id: '', username: '' }
@@ -23,7 +23,7 @@ const feedItemMock = {
   title: 'Demo is coming...',
   body: 'Hello everybody. Today I would like to talk about our deadline. ' +
         'So, we know that the demo will be on 02.09.2020.',
-  images: 'https://i.imgur.com/gWFCLjG.png',
+  imageId: 'fd876825-ba11-4113-bdf7-02cb2c572be9',
   createdAt: new Date().toLocaleString(),
   type: '',
   user: { id: '11', username: 'mark' }

@@ -49,7 +49,6 @@ const GenericPagination: FC<IGenericPaginationProps> = (
   useEffect(() => {
     if (pagination) {
       if (pagination.page !== 0 && pagination.page >= getPageCount()) {
-        console.log('if');
         handleChangePage(pagination.page - 1);
       }
     } else {

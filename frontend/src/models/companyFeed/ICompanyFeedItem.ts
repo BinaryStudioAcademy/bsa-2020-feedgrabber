@@ -1,5 +1,5 @@
 import { IUserShort } from "../user/types";
-import {IPaginationInfo} from "../IPaginationInfo";
+// import { IPaginationInfo } from "../IPaginationInfo";
 
 export interface ICompanyFeedItem {
   id?: string;
@@ -7,7 +7,7 @@ export interface ICompanyFeedItem {
   body: string;
   type: string;
   createdAt: string;
-  image?: string;
+  imageId?: string;
   user: IUserShort;
 }
 

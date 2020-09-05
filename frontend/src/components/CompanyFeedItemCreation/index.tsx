@@ -40,30 +40,32 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
     if (item.id) {
       saveFeedItem(item);
     } else {
-      createFeedItem({
+      console.log(item);
+      const newItem = {
         title: item.title,
         body: item.body,
         type: item.type,
-        image: item.image
-      });
+        imageId: item.imageId
+      };
+      console.log({ newItem });
+      createFeedItem(newItem);
     }
     // history.push('/company');
   };
 
   useEffect(() => {
     setItem(feedItem);
-    setImage(feedItem?.image);
+    setImage(feedItem?.imageId);
   }, [feedItem]);
 
   const uploadFile = file => {
     const formData = new FormData();
-    formData.append('file', file, file.name);
+    formData.append('image', file);
     return apiClient.post('/api/image', formData).then(res => {
+      console.log(res.data);
       setImage(res.data.link);
       return res.data.id;
     });
-    // upload image and return the link
-    // return new Promise(resolve => resolve('https://i.imgur.com/4gfjYyI.png'));
   };
 
   const handleUploadPhoto = async files => {
@@ -73,12 +75,13 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
       if (!file.type.startsWith('image')) {
         return;
       }
-      const newLink = await uploadFile(file);
+      const imageId = await uploadFile(file);
       setIsUploading(false);
-      setItem({ ...item, image: newLink as string });
+      console.log(imageId);
+      setItem({ ...item, imageId: imageId });
     } catch (error) {
       toastr.error('Unable to upload images');
-      setItem({ ...item, image: '' });
+      setItem({ ...item, imageId: null });
     }
     setIsUploading(false);
   };
