@@ -4,6 +4,7 @@ import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
 import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
+import {isEqual} from 'lodash';
 import QuestionDetails from "../../components/QuestionDetails";
 import {Loader} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
@@ -11,53 +12,51 @@ import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
 
-const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
+const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
     {
-        currentQuestion,
+        question,
         isLoading,
         updateQuestion,
         loadCategories,
         questionnaireId,
         sectionId,
         categories,
-        match,
         addQuestion
     }) => {
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
-    const [question, setQuestion] = useState<IQuestion>(
-        Object.keys(currentQuestion).length ? currentQuestion : defaultQuestion
+    const [q, setQ] = useState<IQuestion>(
+        Object.keys(question).length ? question : defaultQuestion
     );
-    const [prevQuestion, setPrevQuestion] = useState<IQuestion>();
 
     const handleQuestionDetailsUpdate = (state: IComponentState<IQuestion>) => {
         const {isCompleted, value} = state;
         setIsQuestionDetailsValid(isCompleted);
-        setQuestion(value);
+        setQ(value);
     };
 
     const onSubmit = question => {
         if (isQuestionDetailsValid) {
-            match.params.id !== "new" ?
+            !question.id ?
                 addQuestion({
                     ...question,
                     questionnaireId,
                     sectionId
                 }) :
                 updateQuestion({
-                    ...question
+                    ...question,
+                    sectionId
                 });
         }
     };
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (prevQuestion !== question) {
-                onSubmit(question);
-                setPrevQuestion(question);
+            if (!isEqual(q, question)) {
+                onSubmit(q);
             }
-        }, 2000);
+        }, 3000);
         return () => clearTimeout(timer);
-    }, [question, prevQuestion, onSubmit]);
+    }, [q, question, onSubmit]);
 
     useEffect(() => {
         loadCategories();
@@ -80,8 +79,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match }> = (
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestion: state.formEditor.currentQuestion,
-    isLoading: state.categories.isLoading,
+    isLoading: state.formEditor.isLoading,
     categories: state.categories.list,
     questionnaireId: state.formEditor.questionnaire.id,
     sectionId: state.formEditor.sections.current.id

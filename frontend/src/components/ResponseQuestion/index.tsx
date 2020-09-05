@@ -13,7 +13,6 @@ import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { isCurrent: boolean }> =
     ({question, answerHandler, setMenuPos, setCurrentQ, isCurrent, isModifyingEnabled}) => {
         const {name, categoryTitle, type} = question;
-        const [editor, setEditor] = useState(false);
         const detailsPage = useRef(null);
         const [t] = useTranslation();
         const [style, setStyle] = useState(styles.container);
@@ -24,19 +23,17 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { is
         }, [isCurrent]);
 
         const handleSegmentClick = () => {
-            if ((isModifyingEnabled && !answerHandler) || editor) {
-                setEditor(!editor);
+            if (isModifyingEnabled && !answerHandler) {
                 setCurrentQ(question);
                 setMenuPos(detailsPage.current.getBoundingClientRect().top);
             }
-            if (!isModifyingEnabled && !answerHandler && !editor) {
+            if (!isModifyingEnabled && !answerHandler) {
                 setModal(true);
             }
         };
 
         const handleSubmit = () => {
             setModal(false);
-            setEditor(!editor);
             setMenuPos(detailsPage.current.getBoundingClientRect().top);
         };
 
@@ -70,10 +67,10 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { is
                     </Modal.Content>
                 </Modal>
                 <Segment className={style}>
-                    {editor && isCurrent
+                    {isCurrent
                         ?
                         <div className={styles.scaleTop}>
-                            <QuestionDetailsPage match={{params: {id: question.id}}}/>
+                            <QuestionDetailsPage question={question}/>
                         </div>
                         :
                         <div onClick={handleSegmentClick}>

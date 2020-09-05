@@ -26,6 +26,10 @@ function parseSectionWithQuestion(section) {
     };
 }
 
+function parseQuestions(questions: IQuestion[]) {
+    return questions.map(q => parseQuestion(q));
+}
+
 function* createSection(action) {
     try {
         const result = yield call(apiClient.post, `/api/section`, action.payload);
@@ -53,7 +57,12 @@ function* addQuestionToSection(action) {
         const result = yield call(apiClient.put, `/api/section/question/${question.sectionId}`, question);
 
         const {first: questionId, second: questions} = result.data.data;
-        yield put(addQuestionToSectionRoutine.success({sectionId: question.sectionId, questionId, questions}));
+
+        yield put(addQuestionToSectionRoutine.success({
+            sectionId: question.sectionId,
+            questionId,
+            questions: parseQuestions(questions)
+        }));
     } catch (error) {
         yield put(addQuestionToSectionRoutine.failure());
     }
@@ -62,11 +71,11 @@ function* addQuestionToSection(action) {
 function* updateQuestion(action) {
     try {
         const question: IQuestion = action.payload;
-        const res = yield call(apiClient.post, `/api/section/${question.sectionId}`, question);
+        const res = yield call(apiClient.post, `/api/section/${question.sectionId}/question`, question);
 
         yield put(updateQuestionInSectionRoutine.success({
             sectionId: question.sectionId,
-            questions: res.data.data,
+            questions: parseQuestions(res.data.data),
             questionId: question.id
         }));
     } catch (e) {
@@ -78,7 +87,7 @@ function* deleteQuestionFromSection(action) {
     try {
         const {sectionId, id: questionId}: IQuestion = action.payload;
         const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
-        yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: result.data.data}));
+        yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: parseQuestions(result.data.data)}));
     } catch (error) {
         yield put(deleteQuestionFromSectionRoutine.failure());
     }
