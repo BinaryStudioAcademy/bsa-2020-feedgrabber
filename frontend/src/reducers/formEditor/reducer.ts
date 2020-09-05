@@ -54,8 +54,8 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             return {
                 ...state,
                 sections: {
-                    current: {...state.sections.current, payload},
-                    list: state.sections.list.map(s => s.id === payload.id ? {...s, payload} : s)
+                    current: {...state.sections.current, ...payload},
+                    list: state.sections.list.map(s => s.id === payload.id ? {...s, ...payload} : s)
                 },
                 isLoading: false
             };
