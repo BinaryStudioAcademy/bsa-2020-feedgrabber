@@ -10,21 +10,32 @@ import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
 const defaultItem = {
   title: '',
   text: '',
-  images: [],
-  creationDate: new Date().toLocaleString()
+  images: '',
+  creationDate: new Date().toLocaleString(),
+  type: '',
+  user: { id: '11', username: 'mark' }
 } as ICompanyFeedItem;
 
 const feedItemMock = {
+  id: '1',
   title: 'Demo is coming...',
   text: 'Hello everybody. Today I would like to talk about our deadline. ' +
         'So, we know that the demo will be on 02.09.2020.',
-  images: [ 'https://i.imgur.com/gWFCLjG.png', 'https://i.imgur.com/wDPiXac.png' ]
+  images: 'https://i.imgur.com/gWFCLjG.png',
+  type: '',
+  user: { id: '11', username: 'mark' }
 };
 
 function* loadCompanyFeed() {
   try {
     // here will be api-call
-    yield put(loadCompanyFeedRoutine.success([ feedItemMock ]));
+    console.log('load feed items');
+    yield put(loadCompanyFeedRoutine.success({
+      total: 2,
+      size: 10,
+      page: 0,
+      items: [ feedItemMock ]
+    }));
   } catch (error) {
     console.log(error);
     yield put(loadCompanyFeedRoutine.failure());

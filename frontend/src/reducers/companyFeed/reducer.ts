@@ -3,25 +3,32 @@ import { IAppState } from "../../models/IAppState";
 import {
   loadCompanyFeedRoutine,
   loadCompanyFeedItemRoutine,
-  saveCompanyFeedItemRoutine
+  saveCompanyFeedItemRoutine,
+  setCompanyFeedPaginationRoutine
 } from "../../sagas/companyFeed/routines";
+import {IPaginationInfo} from "../../models/IPaginationInfo";
 
 export interface ICompanyFeedState {
-  list?: ICompanyFeedItem[];
-  currentItem?: ICompanyFeedItem;
+  list: IPaginationInfo<ICompanyFeedItem>;
+  current: ICompanyFeedItem;
   isLoading: boolean;
   error?: string;
 }
 
 const initialState: ICompanyFeedState = {
   list: null,
-  currentItem: null,
+  current: null,
   isLoading: false,
   error: null
 };
 
 const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {type, payload}) => {
   switch(type) {
+    case setCompanyFeedPaginationRoutine.TRIGGER:
+      return {
+        ...state,
+        pagination: payload
+      };
     case loadCompanyFeedRoutine.TRIGGER:
     case loadCompanyFeedItemRoutine.TRIGGER:
       return {
@@ -45,7 +52,7 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
       return {
         ...state,
         isLoading: false,
-        currentItem: payload
+        current: payload
       };
     default:
       return state;

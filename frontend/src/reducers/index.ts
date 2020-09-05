@@ -16,7 +16,6 @@ import companyFeedReducer from "./companyFeed/reducer";
 import notificationReducer from "./notifications";
 import responseReducer from "./questionnaireResponse/reducer";
 import sectionsReducer from './section/reducer';
-import newsReducer from './news/reducer';
 import searchReducer from "./search/reducer";
 
 export default combineReducers({
@@ -37,6 +36,5 @@ export default combineReducers({
   companyFeed: companyFeedReducer,
   notifications: notificationReducer,
   role: roleReducer,
-  news: newsReducer,
   search: searchReducer
 });
