@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, put, takeEvery } from 'redux-saga/effects';
 import { toastr } from 'react-redux-toastr';
 import {
   loadCompanyFeedRoutine,
@@ -21,7 +21,7 @@ const feedItemMock = {
   images: [ 'https://i.imgur.com/gWFCLjG.png', 'https://i.imgur.com/wDPiXac.png' ]
 };
 
-function* loadCompanyFeed(action) {
+function* loadCompanyFeed() {
   try {
     // here will be api-call
     yield put(loadCompanyFeedRoutine.success([ feedItemMock ]));
