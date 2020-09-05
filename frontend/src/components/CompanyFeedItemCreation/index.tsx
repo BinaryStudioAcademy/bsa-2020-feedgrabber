@@ -50,7 +50,7 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
       console.log({ newItem });
       createFeedItem(newItem);
     }
-    // history.push('/company');
+    history.push('/company');
   };
 
   useEffect(() => {
