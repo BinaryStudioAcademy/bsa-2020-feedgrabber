@@ -6,11 +6,12 @@ import {loadCategoriesRoutine} from "sagas/categories/routines";
 import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import {isEqual} from 'lodash';
 import QuestionDetails from "../../components/QuestionDetails";
-import {Loader} from "semantic-ui-react";
-import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
+import { Loader } from "semantic-ui-react";
+import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
+import UIButton from "../../components/UI/UIButton";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
     {

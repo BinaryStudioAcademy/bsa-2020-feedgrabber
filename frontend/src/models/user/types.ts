@@ -1,5 +1,6 @@
 export interface IUserState {
     isLoading?: boolean;
+    isRegisteredSuccess?: boolean;
     info?: IUserInfo;
     error?: IUserErrors;
     shortInfo?: IUserShort;
@@ -30,6 +31,8 @@ export interface IUserShort {
     id: string;
     avatar?: string;
     username: string;
+    firstName?: string;
+    lastName?: string;
     selected?: boolean;
     loading?: boolean;
 }

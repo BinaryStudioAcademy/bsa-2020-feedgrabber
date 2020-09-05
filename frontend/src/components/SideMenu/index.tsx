@@ -14,12 +14,12 @@ interface ISideMenuProps {
     toggleMenu(): void;
 }
 
-const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu}) => {
+const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded}) => {
     const [t] = useTranslation();
     return (
         <div className={`${styles.menuWrapper} ${expanded ? styles.menuWrapperOpen : styles.menuWrapperClosed}`}>
             <div className={styles.menuContent}>
-                <NavLink exact to="/" className={styles.menuItem} activeClassName={styles.menuItemActive}>
+                <NavLink exact to="/home" className={styles.menuItem} activeClassName={styles.menuItemActive}>
                     <RiHome2Line size="1.3em" color="white" className={styles.menuItemIcon}/>
                     <span className={styles.menuItemTitle}>{t("Home")}</span>
                 </NavLink>
@@ -33,20 +33,14 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded, toggleMenu
                         <span className={styles.menuItemTitle}>{t("Questionnaires")}</span>
                     </NavLink>
                 </AccessManager>
-                <NavLink to="/teams" className={styles.menuItem} activeClassName={styles.menuItemActive}>
+                <NavLink to="/people" className={styles.menuItem} activeClassName={styles.menuItemActive}>
                     <RiTeamLine size="1.3em" className={styles.menuItemIcon} color="white"/>
-                    <span className={styles.menuItemTitle}>{t("Teams")}</span>
+                    <span className={styles.menuItemTitle}>{t("People")}</span>
                 </NavLink>
                 <AccessManager staticPermission={Permissions.managingQuestions}>
                     <NavLink to="/questions" className={styles.menuItem} activeClassName={styles.menuItemActive}>
                         <AiOutlineQuestion className={styles.menuItemIcon} size="1.3em" color="white"/>
                         <span className={styles.menuItemTitle}>{t("Questions")}</span>
-                    </NavLink>
-                </AccessManager>
-                <AccessManager staticPermission={Permissions.blockUserAccount}>
-                    <NavLink to="/employees" className={styles.menuItem} activeClassName={styles.menuItemActive}>
-                        <RiTeamLine className={styles.menuItemIcon} size="1.3em" color="white"/>
-                        <span className={styles.menuItemTitle}>{t("Employees")}</span>
                     </NavLink>
                 </AccessManager>
             </div>

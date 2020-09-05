@@ -16,4 +16,6 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
     List<Company> findAllByUserEmail(String email);
 
     boolean existsByName(String uuid);
+
+    Optional<Company> findCompanyBySubdomainName(String subdomain);
 }

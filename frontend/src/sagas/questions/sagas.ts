@@ -14,7 +14,6 @@ import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {loadSectionsByQuestionnaireRoutine} from 'sagas/sections/routines';
 
 export const parseQuestion = rawQuestion => ({
     ...rawQuestion,
@@ -113,7 +112,7 @@ function* deleteOneByQuestionnaireId(action) {
             apiClient.delete, `/api/questions/questionnaires/${questionId}/${questionnaireId}`,
             action.payload
         );
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
+      yield put(deleteFromQuestionnaireRoutine.success(questionId));
     } catch (e) {
         yield put(deleteFromQuestionnaireRoutine.failure(e.data.error));
         toastr.error("Unable to delete question");

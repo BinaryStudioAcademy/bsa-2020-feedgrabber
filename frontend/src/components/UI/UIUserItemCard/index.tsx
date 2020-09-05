@@ -3,6 +3,7 @@ import {Image} from 'semantic-ui-react';
 import styles from "./styles.module.sass";
 
 interface IUIUserItemCardProps {
+  username?: string;
   userInfo?: string;
   firstName?: string;
   lastName?: string;
@@ -12,7 +13,7 @@ interface IUIUserItemCardProps {
 }
 
 const defaultAvatar =
-    "https://upload.wikimedia.org/wikipedia/commons/7/77/Avatar_cat.png";
+    "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
 const UIUserItemCard: FC<IUIUserItemCardProps> =
     ({
        userInfo,
@@ -26,7 +27,7 @@ const UIUserItemCard: FC<IUIUserItemCardProps> =
              onClick={onClick}>
           <div className={styles.userAvatar}><Image src={avatar ? avatar : defaultAvatar} size='large' circular/></div>
           <div className={styles.userNames}>
-            {(lastName !== undefined ? lastName : '') + ' ' + (firstName !== undefined ? firstName : '')}
+            {firstName && lastName ? `${lastName} ${firstName}` : ''}
           </div>
           <div className={styles.userInfo}>{userInfo}</div>
         </div>

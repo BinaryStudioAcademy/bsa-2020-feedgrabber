@@ -102,6 +102,6 @@ public class QuestionnaireService {
     }
 
     public void delete(UUID id) {
-        questionnaireRepository.deleteById(id);
+        questionnaireRepository.softDeleteById(id);
     }
 }

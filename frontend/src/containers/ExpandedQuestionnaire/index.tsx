@@ -4,7 +4,6 @@ import styles from './styles.module.sass';
 import QuestionnairePreview from 'components/QuestionnairePreview';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
-
 import {
     addExistingQuestionToSectionRoutine,
     addQuestionToSectionRoutine,
@@ -12,8 +11,7 @@ import {
     deleteQuestionFromSectionRoutine, updateQuestionsOrderRoutine,
     updateSectionRoutine
 } from 'sagas/sections/routines';
-import {indexQuestionsRoutine} from "sagas/questions/routines";
-
+import {deleteFromQuestionnaireRoutine, indexQuestionsRoutine} from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/LoaderWrapper";
@@ -123,7 +121,7 @@ const mapDispatchToProps = {
     deleteQuestionFromSection: deleteQuestionFromSectionRoutine,
     addQuestion: addQuestionToSectionRoutine,
     toggleMenu: toggleMenuRoutine,
-    deleteQuestion: deleteQuestionFromSectionRoutine,
+    deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,
     indexQuestions: indexQuestionsRoutine,
     updateOrder: updateQuestionsOrderRoutine
