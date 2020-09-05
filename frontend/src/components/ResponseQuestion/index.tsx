@@ -34,6 +34,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { is
 
         const handleSubmit = () => {
             setModal(false);
+            setCurrentQ(question);
             setMenuPos(detailsPage.current.getBoundingClientRect().top);
         };
 

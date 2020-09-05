@@ -56,7 +56,7 @@ function* addQuestionToSection(action) {
         const question: IQuestion = action.payload;
         const result = yield call(apiClient.put, `/api/section/question/${question.sectionId}`, question);
 
-        const {first: questionId, second: questions} = result.data.data;
+        const {second: questionId, first: questions} = result.data.data;
 
         yield put(addQuestionToSectionRoutine.success({
             sectionId: question.sectionId,
