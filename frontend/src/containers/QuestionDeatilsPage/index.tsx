@@ -3,24 +3,26 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
+import {deleteFromQuestionnaireRoutine, loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import {isEqual} from 'lodash';
 import QuestionDetails from "../../components/QuestionDetails";
-import { Loader } from "semantic-ui-react";
-import { IComponentState } from "../../components/ComponentsQuestions/IQuestionInputContract";
+import {Loader} from "semantic-ui-react";
+import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
 
-const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
+const QuestionDetailsPage: FC<QuestionDetailsProps & { question: IQuestion }> = (
     {
         question,
         isLoading,
         updateQuestion,
         loadCategories,
         questionnaireId,
-        sectionId,
+        section,
+        deleteQuestion,
         categories,
+        sections,
         addQuestion
     }) => {
     const [isQuestionDetailsValid, setIsQuestionDetailsValid] = useState(false);
@@ -34,17 +36,32 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
         setQ(value);
     };
 
-    const onSubmit = question => {
+    const copyQuestion = () => {
+        const s = section ?? sections[sections.length - 1];
+        addQuestion({
+            ...question,
+            name: `${question.name} (copy)`,
+            sectionId: s.id,
+            index: s.questions.length
+        });
+    };
+
+    const handleDeleteQuestion = () => deleteQuestion({
+        questionId: question.id,
+        sectionId: question.id
+    });
+
+    const onSubmit = () => {
         if (isQuestionDetailsValid) {
-            !question.id ?
+            !q.id ?
                 addQuestion({
-                    ...question,
+                    ...q,
                     questionnaireId,
-                    sectionId
+                    sectionId: section.id
                 }) :
                 updateQuestion({
-                    ...question,
-                    sectionId
+                    ...q,
+                    sectionId: section.id
                 });
         }
     };
@@ -52,7 +69,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
     useEffect(() => {
         const timer = setTimeout(() => {
             if (!isEqual(q, question)) {
-                onSubmit(q);
+                onSubmit();
             }
         }, 3000);
         return () => clearTimeout(timer);
@@ -66,6 +83,8 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & {question: IQuestion}> = (
                 <QuestionDetails
                     key={question.id}
                     currentQuestion={question}
+                    onCopy={copyQuestion}
+                    onDelete={handleDeleteQuestion}
                     categories={categories}
                     loadCategories={loadCategories}
                     onValueChange={handleQuestionDetailsUpdate}
@@ -80,14 +99,16 @@ const mapState = (state: IAppState) => ({
     categories: state.categories.list,
     question: state.formEditor.currentQuestion,
     questionnaireId: state.formEditor.questionnaire.id,
-    sectionId: state.formEditor.sections.current.id
+    section: state.formEditor.sections.current,
+    sections: state.formEditor.sections.list
 });
 
 const mapDispatch = {
     addQuestion: addQuestionToSectionRoutine,
     updateQuestion: updateQuestionInSectionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
-    loadCategories: loadCategoriesRoutine
+    loadCategories: loadCategoriesRoutine,
+    deleteQuestion: deleteFromQuestionnaireRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

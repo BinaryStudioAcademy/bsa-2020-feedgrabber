@@ -121,9 +121,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             };
         case loadOneQuestionnaireRoutine.TRIGGER:
         case deleteQuestionFromSectionRoutine.TRIGGER:
-        case addQuestionToSectionRoutine.TRIGGER:
-        case addExistingQuestionToSectionRoutine.TRIGGER:
-        case updateQuestionInSectionRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
         case loadQuestionsRoutine.TRIGGER:
         case loadSectionsByQuestionnaireRoutine.TRIGGER:
@@ -135,9 +132,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 isLoading: true
             };
         case addSelectedQuestionsRoutine.FAILURE:
-        case addQuestionToSectionRoutine.FAILURE:
-        case addExistingQuestionToSectionRoutine.FAILURE:
-        case deleteQuestionFromSectionRoutine.FAILURE:
         case updateQuestionInSectionRoutine.FAILURE:
         case saveAndGetQuestionnaireRoutine.FAILURE:
         case loadSectionsByQuestionnaireRoutine.FAILURE:

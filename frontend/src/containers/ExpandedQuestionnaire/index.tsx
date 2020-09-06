@@ -41,11 +41,6 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         loadQuestionnaire(match.params.id);
     }, [match.params.id, loadQuestionnaire]);
 
-    const handleDeleteQuestion = () => deleteQuestion({
-        questionId: currentQuestion.id,
-        sectionId: currentSection.id
-    });
-
     const addNewQuestion = () => {
         const section = currentSection ?? sections[sections.length - 1];
         addQuestion({
@@ -71,6 +66,11 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             index: section.questions.length
         });
     };
+
+    const handleDeleteQuestion = () => deleteQuestion({
+        questionId: currentQuestion.id,
+        sectionId: currentSection.id
+    });
 
     return (
         <>
@@ -113,8 +113,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
     updateSection: updateSectionRoutine,
-    addQuestion: addQuestionToSectionRoutine,
     toggleMenu: toggleMenuRoutine,
+    addQuestion: addQuestionToSectionRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,
     updateSectionsR: updateSections,

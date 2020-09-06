@@ -68,7 +68,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { is
                     </Modal.Content>
                 </Modal>
                 <Segment className={style}>
-                    {isCurrent
+                    {isCurrent && isModifyingEnabled
                         ?
                         <div className={styles.scaleTop}>
                             <QuestionDetailsPage />
