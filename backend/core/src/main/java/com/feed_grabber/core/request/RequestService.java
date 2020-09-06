@@ -1,16 +1,10 @@
 package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.security.TokenService;
-import com.feed_grabber.core.config.NotificationService;
-
-import com.feed_grabber.core.notification.MessageTypes;
-import com.feed_grabber.core.notification.UserNotificationMapper;
-import com.feed_grabber.core.notification.UserNotificationRepository;
-import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
-import com.feed_grabber.core.file.dto.S3FileCreationDto;
 import com.feed_grabber.core.file.model.S3File;
+import com.feed_grabber.core.notification.UserNotificationService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.report.dto.FileReportsDto;
@@ -18,7 +12,6 @@ import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.dto.RequestShortDto;
-import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -37,26 +30,24 @@ public class RequestService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final ResponseRepository responseRepository;
-    private final UserNotificationRepository userNotificationRepository;
-    private final NotificationService notificationService;
     private final FileRepository fileRepository;
+    private final UserNotificationService userNotificationService;
+
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
                           UserRepository userRepository,
                           TeamRepository teamRepository,
                           ResponseRepository responseRepository,
-                          UserNotificationRepository userNotificationRepository,
-                          NotificationService notificationService,
-                          FileRepository fileRepository) {
+                          FileRepository fileRepository,
+                          UserNotificationService userNotificationService) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.responseRepository = responseRepository;
-        this.userNotificationRepository = userNotificationRepository;
-        this.notificationService = notificationService;
         this.fileRepository = fileRepository;
+        this.userNotificationService = userNotificationService;
     }
 
     public UUID createNew(CreateRequestDto dto) throws NotFoundException {
@@ -98,33 +89,18 @@ public class RequestService {
             else users.remove(targetUser);
         }
 
-        var notifyUsers = dto.getNotifyUsers();
         var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
 
-        if (dto.getNotifyUsers()) {
-            Map<UUID, UUID> userIdNotificationId = new HashMap();
-            for (User user : users)
-                userIdNotificationId.put(user.getId(),
-                        userNotificationRepository.save(UserNotification
-                                .builder()
-                                .request(request)
-                                .text("You have new questionnaire request")
-                                .isClosed(!notifyUsers)
-                                .isRead(false)
-                                .type(MessageTypes.plain_text)
-                                .user(user)
-                                .build()).getId());
-            for (UUID userId : userIdNotificationId.keySet()) {
-                notificationService.sendMessageToConcreteUser(
-                        userId.toString(),
-                        "notify",
-                        userNotificationRepository
-                                .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
-                );
+        var notifyUsers = dto.getNotifyUsers();
+        if (notifyUsers) {
+            for (User user : users) {
+                userNotificationService.saveAndSendResponseNotification(request,
+                        user,
+                        "You have new questionnaire request");
             }
         }
 
