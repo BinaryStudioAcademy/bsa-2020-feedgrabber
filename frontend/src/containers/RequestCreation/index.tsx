@@ -22,9 +22,12 @@ import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
-import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
+import {
+    loadSectionsByQuestionnaireRoutine,
+    updateQuestionsOrderRoutine,
+    updateSectionRoutine
+} from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
@@ -49,6 +52,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        loadTeams,
        loadUsers,
        loadSections,
+       updateSection,
+       updateOrder,
        sendRequest,
        isLoadingUsers,
        isLoadingTeams,
@@ -83,8 +88,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   <UICard>
                     <UICardBlock>
                         <Form
+                            updateSection={updateSection}
+                            updateOrder={updateOrder}
                             currentQuestion={{} as IQuestion}
-                            indexQuestions={indexQuestionsRoutine}
                             sections={sections}
                         />
                     </UICardBlock>
@@ -343,6 +349,8 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
+  updateOrder: updateQuestionsOrderRoutine,
+  updateSection: updateSectionRoutine,
   sendRequest: sendQuestionnaireRequestRoutine,
   loadSections: loadSectionsByQuestionnaireRoutine
 };

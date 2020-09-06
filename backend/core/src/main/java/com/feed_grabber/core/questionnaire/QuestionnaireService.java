@@ -3,6 +3,9 @@ package com.feed_grabber.core.questionnaire;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.question.QuestionService;
+import com.feed_grabber.core.question.QuestionType;
+import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
@@ -10,12 +13,14 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsExcepti
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.SectionService;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
-import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,15 +28,16 @@ public class QuestionnaireService {
 
     private final QuestionnaireRepository questionnaireRepository;
     private final CompanyRepository companyRepository;
-
+    private final QuestionService questionService;
     private final SectionService sectionService;
 
     @Autowired
     public QuestionnaireService(QuestionnaireRepository questionnaireRepository,
                                 CompanyRepository companyRepository,
-                                SectionService sectionService) {
+                                QuestionService questionService, SectionService sectionService) {
         this.questionnaireRepository = questionnaireRepository;
         this.companyRepository = companyRepository;
+        this.questionService = questionService;
         this.sectionService = sectionService;
     }
 
@@ -63,7 +69,7 @@ public class QuestionnaireService {
     }
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId)
-            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
+            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException, SectionNotFoundException {
         if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)) {
             throw new AlreadyExistsException("Such questionnair already exists in this company");
         }
@@ -79,6 +85,17 @@ public class QuestionnaireService {
         var savedQuestionnaire = questionnaireRepository.save(questionnaire);
 
         var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId(), 0));
+
+        questionService.create(new QuestionCreateDto(
+                "Default Question",
+                "any",
+                QuestionType.radio,
+                Optional.of(savedQuestionnaire.getId()),
+                Optional.of(section.getId()),
+                "{\"answerOptions\":[\"Option 1\"],\"includeOther\":false}",
+                0,
+                false
+        ));
 
         return QuestionnaireMapper.MAPPER
                 .questionnaireToQuestionnaireDto(savedQuestionnaire);

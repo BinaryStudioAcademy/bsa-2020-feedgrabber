@@ -1,4 +1,4 @@
-import {all, call, put, takeEvery, select} from 'redux-saga/effects';
+import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
     addQuestionnaireRoutine,
@@ -12,9 +12,7 @@ import {
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
-import {saveQuestionRoutine} from "../questions/routines";
-import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from "../sections/routines";
+import {loadSectionsByQuestionnaireRoutine} from "../sections/routines";
 import {loadNotificationsRoutine} from "../notifications/routines";
 
 function* loadQuestionnairesList() {
@@ -36,9 +34,7 @@ function* saveAndPutNewQuestionnaire(action) {
         const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `/api/questionnaires`, action.payload);
         const payload = res.data.data;
         yield put(saveAndGetQuestionnaireRoutine.success(payload));
-        yield put(saveQuestionRoutine.trigger({...defaultQuestion, questionnaireId: payload.id}));
     } catch (e) {
-        console.log(e);
         yield put(saveAndGetQuestionnaireRoutine.failure());
         toastr.error("Failed saving form");
     }

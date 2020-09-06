@@ -55,8 +55,9 @@ function* loadSections(action) {
 function* addQuestionToSection(action) {
     try {
         const question: IQuestion = action.payload;
+        console.log(action);
         const result = yield call(apiClient.put, `/api/section/question`, question);
-
+        console.log(result);
         const {second: questionId, first: questions} = result.data.data;
 
         yield put(addQuestionToSectionRoutine.success({
@@ -140,10 +141,9 @@ function* updateSection(action) {
 
 function* updateOrder(action) {
     try {
-        const result = yield call(apiClient.put, `/api/section/${action.payload.id}/order`, action.payload);
-        yield put(updateQuestionsOrderRoutine.success(result.data.data));
+        yield call(apiClient.patch, `/api/section/question/reorder`, action.payload);
     } catch (error) {
-        yield put(updateQuestionsOrderRoutine.failure());
+        toastr.error("Question order wasn't saved, try again");
     }
 }
 

@@ -7,35 +7,18 @@ import Section from "./Section/Section";
 import {useTranslation} from "react-i18next";
 import {ISection} from "../../reducers/formEditor/reducer";
 
-interface IIndex {
-    // questionnaireId: string;
-    sectionId: string;
-    questions: IIndexObject[];
-}
-
-interface IIndexObject {
-    questionId: string;
-    index: number;
-}
-
 interface IFormProps {
     sections: ISection[];
     currentQuestion: IQuestion;
-    indexQuestions?(questions: IIndex): void;
-    updateSection?(action: {}): void;
-    updateOrder?(action: {}): void;
-    addQuestionToSection?(action: any): void;
-    deleteQuestionFromSection?(action: any): void;
+    updateSection(action: {}): void;
+    updateOrder(action: {}): void;
 }
 
 const Form: FC<IFormProps> = ({
                                   sections,
-                                  indexQuestions,
                                   updateOrder,
                                   currentQuestion,
-                                  updateSection,
-                                  addQuestionToSection,
-                                  deleteQuestionFromSection
+                                  updateSection
                               }) => {
     const [data, setData] = useState<ISection[]>(sections);
     const [t] = useTranslation();
@@ -82,15 +65,13 @@ const Form: FC<IFormProps> = ({
                     : s
             )));
         }
+        updateOrder({
+            oldIndex: source.index,
+            newIndex: destination.index,
+            oldSection: source.droppableId,
+            newSection: destination.droppableId
+        });
     }
-
-    const moveQuestionToSection = (sectionId: string, question: IQuestion, prevSectionId: string, index: number) => {
-        deleteQuestionFromSection({sectionId: prevSectionId, questionId: question.id});
-        addQuestionToSection({sectionId: sectionId, index, questionId: question.id});
-
-        // moveQuestionToSectionAction({sectionId: sectionId, prevSectionId, questionId: question.id, index});
-
-    };
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>

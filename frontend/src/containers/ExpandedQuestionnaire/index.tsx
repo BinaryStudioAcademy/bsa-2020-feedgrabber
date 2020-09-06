@@ -83,13 +83,9 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                         <UIContent>
                             <div className={styles.questions_container}>
                                 <Form
-                                    addQuestionToSection={addQuestionToSection}
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}
                                     currentQuestion={currentQuestion}
-                                    deleteQuestionFromSection={deleteQuestionFromSection}
-                                    // moveQuestionToSection={moveQuestionToSection}
-                                    indexQuestions={indexQuestions}
                                     sections={sections}
                                 />
                             </div>

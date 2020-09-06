@@ -4,7 +4,6 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionRepository;
 import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.*;
@@ -85,14 +84,23 @@ public class SectionService {
     public void reorderQuestions(SectionsQuestionOrderDto dto) throws NotFoundException {
         var oldS = dto.getOldSection();
         var newS = dto.getNewSection();
+        var oldI = dto.getOldIndex().intValue();
+        var newI = dto.getNewIndex().intValue();
 
         if (oldS.equals(newS)) {
             var section = sectionRepository.findById(newS).orElseThrow(SectionNotFoundException::new);
-            var oldQuestions = section.getQuestions();
-            var oldQ = findByIndex(dto.getOldIndex(), oldQuestions);
 
-            oldQuestions.remove(oldQ);
-            oldQuestions.add(dto.getNewIndex(), oldQ);
+            section.getQuestions().forEach(q -> {
+                var orderI = q.getOrderIndex().intValue();
+                if (orderI == oldI) {
+                    q.setOrderIndex(newI);
+                    return;
+                }
+                if (orderI > oldI && orderI < newI) {
+                    q.setOrderIndex(--orderI);
+                }
+            });
+
             sectionRepository.save(section);
         } else {
             var oldSection = sectionRepository.findById(oldS).orElseThrow(SectionNotFoundException::new);
@@ -100,9 +108,20 @@ public class SectionService {
             var newSection = sectionRepository.findById(newS).orElseThrow(SectionNotFoundException::new);
             var oldQs2 = newSection.getQuestions();
 
-            var q = findByIndex(dto.getOldIndex(), oldQs1);
+            var q = findByIndex(oldI, oldQs1);
             oldQs1.remove(q);
-            oldQs2.add(dto.getNewIndex(), q);
+            oldQs1.forEach(qs -> {
+                var orderI = qs.getOrderIndex().intValue();
+                if (orderI > oldI) qs.setOrderIndex(--orderI);
+            });
+
+            oldQs2.forEach(qs -> {
+                var orderI = qs.getOrderIndex().intValue();
+                if (orderI >= newI) qs.setOrderIndex(++orderI);
+            });
+            q.setOrderIndex(newI);
+            oldQs2.add(q);
+
             sectionRepository.saveAll(List.of(oldSection, newSection));
         }
     }
