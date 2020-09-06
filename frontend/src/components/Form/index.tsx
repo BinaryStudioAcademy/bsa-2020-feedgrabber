@@ -60,7 +60,7 @@ const Form: FC<IFormProps> = ({
 
             const newSection = {
                 ...startSection,
-                questions: insertAtIndex(newQuestions, destination, draggedItem)
+                questions: insertAtIndex(newQuestions, destination.index, draggedItem)
             };
 
             setData(data => data.map(s => s.id === newSection.id ? newSection : s));

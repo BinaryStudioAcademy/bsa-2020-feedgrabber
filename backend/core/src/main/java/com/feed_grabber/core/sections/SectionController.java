@@ -6,10 +6,7 @@ import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionService;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.sections.dto.SectionCreateDto;
-import com.feed_grabber.core.sections.dto.SectionDto;
-import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
-import com.feed_grabber.core.sections.dto.SectionUpdateDto;
+import com.feed_grabber.core.sections.dto.*;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.util.Pair;
@@ -80,6 +77,11 @@ public class SectionController {
         deleteQuestion(dto.getQuestionIndexed().getQuestionId(), dto.getPrevSectionId().orElseThrow(NotFoundException::new));
 
         return addQuestionFromExisting(dto);
+    }
+
+    @PatchMapping("/question/reorder")
+    public void questionReordering(@RequestBody SectionsQuestionOrderDto dto) throws NotFoundException {
+        sectionService.reorderQuestions(dto);
     }
 
     @PostMapping("/{id}/question")

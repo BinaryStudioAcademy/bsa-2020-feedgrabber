@@ -3,16 +3,14 @@ package com.feed_grabber.core.sections;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionRepository;
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
+import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.sections.dto.SectionCreateDto;
-import com.feed_grabber.core.sections.dto.SectionDto;
-import com.feed_grabber.core.sections.dto.SectionQuestionsDto;
-import com.feed_grabber.core.sections.dto.SectionUpdateDto;
+import com.feed_grabber.core.sections.dto.*;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import com.feed_grabber.core.sections.model.Section;
+import com.feed_grabber.core.sections.model.SectionQuestion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +80,37 @@ public class SectionService {
             section.setDescription(dto.getDescription());
         }
         return SectionMapper.MAPPER.modelToDto(sectionRepository.save(section));
+    }
+
+    public void reorderQuestions(SectionsQuestionOrderDto dto) throws NotFoundException {
+        var oldS = dto.getOldSection();
+        var newS = dto.getNewSection();
+
+        if (oldS.equals(newS)) {
+            var section = sectionRepository.findById(newS).orElseThrow(SectionNotFoundException::new);
+            var oldQuestions = section.getQuestions();
+            var oldQ = findByIndex(dto.getOldIndex(), oldQuestions);
+
+            oldQuestions.remove(oldQ);
+            oldQuestions.add(dto.getNewIndex(), oldQ);
+            sectionRepository.save(section);
+        } else {
+            var oldSection = sectionRepository.findById(oldS).orElseThrow(SectionNotFoundException::new);
+            var oldQs1 = oldSection.getQuestions();
+            var newSection = sectionRepository.findById(newS).orElseThrow(SectionNotFoundException::new);
+            var oldQs2 = newSection.getQuestions();
+
+            var q = findByIndex(dto.getOldIndex(), oldQs1);
+            oldQs1.remove(q);
+            oldQs2.add(dto.getNewIndex(), q);
+            sectionRepository.saveAll(List.of(oldSection, newSection));
+        }
+    }
+
+    private SectionQuestion findByIndex(Integer index, List<SectionQuestion> questions) throws SectionNotFoundException {
+        return questions.stream()
+                .filter(q -> q.getOrderIndex().equals(index))
+                .findFirst()
+                .orElseThrow(SectionNotFoundException::new);
     }
 }
