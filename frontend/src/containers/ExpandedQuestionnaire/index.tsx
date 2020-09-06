@@ -5,13 +5,13 @@ import Form from 'components/Form';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {
-    addExistingQuestionToSectionRoutine,
     addQuestionToSectionRoutine,
     createSectionRoutine,
-    deleteQuestionFromSectionRoutine, updateQuestionsOrderRoutine,
-    updateSectionRoutine
+    updateQuestionsOrderRoutine,
+    updateSectionRoutine,
+    updateSections
 } from 'sagas/sections/routines';
-import {deleteFromQuestionnaireRoutine, indexQuestionsRoutine} from "sagas/questions/routines";
+import {deleteFromQuestionnaireRoutine} from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/LoaderWrapper";
@@ -32,11 +32,9 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         currentQuestion,
         createSection,
         currentSection,
-        addQuestionToSection,
         updateSection,
-        updateOrder,
-        indexQuestions,
-        deleteQuestionFromSection
+        updateSectionsR,
+        updateOrder
     }
 ) => {
     useEffect(() => {
@@ -54,7 +52,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
             ...defaultQuestion,
             questionnaireId: match.params.id,
             sectionId: section.id,
-            index: section.questions.length
+            index: section.questions?.length ?? 0
         });
     };
 
@@ -83,6 +81,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                         <UIContent>
                             <div className={styles.questions_container}>
                                 <Form
+                                    updateSections={updateSectionsR}
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}
                                     currentQuestion={currentQuestion}
@@ -114,13 +113,11 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
     updateSection: updateSectionRoutine,
-    addQuestionToSection: addExistingQuestionToSectionRoutine,
-    deleteQuestionFromSection: deleteQuestionFromSectionRoutine,
     addQuestion: addQuestionToSectionRoutine,
     toggleMenu: toggleMenuRoutine,
     deleteQuestion: deleteFromQuestionnaireRoutine,
     createSection: createSectionRoutine,
-    indexQuestions: indexQuestionsRoutine,
+    updateSectionsR: updateSections,
     updateOrder: updateQuestionsOrderRoutine
 };
 

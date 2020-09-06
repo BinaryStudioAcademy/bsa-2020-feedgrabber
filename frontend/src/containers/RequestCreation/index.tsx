@@ -26,7 +26,7 @@ import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import {
     loadSectionsByQuestionnaireRoutine,
     updateQuestionsOrderRoutine,
-    updateSectionRoutine
+    updateSectionRoutine, updateSections
 } from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
@@ -57,6 +57,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        sendRequest,
        isLoadingUsers,
        isLoadingTeams,
+       updateSectionsR,
        sections
      }) => {
 
@@ -90,6 +91,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                         <Form
                             updateSection={updateSection}
                             updateOrder={updateOrder}
+                            updateSections={updateSectionsR}
                             currentQuestion={{} as IQuestion}
                             sections={sections}
                         />
@@ -352,7 +354,8 @@ const mapDispatchToProps = {
   updateOrder: updateQuestionsOrderRoutine,
   updateSection: updateSectionRoutine,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadSections: loadSectionsByQuestionnaireRoutine
+  loadSections: loadSectionsByQuestionnaireRoutine,
+  updateSectionsR: updateSections
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

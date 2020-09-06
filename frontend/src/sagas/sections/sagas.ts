@@ -7,7 +7,7 @@ import {
     createSectionRoutine,
     deleteQuestionFromSectionRoutine,
     loadSavedSectionsByQuestionnaireRoutine,
-    loadSectionsByQuestionnaireRoutine, moveQuestionInSectionRoutine,
+    loadSectionsByQuestionnaireRoutine,
     updateQuestionInSectionRoutine,
     updateQuestionsOrderRoutine,
     updateSectionRoutine
@@ -19,17 +19,12 @@ import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 import {ISection} from "../../reducers/formEditor/reducer";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
-function parseSectionWithQuestion(section) {
-    const questions = section.questions.map(q => parseQuestion(q));
-    return {
-        ...section,
-        questions
-    };
-}
+const parseQuestions = questions => questions.map(q => parseQuestion(q));
 
-function parseQuestions(questions: IQuestion[]) {
-    return questions.map(q => parseQuestion(q));
-}
+const parseSectionWithQuestion = section => ({
+    ...section,
+    questions: parseQuestions(section.questions)
+});
 
 function* createSection(action) {
     try {
@@ -55,9 +50,7 @@ function* loadSections(action) {
 function* addQuestionToSection(action) {
     try {
         const question: IQuestion = action.payload;
-        console.log(action);
         const result = yield call(apiClient.put, `/api/section/question`, question);
-        console.log(result);
         const {second: questionId, first: questions} = result.data.data;
 
         yield put(addQuestionToSectionRoutine.success({
@@ -114,22 +107,6 @@ function* deleteQuestionFromSection(action) {
     }
 }
 
-function* moveQuestionInsideQuestionnaire(action) {
-    try {
-        const {prevSectionId, sectionId, questionId: qId, index} = action.payload;
-        const result = yield call(apiClient.put, `/api/section/move`,
-            {questionIndexed: {questionId: qId, index}, sectionId, prevSectionId});
-        const {second: questionId, first: questions} = result.data.data;
-        yield put(moveQuestionInSectionRoutine.success({
-            sectionId,
-            questionId,
-            questions: parseQuestions(questions)
-        }));
-    } catch (error) {
-        yield put(moveQuestionInSectionRoutine.failure());
-    }
-}
-
 function* updateSection(action) {
     try {
         const result = yield call(apiClient.put, `/api/section/${action.payload.id}`, action.payload);
@@ -183,7 +160,6 @@ export default function* sectionSagas() {
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder),
         yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved),
-        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection),
-        yield takeEvery(moveQuestionInSectionRoutine.TRIGGER, moveQuestionInsideQuestionnaire)
+        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection)
     ]);
 }

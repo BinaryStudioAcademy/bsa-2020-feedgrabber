@@ -2,33 +2,34 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.QuestionMapper;
-import com.feed_grabber.core.question.QuestionRepository;
 import com.feed_grabber.core.question.dto.QuestionDto;
+import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.*;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import com.feed_grabber.core.sections.model.Section;
 import com.feed_grabber.core.sections.model.SectionQuestion;
+import com.feed_grabber.core.sections.model.SectionQuestionId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.transaction.Transactional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class SectionService {
     private final SectionRepository sectionRepository;
     private final QuestionnaireRepository questionnaireRepository;
+    private final SectionIdsRepository sectionIdsRepository;
 
     @Autowired
     public SectionService(SectionRepository sectionRepository,
-                          QuestionnaireRepository questionnaireRepository) {
+                          QuestionnaireRepository questionnaireRepository, SectionIdsRepository sectionIdsRepository) {
         this.sectionRepository = sectionRepository;
         this.questionnaireRepository = questionnaireRepository;
+        this.sectionIdsRepository = sectionIdsRepository;
     }
 
     public SectionDto create(SectionCreateDto createDto) throws QuestionnaireNotFoundException {
@@ -77,6 +78,7 @@ public class SectionService {
         return SectionMapper.MAPPER.modelToDto(sectionRepository.save(section));
     }
 
+    @Transactional
     public void reorderQuestions(SectionsQuestionOrderDto dto) throws NotFoundException {
         var oldS = dto.getOldSection();
         var newS = dto.getNewSection();
@@ -117,6 +119,7 @@ public class SectionService {
 
             var q = findByIndex(oldI, oldQs1);
             oldQs1.remove(q);
+
             oldQs1.forEach(qs -> {
                 var orderI = qs.getOrderIndex().intValue();
                 if (orderI > oldI) qs.setOrderIndex(--orderI);
@@ -126,17 +129,17 @@ public class SectionService {
                 var orderI = qs.getOrderIndex().intValue();
                 if (orderI >= newI) qs.setOrderIndex(++orderI);
             });
-            q.setOrderIndex(newI);
-            oldQs2.add(q);
 
-            sectionRepository.saveAll(List.of(oldSection, newSection));
+            oldQs1.addAll(oldQs2);
+            sectionIdsRepository.saveAll(new ArrayList<>(oldQs1));
+            sectionIdsRepository.moveQuestionToAnotherSection(q.getQuestion().getId(), oldS, newS, newI);
         }
     }
 
-    private SectionQuestion findByIndex(Integer index, List<SectionQuestion> questions) throws SectionNotFoundException {
+    private SectionQuestion findByIndex(Integer index, List<SectionQuestion> questions) throws NotFoundException {
         return questions.stream()
                 .filter(q -> q.getOrderIndex().equals(index))
                 .findFirst()
-                .orElseThrow(SectionNotFoundException::new);
+                .orElseThrow(QuestionNotFoundException::new);
     }
 }

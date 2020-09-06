@@ -7,11 +7,12 @@ import {
     createSectionRoutine,
     deleteQuestionFromSectionRoutine,
     loadSavedSectionsByQuestionnaireRoutine,
-    loadSectionsByQuestionnaireRoutine, moveQuestionInSectionRoutine,
+    loadSectionsByQuestionnaireRoutine,
     setCurrentQuestionInSection,
     setCurrentSectionRoutine,
     updateQuestionInSectionRoutine,
-    updateSectionRoutine
+    updateSectionRoutine,
+    updateSections
 } from "sagas/sections/routines";
 import {
     addSelectedQuestionsRoutine,
@@ -42,6 +43,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 }
             };
         case createSectionRoutine.SUCCESS:
+            payload.questions = [];
             return {
                 ...state,
                 sections: {
@@ -93,8 +95,17 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 ...state,
                 currentQuestion: payload
             };
+        case updateSections.TRIGGER:
+            return {
+                ...state,
+                sections: {
+                    list: payload,
+                    current: payload.find(s => s.id === state.sections.current.id)
+                }
+            };
         case updateQuestionInSectionRoutine.SUCCESS:
         case addQuestionToSectionRoutine.SUCCESS:
+        case deleteQuestionFromSectionRoutine.SUCCESS:
             const {sectionId, questions, questionId} = payload;
             const curQ = questionId ? questions.find(q => q.id === questionId) : {};
             const list = state.sections.list.map(s => s.id === sectionId ? {...s, questions} : s);
@@ -111,7 +122,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case loadOneQuestionnaireRoutine.TRIGGER:
         case deleteQuestionFromSectionRoutine.TRIGGER:
         case addQuestionToSectionRoutine.TRIGGER:
-        case moveQuestionInSectionRoutine.TRIGGER:
         case addExistingQuestionToSectionRoutine.TRIGGER:
         case updateQuestionInSectionRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
@@ -126,7 +136,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             };
         case addSelectedQuestionsRoutine.FAILURE:
         case addQuestionToSectionRoutine.FAILURE:
-        case moveQuestionInSectionRoutine.FAILURE:
         case addExistingQuestionToSectionRoutine.FAILURE:
         case deleteQuestionFromSectionRoutine.FAILURE:
         case updateQuestionInSectionRoutine.FAILURE:

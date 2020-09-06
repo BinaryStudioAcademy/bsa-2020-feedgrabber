@@ -5,6 +5,8 @@ import QuestionCard from 'components/Form/QuestionCard/QuestionCard';
 import styles from "./styles.module.sass";
 import {ISection} from "../../../reducers/formEditor/reducer";
 import UISection from "../../UI/UISectionCard";
+import {Header} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
 
 interface ISectionProps {
     currentQuestion: IQuestion;
@@ -12,31 +14,30 @@ interface ISectionProps {
     renameSection(x: any): void;
 }
 
-const Section: React.FC<ISectionProps> = ({
-                                              section,
-                                              renameSection,
-                                              currentQuestion
-                                          }) => {
+const Section: React.FC<ISectionProps> = ({section, renameSection, currentQuestion }) => {
     const handleChapterChange = (id, title, description) => renameSection({id, title, description});
-
+    const [t] = useTranslation();
+    const {id, questions} = section;
     return (
         <>
             <UISection section={section} onChanged={handleChapterChange}/>
-            <Droppable droppableId={section.id}>
+            <Droppable droppableId={id}>
                 {provided => (
                     <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                         className={styles.wrapper}
                     >
-                        {section.questions.map((q, i) => (
+                        {questions?.length ? questions.map((q, i) => (
                             <QuestionCard
                                 key={q.id}
                                 question={q}
                                 index={i}
                                 isCurrent={q === currentQuestion}
                             />
-                        ))}
+                        )) :
+                        <Header as='h3' content={t("Add questions")}/>
+                        }
                         {provided.placeholder}
                     </div>)
                 }
