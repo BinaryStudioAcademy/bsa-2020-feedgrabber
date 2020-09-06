@@ -49,4 +49,7 @@ public class Company {
 
     @Column(name = "subdomain_name")
     private String subdomainName;
+
+    @Column(name = "email_domain")
+    private String emailDomain;
 }

@@ -14,6 +14,7 @@ public class SecurityConstants {
             "/api/auth/register/confirm",
             "/api/auth/invitation",
             "/api/auth/register/confirm",
+            "/api/auth/registerByEmail",
             "/api/auth/renovate",
             "/api/invitations/sign-up/**",
             "/api/company/user-companies",
