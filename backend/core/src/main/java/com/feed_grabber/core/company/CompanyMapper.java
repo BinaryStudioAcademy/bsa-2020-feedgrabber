@@ -18,6 +18,5 @@ public interface CompanyMapper {
     @Mapping(target = "subdomainName", ignore = true)
     Company companyDtoToModel(CompanyDto companyDto);
 
-
     CompanyDomainDto companyToCompanyDomainDto(Company company);
 }

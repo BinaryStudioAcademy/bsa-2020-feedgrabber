@@ -1,5 +1,5 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
-import {loginRoutine, logoutRoutine, registerRoutine} from './routines';
+import {loginRoutine, logoutRoutine, registerRoutine, registerByEmailRoutine} from './routines';
 import apiClient from '../../helpers/apiClient';
 import {history} from "../../helpers/history.helper";
 import {deleteTokens, saveTokens} from '../../security/authProvider';
@@ -29,6 +29,16 @@ function* signup(action) {
     }
 }
 
+function* signUpByEmail(action) {
+    try {
+        const res: IGeneric<IRegisterResponse> = 
+        yield call(apiClient.post, `/api/auth/registerByEmail`, action.payload);
+        yield put(registerByEmailRoutine.success(res.data.data.success));
+    } catch (error) {
+        yield put(registerByEmailRoutine.failure(error.response?.data?.error || "No response"));
+    }
+}
+
 function* logout() {
     yield call(deleteTokens);
     yield call(redirectToMain);
@@ -40,6 +50,7 @@ export default function* authSaga() {
     yield all([
         yield takeEvery(loginRoutine.TRIGGER, login),
         yield takeEvery(registerRoutine.TRIGGER, signup),
-        yield takeEvery(logoutRoutine.TRIGGER, logout)
+        yield takeEvery(logoutRoutine.TRIGGER, logout),
+        yield takeEvery(registerByEmailRoutine.TRIGGER, signUpByEmail)
     ]);
 }

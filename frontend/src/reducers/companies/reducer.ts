@@ -4,7 +4,8 @@ import {
     chooseCompanyRoutine,
     dropCompanyRoutine, fetchCompanyBySubdomainRoutine,
     fetchCompanyRoutine,
-    loadCompaniesRoutine
+    loadCompaniesRoutine,
+    setEmailDomainRoutine
 } from "../../sagas/companies/routines";
 
 export interface ICompanyState {
@@ -39,6 +40,7 @@ const companyReducer = (state: IAppState['company'] = initialState, {type, paylo
                 error: null
             };
         case(fetchCompanyRoutine.SUCCESS):
+        case(setEmailDomainRoutine.SUCCESS):
         case(fetchCompanyBySubdomainRoutine.SUCCESS):
             return {
                 ...state,
