@@ -40,14 +40,11 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   const handleSubmit = () => {
     // here we send new item to backend
     if (!item) {
-      console.log('return');
       return;
     }
     if (item.id) {
       saveFeedItem(item);
     } else {
-      console.log('create');
-      console.log(item);
       const newItem = {
         title: item.title,
         body: item.body,
@@ -82,7 +79,6 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
       }
       const image = await uploadFile(file);
       setIsUploading(false);
-      console.log(image);
       setItem({ ...item, image: image });
     } catch (error) {
       toastr.error('Unable to upload images');

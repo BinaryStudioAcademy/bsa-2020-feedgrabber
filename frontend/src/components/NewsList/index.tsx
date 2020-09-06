@@ -22,7 +22,6 @@ interface INewsFeedProps {
 }
 
 const getNewsItem = (item: ICompanyFeedItem) => {
-  console.log(item);
   return (
     <UICardBlock key={item.id}
                  className={styles.newsItemContainer}>

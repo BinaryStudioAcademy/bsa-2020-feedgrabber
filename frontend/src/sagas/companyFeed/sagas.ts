@@ -59,6 +59,7 @@ function* createCompanyFeedItem(action) {
   try {
     const res = yield call(apiClient.post, '/api/news', action.payload); 
     yield put(createCompanyFeedItemRoutine.success(res.data.data));
+    yield put(loadCompanyFeedRoutine.trigger());
   } catch (err) {
     toastr.error('Unable to create feed item');
   }
