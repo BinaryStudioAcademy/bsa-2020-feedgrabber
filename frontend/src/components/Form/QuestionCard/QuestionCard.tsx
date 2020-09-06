@@ -1,6 +1,6 @@
 import React, {FC} from "react";
-import styles from "../../containers/QuestionsList/styles.module.sass";
-import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import styles from "../../../containers/QuestionsList/styles.module.sass";
+import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 import ResponseQuestion from "components/ResponseQuestion";
 import {Draggable} from "react-beautiful-dnd";
 

@@ -19,7 +19,7 @@ import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 import QuestionnaireResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
-import Form from "../../components/QuestionnairePreview";
+import Form from "../../components/Form";
 import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportPage from "../ReportPage";
 import RequestsPage from "../RequestsPage";

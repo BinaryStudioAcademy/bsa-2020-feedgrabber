@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import styles from './styles.module.sass';
-import Form from 'components/QuestionnairePreview';
+import Form from 'components/Form';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {

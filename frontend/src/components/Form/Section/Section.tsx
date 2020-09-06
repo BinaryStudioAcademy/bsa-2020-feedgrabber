@@ -1,10 +1,10 @@
 import React from 'react';
 import {IQuestion} from 'models/forms/Questions/IQuesion';
 import {Droppable} from "react-beautiful-dnd";
-import QuestionCard from 'components/QuestionnaireOrderDraggableView/QuestionCard';
+import QuestionCard from 'components/Form/QuestionCard/QuestionCard';
 import styles from "./styles.module.sass";
-import {ISection} from "../../reducers/formEditor/reducer";
-import UISection from "../UI/UISectionCard";
+import {ISection} from "../../../reducers/formEditor/reducer";
+import UISection from "../../UI/UISectionCard";
 
 interface ISectionProps {
     currentQuestion: IQuestion;
