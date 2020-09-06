@@ -6,7 +6,7 @@ export interface ICompanyFeedItem {
   body: string;
   type: string;
   createdAt: string;
-  imageId?: string;
+  image?: { id: string, link: string; };
   user: IUserShort;
 }
 

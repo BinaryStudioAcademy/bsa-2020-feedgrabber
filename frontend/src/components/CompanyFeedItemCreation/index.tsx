@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FC } from 'react';
+import { useTranslation } from "react-i18next";
 import apiClient from "../../helpers/apiClient";
 import { connect, ConnectedProps } from 'react-redux';
 import { Image, Icon, Button, Header } from 'semantic-ui-react';
@@ -24,7 +25,8 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   const history = useHistory();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [item, setItem] = useState<ICompanyFeedItem>(undefined);
-  const [image, setImage] = useState<string>(undefined);
+  // const [image, setImage] = useState<string>(undefined);
+  const [t] = useTranslation();
 
   useEffect(() => {
     const id = match.params.id;
@@ -37,17 +39,21 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
 
   const handleSubmit = () => {
     // here we send new item to backend
+    if (!item) {
+      console.log('return');
+      return;
+    }
     if (item.id) {
       saveFeedItem(item);
     } else {
+      console.log('create');
       console.log(item);
       const newItem = {
         title: item.title,
         body: item.body,
         type: item.type,
-        imageId: item.imageId
+        imageId: item.image?.id
       };
-      console.log({ newItem });
       createFeedItem(newItem);
     }
     history.push('/company');
@@ -55,16 +61,15 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
 
   useEffect(() => {
     setItem(feedItem);
-    setImage(feedItem?.imageId);
+    // setImage(feedItem?.imageId);
   }, [feedItem]);
 
   const uploadFile = file => {
     const formData = new FormData();
     formData.append('image', file);
     return apiClient.post('/api/image', formData).then(res => {
-      console.log(res.data);
-      setImage(res.data.link);
-      return res.data.id;
+      // setImage(res.data);
+      return res.data;
     });
   };
 
@@ -75,13 +80,13 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
       if (!file.type.startsWith('image')) {
         return;
       }
-      const imageId = await uploadFile(file);
+      const image = await uploadFile(file);
       setIsUploading(false);
-      console.log(imageId);
-      setItem({ ...item, imageId: imageId });
+      console.log(image);
+      setItem({ ...item, image: image });
     } catch (error) {
       toastr.error('Unable to upload images');
-      setItem({ ...item, imageId: null });
+      setItem({ ...item, image: null });
     }
     setIsUploading(false);
   };
@@ -89,27 +94,27 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   return (
     <div className={styles.new_feed_wrapper}>
     <div className={styles.new_feed_item_page}>
-      <Header as="h3">Create a new feed item</Header>
-      <input placeholder="Title" type="text"
+      <Header as="h3">{t('Create a new feed item')}</Header>
+      <input placeholder={t('Title')} type="text"
              value={item?.title || ''}
              className={styles.feed_item_input}
              onChange={e => setItem({ ...item, title: e.target.value })} />
-      <textarea placeholder="What's up?"
+      <textarea placeholder={t('What\'s up')}
                 value={item?.body || ''}
                 className={styles.feed_item_textarea}
                 onChange={e => setItem({ ...item, body: e.target.value })} />
-      {image && (
-          <Image src={image} size='small' alt="image" bordered />
+      {item?.image && (
+          <Image src={item.image.link} size='small' alt="image" bordered />
       )}
       <Button color="teal" icon labelPosition="left" as="label"
               loading={isUploading} disabled={isUploading} className={styles.button}>
         <Icon name="image" />
-        Attach image
+        {t('Attach image')}
         <input name="image" type="file" multiple
                onChange={e => handleUploadPhoto(e.target.files)} hidden />
       </Button>
       <Button type="submit" onClick={handleSubmit} className={styles.submit_button}>
-        Submit
+        {t('Submit')}
       </Button>
     </div>
     </div>

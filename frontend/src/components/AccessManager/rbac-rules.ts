@@ -47,6 +47,7 @@ const hr: IRole = {
     endpoints: [
         ...employee.endpoints,
         "/questionnaires",
+        "/company/:id",
         "/questionnaires/:id",
         "/questionnaires/:id/preview",
         "/questionnaires/:id/new-request",
