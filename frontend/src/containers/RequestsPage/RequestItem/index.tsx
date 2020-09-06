@@ -57,6 +57,9 @@ export const RequestItem: FC<Props> = (
                 <Card.Content textAlign="center">
                     <Card.Header>{t("Created by")} {request.requestMaker.username}</Card.Header>
                     <Card.Meta>{moment(request.creationDate).calendar()}</Card.Meta>
+                    {request.targetUser && (
+                      <Card.Description>{t("target user")}: {request.targetUser.username}</Card.Description>
+                    )}
                 </Card.Content>
                 <Card.Content extra>
                     {getProgressBar()}
