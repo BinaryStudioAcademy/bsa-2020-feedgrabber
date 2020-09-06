@@ -20,17 +20,11 @@ interface IIndexObject {
 
 interface IFormProps {
     sections: ISection[];
-
     currentQuestion: IQuestion;
-
     indexQuestions?(questions: IIndex): void;
-
     updateSection?(action: {}): void;
-
     updateOrder?(action: {}): void;
-
     addQuestionToSection?(action: any): void;
-
     deleteQuestionFromSection?(action: any): void;
 }
 
@@ -58,10 +52,8 @@ const Form: FC<IFormProps> = ({
                 {sections?.map(section => section.questions?.length ?
                     <Section
                         currentQuestion={currentQuestion}
-                        data={section}
+                        section={section}
                         renameSection={updateSection}
-                        handleMoveQuestionToSection={moveQuestionToSection}
-                        indexQuestions={indexQuestions}
                     />
                     : <Header as='h3'>
                         {t("Add questions")}

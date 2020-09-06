@@ -1,90 +1,31 @@
-import React, {useRef} from "react";
-import { useDrag, useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
-import { XYCoord } from 'dnd-core';
+import React, {FC} from "react";
 import styles from "../../containers/QuestionsList/styles.module.sass";
-import {DraggableItemTypes, IQuestion} from "../../models/forms/Questions/IQuesion";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import ResponseQuestion from "components/ResponseQuestion";
+import {Draggable} from "react-beautiful-dnd";
 
 export interface ICardProps {
-  id: string;
-  question: IQuestion;
-  prevSectionId: string;
-  isCurrent: boolean;
-  index: number;
-  moveCard(dragIndex: number, hoverIndex: number): void;
-  onDropCard(): void;
-  addQuestionToSection?(sectionId: string, question: IQuestion, prevSectionId: string, index: number): void;
+    question: IQuestion;
+    isCurrent: boolean;
+    index: number;
 }
 
-export interface IDragItem {
-  index: number;
-  id: string;
-  type: string;
-}
-const QuestionCard: React.FC<ICardProps> = ({
-  index,
-  moveCard, isCurrent,
-  onDropCard, question,
-  addQuestionToSection,
-  prevSectionId
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [, drop] = useDrop({
-    accept: DraggableItemTypes.QUESTION_CARD,
-    hover(item: IDragItem, monitor: DropTargetMonitor) {
-      if (!ref.current) return;
-
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      if (dragIndex === hoverIndex) return;
-
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      moveCard(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex;
-    },
-    drop() {
-      onDropCard();
-    }
-  });
-
-  const [, drag] = useDrag({
-    item: { type: DraggableItemTypes.QUESTION_CARD, id: question.id, index },
-    end(item: IDragItem, monitor: DragSourceMonitor ) {
-      const dropResult = monitor.getDropResult();
-      if (item && dropResult) {
-        const sectionId = dropResult.id as string;
-        addQuestionToSection(sectionId, question, prevSectionId, index);
-      }
-    },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging()
-    })
-  });
-
-  drag(drop(ref));
-
-  return (
-    <div ref={ref} className={styles.question}>
-      <ResponseQuestion question={question} isCurrent={isCurrent} />
-    </div>
-  );
-};
+const QuestionCard: FC<ICardProps> = ({question, isCurrent, index}) => (
+    <Draggable draggableId={question.id} index={index}>
+        {provided => (
+            <div
+                ref={provided.innerRef}
+                className={styles.question}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+            >
+                <ResponseQuestion
+                    question={question}
+                    isCurrent={isCurrent}
+                />
+            </div>
+        )}
+    </Draggable>
+);
 
 export default QuestionCard;
