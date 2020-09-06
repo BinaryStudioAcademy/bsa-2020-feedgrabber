@@ -26,6 +26,12 @@ public interface RequestRepository extends JpaRepository<Request, UUID> {
 
     List<Request> findAllByQuestionnaireId(UUID id);
 
+    @Query("SELECT r " +
+            "FROM Request r " +
+            "WHERE r.targetUser is not NULL AND " +
+            "      EXISTS (SELECT t FROM r.targetUser.teams t WHERE t.id = :id)")
+    List<Request> findAllByTeamId(UUID id);
+
     @Query("select r from Request r where r.closeDate is not NULL and r.questionnaire.company.id = :companyId")
     List<Request> findAllReports(UUID companyId);
 

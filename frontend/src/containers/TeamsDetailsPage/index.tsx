@@ -14,6 +14,7 @@ import TeamMetadataBlock from "./metadataBlock";
 import TeamUsersBlock from "./usersBlock";
 import { useTranslation } from 'react-i18next';
 import TeamRequestsBlock from "./requestsBlock";
+import {closeRequestRoutine} from "../../sagas/request/routines";
 
 const TeamDetailsPage: FC<Props & { match }> = (
     {
@@ -36,7 +37,8 @@ const TeamDetailsPage: FC<Props & { match }> = (
         isLoadingTeamRequests,
         loadTeamRequests,
         teamRequests,
-        failedLoadingTeamRequests
+        failedLoadingTeamRequests,
+        closeRequest
     }
 ) => {
     const [t] = useTranslation();
@@ -87,6 +89,7 @@ const TeamDetailsPage: FC<Props & { match }> = (
                             toggleLead={toggleLead}
                         />
                         <TeamRequestsBlock
+                          closeRequest={closeRequest}
                           currentTeam={currentTeam}
                           loadingFailed={failedLoadingTeamRequests}
                           requestsList={teamRequests}
@@ -116,6 +119,7 @@ const mapState = (state: IAppState) => ({
 });
 
 const mapDispatch = {
+    closeRequest: closeRequestRoutine,
     loadUsers: loadCompanyUsersRoutine,
     loadCurrentTeam: loadCurrentTeamRoutine,
     loadTeamRequests: loadTeamRequestsRoutine,

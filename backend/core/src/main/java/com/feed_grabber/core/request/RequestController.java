@@ -62,6 +62,13 @@ public class RequestController {
         return new AppResponse<>(requestService.getAllByQuestionnaire(id));
     }
 
+    @ApiOperation("Get all requests where target user is in the team")
+    @GetMapping("/team/{id}")
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
+    public AppResponse<List<RequestShortDto>> getAllByTeamId(@PathVariable UUID id) {
+        return new AppResponse<>(requestService.getAllByTeamId(id));
+    }
+
     @ApiOperation(value = "Get the pending for the user", notes = "user id is got from token")
     @GetMapping("/pending")
     @ResponseStatus(HttpStatus.OK)

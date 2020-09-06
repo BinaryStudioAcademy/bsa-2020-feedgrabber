@@ -200,4 +200,11 @@ public class RequestService {
                 .collect(Collectors.toList());
     }
 
+    public List<RequestShortDto> getAllByTeamId(UUID id) {
+        return requestRepository.findAllByTeamId(id)
+                .stream()
+                .map(RequestMapper.MAPPER::requestToShortDto)
+                .collect(Collectors.toList());
+    }
+
 }
