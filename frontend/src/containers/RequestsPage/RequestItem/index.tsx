@@ -13,9 +13,12 @@ type Props = {
     closeRequest?: typeof closeRequestRoutine;
     isClosed: boolean;
     questionnaireId?: string;
+    teamId?: string;
 };
 
-export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questionnaireId}) => {
+export const RequestItem: FC<Props> = (
+  {request, closeRequest, isClosed, questionnaireId, teamId}
+  ) => {
     const [open, setOpen] = useState(false);
     const [t] = useTranslation();
 
@@ -30,7 +33,9 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
 
     function handleRequestClose() {
         !isClosed &&
-        closeRequest({requestId: request.requestId, questionnaireId: questionnaireId});
+        closeRequest({
+          requestId: request.requestId, questionnaireId: questionnaireId, teamId: teamId
+        });
         setOpen(false);
     }
 

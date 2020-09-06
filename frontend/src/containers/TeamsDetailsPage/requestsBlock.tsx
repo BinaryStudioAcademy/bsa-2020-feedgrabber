@@ -7,7 +7,7 @@ import {ITeam} from "../../models/teams/ITeam";
 import {useTranslation} from "react-i18next";
 import {IRequestShort} from "../../models/report/IReport";
 import {RequestItem} from "../RequestsPage/RequestItem";
-import {Card, Tab} from "semantic-ui-react";
+import {Tab} from "semantic-ui-react";
 import {closeRequestRoutine} from "../../sagas/request/routines";
 
 interface ITeamRequestsBlockProps {
@@ -51,7 +51,7 @@ const TeamRequestsBlock: React.FunctionComponent<ITeamRequestsBlockProps> = (
       render: () => <Tab.Pane>
         {open.map(r => (
           <RequestItem isClosed={false} closeRequest={closeRequest}
-                       key={r.requestId} request={r}
+                       key={r.requestId} request={r} teamId={currentTeam?.id}
           />))}
       </Tab.Pane>
     },
