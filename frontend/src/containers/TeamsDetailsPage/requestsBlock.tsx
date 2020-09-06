@@ -50,7 +50,7 @@ const TeamRequestsBlock: React.FunctionComponent<ITeamRequestsBlockProps> = (
       menuItem: {key: 'opened', icon: 'eye', content: t('Opened requests')},
       render: () => <Tab.Pane>
         {open.map(r => (
-          <RequestItem isClosed={false} closeRequest={closeRequest}
+          <RequestItem isClosed={false} closeRequest={closeRequest} showQuestionnaireTitle
                        key={r.requestId} request={r} teamId={currentTeam?.id}
           />))}
       </Tab.Pane>
@@ -59,7 +59,7 @@ const TeamRequestsBlock: React.FunctionComponent<ITeamRequestsBlockProps> = (
       menuItem: {key: 'closed', icon: 'lock', content: t('Closed requests')},
       render: () => <Tab.Pane>
           {closed.map(r => (
-            <RequestItem isClosed key={r.requestId} request={r}/>))}
+            <RequestItem isClosed key={r.requestId} request={r} showQuestionnaireTitle/>))}
       </Tab.Pane>
     }
   ];
