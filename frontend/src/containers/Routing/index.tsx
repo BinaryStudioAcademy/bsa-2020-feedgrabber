@@ -30,7 +30,6 @@ import RedirectFormEditor from "../../components/RedirectFormEditor";
 import ErrorPage from "../ErrorPage";
 import NewsList from "../../components/NewsList";
 
-// just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
 import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
@@ -62,7 +61,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
                     <PrivateRoute exact path="/company" component={NewsList}/>
-                    <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
+                    <PrivateRoute exact path="/company/:id" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/people/:tab" component={PeopleManagementPage}/>
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
