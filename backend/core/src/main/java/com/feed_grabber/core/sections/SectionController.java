@@ -69,16 +69,6 @@ public class SectionController {
                 Pair.of(sectionService.getSectionQuestions(dto.getSectionId()), dto.getQuestionIndexed().getQuestionId()));
     }
 
-    @ApiOperation(value = "Compose delete and add")
-    @PutMapping("/move")
-    @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Pair<List<QuestionDto>, UUID>> composeAddDelete(@RequestBody AddExistingQuestionBySectionDto dto) throws NotFoundException {
-
-        deleteQuestion(dto.getQuestionIndexed().getQuestionId(), dto.getPrevSectionId().orElseThrow(NotFoundException::new));
-
-        return addQuestionFromExisting(dto);
-    }
-
     @PatchMapping("/question/reorder")
     public void questionReordering(@RequestBody SectionsQuestionOrderDto dto) throws NotFoundException {
         sectionService.reorderQuestions(dto);

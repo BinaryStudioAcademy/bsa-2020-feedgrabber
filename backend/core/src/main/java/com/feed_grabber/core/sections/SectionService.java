@@ -22,15 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class SectionService {
     private final SectionRepository sectionRepository;
-    private final QuestionRepository questionRepository;
     private final QuestionnaireRepository questionnaireRepository;
 
     @Autowired
     public SectionService(SectionRepository sectionRepository,
-                          QuestionRepository questionRepository,
                           QuestionnaireRepository questionnaireRepository) {
         this.sectionRepository = sectionRepository;
-        this.questionRepository = questionRepository;
         this.questionnaireRepository = questionnaireRepository;
     }
 
@@ -47,8 +44,7 @@ public class SectionService {
     public List<SectionQuestionsDto> getByQuestionnaire(UUID id) {
         return sectionRepository.findByQuestionnaireIdOrderByOrder(id)
                 .stream()
-                .map(section ->
-                        SectionMapper.MAPPER.sectionAndQuestionsDto(section, questionRepository.findAllBySectionId(section.getId())))
+                .map(SectionMapper.MAPPER::modelToExtendedDto)
                 .collect(Collectors.toList());
     }
 
@@ -89,18 +85,29 @@ public class SectionService {
 
         if (oldS.equals(newS)) {
             var section = sectionRepository.findById(newS).orElseThrow(SectionNotFoundException::new);
-
-            section.getQuestions().forEach(q -> {
-                var orderI = q.getOrderIndex().intValue();
-                if (orderI == oldI) {
-                    q.setOrderIndex(newI);
-                    return;
-                }
-                if (orderI > oldI && orderI < newI) {
-                    q.setOrderIndex(--orderI);
-                }
-            });
-
+            if (oldI < newI) {
+                section.getQuestions().forEach(q -> {
+                    var orderI = q.getOrderIndex().intValue();
+                    if (orderI == oldI) {
+                        q.setOrderIndex(newI);
+                        return;
+                    }
+                    if (orderI > oldI && orderI <= newI) {
+                        q.setOrderIndex(--orderI);
+                    }
+                });
+            } else {
+                section.getQuestions().forEach(q -> {
+                    var orderI = q.getOrderIndex().intValue();
+                    if (orderI == oldI) {
+                        q.setOrderIndex(newI);
+                        return;
+                    }
+                    if (orderI >= newI && orderI < oldI) {
+                        q.setOrderIndex(++orderI);
+                    }
+                });
+            }
             sectionRepository.save(section);
         } else {
             var oldSection = sectionRepository.findById(oldS).orElseThrow(SectionNotFoundException::new);

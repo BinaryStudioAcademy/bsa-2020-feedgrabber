@@ -2,7 +2,6 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
@@ -13,10 +12,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.util.List;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
-@Mapper(uses ={QuestionMapper.class, QuestionnaireMapper.class})
+@Mapper(uses = {QuestionMapper.class, QuestionnaireMapper.class})
 public interface SectionMapper {
     SectionMapper MAPPER = Mappers.getMapper(SectionMapper.class);
 
@@ -30,24 +29,23 @@ public interface SectionMapper {
     SectionDto modelToDto(Section section);
 
     default SectionQuestionsDto modelToExtendedDto(Section section) {
-         return new SectionQuestionsDto(
-                 section.getId(), section.getTitle(), section.getDescription(),
-                 section.getQuestions().stream().map(i -> {
-                     var index = i.getOrderIndex();
-                     var q = i.getQuestion();
-                     return new QuestionDto(
-                             q.getId(),
-                             q.getText(),
-                             index,
-                             q.getCategory().getTitle(),
-                             q.getType(),
-                             q.getPayload(),
-                             q.isRequired()
-                     );
-                 }).collect(Collectors.toList())
-         );
+        return new SectionQuestionsDto(
+                section.getId(), section.getTitle(), section.getDescription(),
+                section.getQuestions().stream().map(i -> {
+                    var index = i.getOrderIndex();
+                    var q = i.getQuestion();
+                    return new QuestionDto(
+                            q.getId(),
+                            q.getText(),
+                            index,
+                            q.getCategory().getTitle(),
+                            q.getType(),
+                            q.getPayload(),
+                            q.isRequired()
+                    );
+                })
+                        .sorted(Comparator.comparing(QuestionDto::getIndex))
+                        .collect(Collectors.toList())
+        );
     }
-
-    @Mapping(target = "questions", source = "questions")
-    SectionQuestionsDto sectionAndQuestionsDto(Section section, List<Question> questions);
 }
