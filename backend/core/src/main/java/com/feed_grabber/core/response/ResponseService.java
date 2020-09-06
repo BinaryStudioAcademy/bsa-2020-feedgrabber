@@ -2,6 +2,7 @@ package com.feed_grabber.core.response;
 
 import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.notification.MessageTypes;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.request.RequestService;
@@ -10,6 +11,7 @@ import com.feed_grabber.core.response.dto.ResponseUpdateDto;
 import com.feed_grabber.core.response.dto.UserResponseShortDto;
 import com.feed_grabber.core.response.exceptions.ResponseNotFoundException;
 import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -57,27 +59,7 @@ public class ResponseService {
         if (unanswered == 0) {
             // close the request
             requestService.closeNow(request.getId());
-            var toSaveNotification = UserNotification
-                    .builder()
-                    .request(request)
-                    .text("Request closed")
-                    .build();
-            var notification = userNotificationRepository.save(toSaveNotification);
-
-            String makerId = request.getRequestMaker().getId().toString();
-            String targetId = request.getTargetUser().getId().toString();
-            ArrayList<String> userIds = new ArrayList<>();
-            userIds.add(makerId);
-            if (!makerId.equals(targetId)) {
-                userIds.add(targetId);
-            }
-            System.out.println(userIds);
-
-            var toSendNotification = userNotificationRepository.findNotificationById(notification.getId());
-            notificationService.sendMessageToUsers(
-                    userIds,
-                    "notify",
-                    toSendNotification);
+            requestService.notifyAboutClosing(request);
         }
         return result;
     }

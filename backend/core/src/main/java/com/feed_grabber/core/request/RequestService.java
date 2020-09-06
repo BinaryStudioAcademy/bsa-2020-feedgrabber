@@ -4,12 +4,10 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
 
 import com.feed_grabber.core.notification.MessageTypes;
-import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
-import com.feed_grabber.core.file.dto.S3FileCreationDto;
 import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
@@ -205,16 +203,15 @@ public class RequestService {
         return closeDate;
     }
 
-    public Date close(UUID requestId) throws NotFoundException {
-        var request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new NotFoundException("Request not found"));
-        if (request.getCloseDate() != null) {
-            return new Date();
+    public void notifyAboutClosing(Request request) throws NotFoundException {
+        User maker = request.getRequestMaker();
+        User target = request.getTargetUser();
+        ArrayList<User> users = new ArrayList<>();
+        users.add(maker);
+
+        if (request.getSendToTarget() && !maker.equals(target)) {
+            users.add(target);
         }
-
-        var date = closeNow(requestId);
-        User[] users = {request.getTargetUser(), request.getRequestMaker()};
-
         Map<UUID, UUID> userIdNotificationId = new HashMap<>();
         for (User user : users)
             userIdNotificationId.put(user.getId(),
@@ -232,10 +229,19 @@ public class RequestService {
                     userId.toString(),
                     "notify",
                     userNotificationRepository
-                            .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
+                            .findNotificationById(userIdNotificationId.get(userId))
+                            .orElseThrow(NotFoundException::new)
             );
         }
-        return date;
+    }
+
+    public void close(UUID requestId) throws NotFoundException {
+        var request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("Request not found"));
+        if (request.getCloseDate() != null) {
+            return;
+        }
+        notifyAboutClosing(request);
     }
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
