@@ -49,8 +49,16 @@ public class NewsService {
     }
 
     public NewsDto create(NewsCreateDto newsCreateDto) throws NotFoundException {
-        var image = imageRepository.findById(newsCreateDto.getImageId())
+		var news = News.builder()
+                .title(newsCreateDto.getTitle())
+                .type(newsCreateDto.getType())
+                .body(newsCreateDto.getBody());
+
+        if (newsCreateDto.getImageId() != null) {
+			var image = imageRepository.findById(newsCreateDto.getImageId())
                 .orElseThrow(NotFoundException::new);
+			news.image(image);
+		}
 
         var user = userRepository.findById(newsCreateDto.getUserId())
                 .orElseThrow(UserNotFoundException::new);
@@ -58,15 +66,9 @@ public class NewsService {
         var company = companyRepository.findById(newsCreateDto.getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
 
-        var news = News.builder()
-                .title(newsCreateDto.getTitle())
-                .type(newsCreateDto.getType())
-                .body(newsCreateDto.getBody())
-                .image(image)
-                .user(user)
-                .company(company)
-                .build();
-        var saved = newsRepository.save(news);
+		news.user(user);
+		news.company(company);
+        var saved = newsRepository.save(news.build());
         return NewsMapper.MAPPER.newsToNewsDto(saved);
     }
 
