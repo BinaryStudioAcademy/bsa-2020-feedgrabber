@@ -21,7 +21,7 @@ import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {RouteComponentProps} from "react-router-dom";
-import QuestionnairePreview from "../../components/QuestionnairePreview";
+import Form from "../../components/QuestionnairePreview";
 import {indexQuestionsRoutine} from "../../sagas/questions/routines";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
@@ -82,7 +82,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
               <UIColumn>
                   <UICard>
                     <UICardBlock>
-                        <QuestionnairePreview
+                        <Form
                             currentQuestion={{} as IQuestion}
                             indexQuestions={indexQuestionsRoutine}
                             sections={sections}

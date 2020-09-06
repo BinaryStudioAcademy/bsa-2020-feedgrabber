@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import styles from './styles.module.sass';
-import QuestionnairePreview from 'components/QuestionnairePreview';
+import Form from 'components/QuestionnairePreview';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {
@@ -82,7 +82,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                     <LoaderWrapper loading={isLoading}>
                         <UIContent>
                             <div className={styles.questions_container}>
-                                <QuestionnairePreview
+                                <Form
                                     addQuestionToSection={addQuestionToSection}
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}

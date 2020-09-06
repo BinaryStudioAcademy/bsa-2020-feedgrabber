@@ -19,7 +19,7 @@ import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 import QuestionnaireResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
-import QuestionnairePreview from "../../components/QuestionnairePreview";
+import Form from "../../components/QuestionnairePreview";
 import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportPage from "../ReportPage";
 import RequestsPage from "../RequestsPage";
@@ -66,7 +66,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
                     <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire}/>
-                    <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview}/>
+                    <PrivateRoute exact path="/questionnaires/:id/preview" component={Form}/>
                     <PrivateRoute exact path="/questionnaires/:id/new-request" component={RequestCreation}/>
                     <PrivateRoute exact path="/questionnaires/:id/requests" component={RequestsPage}/>
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>

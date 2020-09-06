@@ -23,10 +23,8 @@ export interface IDragItem {
 }
 const QuestionCard: React.FC<ICardProps> = ({
   index,
-  moveCard,
-    isCurrent,
-  onDropCard,
-  question,
+  moveCard, isCurrent,
+  onDropCard, question,
   addQuestionToSection,
   prevSectionId
 }) => {
@@ -34,15 +32,12 @@ const QuestionCard: React.FC<ICardProps> = ({
   const [, drop] = useDrop({
     accept: DraggableItemTypes.QUESTION_CARD,
     hover(item: IDragItem, monitor: DropTargetMonitor) {
-      if (!ref.current) {
-        return;
-      }
+      if (!ref.current) return;
+
       const dragIndex = item.index;
       const hoverIndex = index;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
+      if (dragIndex === hoverIndex) return;
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -83,11 +78,10 @@ const QuestionCard: React.FC<ICardProps> = ({
     })
   });
 
-  const opacity = 1; // isDragging ? 0 : 1;
   drag(drop(ref));
 
   return (
-    <div ref={ref} style={{ opacity }} className={styles.question}>
+    <div ref={ref} className={styles.question}>
       <ResponseQuestion question={question} isCurrent={isCurrent} />
     </div>
   );
