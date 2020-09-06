@@ -3,7 +3,7 @@ import {
   createTeamRoutine,
   deleteTeamRoutine,
   loadCompanyUsersRoutine,
-  loadCurrentTeamRoutine,
+  loadCurrentTeamRoutine, loadTeamRequestsRoutine,
   loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
   toggleUserCurrentTeamRoutine,
   updateTeamRoutine
@@ -11,6 +11,7 @@ import {
 import {Routine} from 'redux-saga-routines';
 import {ITeam, ITeamShort} from 'models/teams/ITeam';
 import {IUserShort} from "../../models/user/types";
+import {IRequestShort} from "../../models/report/IReport";
 
 export interface ITeamCurrent {
   failed?: boolean;
@@ -19,6 +20,9 @@ export interface ITeamCurrent {
   isLoadingToggleLead?: boolean;
   currentTeam?: ITeam;
   error?: string;
+  isLoadingTeamRequests?: boolean;
+  teamRequests?: IRequestShort[];
+  failedLoadingTeamRequests?: boolean;
 }
 
 export interface ITeamsState {
@@ -245,6 +249,33 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
       return {
         ...state,
         teams: (state.teams || []).map(t => t.id === action.payload ? {...t, deleteLoading: false} : t)
+      };
+
+    case loadTeamRequestsRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeamRequests: true
+        }
+      };
+    case loadTeamRequestsRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeamRequests: false,
+          teamRequests: action.payload
+        }
+      };
+    case loadTeamRequestsRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeamRequests: false,
+          failedLoadingTeamRequests: true
+        }
       };
 
     default:

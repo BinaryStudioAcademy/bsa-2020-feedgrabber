@@ -1,7 +1,7 @@
 import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {
   createTeamRoutine, deleteTeamRoutine,
-  loadCompanyUsersRoutine,
+  loadCompanyUsersRoutine, loadTeamRequestsRoutine,
   loadCurrentTeamRoutine,
   loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
   toggleUserCurrentTeamRoutine,
@@ -14,6 +14,7 @@ import {IUserInfo} from "../../models/user/types";
 import {ITeam, ITeamLeadToggle, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
 import {IAppState} from "../../models/IAppState";
+import {IRequestShort} from "../../models/report/IReport";
 
 function* loadTeams() {
   try {
@@ -33,6 +34,17 @@ function* loadCurrentTeam(action: any) {
     yield put(loadCurrentTeamRoutine.failure());
     toastr.error("Unable to load team");
     history.push("/people/teams");
+  }
+}
+
+function* loadTeamRequests(action: any) {
+  try {
+    const teamId: string = action.payload;
+    const res: IGeneric<IRequestShort[]> = yield call(apiClient.get, `/api/request/team/${teamId}`);
+    yield put(loadTeamRequestsRoutine.success(res.data.data));
+  } catch (error) {
+    yield put(loadTeamRequestsRoutine.failure());
+    toastr.error("Unable to load requests");
   }
 }
 
@@ -121,6 +133,7 @@ export default function* teamsSaga() {
   yield all([
     yield takeEvery(loadTeamsRoutine.TRIGGER, loadTeams),
     yield takeEvery(loadCurrentTeamRoutine.TRIGGER, loadCurrentTeam),
+    yield takeEvery(loadTeamRequestsRoutine.TRIGGER, loadTeamRequests),
     yield takeEvery(createTeamRoutine.TRIGGER, createTeam),
     yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam),
     yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam),
