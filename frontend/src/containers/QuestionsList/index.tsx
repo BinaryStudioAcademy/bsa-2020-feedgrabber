@@ -40,6 +40,10 @@ const QuestionsList: FC<QuestionsListProps> = ({
         loadQuestions();
     }, [loadQuestions]);
 
+    useEffect(()=> {
+        setNewPressed(!isEmpty(current) && newPressed);
+    }, [current]);
+
     const handleClick = (question: IQuestion) => {
         setNewPressed(!question);
         setCurrentQ(question || defaultQuestion);

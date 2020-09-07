@@ -106,13 +106,17 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     };
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            const {question, ...rest} = formik.values;
-            if (!isEqual({...question, ...rest}, currentQuestion)) {
-                onSubmit();
-            }
-        }, 3000);
-        return () => clearTimeout(timer);
+        if (!listEdit) {
+            const timer = setTimeout(() => {
+                const {question, ...rest} = formik.values;
+                if (!isEqual({...question, ...rest}, currentQuestion)) {
+                    onSubmit();
+                }
+            }, 3000);
+            return () => clearTimeout(timer);
+        } else {
+            return () => ({});
+        }
     }, [currentQuestion, formik.values, onSubmit]);
 
     const setQuestionType = (data: any) => {

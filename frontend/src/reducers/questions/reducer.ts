@@ -49,7 +49,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
         case saveQuestionRoutine.SUCCESS:
             return {
                 ...state,
-                list: [state.list, payload],
+                list: [payload, ...state.list],
                 current: {},
                 isLoading: false
             };
