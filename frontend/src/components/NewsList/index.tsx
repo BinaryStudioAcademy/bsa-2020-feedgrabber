@@ -5,29 +5,42 @@ import AccessManager from "../AccessManager";
 import { ICompanyFeedItem } from 'models/companyFeed/ICompanyFeedItem';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
-import { loadCompanyFeedRoutine, setCompanyFeedPaginationRoutine } from 'sagas/companyFeed/routines';
+import {
+  applyReactionRoutine,
+  loadCompanyFeedRoutine,
+  reactOnNewsRoutine,
+  setCompanyFeedPaginationRoutine
+} from 'sagas/companyFeed/routines';
 import GenericPagination from 'components/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import styles from './styles.module.scss';
-import NewsItem from "../NewsItem/NewsItem";
+import NewsItem, {ICreatedReactionDto, IReactionCreationDto} from "../NewsItem/NewsItem";
+import {useStomp} from "../../helpers/websocket.helper";
 
 interface INewsFeedProps {
   pagination?: IPaginationInfo<ICompanyFeedItem>;
   isLoading?: boolean;
   loadNews?(): void;
+
+  reactOnNews(reaction: IReactionCreationDto): void;
   setPagination?(pagination: IPaginationInfo<ICompanyFeedItem>): void;
+  applyReaction(reaction: ICreatedReactionDto): void;
 }
 
 const NewsList: React.FC<INewsFeedProps> = ({
   pagination,
   isLoading,
   loadNews,
-  setPagination
+  setPagination,
+  reactOnNews,
+  applyReaction
 }) => {
+
   const [t] = useTranslation();
+
   return (
     <div className={styles.newsItemContainer}>
       <AccessManager staticPermission={Permissions.createPostsAndPolls}>
@@ -41,7 +54,11 @@ const NewsList: React.FC<INewsFeedProps> = ({
           loadItems={loadNews}
           pagination={pagination}
           setPagination={setPagination}
-          mapItemToJSX={(item: ICompanyFeedItem) => (<NewsItem item={item}/>)} />
+          mapItemToJSX={(item: ICompanyFeedItem) => (
+              <NewsItem applyReaction={applyReaction} react={reactOnNews} item={item}/>
+              )
+          }
+        />
       </div>
     </div>
   );
@@ -54,6 +71,8 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
   loadNews: loadCompanyFeedRoutine,
+  reactOnNews: reactOnNewsRoutine,
+  applyReaction: applyReactionRoutine,
   setPagination: setCompanyFeedPaginationRoutine
 };
 
