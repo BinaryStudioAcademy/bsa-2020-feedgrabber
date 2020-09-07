@@ -3,6 +3,7 @@ package com.feed_grabber.core.questionnaire;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.QuestionService;
 import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
@@ -69,7 +70,7 @@ public class QuestionnaireService {
     }
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId)
-            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException, SectionNotFoundException {
+            throws NotFoundException, AlreadyExistsException {
         if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)) {
             throw new AlreadyExistsException("Such questionnair already exists in this company");
         }

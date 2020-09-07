@@ -10,7 +10,11 @@ import {Loader} from "semantic-ui-react";
 import {IComponentState} from "../../components/ComponentsQuestions/IQuestionInputContract";
 import styles from "./styles.module.sass";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import {addQuestionToSectionRoutine, updateQuestionInSectionRoutine} from "../../sagas/sections/routines";
+import {
+    addQuestionToSectionRoutine,
+    deleteQuestionFromSectionRoutine,
+    updateQuestionInSectionRoutine
+} from "../../sagas/sections/routines";
 
 const QuestionDetailsPage: FC<QuestionDetailsProps & { question: IQuestion }> = (
     {
@@ -48,7 +52,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { question: IQuestion }> = 
 
     const handleDeleteQuestion = () => deleteQuestion({
         questionId: question.id,
-        sectionId: question.id
+        sectionId: section.id
     });
 
     const onSubmit = () => {
@@ -108,7 +112,7 @@ const mapDispatch = {
     updateQuestion: updateQuestionInSectionRoutine,
     loadQuestion: loadQuestionByIdRoutine,
     loadCategories: loadCategoriesRoutine,
-    deleteQuestion: deleteFromQuestionnaireRoutine
+    deleteQuestion: deleteQuestionFromSectionRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

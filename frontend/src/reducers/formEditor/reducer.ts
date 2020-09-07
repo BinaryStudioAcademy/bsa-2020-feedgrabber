@@ -120,7 +120,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.TRIGGER:
-        case deleteQuestionFromSectionRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
         case loadQuestionsRoutine.TRIGGER:
         case loadSectionsByQuestionnaireRoutine.TRIGGER:

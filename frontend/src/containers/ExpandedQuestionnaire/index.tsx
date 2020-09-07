@@ -6,7 +6,7 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {
     addQuestionToSectionRoutine,
-    createSectionRoutine,
+    createSectionRoutine, deleteQuestionFromSectionRoutine,
     updateQuestionsOrderRoutine,
     updateSectionRoutine,
     updateSections
@@ -115,7 +115,7 @@ const mapDispatchToProps = {
     updateSection: updateSectionRoutine,
     toggleMenu: toggleMenuRoutine,
     addQuestion: addQuestionToSectionRoutine,
-    deleteQuestion: deleteFromQuestionnaireRoutine,
+    deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
     updateSectionsR: updateSections,
     updateOrder: updateQuestionsOrderRoutine

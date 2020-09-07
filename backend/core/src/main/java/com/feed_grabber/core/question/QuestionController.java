@@ -69,7 +69,7 @@ public class QuestionController {
     @PostMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<QuestionDto> create(@RequestBody String json)
-            throws QuestionnaireNotFoundException, JsonProcessingException, CompanyNotFoundException, SectionNotFoundException {
+            throws NotFoundException, JsonProcessingException {
 
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 

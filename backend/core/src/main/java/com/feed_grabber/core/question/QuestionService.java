@@ -13,7 +13,6 @@ import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.SectionRepository;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
-import com.feed_grabber.core.sections.model.Section;
 import lombok.SneakyThrows;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
@@ -66,15 +65,13 @@ public class QuestionService {
     }
 
 
-    public QuestionDto create(QuestionCreateDto dto)
-            throws CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
+    public QuestionDto create(QuestionCreateDto dto) throws NotFoundException {
         var question = this.createModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
     @Transactional
-    public Question createModel(QuestionCreateDto dto)
-            throws CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
+    public Question createModel(QuestionCreateDto dto) throws NotFoundException {
         var question = Question.builder();
 
         var company = companyRep
@@ -92,18 +89,8 @@ public class QuestionService {
                 .isRequired(dto.isRequired());
 
         var savedQuestion = quesRep.save(question.build());
-        if (dto.getQuestionnaireId().isPresent()) {
-            var questionnaire = anketRep.findById(dto.getQuestionnaireId().get())
-                    .orElseThrow(QuestionnaireNotFoundException::new);
-
-            Section section;
-            if (dto.getSectionId().isEmpty()) {
-                section = this.sectionRepository.findByQuestionnaireIdAndTitle(questionnaire.getId(), questionnaire.getTitle());
-            } else {
-                section = this.sectionRepository.findById(dto.getSectionId().get())
-                        .orElseThrow(SectionNotFoundException::new);
-            }
-            this.sectionRepository.addQuestion(section.getId(), savedQuestion.getId(), dto.getIndex());
+        if (dto.getSectionId().isPresent()) {
+            this.sectionRepository.addQuestion(dto.getSectionId().get(), savedQuestion.getId(), dto.getIndex());
         }
         return savedQuestion;
     }

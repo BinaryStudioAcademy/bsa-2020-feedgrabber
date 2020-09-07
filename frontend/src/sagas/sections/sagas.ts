@@ -100,7 +100,7 @@ function* updateQuestion(action) {
 function* deleteQuestionFromSection(action) {
     try {
         const {sectionId, questionId} = action.payload;
-        const result = yield call(apiClient.delete, `/api/section/question/${questionId}?sectionId=${sectionId}`);
+        const result = yield call(apiClient.delete, `/api/section/${sectionId}/${questionId}`);
         yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: parseQuestions(result.data.data)}));
     } catch (error) {
         yield put(deleteQuestionFromSectionRoutine.failure());
