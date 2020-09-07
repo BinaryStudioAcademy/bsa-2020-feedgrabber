@@ -27,7 +27,6 @@ function* getAll() {
         const questions = res.data.data.map(q => parseQuestion(q));
 
         yield put(loadQuestionsRoutine.success(questions));
-
     } catch (e) {
         yield put(loadQuestionsRoutine.failure());
         toastr.error("Unable to load questions");

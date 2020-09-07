@@ -108,13 +108,12 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case updateQuestionInSectionRoutine.SUCCESS:
         case addQuestionToSectionRoutine.SUCCESS:
         case deleteQuestionFromSectionRoutine.SUCCESS:
-            const {sectionId, questions, questionId} = payload;
+            const {sectionId, questions} = payload;
             const list = state.sections.list.map(s => s.id === sectionId ? {...s, questions} : s);
-
             return {
                 ...state,
                 sections: {
-                    current: {...state.sections.current, questions: questions},
+                    current: {...state.sections.current, questions},
                     list
                 },
                 isLoading: false

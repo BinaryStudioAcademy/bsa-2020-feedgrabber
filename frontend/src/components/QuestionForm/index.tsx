@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {isEqual} from "lodash";
@@ -10,19 +10,18 @@ import {
     deleteQuestionFromSectionRoutine,
     updateQuestionInSectionRoutine
 } from "../../sagas/sections/routines";
-import {isEmpty} from 'lodash';
 import {useFormik} from "formik";
 import {renderForm} from "./defaultValues";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
-import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import useOutsideAlerter from "../../helpers/outsideClick.hook";
 
 export interface IQuestionListEditProps {
     addQuestion: (question) => void;
     cancel: () => void;
-    deleteQuestion: (id: string) => void;
+    deleteQuestion?: (id: string) => void;
 }
 
 const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProps }> = (
@@ -41,11 +40,14 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     }) => {
     const [isDetailsValid, setValid] = useState(true);
     const [localCategories, setLocalCategories] = useState<string[]>(categories);
+    const ref = useRef(null);
     const [t] = useTranslation();
 
     useEffect(() => {
         setLocalCategories(categories);
     }, [categories]);
+
+    useOutsideAlerter(ref, () => !listEdit ? onSubmit() : {});
 
     const formik = useFormik({
         initialValues: {
@@ -81,12 +83,11 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const onSubmit = () => {
         if (isDetailsValid && formik.isValid) {
             const {question, ...rest} = formik.values;
-            const qd = !isEmpty(currentQuestion) ? currentQuestion : defaultQuestion;
             listEdit ?
                 listEdit
                     .addQuestion(
                         {
-                            ...qd,
+                            ...currentQuestion,
                             ...question,
                             ...rest
                         })
@@ -131,7 +132,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const handleCategoriesLoad = () => !localCategories.length && loadCategories();
 
     return (
-        <div className={`${styles.question_container}`}>
+        <div className={`${styles.question_container}`} ref={ref}>
             {isLoading ?
                 <Loader active inline='centered'/>
                 :
@@ -204,13 +205,14 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                                 />
                             </>
                             }
+                            {(!listEdit || listEdit.deleteQuestion) &&
                             <Popup content={"Delete"}
                                    trigger={(
                                        <span className={styles.icon} onClick={deleteQuestion}>
                                             <Icon name="trash alternate outline" size="large"/>
                                         </span>
                                    )}
-                            />
+                            />}
                             {currentQuestion?.id && onCopy &&
                             <Popup content={"Copy"}
                                    trigger={(

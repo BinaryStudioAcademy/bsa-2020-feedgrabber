@@ -19,6 +19,7 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import QuestionDetailsForm from "../../components/QuestionForm";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
 const QuestionsList: FC<QuestionsListProps> = ({
                                                    questions,
@@ -40,8 +41,8 @@ const QuestionsList: FC<QuestionsListProps> = ({
     }, [loadQuestions]);
 
     const handleClick = (question: IQuestion) => {
-        !question && setNewPressed(true);
-        setCurrentQ(question || {});
+        setNewPressed(!question);
+        setCurrentQ(question || defaultQuestion);
     };
 
     return (
@@ -54,7 +55,7 @@ const QuestionsList: FC<QuestionsListProps> = ({
                         <br/>
                         <UIContent>
                             <UIColumn>
-                                {isEmpty(current) && newPressed && <><p>Add new</p>
+                                {newPressed && <><p>Add new</p>
                                     <hr/>
                                     <br/>
                                     <QuestionDetailsForm
@@ -64,7 +65,6 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                     setCurrentQ({});
                                                     newPressed && setNewPressed(false);
                                                 },
-                                                deleteQuestion,
                                                 addQuestion: saveNewQuestion
                                             }
                                         }/></>}
