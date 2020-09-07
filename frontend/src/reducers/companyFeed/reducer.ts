@@ -61,8 +61,6 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
             };
         case applyReactionRoutine.TRIGGER:
             const list = {...state.list};
-            console.log(payload);
-
             if (payload.toAdd) {
                 const newsReactions = list.items.filter(r => r.id === payload.newsId)[0].reactions
                     .filter(r => r.emoji === payload.reaction)[0];
@@ -78,7 +76,6 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
                     });
                 }
             } else {
-                console.log(payload.newsId);
                 const news = list.items.filter(r => r.id === payload.newsId)[0];
                 const newsReactions = news.reactions.filter(r => r.emoji === payload.reaction)[0];
                 newsReactions.reactedUsers = newsReactions.reactedUsers.filter(r => r.id !== payload.user.id);

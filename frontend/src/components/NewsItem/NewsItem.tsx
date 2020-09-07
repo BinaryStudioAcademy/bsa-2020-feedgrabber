@@ -73,30 +73,21 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
                         <ReactionTile newsId={item.id} react={react} item={r}/>
                     ))}
                 <Popup
-                    content={'Add reaction'}
-                    on='hover'
+                    content={
+                        <Picker
+                            showSkinTones={false}
+                            title={'React on news!'}
+                            onSelect={onEmojiSelect}
+                            set={'google'}
+                        />
+                    }
+                    on='click'
                     pinned
                     trigger={
-                        <div>
-                            <Popup
-                                content={
-                                    <Picker
-                                        showSkinTones={false}
-                                        title={'React on news!'}
-                                        onSelect={onEmojiSelect}
-                                        set={'google'}
-                                    />
-                                }
-                                on='click'
-                                pinned
-                                trigger={
-                                    <div className={styles.addReaction}>
-                                        <Icon className={styles.icon} name={'smile outline'}/>
-                                        +
-                                    </div>}
-                            />
-                        </div>
-                    }
+                        <div className={styles.addReaction}>
+                            <Icon className={styles.icon} name={'smile outline'}/>
+                            +
+                        </div>}
                 />
             </div>
         </>
