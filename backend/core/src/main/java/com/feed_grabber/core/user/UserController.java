@@ -133,6 +133,14 @@ public class UserController {
         userService.removeCompany(id);
     }
 
+    @ApiOperation(value = "Unfire user")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("{id}/unfire")
+    @Secured(value = {ROLE_COMPANY_OWNER})
+    public void unfireUser(@PathVariable UUID id) {
+        userService.removeCompany(id);
+    }
+
     @ApiOperation(value = "Get user short info by email and company")
     @GetMapping("/short")
     @ResponseStatus(HttpStatus.OK)
