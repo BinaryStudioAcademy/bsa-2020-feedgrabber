@@ -37,6 +37,15 @@ export interface IUserShort {
     loading?: boolean;
 }
 
+export interface IUserDashboardDto {
+  id: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
+  role: string;
+  isTeamLead: boolean;
+}
+
 export interface IUserSettings {
     language: string;
     enableNotifications: boolean;
