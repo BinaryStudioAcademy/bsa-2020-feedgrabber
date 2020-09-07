@@ -22,12 +22,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-
-
 import java.util.List;
 
 import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
-
 
 @RestController
 @RequestMapping("/api/user")
@@ -139,7 +136,7 @@ public class UserController {
     @PutMapping("{id}/unfire")
     @Secured(value = {ROLE_COMPANY_OWNER})
     public void unfireUser(@PathVariable UUID id) {
-        userService.removeCompany(id);
+        userService.unfireUser(id);
     }
 
     @ApiOperation(value = "Get user short info by email and company")

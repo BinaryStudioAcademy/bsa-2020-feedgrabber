@@ -5,6 +5,7 @@ import GenericPagination from "../../components/GenericPagination";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {IUserInfo} from "../../models/user/types";
 import UserListItem from "../../components/UserListItem";
+import FiredUserListItem from "../../components/FiredUserListItem";
 import {
     loadCompanyUsersRoutine,
     removeUserFromCompanyRoutine,
@@ -14,7 +15,7 @@ import {
     setFiredUsersPaginationRoutine
 } from "../../sagas/users/routines";
 import UIColumn from "../../components/UI/UIColumn";
-import {Input} from 'semantic-ui-react';
+import { Input, Header } from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {IRoleState} from "../../reducers/role/reducer";
 import {changeRoleRoutine, loadShortRolesRoutine, setSelectedUserRoutine} from "../../sagas/role/routines";
@@ -24,15 +25,6 @@ import {ISearchResult} from "../../models/search/Search";
 import UIButton from "../../components/UI/UIButton";
 
 const defaultSize = 10;
-
-// interface ICompanyUsersListProps {
-//   pagination?: IPaginationInfo<IUserInfo>;
-//   isLoading: boolean;
-//   userRole: string;
-//   loadUsers(query?: string): void;
-//   fireUser(id: string): void;
-//   setPagination(pagination: IPaginationInfo<IUserInfo>): void;
-// }
 
 interface ICompanyUsersListProps {
     pagination?: IPaginationInfo<IUserInfo>;
@@ -84,6 +76,14 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
         />
     );
 
+    const mapFiredUsersToJSX = (user: IUserInfo) => (
+        <FiredUserListItem
+            key={user.id}
+            user={user}
+            unfire={unfireUser}
+        />
+    );
+
     const [t] = useTranslation();
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearch, setIsSearch] = useState(false);
@@ -117,7 +117,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 
     const search = () => (
         <div className={styles.searchContainer}>
-            <Input style={{width: '450px'}}
+            <Input style={{width: '450px', marginRight: '1em'}}
                    icon={{
                      name: 'search',
                      circular: true,
@@ -135,8 +135,9 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     );
 
     return (
-        <>
-            <UIColumn>
+        <div className={styles.pageContainer}>
+            <UIColumn wide>
+                <Header as="h2">All employees</Header>
                 {search()}
                 <GenericPagination
                     isLoading={isLoading}
@@ -146,15 +147,15 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
                     mapItemToJSX={mapUsersToJSX}
                 />
             </UIColumn>
-            <UIColumn>
-              {search()}
-              <GenericPagination
-                isLoading={isFiredLoading}
-                pagination={paginationFired}
-                setPagination={setFiredPagination}
-                loadItems={loadFiredUsers}
-                mapItemToJSX={mapUsersToJSX}
-              />
+            <UIColumn wide>
+                <Header as="h2">Fired Users</Header>
+                <GenericPagination
+                    isLoading={isFiredLoading}
+                    pagination={paginationFired}
+                    setPagination={setFiredPagination}
+                    loadItems={loadFiredUsers}
+                    mapItemToJSX={mapFiredUsersToJSX}
+                />
             </UIColumn>
             {roleState.selectedUser &&
             <SwitchRoleModal
@@ -166,7 +167,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
                 isLoading={roleState.isLoading}
                 loadCompanyRoles={loadCompanyRoles}
             />}
-        </>
+        </div>
     );
 };
 

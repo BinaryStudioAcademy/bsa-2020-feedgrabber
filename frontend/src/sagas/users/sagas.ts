@@ -78,7 +78,7 @@ function* loadFiredUserList(action: any) {
 function* unfireUser(action) {
   try {
     // unfire user
-    yield call(apiClient.get, `/api/users/${action.payload}/unfire`);
+    yield call(apiClient.put, `/api/user/${action.payload}/unfire`);
     toastr.success("Employee unfired");
     // reload all users
     yield put(loadCompanyUsersRoutine.trigger());
