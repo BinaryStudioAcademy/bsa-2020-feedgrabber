@@ -12,14 +12,15 @@ import {useTranslation} from "react-i18next";
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
         const {name, categoryTitle, type, id} = question;
-        const [editor, setEditor] = useState(false);
+        const [editor, setEditor] = useState(true);
         const detailsPage = useRef(null);
         const [t] = useTranslation();
         const [style, setStyle] = useState(styles.container);
         const [modal, setModal] = useState(false);
 
         useEffect(() => {
-            id === nowModifying.id ? setStyle(styles.highlight) : setStyle(styles.container);
+            id === nowModifying.id ? setStyle(styles.highlight)
+                : setStyle(styles.container);
         }, [id, nowModifying]);
 
         const handleSegmentClick = () => {
@@ -28,13 +29,16 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                 const {top, right} = detailsPage.current.getBoundingClientRect();
                 loadCurrent({id: question.id, top, right});
             }
-            setModal(true);
+            if(!isModifyingEnabled && !answerHandler && !editor){
+                setModal(true);
+            }
         };
 
         const handleSubmit = () => {
-            if (!isModifyingEnabled && !answerHandler && !editor) {
-                setModal(true);
-            }
+            handleCancel();
+            setEditor(!editor);
+            const {top, right} = detailsPage.current.getBoundingClientRect();
+            loadCurrent({id: question.id, top, right});
         };
 
         function handleCancel() {
@@ -43,21 +47,6 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
 
         return (
             <div ref={detailsPage}>
-                {/* <Popup*/}
-                {/*    // trigger={!answerHandler && <Icon name='code' link/>}*/}
-                {/*    isOpen={popup}*/}
-                {/*    on='click'>*/}
-                {/*    <Popup*/}
-                {/*        trigger={<Button color='blue'*/}
-                {/*                         content={t('I know what I do!')}*/}
-                {/*                         fluid*/}
-                {/*                         onClick={handleSegmentClick}/>}*/}
-                {/*        content={t('It may affect answers that have been given before!!!')}*/}
-                {/*        position='top center'*/}
-                {/*        size='tiny'*/}
-                {/*        inverted*/}
-                {/*    />*/}
-                {/* </Popup>*/}
                 <Modal
                     open={modal}
                     size="small"
@@ -87,7 +76,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                         <div className={styles.scaleTop}>
                             <QuestionDetailsPage
                                 match={{params: {id: question.id}}}
-                                isPreview={{question: question, close: handleSegmentClick}}/>
+                                isPreview={{question: question, close: handleSegmentClick()}}/>
                         </div>
                         :
                         <div onClick={handleSegmentClick}>

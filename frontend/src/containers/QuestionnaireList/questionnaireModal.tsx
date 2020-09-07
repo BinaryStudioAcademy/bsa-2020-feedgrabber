@@ -24,6 +24,8 @@ const validationSchema = yup.object().shape({
   title: yup
     .string()
     .required()
+    .min(2, "Name too short!")
+    .max(40, "Name too long!")
 });
 
 const QuestionnaireModal: FC<IQuestionnaireModalProps> = (

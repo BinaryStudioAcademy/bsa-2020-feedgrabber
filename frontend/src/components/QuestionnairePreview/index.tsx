@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import { Header} from "semantic-ui-react";
+import React, {FC} from "react";
 import styles from "./styles.module.sass";
 import { IQuestion } from "models/forms/Questions/IQuesion";
 import { ISection } from "models/forms/Sections/types";
@@ -12,9 +11,9 @@ import { updateSectionsRoutine,
 import { connect } from "react-redux";
 import SectionQuestionList from "./QuestionnaireList";
 import {useTranslation} from "react-i18next";
+import {Header} from "semantic-ui-react";
 
 interface IIndex  {
-  // questionnaireId: string;
   sectionId: string;
   questions: IIndexObject[];
 }
@@ -31,10 +30,6 @@ interface IQuestionnairePreviewProps {
   updateSection(action: {}): void;
   addQuestionToSection(action: any): void;
   deleteQuestionFromSection(action: any): void;
-}
-
-interface ISectionState {
-  questions: IQuestion[];
 }
 
 const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
@@ -75,7 +70,7 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
   return (
     <div className={styles.wrapper}>
       {sections && sections.map(section =>
-      <SectionBlock id={section.id}>
+      <SectionBlock id={section.id} key={section.id}>
       <UISection section={section} onChanged={handleChapterChange}/>
       {section.questions.length ?
         <SectionQuestionList
@@ -84,8 +79,8 @@ const QuestionnairePreview: FC<IQuestionnairePreviewProps> = ({
         handleMoveQuestionToSection={moveQuestionToSection}
         indexQuestions={indexQuestions}
         />
-        : <Header as='h3'>
-          {t("Add questions")}
+        : <Header as="h3">
+          {t("Drop any question here")}
         </Header>}
         </SectionBlock>
       )}

@@ -37,6 +37,8 @@ const QuestionD: React.FC<IQuestionProps> = ({
     const [addedCategories, setNewCategories] = useState([]);
     const [t] = useTranslation();
 
+    const loc = window.location.pathname;
+
     useEffect(() => {
         if(onValueChange) {
             onValueChange({
@@ -88,13 +90,6 @@ const QuestionD: React.FC<IQuestionProps> = ({
                         value={question.details}
                     />
                 );
-            // case QuestionType.multichoice:
-            //     return (
-            //         <MultichoiseQuestion
-            //             onValueChange={handleQuestionDetailsUpdate}
-            //             value={question.details}
-            //         />
-            //     );
             case QuestionType.scale:
                 return (
                     <ScaleQuestion
@@ -239,17 +234,19 @@ const QuestionD: React.FC<IQuestionProps> = ({
                                 {/*       )}*/}
                                 {/* />*/}
                                 {/* }*/}
-                                <Popup
-                                    content={t("Required")}
-                                    trigger={
-                                        <Checkbox
-                                            toggle
-                                            name="isRequired"
-                                            checked={formik.values.isRequired}
-                                            onChange={(e, value ) =>
-                                                setQuestion({ ...question, isRequired: value.checked })}
-                                        />}
-                                />
+                                {(loc === "/question/new" || loc === "/question/" + question.id) ??
+                                    <Popup
+                                        content={t("Required")}
+                                        trigger={
+                                            <Checkbox
+                                                toggle
+                                                name="isRequired"
+                                                checked={formik.values.isRequired}
+                                                onChange={(e, value) =>
+                                                    setQuestion({...question, isRequired: value.checked})}
+                                            />}
+                                    />
+                                }
                             </div>
                         </Segment>
                     </Form>
