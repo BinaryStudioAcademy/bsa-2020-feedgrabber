@@ -15,7 +15,6 @@ import TeamUsersBlock from "./usersBlock";
 import { useTranslation } from 'react-i18next';
 import TeamRequestsBlock from "./requestsBlock";
 import {closeRequestRoutine} from "../../sagas/request/routines";
-import {ITeamShort} from "../../models/teams/ITeam";
 
 const TeamDetailsPage: FC<Props & { match }> = (
     {
@@ -47,7 +46,6 @@ const TeamDetailsPage: FC<Props & { match }> = (
     const [isNew, setIsNew] = useState<boolean>(match.params.id === "new");
 
     const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
-    const isTeamLead = currentTeam?.teamLeadId === currentUser?.id;
 
     // load users
     useEffect(() => {
