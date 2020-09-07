@@ -11,6 +11,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.dto.RequestShortDto;
+import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +65,9 @@ public class RequestController {
 
     @ApiOperation("Get all requests where target user is in the team")
     @GetMapping("/team/{id}")
-    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<List<RequestShortDto>> getAllByTeamId(@PathVariable UUID id) {
-        return new AppResponse<>(requestService.getAllByTeamId(id));
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR, ROLE_EMPLOYEE}) // employee only lead
+    public AppResponse<List<RequestShortDto>> getAllByTeamId(@PathVariable UUID id) throws TeamNotFoundException {
+        return new AppResponse<>(requestService.getAllByTeamId(id, TokenService.getUserId(), TokenService.getRoleName()));
     }
 
     @ApiOperation(value = "Get the pending for the user", notes = "user id is got from token")

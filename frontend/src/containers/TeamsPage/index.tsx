@@ -47,7 +47,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
   const [t] = useTranslation();
 
   const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
-  const isTeamLead = (team: ITeamShort) => currentUser.id === team.leadId;
+  const isTeamLead = (team: ITeamShort) => currentUser?.id === team.leadId;
 
     return (
         <>
