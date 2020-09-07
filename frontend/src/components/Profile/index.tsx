@@ -56,9 +56,6 @@ const Profile: FC<IProfileMode & {isLoading: boolean}> =
                                 <div className={[styles.menuItem, mode === 'security' && styles.selected].join(' ')}
                                      onClick={() => history.push('/profile/security')}>{t("Privacy and Security")}
                                 </div>
-                                <div className={[styles.menuItem, mode === 'settings' && styles.selected].join(' ')}
-                                     onClick={() => history.push('/profile/settings')}>{t("Settings")}
-                                </div>
                             </div>
                         <LoaderWrapper loading={isLoading}>
                             <UICard>
