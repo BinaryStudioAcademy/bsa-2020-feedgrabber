@@ -8,7 +8,10 @@ import UserListItem from "../../components/UserListItem";
 import {
     loadCompanyUsersRoutine,
     removeUserFromCompanyRoutine,
-    setUsersPaginationRoutine
+    setUsersPaginationRoutine,
+    loadFiredUsersRoutine,
+    unfireUserRoutine,
+    setFiredUsersPaginationRoutine
 } from "../../sagas/users/routines";
 import UIColumn from "../../components/UI/UIColumn";
 import {Input} from 'semantic-ui-react';
@@ -34,21 +37,20 @@ const defaultSize = 10;
 interface ICompanyUsersListProps {
     pagination?: IPaginationInfo<IUserInfo>;
     isLoading: boolean;
+    paginationFired?: IPaginationInfo<IUserInfo>;
+    isFiredLoading?: boolean;
     userRole: string;
     roleState: IRoleState;
 
     loadUsers(query?: string): void;
-
+    loadFiredUsers(query?: string): void;
     fireUser(id: string): void;
-
+    unfireUser(id: string): void;
     setPagination(pagination: IPaginationInfo<IUserInfo>): void;
-
+    setFiredPagination(pagination: IPaginationInfo<IUserInfo>): void;
     changeUserRole(dto: IRoleSwitchDto): void;
-
     loadCompanyRoles(): void;
-
     setSelectedUser(user: IUserInfo): void;
-
     result: ISearchResult;
 }
 
@@ -56,17 +58,22 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     {
         pagination,
         isLoading,
+        paginationFired,
+        isFiredLoading,
         loadUsers,
+        loadFiredUsers,
         fireUser,
+        unfireUser,
         setPagination,
         roleState,
         loadCompanyRoles,
         changeUserRole,
         setSelectedUser,
+        setFiredPagination,
         result
     }
 ) => {
-    const mapItemToJSX = (user: IUserInfo) => (
+    const mapUsersToJSX = (user: IUserInfo) => (
         <UserListItem
             key={user.id}
             user={user}
@@ -96,7 +103,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     };
 
     const handleClear = () => {
-        setPagination({total: 0, page: 0, size: defaultSize, items: []});
+        setPagination({ total: 0, page: 0, size: defaultSize, items: [] });
         setIsSearch(false);
         setSearchQuery("");
         loadUsers();
@@ -136,8 +143,18 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
                     pagination={pagination}
                     setPagination={setPagination}
                     loadItems={loadItems}
-                    mapItemToJSX={mapItemToJSX}
+                    mapItemToJSX={mapUsersToJSX}
                 />
+            </UIColumn>
+            <UIColumn>
+              {search()}
+              <GenericPagination
+                isLoading={isFiredLoading}
+                pagination={paginationFired}
+                setPagination={setFiredPagination}
+                loadItems={loadFiredUsers}
+                mapItemToJSX={mapUsersToJSX}
+              />
             </UIColumn>
             {roleState.selectedUser &&
             <SwitchRoleModal
@@ -156,6 +173,8 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
 const mapStateToProps = (rootState: IAppState) => ({
     pagination: rootState.users.pagination,
     isLoading: rootState.users.isLoading,
+    paginationFired: rootState.users.paginationFired,
+    isFiredLoading: rootState.users.isFiredLoading,
     userRole: rootState.user.info?.role,
     roleState: rootState.role,
     result: rootState.search.result
@@ -163,10 +182,13 @@ const mapStateToProps = (rootState: IAppState) => ({
 
 const mapDispatchToProps = {
     loadUsers: loadCompanyUsersRoutine,
+    loadFiredUsers: loadFiredUsersRoutine,
     loadCompanyRoles: loadShortRolesRoutine,
     changeUserRole: changeRoleRoutine,
+    unfireUser: unfireUserRoutine,
     fireUser: removeUserFromCompanyRoutine,
     setPagination: setUsersPaginationRoutine,
+    setFiredPagination: setFiredUsersPaginationRoutine,
     setSelectedUser: setSelectedUserRoutine
 };
 
