@@ -1,6 +1,7 @@
-import React, {FC, useState} from "react";
-import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
+import React, {FC, useEffect, useState} from "react";
+import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
+import {isEqual} from "lodash";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
 import {Checkbox, Divider, Form, Icon, Loader, Popup} from "semantic-ui-react";
@@ -38,9 +39,14 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         sections,
         addQuestion
     }) => {
-    const [isValid, setValid] = useState(false);
+    const [isDetailsValid, setValid] = useState(true);
     const [localCategories, setLocalCategories] = useState<string[]>(categories);
     const [t] = useTranslation();
+
+    useEffect(() => {
+        setLocalCategories(categories);
+    }, [categories]);
+
     const formik = useFormik({
         initialValues: {
             question: currentQuestion,
@@ -53,10 +59,14 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     });
 
     const handleQuestionDetailsUpdate = state => {
-        console.log(state);
         const {isCompleted, value} = state;
         formik.setFieldValue("question", {...formik.values.question, details: value});
-        setValid(isCompleted && formik.isValid);
+        const type = formik.values.question.type;
+        if (type === QuestionType.freeText || type === QuestionType.date) {
+            setValid(true);
+        } else {
+            setValid(isCompleted);
+        }
     };
 
     const onCopy = () => {
@@ -68,63 +78,57 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
             index: s.questions.length
         });
     };
-
-    const onDelete = () => {
-        listEdit
-            ? listEdit.deleteQuestion(currentQuestion.id)
-            : deleteQuestion({
-                questionId: currentQuestion.id,
-                sectionId: section.id
-            });
-    };
-
     const onSubmit = () => {
-        const q = formik.values.question;
-        const qd = !isEmpty(currentQuestion) ? currentQuestion : defaultQuestion;
-        listEdit
-            .addQuestion(
-                {
-                    ...qd,
-                    ...q
-                });
-        if (isValid) {
-            const q = formik.values.question;
+        if (isDetailsValid && formik.isValid) {
+            const {question, ...rest} = formik.values;
             const qd = !isEmpty(currentQuestion) ? currentQuestion : defaultQuestion;
             listEdit ?
                 listEdit
                     .addQuestion(
                         {
                             ...qd,
-                            ...q
+                            ...question,
+                            ...rest
                         })
-                : !q.id ?
+                : !question.id ?
                 addQuestion({
-                    ...q,
+                    ...question,
+                    ...rest,
                     questionnaireId,
                     sectionId: section.id
                 }) :
                 updateQuestion({
-                    ...q,
+                    ...question,
+                    ...rest,
                     sectionId: section.id
                 });
         }
     };
 
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         if (!isEqual(q, question)) {
-    //             onSubmit();
-    //         }
-    //     }, 3000);
-    //     return () => clearTimeout(timer);
-    // }, [q, question, onSubmit]);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const {question, ...rest} = formik.values;
+            if (!isEqual({...question, ...rest}, currentQuestion)) {
+                onSubmit();
+            }
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [currentQuestion, formik.values, onSubmit]);
 
     const setQuestionType = (data: any) => {
         const type: QuestionType = data.value;
         formik.setFieldValue("question", {...formik.values.question, type, details: undefined});
     };
 
-    const parseCategories = () => localCategories.map(cat => ({key: cat, value: cat, text: cat}));
+    const parseCategories = categories => categories.length ?
+        categories.map(cat => ({key: cat, value: cat, text: cat}))
+        : [{
+            key: currentQuestion.categoryTitle,
+            value: currentQuestion.categoryTitle,
+            text: currentQuestion.categoryTitle
+        }];
+
+    const handleCategoriesLoad = () => !localCategories.length && loadCategories();
 
     return (
         <div className={`${styles.question_container}`}>
@@ -158,10 +162,10 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                             id="categoryTitle"
                             placeholder={t('Choose category or type custom')}
                             closeOnBlur
-                            onClick={loadCategories}
+                            onClick={handleCategoriesLoad}
                             allowAdditions
                             additionLabel={t('Add new category: ')}
-                            onChange={formik.handleChange}
+                            onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
                             value={formik.values.categoryTitle}
                             onAddItem={(e, {value}) => {
                                 setLocalCategories([value as string, ...localCategories]);
@@ -171,7 +175,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                             error={formik.touched.categoryTitle && formik.errors.categoryTitle
                                 ? t(formik.errors.categoryTitle)
                                 : undefined}
-                            options={parseCategories()}
+                            options={parseCategories(localCategories)}
                             onBlur={formik.handleBlur}
                         />{' '}
                         <Divider/>
@@ -200,15 +204,13 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                                 />
                             </>
                             }
-                            {onDelete &&
                             <Popup content={"Delete"}
                                    trigger={(
-                                       <span className={styles.icon} onClick={onDelete}>
+                                       <span className={styles.icon} onClick={deleteQuestion}>
                                             <Icon name="trash alternate outline" size="large"/>
                                         </span>
                                    )}
                             />
-                            }
                             {currentQuestion?.id && onCopy &&
                             <Popup content={"Copy"}
                                    trigger={(
