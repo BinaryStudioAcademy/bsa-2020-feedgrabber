@@ -1,26 +1,21 @@
-import QuestionDetailsPage from "../../containers/QuestionDeatilsPage";
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import {IAppState} from "models/IAppState";
 import {IQuestionResponse} from "models/IQuestionResponse";
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useRef, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {Button, Header, Label, Modal, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
 import {setFloatingMenuPos} from "../../sagas/app/routines";
 import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
+import QuestionForm from "../QuestionForm";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { isCurrent: boolean }> =
     ({question, answerHandler, setMenuPos, setCurrentQ, isCurrent, isModifyingEnabled}) => {
         const {name, categoryTitle, type} = question;
         const detailsPage = useRef(null);
         const [t] = useTranslation();
-        const [style, setStyle] = useState(styles.container);
         const [modal, setModal] = useState(false);
-
-        useEffect(() => {
-            isCurrent ? setStyle(styles.highlight) : setStyle(styles.container);
-        }, [isCurrent]);
 
         const handleSegmentClick = () => {
             if (isModifyingEnabled && !answerHandler) {
@@ -67,11 +62,11 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps & { is
                         </Modal.Actions>
                     </Modal.Content>
                 </Modal>
-                <Segment className={style}>
+                <Segment className={`${styles.container} ${isCurrent && styles.highlight}`}>
                     {isCurrent && isModifyingEnabled
                         ?
                         <div className={styles.scaleTop}>
-                            <QuestionDetailsPage />
+                            <QuestionForm/>
                         </div>
                         :
                         <div onClick={handleSegmentClick}>

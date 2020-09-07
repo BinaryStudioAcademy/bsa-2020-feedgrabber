@@ -1,7 +1,7 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { loadCategoriesRoutine } from './routines';
 import apiClient from '../../helpers/apiClient';
-import {defaultQuestionValues} from "../../components/QuestionDetails/defaultValues";
+import {defaultQuestionValues} from "../../components/QuestionForm/defaultValues";
 import {ICategorie} from "../../reducers/categories/reducer";
 
 function* getAllCategories() {

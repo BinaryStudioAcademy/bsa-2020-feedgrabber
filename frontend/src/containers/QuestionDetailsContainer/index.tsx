@@ -1,8 +1,8 @@
 import React, {FC} from "react";
-import QuestionDetailsPage from "../QuestionDeatilsPage";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import {useTranslation} from "react-i18next";
 import UIContent from "../../components/UI/UIContent";
+import QuestionForm from "../../components/QuestionForm";
 
 const QuestionDetailsContainer: FC<{ match }> = (
     {
@@ -14,7 +14,7 @@ const QuestionDetailsContainer: FC<{ match }> = (
       <>
           <UIPageTitle title={t("Question details")}/>
           <UIContent >
-            <QuestionDetailsPage />
+            <QuestionForm />
           </UIContent>
       </>
     );

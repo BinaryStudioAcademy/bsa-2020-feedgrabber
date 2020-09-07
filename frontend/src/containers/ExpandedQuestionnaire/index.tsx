@@ -27,6 +27,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         sections,
         loadQuestionnaire,
         addQuestion,
+        toggleMenu,
         deleteQuestion,
         currentQuestion,
         createSection,
@@ -38,7 +39,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     useEffect(() => {
         loadQuestionnaire(match.params.id);
-    }, [match.params.id, loadQuestionnaire]);
+        toggleMenu(false);
+    }, [match.params.id, loadQuestionnaire, toggleMenu]);
 
     const addNewQuestion = () => {
         const section = currentSection ?? sections[sections.length - 1];
