@@ -15,7 +15,7 @@ import {useTranslation} from 'react-i18next';
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import QuestionDetailsForm from "../../components/QuestionForm";

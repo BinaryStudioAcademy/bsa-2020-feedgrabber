@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {isEqual} from "lodash";
@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
+import question from "../../models/forms/Questions/DefaultQuestion";
 
 export interface IQuestionListEditProps {
     addQuestion: (question) => void;
@@ -60,6 +61,51 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         onSubmit: () => console.log()
     });
 
+    useEffect(() => {
+        setLocalCategories(categories);
+    }, [categories]);
+
+    useOutsideAlerter(ref, () => onSubmit());
+
+    const onSubmit = useCallback(() => {
+        if (isDetailsValid && formik.isValid) {
+            const {question, ...rest} = formik.values;
+            if (!isEqual({...question, ...rest}, currentQuestion)) {
+                const {question, ...rest} = formik.values;
+                listEdit ?
+                    listEdit
+                        .addQuestion(
+                            {
+                                ...question,
+                                ...rest
+                            })
+                    :
+                    !question.id ?
+                        addQuestion({
+                            ...question,
+                            ...rest,
+                            questionnaireId,
+                            sectionId: section.id
+                        }) :
+                        updateQuestion({
+                            ...question,
+                            ...rest,
+                            sectionId: section.id
+                        });
+            }
+        }
+    }, [currentQuestion, addQuestion, updateQuestion,
+        formik.values, isDetailsValid, section?.id, questionnaireId, formik.isValid]);
+
+    useEffect(() => {
+        if (!listEdit) {
+            const timer = setTimeout(() => onSubmit(), 3000);
+            return () => clearTimeout(timer);
+        } else {
+            return () => ({});
+        }
+    }, [onSubmit]);
+
     const handleQuestionDetailsUpdate = state => {
         const {isCompleted, value} = state;
         formik.setFieldValue("question", {...formik.values.question, details: value});
@@ -73,53 +119,23 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
 
     const onCopy = () => {
         const s = section ?? sections[sections.length - 1];
-        addQuestion({
+        const res = {
             ...currentQuestion,
             name: `${currentQuestion.name} (copy)`,
-            sectionId: s.id,
-            index: s.questions.length
+            sectionId: s?.id,
+            index: s?.questions.length
+        };
+        listEdit ? listEdit.addQuestion(res) : addQuestion(res);
+    };
+
+    const onDelete = () => listEdit?.deleteQuestion
+        ? listEdit?.deleteQuestion(currentQuestion.id)
+        : deleteQuestion({
+            questionId: currentQuestion.id,
+            sectionId: section.id
         });
-    };
-    const onSubmit = () => {
-        if (isDetailsValid && formik.isValid) {
-            const {question, ...rest} = formik.values;
-            listEdit ?
-                listEdit
-                    .addQuestion(
-                        {
-                            ...question,
-                            ...rest
-                        })
-                : !question.id ?
-                addQuestion({
-                    ...question,
-                    ...rest,
-                    questionnaireId,
-                    sectionId: section.id
-                }) :
-                updateQuestion({
-                    ...question,
-                    ...rest,
-                    sectionId: section.id
-                });
-        }
-    };
 
-    useEffect(() => {
-        if (!listEdit) {
-            const timer = setTimeout(() => {
-                const {question, ...rest} = formik.values;
-                if (!isEqual({...question, ...rest}, currentQuestion)) {
-                    onSubmit();
-                }
-            }, 3000);
-            return () => clearTimeout(timer);
-        } else {
-            return () => ({});
-        }
-    }, [currentQuestion, formik.values, onSubmit]);
-
-    const setQuestionType = (data: any) => {
+    const setQuestionType = data => {
         const type: QuestionType = data.value;
         formik.setFieldValue("question", {...formik.values.question, type, details: undefined});
     };
@@ -211,7 +227,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                             {(!listEdit || listEdit.deleteQuestion) &&
                             <Popup content={"Delete"}
                                    trigger={(
-                                       <span className={styles.icon} onClick={deleteQuestion}>
+                                       <span className={styles.icon} onClick={onDelete}>
                                             <Icon name="trash alternate outline" size="large"/>
                                         </span>
                                    )}

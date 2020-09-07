@@ -9,7 +9,7 @@ import {IAppState} from 'models/IAppState';
 import {connect} from "react-redux";
 import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
 import {loadReportsRoutine} from 'sagas/report/routines';
-import LoaderWrapper from 'components/LoaderWrapper';
+import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import {IReportShort} from 'models/report/IReport';

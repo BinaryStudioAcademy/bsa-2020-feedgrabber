@@ -11,7 +11,7 @@ import {IAppState} from "../../../models/IAppState";
 import CompanySelectorForm from "./CompanySelectorForm";
 import styles from "./CompanySelectorForm/styles.module.sass";
 import {dropCompanyRoutine} from "../../../sagas/companies/routines";
-import LoaderWrapper from "../../LoaderWrapper";
+import LoaderWrapper from "../../helpers/LoaderWrapper";
 import {useTranslation} from "react-i18next";
 
 const schema = yup.object().shape({

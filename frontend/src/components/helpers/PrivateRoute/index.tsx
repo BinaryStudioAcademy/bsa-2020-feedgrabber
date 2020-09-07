@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react';
 import {Redirect, Route} from 'react-router-dom';
-import {useAuth} from '../../security/authProvider';
-import Header from "../Header";
-import SideMenu from "../SideMenu";
+import {useAuth} from '../../../security/authProvider';
+import Header from "../../Header";
+import SideMenu from "../../SideMenu";
 import styles from './styles.module.sass';
 import {connect} from "react-redux";
-import {toggleMenuRoutine} from "../../sagas/app/routines";
+import {toggleMenuRoutine} from "../../../sagas/app/routines";
 import AccessManager from "../AccessManager";
 import {useTranslation} from "react-i18next";
-import {getUserSettingsRoutine} from "../../sagas/user/routines";
-import {IAppState} from "../../models/IAppState";
+import {getUserSettingsRoutine} from "../../../sagas/user/routines";
+import {IAppState} from "../../../models/IAppState";
 
 const PrivateRoute = ({component: Component, showMenu, toggleMenu,
                           getSettings, user, roles = null, ...rest}) => {

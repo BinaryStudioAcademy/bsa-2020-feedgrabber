@@ -1,28 +1,30 @@
-import React, {useEffect} from 'react';
+import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import styles from './styles.module.sass';
 import Form from 'components/Form';
 import {IAppState} from 'models/IAppState';
-import QuestionMenu from "../../components/QuestionMenu";
+import QuestionMenu from "../../components/Form/QuestionMenu";
 import {
     addQuestionToSectionRoutine,
-    createSectionRoutine, deleteQuestionFromSectionRoutine,
+    createSectionRoutine, deleteQuestionFromSectionRoutine, setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
     updateSectionRoutine,
     updateSections
 } from 'sagas/sections/routines';
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {toastr} from "react-redux-toastr";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
-import {toggleMenuRoutine} from "../../sagas/app/routines";
+import {setFloatingMenuPos, toggleMenuRoutine} from "../../sagas/app/routines";
 
-const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
+const FormEditor: FC<FormEditorProps & { match }> = (
     {
         match,
         isLoading,
+        setMenuPos,
+        setCurrentQuestion,
         questionnaire,
         sections,
         loadQuestionnaire,
@@ -83,6 +85,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                             <div className={styles.questions_container}>
                                 <Form
                                     updateSections={updateSectionsR}
+                                    setMenuPos={setMenuPos}
+                                    setCurrentQuestion={setCurrentQuestion}
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}
                                     currentQuestion={currentQuestion}
@@ -114,6 +118,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
     updateSection: updateSectionRoutine,
+    setMenuPos: setFloatingMenuPos,
+    setCurrentQuestion: setCurrentQuestionInSection,
     toggleMenu: toggleMenuRoutine,
     addQuestion: addQuestionToSectionRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine,
@@ -124,6 +130,6 @@ const mapDispatchToProps = {
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type ExpandedQuestionnaireProps = ConnectedProps<typeof connector>;
+type FormEditorProps = ConnectedProps<typeof connector>;
 
-export default connector(ExpandedQuestionnaire);
+export default connector(FormEditor);

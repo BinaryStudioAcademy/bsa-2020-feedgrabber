@@ -4,22 +4,30 @@ import {IQuestion} from "models/forms/Questions/IQuesion";
 import {DragDropContext} from "react-beautiful-dnd";
 import Section from "./Section/Section";
 import {ISection} from "../../reducers/formEditor/reducer";
+import {deleteAtIndex, insertAtIndex} from "../../helpers/array.helper";
+import {ResponseQuestionProps} from "./QuestionCard/QuestionCard";
 
 interface IFormProps {
     sections: ISection[];
     currentQuestion: IQuestion;
+
     updateSection(action: {}): void;
+
     updateOrder(action: {}): void;
+
     updateSections(action: {}): void;
 }
 
-const Form: FC<IFormProps> = ({
-                                  sections,
-                                  updateSections,
-                                  updateOrder,
-                                  currentQuestion,
-                                  updateSection
-                              }) => {
+const Form: FC<IFormProps & ResponseQuestionProps> = (
+    {
+        sections,
+        updateSections,
+        updateOrder,
+        setCurrentQuestion,
+        setMenuPos,
+        currentQuestion,
+        updateSection
+    }) => {
 
     function onDragEnd(res) {
         const {destination, source} = res;
@@ -77,6 +85,8 @@ const Form: FC<IFormProps> = ({
                 {sections?.map(section =>
                     <Section
                         key={section.id}
+                        setCurrentQuestion={setCurrentQuestion}
+                        setMenuPos={setMenuPos}
                         currentQuestion={currentQuestion}
                         section={section}
                         renameSection={updateSection}
@@ -88,14 +98,4 @@ const Form: FC<IFormProps> = ({
 };
 
 export default Form;
-
-function deleteAtIndex(arr: Array<IQuestion>, index: number): Array<IQuestion> {
-    arr.splice(index, 1);
-    return arr;
-}
-
-function insertAtIndex(arr: Array<IQuestion>, index: number, q: IQuestion): Array<IQuestion> {
-    arr.splice(index, 0, q);
-    return arr;
-}
 

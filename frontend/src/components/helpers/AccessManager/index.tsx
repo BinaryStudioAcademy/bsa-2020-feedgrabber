@@ -1,7 +1,7 @@
-import {IAppState} from "../../models/IAppState";
+import {IAppState} from "../../../models/IAppState";
 import {connect} from "react-redux";
 import {FC, useEffect} from "react";
-import {getUserRoutine} from "../../sagas/auth/routines";
+import {getUserRoutine} from "../../../sagas/auth/routines";
 import rolesRules, {IRole} from "./rbac-rules";
 
 interface IAccessManagerProps {

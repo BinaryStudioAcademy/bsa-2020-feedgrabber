@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect, Route} from 'react-router-dom';
-import {useAuth} from '../../security/authProvider';
+import {useAuth} from '../../../security/authProvider';
 
 const GuestRoute = ({component: Component, ...rest}) => {
   const isLogged = useAuth();
