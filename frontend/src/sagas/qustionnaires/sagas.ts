@@ -37,10 +37,9 @@ function* saveAndPutNewQuestionnaire(action) {
         const payload = res.data.data;
         yield put(saveAndGetQuestionnaireRoutine.success(payload));
         yield put(saveQuestionRoutine.trigger({...defaultQuestion, questionnaireId: payload.id}));
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
         yield put(saveAndGetQuestionnaireRoutine.failure());
-        toastr.error("Failed saving form");
+        toastr.error(error.response?.data?.error || 'No response');
     }
 }
 
@@ -52,8 +51,8 @@ function* addQuestionnaire(action) {
         yield put(hideModalQuestionnaireRoutine.trigger());
         yield put(loadQuestionnairesRoutine.trigger());
         toastr.success("Added questionnaire");
-    } catch (errorResponse) {
-        yield put(addQuestionnaireRoutine.failure(errorResponse?.data?.error || 'No response'));
+    } catch (error) {
+        yield put(addQuestionnaireRoutine.failure(error.response?.data?.error || 'No response'));
     }
 }
 

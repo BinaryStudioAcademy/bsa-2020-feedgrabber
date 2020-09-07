@@ -63,9 +63,9 @@ public class QuestionnaireService {
     }
 
     public QuestionnaireDto create(QuestionnaireCreateDto createDto, UUID companyId)
-            throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
+            throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
         if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)) {
-            throw new AlreadyExistsException("Such questionnair already exists in this company");
+            throw new QuestionnaireExistsException();
         }
 
         var company = companyRepository.findById(companyId)

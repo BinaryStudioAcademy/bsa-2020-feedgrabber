@@ -74,7 +74,8 @@ public class QuestionnaireController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto) throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
+    public AppResponse<QuestionnaireDto> create(@RequestBody QuestionnaireCreateDto createDto)
+            throws CompanyNotFoundException, QuestionnaireExistsException, QuestionnaireNotFoundException {
         return new AppResponse<>(
                 questionnaireService.create(createDto, TokenService.getCompanyId())
         );
