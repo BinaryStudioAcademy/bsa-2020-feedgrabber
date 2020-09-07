@@ -95,7 +95,7 @@ const QuestionDetailsPage: FC<QuestionDetailsProps & { match; isPreview }> = (
                         onValueChange={handleQuestionDetailsUpdate}
                     />
                     <div className={`${styles.question_actions} ${isPreview ? styles.question_actions_preview : ''}`}>
-                        <UIButton title={t("Cancel")} primary onClick={onClose} />
+                        <UIButton title={t("Cancel")} cancel onClick={onClose} />
                         <UIButton
                           title={t("Save")}
                           submit
