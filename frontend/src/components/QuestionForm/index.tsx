@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {isEqual} from "lodash";
@@ -16,6 +16,7 @@ import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
+import useOutsideAlerter from "../../helpers/outsideClick.hook";
 
 const QuestionForm: FC<QuestionDetailsProps> = (
     {
@@ -32,11 +33,14 @@ const QuestionForm: FC<QuestionDetailsProps> = (
     }) => {
     const [isDetailsValid, setValid] = useState(true);
     const [localCategories, setLocalCategories] = useState<string[]>(categories);
+    const ref = useRef(null);
     const [t] = useTranslation();
 
     useEffect(() => {
         setLocalCategories(categories);
     }, [categories]);
+
+    useOutsideAlerter(ref, () => onSubmit());
 
     const formik = useFormik({
         initialValues: {
@@ -118,7 +122,7 @@ const QuestionForm: FC<QuestionDetailsProps> = (
     const handleCategoriesLoad = () => !localCategories.length && loadCategories();
 
     return (
-        <div className={`${styles.question_container}`}>
+        <div className={`${styles.question_container}`} ref={ref}>
             {isLoading ?
                 <Loader active inline='centered'/>
                 :

@@ -109,6 +109,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case addQuestionToSectionRoutine.SUCCESS:
         case deleteQuestionFromSectionRoutine.SUCCESS:
             const {sectionId, questions, questionId} = payload;
+            const curQ = questionId ? questions.find(q => q.id === questionId) : {};
             const list = state.sections.list.map(s => s.id === sectionId ? {...s, questions} : s);
 
             return {
@@ -117,6 +118,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                     current: {...state.sections.current, questions: questions},
                     list
                 },
+                currentQuestion: curQ,
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.TRIGGER:

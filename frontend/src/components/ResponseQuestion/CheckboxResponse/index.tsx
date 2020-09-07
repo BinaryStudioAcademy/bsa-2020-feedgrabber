@@ -57,6 +57,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
             {boxes.map((v, i) => {
                 return <Checkbox disabled={response !== undefined && !answerHandler}
                                  label={v.value}
+                                 key={i}
                                  checked={boxes[i].checked}
                                  onChange={() => {
                                      setBoxes(() => {
