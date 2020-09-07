@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC} from "react";
 import styles from './styles.module.scss';
 import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UICardBlock from "../UI/UICardBlock";
