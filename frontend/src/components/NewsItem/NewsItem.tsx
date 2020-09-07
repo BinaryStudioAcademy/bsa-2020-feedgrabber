@@ -7,15 +7,14 @@ export interface INewsItemProps {
     item: ICompanyFeedItem;
 }
 
+const defaultNewsImage = "https://img.icons8.com/cotton/2x/news.png";
+
 const NewsItem: FC<INewsItemProps> = ({item}) => {
     return (
         <UICardBlock key={item.id}
                      className={styles.newsItemContainer}>
             <>
-            {item.image
-                ? <img src={item.image?.link} alt='' height="240" width="180"/>
-                : <div/>
-            } {/* scale 4:3 * 60 */}
+            <img src={item.image? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
             <div className={styles.detailesContainer}>
                 <div className={styles.mainContainer}>
                     <div className={styles.type}>{item.type}</div>
