@@ -21,7 +21,12 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
             fetchCompany();
             return;
         }
-        isLogged && !error ? redirectToCompany(company) : history.push("/error");
+        if(isLogged && company) {
+            redirectToCompany(company);
+        }
+        if(isLogged && error) {
+            history.push("/error");
+        }
 
         const subdomain = getSubdomainFromDomain();
         if(!subdomain) {
