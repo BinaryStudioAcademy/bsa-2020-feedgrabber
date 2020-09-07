@@ -49,7 +49,7 @@ const QuestionnaireList: FC<Props> = (
             .questionnaires
             .map(q => q.id)
             .includes(item.id);
-        return <UICard>
+        return <UICard key={item.id}>
             <UICardBlock className={`${styles.cardBlockWrapper} ${match && styles.searched}`}>
                 <h3>{item.title}</h3>
                 <span
