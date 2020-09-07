@@ -44,7 +44,7 @@ public class QuestionService {
     }
 
     public List<QuestionDto> getAll() {
-        return quesRep.findAll()
+        return quesRep.findAllByCompanyId(TokenService.getCompanyId())
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
