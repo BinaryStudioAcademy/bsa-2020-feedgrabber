@@ -10,16 +10,14 @@ import {connect, ConnectedProps} from "react-redux";
 
 const ExpandedNews: React.FC<ExpandedNewsProps> = (
     {
-        currentNews,
-        isLoading,
         user,
         setCurrentNews,
         loadNews
     }) => {
 
-    useEffect(() => {
+    /* useEffect(() => {
        loadNews({ id: currentNews.id });
-    }, [currentNews.id]);
+    }, [currentNews.id, loadNews]);
 
     const initialComment: IComment = {
         id: "",
@@ -55,9 +53,10 @@ const ExpandedNews: React.FC<ExpandedNewsProps> = (
                 <Comment.Text>{comment.body}</Comment.Text>
             </Comment>
         );
-    };
+    };*/
 
-    return (
+    return null;
+    /* (
         <Modal
             open={!!currentNews}
             onClose={handleClose}
@@ -73,13 +72,10 @@ const ExpandedNews: React.FC<ExpandedNewsProps> = (
                 />
             </Modal.Content>
         </Modal>
-    );
+    );*/
 };
 
 const mapStateToProps = (state: IAppState) => ({
-    currentNews: state.news.current.get,
-    commentsList: state.news.current.get.comments,
-    isLoading: state.news.current.isLoading,
     user: state.user.shortInfo
 });
 

@@ -1,69 +1,60 @@
 import React from 'react';
-import styles from './styles.module.scss';
-import UICardBlock from 'components/UI/UICardBlock';
-import { INewsItem} from 'models/news';
+import { useTranslation } from "react-i18next";
+import { Permissions } from "../AccessManager/rbac-rules";
+import AccessManager from "../AccessManager";
+import { ICompanyFeedItem } from 'models/companyFeed/ICompanyFeedItem';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
-import {loadNewsListRoutine, setCurrentNewsRoutine, setNewsPaginationRoutine} from 'sagas/news/routines';
+import { loadCompanyFeedRoutine, setCompanyFeedPaginationRoutine } from 'sagas/companyFeed/routines';
 import GenericPagination from 'components/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
-import News from "../News";
-import ExpandedNews from "../ExpandedNews";
+import { Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+
+import styles from './styles.module.scss';
+import NewsItem from "../NewsItem/NewsItem";
 
 interface INewsFeedProps {
-    pagination?: IPaginationInfo<INewsItem>;
-    isLoading?: boolean;
-    loadNews?(): void;
-    setPagination?(pagination: IPaginationInfo<INewsItem>): void;
-    currentNews: INewsItem;
-    setCurrentNews?(payload: any): void;
-    loadComments?(payload: { newsId: string }): void;
+  pagination?: IPaginationInfo<ICompanyFeedItem>;
+  isLoading?: boolean;
+  loadNews?(): void;
+  setPagination?(pagination: IPaginationInfo<ICompanyFeedItem>): void;
 }
 
-const NewsList: React.FC<INewsFeedProps> =
-    ({
-         pagination,
-         isLoading,
-         loadNews,
-         setPagination,
-         setCurrentNews,
-         currentNews
-    }) => {
-    const getNewsItem = (news: INewsItem) => {
-        return (
-            <UICardBlock key={news.id}
-                         className={styles.newsItemContainer}>
-                <News item={news} setCurrentNews={setCurrentNews} />
-            </UICardBlock>
-        );
-    };
-
-    return (
-        <div className={styles.newsFeedContainer}>
-            <div className={styles.newsListMain}>
-                <GenericPagination
-                isLoading={isLoading}
-                loadItems={loadNews}
-                pagination={pagination}
-                setPagination={setPagination}
-                mapItemToJSX={getNewsItem}
-                />
-            </div>
-            {currentNews?.id && <ExpandedNews />}
-        </div>
-    );
+const NewsList: React.FC<INewsFeedProps> = ({
+  pagination,
+  isLoading,
+  loadNews,
+  setPagination
+}) => {
+  const [t] = useTranslation();
+  return (
+    <div className={styles.newsItemContainer}>
+      <AccessManager staticPermission={Permissions.createPostsAndPolls}>
+        <Link to="/company/new">
+          <Button>{t('Add news')}</Button>
+        </Link>
+      </AccessManager>
+      <div className={styles.newsListMain}>
+        <GenericPagination
+          isLoading={isLoading}
+          loadItems={loadNews}
+          pagination={pagination}
+          setPagination={setPagination}
+          mapItemToJSX={(item: ICompanyFeedItem) => (<NewsItem item={item}/>)} />
+      </div>
+    </div>
+  );
 };
 
 const mapStateToProps = (state: IAppState) => ({
-    pagination: state.news.list.pagination,
-    isLoading: state.news.list.isLoading,
-    currentNews: state.news.current.get
+  pagination: state.companyFeed.list,
+  isLoading: state.companyFeed.isLoading
 });
 
 const mapDispatchToProps = {
-    loadNews: loadNewsListRoutine,
-    setPagination: setNewsPaginationRoutine,
-    setCurrentNews: setCurrentNewsRoutine
+  loadNews: loadCompanyFeedRoutine,
+  setPagination: setCompanyFeedPaginationRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewsList);
