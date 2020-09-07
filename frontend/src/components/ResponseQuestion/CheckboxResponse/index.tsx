@@ -23,6 +23,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
         return !!options.find(option => option === field);
     };
     const [boxes, setBoxes] = useState([] as { checked: boolean; value: string }[]);
+    const notResponsePage = window.location.pathname.split("/")[1] !== "response";
 
     useEffect(() => {
         setBoxes(question.details.answerOptions.map(v => ({
@@ -55,7 +56,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
     return (
         <div className={styles.boxes}>
             {boxes.map((v, i) => {
-                return <Checkbox disabled={response !== undefined && !answerHandler}
+                return <Checkbox disabled={(response !== undefined && !answerHandler) || notResponsePage}
                                  label={v.value}
                                  checked={boxes[i].checked}
                                  onChange={() => {
@@ -69,7 +70,7 @@ export const CheckboxResponse: FC<IQuestionResponse<ICheckboxQuestion> & ICheckb
             {question.details.includeOther && (
                 <div className={styles.other}>
                     <Checkbox
-                        disabled={response !== undefined && !answerHandler}
+                        disabled={(response !== undefined && !answerHandler) || notResponsePage}
                         checked={other.checked}
                         onChange={() => {
                             setOther(() => {
