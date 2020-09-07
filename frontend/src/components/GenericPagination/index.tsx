@@ -61,7 +61,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
     <>
       {pagination?.total > 0 && (
         <div className={styles.paginationMetaWrapper}>
-          <div>Total: <strong>{pagination.total}</strong></div>
+          <div>{t("Total")}: <strong>{pagination.total}</strong></div>
           <div>
             <select
               onChange={e => handleChangeAmountPerPage(e.target.value)}

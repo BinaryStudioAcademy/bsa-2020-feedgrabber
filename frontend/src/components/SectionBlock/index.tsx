@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import { useDrop } from 'react-dnd';
 import { DraggableItemTypes } from 'models/forms/Questions/IQuesion';
 import { Header } from 'semantic-ui-react';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface ISectionProps {
     id: string;
@@ -29,10 +29,10 @@ const SectionBlock: React.FC<ISectionProps> = ({id, children}) => {
             className={[styles.section, styles.backgroundColor].join(' ')}
             ref={drop}>
             {children}
-            {isActive ?
-            <Header as='h3'>
-          {t("Drop Question here")}
-        </Header> : null}
+            {isActive
+              ? <Header as='h3'>{t("Drop Question here")}</Header>
+              : null
+            }
         </div>
     );
 };
