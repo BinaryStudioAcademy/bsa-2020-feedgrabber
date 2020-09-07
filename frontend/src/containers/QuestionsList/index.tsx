@@ -6,7 +6,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {
     deleteQuestion,
     loadQuestionsRoutine,
-    saveQuestionRoutine,
+    saveQuestionRoutine, setCurrentQuestionRoutine,
     updateQuestionRoutine
 } from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
@@ -16,7 +16,6 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import LoaderWrapper from "../../components/helpers/LoaderWrapper";
-import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import QuestionDetailsForm from "../../components/QuestionForm";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
@@ -64,13 +63,14 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                     <br/>
                                     <div className={styles.questionContainer}>
                                         <QuestionDetailsForm
+                                            isList
+                                            isListNew
                                             listEdit={
                                                 {
                                                     cancel: () => {
                                                         setCurrentQ({});
                                                         newPressed && setNewPressed(false);
-                                                    },
-                                                    addQuestion: saveNewQuestion
+                                                    }
                                                 }
                                             }/></div>
                                 </>}
@@ -85,14 +85,12 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                     return (
                                         current?.id === question.id ?
                                             <div key={index} className={styles.questionContainer}>
-                                                <QuestionDetailsForm listEdit={
+                                                <QuestionDetailsForm isList listEdit={
                                                     {
                                                         cancel: () => {
                                                             setCurrentQ({});
                                                             newPressed && setNewPressed(false);
-                                                        },
-                                                        deleteQuestion,
-                                                        addQuestion: updateQuestion
+                                                        }
                                                     }
                                                 }/></div>
                                             :
@@ -120,13 +118,13 @@ const QuestionsList: FC<QuestionsListProps> = ({
 const mapState = (state: IAppState) => ({
     questions: state.questions.list,
     isLoading: state.questions.isLoading,
-    current: state.formEditor.currentQuestion,
+    current: state.questions.currentQuestion,
     result: state.search.result
 });
 
 const mapDispatch = {
     loadQuestions: loadQuestionsRoutine,
-    setCurrentQ: setCurrentQuestionInSection,
+    setCurrentQ: setCurrentQuestionRoutine,
     saveNewQuestion: saveQuestionRoutine,
     deleteQuestion: deleteQuestion,
     updateQuestion: updateQuestionRoutine

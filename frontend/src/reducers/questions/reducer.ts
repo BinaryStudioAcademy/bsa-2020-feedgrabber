@@ -3,17 +3,19 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {
     deleteQuestion,
     loadQuestionsRoutine,
-    saveQuestionRoutine,
+    saveQuestionRoutine, setCurrentQuestionRoutine,
     updateQuestionRoutine
 } from "../../sagas/questions/routines";
 
 export interface IQuestionsState {
     list?: IQuestion[];
+    currentQuestion: IQuestion;
     isLoading?: boolean;
 }
 
 const initialState: IAppState['questions'] = {
     list: [] as IQuestion[],
+    currentQuestion: {} as IQuestion,
     isLoading: false
 };
 
@@ -27,6 +29,11 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
                 ...state,
                 isLoading: true
             };
+        case setCurrentQuestionRoutine.TRIGGER:
+            return {
+                ...state,
+                currentQuestion: payload
+            };
         case loadQuestionsRoutine.SUCCESS:
             return {
                 ...state,
@@ -37,7 +44,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
             return {
                 ...state,
                 list: state.list.map(q => q.id === payload.id ? payload : q),
-                current: {},
+                current: payload,
                 isLoading: false
             };
         case deleteQuestion.SUCCESS:

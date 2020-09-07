@@ -7,3 +7,4 @@ export const addSelectedQuestionsRoutine = createRoutine('QUESTION:ADD_SELECTED'
 export const loadQuestionnaireQuestionsRoutine = createRoutine('QUESTION:LOAD_QUESTIONNAIRE');
 export const loadQuestionsBySectionRoutine = createRoutine('QUESTION:LOAD_SECTION');
 export const deleteQuestion = createRoutine('QUESTION:DELETE');
+export const setCurrentQuestionRoutine = createRoutine('QUESTION:SET_CURRENT');
