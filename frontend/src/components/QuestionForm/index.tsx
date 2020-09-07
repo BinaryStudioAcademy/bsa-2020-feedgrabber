@@ -1,5 +1,5 @@
 import React, {FC, useState} from "react";
-import {QuestionType} from "../../models/forms/Questions/IQuesion";
+import {IQuestion, QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
@@ -9,15 +9,24 @@ import {
     deleteQuestionFromSectionRoutine,
     updateQuestionInSectionRoutine
 } from "../../sagas/sections/routines";
+import {isEmpty} from 'lodash';
 import {useFormik} from "formik";
 import {renderForm} from "./defaultValues";
 import styles from "./styles.module.sass";
 import {useTranslation} from "react-i18next";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
+import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 
-const QuestionForm: FC<QuestionDetailsProps> = (
+export interface IQuestionListEditProps {
+    addQuestion: (question) => void;
+    cancel: () => void;
+    deleteQuestion: (id: string) => void;
+}
+
+const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProps }> = (
     {
+        listEdit,
         currentQuestion,
         isLoading,
         updateQuestion,
@@ -60,15 +69,35 @@ const QuestionForm: FC<QuestionDetailsProps> = (
         });
     };
 
-    const onDelete = () => deleteQuestion({
-        questionId: currentQuestion.id,
-        sectionId: section.id
-    });
+    const onDelete = () => {
+        listEdit
+            ? listEdit.deleteQuestion(currentQuestion.id)
+            : deleteQuestion({
+                questionId: currentQuestion.id,
+                sectionId: section.id
+            });
+    };
 
     const onSubmit = () => {
+        const q = formik.values.question;
+        const qd = !isEmpty(currentQuestion) ? currentQuestion : defaultQuestion;
+        listEdit
+            .addQuestion(
+                {
+                    ...qd,
+                    ...q
+                });
         if (isValid) {
             const q = formik.values.question;
-            !q.id ?
+            const qd = !isEmpty(currentQuestion) ? currentQuestion : defaultQuestion;
+            listEdit ?
+                listEdit
+                    .addQuestion(
+                        {
+                            ...qd,
+                            ...q
+                        })
+                : !q.id ?
                 addQuestion({
                     ...q,
                     questionnaireId,
@@ -151,6 +180,26 @@ const QuestionForm: FC<QuestionDetailsProps> = (
                         </div>
                         <Divider/>
                         <div className={styles.actions}>
+                            {listEdit &&
+                            <>
+                                <Popup content={"Save"}
+                                       trigger={(
+                                           <span
+                                               className={styles.icon}
+                                               onClick={onSubmit}>
+                                            <Icon name="save outline" size="large"/>
+                                        </span>
+                                       )}
+                                />
+                                <Popup content={"Cancel"}
+                                       trigger={(
+                                           <span className={styles.icon} onClick={() => listEdit.cancel()}>
+                                            <Icon name="close" size="large"/>
+                                        </span>
+                                       )}
+                                />
+                            </>
+                            }
                             {onDelete &&
                             <Popup content={"Delete"}
                                    trigger={(

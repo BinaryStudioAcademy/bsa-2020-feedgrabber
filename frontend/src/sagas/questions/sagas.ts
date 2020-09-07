@@ -6,12 +6,13 @@ import {
     loadQuestionsBySectionRoutine,
     loadQuestionsRoutine,
     saveQuestionRoutine,
-    setCurrentQuestionRoutine
+    updateQuestionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import {setCurrentQuestionInSection} from "../sections/routines";
 
 export const parseQuestion = rawQuestion => ({
     ...rawQuestion,
@@ -46,6 +47,18 @@ function* addFromExisting(action) {
     }
 }
 
+function* updateQuestion(action) {
+    try {
+        const res = yield call(apiClient.put, `/api/questions`, action.payload);
+
+        yield put(updateQuestionRoutine.success(parseQuestion(res.data.data)));
+        yield put(setCurrentQuestionInSection.trigger({}));
+    } catch (e) {
+        yield put(updateQuestionRoutine.failure());
+        toastr.error("Question wasn't updated");
+    }
+}
+
 function* deleteQuestionById(action) {
     try {
         yield call(apiClient.delete, `/api/questions/${action.payload}`);
@@ -62,6 +75,7 @@ function* saveQuestion(action) {
         const res = yield call(apiClient.post, `/api/questions`, action.payload);
 
         yield put(saveQuestionRoutine.success(parseQuestion(res.data.data)));
+        yield put(setCurrentQuestionInSection.trigger({}));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());
         toastr.error("Question wasn't saved");
@@ -85,9 +99,9 @@ export default function* questionSagas() {
     yield all([
         yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
         yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
+        yield takeEvery(updateQuestionRoutine.TRIGGER, updateQuestion),
         yield takeEvery(saveQuestionRoutine.TRIGGER, saveQuestion),
         yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId),
-        yield takeEvery(deleteQuestion.TRIGGER, deleteQuestionById),
-        yield takeEvery(setCurrentQuestionRoutine.TRIGGER, deleteQuestionById)
+        yield takeEvery(deleteQuestion.TRIGGER, deleteQuestionById)
     ]);
 }

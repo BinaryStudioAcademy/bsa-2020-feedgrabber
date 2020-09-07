@@ -3,7 +3,12 @@ import {isEmpty} from 'lodash';
 import {Card} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
-import {loadQuestionsRoutine, saveQuestionRoutine} from '../../sagas/questions/routines';
+import {
+    deleteQuestion,
+    loadQuestionsRoutine,
+    saveQuestionRoutine,
+    updateQuestionRoutine
+} from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
 import UIButton from 'components/UI/UIButton';
 import {useTranslation} from 'react-i18next';
@@ -22,7 +27,9 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                    result,
                                                    setCurrentQ,
                                                    current,
-                                                   saveNewQuestion
+                                                   saveNewQuestion,
+                                                   deleteQuestion,
+                                                   updateQuestion
                                                }) => {
     const [t] = useTranslation();
 
@@ -50,7 +57,17 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                 {isEmpty(current) && newPressed && <><p>Add new</p>
                                     <hr/>
                                     <br/>
-                                    <QuestionDetailsForm/></>}
+                                    <QuestionDetailsForm
+                                        listEdit={
+                                            {
+                                                cancel: () => {
+                                                    setCurrentQ({});
+                                                    newPressed && setNewPressed(false);
+                                                },
+                                                deleteQuestion,
+                                                addQuestion: saveNewQuestion
+                                            }
+                                        }/></>}
                                 <p>Modify existing</p>
                                 <hr/>
                                 <br/>
@@ -61,15 +78,24 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                         .includes(question.id);
                                     return (
                                         current?.id === question.id ?
-                                            <QuestionDetailsForm/>
+                                            <QuestionDetailsForm listEdit={
+                                                {
+                                                    cancel: () => {
+                                                        setCurrentQ({});
+                                                        newPressed && setNewPressed(false);
+                                                    },
+                                                    deleteQuestion,
+                                                    addQuestion: updateQuestion
+                                                }
+                                            }/>
                                             : <div key={index} className={styles.questionContainer}>
                                                 <Card className={`${styles.question} ${match && styles.searched}`}
                                                       link centered fluid
-                                                      description={question.name.length > 70 ?
+                                                      description={question.name?.length > 70 ?
                                                           question.name.slice(0, 70).concat("...") :
                                                           question.name}
                                                       extra={match && 'Matches searched query!'}
-                                                      meta={question.categoryTitle.length > 70 ?
+                                                      meta={question.categoryTitle?.length > 70 ?
                                                           question.categoryTitle.slice(0, 70).concat("...") :
                                                           question.categoryTitle}
                                                       onClick={() => handleClick(question)}/>
@@ -95,7 +121,9 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     loadQuestions: loadQuestionsRoutine,
     setCurrentQ: setCurrentQuestionInSection,
-    saveNewQuestion: saveQuestionRoutine
+    saveNewQuestion: saveQuestionRoutine,
+    deleteQuestion: deleteQuestion,
+    updateQuestion: updateQuestionRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
