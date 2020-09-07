@@ -8,6 +8,7 @@ import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.questionnaire.exceptions.WrongQuestionnaireTitleException;
 import com.feed_grabber.core.sections.SectionService;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
 import com.feed_grabber.core.user.UserRepository;
@@ -66,6 +67,17 @@ public class QuestionnaireService {
             throws CompanyNotFoundException, AlreadyExistsException, QuestionnaireNotFoundException {
         if (questionnaireRepository.existsByTitleAndCompanyId(createDto.getTitle(), companyId)) {
             throw new AlreadyExistsException("Such questionnair already exists in this company");
+        }
+
+        if (createDto.getTitle().length() > 40 || createDto.getTitle().length() < 3) {
+            throw new WrongQuestionnaireTitleException("Wrong title length: too long (>40) or too short (<3)");
+        }
+
+        if (!createDto.getTitle()
+                .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
+            throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
+                    "have more than one space in sequence." +
+                    "Title can contain latin letters, numbers and special symbols.");
         }
 
         var company = companyRepository.findById(companyId)
