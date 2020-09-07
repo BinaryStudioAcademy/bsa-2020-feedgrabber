@@ -28,8 +28,9 @@ import RespondentReport from "../ReportPage/RespondentReport";
 import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
 import ErrorPage from "../ErrorPage";
+import NewsList from "../../components/NewsList";
+import SignUpByEmailPage from 'components/SignUpByEmailPage';
 
-// just for demo
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
 import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
@@ -47,6 +48,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                 <Switch>
                     <GuestRoute exact path="/" component={Landing}/>
                     <GuestRoute exact path="/auth" component={SignForm}/>
+                    <GuestRoute exact path="/auth/email" component={SignUpByEmailPage}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
                     <Route exact path="/error" render={ props => <ErrorPage {...props}/>}/>
@@ -60,8 +62,8 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/editor" component={RedirectFormEditor}/>
                     <PrivateRoute exact path="/assign" component={() => <span>Assign feedbacks</span>}/>
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
-                    <PrivateRoute exact path="/company" component={() => <span>Company Dashboard</span>}/>
-                    <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
+                    <PrivateRoute exact path="/company" component={NewsList}/>
+                    <PrivateRoute exact path="/company/:id" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/people/:tab" component={PeopleManagementPage}/>
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>

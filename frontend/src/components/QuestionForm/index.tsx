@@ -48,8 +48,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         setLocalCategories(categories);
     }, [categories]);
 
-    useOutsideAlerter(ref, () => !listEdit ? onSubmit() : {});
-
     const formik = useFormik({
         initialValues: {
             question: currentQuestion,

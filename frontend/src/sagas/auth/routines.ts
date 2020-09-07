@@ -7,3 +7,4 @@ export const getUserRoutine = createRoutine('USER:GET');
 export const getUserShortRoutine = createRoutine('USER_SHORT:GET');
 export const sendEmailToResetPasswordRoutine = createRoutine('USER:SEND_EMAIL_RESET_PASSWORD');
 export const resetPasswordRoutine = createRoutine('USER:RESET_PASSWORD');
+export const registerByEmailRoutine = createRoutine('SIGN_UP:REGISTER_BY_EMAIL');

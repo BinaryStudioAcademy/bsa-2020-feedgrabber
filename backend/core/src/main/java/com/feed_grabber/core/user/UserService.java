@@ -6,9 +6,11 @@ import com.feed_grabber.core.auth.dto.UserRegisterInvitationDTO;
 import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
+import com.feed_grabber.core.auth.exceptions.CorporateEmailException;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
+import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
@@ -32,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -355,6 +358,43 @@ public class UserService implements UserDetailsService {
         user.setRole(newRole);
         userRepository.save(user);
         verificationTokenService.deleteByUserId(userId);
+    }
+
+    private String getSubdomain(String email) {
+        return email.split("@")[1];
+    }
+
+    public UUID createInCompanyByEmail(UserRegisterDTO registerDto)
+            throws CompanyNotFoundException, CorporateEmailException {
+        var company = companyRepository
+                .findCompanyByName(registerDto.getCompanyName())
+                .orElseThrow(CompanyNotFoundException::new);
+        if (StringUtils.isEmpty(company.getEmailDomain())) {
+            throw new CorporateEmailException("You can`t sign up in your company using corporate email yet." +
+                    " Wait for the invitation.");
+        }
+        if (!getSubdomain(registerDto.getEmail()).equals(company.getEmailDomain())) {
+            throw new CorporateEmailException("Write right corporate email");
+        }
+        var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
+                registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
+        );
+        if (existing.isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+        var role = roleRepository.findByCompanyIdAndSystemRole(company.getId(), SystemRole.employee)
+                .orElseThrow();
+        var user = userRepository.save(User.builder()
+                .email(registerDto.getEmail())
+                .username(registerDto.getUsername())
+                .password(registerDto.getPassword())
+                .isEnabled(false)
+                .role(role)
+                .company(company)
+                .build()
+        );
+        verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
+        return company.getId();
     }
 }
 

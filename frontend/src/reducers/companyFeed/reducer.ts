@@ -3,33 +3,44 @@ import { IAppState } from "../../models/IAppState";
 import {
   loadCompanyFeedRoutine,
   loadCompanyFeedItemRoutine,
-  saveCompanyFeedItemRoutine
+  saveCompanyFeedItemRoutine,
+  createCompanyFeedItemRoutine,
+  setCompanyFeedPaginationRoutine
 } from "../../sagas/companyFeed/routines";
+import {IPaginationInfo} from "../../models/IPaginationInfo";
 
 export interface ICompanyFeedState {
-  list?: ICompanyFeedItem[];
-  currentItem?: ICompanyFeedItem;
+  list: IPaginationInfo<ICompanyFeedItem>;
+  current: ICompanyFeedItem;
   isLoading: boolean;
   error?: string;
 }
 
 const initialState: ICompanyFeedState = {
   list: null,
-  currentItem: null,
+  current: null,
   isLoading: false,
   error: null
 };
 
 const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {type, payload}) => {
   switch(type) {
+    case setCompanyFeedPaginationRoutine.TRIGGER:
+      return {
+        ...state,
+        pagination: payload
+      };
     case loadCompanyFeedRoutine.TRIGGER:
     case loadCompanyFeedItemRoutine.TRIGGER:
+    case createCompanyFeedItemRoutine.TRIGGER:
+    case saveCompanyFeedItemRoutine.TRIGGER:
       return {
         ...state,
         isLoading: true
       };
     case loadCompanyFeedRoutine.FAILURE:
     case loadCompanyFeedItemRoutine.FAILURE:
+    case createCompanyFeedItemRoutine.FAILURE:
     case saveCompanyFeedItemRoutine.FAILURE:
       return {
         ...state,
@@ -42,10 +53,11 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         list: payload
       };
     case loadCompanyFeedItemRoutine.SUCCESS:
+    case createCompanyFeedItemRoutine.SUCCESS:
       return {
         ...state,
         isLoading: false,
-        currentItem: payload
+        current: payload
       };
     default:
       return state;
