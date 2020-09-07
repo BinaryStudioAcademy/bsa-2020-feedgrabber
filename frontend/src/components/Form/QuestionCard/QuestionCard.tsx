@@ -4,13 +4,14 @@ import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 import ResponseQuestion from "components/ResponseQuestion";
 import {Draggable} from "react-beautiful-dnd";
 
-export interface ICardProps {
-    question: IQuestion;
-    isCurrent: boolean;
-    index: number;
-}
-
-const QuestionCard: FC<ICardProps> = ({question, isCurrent, index}) => (
+const QuestionCard: FC<CardProps> = (
+    {
+        question,
+        isCurrent,
+        index,
+        setMenuPos,
+        setCurrentQuestion
+    }) => (
     <Draggable draggableId={question.id} index={index}>
         {provided => (
             <div
@@ -20,6 +21,8 @@ const QuestionCard: FC<ICardProps> = ({question, isCurrent, index}) => (
                 {...provided.dragHandleProps}
             >
                 <ResponseQuestion
+                    setCurrentQuestion={setCurrentQuestion}
+                    setMenuPos={setMenuPos}
                     question={question}
                     isCurrent={isCurrent}
                 />
@@ -29,3 +32,16 @@ const QuestionCard: FC<ICardProps> = ({question, isCurrent, index}) => (
 );
 
 export default QuestionCard;
+
+export type CardProps = {
+    question: IQuestion;
+    isCurrent: boolean;
+    index: number;
+} & ResponseQuestionProps;
+
+export type ResponseQuestionProps = {
+    setMenuPos: (x: any) => void;
+    setCurrentQuestion: (x: any) => void;
+    isCurrent?: boolean;
+}
+

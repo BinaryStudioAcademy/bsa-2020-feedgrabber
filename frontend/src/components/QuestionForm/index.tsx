@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {isEqual} from "lodash";
@@ -36,12 +36,6 @@ const QuestionForm: FC<QuestionDetailsProps> = (
     const ref = useRef(null);
     const [t] = useTranslation();
 
-    useEffect(() => {
-        setLocalCategories(categories);
-    }, [categories]);
-
-    useOutsideAlerter(ref, () => onSubmit());
-
     const formik = useFormik({
         initialValues: {
             question: currentQuestion,
@@ -52,6 +46,39 @@ const QuestionForm: FC<QuestionDetailsProps> = (
         validationSchema: mainSchema,
         onSubmit: () => console.log()
     });
+
+    useEffect(() => {
+        setLocalCategories(categories);
+    }, [categories]);
+
+    useOutsideAlerter(ref, () => onSubmit());
+
+    const onSubmit = useCallback(() => {
+        if (isDetailsValid && formik.isValid) {
+            const {question, ...rest} = formik.values;
+            if (!isEqual({...question, ...rest}, currentQuestion)) {
+                const {question, ...rest} = formik.values;
+                !question.id ?
+                    addQuestion({
+                        ...question,
+                        ...rest,
+                        questionnaireId,
+                        sectionId: section.id
+                    }) :
+                    updateQuestion({
+                        ...question,
+                        ...rest,
+                        sectionId: section.id
+                    });
+            }
+        }
+    }, [currentQuestion, addQuestion, updateQuestion,
+        formik.values, isDetailsValid, section.id, questionnaireId, formik.isValid]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => onSubmit(), 3000);
+        return () => clearTimeout(timer);
+    }, [onSubmit]);
 
     const handleQuestionDetailsUpdate = state => {
         const {isCompleted, value} = state;
@@ -78,35 +105,7 @@ const QuestionForm: FC<QuestionDetailsProps> = (
         sectionId: section.id
     });
 
-    const onSubmit = () => {
-        if (isDetailsValid && formik.isValid) {
-            const {question, ...rest} = formik.values;
-            !question.id ?
-                addQuestion({
-                    ...question,
-                    ...rest,
-                    questionnaireId,
-                    sectionId: section.id
-                }) :
-                updateQuestion({
-                    ...question,
-                    ...rest,
-                    sectionId: section.id
-                });
-        }
-    };
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            const {question, ...rest} = formik.values;
-            if (!isEqual({...question, ...rest}, currentQuestion)) {
-                onSubmit();
-            }
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, [currentQuestion, formik.values, onSubmit]);
-
-    const setQuestionType = (data: any) => {
+    const setQuestionType = data => {
         const type: QuestionType = data.value;
         formik.setFieldValue("question", {...formik.values.question, type, details: undefined});
     };

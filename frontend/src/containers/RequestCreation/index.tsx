@@ -24,12 +24,13 @@ import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import {
-    loadSectionsByQuestionnaireRoutine,
+    loadSectionsByQuestionnaireRoutine, setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
     updateSectionRoutine, updateSections
 } from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -56,6 +57,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        updateOrder,
        sendRequest,
        isLoadingUsers,
+       setMenuPos,
+       setCurrentQuestion,
        isLoadingTeams,
        updateSectionsR,
        sections
@@ -90,6 +93,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                     <UICardBlock>
                         <Form
                             updateSection={updateSection}
+                            setMenuPos={setMenuPos}
+                            setCurrentQuestion={setCurrentQuestion}
                             updateOrder={updateOrder}
                             updateSections={updateSectionsR}
                             currentQuestion={{} as IQuestion}
@@ -353,6 +358,8 @@ const mapDispatchToProps = {
   loadUsers: loadCompanyUsersRoutine,
   updateOrder: updateQuestionsOrderRoutine,
   updateSection: updateSectionRoutine,
+setMenuPos: setFloatingMenuPos,
+setCurrentQuestion: setCurrentQuestionInSection,
   sendRequest: sendQuestionnaireRequestRoutine,
   loadSections: loadSectionsByQuestionnaireRoutine,
   updateSectionsR: updateSections

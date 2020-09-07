@@ -13,10 +13,15 @@ import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import {getResponseRoutine, saveResponseRoutine} from 'sagas/response/routines';
-import {loadSavedSectionsByQuestionnaireRoutine, loadSectionsByQuestionnaireRoutine} from 'sagas/sections/routines';
+import {
+    loadSavedSectionsByQuestionnaireRoutine,
+    loadSectionsByQuestionnaireRoutine,
+    setCurrentQuestionInSection
+} from 'sagas/sections/routines';
 import LoaderWrapper from 'components/LoaderWrapper';
 import {Translation} from 'react-i18next';
 import {ISection} from "../../reducers/formEditor/reducer";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
 
 interface IComponentState {
     question: IQuestion;
@@ -47,6 +52,8 @@ interface IQuestionnaireResponseProps {
 
     // loadQuestionnaire(id: string): void;
     loadSections(id: string): void;
+    setMenuPos(x: any): void;
+    setCurrentQuestion(x: any): void;
 
     // loadOneSaved(payload: { questionnaireId: string; responseId: string }): void;
     loadSavedQuestionnaire(payload: { questionnaireId: string; responseId: string }): void;
@@ -166,7 +173,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     };
 
     render() {
-        const {sections, isLoading, response} = this.props;
+        const {sections, isLoading, response, setCurrentQuestion, setMenuPos} = this.props;
         const changeable = response?.changeable;
         const isModifying = !!response?.answeredAt;
         const {showErrors, currentSectionIndex} = this.state;
@@ -187,7 +194,10 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                             return (
                                                 <UIListItem key={question.id} name={question.name}
                                                             category={question.categoryTitle}>
-                                                    <ResponseQuestion isCurrent={false} question={question}
+                                                    <ResponseQuestion
+                                                        setCurrentQuestion={setCurrentQuestion}
+                                                        setMenuPos={setMenuPos}
+                                                        isCurrent={false} question={question}
                                                                       answerHandler={(data: IAnswerBody) => {
                                                                           question["answer"] = data;
                                                                           this.handleComponentChange({
@@ -224,6 +234,8 @@ const mapStateToProps = (state: IAppState) => ({
     description: state.formEditor.questionnaire.description,
     response: state.questionnaireResponse.current,
     sections: state.formEditor.sections.list,
+    setMenuPos: setFloatingMenuPos,
+    setCurrentQuestion: setCurrentQuestionInSection,
     isLoading: state.formEditor.isLoading
 });
 

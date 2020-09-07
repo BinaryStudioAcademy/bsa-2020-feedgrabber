@@ -6,7 +6,7 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/QuestionMenu";
 import {
     addQuestionToSectionRoutine,
-    createSectionRoutine, deleteQuestionFromSectionRoutine,
+    createSectionRoutine, deleteQuestionFromSectionRoutine, setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
     updateSectionRoutine,
     updateSections
@@ -17,12 +17,14 @@ import LoaderWrapper from "../../components/LoaderWrapper";
 import {toastr} from "react-redux-toastr";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
-import {toggleMenuRoutine} from "../../sagas/app/routines";
+import {setFloatingMenuPos, toggleMenuRoutine} from "../../sagas/app/routines";
 
 const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = (
     {
         match,
         isLoading,
+        setMenuPos,
+        setCurrentQuestion,
         questionnaire,
         sections,
         loadQuestionnaire,
@@ -83,6 +85,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
                             <div className={styles.questions_container}>
                                 <Form
                                     updateSections={updateSectionsR}
+                                    setMenuPos={setMenuPos}
+                                    setCurrentQuestion={setCurrentQuestion}
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}
                                     currentQuestion={currentQuestion}
@@ -114,6 +118,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadQuestionnaire: loadOneQuestionnaireRoutine,
     updateSection: updateSectionRoutine,
+    setMenuPos: setFloatingMenuPos,
+    setCurrentQuestion: setCurrentQuestionInSection,
     toggleMenu: toggleMenuRoutine,
     addQuestion: addQuestionToSectionRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine,
