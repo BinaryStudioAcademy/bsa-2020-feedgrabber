@@ -15,9 +15,11 @@ import TeamUsersBlock from "./usersBlock";
 import { useTranslation } from 'react-i18next';
 import TeamRequestsBlock from "./requestsBlock";
 import {closeRequestRoutine} from "../../sagas/request/routines";
+import {ITeamShort} from "../../models/teams/ITeam";
 
 const TeamDetailsPage: FC<Props & { match }> = (
     {
+        currentUser,
         match,
         currentTeamError,
         currentTeam,
@@ -44,6 +46,9 @@ const TeamDetailsPage: FC<Props & { match }> = (
     const [t] = useTranslation();
     const [isNew, setIsNew] = useState<boolean>(match.params.id === "new");
 
+    const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
+    const isTeamLead = currentTeam?.teamLeadId === currentUser?.id;
+
     // load users
     useEffect(() => {
         if (!companyUsers && !isLoadingUsers && !failedUsers) {
@@ -69,7 +74,8 @@ const TeamDetailsPage: FC<Props & { match }> = (
         <>
             <UIPageTitle title={isNew ? t("Add Team") : t("Edit Team")}/>
             <UIContent>
-                <TeamMetadataBlock
+                {isHrOrCo &&
+                  <TeamMetadataBlock
                     isNew={isNew}
                     currentTeamError={currentTeamError}
                     currentTeam={currentTeam}
@@ -77,10 +83,12 @@ const TeamDetailsPage: FC<Props & { match }> = (
                     isLoadingRequest={isLoadingRequest}
                     updateTeam={updateTeam}
                     createTeam={createTeam}
-                />
+                  />
+                }
                 {!isNew && (
                     <>
                         <TeamUsersBlock
+                            isHrOrCo={isHrOrCo}
                             currentTeam={currentTeam}
                             companyUsers={companyUsers}
                             isLoadingUsers={isLoadingUsers}
@@ -104,6 +112,7 @@ const TeamDetailsPage: FC<Props & { match }> = (
 };
 
 const mapState = (state: IAppState) => ({
+    currentUser: state.user.info,
     companyUsers: state.teams.companyUsers,
     isLoadingUsers: state.teams.isLoadingUsers,
     isLoadingTeam: state.teams.current.isLoadingTeam,

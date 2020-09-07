@@ -11,6 +11,7 @@ import {IUserShort} from "../../models/user/types";
 import { useTranslation } from "react-i18next";
 
 interface ITeamUsersBlockProps {
+  isHrOrCo: boolean;
   currentTeam?: ITeam;
   companyUsers?: IUserShort[];
   isLoadingUsers?: boolean;
@@ -25,6 +26,7 @@ const defaultAvatar =
 
 const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
   {
+    isHrOrCo,
     currentTeam,
     companyUsers,
     toggleUser,
@@ -45,12 +47,12 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
           <UICardBlock>
             <h3>{t("Users")}</h3>
           </UICardBlock>
-          {(companyUsers || []).map(user => (
+          {(companyUsers || []).filter(u => isHrOrCo ? true : u.selected).map(user => (
             <UICardBlock key={user.id} className={styles.toggleCardBlock}>
               <div className={styles.cardUserBlock}>
                 <Image src={user.avatar ?? defaultAvatar} size="mini" avatar/>
                 <h4>{user.username}</h4>
-                {user.selected && (
+                {isHrOrCo && user.selected && (
                   <Icon
                     name={isUserTeamLead(user) ? "star" : "star outline"}
                     className={`${styles.cardUserStar} ${isUserTeamLead(user) ? styles.cardUserStarActive : ""}`}
@@ -62,7 +64,7 @@ const TeamUsersBlock: React.FunctionComponent<ITeamUsersBlockProps> = (
                   />
                 )}
               </div>
-              {currentTeam && (
+              {isHrOrCo && currentTeam && (
                 <UIButton
                   title={user.selected ? t("Remove") : t("Add")}
                   secondary={user.selected}
