@@ -25,20 +25,22 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
     };
 
     return (
-        <Segment ref={detailsPage} className={`${styles.container} ${isCurrent && styles.highlight}`}>
-            {isCurrent
-                ?
-                <div className={styles.scaleTop}>
-                    <QuestionForm/>
-                </div>
-                :
-                <div onClick={handleSegmentClick}>
-                    {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}
-                    {TypeToResponseMap.get(type.toUpperCase())?.
-                    ({question, answerHandler, response: question.answer})}
-                </div>
-            }
-        </Segment>);
+        <div ref={detailsPage}>
+            <Segment className={`${styles.container} ${isCurrent && styles.highlight}`}>
+                {isCurrent
+                    ?
+                    <div className={styles.scaleTop}>
+                        <QuestionForm/>
+                    </div>
+                    :
+                    <div onClick={handleSegmentClick}>
+                        {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}
+                        {TypeToResponseMap.get(type.toUpperCase())?.
+                        ({question, answerHandler, response: question.answer})}
+                    </div>
+                }
+            </Segment>
+        </div>);
 };
 
 export default ResponseQuestion;

@@ -9,7 +9,7 @@ import {
     receiveNotificationRoutine,
     markNotificationAsReadRoutine
 } from "../../sagas/notifications/routines";
-import LoaderWrapper from "../LoaderWrapper";
+import LoaderWrapper from "../helpers/LoaderWrapper";
 import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";

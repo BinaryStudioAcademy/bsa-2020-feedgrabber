@@ -10,7 +10,7 @@ import {
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import QuestionnaireModal from "./questionnaireModal";
-import GenericPagination from "../../components/GenericPagination";
+import GenericPagination from "../../components/helpers/GenericPagination";
 import {history} from '../../helpers/history.helper';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import UICard from "../../components/UI/UICard";

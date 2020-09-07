@@ -2,8 +2,8 @@ import React from 'react';
 import {NavLink} from 'react-router-dom';
 
 import styles from './styles.module.sass';
-import {Permissions} from "../AccessManager/rbac-rules";
-import AccessManager from "../AccessManager";
+import {Permissions} from "../helpers/AccessManager/rbac-rules";
+import AccessManager from "../helpers/AccessManager";
 import {useTranslation} from "react-i18next";
 import {RiDashboardLine, RiHome2Line, RiListSettingsLine, RiTeamLine} from "react-icons/ri";
 import {AiOutlineQuestion} from "react-icons/ai";

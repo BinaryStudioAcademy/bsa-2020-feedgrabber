@@ -6,7 +6,7 @@ import ReduxToastr from 'react-redux-toastr';
 import {history} from '../../helpers/history.helper';
 import {store} from '../../store';
 import Routing from 'containers/Routing';
-import SubdomainRouter from "../../components/SubdomainRouter";
+import SubdomainRouter from "../../components/helpers/SubdomainRouter";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {I18nextProvider} from "react-i18next";

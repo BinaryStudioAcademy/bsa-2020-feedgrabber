@@ -5,7 +5,7 @@ import { INewsItem} from 'models/news';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
 import { loadNewsListRoutine, setNewsPaginationRoutine } from 'sagas/news/routines';
-import GenericPagination from 'components/GenericPagination';
+import GenericPagination from 'components/helpers/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
 
 interface INewsFeedProps {

@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
-import {useAuth} from '../../security/authProvider';
-import {getSubdomainFromDomain, redirectToCompany} from "../../helpers/subdomain.helper";
-import {IAppState} from "../../models/IAppState";
+import {useAuth} from '../../../security/authProvider';
+import {getSubdomainFromDomain, redirectToCompany} from "../../../helpers/subdomain.helper";
+import {IAppState} from "../../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
-import {history} from "../../helpers/history.helper";
-import {fetchCompanyBySubdomainRoutine, fetchCompanyRoutine} from "../../sagas/companies/routines";
+import {history} from "../../../helpers/history.helper";
+import {fetchCompanyBySubdomainRoutine, fetchCompanyRoutine} from "../../../sagas/companies/routines";
 
 const SubdomainRouter: React.FC<SubdomainRouterProps> =
     ({

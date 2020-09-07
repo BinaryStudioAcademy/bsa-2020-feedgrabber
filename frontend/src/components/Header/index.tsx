@@ -12,8 +12,8 @@ import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
 import Search from "../Search";
-import AccessManager from "../AccessManager";
-import {Permissions} from "../AccessManager/rbac-rules";
+import AccessManager from "../helpers/AccessManager";
+import {Permissions} from "../helpers/AccessManager/rbac-rules";
 import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
 import {useTranslation} from "react-i18next";
 

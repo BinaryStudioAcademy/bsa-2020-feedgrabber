@@ -19,7 +19,7 @@ import {history} from '../../helpers/history.helper';
 import {IUserShort} from "../../models/user/types";
 import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";

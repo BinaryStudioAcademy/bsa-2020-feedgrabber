@@ -18,7 +18,7 @@ import {
     loadSectionsByQuestionnaireRoutine,
     setCurrentQuestionInSection
 } from 'sagas/sections/routines';
-import LoaderWrapper from 'components/LoaderWrapper';
+import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import {Translation} from 'react-i18next';
 import {ISection} from "../../reducers/formEditor/reducer";
 import {setFloatingMenuPos} from "../../sagas/app/routines";

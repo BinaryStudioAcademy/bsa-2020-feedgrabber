@@ -2,7 +2,7 @@ import React, {FC, useEffect} from "react";
 import ReactPaginate from 'react-paginate';
 
 import styles from './styles.module.sass';
-import {IPaginationInfo} from "../../models/IPaginationInfo";
+import {IPaginationInfo} from "../../../models/IPaginationInfo";
 import LoaderWrapper from "../LoaderWrapper";
 import {useTranslation} from "react-i18next";
 

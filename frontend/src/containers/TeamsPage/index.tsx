@@ -13,10 +13,10 @@ import UIButton from "../../components/UI/UIButton";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
-import {Permissions} from "../../components/AccessManager/rbac-rules";
-import AccessManager from "../../components/AccessManager";
+import {Permissions} from "../../components/helpers/AccessManager/rbac-rules";
+import AccessManager from "../../components/helpers/AccessManager";
 import { useTranslation } from 'react-i18next';
 import styles from './styles.module.sass';
 

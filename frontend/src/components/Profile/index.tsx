@@ -9,7 +9,7 @@ import UIBackgroundWrapper from "../UI/UIBackgroundWrapper";
 import {history} from "../../helpers/history.helper";
 import {useTranslation} from "react-i18next";
 import UIContent from "../UI/UIContent";
-import LoaderWrapper from "../LoaderWrapper";
+import LoaderWrapper from "../helpers/LoaderWrapper";
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 
