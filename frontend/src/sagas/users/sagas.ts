@@ -65,7 +65,7 @@ function* loadFiredUserList(action: any) {
     // const api = query
     //   ? `/api/user/search/?page=${page}&size=${size}&query=${query}`
     //   : `/api/user/all/?page=${page}&size=${size}`;
-    const api = `/api/user/all/?page=${page}&size=${size}`;
+    const api = `/api/user/all/?page=${page}&size=${size}&fired=true`;
     const res = yield call(apiClient.get, api);
     const items = res.data.data;
     yield put(loadFiredUsersRoutine.success(items));

@@ -96,13 +96,14 @@ public class UserController {
     @GetMapping("/all")
     public AppResponse<DataList<UserDetailsResponseDTO>> getUsersByCompanyId(
             @RequestParam Integer page,
-            @RequestParam Integer size
+            @RequestParam Integer size,
+            @RequestParam(required = false, defaultValue = "false") Boolean fired
     ) {
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(
                 new DataList<>(
-                        userService.getAllByCompanyId(companyId, page, size),
-                        userService.getCountByCompanyId(companyId),
+                        userService.getAllByCompanyId(companyId, page, size, fired),
+                        userService.getCountByCompanyId(companyId, fired),
                         page,
                         size
                 ));

@@ -27,13 +27,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<User> findAllByCompanyId(UUID companyId);
 
-    Long countAllByCompanyId(UUID companyId);
+    Long countAllByCompanyIdAndIsDeleted(UUID companyId, Boolean isFired);
 
     @Query("FROM User u inner join Company c ON u.company = c " +
             "left join UserProfile p ON u.userProfile = p " +
-            "where c.id = :companyId and u.isDeleted = false " +
+            "where c.id = :companyId and u.isDeleted = :isFired " +
             "ORDER BY p.lastName, p.firstName, u.username")
-    List<User> findAllByCompanyId(UUID companyId, Pageable pageable);
+    List<User> findAllByCompanyId(UUID companyId, Boolean isFired, Pageable pageable);
 
     @Query(value = "select * from users u inner join companies c on u.company_id = c.id " +
             "left join user_profiles p on u.id = p.user_id where c.id = :companyId and u.isDeleted = false " +
