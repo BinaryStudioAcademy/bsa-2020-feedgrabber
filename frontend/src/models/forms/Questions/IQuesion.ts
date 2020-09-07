@@ -64,10 +64,6 @@ export interface ITextQuestion extends IQuestionBase<{}> {
     type: QuestionType.freeText;
 }
 
-// export interface IMultichoiceQuestion extends IQuestionBase<IMultiAnswerDetails> {
-//     type: QuestionType.multichoice;
-// }
-
 export interface ICheckboxQuestion extends IQuestionBase<ICheckboxAnswerDetails> {
     type: QuestionType.checkbox;
 }
@@ -81,7 +77,6 @@ export interface IFileUploadQuestion extends IQuestionBase<IFileUploadAnswerDeta
 }
 
 export type IQuestion =
-    // | IMultichoiceQuestion
     | ITextQuestion
     | IScaleQuestion
     | IRadioQuestion
@@ -94,11 +89,7 @@ export enum QuestionType {
     radio = "radio",
     scale = "scale",
     checkbox = "checkbox",
-    // multichoice = "multi_choice",
     date = "date",
     fileUpload = "fileUpload"
 }
 
-export const DraggableItemTypes = {
-    QUESTION_CARD: 'question_card'
-};
