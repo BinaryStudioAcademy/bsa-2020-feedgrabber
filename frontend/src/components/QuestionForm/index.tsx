@@ -87,7 +87,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                 listEdit
                     .addQuestion(
                         {
-                            ...currentQuestion,
                             ...question,
                             ...rest
                         })

@@ -58,16 +58,18 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                 {newPressed && <><p>Add new</p>
                                     <hr/>
                                     <br/>
-                                    <QuestionDetailsForm
-                                        listEdit={
-                                            {
-                                                cancel: () => {
-                                                    setCurrentQ({});
-                                                    newPressed && setNewPressed(false);
-                                                },
-                                                addQuestion: saveNewQuestion
-                                            }
-                                        }/></>}
+                                    <div className={styles.questionContainer}>
+                                        <QuestionDetailsForm
+                                            listEdit={
+                                                {
+                                                    cancel: () => {
+                                                        setCurrentQ({});
+                                                        newPressed && setNewPressed(false);
+                                                    },
+                                                    addQuestion: saveNewQuestion
+                                                }
+                                            }/></div>
+                                </>}
                                 <p>Modify existing</p>
                                 <hr/>
                                 <br/>
@@ -78,28 +80,28 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                         .includes(question.id);
                                     return (
                                         current?.id === question.id ?
-                                            <QuestionDetailsForm listEdit={
-                                                {
-                                                    cancel: () => {
-                                                        setCurrentQ({});
-                                                        newPressed && setNewPressed(false);
-                                                    },
-                                                    deleteQuestion,
-                                                    addQuestion: updateQuestion
-                                                }
-                                            }/>
-                                            : <div key={index} className={styles.questionContainer}>
-                                                <Card className={`${styles.question} ${match && styles.searched}`}
-                                                      link centered fluid
-                                                      description={question.name?.length > 70 ?
-                                                          question.name.slice(0, 70).concat("...") :
-                                                          question.name}
-                                                      extra={match && 'Matches searched query!'}
-                                                      meta={question.categoryTitle?.length > 70 ?
-                                                          question.categoryTitle.slice(0, 70).concat("...") :
-                                                          question.categoryTitle}
-                                                      onClick={() => handleClick(question)}/>
-                                            </div>
+                                            <div key={index} className={styles.questionContainer}>
+                                                <QuestionDetailsForm listEdit={
+                                                    {
+                                                        cancel: () => {
+                                                            setCurrentQ({});
+                                                            newPressed && setNewPressed(false);
+                                                        },
+                                                        deleteQuestion,
+                                                        addQuestion: updateQuestion
+                                                    }
+                                                }/></div>
+                                            :
+                                            <Card className={`${styles.question} ${match && styles.searched}`}
+                                                  link centered fluid
+                                                  description={question.name?.length > 70 ?
+                                                      question.name.slice(0, 70).concat("...") :
+                                                      question.name}
+                                                  extra={match && 'Matches searched query!'}
+                                                  meta={question.categoryTitle?.length > 70 ?
+                                                      question.categoryTitle.slice(0, 70).concat("...") :
+                                                      question.categoryTitle}
+                                                  onClick={() => handleClick(question)}/>
                                     );
                                 }))}
                             </UIColumn>
