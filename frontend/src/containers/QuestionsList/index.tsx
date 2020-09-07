@@ -13,7 +13,7 @@ import UIColumn from "../../components/UI/UIColumn";
 import LoaderWrapper from "../../components/LoaderWrapper";
 import {setCurrentQuestionInSection} from "../../sagas/sections/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import QuestionDetailsPage from "../QuestionDeatilsPage";
+import QuestionDetailsForm from "../../components/QuestionForm";
 
 const QuestionsList: FC<QuestionsListProps> = ({
                                                    questions,
@@ -50,7 +50,7 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                 {isEmpty(current) && newPressed && <><p>Add new</p>
                                     <hr/>
                                     <br/>
-                                    <QuestionDetailsPage/></>}
+                                    <QuestionDetailsForm/></>}
                                 <p>Modify existing</p>
                                 <hr/>
                                 <br/>
@@ -61,7 +61,7 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                         .includes(question.id);
                                     return (
                                         current?.id === question.id ?
-                                            <QuestionDetailsPage/>
+                                            <QuestionDetailsForm/>
                                             : <div key={index} className={styles.questionContainer}>
                                                 <Card className={`${styles.question} ${match && styles.searched}`}
                                                       link centered fluid

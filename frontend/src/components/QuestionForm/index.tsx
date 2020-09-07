@@ -3,7 +3,6 @@ import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import {Checkbox, Divider, Form, Icon, Loader, Popup} from "semantic-ui-react";
 import {
     addQuestionToSectionRoutine,
@@ -201,7 +200,6 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     addQuestion: addQuestionToSectionRoutine,
     updateQuestion: updateQuestionInSectionRoutine,
-    loadQuestion: loadQuestionByIdRoutine,
     loadCategories: loadCategoriesRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine
 };
