@@ -32,7 +32,7 @@ export const RequestItem: FC<Props> = (
     function handleClick() {
         if (isClosed) {
             history.push(`/report/${request.requestId}`);
-        } else {
+        } else if (closeRequest !== undefined) {
             toastr.info(t("Request is in progress"));
             setOpen(true);
         }
