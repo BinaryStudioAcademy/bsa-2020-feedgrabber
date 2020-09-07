@@ -1,7 +1,6 @@
 .newsItemContainer {
-  margin-top: 6em;
-    display: flex;
-  flex-direction: column;
+  display: flex;
+  flex-direction: row;
 }
 
 .newsItemContainer > img {
@@ -22,20 +21,23 @@
 }
 
 .detailesContainer {
-  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.mainContainer {
+  margin-bottom: 10px;
   width: 100%;
 }
 
 .authorContainer {
+  width: max-content;
+  align-self: flex-end;
   display: flex;
-  position: absolute;
-  bottom: 10px;
-}
-
-.authorContainerRight {
-  display: flex;
-  position: relative;
-  float: right;
+  margin-bottom: 10px;
 }
 
 .authorContainer > img {
@@ -50,8 +52,7 @@
 .date {
   color: #707070;
   font-size: 13px;
-  position: absolute;
-  bottom: 3px;
+  margin-top: 5px;
 }
 
 .reactionsContainer{
