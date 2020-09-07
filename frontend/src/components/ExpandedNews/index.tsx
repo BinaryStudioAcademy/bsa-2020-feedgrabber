@@ -5,24 +5,15 @@ import InfiniteScroll from 'react-infinite-scroller';
 import CommentInput from "./CommentInput";
 import {IComment} from "../../models/comments";
 import {IAppState} from "../../models/IAppState";
-import {
-    loadCommentsByNewsIdRoutine,
-    saveOrUpdateCommentRoutine,
-    setCommentsPaginationRoutine
-} from "../../sagas/comments/routines";
 import {loadNewsByIdRoutine, setCurrentNewsRoutine} from "../../sagas/news/routines";
 import {connect, ConnectedProps} from "react-redux";
-import GenericPagination from "../GenericPagination";
 
 const ExpandedNews: React.FC<ExpandedNewsProps> = (
     {
         currentNews,
         isLoading,
         user,
-        loadComments,
-        saveOrUpdateComment,
         setCurrentNews,
-        setCommentsPagination,
         loadNews
     }) => {
 
@@ -50,10 +41,7 @@ const ExpandedNews: React.FC<ExpandedNewsProps> = (
     };
 
     const handleSubmit = () => {
-        if (comment.body) {
-            saveOrUpdateComment({ comment });
-            setComment(initialComment);
-        }
+        console.log("saved");
     };
 
     const mapComments = (comment: IComment) => {
@@ -96,10 +84,7 @@ const mapStateToProps = (state: IAppState) => ({
 });
 
 const mapDispatchToProps = {
-    saveOrUpdateComment: saveOrUpdateCommentRoutine,
-    loadComments: loadCommentsByNewsIdRoutine,
     setCurrentNews: setCurrentNewsRoutine,
-    setCommentsPagination: setCommentsPaginationRoutine,
     loadNews: loadNewsByIdRoutine
 };
 

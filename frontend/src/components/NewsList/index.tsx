@@ -9,7 +9,6 @@ import GenericPagination from 'components/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
 import News from "../News";
 import ExpandedNews from "../ExpandedNews";
-import {loadCommentsByNewsIdRoutine} from "../../sagas/comments/routines";
 
 interface INewsFeedProps {
     pagination?: IPaginationInfo<INewsItem>;
@@ -64,8 +63,7 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadNews: loadNewsListRoutine,
     setPagination: setNewsPaginationRoutine,
-    setCurrentNews: setCurrentNewsRoutine,
-    loadComments: loadCommentsByNewsIdRoutine
+    setCurrentNews: setCurrentNewsRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewsList);
