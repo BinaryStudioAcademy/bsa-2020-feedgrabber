@@ -1,14 +1,15 @@
 import {Icon} from "semantic-ui-react";
-import React, {FC} from "react";
+import React from "react";
 import { INewsItem} from 'models/news';
 import {useTranslation} from "react-i18next";
 import styles from './styles.module.scss';
 
 interface INewsProps {
     item: INewsItem;
+    setCurrentNews?(payload: any): void;
 }
 
-const News: React.FC<INewsProps> = ({ item }) => {
+const News: React.FC<INewsProps> = ({ item, setCurrentNews}) => {
     const [t] = useTranslation();
     return (
         <>
@@ -27,7 +28,7 @@ const News: React.FC<INewsProps> = ({ item }) => {
                     </div>
                 </div>
                 <div className={styles.icons}>
-                    <span className={styles.comments}>
+                    <span className={styles.comments} onClick={() => setCurrentNews({ ...item })}>
                         <Icon name="comment" />
                         {item.commentsCount} {item.commentsCount === 1 ? t("comment") : t("comments")}
                     </span>

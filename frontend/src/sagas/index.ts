@@ -18,6 +18,7 @@ import roleSagas from './role/sagas';
 import newsSagas from './news/sagas';
 import searchSagas from "./search/sagas";
 import companyFeedSaga from './companyFeed/sagas';
+import commentsSagas from "./comments/sagas";
 
 export default function* rootSaga() {
     yield all([
@@ -40,6 +41,7 @@ export default function* rootSaga() {
         sectionSagas(),
         searchSagas(),
         companyFeedSaga(),
-        newsSagas()
+        newsSagas(),
+        commentsSagas()
     ]);
 }

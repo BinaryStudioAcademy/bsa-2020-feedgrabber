@@ -1,5 +1,6 @@
 import { IUserShort } from "models/user/types";
 import { IPaginationInfo } from "models/IPaginationInfo";
+import {IComment} from "../comments";
 
 export interface INewsItem {
     id: string;
@@ -10,6 +11,7 @@ export interface INewsItem {
     user: IUserShort;
     commentsCount: number;
     date: string;
+    comments?: IComment[];
 }
 
 export interface INewsListState {
@@ -18,6 +20,10 @@ export interface INewsListState {
 }
 
 export interface INewsFeedState {
-    list: INewsListState;
-    current: INewsItem;
+    list?: INewsListState;
+    current?: {
+        get: INewsItem;
+        comments?: IComment[];
+        isLoading: boolean;
+    };
 }

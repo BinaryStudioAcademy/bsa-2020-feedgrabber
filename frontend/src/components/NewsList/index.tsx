@@ -4,24 +4,37 @@ import UICardBlock from 'components/UI/UICardBlock';
 import { INewsItem} from 'models/news';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
-import { loadNewsListRoutine, setNewsPaginationRoutine } from 'sagas/news/routines';
+import {loadNewsListRoutine, setCurrentNewsRoutine, setNewsPaginationRoutine} from 'sagas/news/routines';
 import GenericPagination from 'components/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
 import News from "../News";
+import ExpandedNews from "../ExpandedNews";
+import {loadCommentsByNewsIdRoutine} from "../../sagas/comments/routines";
 
 interface INewsFeedProps {
     pagination?: IPaginationInfo<INewsItem>;
     isLoading?: boolean;
     loadNews?(): void;
     setPagination?(pagination: IPaginationInfo<INewsItem>): void;
+    currentNews: INewsItem;
+    setCurrentNews?(payload: any): void;
+    loadComments?(payload: { newsId: string }): void;
 }
 
-const NewsList: React.FC<INewsFeedProps> = ({pagination, isLoading, loadNews, setPagination}) => {
-    const getNewsItem = (item: INewsItem) => {
+const NewsList: React.FC<INewsFeedProps> =
+    ({
+         pagination,
+         isLoading,
+         loadNews,
+         setPagination,
+         setCurrentNews,
+         currentNews
+    }) => {
+    const getNewsItem = (news: INewsItem) => {
         return (
-            <UICardBlock key={item.id}
+            <UICardBlock key={news.id}
                          className={styles.newsItemContainer}>
-                <News item={item} />
+                <News item={news} setCurrentNews={setCurrentNews} />
             </UICardBlock>
         );
     };
@@ -37,18 +50,22 @@ const NewsList: React.FC<INewsFeedProps> = ({pagination, isLoading, loadNews, se
                 mapItemToJSX={getNewsItem}
                 />
             </div>
+            {currentNews?.id && <ExpandedNews />}
         </div>
     );
 };
 
 const mapStateToProps = (state: IAppState) => ({
     pagination: state.news.list.pagination,
-    isLoading: state.news.list.isLoading
+    isLoading: state.news.list.isLoading,
+    currentNews: state.news.current.get
 });
 
 const mapDispatchToProps = {
     loadNews: loadNewsListRoutine,
-    setPagination: setNewsPaginationRoutine
+    setPagination: setNewsPaginationRoutine,
+    setCurrentNews: setCurrentNewsRoutine,
+    loadComments: loadCommentsByNewsIdRoutine
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewsList);

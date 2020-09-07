@@ -38,6 +38,10 @@ public class CommentService {
 
     }
 
+    public Long getCountByNewsId(UUID newsId) {
+        return commentRepository.countByNewsId(newsId);
+    }
+
     public CommentDto create(CommentCreationDto commentCreationDto) throws NewsNotFoundException, UserNotFoundException {
         var user = userRepository.findById(commentCreationDto.getUserId())
                 .orElseThrow(UserNotFoundException::new);

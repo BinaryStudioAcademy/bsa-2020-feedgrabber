@@ -5,6 +5,7 @@ import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.ImageRepository;
 import com.feed_grabber.core.news.dto.NewsCreateDto;
+import com.feed_grabber.core.news.dto.NewsDetailsDto;
 import com.feed_grabber.core.news.dto.NewsDto;
 import com.feed_grabber.core.news.dto.NewsUpdateDto;
 import com.feed_grabber.core.news.exceptions.NewsNotFoundException;
@@ -46,6 +47,11 @@ public class NewsService {
 
     public Long getCountByCompanyId(UUID companyId) {
         return newsRepository.countAllByCompanyId(companyId);
+    }
+
+    public NewsDetailsDto getNewsById(UUID id) {
+        var news = newsRepository.findById(id);
+        return news.map(NewsMapper.MAPPER::newsToNewsDetailsDto).orElse(null);
     }
 
     public NewsDto create(NewsCreateDto newsCreateDto) throws NotFoundException {

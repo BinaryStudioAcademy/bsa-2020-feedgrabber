@@ -1,6 +1,7 @@
 package com.feed_grabber.core.comments;
 
 import com.feed_grabber.core.apiContract.AppResponse;
+import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.comments.dto.CommentCreationDto;
 import com.feed_grabber.core.comments.dto.CommentDto;
@@ -25,15 +26,24 @@ public class CommentController {
 
     @ApiOperation("Get all comments by news id")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{id}")
-    public AppResponse<List<CommentDto>> getAllByNews(@PathVariable UUID id) {
-        return new AppResponse<>(commentService.getAllByNewsId(id));
+    @GetMapping
+    public AppResponse<List<CommentDto>> getAllByNews(@RequestParam(defaultValue = "0") Integer page,
+                                                          @RequestParam(defaultValue = "0") Integer size,
+                                                          @RequestParam UUID newsId) {
+        /*var dataList = new DataList<>(
+                commentService.getAllByNewsId(newsId),
+                commentService.getCountByNewsId(newsId),
+                page,
+                size
+        );
+        return new AppResponse<>(dataList);*/
+        return new AppResponse<>(commentService.getAllByNewsId(newsId));
     }
 
     @ApiOperation("Create new comment")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public AppResponse<CommentDto> create(CommentCreationDto commentCreationDto) throws NewsNotFoundException, UserNotFoundException {
+    public AppResponse<CommentDto> create(@RequestBody CommentCreationDto commentCreationDto) throws NewsNotFoundException, UserNotFoundException {
         commentCreationDto.setUserId(TokenService.getUserId());
         return new AppResponse<>(commentService.create(commentCreationDto));
     }
@@ -41,7 +51,7 @@ public class CommentController {
     @ApiOperation("Update comment")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
-    public AppResponse<CommentDto> update(CommentUpdateDto commentUpdateDto) throws CommentNotFoundException {
+    public AppResponse<CommentDto> update(@RequestBody CommentUpdateDto commentUpdateDto) throws CommentNotFoundException {
         return new AppResponse<>(commentService.update(commentUpdateDto));
     }
 

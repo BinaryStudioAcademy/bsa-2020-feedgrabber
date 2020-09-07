@@ -83,7 +83,7 @@ const QuestionCard: React.FC<ICardProps> = ({
 
   const opacity = 1; // isDragging ? 0 : 1;
   drag(drop(ref));
-  
+
   return (
     <div ref={ref}  style={{ opacity }} className={styles.question}>
       <ResponseQuestion question={question} />

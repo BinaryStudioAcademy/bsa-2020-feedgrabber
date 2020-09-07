@@ -1,7 +1,7 @@
-import { select, call, put, takeEvery } from "redux-saga/effects";
+import { select, call, put, takeEvery, all } from "redux-saga/effects";
 import apiClient from "helpers/apiClient";
 import {toastr} from 'react-redux-toastr';
-import { loadNewsListRoutine } from "./routines";
+import {loadNewsByIdRoutine, loadNewsListRoutine} from "./routines";
 
 function* loadNewsList() {
     try {
@@ -17,6 +17,21 @@ function* loadNewsList() {
     }
 }
 
+function* loadNewsById(action) {
+    try {
+        const { id } = action.payload;
+        const res = yield call(apiClient.get, `/api/news/${id}`);
+        const news = res.data.data;
+
+        yield put(loadNewsByIdRoutine.success(news));
+    } catch (error) {
+        yield put(loadNewsByIdRoutine.failure(error));
+    }
+}
+
 export default function* newsSagas() {
-    yield takeEvery(loadNewsListRoutine.TRIGGER, loadNewsList);
+    yield all([
+        yield takeEvery(loadNewsListRoutine.TRIGGER, loadNewsList),
+        yield takeEvery(loadNewsByIdRoutine.TRIGGER, loadNewsById)
+    ]);
 }

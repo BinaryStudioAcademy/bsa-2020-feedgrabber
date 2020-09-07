@@ -5,6 +5,7 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.news.dto.NewsCreateDto;
+import com.feed_grabber.core.news.dto.NewsDetailsDto;
 import com.feed_grabber.core.news.dto.NewsDto;
 import com.feed_grabber.core.news.dto.NewsUpdateDto;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +39,11 @@ public class NewsController {
                 size
         );
         return new AppResponse<>(dataList);
+    }
+
+    @GetMapping("/{id}")
+    public AppResponse<NewsDetailsDto> getOne(@PathVariable UUID id) {
+        return new AppResponse<>(newsService.getNewsById(id));
     }
 
     @ApiOperation(value = "Create new news",
