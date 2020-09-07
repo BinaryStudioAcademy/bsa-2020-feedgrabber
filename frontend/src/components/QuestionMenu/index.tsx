@@ -41,17 +41,17 @@ const QuestionMenu: FC<IQuestionMenuProps> = ({
     const handleOpenModal = () => {
         setOpenModal(!isOpenModal);
     };
-
+ // position: 'absolute',
+ //            top: (currentQuestion.top > innerHeight
+ //            || currentQuestion.top < 0
+ //                ? (scrollTop || 0) + innerHeight / 2 - 40
+ //                : (scrollTop || 0) + (currentQuestion.top || innerHeight / 2 - 40)),
+ //            left: '20%',
+ //            transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
     const { scrollTop, innerHeight } = positions;
     return (
         <div style={{
-            position: 'absolute',
-            top: (currentQuestion.top > innerHeight
-            || currentQuestion.top < 0
-                ? (scrollTop || 0) + innerHeight / 2 - 40
-                : (scrollTop || 0) + (currentQuestion.top || innerHeight / 2 - 40)),
-            left: '20%',
-            transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
+
         }}>
             <Form className={styles.container}>
                 <Button.Group className={styles.buttons} vertical>

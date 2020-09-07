@@ -11,7 +11,6 @@ import {
     updateSectionRoutine,
     updateSections
 } from 'sagas/sections/routines';
-import {deleteFromQuestionnaireRoutine} from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/LoaderWrapper";
@@ -28,6 +27,7 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
         sections,
         loadQuestionnaire,
         addQuestion,
+        toggleMenu,
         deleteQuestion,
         currentQuestion,
         createSection,
@@ -39,7 +39,8 @@ const ExpandedQuestionnaire: React.FC<ExpandedQuestionnaireProps & { match }> = 
 ) => {
     useEffect(() => {
         loadQuestionnaire(match.params.id);
-    }, [match.params.id, loadQuestionnaire]);
+        toggleMenu(false);
+    }, [match.params.id, loadQuestionnaire, toggleMenu]);
 
     const addNewQuestion = () => {
         const section = currentSection ?? sections[sections.length - 1];
