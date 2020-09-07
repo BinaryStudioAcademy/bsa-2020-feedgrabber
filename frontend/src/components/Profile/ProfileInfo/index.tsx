@@ -65,7 +65,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                   {t("Update")}
                   <input name="image" type="file" onChange={onSelectFile} hidden/>
                 </Button>
-                <Button content='Delete'
+                <Button content={t('Delete')}
                         size='small'
                         basic
                         onClick={() => uploadImage()}

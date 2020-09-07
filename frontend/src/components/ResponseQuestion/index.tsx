@@ -7,7 +7,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
 import {Button, Header, Label, Modal, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
@@ -43,7 +43,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
 
         function handleCancel() {
             setModal(false);
-        }
+        };
 
         return (
             <div ref={detailsPage}>
@@ -59,13 +59,13 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                         </Modal.Description>
                         <Modal.Actions>
                             <Button
-                                content="Yes, I am sure"
+                                content={t("Yes, I am sure")}
                                 labelPosition='right'
                                 icon='checkmark'
                                 positive
                                 onClick={handleSubmit}/>
                             <Button
-                                content="Cancel"
+                                content={t("Cancel")}
                                 onClick={handleCancel}/>
                         </Modal.Actions>
                     </Modal.Content>

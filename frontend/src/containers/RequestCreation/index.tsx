@@ -129,6 +129,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <p>{t("This user will receive report")}</p>
                                 <input type="text"
                                        style={{width: '100%'}}
+                                       placeholder={t("Search...")}
                                        onChange={e => setTargetUserPattern(e.target.value)}/>
                                 <div className={styles.targetUserContainer}>
                                   {
@@ -156,7 +157,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               </UICardBlock>
 
                               {formik.values.targetUserId && (<UICardBlock>
-                                <h4 className={styles.yesNoHeader}>Include target user to request?
+                                <h4 className={styles.yesNoHeader}>{t("Include target user to request?")}
                                   <span>
                                   <UISwitch
                                       name='includeTargetUser'
@@ -167,7 +168,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <p>{t("If yes, this user will also receive request")}</p>
                               </UICardBlock>)}
                               {formik.values.targetUserId && (<UICardBlock>
-                                <h4 className={styles.yesNoHeader}>Send report to target user?
+                                <h4 className={styles.yesNoHeader}>{t("Send report to target user?")}
                                   <span>
                                   <UISwitch
                                       name='sendToTargetUser'
@@ -205,7 +206,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                               </UICardBlock>
 
                               <UICardBlock>
-                                <h4 className={styles.yesNoHeader}>Notify Users?
+                                <h4 className={styles.yesNoHeader}>{t("Notify Users?")}
                                   <span>
                                   <UISwitch
                                       name='notifyUsers'
@@ -265,6 +266,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 </div>
                                 <input type="text"
                                        style={{width: '100%'}}
+                                       placeholder={t("Search...")}
                                        onChange={e => setRespondentPattern(e.target.value)}/>
                                 {selectTeams && teams
                                   .filter(team => respondentPattern
