@@ -14,6 +14,17 @@ import java.util.UUID;
 public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findAllByResponsesUserId(UUID id);
 
+    @Query("SELECT case when " +
+            "   (EXISTS (" +
+            "       SELECT t " +
+            "       FROM u.teams t " +
+            "       WHERE t.lead.id = :userId" +
+            "   )) " +
+            "   then true else false end " +
+            "FROM User u " +
+            "WHERE u.id = :targetId")
+    boolean isTeamLeadOfTargetUser(UUID targetId, UUID userId);
+
     @Query("select r from Request r where r.id = :id and r.targetUser.id = :targetUser")
     Optional<Request> findByIdAndTargetUser(UUID id, UUID targetUser);
 
