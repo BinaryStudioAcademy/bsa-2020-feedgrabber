@@ -279,6 +279,12 @@
     "Delete questionnaire": "Видалити опитник",
 
     "Edit questionnaire": "Редагувати опитник",
-    "Add questionnaire": "Створити опитник"
+    "Add questionnaire": "Створити опитник",
+
+    "Create a new feed item": "Створити новину",
+    "What's up": "Що сталося?",
+    "Attach image": "Прикріпити фото",
+    "Submit": "Підтвердити",
+    "Add news": "Додати новину"
   }
 }
