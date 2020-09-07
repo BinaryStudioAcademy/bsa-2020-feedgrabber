@@ -17,12 +17,15 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
     const isLogged = useAuth();
 
     useEffect(() => {
-        if(isLogged && !company) {
+        if(isLogged && !company && !error) {
             fetchCompany();
             return;
         }
-        if (isLogged) {
+        if(isLogged && company) {
             redirectToCompany(company);
+        }
+        if(isLogged && error) {
+            history.push("/error");
         }
 
         const subdomain = getSubdomainFromDomain();
@@ -43,7 +46,7 @@ const SubdomainRouter: React.FC<SubdomainRouterProps> =
         }
 
         if(!isLogged && !!company) {
-            history.push('/auth');
+            history.push('/auth/email');
         }
     }, [isLogged, company, fetchCompany, fetchCompanyBySubdomain, error]);
 

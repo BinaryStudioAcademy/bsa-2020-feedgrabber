@@ -19,8 +19,10 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu,
     const path = rest.path;
 
     useEffect(() => {
-        getSettings();
-    }, [getSettings]);
+        if (isLogged) {
+            getSettings();
+        }
+    }, [isLogged, getSettings]);
 
     useEffect(() => {
         if (i18n.language !== user.settings?.language) {
