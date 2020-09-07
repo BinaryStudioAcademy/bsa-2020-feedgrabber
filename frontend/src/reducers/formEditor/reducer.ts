@@ -2,7 +2,6 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IAppState} from "../../models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {
-    addExistingQuestionToSectionRoutine,
     addQuestionToSectionRoutine,
     createSectionRoutine,
     deleteQuestionFromSectionRoutine,
@@ -17,7 +16,6 @@ import {
 import {
     addSelectedQuestionsRoutine,
     loadQuestionsBySectionRoutine,
-    loadQuestionsRoutine,
     saveQuestionRoutine
 } from "sagas/questions/routines";
 import {loadOneQuestionnaireRoutine, saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
@@ -121,7 +119,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             };
         case loadOneQuestionnaireRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
-        case loadQuestionsRoutine.TRIGGER:
         case loadSectionsByQuestionnaireRoutine.TRIGGER:
         case createSectionRoutine.TRIGGER:
         case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
@@ -137,7 +134,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case loadSavedSectionsByQuestionnaireRoutine.FAILURE:
         case loadQuestionsBySectionRoutine.FAILURE:
         case loadOneQuestionnaireRoutine.FAILURE:
-        case loadQuestionsRoutine.FAILURE:
         case saveQuestionRoutine.FAILURE:
             return {
                 ...state,

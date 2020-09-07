@@ -3,7 +3,6 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {deleteFromQuestionnaireRoutine, loadQuestionByIdRoutine} from "../../sagas/questions/routines";
 import {isEqual} from 'lodash';
 import QuestionDetails from "../../components/QuestionDetails";
 import {Loader} from "semantic-ui-react";
@@ -110,7 +109,6 @@ const mapState = (state: IAppState) => ({
 const mapDispatch = {
     addQuestion: addQuestionToSectionRoutine,
     updateQuestion: updateQuestionInSectionRoutine,
-    loadQuestion: loadQuestionByIdRoutine,
     loadCategories: loadCategoriesRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine
 };

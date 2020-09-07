@@ -11,7 +11,6 @@ import {
     updateSectionRoutine,
     updateSections
 } from 'sagas/sections/routines';
-import {deleteFromQuestionnaireRoutine} from "sagas/questions/routines";
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/LoaderWrapper";
