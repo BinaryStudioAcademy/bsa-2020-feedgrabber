@@ -28,13 +28,16 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                 const {top, right} = detailsPage.current.getBoundingClientRect();
                 loadCurrent({id: question.id, top, right});
             }
-            setModal(true);
-        };
-
-        const handleSubmit = () => {
             if (!isModifyingEnabled && !answerHandler && !editor) {
                 setModal(true);
             }
+        };
+
+        const handleSubmit = () => {
+            setModal(false);
+            setEditor(!editor);
+            const {top, right} = detailsPage.current.getBoundingClientRect();
+            loadCurrent({id: question.id, top, right});
         };
 
         function handleCancel() {
@@ -43,21 +46,6 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
 
         return (
             <div ref={detailsPage}>
-                {/* <Popup*/}
-                {/*    // trigger={!answerHandler && <Icon name='code' link/>}*/}
-                {/*    isOpen={popup}*/}
-                {/*    on='click'>*/}
-                {/*    <Popup*/}
-                {/*        trigger={<Button color='blue'*/}
-                {/*                         content={t('I know what I do!')}*/}
-                {/*                         fluid*/}
-                {/*                         onClick={handleSegmentClick}/>}*/}
-                {/*        content={t('It may affect answers that have been given before!!!')}*/}
-                {/*        position='top center'*/}
-                {/*        size='tiny'*/}
-                {/*        inverted*/}
-                {/*    />*/}
-                {/* </Popup>*/}
                 <Modal
                     open={modal}
                     size="small"
