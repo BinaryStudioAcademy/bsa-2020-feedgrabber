@@ -16,6 +16,7 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.model.Role;
@@ -220,8 +221,13 @@ public class UserService implements UserDetailsService {
 
     public void removeCompany(UUID id) {
         var userToUpdate = userRepository.getOne(id);
-        userToUpdate.setCompany(null);
+        userToUpdate.setIsDeleted(true);
+        userToUpdate.setUsername(userToUpdate.getUsername() + " (fired)");
         userRepository.save(userToUpdate);
+
+        Optional<Invitation> invitation = invitationRepository
+                .findByCompanyAndEmail(userToUpdate.getCompany(), userToUpdate.getEmail());
+        invitation.ifPresent(invitationRepository::delete);
     }
 
     public void deleteUser(UUID id) {
