@@ -1,9 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Icon, Image } from "semantic-ui-react";
-import { IRoleState } from "../../reducers/role/reducer";
 import { IUserInfo } from "../../models/user/types";
-import { ISearchResult } from "../../models/search/Search";
 import UIButton from "../UI/UIButton";
 
 import styles from '../UserListItem/styles.module.sass';
