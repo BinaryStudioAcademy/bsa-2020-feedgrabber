@@ -81,7 +81,6 @@ const GenericPagination: FC<IGenericPaginationProps> = (
               : <div className={styles.paginationNoItems}>{t("No items")}</div>}
           </div>
         </div>
-      </LoaderWrapper>
       {pagination?.total > 0 && (
         <div className={styles.paginationPagesWrapper}>
           <ReactPaginate
@@ -102,6 +101,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
           />
         </div>
       )}
+      </LoaderWrapper>
     </>
   );
 };
