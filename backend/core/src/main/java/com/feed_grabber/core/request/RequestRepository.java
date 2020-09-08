@@ -35,4 +35,7 @@ public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findReportsForEmployee(UUID userId);
 
     boolean existsByCloseDateIsNotNullAndId(UUID id);
+
+    //@Query("select r from Request r where r.id = :id and r.targetUser.id = :targetUser")
+    List<Request> findByTargetUserIdAndCloseDateIsNotNull(UUID targetUser);
 }

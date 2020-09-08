@@ -278,6 +278,21 @@
     "Delete questionnaire": "Delete questionnaire",
 
     "Edit questionnaire": "Edit questionnaire",
-    "Add questionnaire": "Add questionnaire"
+    "Add questionnaire": "Add questionnaire",
+
+    "Create a new feed item": "Create a new feed item",
+    "What's up": "What's up?",
+    "Attach image": "Attach image",
+    "Submit": "Submit",
+    "Add news": "Add news",
+
+    "No reviews yet": "No reviews yet",
+    "No reports yet": "No reports yet",
+    "Company owners": "Company owners",
+    "HR managers": "HR managers",
+    "People": "People",
+    "Active questionnaires": "Active questionnaires",
+    "Archived questionnaires": "Archived questionnaires",
+    "Team Leaders": "Team Leaders"
   }
 }

@@ -68,7 +68,7 @@ const ResetPasswordForm: FC<FormProps & {match}> =
                     return (
                         <Container>
                             <Menu fixed='top' className={styles.menu}>
-                                <Menu.Item as={Link} to="/layout" header>
+                                <Menu.Item as={Link} to="/" header>
                                     <img
                                         className={styles.logo}
                                         src={require("../../../assets/images/icon_bg.jpg")}

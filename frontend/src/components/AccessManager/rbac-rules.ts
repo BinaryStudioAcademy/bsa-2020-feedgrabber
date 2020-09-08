@@ -19,11 +19,11 @@ export interface IRole {
 
 const employee: IRole = {
     endpoints: [
-        "/layout",
+        "/",
         "/auth",
         "/sign-up/:id",
         "/reset/:id",
-        "/",
+        "/home",
         "/profile",
         "/profile/settings",
         "/profile/security",
@@ -47,6 +47,7 @@ const hr: IRole = {
     endpoints: [
         ...employee.endpoints,
         "/questionnaires",
+        "/company/:id",
         "/questionnaires/:id",
         "/questionnaires/:id/preview",
         "/questionnaires/:id/new-request",

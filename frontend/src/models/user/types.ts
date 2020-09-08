@@ -1,3 +1,5 @@
+import {IReportShort, IReportShortDto} from "../report/IReport";
+
 export interface IUserState {
     isLoading?: boolean;
     isRegisteredSuccess?: boolean;
@@ -37,17 +39,17 @@ export interface IUserShort {
     loading?: boolean;
 }
 
-export interface IUserDashboardDto {
+export interface IUserSettings {
+    language: string;
+    enableNotifications: boolean;
+}
+
+export interface IUserShortInfo {
   id: string;
   username: string;
   firstName?: string;
   lastName?: string;
   role: string;
   isTeamLead: boolean;
+  reports: IReportShortDto[];
 }
-
-export interface IUserSettings {
-    language: string;
-    enableNotifications: boolean;
-}
-

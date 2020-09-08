@@ -278,6 +278,21 @@
     "Delete questionnaire": "Видалити опитник",
 
     "Edit questionnaire": "Редагувати опитник",
-    "Add questionnaire": "Створити опитник"
+    "Add questionnaire": "Створити опитник",
+
+    "Create a new feed item": "Створити новину",
+    "What's up": "Що сталося?",
+    "Attach image": "Прикріпити фото",
+    "Submit": "Підтвердити",
+    "Add news": "Додати новину",
+
+    "No reviews yet": "Відруків ще немає",
+    "No reports yet": "Звітів ще немає",
+    "Company owners": "Власники компанії",
+    "HR managers": "Менеджери з персоналу",
+    "People": "Люди",
+    "Team Leaders": "Керівники команд",
+    "Active questionnaires": "Опитувальники",
+    "Archived questionnaires": "Архівні Опитувальники"
   }
 }

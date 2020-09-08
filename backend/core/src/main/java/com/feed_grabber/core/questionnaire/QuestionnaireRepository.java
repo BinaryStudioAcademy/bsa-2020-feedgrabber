@@ -17,6 +17,15 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, UU
             " where c.id = :companyId and q.isDeleted = false ")
     List<Questionnaire> findAllByCompanyId(UUID companyId, Pageable pageable);
 
+    @Query("SELECT q FROM Questionnaire q inner join q.company c" +
+            " where c.id = :companyId and q.isDeleted = false ")
+    List<Questionnaire> findAllByCompanyId(UUID companyId);
+
+    @Query("SELECT q FROM Questionnaire q inner join q.company c " +
+            "left join Request r on q.id = r.questionnaire.id and r.closeDate is not null " +
+            " where c.id = :companyId and q.isDeleted = false ")
+    List<Questionnaire> findAllByCompanyIdAndClosedRequests(UUID companyId);
+
     @Modifying
     @Transactional
     @Query(value = "UPDATE Questionnaire q SET q.isDeleted = true WHERE q.id = :id")

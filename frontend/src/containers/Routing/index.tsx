@@ -30,6 +30,8 @@ import RedirectFormEditor from "../../components/RedirectFormEditor";
 import ErrorPage from "../ErrorPage";
 import CompanyDashboard from "../Dashboard";
 // just for demo
+import NewsList from "../../components/NewsList";
+import SignUpByEmailPage from 'components/SignUpByEmailPage';
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
 import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
@@ -45,13 +47,14 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
         <>
             <LoaderWrapper loading={isLoading}>
                 <Switch>
-                    <GuestRoute exact path="/layout" component={Landing}/>
+                    <GuestRoute exact path="/" component={Landing}/>
                     <GuestRoute exact path="/auth" component={SignForm}/>
+                    <GuestRoute exact path="/auth/email" component={SignUpByEmailPage}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
                     <Route exact path="/error" render={ props => <ErrorPage {...props}/>}/>
                     <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
-                    <PrivateRoute exact path="/" component={MainPage}/>
+                    <PrivateRoute exact path="/home" component={MainPage}/>
                     <PrivateRoute exact path="/profile" component={() => <Profile mode='profile'/>}/>
                     <PrivateRoute exact path="/profile/settings" component={() => <Profile mode='settings'/>}/>
                     <PrivateRoute exact path="/profile/security" component={() => <Profile mode='security'/>}/>
@@ -62,6 +65,8 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/pending" component={() => <span>Pending feedbacks</span>}/>
                     <PrivateRoute exact path="/company" component={CompanyDashboard}/>
                     <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
+                    <PrivateRoute exact path="/company" component={NewsList}/>
+                    <PrivateRoute exact path="/company/:id" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/people/:tab" component={PeopleManagementPage}/>
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
@@ -81,7 +86,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                         <Redirect to="/people/teams"/>
                     </Route>
                     <Route path="/*">
-                        <Redirect to="/layout"/>
+                        <Redirect to="/"/>
                     </Route>
                 </Switch>
             </LoaderWrapper>

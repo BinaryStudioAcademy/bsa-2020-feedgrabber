@@ -19,7 +19,7 @@ const LandingPage: React.FunctionComponent<LandingProps> = () => {
     <>
       <section className='landing_face'>
         <Menu fixed='top'>
-          <Menu.Item as={Link} to='/layout' header>
+          <Menu.Item as={Link} to='/' header>
             <img
               className='logo'
               src={require('../../assets/images/icon_bg.jpg')}

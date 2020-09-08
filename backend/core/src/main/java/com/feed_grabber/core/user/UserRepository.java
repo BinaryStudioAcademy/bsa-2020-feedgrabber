@@ -67,20 +67,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             nativeQuery = true)
     Long countByLastNameAndNameAndCompanyId(UUID companyId, String name, String surname);
 
-
-    Integer countAllByRoleNameAndCompanyId(String role, UUID companyId);
-
-//    @Query(value = "select new com.feed_grabber.core.dashboard.dto.UserInfo(u, r) " +
-//            "from User u inner join Company c on u.company.id = c.id " +
-//            "left join Request r on u.id = r.targetUser.id " +
-//            "where c.id = :companyId")
-//    List<UserInfo> getUsersRequests(UUID companyId);
-//
-//    @Query(value = "select new com.feed_grabber.core.dashboard.dto.UserInfo(u," +
-//            " (select r from Request r inner join User us on r.targetUser.id = us.id where us.id = u.id)) " +
-//            "from User u inner join Company c on u.company.id = c.id " +
-//            "where c.id = :companyId")
-//    List<UserInfo> getUsersRequests2(UUID companyId);
-
+    @Query(value = "select new com.feed_grabber.core.dashboard.dto.UserInfo(" +
+            "   u.id, u.username, p.firstName, p.lastName, u.role.name, " +
+            "   (select case when count (t) > 0 THEN true ELSE false END from Team t where t.lead.id = u.id)) " +
+            "from User u inner join Company c on u.company.id = c.id " +
+            "left join UserProfile p on u.id = p.user.id " +
+            "where c.id = :companyId")
+    List<UserInfo> getUserInfo(UUID companyId);
 
 }
