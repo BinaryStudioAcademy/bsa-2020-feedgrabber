@@ -101,6 +101,7 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Question>) questionQuery.getResultList())
                 .stream()
+                .filter(q -> q.getCompany().getId().equals(getCompanyId()))
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList())
                 , (long) questionQuery.getResultSize());
@@ -121,6 +122,7 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Questionnaire>) questionnaireQuery.getResultList())
                 .stream()
+                .filter(q -> q.getCompany().getId().equals(getCompanyId()))
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList())
                 , (long) questionnaireQuery.getResultSize());
@@ -140,6 +142,7 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Request>) reportQuery.getResultList())
                 .stream()
+                .filter(r -> r.getQuestionnaire().getCompany().getId().equals(getCompanyId()))
                 .map(ReportMapper.MAPPER::requestToReportDetails)
                 .collect(Collectors.toList())
                 , (long) reportQuery.getResultSize());
@@ -160,6 +163,7 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Team>) teamQuery.getResultList())
                 .stream()
+                .filter(t -> t.getCompany().getId().equals(getCompanyId()))
                 .map(TeamMapper.MAPPER::teamToTeamDto)
                 .collect(Collectors.toList())
                 , (long) teamQuery.getResultSize());
