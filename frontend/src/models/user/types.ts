@@ -1,4 +1,4 @@
-import {IReportShort, IReportShortDto} from "../report/IReport";
+import {IReportShortDto} from "../report/IReport";
 
 export interface IUserState {
     isLoading?: boolean;
