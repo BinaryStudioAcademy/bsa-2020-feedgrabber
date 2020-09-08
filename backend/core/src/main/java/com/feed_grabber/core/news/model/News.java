@@ -1,6 +1,5 @@
 package com.feed_grabber.core.news.model;
 
-import com.feed_grabber.core.comments.model.Comment;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.image.model.Image;
 import com.feed_grabber.core.newsReaction.model.NewsReaction;
@@ -53,9 +52,6 @@ public class News {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
-
-    @OneToMany(mappedBy = "news", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.REFRESH })
-    private List<Comment> comments;
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
