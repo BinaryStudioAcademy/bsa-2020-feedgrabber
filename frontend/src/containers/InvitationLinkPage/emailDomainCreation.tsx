@@ -11,6 +11,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { IAppState } from 'models/IAppState';
 import {env} from "../../env";
+import { useTranslation } from "react-i18next";
 
 interface IDomainCreationBlockProps {
     company?: ICompanyDomain;
@@ -26,7 +27,7 @@ const validationSchema = yup.object().shape({
   });
 
 const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setCompanyDomain}) => {
-
+    const [t] = useTranslation();
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     const handleSave = values => {
@@ -53,16 +54,16 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
             onClose={() => setShowConfirmationModal(false)}
         >
             <Modal.Header>
-                Do you really want to delete current email domain? 
-                Employees won`t able to register with there corporate emails anymore
+                {t("Do you really want to delete current email domain?")}
+                {t("Employees won`t able to register with there corporate emails anymore")}
             </Modal.Header>
             <Modal.Actions>
-                <UIButton title="Yes"
+                <UIButton title={t("Yes")}
                         onClick={() => {
                             setShowConfirmationModal(false);
                             handleDelete();
                         }}/>
-                <UIButton title="No" submit onClick={() => setShowConfirmationModal(false)}/>
+                <UIButton title={t("No")} submit onClick={() => setShowConfirmationModal(false)}/>
             </Modal.Actions>
         </Modal>);
     };
@@ -76,19 +77,19 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
             >
                 {formik => 
                     <form>
-                        Write company email domain name <i>(e.g. binary-academy.com) </i>
+                        {t("Write company email domain name (e.g. binary-academy.com)")}
                         <br/>
                     <Input id="emailDomain"
                         name="emailDomain"
                         icon='at' 
                         fluid
                         iconPosition='left' 
-                        placeholder='Write domain...' 
+                        placeholder={t('Write domain...')}
                         onChange={formik.handleChange}
                         />
                     {formik.errors.emailDomain && <div>{formik.errors.emailDomain}</div>}
                     <UIButton 
-                        title="Save" 
+                        title={t("Save")}
                         onClick={formik.handleSubmit} 
                         submit/>
                     </form>
@@ -110,19 +111,19 @@ const DomainCreationBlock: React.FC<IDomainCreationBlockProps> = ({company, setC
 
     const componentWithDomain = (
         <UICardBlock>
-            <span className={styles.info}>Now you can tell employees that they can sign up on <br/>
+            <span className={styles.info}>{t("Now you can tell employees that they can sign up on")} <br/>
             <a href={getLink()}> 
             {getLink()} </a><br/>
-            using there corporate email: <code>@{company?.emailDomain}</code></span>s
+            {t("using there corporate email")}: <code>@{company?.emailDomain}</code></span>s
             <br/>
-            <UIButton title="Delete" onClick={() => setShowConfirmationModal(true)}/>
+            <UIButton title={t("Delete")} onClick={() => setShowConfirmationModal(true)}/>
         </UICardBlock>
     );
 
     return (
         <UICard>
             <UICardBlock>
-                <h3>Domain name for corporate email</h3>
+                <h3>{t("Domain name for corporate email")}</h3>
             </UICardBlock>
             {company?.emailDomain === null ? componentWithoutDomain : componentWithDomain }
             {confirmationModal()}

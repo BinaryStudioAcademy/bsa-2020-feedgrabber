@@ -5,11 +5,14 @@
     overflow-y: hidden
 
     & .menu
-        background-color: transparent !important
+        background-color: transparent
         backdrop-filter: blur(10px)
         box-shadow: none
         font-family: 'Quicksand-Bold', sans-serif
         font-size: 1.5rem
+
+        @supports (-moz-appearance:none)
+            background-color: rgba(249, 249, 249, 0.85)
 
         & .item
             padding-top: 10px !important
@@ -32,7 +35,21 @@
             margin-top: 10%
             width: 30vw
             backdrop-filter: blur(10px)
+            overflow: hidden
             animation: bounce-left .8s both
+
+            @supports (-moz-appearance:none)
+                &:before
+                    content: ''
+                    background-image: url('../../assets/images/bg-pattern.jpg')
+                    position: absolute
+                    top: 0
+                    right: 0
+                    bottom: 0
+                    left: 0
+                    filter: blur(10px)
+                    margin: -20px
+                    z-index: -1
 
             &_header
                 font-family: 'Quicksand-Bold', sans-serif

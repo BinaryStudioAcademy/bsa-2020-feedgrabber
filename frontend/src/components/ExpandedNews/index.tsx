@@ -4,7 +4,7 @@ import CommentInput from "./CommentInput";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import NewsItem from "../NewsItem/NewsItem";
-import {loadCompanyFeedItemRoutine} from "../../sagas/companyFeed/routines";
+import {applyReactionRoutine, loadCompanyFeedItemRoutine, reactOnNewsRoutine} from "../../sagas/companyFeed/routines";
 import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UIContent from "../UI/UIContent";
 import UIColumn from "../UI/UIColumn";
@@ -25,7 +25,8 @@ const defaultItem: ICompanyFeedItem = {
         id: "",
         username: ""
     },
-    commentsCount: 0
+    commentsCount: 0,
+    reactions: []
 };
 
 const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
@@ -35,6 +36,8 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         saveComment,
         updateComment,
         deleteComment,
+        reactOnNews,
+        applyReaction,
         match
 }) => {
 
@@ -74,7 +77,11 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         <UIContent>
             <UIPageTitle title={""}/>
             <UIColumn wide >
-                <NewsItem item={newsItem ? newsItem : defaultItem} />
+                <NewsItem
+                    item={newsItem ? newsItem : defaultItem}
+                    applyReaction={applyReaction}
+                    react={reactOnNews}
+                />
                 <Divider />
                 <CommentGroup className={styles.comments}>
                     {newsItem?.comments?.map(comment => {
@@ -134,7 +141,9 @@ const mapDispatchToProps = {
     loadNews: loadCompanyFeedItemRoutine,
     saveComment: saveCommentRoutine,
     updateComment: updateCommentRoutine,
-    deleteComment: deleteCommentRoutine
+    deleteComment: deleteCommentRoutine,
+    reactOnNews: reactOnNewsRoutine,
+    applyReaction: applyReactionRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

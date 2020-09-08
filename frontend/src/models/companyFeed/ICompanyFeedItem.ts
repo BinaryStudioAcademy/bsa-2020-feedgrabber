@@ -11,5 +11,12 @@ export interface ICompanyFeedItem {
   user: IUserShort;
   commentsCount: number;
   comments?: IComment[];
+  reactions: IReaction[];
+}
+
+export interface IReaction {
+  emoji: string;
+  reactedByCurrentUser: boolean;
+  reactedUsers: any[];
 }
 

@@ -5,7 +5,8 @@ import {
   loadCompanyFeedRoutine,
   loadCompanyFeedItemRoutine,
   saveCompanyFeedItemRoutine,
-  createCompanyFeedItemRoutine
+  createCompanyFeedItemRoutine,
+  reactOnNewsRoutine, applyReactionRoutine
 } from './routines';
 import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
 
@@ -45,6 +46,14 @@ function* loadCompanyFeedItem(action) {
   }
 }
 
+function* reactOnNews(action) {
+  try {
+    yield call(apiClient.post, '/api/news/reaction', action.payload);
+  } catch (error) {
+    toastr.error('Can not react on news');
+  }
+}
+
 function* createCompanyFeedItem(action) {
   try {
     const res = yield call(apiClient.post, '/api/news', action.payload);
@@ -69,6 +78,7 @@ export default function* companyFeedSaga() {
     yield takeEvery(loadCompanyFeedRoutine.TRIGGER, loadCompanyFeed),
     yield takeEvery(loadCompanyFeedItemRoutine.TRIGGER, loadCompanyFeedItem),
     yield takeEvery(saveCompanyFeedItemRoutine.TRIGGER, saveCompanyFeedItem),
-    yield takeEvery(createCompanyFeedItemRoutine.TRIGGER, createCompanyFeedItem)
+    yield takeEvery(createCompanyFeedItemRoutine.TRIGGER, createCompanyFeedItem),
+    yield takeEvery(reactOnNewsRoutine.TRIGGER, reactOnNews)
   ]);
 }
