@@ -1,6 +1,6 @@
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import {IQuestionResponse} from "models/IQuestionResponse";
-import React, {FC, useRef} from "react";
+import React, {FC, useLayoutEffect, useRef} from "react";
 import {Header, Label, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import QuestionForm from "../QuestionForm";
@@ -20,9 +20,12 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
     const handleSegmentClick = () => {
         if (!answerHandler && !isCurrent) {
             setCurrentQuestion(question);
-            setMenuPos(ref?.current?.getBoundingClientRect().y);
         }
     };
+
+    useLayoutEffect(() => {
+        isCurrent && setMenuPos(ref?.current?.getBoundingClientRect().y - 18);
+    }, [isCurrent, setMenuPos]);
 
     return (
         <div ref={ref} onClick={handleSegmentClick}>
@@ -30,7 +33,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
                 {isCurrent
                     ?
                     <div className={styles.scaleTop}>
-                        <QuestionForm />
+                        <QuestionForm/>
                     </div>
                     :
                     <div>

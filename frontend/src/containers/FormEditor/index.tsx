@@ -99,7 +99,6 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                         position={position}
                                         addQuestion={addNewQuestion}
                                         copyQuestion={copyQuestion}
-                                        currentQuestion={currentQuestion ?? defaultQuestion}
                                         onDelete={handleDeleteQuestion}
                                         addSection={handleAddSection}
                                     />

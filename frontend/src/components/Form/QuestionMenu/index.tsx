@@ -1,21 +1,14 @@
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useRef, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
-import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 import {useTranslation} from "react-i18next";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
-
     copyQuestion(): void;
-
     position: number;
-
     onDelete(): void;
-
     addSection(): void;
-
-    currentQuestion: IQuestion;
 }
 
 const styleBorder = {style: {border: 'none', backgroundColor: 'white', padding: 12}};
@@ -43,7 +36,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
     return (
         <div style={{
             position: 'absolute',
-            top: (scrollTop.current + position) || '10%',
+            top: (scrollTop.current + position) || '9%',
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Button.Group basic {...styleBorderX} vertical size="big">

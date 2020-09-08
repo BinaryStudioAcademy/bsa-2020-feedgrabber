@@ -105,11 +105,26 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                     current: payload.find(s => s.id === state.sections.current.id)
                 }
             };
+        case deleteQuestionFromSectionRoutine.SUCCESS:
+            const qs = state.sections.list.flatMap(s => s.questions);
+            const index = qs.findIndex(q => q.id === payload.questionId);
+            const q = qs[index-1] || qs[index+1];
+            return {
+                ...state,
+                sections: {
+                    current: {...state.sections.current, questions: payload.questions},
+                    list: state.sections.list.map(s => s.id === payload.sectionId ? {
+                        ...s,
+                        questions: payload.questions
+                    } : s)
+                },
+                currentQuestion: q ?? {},
+                isLoading: false
+            };
         case updateQuestionInSectionRoutine.SUCCESS:
         case addQuestionToSectionRoutine.SUCCESS:
-        case deleteQuestionFromSectionRoutine.SUCCESS:
             const {sectionId, questions, questionId} = payload;
-            const curQ = questionId ? questions.find(q => q.id === questionId) : {};
+            const curQ = questions.find(q => q.id === questionId);
             const list = state.sections.list.map(s => s.id === sectionId ? {...s, questions} : s);
 
             return {
@@ -124,7 +139,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case loadOneQuestionnaireRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
         case loadSectionsByQuestionnaireRoutine.TRIGGER:
-        case createSectionRoutine.TRIGGER:
         case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
         case loadQuestionsBySectionRoutine.TRIGGER:
             return {
