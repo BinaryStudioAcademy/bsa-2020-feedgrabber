@@ -118,7 +118,6 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
                               onChange={handleUpdatingCommentChange}
                               onCancel={() => setUpdatingComment(null)}
                               onSubmit={handleUpdateCommentSubmit}
-                              loading={isLoading}
                           />
                         );
                     })}
