@@ -59,12 +59,8 @@ function* changeUserRole(action) {
 
 function* loadFiredUserList(action: any) {
   try {
-    // const query = action.payload;
     const store = yield select();
     const {page, size} = store.users.paginationFired;
-    // const api = query
-    //   ? `/api/user/search/?page=${page}&size=${size}&query=${query}`
-    //   : `/api/user/all/?page=${page}&size=${size}`;
     const api = `/api/user/all/?page=${page}&size=${size}&fired=true`;
     const res = yield call(apiClient.get, api);
     const items = res.data.data;

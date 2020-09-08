@@ -222,7 +222,6 @@ public class UserService implements UserDetailsService {
     public void removeCompany(UUID id) {
         var userToUpdate = userRepository.getOne(id);
         userToUpdate.setIsDeleted(true);
-//        userToUpdate.setUsername(userToUpdate.getUsername() + " (fired)");
         userRepository.save(userToUpdate);
 
         Optional<Invitation> invitation = invitationRepository
