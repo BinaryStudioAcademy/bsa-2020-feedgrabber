@@ -1,5 +1,6 @@
 package com.feed_grabber.core.request;
 
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
 
@@ -21,6 +22,7 @@ import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
+import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
@@ -246,6 +248,19 @@ public class RequestService {
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
         return requestRepository.findAllByQuestionnaireId(id)
+                .stream()
+                .map(RequestMapper.MAPPER::requestToShortDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<RequestShortDto> getAllByTeamId(UUID id, UUID userId, String roleName) throws TeamNotFoundException {
+        if (roleName.equals("employee")) {
+            var team = teamRepository.findById(id).orElseThrow(TeamNotFoundException::new);
+            if (!team.getLead().getId().equals(userId)) {
+                throw new JwtTokenException("No rights to see requests");
+            }
+        }
+        return requestRepository.findAllByTeamId(id)
                 .stream()
                 .map(RequestMapper.MAPPER::requestToShortDto)
                 .collect(Collectors.toList());
