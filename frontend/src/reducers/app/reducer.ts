@@ -21,7 +21,7 @@ const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => 
     if (type === setFloatingMenuPos.TRIGGER) {
         return {
             ...state,
-            floatingMenuPos: payload
+            floatingMenuPos: payload - 25
         };
     }
     return state;

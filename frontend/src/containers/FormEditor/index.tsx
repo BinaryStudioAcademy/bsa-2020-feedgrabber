@@ -6,7 +6,9 @@ import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/Form/QuestionMenu";
 import {
     addQuestionToSectionRoutine,
-    createSectionRoutine, deleteQuestionFromSectionRoutine, setCurrentQuestionInSection,
+    createSectionRoutine,
+    deleteQuestionFromSectionRoutine,
+    setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
     updateSectionRoutine,
     updateSections
@@ -16,7 +18,6 @@ import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {toastr} from "react-redux-toastr";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
-import UIPageTitle from "../../components/UI/UIPageTitle";
 import {setFloatingMenuPos, toggleMenuRoutine} from "../../sagas/app/routines";
 
 const FormEditor: FC<FormEditorProps & { match }> = (
@@ -26,6 +27,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
         setMenuPos,
         setCurrentQuestion,
         questionnaire,
+        position,
         sections,
         loadQuestionnaire,
         addQuestion,
@@ -77,32 +79,35 @@ const FormEditor: FC<FormEditorProps & { match }> = (
 
     return (
         <>
-            <UIPageTitle title=""/>
             {questionnaire && (
-                <div className={styles.formDetails}>
                     <LoaderWrapper loading={isLoading}>
                         <UIContent>
-                            <div className={styles.questions_container}>
-                                <Form
-                                    updateSections={updateSectionsR}
-                                    setMenuPos={setMenuPos}
-                                    setCurrentQuestion={setCurrentQuestion}
-                                    updateSection={updateSection}
-                                    updateOrder={updateOrder}
-                                    currentQuestion={currentQuestion}
-                                    sections={sections}
-                                />
+                            <div className={styles.container} >
+                                <div className={styles.form}>
+                                    <Form
+                                        updateSections={updateSectionsR}
+                                        setMenuPos={setMenuPos}
+                                        setCurrentQuestion={setCurrentQuestion}
+                                        updateSection={updateSection}
+                                        updateOrder={updateOrder}
+                                        currentQuestion={currentQuestion}
+                                        sections={sections}
+                                    />
+                                </div>
+                                <div className={styles.menu}>
+                                    <QuestionMenu
+                                        position={position}
+                                        addQuestion={addNewQuestion}
+                                        copyQuestion={copyQuestion}
+                                        currentQuestion={currentQuestion ?? defaultQuestion}
+                                        onDelete={handleDeleteQuestion}
+                                        addSection={handleAddSection}
+                                    />
+                                </div>
                             </div>
-                            <QuestionMenu
-                                addQuestion={addNewQuestion}
-                                copyQuestion={copyQuestion}
-                                currentQuestion={currentQuestion ?? defaultQuestion}
-                                onDelete={handleDeleteQuestion}
-                                addSection={handleAddSection}
-                            />
                         </UIContent>
                     </LoaderWrapper>
-                </div>)}
+                )}
         </>
     );
 };
@@ -110,6 +115,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
 const mapStateToProps = (state: IAppState) => ({
     currentQuestion: state.formEditor.currentQuestion,
     questionnaire: state.formEditor.questionnaire,
+    position: state.app.floatingMenuPos,
     isLoading: state.formEditor.isLoading,
     sections: state.formEditor.sections.list,
     currentSection: state.formEditor.sections.current

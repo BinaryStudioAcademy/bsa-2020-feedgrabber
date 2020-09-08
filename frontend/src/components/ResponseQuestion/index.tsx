@@ -15,25 +15,25 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
         isCurrent
     }) => {
     const {name, categoryTitle, type} = question;
-    const detailsPage = useRef(null);
+    const ref = useRef(null);
 
     const handleSegmentClick = () => {
-        if (!answerHandler) {
+        if (!answerHandler && !isCurrent) {
             setCurrentQuestion(question);
-            setMenuPos(detailsPage.current.getBoundingClientRect().top);
+            setMenuPos(ref?.current?.getBoundingClientRect().y);
         }
     };
 
     return (
-        <div ref={detailsPage}>
+        <div ref={ref} onClick={handleSegmentClick}>
             <Segment className={`${styles.container} ${isCurrent && styles.highlight}`}>
                 {isCurrent
                     ?
                     <div className={styles.scaleTop}>
-                        <QuestionForm/>
+                        <QuestionForm />
                     </div>
                     :
-                    <div onClick={handleSegmentClick}>
+                    <div>
                         {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}
                         {TypeToResponseMap.get(type.toUpperCase())?.
                         ({question, answerHandler, response: question.answer})}

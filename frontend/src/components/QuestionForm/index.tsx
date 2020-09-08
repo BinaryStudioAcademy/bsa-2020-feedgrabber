@@ -17,7 +17,6 @@ import {useTranslation} from "react-i18next";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
-import question from "../../models/forms/Questions/DefaultQuestion";
 
 export interface IQuestionListEditProps {
     addQuestion: (question) => void;
@@ -44,10 +43,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const ref = useRef(null);
     const [t] = useTranslation();
 
-    useEffect(() => {
-        setLocalCategories(categories);
-    }, [categories]);
-
     const formik = useFormik({
         initialValues: {
             question: currentQuestion,
@@ -68,51 +63,29 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const onSubmit = useCallback(() => {
         if (isDetailsValid && formik.isValid) {
             const {question, ...rest} = formik.values;
-            if (!isEqual({...question, ...rest}, currentQuestion)) {
-                const {question, ...rest} = formik.values;
+            const sum = {...question, ...rest};
+            if (!isEqual(sum, currentQuestion)) {
                 listEdit ?
-                    listEdit
-                        .addQuestion(
-                            {
-                                ...question,
-                                ...rest
-                            })
-                    :
-                    !question.id ?
-                        addQuestion({
-                            ...question,
-                            ...rest,
-                            questionnaireId,
-                            sectionId: section.id
-                        }) :
-                        updateQuestion({
-                            ...question,
-                            ...rest,
-                            sectionId: section.id
-                        });
+                    listEdit.addQuestion(sum) :
+                    !sum.id ? addQuestion({ ...sum, questionnaireId, sectionId: section.id })
+                    : updateQuestion({ ...sum, sectionId: section.id });
             }
         }
     }, [currentQuestion, addQuestion, updateQuestion,
-        formik.values, isDetailsValid, section?.id, questionnaireId, formik.isValid]);
+        formik.values, isDetailsValid, section, questionnaireId, formik.isValid, listEdit]);
 
     useEffect(() => {
         if (!listEdit) {
             const timer = setTimeout(() => onSubmit(), 3000);
             return () => clearTimeout(timer);
-        } else {
-            return () => ({});
         }
-    }, [onSubmit]);
+            return undefined;
+    }, [onSubmit, listEdit]);
 
     const handleQuestionDetailsUpdate = state => {
         const {isCompleted, value} = state;
         formik.setFieldValue("question", {...formik.values.question, details: value});
-        const type = formik.values.question.type;
-        if (type === QuestionType.freeText || type === QuestionType.date) {
-            setValid(true);
-        } else {
-            setValid(isCompleted);
-        }
+        setValid(isCompleted);
     };
 
     const onCopy = () => {
@@ -135,7 +108,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
 
     const setQuestionType = data => {
         const type: QuestionType = data.value;
-        formik.setFieldValue("question", {...formik.values.question, type, details: undefined});
+        formik.setFieldValue("question", {...formik.values.question, type, details: {}});
     };
 
     const parseCategories = categories => categories.length ?
