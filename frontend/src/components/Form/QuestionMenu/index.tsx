@@ -1,13 +1,17 @@
-import React, {FC, useRef, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
 import {useTranslation} from "react-i18next";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
+
     copyQuestion(): void;
+
     position: number;
+
     onDelete(): void;
+
     addSection(): void;
 }
 
@@ -26,17 +30,16 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
         position
     }) => {
     const [isOpenModal, setOpenModal] = useState(false);
-    const scrollTop = useRef<number>(0);
+    const ref = useRef(document.getElementById("app-content"));
     const [t] = useTranslation();
 
-    (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = () => {
-        scrollTop.current = (document.getElementById('root')?.firstChild?.firstChild as HTMLElement)?.scrollTop || 0;
-    };
+    const x = ref.current?.scrollTop + position;
+    const top = x ? x - 100 : 0;
 
     return (
         <div style={{
             position: 'absolute',
-            top: (scrollTop.current + position) || '9%',
+            top,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Button.Group basic {...styleBorderX} vertical size="big">

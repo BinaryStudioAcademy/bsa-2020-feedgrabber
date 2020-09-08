@@ -43,7 +43,7 @@ const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
                                     key={q.id}
                                     question={q}
                                     index={i}
-                                    isCurrent={q.id === currentQuestion.id}
+                                    currentQuestion={currentQuestion}
                                 />
                             )) :
                             <Header as='h3' content={t("Add questions")}/>

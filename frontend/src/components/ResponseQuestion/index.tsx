@@ -12,10 +12,11 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
         answerHandler,
         setMenuPos,
         setCurrentQuestion,
-        isCurrent
+        currentQuestion
     }) => {
     const {name, categoryTitle, type} = question;
     const ref = useRef(null);
+    const isCurrent = currentQuestion.id === question.id;
 
     const handleSegmentClick = () => {
         if (!answerHandler && !isCurrent) {
@@ -24,8 +25,8 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
     };
 
     useLayoutEffect(() => {
-        isCurrent && setMenuPos(ref?.current?.getBoundingClientRect().y - 18);
-    }, [isCurrent, setMenuPos]);
+        isCurrent && setMenuPos(ref?.current?.getBoundingClientRect().y);
+    }, [isCurrent, setMenuPos, currentQuestion]);
 
     return (
         <div ref={ref} onClick={handleSegmentClick}>

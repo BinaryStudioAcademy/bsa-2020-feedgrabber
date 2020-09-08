@@ -197,7 +197,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                                     <ResponseQuestion
                                                         setCurrentQuestion={setCurrentQuestion}
                                                         setMenuPos={setMenuPos}
-                                                        isCurrent={false} question={question}
+                                                        currentQuestion={{} as IQuestion} question={question}
                                                                       answerHandler={(data: IAnswerBody) => {
                                                                           question["answer"] = data;
                                                                           this.handleComponentChange({

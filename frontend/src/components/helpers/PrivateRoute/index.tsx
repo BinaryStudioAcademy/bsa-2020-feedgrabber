@@ -45,7 +45,7 @@ const PrivateRoute = ({
                             <div className={styles.mainSideBar}>
                                 <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
                             </div>
-                            <div className={styles.appContent}>
+                            <div className={styles.appContent} id="app-content">
                                 <Component {...props} />
                             </div>
                         </div>

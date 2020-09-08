@@ -9,7 +9,7 @@ import {
     loadSectionsByQuestionnaireRoutine,
     setCurrentQuestionInSection,
     setCurrentSectionRoutine,
-    updateQuestionInSectionRoutine,
+    updateQuestionInSectionRoutine, updateQuestionsOrderRoutine,
     updateSectionRoutine,
     updateSections
 } from "sagas/sections/routines";
@@ -87,6 +87,11 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                     }
                 },
                 isLoading: false
+            };
+        case updateQuestionsOrderRoutine.TRIGGER:
+            return {
+                ...state,
+                currentQuestion: {...state.currentQuestion, index: payload.newIndex}
             };
         case setCurrentQuestionInSection.TRIGGER:
             return {
