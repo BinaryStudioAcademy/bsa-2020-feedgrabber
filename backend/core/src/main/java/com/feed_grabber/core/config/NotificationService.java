@@ -15,7 +15,6 @@ public class NotificationService {
     }
 
     public <T> void sendMessageToConcreteUser(String userId, String topic, T payload) {
-        System.out.println(userId);
         simpMessagingTemplate.convertAndSendToUser(userId, "/queue/" + topic, payload);
     }
 
