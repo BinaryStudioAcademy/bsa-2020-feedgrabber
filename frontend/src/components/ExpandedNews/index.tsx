@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {CommentGroup, Comment, Divider} from "semantic-ui-react";
+import {CommentGroup, Comment, Divider, Dropdown} from "semantic-ui-react";
 import CommentInput from "./CommentInput";
-import {IComment} from "../../models/comments";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import NewsItem from "../NewsItem/NewsItem";
@@ -13,6 +12,7 @@ import UIPageTitle from "../UI/UIPageTitle";
 import {saveCommentRoutine} from "../../sagas/comments/routines";
 import moment from "moment";
 import styles from "./styles.module.sass";
+import LoaderWrapper from "../LoaderWrapper";
 
 const defaultItem: ICompanyFeedItem = {
     id: "",
@@ -29,6 +29,7 @@ const defaultItem: ICompanyFeedItem = {
 
 const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         newsItem,
+        isLoading,
         loadNews,
         saveComment,
         match
@@ -38,24 +39,19 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         loadNews({ id: match.params.id });
     }, [loadNews, match.params.id]);
 
-    const initialComment = {
-        id: "",
-        body: "",
-        newsId: match.params.id,
-        user: null
-    };
-    const [comment, setComment] = useState<IComment>(initialComment);
+    const [body, setBody] = useState('');
 
     const handleCommentChange = (body: string) => {
-       setComment({
-           ...comment,
-           body
-       });
+       setBody(body);
     };
 
     const handleSubmit = () => {
-        if (comment.body) {
-            saveComment(comment);
+        if (body) {
+            saveComment({
+                body,
+                newsId: match.params.id
+            });
+            setBody("");
         }
     };
 
@@ -65,9 +61,10 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
             <UIColumn wide >
                 <NewsItem item={newsItem ? newsItem : defaultItem} />
                 <Divider />
+                <LoaderWrapper loading={isLoading}>
                 <CommentGroup className={styles.comments}>
                     {newsItem?.comments?.map(comment => (
-                        <Comment className={styles.comments}>
+                        <Comment>
                             <Comment.Avatar src={comment.user.avatar} />
                             <Comment.Content>
                                 <Comment.Author>
@@ -75,14 +72,22 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
                                     <Comment.Metadata>
                                     {moment(comment.createdAt).fromNow()}
                                     </Comment.Metadata>
+                                    <Dropdown>
+                                    <Dropdown.Menu size="sm" title="">
+                                      <Dropdown.Item>Edit</Dropdown.Item>
+                                      <Dropdown.Item>Delete</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Dropdown>
                                 </Comment.Author>
                                 <Comment.Text>{comment.body}</Comment.Text>
                             </Comment.Content>
                         </Comment>
                     ))}
                 </CommentGroup>
+                </LoaderWrapper>
                 <CommentInput
-                    value={comment.body}
+                    className={styles.commentInput}
+                    value={body}
                     onChange={handleCommentChange}
                     onSubmit={handleSubmit}
                 />
@@ -92,7 +97,8 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
 };
 
 const mapStateToProps = (state: IAppState) => ({
-    newsItem: state.companyFeed.current
+    newsItem: state.companyFeed.current,
+    isLoading: state.companyFeed.isLoading
 });
 
 const mapDispatchToProps = {

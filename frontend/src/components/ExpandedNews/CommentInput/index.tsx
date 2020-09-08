@@ -4,11 +4,18 @@ import {useTranslation} from "react-i18next";
 import UIButton from "../../UI/UIButton";
 import styles from "./styles.module.sass";
 
-const CommentInput = ({ value, onChange, onSubmit }) => {
+interface ICommentInputProps {
+    className?: string;
+    value: string;
+    onChange(string): void;
+    onSubmit(): void;
+}
+
+const CommentInput: React.FC<ICommentInputProps> = ({ className, value, onChange, onSubmit }) => {
     const [t] = useTranslation();
 
     return (
-        <div className={styles.commentInput}>
+        <div className={className ? className : ""}>
             <TextareaAutosize
                 className={styles.textInput}
                 value={value}
@@ -17,10 +24,10 @@ const CommentInput = ({ value, onChange, onSubmit }) => {
                 minRows={3}
                 maxRows={8}
             />
-            <span className={styles.sendCommentButton}>
+            <div className={styles.sendCommentButton}>
                 <UIButton secondary title={t("Cancel")} onClick={() => onChange("")} />
                 <UIButton primary title={t("Send")} onClick={onSubmit} />
-            </span>
+            </div>
         </div>
     );
 };

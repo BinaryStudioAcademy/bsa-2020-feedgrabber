@@ -21,8 +21,11 @@ const NewsItem: FC<INewsItemProps> = ({item}) => {
     };
 
     return (
-        <UICardBlock key={item.id}
-                     className={styles.newsItemContainer}>
+        <UICardBlock
+            key={item.id}
+            className={styles.newsItemContainer}
+            onClick={handleClick}
+        >
             <img src={item.image? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
             <div className={styles.detailesContainer}>
                 <div className={styles.mainContainer}>
@@ -40,7 +43,7 @@ const NewsItem: FC<INewsItemProps> = ({item}) => {
                         <div className={styles.date}>{item.createdAt}</div>
                     </div>
                 </div>
-                <div onClick={handleClick}>
+                <div>
                     <Icon name="comment" />
                     {item.commentsCount} {" "}
                     {item.commentsCount === 1 ? t("comment") : t("comments")}
