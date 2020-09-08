@@ -137,7 +137,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
     return (
         <div className={styles.pageContainer}>
             <UIColumn wide>
-                <Header as="h2">All employees</Header>
+                <Header as="h2">{t("All Employees")}</Header>
                 {search()}
                 <GenericPagination
                     isLoading={isLoading}
@@ -148,7 +148,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
                 />
             </UIColumn>
             <UIColumn wide>
-                <Header as="h2">Fired Users</Header>
+                <Header as="h2">{t("Fired Users")}</Header>
                 <GenericPagination
                     isLoading={isFiredLoading}
                     pagination={paginationFired}

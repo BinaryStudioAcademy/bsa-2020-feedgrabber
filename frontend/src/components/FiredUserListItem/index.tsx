@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Icon, Image } from "semantic-ui-react";
 import { IRoleState } from "../../reducers/role/reducer";
 import { IUserInfo } from "../../models/user/types";
@@ -19,6 +20,7 @@ const FiredUserListItem: FC<IUserListItemProps> = ({
     user,
     unfire
 }) => {
+    const [t] = useTranslation();
     const {id, firstName, lastName, role, avatar, userName} = user;
     const info = firstName && lastName ? `${lastName} ${firstName}` : `${userName}`;
 
@@ -38,11 +40,11 @@ const FiredUserListItem: FC<IUserListItemProps> = ({
                     </div>}
                     <div className={styles.infoItem}>
                         <Icon color={"grey"} name='briefcase'/>
-                        <p>{role.replace("_", " ")}</p>
+                        <p>{t(role)}</p>
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>
-                    <UIButton title={'Unfire'} onClick={() => unfire(id)}/>
+                    <UIButton title={t('Unfire')} onClick={() => unfire(id)}/>
                 </div>
 
             </div>
