@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { IAppState } from 'models/IAppState';
 import { loadReportRoutine, loadRespondentReportsRoutine } from "../../sagas/report/routines";
 import UICardBlock from "../../components/UI/UICardBlock";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import { Header, Segment, Tab, Label } from 'semantic-ui-react';
 import { QuestionType } from "../../models/forms/Questions/IQuesion";
 import {

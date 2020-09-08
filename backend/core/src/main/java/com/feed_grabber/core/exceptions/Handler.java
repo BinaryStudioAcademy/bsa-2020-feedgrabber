@@ -1,9 +1,7 @@
 package com.feed_grabber.core.exceptions;
 
-import com.feed_grabber.core.auth.exceptions.InsertionException;
-import com.feed_grabber.core.auth.exceptions.JwtTokenException;
-import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
-import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
+import com.feed_grabber.core.auth.exceptions.*;
+import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
@@ -77,5 +75,18 @@ public class Handler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new AppResponse<>(ex));
+    }
+    @ExceptionHandler(value = CorporateEmailException.class)
+    public ResponseEntity<AppResponse<Object>> handleWrongCorporateEmailException(CorporateEmailException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(exception));
+    }
+
+    @ExceptionHandler(value = QuestionnaireExistsException.class)
+    public ResponseEntity<AppResponse<Object>> handleQuestionnaireAlreadyExistsException(QuestionnaireExistsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(exception));
     }
 }

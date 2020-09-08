@@ -17,6 +17,7 @@
     "Teams": "Teams",
     "Questions": "Questions",
     "Employees": "Employees",
+    "People": "People",
     "Invitations": "Invitations",
 
     "Account verification": "Account verification",
@@ -57,6 +58,7 @@
     "Inspire employees": "Inspire employees to become better as you see it",
     "Reviews = opportunity": "Reviews = opportunity. Start giving professional feedbacks right now.",
     "Make some fire!": "Make some fire!",
+    "Company employees": "Company employees",
 
     "Pending requests": "Pending requests",
     "Deadline at": "Deadline at",
@@ -104,6 +106,7 @@
     "Copy": "Copy",
     "Delete": "Delete",
     "Add section": "Add section",
+    "Description": "Description",
 
     "Add questions": "Add questions",
 
@@ -117,8 +120,27 @@
     "Select new role": "Select new role",
     "Discard changes": "Discard changes",
     "Change": "Change",
+    "All Employees": "All Employees",
+    "Fired Employees": "Fired Employees",
+    "Unfire": "Unfire",
+    "Do you really want to fire": "Do you really want to fire",
+    "Switch": "Switch",
+    "Fire": "Fire",
+	"Switch role": "Switch role",
+    "company_owner": "company owner",
+    "hr": "hr",
+    "employee": "employee",
 
     "Send New Invitation": "Send New Invitation",
+    "Domain name for corporate email": "Domain name for corporate email",
+    "Write company email domain name (e.g. binary-academy.com)":
+      "Write company email domain name (e.g. binary-academy.com)",
+    "Write domain...": "Write domain...",
+    "Now you can tell employees that they can sign up on": "Now you can tell employees that they can sign up on",
+    "using there corporate email": "using there corporate email",
+    "Do you really want to delete current email domain?": "Do you really want to delete current email domain? ",
+    "Employees won`t able to register with there corporate emails anymore":
+	    "Employees won`t able to register with there corporate emails anymore.",
     "Send": "Send",
     "Sent Invitations": "Sent Invitations",
     "Resend": "Resend",
@@ -133,6 +155,10 @@
     "Please, fill the question": "Please, fill the question",
     "Next": "Next",
     "Add new": "Add new",
+    "This question was answered already": "This question was answered already",
+    "Are you sure you want to change it?": "Are you sure you want to change it?",
+    "Yes, I am sure": "Yes, I am sure",
+    "Cancel": "Cancel",
 
     "average size": "average size",
     "Overall": "Overall",
@@ -144,6 +170,10 @@
     "Select at least one user or team": "Select at least one user or team",
     "Assign target user": "Assign target user",
     "This user will receive report": "This user will receive report",
+    "Include target user to request?": "Include target user to request?",
+    "Send report to target user?": "Send report to target user?",
+    "Notify Users?": "Notify Users?",
+    "If yes, this user will also receive report": "If yes, this user will also receive report",
     "If yes, this user will also receive request": "If yes, this user will also receive request",
     "Set Deadline for this request?": "Set Deadline for this request?",
     "Users will be notified before the deadline": "Users will be notified before the deadline",
@@ -169,6 +199,7 @@
     "Track pending/closed requests": "Track pending/closed requests",
 
     "Add Team": "Add Team",
+    "Member(s)": "Member(s)",
     "Edit Team": "Edit Team",
     "Here could be requests or something else": "Here could be requests or something else",
 
@@ -191,7 +222,7 @@
     "Email must be valid": "Email must be valid",
     "Email is required": "Email is required",
 
-    "No companies found. Create your own :)": "No companies found. Create your own :)",
+    "No companies found. Create your own": "No companies found. Create your own",
     "Company name required": "Company name required",
     "Company name too short!": "Company name too short!",
     "Company name too long!": "Company name too long!",
@@ -269,6 +300,7 @@
     "or": "or",
     "Matches searched query": "Matches searched query",
     "items per page": "items per page",
+    "Total": "Total",
 
     "New request": "New request",
     "Show requests and reports": "Show requests and reports",
@@ -281,6 +313,14 @@
 
     "Archive": "Archive",
     "Unarchive": "Unarchive",
-    "Archived": "Archived"
+    "Archived": "Archived",
+    "title is a required field": "title is a required field",
+
+    "Create a new feed item": "Create a new feed item",
+    "What's up": "What's up?",
+    "Attach image": "Attach image",
+    "Submit": "Submit",
+	"Add": "Add",
+    "Add news": "Add news"
   }
 }

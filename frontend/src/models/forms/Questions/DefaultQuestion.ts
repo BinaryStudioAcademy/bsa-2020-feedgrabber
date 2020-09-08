@@ -1,4 +1,4 @@
-import {defaultQuestionValues} from "../../../components/QuestionDetails/defaultValues";
+import {defaultQuestionValues} from "../../../components/QuestionForm/defaultValues";
 import {IQuestion, QuestionType} from "./IQuesion";
 import {IAnswerBody} from "../Response/types";
 

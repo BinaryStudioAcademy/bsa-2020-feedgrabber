@@ -1,5 +1,5 @@
 import React, {FC, useState} from "react";
-
+import { useTranslation } from 'react-i18next';
 import styles from './styles.module.sass';
 import {Icon, Image, Modal} from "semantic-ui-react";
 import {IRoleState} from "../../reducers/role/reducer";
@@ -13,9 +13,7 @@ interface IUserListItemProps {
     result?: ISearchResult;
 
     fire(id: string): void;
-
     loadCompanyRoles(): void;
-
     setSelectedUser(user: IUserInfo): void;
 }
 
@@ -30,10 +28,9 @@ const UserListItem: FC<IUserListItemProps> = (
         result
     }
 ) => {
+    const [t] = useTranslation();
     const {id, firstName, lastName, role, avatar, userName} = user;
-
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
     const info = firstName && lastName ? `${lastName} ${firstName}` : `${userName}`;
 
     const confirmationModal = () => {
@@ -44,16 +41,16 @@ const UserListItem: FC<IUserListItemProps> = (
             onClose={() => setShowConfirmationModal(false)}
         >
             <Modal.Header>
-                Do you really want to fire {firstName && lastName ? `${lastName} ${firstName}` : `${userName} ?`}
+                {t("Do you really want to fire")} {firstName && lastName ? `${lastName} ${firstName}` : `${userName} ?`}
             </Modal.Header>
             <Modal.Actions>
-                <UIButton onClick={() => setShowConfirmationModal(false)} title={'No'}/>
+                <UIButton onClick={() => setShowConfirmationModal(false)} title={t('No')}/>
                 <UIButton secondary
                         onClick={() => {
                             setShowConfirmationModal(false);
                             fire(id);
                         }}
-                title={'Yes'}/>
+                title={t('Yes')}/>
             </Modal.Actions>
         </Modal>);
     };
@@ -79,14 +76,14 @@ const UserListItem: FC<IUserListItemProps> = (
                     </div>}
                     <div className={styles.infoItem}>
                         <Icon color={"grey"} name='briefcase'/>
-                        <p>{role.replace("_", " ")}</p>
+                        <p>{t(role)}</p>
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>
                      {role !== 'company_owner' &&
-                    <UIButton title={'Switch role'} onClick={() => setSelectedUser(user)}/>}
+                    <UIButton title={t('Switch role')} onClick={() => setSelectedUser(user)}/>}
                    {role !== 'company_owner' &&
-                    <UIButton secondary title={'Fire'} onClick={() => setShowConfirmationModal(true)}/>}
+                    <UIButton secondary title={t('Fire')} onClick={() => setShowConfirmationModal(true)}/>}
                 </div>
 
             </div>

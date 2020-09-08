@@ -4,12 +4,12 @@ export function replaceAtIndex<T>(arr: T[], val: T, index: number) {
     return [...arr.slice(0, index), val, ...arr.slice(index + 1)];
 }
 
-export function updateQuestions(questions: IQuestion[], newQuestion: IQuestion) {
-    const isThereQuestion = questions.some(question => question.id === newQuestion.id);
+export function deleteAtIndex(arr: Array<IQuestion>, index: number): Array<IQuestion> {
+    arr.splice(index, 1);
+    return arr;
+}
 
-    if (isThereQuestion) {
-        return questions.map(q => q.id === newQuestion.id ?
-            newQuestion : q);
-    }
-    return [...questions, newQuestion];
+export function insertAtIndex(arr: Array<IQuestion>, index: number, q: IQuestion): Array<IQuestion> {
+    arr.splice(index, 0, q);
+    return arr;
 }

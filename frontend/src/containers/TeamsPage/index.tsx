@@ -13,10 +13,10 @@ import UIButton from "../../components/UI/UIButton";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
-import {Permissions} from "../../components/AccessManager/rbac-rules";
-import AccessManager from "../../components/AccessManager";
+import {Permissions} from "../../components/helpers/AccessManager/rbac-rules";
+import AccessManager from "../../components/helpers/AccessManager";
 import { useTranslation } from 'react-i18next';
 import styles from './styles.module.sass';
 
@@ -39,7 +39,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
 
   const handleRedirect = (id: string): void => {
     clearCurrentTeam();
-    history.push(`/teams/${id}`);
+    history.push(`/people/teams/${id}`);
   };
 
   const [t] = useTranslation();
@@ -79,7 +79,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                     }>{match && t('Matches searched query')}</span>
                                 </UICardBlock>
                                 <UICardBlock>
-                                    <Icon color={"grey"} name="users"/>{team.membersAmount} Member(s)
+                                    <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
                                 </UICardBlock>
                                 <AccessManager staticPermission={Permissions.manageTeams}>
                                     <UICardBlock>

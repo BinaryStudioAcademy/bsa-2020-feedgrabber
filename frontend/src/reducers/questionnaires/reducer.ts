@@ -2,7 +2,6 @@ import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
-    loadOneQuestionnaireRoutine,
     loadQuestionnairesRoutine,
     saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
@@ -10,14 +9,10 @@ import {
     updateQuestionnaireRoutine,
     setCurrentIdRoutine, loadArchivedQuestionnairesRoutine, setQuestionnaireArchivePaginationRoutine
 } from '../../sagas/qustionnaires/routines';
-import { IAppState } from "../../models/IAppState";
-import { combineReducers } from "redux";
-import {
-    addSelectedQuestionsRoutine, deleteFromQuestionnaireRoutine,
-    loadQuestionnaireQuestionsRoutine
-} from "../../sagas/questions/routines";
-import { IQuestionnaire, IRequest } from "../../models/forms/Questionnaires/types";
-import { loadRequestedQuestionnairesRoutine } from 'sagas/request/routines';
+import {IAppState} from "../../models/IAppState";
+import {combineReducers} from "redux";
+import {IRequest} from "../../models/forms/Questionnaires/types";
+import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
 
 const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = {}, action) => {
     switch (action.type) {
@@ -51,8 +46,8 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
                 pagination: {
                     ...state.pagination,
                     total: state.pagination?.total + 1,
-                    items: [...state.pagination?.items??[], action.payload]
-                 }
+                    items: [...state.pagination?.items ?? [], action.payload]
+                }
             };
         case addQuestionnaireRoutine.TRIGGER:
         case updateQuestionnaireRoutine.TRIGGER:
@@ -88,7 +83,7 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
 };
 
 const pendingQuestionnairesReducer = (state: IAppState['questionnaires']['pending'] =
-    { list: [] as IRequest[], isLoading: false }, { payload, type }) => {
+                                          {list: [] as IRequest[], isLoading: false}, {payload, type}) => {
     switch (type) {
         case loadRequestedQuestionnairesRoutine.SUCCESS:
             return {
@@ -104,61 +99,6 @@ const pendingQuestionnairesReducer = (state: IAppState['questionnaires']['pendin
             return {
                 ...state,
                 isLoading: false
-            };
-        default:
-            return state;
-    }
-};
-
-const currentQuestionnaireReducer = (state: IAppState['questionnaires']['current'] =
-    { questions: [], get: {} as IQuestionnaire }, { payload, type }) => {
-    switch (type) {
-        case addSelectedQuestionsRoutine.SUCCESS:
-            return {
-                ...state,
-                questions: [...state.questions, ...payload],
-                isLoading: false
-            };
-        case setCurrentIdRoutine.TRIGGER:
-            return {
-                ...state,
-                get: {...state.get, id: payload}
-            };
-        case loadOneQuestionnaireRoutine.SUCCESS:
-        case saveAndGetQuestionnaireRoutine.SUCCESS:
-            return {
-                ...state,
-                get: payload,
-                isLoading: false
-            };
-        case deleteFromQuestionnaireRoutine.SUCCESS:
-        case loadQuestionnaireQuestionsRoutine.SUCCESS:
-            return {
-                ...state,
-                questions: payload,
-                isLoading: false
-            };
-        case deleteFromQuestionnaireRoutine.TRIGGER:
-        case loadOneQuestionnaireRoutine.TRIGGER:
-        case loadQuestionnaireQuestionsRoutine.TRIGGER:
-        case addSelectedQuestionsRoutine.TRIGGER:
-        case saveAndGetQuestionnaireRoutine.TRIGGER:
-            return {
-                ...state,
-                isLoading: true
-            };
-        case deleteFromQuestionnaireRoutine.FAILURE:
-        case loadQuestionnaireQuestionsRoutine.FAILURE:
-        case addSelectedQuestionsRoutine.FAILURE:
-        case saveAndGetQuestionnaireRoutine.FAILURE:
-            return {
-                ...state,
-                isLoading: false
-            };
-        case loadOneQuestionnaireRoutine.FAILURE:
-            return {
-                ...state,
-                get: {}
             };
         default:
             return state;
@@ -195,7 +135,6 @@ const archivedQuestionnairesReducer = (state: IAppState['questionnaires']['archi
 
 const questionnairesReducer = combineReducers({
     list: questionnairesListReducer,
-    current: currentQuestionnaireReducer,
     pending: pendingQuestionnairesReducer,
     archived: archivedQuestionnairesReducer
 });

@@ -83,11 +83,11 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         <Input name="email" placeholder="Email" value={values.email}
-                               onChange={handleChange} onBlur={handleBlur}
+                            onChange={handleChange} onBlur={handleBlur}
                         />
                         <Input name="companyName" placeholder="Company" value={values.companyName}
-                               onChange={handleChange} onBlur={handleBlur}
-                        />
+                        onChange={handleChange} onBlur={handleBlur}
+                        /> 
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />

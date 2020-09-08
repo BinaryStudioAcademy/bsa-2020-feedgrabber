@@ -15,7 +15,7 @@ const RadioButtonQuestionUI: IGenericQuestionComponent<IRadioButtonAnswerDetails
                                                                                      }) => {
     const [ t ] = useTranslation();
     const value = useInitValue(
-        {value: {answerOptions: [`${t("Option")} 1`], includeOther: false}, isCompleted: false},
+        {value: {answerOptions: [`${t("Option")} 1`], includeOther: false}, isCompleted: true},
         propValue,
         onValueChange
     );

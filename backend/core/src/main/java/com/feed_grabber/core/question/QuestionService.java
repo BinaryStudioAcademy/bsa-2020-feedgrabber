@@ -1,8 +1,8 @@
 package com.feed_grabber.core.question;
 
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.question.model.Question;
@@ -11,9 +11,9 @@ import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.SectionRepository;
-import com.feed_grabber.core.sections.exception.SectionNotFoundException;
-import com.feed_grabber.core.sections.model.Section;
 import lombok.SneakyThrows;
+import org.hibernate.HibernateException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
 
 @Service
 public class QuestionService {
@@ -43,11 +45,15 @@ public class QuestionService {
         this.sectionRepository = sectionRepository;
     }
 
-    public List<QuestionDto> getAll() {
-        return quesRep.findAll()
+    public List<QuestionDto> getAll(UUID companyId, Integer page, Integer size) {
+        return quesRep.findAllByCompanyId(companyId, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
+    }
+
+    public Long countByCompanyId(UUID companyId) {
+        return quesRep.countAllByCompanyId(companyId);
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
@@ -64,19 +70,17 @@ public class QuestionService {
     }
 
 
-    public QuestionDto create(QuestionCreateDto dto)
-            throws CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
+    public QuestionDto create(QuestionCreateDto dto) throws NotFoundException {
         var question = this.createModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
     @Transactional
-    public Question createModel(QuestionCreateDto dto)
-            throws CompanyNotFoundException, QuestionnaireNotFoundException, SectionNotFoundException {
+    public Question createModel(QuestionCreateDto dto) throws NotFoundException {
         var question = Question.builder();
 
         var company = companyRep
-                .findById(TokenService.getCompanyId())
+                .findById(getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
 
         var category = findOrCreateCategory(dto.getCategoryTitle());
@@ -90,53 +94,43 @@ public class QuestionService {
                 .isRequired(dto.isRequired());
 
         var savedQuestion = quesRep.save(question.build());
-        if (dto.getQuestionnaireId().isPresent()) {
-            var questionnaire = anketRep.findById(dto.getQuestionnaireId().get())
-                    .orElseThrow(QuestionnaireNotFoundException::new);
-            questionnaire.getQuestions().add(savedQuestion);
-            anketRep.save(questionnaire);
-
-            Section section;
-            if (dto.getSectionId().isEmpty()) {
-                section = this.sectionRepository.findByQuestionnaireIdAndTitle(questionnaire.getId(), questionnaire.getTitle());
-            } else {
-                section = this.sectionRepository.findById(dto.getSectionId().get())
-                        .orElseThrow(SectionNotFoundException::new);
-            }
-            this.sectionRepository.addQuestion(section.getId(), savedQuestion.getId(), dto.getIndex());
+        if (dto.getSectionId().isPresent()) {
+            this.sectionRepository.addQuestion(dto.getSectionId().get(), savedQuestion.getId(), dto.getIndex());
         }
         return savedQuestion;
     }
 
     @Transactional
-    public List<QuestionDto> addExistingQuestion(AddExistingQuestionsDto dto) throws QuestionnaireNotFoundException {
+    public void addExistingQuestions(AddExistingQuestionsDto dto) throws QuestionnaireNotFoundException {
         var questionnaire = anketRep
                 .findById(dto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
 
-        var question = quesRep.findAllById(dto.getQuestions()
-                .stream().map(IndexDto::getQuestionId).collect(Collectors.toList()));
-
-        questionnaire.getQuestions().addAll(question);
-
         dto.getQuestions()
                 .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
 
-        return anketRep.save(questionnaire)
-                .getQuestions()
-                .stream()
-                .map(QuestionMapper.MAPPER::questionToQuestionDto)
-                .collect(Collectors.toList());
+        anketRep.save(questionnaire);
+    }
+
+    public void addExistingQuestionBySection(AddExistingQuestionBySectionDto dto) throws NotFoundException {
+
+        var indexedQuestion = dto.getQuestionIndexed();
+
+        var question = quesRep
+                .findById(indexedQuestion.getQuestionId())
+                .orElseThrow(NotFoundException::new);
+
+        sectionRepository.addQuestion(dto.getSectionId(), question.getId(), indexedQuestion.getIndex());
     }
 
     public QuestionDto update(QuestionUpdateDto dto)
             throws QuestionNotFoundException, CompanyNotFoundException {
-        if (dto.getDetails().equals(""))dto.setDetails("{}");
+        if (dto.getDetails().equals("")) dto.setDetails("{}");
         var question = this.updateModel(dto);
         return QuestionMapper.MAPPER.questionToQuestionDto(question);
     }
 
-    public Question updateModel(QuestionUpdateDto dto) throws QuestionNotFoundException, CompanyNotFoundException {
+    private Question updateModel(QuestionUpdateDto dto) throws QuestionNotFoundException, CompanyNotFoundException {
         var question = quesRep
                 .findById(dto.getId())
                 .orElseThrow(QuestionNotFoundException::new);
@@ -157,7 +151,7 @@ public class QuestionService {
     }
 
     private QuestionCategory findOrCreateCategory(String name) throws CompanyNotFoundException {
-        var company = companyRep.findById(TokenService.getCompanyId())
+        var company = companyRep.findById(getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
 
         return quesCategRep.findByTitle(name)
@@ -174,16 +168,15 @@ public class QuestionService {
                 : this.updateModel(QuestionMapper.MAPPER.upsertDtoToUpdateDto(question));
     }
 
-
-    public void index(QuestionIndexDto dto) throws QuestionNotFoundException, SectionNotFoundException {
-        for (IndexDto question : dto.getQuestions()) {
-            quesRep.findById(question.getQuestionId()).orElseThrow(QuestionNotFoundException::new);
-            sectionRepository.findById(dto.getSectionId()).orElseThrow(SectionNotFoundException::new);
-            sectionRepository.setIndex(dto.getSectionId(), question.getQuestionId(), question.getIndex());
+    public void index(QuestionIndexDto dto) throws NotFoundException {
+        try {
+            dto.getQuestions().forEach(q -> sectionRepository.setIndex(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
+        } catch (HibernateException e) {
+            throw new NotFoundException("Section or question not found");
         }
     }
 
-    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) throws QuestionnaireNotFoundException {
+    public void deleteOneByQuestionnaireIdAndQuestionId(UUID questionId, UUID qId) {
         var section = sectionRepository.findByQuestionnaireIdAndQuestionId(qId, questionId);
         sectionRepository.deleteQuestion(section.getId(), questionId);
 

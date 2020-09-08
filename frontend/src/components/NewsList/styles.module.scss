@@ -1,53 +1,10 @@
 .newsItemContainer {
+	margin-top: 6em;
     display: flex;
+	flex-direction: column;
 }
 
 .newsItemContainer > img {
     border-radius: 5px;
     margin-right: 25px;
-}
-
-.type {
-    color: #707070;
-    margin: 15px 0 15px 0;
-    font-size: 15px;
-}
-
-.title {
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
-.detailesContainer {
-    position: relative;
-    width: 100%;
-}
-
-.authorContainer {
-    display: flex;
-    position: absolute;
-    bottom: 10px;
-}
-
-.authorContainerRight {
-    display: flex;
-    position: relative;
-    float: right;
-}
-
-.authorContainer > img {
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.userName {
-    margin-top: 6px;
-}
-
-.date {
-    color: #707070;
-    font-size: 13px;
-    position: absolute;
-    bottom: 3px;
 }
