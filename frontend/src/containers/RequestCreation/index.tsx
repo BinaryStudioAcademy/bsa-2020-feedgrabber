@@ -19,13 +19,18 @@ import {history} from '../../helpers/history.helper';
 import {IUserShort} from "../../models/user/types";
 import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {RouteComponentProps} from "react-router-dom";
-import QuestionnairePreview from "../../components/QuestionnairePreview";
-import {indexQuestionsRoutine} from "../../sagas/questions/routines";
+import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
+import {
+    loadSectionsByQuestionnaireRoutine, setCurrentQuestionInSection,
+    updateQuestionsOrderRoutine,
+    updateSectionRoutine, updateSections
+} from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -48,9 +53,14 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        loadTeams,
        loadUsers,
        loadSections,
+       updateSection,
+       updateOrder,
        sendRequest,
        isLoadingUsers,
+       setMenuPos,
+       setCurrentQuestion,
        isLoadingTeams,
+       updateSectionsR,
        sections
      }) => {
 
@@ -74,6 +84,16 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       const [respondentPattern, setRespondentPattern] = useState('');
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
+      
+      const isUserFind = user => {
+          const pattern = targetUserPattern.toLowerCase();
+          const name = user.firstName?.toLowerCase();
+          const surname = user.lastName?.toLowerCase();
+
+          return user.username?.toLowerCase().includes(pattern)
+          || `${name} ${surname}`.includes(pattern);
+      };
+      
       return (
           <>
             <UIPageTitle title={t("Send Request")}/>
@@ -81,8 +101,13 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
               <UIColumn>
                   <UICard>
                     <UICardBlock>
-                        <QuestionnairePreview
-                            indexQuestions={indexQuestionsRoutine}
+                        <Form
+                            updateSection={updateSection}
+                            setMenuPos={setMenuPos}
+                            setCurrentQuestion={setCurrentQuestion}
+                            updateOrder={updateOrder}
+                            updateSections={updateSectionsR}
+                            currentQuestion={{} as IQuestion}
                             sections={sections}
                         />
                     </UICardBlock>
@@ -134,16 +159,13 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <div className={styles.targetUserContainer}>
                                   {
                                     users
-                                      .filter(user => targetUserPattern
-                                        ? user.username.includes(targetUserPattern)
-                                          || `${user.firstName} ${user.lastName}`.includes(targetUserPattern)
-                                        : true)
+                                      .filter(user => targetUserPattern ? isUserFind(user) : true)
                                       .map(user => (
                                         <UIUserItemCard
                                             key={user.id}
                                             firstName={user.firstName}
                                             lastName={user.lastName}
-                                            userInfo={'username: ' + user.username}
+                                            userInfo={t('username')+': ' + user.username}
                                             avatar={user.avatar}
                                             onClick={() => {
                                               formik.setFieldValue('targetUserId',
@@ -278,7 +300,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         team={team}
                                         selected={formik.values.chosenTeams.includes(team)}
                                         onClick={() => {
-                                          let newTeams = [];
+                                          let newTeams: any[];
                                           if (formik.values.chosenTeams.includes(team)) {
                                             newTeams = formik.values.chosenTeams.filter(t => t !== team);
                                           } else {
@@ -304,7 +326,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         userInfo={'Username: ' + user.username}
                                         selected={formik.values.chosenUsers.includes(user)}
                                         onClick={() => {
-                                          let newUsers = [];
+                                          let newUsers: any[];
                                           if (formik.values.chosenUsers.includes(user)) {
                                             newUsers = formik.values.chosenUsers.filter(u => u !== user);
                                           } else {
@@ -326,15 +348,10 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   </UICard>
                 </LoaderWrapper>
               </UIColumn>
-
             </UIContent>
           </>
       );
     };
-
-interface IRouterProps {
-  id: string;
-}
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   domProps: ownProps,
@@ -342,15 +359,19 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,
-  questions: state.questionnaires.current.questions,
-  sections: state.sections.list
+  sections: state.formEditor.sections.list
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
+  updateOrder: updateQuestionsOrderRoutine,
+  updateSection: updateSectionRoutine,
+setMenuPos: setFloatingMenuPos,
+setCurrentQuestion: setCurrentQuestionInSection,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadSections: loadSectionsByQuestionnaireRoutine
+  loadSections: loadSectionsByQuestionnaireRoutine,
+  updateSectionsR: updateSections
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

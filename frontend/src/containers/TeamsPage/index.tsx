@@ -13,17 +13,18 @@ import UIButton from "../../components/UI/UIButton";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
-import {Permissions} from "../../components/AccessManager/rbac-rules";
-import AccessManager from "../../components/AccessManager";
+import {Permissions} from "../../components/helpers/AccessManager/rbac-rules";
+import AccessManager from "../../components/helpers/AccessManager";
 import {useTranslation} from 'react-i18next';
 import styles from './styles.module.sass';
-import GenericPagination from "../../components/GenericPagination";
+import GenericPagination from "../../components/helpers/GenericPagination";
 import {ITeamShort} from "../../models/teams/ITeam";
 
 const TeamsPage: FC<ITeamsPageProps> = (
     {
+        currentUser,
         pagination,
         setPagination,
         loadTeams,
@@ -46,6 +47,9 @@ const TeamsPage: FC<ITeamsPageProps> = (
     };
 
     const [t] = useTranslation();
+
+  const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
+  const isTeamLead = (team: ITeamShort) => currentUser?.id === team.leadId;
 
     return (
         <>
@@ -75,28 +79,28 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                     .map(t => t.id)
                                     .includes(team.id);
                                 return <UICard searched={match} customStyle={styles.customCard}>
+                                     <UICardBlock>
+                                    <h3 className={styles.teamHeader}>{team.name}</h3>
+                                    <span style={
+                                        {
+                                            fontSize: '0.8rem',
+                                            display: 'inline-flex',
+                                            alignItems: 'center'
+                                        }
+                                    }>{match && t('Matches searched query')}</span>
+                                </UICardBlock>
+                                <UICardBlock>
+                                    <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
+                                </UICardBlock>
                                     <UICardBlock>
-                                        <h3 className={styles.teamHeader}>{team.name}</h3>
-                                        <span style={
-                                            {
-                                                fontSize: '0.8rem',
-                                                display: 'inline-flex',
-                                                alignItems: 'center'
-                                            }
-                                        }>{match && t('Matches searched query')}</span>
+                                      {(isHrOrCo || isTeamLead(team)) &&
+                                          <UIButton title={t("Manage")} onClick={() => handleRedirect(team.id)}/>
+                                      }
+                                      <AccessManager staticPermission={Permissions.manageTeams}>
+                                        <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
+                                                  disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
+                                      </AccessManager>
                                     </UICardBlock>
-                                    <UICardBlock>
-                                        <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
-                                    </UICardBlock>
-                                    <AccessManager staticPermission={Permissions.manageTeams}>
-                                        <UICardBlock>
-                                            <UIButton title={t("Manage")}
-                                                      onClick={() => handleRedirect(team.id)}/>
-                                            <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
-                                                      disabled={team.deleteLoading}
-                                                      onClick={() => deleteTeam(team.id)}/>
-                                        </UICardBlock>
-                                    </AccessManager>
                                 </UICard>;
                             }}
                         />
@@ -109,10 +113,11 @@ const TeamsPage: FC<ITeamsPageProps> = (
 };
 
 const mapState = (state: IAppState) => ({
-    pagination: state.teams.pagination,
-    companyUsers: state.teams.companyUsers,
-    isLoading: state.teams.isLoading,
-    result: state.search.result
+  currentUser: state.user.info,
+  pagination: state.teams.pagination,
+  companyUsers: state.teams.companyUsers,
+  isLoading: state.teams.isLoading,
+  result: state.search.result
 });
 
 const mapDispatch = {

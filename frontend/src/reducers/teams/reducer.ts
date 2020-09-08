@@ -1,25 +1,30 @@
 import {
-    clearCurrentTeamRoutine,
-    createTeamRoutine,
-    deleteTeamRoutine,
-    loadCompanyUsersRoutine,
-    loadCurrentTeamRoutine,
-    loadTeamsRoutine, setTeamPaginationRoutine, toggleLeadCurrentTeamRoutine,
-    toggleUserCurrentTeamRoutine,
-    updateTeamRoutine
+  clearCurrentTeamRoutine,
+  createTeamRoutine,
+  deleteTeamRoutine,
+  loadCompanyUsersRoutine,
+  loadCurrentTeamRoutine, loadTeamRequestsRoutine,
+  loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
+  toggleUserCurrentTeamRoutine,
+  updateTeamRoutine,
+  setTeamPaginationRoutine
 } from '../../sagas/teams/routines';
 import {Routine} from 'redux-saga-routines';
 import {ITeam, ITeamShort} from 'models/teams/ITeam';
 import {IUserShort} from "../../models/user/types";
+import {IRequestShort} from "../../models/report/IReport";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 
 export interface ITeamCurrent {
-    failed?: boolean;
-    isLoadingTeam?: boolean;
-    isLoadingRequest?: boolean;
-    isLoadingToggleLead?: boolean;
-    currentTeam?: ITeam;
-    error?: string;
+  failed?: boolean;
+  isLoadingTeam?: boolean;
+  isLoadingRequest?: boolean;
+  isLoadingToggleLead?: boolean;
+  currentTeam?: ITeam;
+  error?: string;
+  isLoadingTeamRequests?: boolean;
+  teamRequests?: IRequestShort[];
+  failedLoadingTeamRequests?: boolean;
 }
 
 export interface ITeamsState {
@@ -273,9 +278,36 @@ const teamsReducer = (state = initState, action: Routine<any>): ITeamsState => {
                 }
             };
 
-        default:
-            return state;
-    }
+    case loadTeamRequestsRoutine.TRIGGER:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeamRequests: true
+        }
+      };
+    case loadTeamRequestsRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeamRequests: false,
+          teamRequests: action.payload
+        }
+      };
+    case loadTeamRequestsRoutine.FAILURE:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isLoadingTeamRequests: false,
+          failedLoadingTeamRequests: true
+        }
+      };
+
+    default:
+      return state;
+  }
 };
 
 export default teamsReducer;

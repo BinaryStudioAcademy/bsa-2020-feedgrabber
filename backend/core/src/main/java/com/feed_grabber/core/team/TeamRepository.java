@@ -52,7 +52,8 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
     @Query("SELECT new com.feed_grabber.core.team.dto.TeamShortDto(" +
             "   t.id," +
             "   t.name," +
-            "   size(t.users)" +
+            "   size(t.users)," +
+            "   t.lead.id" +
             ") " +
             "FROM Team t " +
             "WHERE t.company.id = :companyId")

@@ -14,6 +14,17 @@ import java.util.UUID;
 public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findAllByResponsesUserId(UUID id);
 
+    @Query("SELECT case when " +
+            "   (EXISTS (" +
+            "       SELECT t " +
+            "       FROM u.teams t " +
+            "       WHERE t.lead.id = :userId" +
+            "   )) " +
+            "   then true else false end " +
+            "FROM User u " +
+            "WHERE u.id = :targetId")
+    boolean isTeamLeadOfTargetUser(UUID targetId, UUID userId);
+
     @Query("select r from Request r where r.id = :id and r.targetUser.id = :targetUser")
     Optional<Request> findByIdAndTargetUser(UUID id, UUID targetUser);
 
@@ -25,6 +36,12 @@ public interface RequestRepository extends JpaRepository<Request, UUID> {
     List<Request> findAllUnansweredByRespondentId(UUID id);
 
     List<Request> findAllByQuestionnaireId(UUID id);
+
+    @Query("SELECT r " +
+            "FROM Request r " +
+            "WHERE r.targetUser is not NULL AND " +
+            "      EXISTS (SELECT t FROM r.targetUser.teams t WHERE t.id = :id)")
+    List<Request> findAllByTeamId(UUID id);
 
     @Query("select r from Request r where r.closeDate is not NULL and r.questionnaire.company.id = :companyId")
     List<Request> findAllReports(UUID companyId);

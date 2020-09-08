@@ -48,7 +48,9 @@ public class TeamController {
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<TeamDetailsDto> getOne(@PathVariable UUID id) throws TeamNotFoundException {
         var companyId = TokenService.getCompanyId();
-        var team = service.getOne(companyId, id);
+        var userId = TokenService.getUserId();
+        var role = TokenService.getRoleName();
+        var team = service.getOne(companyId, id, userId, role);
         return new AppResponse<>(team);
     }
 

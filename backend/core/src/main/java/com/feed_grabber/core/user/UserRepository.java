@@ -27,16 +27,16 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<User> findAllByCompanyId(UUID companyId);
 
-    Long countAllByCompanyId(UUID companyId);
+    Long countAllByCompanyIdAndIsDeleted(UUID companyId, Boolean isFired);
 
     @Query("FROM User u inner join Company c ON u.company = c " +
             "left join UserProfile p ON u.userProfile = p " +
-            "where c.id = :companyId " +
+            "where c.id = :companyId and u.isDeleted = :isFired " +
             "ORDER BY p.lastName, p.firstName, u.username")
-    List<User> findAllByCompanyId(UUID companyId, Pageable pageable);
+    List<User> findAllByCompanyId(UUID companyId, Boolean isFired, Pageable pageable);
 
     @Query(value = "select * from users u inner join companies c on u.company_id = c.id " +
-            "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +
+            "left join user_profiles p on u.id = p.user_id where c.id = :companyId and u.isDeleted = false " +
             "and (lower(p.last_name) like :name or lower(p.first_name) like :name or lower(u.username) like :name) " +
             " order by p.last_name, p.first_name, u.username ",
             nativeQuery = true)
@@ -44,6 +44,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = "select * from users u inner join companies c on u.company_id = c.id " +
             "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +
+            "and u.isDeleted = false " +
             "and ((lower(p.last_name) like :surname and lower(p.first_name) like :name) OR " +
             "(lower(p.last_name) like :name and lower(p.first_name) like :surname)) " +
             "order by p.last_name, p.first_name, u.username ",
@@ -52,17 +53,18 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value = "select count(*) " +
             "from (select * from users u inner join companies c on u.company_id = c.id " +
-            "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +
+            "left join user_profiles p on u.id = p.user_id where c.id = :companyId and u.isDeleted = false " +
             "and (lower(p.last_name) like :name or lower(p.first_name) like :name " +
-            "   or lower(u.username) like :name)) as subquery",
+            "or lower(u.username) like :name)) as subquery",
             nativeQuery = true)
     Long countByNameBeginAndCompanyId(UUID companyId, String name);
 
     @Query(value = "select count(*) " +
             "from (select * from users u inner join companies c on u.company_id = c.id " +
             "left join user_profiles p on u.id = p.user_id where c.id = :companyId " +
-            "and ((lower(p.last_name) like :surname and lower(p.first_name) like :name) OR " +
-            "(lower(p.last_name) like :name and lower(p.first_name) like :surname))) as subquery",
+            "and ((lower(p.last_name) like :surname and lower(p.first_name) like :name) " +
+            "and u.isDeleted = false " +
+            "OR (lower(p.last_name) like :name and lower(p.first_name) like :surname))) as subquery",
             nativeQuery = true)
     Long countByLastNameAndNameAndCompanyId(UUID companyId, String name, String surname);
 

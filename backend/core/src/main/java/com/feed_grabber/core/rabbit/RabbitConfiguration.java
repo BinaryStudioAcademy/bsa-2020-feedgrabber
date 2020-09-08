@@ -29,8 +29,14 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Value("${rabbitmq.queue.response}")
     private String queue;
 
+    @Value("${rabbitmq.queue.request.close.receive}")
+    private String requestCloseReceiveQueue;
+
     @Value("${rabbitmq.routing-key-response-links}")
     private String linksRoutingKey;
+
+    @Value("${rabbitmq.routing-key-request-close-receive}")
+    private String requestCloseReceiveRoutingKey;
 
     @Value("${rabbitmq.queue.response.links}")
     private String linksQueue;
@@ -45,6 +51,10 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
         return new Queue(linksQueue, true);
     }
 
+    @Bean
+    public Queue requestCloseReceiveQueue() {
+        return new Queue(requestCloseReceiveQueue, true);
+    }
 
     @Bean
     public TopicExchange exchange() {
@@ -54,6 +64,11 @@ public class RabbitConfiguration implements RabbitListenerConfigurer {
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    }
+
+    @Bean
+    public Binding bindCloseRequest(Queue requestCloseReceiveQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(requestCloseReceiveQueue).to(exchange).with(requestCloseReceiveRoutingKey);
     }
 
     @Bean

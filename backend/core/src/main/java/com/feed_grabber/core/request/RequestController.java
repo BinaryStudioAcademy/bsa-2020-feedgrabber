@@ -1,7 +1,6 @@
 package com.feed_grabber.core.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
@@ -9,19 +8,15 @@ import com.feed_grabber.core.report.ReportService;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
-import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.dto.RequestShortDto;
+import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -60,6 +55,13 @@ public class RequestController {
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<List<RequestShortDto>> getAllByQuestionnaireId(@RequestParam("questionnaireId") UUID id) {
         return new AppResponse<>(requestService.getAllByQuestionnaire(id));
+    }
+
+    @ApiOperation("Get all requests where target user is in the team")
+    @GetMapping("/team/{id}")
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR, ROLE_EMPLOYEE}) // employee only lead
+    public AppResponse<List<RequestShortDto>> getAllByTeamId(@PathVariable UUID id) throws TeamNotFoundException {
+        return new AppResponse<>(requestService.getAllByTeamId(id, TokenService.getUserId(), TokenService.getRoleName()));
     }
 
     @ApiOperation(value = "Get the pending for the user", notes = "user id is got from token")

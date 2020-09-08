@@ -1,11 +1,11 @@
 import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {
-    createTeamRoutine, deleteTeamRoutine,
-    loadCompanyUsersRoutine,
-    loadCurrentTeamRoutine,
-    loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
-    toggleUserCurrentTeamRoutine,
-    updateTeamRoutine
+  createTeamRoutine, deleteTeamRoutine,
+  loadCompanyUsersRoutine, loadTeamRequestsRoutine,
+  loadCurrentTeamRoutine,
+  loadTeamsRoutine, toggleLeadCurrentTeamRoutine,
+  toggleUserCurrentTeamRoutine,
+  updateTeamRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
@@ -14,6 +14,7 @@ import {IUserInfo} from "../../models/user/types";
 import {ITeam, ITeamLeadToggle, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
 import {IAppState} from "../../models/IAppState";
+import {IRequestShort} from "../../models/report/IReport";
 
 function* loadTeams() {
     try {
@@ -36,6 +37,17 @@ function* loadCurrentTeam(action: any) {
         toastr.error("Unable to load team");
         history.push("/people/teams");
     }
+}
+
+function* loadTeamRequests(action: any) {
+  try {
+    const teamId: string = action.payload;
+    const res: IGeneric<IRequestShort[]> = yield call(apiClient.get, `/api/request/team/${teamId}`);
+    yield put(loadTeamRequestsRoutine.success(res.data.data));
+  } catch (error) {
+    yield put(loadTeamRequestsRoutine.failure());
+    toastr.error("Unable to load requests");
+  }
 }
 
 function* createTeam(action: any) {
@@ -120,14 +132,15 @@ function* loadCompanyUsers() {
 }
 
 export default function* teamsSaga() {
-    yield all([
-        yield takeEvery(loadTeamsRoutine.TRIGGER, loadTeams),
-        yield takeEvery(loadCurrentTeamRoutine.TRIGGER, loadCurrentTeam),
-        yield takeEvery(createTeamRoutine.TRIGGER, createTeam),
-        yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam),
-        yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam),
-        yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam),
-        yield takeEvery(toggleLeadCurrentTeamRoutine.TRIGGER, toggleLeadTeam),
-        yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers)
-    ]);
+  yield all([
+    yield takeEvery(loadTeamsRoutine.TRIGGER, loadTeams),
+    yield takeEvery(loadCurrentTeamRoutine.TRIGGER, loadCurrentTeam),
+    yield takeEvery(loadTeamRequestsRoutine.TRIGGER, loadTeamRequests),
+    yield takeEvery(createTeamRoutine.TRIGGER, createTeam),
+    yield takeEvery(updateTeamRoutine.TRIGGER, updateTeam),
+    yield takeEvery(deleteTeamRoutine.TRIGGER, deleteTeam),
+    yield takeEvery(toggleUserCurrentTeamRoutine.TRIGGER, toggleUserTeam),
+    yield takeEvery(toggleLeadCurrentTeamRoutine.TRIGGER, toggleLeadTeam),
+    yield takeEvery(loadCompanyUsersRoutine.TRIGGER, loadCompanyUsers)
+  ]);
 }

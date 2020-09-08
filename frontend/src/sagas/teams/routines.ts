@@ -8,6 +8,7 @@ export const toggleLeadCurrentTeamRoutine = createRoutine('TEAMS:TOGGLE_LEAD');
 
 export const clearCurrentTeamRoutine = createRoutine('TEAMS:CLEAR_CURRENT');
 export const loadCurrentTeamRoutine = createRoutine('TEAMS:LOAD_CURRENT');
+export const loadTeamRequestsRoutine = createRoutine('TEAMS:LOAD_REPORTS');
 export const createTeamRoutine = createRoutine('TEAMS:CREATE');
 export const updateTeamRoutine = createRoutine('TEAMS:UPDATE_METADATA');
 export const deleteTeamRoutine = createRoutine('TEAMS:DELETE');

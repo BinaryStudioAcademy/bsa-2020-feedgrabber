@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RequestShortDto {
     private UUID requestId;
+    private String questionnaireTitle;
     private UserShortDto targetUser;
     private UserShortDto requestMaker;
     private Date creationDate;

@@ -29,4 +29,10 @@ class MailContentBuilder(
         return Content("text/html", templateEngine.process("invitation_link", context))
     }
 
+    fun buildNotificationEmail(link: String): Content {
+        val context = Context()
+        context.setVariable("link", link)
+        return Content("text/html", templateEngine.process("deadline_notification", context))
+    }
+
 }

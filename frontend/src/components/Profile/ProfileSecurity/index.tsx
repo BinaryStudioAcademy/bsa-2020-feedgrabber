@@ -60,7 +60,7 @@ const ProfileSecurity: React.FC<ProfileSecurityProps> =
             >
               {formik => (
                   <Form onSubmit={formik.handleSubmit}>
-                    <UITextInput labelText={'Username'}
+                    <UITextInput labelText={t('Username')}
                                  placeholder={t('Type your username...')}
                                  name='username'
                                  value={formik.values.username}
