@@ -89,7 +89,7 @@ public class UserService implements UserDetailsService {
             throw new WrongCompanyNameException("Too long company name(more than 63)");
         }
         if (!userRegisterDTO.getCompanyName()
-                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*([a-zA-Z0-9])")) {
+                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*")) {
             throw new WrongCompanyNameException("Company name should not start/end with space," +
                     " have more than one space in sequence. Company name should contain latin letters and numbers ");
         }
