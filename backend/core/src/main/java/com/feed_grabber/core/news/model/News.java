@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -54,7 +55,7 @@ public class News {
     private Company company;
 
     @OneToMany(mappedBy = "news", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE, CascadeType.REFRESH })
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp

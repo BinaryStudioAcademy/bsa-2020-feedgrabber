@@ -1,4 +1,4 @@
-import {IUserShort} from "../user/types";
+import {IUserInfo, IUserShort} from "../user/types";
 import {IPaginationInfo} from "../IPaginationInfo";
 
 export interface IComment {

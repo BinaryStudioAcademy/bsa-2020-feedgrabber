@@ -2,6 +2,9 @@ import React, {FC} from "react";
 import styles from './styles.module.scss';
 import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UICardBlock from "../UI/UICardBlock";
+import {Icon} from "semantic-ui-react";
+import {useTranslation} from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 export interface INewsItemProps {
     item: ICompanyFeedItem;
@@ -10,10 +13,16 @@ export interface INewsItemProps {
 const defaultNewsImage = "https://img.icons8.com/cotton/2x/news.png";
 
 const NewsItem: FC<INewsItemProps> = ({item}) => {
+    const [t] = useTranslation();
+    const history = useHistory();
+
+    const handleClick = () => {
+        history.push(`/company/news/${item.id}`);
+    };
+
     return (
         <UICardBlock key={item.id}
                      className={styles.newsItemContainer}>
-            <>
             <img src={item.image? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
             <div className={styles.detailesContainer}>
                 <div className={styles.mainContainer}>
@@ -31,11 +40,15 @@ const NewsItem: FC<INewsItemProps> = ({item}) => {
                         <div className={styles.date}>{item.createdAt}</div>
                     </div>
                 </div>
+                <div onClick={handleClick}>
+                    <Icon name="comment" />
+                    {item.commentsCount} {" "}
+                    {item.commentsCount === 1 ? t("comment") : t("comments")}
+                </div>
             </div>
             <div className={styles.reactionsContainer}>
 
             </div>
-            </>
         </UICardBlock>
     );
 };

@@ -17,7 +17,7 @@ import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
 import searchSagas from "./search/sagas";
 import companyFeedSaga from './companyFeed/sagas';
-import newsSagas from "./news/sagas";
+import commentsSagas from "./comments/sagas";
 
 export default function* rootSaga() {
     yield all([
@@ -38,6 +38,7 @@ export default function* rootSaga() {
         responseSagas(),
         roleSagas(),
         sectionSagas(),
-        searchSagas()
+        searchSagas(),
+        commentsSagas()
     ]);
 }

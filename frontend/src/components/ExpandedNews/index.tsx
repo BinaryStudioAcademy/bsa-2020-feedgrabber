@@ -1,35 +1,50 @@
 import React, {useEffect, useState} from "react";
-import {CommentGroup, Loader, Modal, Comment, Divider} from "semantic-ui-react";
-import News from "../News";
-import InfiniteScroll from 'react-infinite-scroller';
+import {CommentGroup, Comment, Divider} from "semantic-ui-react";
 import CommentInput from "./CommentInput";
 import {IComment} from "../../models/comments";
 import {IAppState} from "../../models/IAppState";
-import {loadNewsByIdRoutine, setCurrentNewsRoutine} from "../../sagas/news/routines";
 import {connect, ConnectedProps} from "react-redux";
+import NewsItem from "../NewsItem/NewsItem";
+import {loadCompanyFeedItemRoutine} from "../../sagas/companyFeed/routines";
+import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
+import UIContent from "../UI/UIContent";
+import UIColumn from "../UI/UIColumn";
+import UIPageTitle from "../UI/UIPageTitle";
+import {saveCommentRoutine} from "../../sagas/comments/routines";
+import moment from "moment";
+import styles from "./styles.module.sass";
 
-const ExpandedNews: React.FC<ExpandedNewsProps> = (
-    {
-        user,
-        setCurrentNews,
-        loadNews
-    }) => {
+const defaultItem: ICompanyFeedItem = {
+    id: "",
+    title: "",
+    body: "",
+    type: "",
+    createdAt: "",
+    user: {
+        id: "",
+        username: ""
+    },
+    commentsCount: 0
+};
 
-    /* useEffect(() => {
-       loadNews({ id: currentNews.id });
-    }, [currentNews.id, loadNews]);
+const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
+        newsItem,
+        loadNews,
+        saveComment,
+        match
+}) => {
 
-    const initialComment: IComment = {
+    useEffect(() => {
+        loadNews({ id: match.params.id });
+    }, [loadNews, match.params.id]);
+
+    const initialComment = {
         id: "",
         body: "",
-        newsId: currentNews.id,
-        user
+        newsId: match.params.id,
+        user: null
     };
     const [comment, setComment] = useState<IComment>(initialComment);
-
-    const handleClose = () => {
-        setCurrentNews({});
-    };
 
     const handleCommentChange = (body: string) => {
        setComment({
@@ -39,51 +54,52 @@ const ExpandedNews: React.FC<ExpandedNewsProps> = (
     };
 
     const handleSubmit = () => {
-        console.log("saved");
+        if (comment.body) {
+            saveComment(comment);
+        }
     };
 
-    const mapComments = (comment: IComment) => {
-        return (
-            <Comment>
-                <Comment.Avatar src={comment.user.avatar} />
-                <Comment.Author>{comment.user.username}</Comment.Author>
-                <Comment.Metadata>
-                    <div>{comment.createdAt}</div>
-                </Comment.Metadata>
-                <Comment.Text>{comment.body}</Comment.Text>
-            </Comment>
-        );
-    };*/
-
-    return null;
-    /* (
-        <Modal
-            open={!!currentNews}
-            onClose={handleClose}
-        >
-            <Modal.Content>
-                <News item={currentNews} />
+    return (
+        <UIContent>
+            <UIPageTitle title={""}/>
+            <UIColumn wide >
+                <NewsItem item={newsItem ? newsItem : defaultItem} />
                 <Divider />
-                {currentNews.comments?.map(comment => mapComments(comment))}
+                <CommentGroup className={styles.comments}>
+                    {newsItem?.comments?.map(comment => (
+                        <Comment className={styles.comments}>
+                            <Comment.Avatar src={comment.user.avatar} />
+                            <Comment.Content>
+                                <Comment.Author>
+                                    {comment.user.username}
+                                    <Comment.Metadata>
+                                    {moment(comment.createdAt).fromNow()}
+                                    </Comment.Metadata>
+                                </Comment.Author>
+                                <Comment.Text>{comment.body}</Comment.Text>
+                            </Comment.Content>
+                        </Comment>
+                    ))}
+                </CommentGroup>
                 <CommentInput
                     value={comment.body}
                     onChange={handleCommentChange}
                     onSubmit={handleSubmit}
                 />
-            </Modal.Content>
-        </Modal>
-    );*/
+            </UIColumn>
+        </UIContent>
+    );
 };
 
 const mapStateToProps = (state: IAppState) => ({
-    user: state.user.shortInfo
+    newsItem: state.companyFeed.current
 });
 
 const mapDispatchToProps = {
-    setCurrentNews: setCurrentNewsRoutine,
-    loadNews: loadNewsByIdRoutine
+    loadNews: loadCompanyFeedItemRoutine,
+    saveComment: saveCommentRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type ExpandedNewsProps = ConnectedProps<typeof connector>;
-export default connector(ExpandedNews);
+export default connector(ExpandedNewsItem);

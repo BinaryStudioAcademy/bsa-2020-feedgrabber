@@ -41,14 +41,15 @@ function* loadCompanyFeed() {
 
 function* loadCompanyFeedItem(action) {
   try {
-    const id = action.payload;
+    const { id } = action.payload;
     if (!id) {
       // return defaultItem
       yield put(loadCompanyFeedItemRoutine.success(defaultItem));
       return;
     }
-    // here will be api-call
-    yield put(loadCompanyFeedItemRoutine.success(feedItemMock));
+    const res = yield call(apiClient.get, `/api/news/${id}`);
+    const feedItem = res.data.data;
+    yield put(loadCompanyFeedItemRoutine.success(feedItem));
   } catch (error) {
     yield put(loadCompanyFeedItemRoutine.failure());
     toastr.error('Can not load feed');
@@ -57,7 +58,7 @@ function* loadCompanyFeedItem(action) {
 
 function* createCompanyFeedItem(action) {
   try {
-    const res = yield call(apiClient.post, '/api/news', action.payload); 
+    const res = yield call(apiClient.post, '/api/news', action.payload);
     yield put(createCompanyFeedItemRoutine.success(res.data.data));
     yield put(loadCompanyFeedRoutine.trigger());
   } catch (err) {
