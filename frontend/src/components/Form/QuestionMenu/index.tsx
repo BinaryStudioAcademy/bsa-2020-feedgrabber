@@ -43,7 +43,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
     return (
         <div style={{
             position: 'absolute',
-            top: (scrollTop.current + position) || '7%',
+            top: (scrollTop.current + position) || '10%',
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
             <Button.Group basic {...styleBorderX} vertical size="big">

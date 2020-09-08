@@ -6,6 +6,7 @@ import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";
 import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import { useTranslation } from "react-i18next";
 
 const SelectQuestionsFromExisting: FC<ContainerProps & {
     isOpen: boolean;
@@ -22,6 +23,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         isOpen,
         handleOpenModal
     }) => {
+    const [t] = useTranslation();
     const [selected, setSelected] = useState([] as IQuestion[]);
 
     const handleClick = (id, isSelected) => {
@@ -73,10 +75,10 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
             </Modal.Content>
             <Modal.Actions
             className={styles.modalActions}>
-                <Button onClick={() => handleOpenModal(false)} content="Cancel"/>
+                <Button onClick={() => handleOpenModal(false)} content={t("Cancel")}/>
                 <Button
                     loading={isLoading}
-                    content="Add"
+                    content={t("Add")}
                     labelPosition='right'
                     icon='checkmark'
                     onClick={handleSubmit}

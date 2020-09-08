@@ -79,7 +79,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                     }>{match && t('Matches searched query')}</span>
                                 </UICardBlock>
                                 <UICardBlock>
-                                    <Icon color={"grey"} name="users"/>{team.membersAmount} Member(s)
+                                    <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
                                 </UICardBlock>
                                 <AccessManager staticPermission={Permissions.manageTeams}>
                                     <UICardBlock>
