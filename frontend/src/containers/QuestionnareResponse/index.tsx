@@ -12,14 +12,16 @@ import UIButton from 'components/UI/UIButton';
 import UIListHeader from 'components/UI/UIQuestionListHeader';
 import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
-import {saveResponseRoutine, getResponseRoutine} from 'sagas/response/routines';
+import {getResponseRoutine, saveResponseRoutine} from 'sagas/response/routines';
 import {
-  loadSectionsByQuestionnaireRoutine,
-  loadSavedSectionsByQuestionnaireRoutine
+    loadSavedSectionsByQuestionnaireRoutine,
+    loadSectionsByQuestionnaireRoutine,
+    setCurrentQuestionInSection
 } from 'sagas/sections/routines';
-import { ISection } from 'models/forms/Sections/types';
-import LoaderWrapper from 'components/LoaderWrapper';
-import { Translation } from 'react-i18next';
+import LoaderWrapper from 'components/helpers/LoaderWrapper';
+import {Translation} from 'react-i18next';
+import {ISection} from "../../reducers/formEditor/reducer";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
 
 interface IComponentState {
     question: IQuestion;
@@ -50,6 +52,8 @@ interface IQuestionnaireResponseProps {
 
     // loadQuestionnaire(id: string): void;
     loadSections(id: string): void;
+    setMenuPos(x: any): void;
+    setCurrentQuestion(x: any): void;
 
     // loadOneSaved(payload: { questionnaireId: string; responseId: string }): void;
     loadSavedQuestionnaire(payload: { questionnaireId: string; responseId: string }): void;
@@ -75,8 +79,8 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     handleComponentChange(state: IComponentState) {
-        const { sections } = this.props;
-        const { currentSectionIndex } = this.state;
+        const {sections} = this.props;
+        const {currentSectionIndex} = this.state;
         const questions = sections[currentSectionIndex].questions;
         let updatedQuestions: IQuestion[] = questions;
         if (state.isAnswered) {
@@ -94,18 +98,18 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     }
 
     componentDidMount() {
-        const { match, getResponse } = this.props;
+        const {match, getResponse} = this.props;
         getResponse(match.params.id);
     }
 
     componentDidUpdate() {
-        const { match, loadSections, loadSavedQuestionnaire, response } = this.props;
-        const { oldResponseId } = this.state;
+        const {match, loadSections, loadSavedQuestionnaire, response} = this.props;
+        const {oldResponseId} = this.state;
         if (oldResponseId !== response?.id) {
-            this.setState({ oldResponseId: response?.id });
+            this.setState({oldResponseId: response?.id});
             !match.params.responseId
                 ? loadSections(response.questionnaire.id)
-                : loadSavedQuestionnaire({ questionnaireId: response.questionnaire.id, responseId: response.id });
+                : loadSavedQuestionnaire({questionnaireId: response.questionnaire.id, responseId: response.id});
         }
     }
 
@@ -169,64 +173,70 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     };
 
     render() {
-        const {sections, isLoading, response} = this.props;
+        const {sections, isLoading, response, setCurrentQuestion, setMenuPos} = this.props;
         const changeable = response?.changeable;
         const isModifying = !!response?.answeredAt;
         const {showErrors, currentSectionIndex} = this.state;
         return (
             <Translation>
-            {t =>
-                <>
-                <UIPageTitle title={t("Response")} />
-                <br />
-                <br />
-                <LoaderWrapper loading={isLoading}>
-                <UIListHeader title={sections[currentSectionIndex]?.title}
-                              description={sections[currentSectionIndex]?.description} />
-                <Formik initialValues={this.state} onSubmit={this.handleNextClick}>{formik => (
-                    <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
-                        <ul>
-                            {sections[currentSectionIndex]?.questions.map(question => {
-                                return (
-                                    <UIListItem key={question.id} name={question.name}
-                                                category={question.categoryTitle}>
-                                        <ResponseQuestion question={question} answerHandler={(data: IAnswerBody) => {
-                                            question["answer"] = data;
-                                            this.handleComponentChange({
-                                                question,
-                                                isAnswered: !!data
-                                            });
-                                        }} />
-                                        {showErrors && !question.answer ?
-                                            <div className={styles.error_message}>
-                                                {t("Please, fill the question")}</div> : null}
-                                    </UIListItem>);
-                            })}
-                        </ul>
-                        <div className={styles.submit}>
-                            {/* {currentSectionIndex !== 0 ?
+                {t =>
+                    <>
+                        <UIPageTitle title={t("Response")}/>
+                        <br/>
+                        <br/>
+                        <LoaderWrapper loading={isLoading}>
+                            <UIListHeader title={sections[currentSectionIndex]?.title}
+                                          description={sections[currentSectionIndex]?.description}/>
+                            <Formik initialValues={this.state} onSubmit={this.handleNextClick}>{formik => (
+                                <Form onSubmit={formik.handleSubmit} className={styles.questionsListContainer}>
+                                    <ul>
+                                        {sections[currentSectionIndex]?.questions.map(question => {
+                                            return (
+                                                <UIListItem key={question.id} name={question.name}
+                                                            category={question.categoryTitle}>
+                                                    <ResponseQuestion
+                                                        setCurrentQuestion={setCurrentQuestion}
+                                                        setMenuPos={setMenuPos}
+                                                        isCurrent={false} question={question}
+                                                                      answerHandler={(data: IAnswerBody) => {
+                                                                          question["answer"] = data;
+                                                                          this.handleComponentChange({
+                                                                              question,
+                                                                              isAnswered: !!data
+                                                                          });
+                                                                      }}/>
+                                                    {showErrors && !question.answer ?
+                                                        <div className={styles.error_message}>
+                                                            {t("Please, fill the question")}</div> : null}
+                                                </UIListItem>);
+                                        })}
+                                    </ul>
+                                    <div className={styles.submit}>
+                                        {/* {currentSectionIndex !== 0 ?
                             <UIButton title="Previous" onClick={this.handlePreviousClick}/>:null} */}
-                            {sections.length === currentSectionIndex + 1
-                                ? ((!isModifying || changeable) &&
-                                    <UIButton title={t("Send")} submit onClick={this.handleSendClick} />)
-                                : <UIButton title={t("Next")} submit />}
-                            </div>
-                        </Form>)}
-                    </Formik>
-                </LoaderWrapper>
-            </>
-            }
+                                        {sections.length === currentSectionIndex + 1
+                                            ? ((!isModifying || changeable) &&
+                                            <UIButton title={t("Send")} submit onClick={this.handleSendClick}/>)
+                                            : <UIButton title={t("Next")} submit/>}
+                                    </div>
+                                </Form>)}
+                            </Formik>
+                        </LoaderWrapper>
+                    </>
+                }
             </Translation>);
     }
 }
 
 const mapStateToProps = (state: IAppState) => ({
-    questions: state.questionnaires.current.questions,
-    title: state.questionnaires.current.get.title,
-    description: state.questionnaires.current.get.description,
+    questions: state.formEditor.sections.list.map(s => s.questions).flat(),
+    title: state.formEditor.questionnaire.title,
+    description: state.formEditor.questionnaire.description,
     response: state.questionnaireResponse.current,
-    sections: state.sections.list,
-    isLoading: state.sections.isLoading
+    sections: state.formEditor.sections.list,
+    setMenuPos: setFloatingMenuPos,
+    setCurrentQuestion: setCurrentQuestionInSection,
+    isLoading: state.formEditor.isLoading
 });
 
 const mapDispatchToProps = {

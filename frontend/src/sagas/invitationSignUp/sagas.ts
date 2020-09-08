@@ -25,7 +25,7 @@ function* registerInvitationSignUp(action: any) {
 
     yield put(loginRoutine.success(user));
     yield call(saveTokens, {accessToken, refreshToken});
-    yield call(history.push, "/");
+    yield call(history.push, "/home");
   } catch (e) {
     yield put(registerInvitationSingUpRoutine.failure(e.data.error || 'No response'));
   }

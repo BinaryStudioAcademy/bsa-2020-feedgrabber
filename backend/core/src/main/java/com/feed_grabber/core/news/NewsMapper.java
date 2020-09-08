@@ -11,5 +11,6 @@ import org.mapstruct.factory.Mappers;
 public interface NewsMapper {
     NewsMapper MAPPER = Mappers.getMapper(NewsMapper.class);
 
+    @Mapping(target = "reactions", ignore = true)
     NewsDto newsToNewsDto(News news);
 }

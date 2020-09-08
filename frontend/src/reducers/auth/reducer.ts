@@ -3,7 +3,8 @@ import {
     loginRoutine,
     logoutRoutine,
     registerRoutine,
-    getUserShortRoutine
+    getUserShortRoutine,
+    registerByEmailRoutine
 } from "../../sagas/auth/routines";
 import {IAppState} from "../../models/IAppState";
 import {
@@ -18,13 +19,19 @@ const initialState = {
 };
 
 const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, payload}) => {
-    if (type === loginRoutine.SUCCESS
-        || type === registerRoutine.SUCCESS) {
+    if (type === loginRoutine.SUCCESS) {
         return {
             ...state,
             info: undefined,  // to load user details after login, currently - different DTO after login and getUser
             isLoading: false,
             error: {}
+        };
+    }
+    if(type === registerRoutine.SUCCESS
+        || type === registerByEmailRoutine.SUCCESS) {
+        return {
+            ...state,
+            isRegisteredSuccess: payload
         };
     }
     if (type === getUserRoutine.SUCCESS) {
@@ -37,10 +44,13 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
     }
     if (type === loginRoutine.TRIGGER
         || type === registerRoutine.TRIGGER
-        || type === getUserRoutine.TRIGGER) {
+        || type === getUserRoutine.TRIGGER
+        || type === registerByEmailRoutine.TRIGGER) {
         return {
             ...state,
-            isLoading: true
+            isLoading: true,
+            isRegisteredSuccess: null,
+            error: {}
         };
     }
     if (type === logoutRoutine.SUCCESS) {
@@ -50,7 +60,8 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
             isLoading: false
         };
     }
-    if (type === registerRoutine.FAILURE) {
+    if (type === registerRoutine.FAILURE
+        || type === registerByEmailRoutine.FAILURE) {
         return {
             ...state,
             error: {...state.error, register: payload},

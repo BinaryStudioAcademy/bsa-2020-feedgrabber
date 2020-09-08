@@ -43,7 +43,7 @@ const schema = yup.object().shape({
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error} = props;
+    const {signUp, className, error, success} = props;
     const [ t ] = useTranslation();
 
     return (
@@ -83,11 +83,11 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                onChange={handleChange} onBlur={handleBlur}
                         />
                         <Input name="email" placeholder="Email" value={values.email}
-                               onChange={handleChange} onBlur={handleBlur}
+                            onChange={handleChange} onBlur={handleBlur}
                         />
                         <Input name="companyName" placeholder="Company" value={values.companyName}
-                               onChange={handleChange} onBlur={handleBlur}
-                        />
+                        onChange={handleChange} onBlur={handleBlur}
+                        /> 
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -97,6 +97,11 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                         />
                         {
                             errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
+                        }
+                        {
+                            success && <Message attached="top"
+                                                positive
+                                                content={"Account created!\n Check your email"}/>
                         }
                         <Button disabled={!!errorText && errorText !== error}
                                 variant="secondary"
@@ -111,7 +116,8 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
 
 const mapState = (state: IAppState) => ({
     isLoading: state.user.isLoading,
-    error: state.user.error?.register
+    error: state.user.error?.register,
+    success: state.user.isRegisteredSuccess
 });
 
 const mapDispatch = {

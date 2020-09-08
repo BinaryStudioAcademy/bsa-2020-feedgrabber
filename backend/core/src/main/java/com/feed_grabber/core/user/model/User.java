@@ -24,7 +24,7 @@ import java.util.UUID;
         tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
         filters = {
                 @TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
-                        @Parameter(name = "pattern",value = "([^a-zA-Z0-9\\.])"),
+                        @Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
                         @Parameter(name = "replacement", value = " "),
                         @Parameter(name = "replace", value = "all") }),
                 @TokenFilterDef(factory = LowerCaseFilterFactory.class),
@@ -68,6 +68,10 @@ public class User {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
+	@Builder.Default
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     @ManyToMany(
             cascade = {
                     CascadeType.PERSIST,
@@ -89,6 +93,7 @@ public class User {
     private UserProfile userProfile;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @EqualsAndHashCode.Exclude
     private UserSettings userSettings;
 
     @IndexedEmbedded(depth = 2)

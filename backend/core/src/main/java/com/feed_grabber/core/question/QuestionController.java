@@ -3,15 +3,15 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.config.NotificationService;
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
-import com.feed_grabber.core.questionnaire.dto.QuestionDeleteDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
@@ -20,13 +20,12 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
 import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
@@ -44,8 +43,15 @@ public class QuestionController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<List<QuestionDto>> getAll() {
-        return new AppResponse<>(questionService.getAll());
+    public AppResponse<DataList<QuestionDto>> getAll(@RequestParam(required = false) Integer page,
+                                                     @RequestParam(required = false) Integer size) {
+        var companyId = getCompanyId();
+        return new AppResponse<>(new DataList<>(
+                questionService.getAll(companyId, page, size),
+                questionService.countByCompanyId(companyId),
+                page,
+                size
+        ));
     }
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")
@@ -72,7 +78,7 @@ public class QuestionController {
     @PostMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
     public AppResponse<QuestionDto> create(@RequestBody String json)
-            throws QuestionnaireNotFoundException, JsonProcessingException, CompanyNotFoundException, SectionNotFoundException {
+            throws NotFoundException, JsonProcessingException {
 
         var dto = new ObjectMapper().readValue(json, QuestionCreateDto.class);
 
@@ -98,10 +104,10 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<List<QuestionDto>> addExisting(@RequestBody AddExistingQuestionsDto dto)
+    public void addExisting(@RequestBody AddExistingQuestionsDto dto)
             throws QuestionnaireNotFoundException {
 
-        return new AppResponse<>(questionService.addExistingQuestion(dto));
+        questionService.addExistingQuestions(dto);
     }
 
     @ApiOperation(value = "Delete the question")
@@ -118,9 +124,8 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/index")
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void index(@RequestBody QuestionIndexDto dto)
-            throws QuestionNotFoundException, SectionNotFoundException {
-        this.questionService.index(dto);
+    public void index(@RequestBody QuestionIndexDto dto) throws NotFoundException {
+        questionService.index(dto);
     }
 
     @ApiOperation(value = "Delete the question by id and questionnaireId")

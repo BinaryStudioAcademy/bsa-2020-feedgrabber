@@ -40,13 +40,6 @@ public class Questionnaire {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "question_questionnaire",
-            joinColumns = @JoinColumn(name = "questionnaire_id"),
-            inverseJoinColumns = @JoinColumn(name = "question_id"))
-    private List<Question> questions;
-
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
@@ -61,4 +54,9 @@ public class Questionnaire {
     @ColumnDefault("true")
     @Builder.Default
     private boolean isEditingEnabled = true;
+
+    @Column(name = "is_deleted", nullable = false)
+    @ColumnDefault("false")
+    @Builder.Default
+    private boolean isDeleted = false;
 }

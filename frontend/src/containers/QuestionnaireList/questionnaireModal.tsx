@@ -24,6 +24,10 @@ const validationSchema = yup.object().shape({
   title: yup
     .string()
     .required()
+    .min(3, "Too Short!")
+    .max(40, "Too Long!")
+    .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+        "Title must be valid")
 });
 
 const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
@@ -46,6 +50,7 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
       : addQuestionnaire({
         title: values.title
       });
+    hideModal();
   };
 
   const [t] = useTranslation();
@@ -53,7 +58,7 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
   return (
     <Modal open={modalShown} size="small" onClose={hideModal}>
       <ModalHeader>{modalQuestionnaire ? t('Edit questionnaire') : t('Add questionnaire')}</ModalHeader>
-      {modalError && <div className={styles.modalError}>{modalError}</div>}
+      {modalError && <div className={styles.modalError}>{t(modalError)}</div>}
       <ModalContent>
         <Formik
           initialValues={{title: modalQuestionnaire ? modalQuestionnaire.title : ''}}
@@ -70,13 +75,13 @@ const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
             }) => (
             <Form name="loginForm" size="large" onSubmit={handleSubmit}>
               <Form.Field>
-                <label>Title</label>
+                <label>{t("Title")}</label>
                 <Form.Input
                   fluid
                   placeholder={t("Title")}
                   type="text"
                   name="title"
-                  error={touched.title && errors.title ? errors.title : undefined}
+                  error={touched.title && errors.title ? t(errors.title) : undefined}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.title}
