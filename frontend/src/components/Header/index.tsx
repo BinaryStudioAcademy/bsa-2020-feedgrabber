@@ -48,13 +48,17 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                         <h1 className={styles.headerServiceName} onClick={() => history.push('/home')}>FeedGrabber</h1>
                     </div>
                     <div className={styles.navLinks}>
-                        <NavLink exact to="/editor"
-                                 className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-                            {t("Form Creator")}
-                        </NavLink>
-                        <a href="/#" className={styles.headerMenuItem}>
-                            {t("Send Request")}
-                        </a>
+                        <AccessManager staticPermission={Permissions.managingQuestionnaires}>
+                            <NavLink exact to="/editor"
+                                    className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
+                                {t("Form Creator")}
+                            </NavLink>
+                        </AccessManager>
+                        <AccessManager staticPermission={Permissions.createQuestionnaireRequest}>
+                            <a href="/#" className={styles.headerMenuItem}>
+                                {t("Send Request")}
+                            </a>
+                        </AccessManager>
                     </div>
                 </div>
                 <div className={styles.headerPart}>
