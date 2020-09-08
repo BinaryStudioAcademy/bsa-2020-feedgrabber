@@ -4,13 +4,14 @@ import { ICompanyFeedItem } from 'models/companyFeed/ICompanyFeedItem';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
 import {
-  applyReactionRoutine,
-  loadCompanyFeedRoutine,
-  reactOnNewsRoutine,
-  setCompanyFeedPaginationRoutine
+    applyReactionRoutine,
+    loadCompanyFeedRoutine,
+    reactOnNewsRoutine,
+    setCompanyFeedPaginationRoutine, setExpandedImageRoutine
 } from 'sagas/companyFeed/routines';
 import GenericPagination from 'components/helpers/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
+import {Button, Image, Modal} from 'semantic-ui-react';
 import { Permissions } from "../helpers/AccessManager/rbac-rules";
 import { Link } from 'react-router-dom';
 
@@ -21,9 +22,11 @@ import UIButton from "../UI/UIButton";
 
 interface INewsFeedProps {
   pagination?: IPaginationInfo<ICompanyFeedItem>;
+  openedImage: string;
   isLoading?: boolean;
-  loadNews?(): void;
 
+  expandImage(imageUrl: string): void;
+  loadNews?(): void;
   reactOnNews(reaction: IReactionCreationDto): void;
   setPagination?(pagination: IPaginationInfo<ICompanyFeedItem>): void;
   applyReaction(reaction: ICreatedReactionDto): void;
@@ -31,11 +34,13 @@ interface INewsFeedProps {
 
 const NewsList: React.FC<INewsFeedProps> = ({
   pagination,
+  openedImage,
   isLoading,
   loadNews,
   setPagination,
   reactOnNews,
-  applyReaction
+  applyReaction,
+  expandImage
 }) => {
 
   const [t] = useTranslation();
@@ -54,24 +59,36 @@ const NewsList: React.FC<INewsFeedProps> = ({
           pagination={pagination}
           setPagination={setPagination}
           mapItemToJSX={(item: ICompanyFeedItem) => (
-              <NewsItem applyReaction={applyReaction} react={reactOnNews} item={item}/>
+              <NewsItem expandImage={expandImage} applyReaction={applyReaction} react={reactOnNews} item={item}/>
               )
           }
         />
       </div>
+      <Modal
+        basic
+        onClose={() => expandImage(null)}
+        open={!!openedImage}
+        size='small'
+      >
+        <Modal.Content className={styles.expandedImageContainer}>
+            <img className={styles.expandedImage} src={openedImage}/>
+        </Modal.Content>
+      </Modal>
     </div>
   );
 };
 
 const mapStateToProps = (state: IAppState) => ({
   pagination: state.companyFeed.list,
-  isLoading: state.companyFeed.isLoading
+  isLoading: state.companyFeed.isLoading,
+  openedImage: state.companyFeed.expandedImageUrl
 });
 
 const mapDispatchToProps = {
   loadNews: loadCompanyFeedRoutine,
   reactOnNews: reactOnNewsRoutine,
   applyReaction: applyReactionRoutine,
+  expandImage: setExpandedImageRoutine,
   setPagination: setCompanyFeedPaginationRoutine
 };
 
