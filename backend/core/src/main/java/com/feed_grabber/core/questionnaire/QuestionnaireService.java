@@ -34,17 +34,6 @@ public class QuestionnaireService {
         this.sectionService = sectionService;
     }
 
-//    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
-//        return questionnaireRepository.findAll(PageRequest.of(page, size))
-//                .stream()
-//                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
-//                .collect(Collectors.toList());
-//    }
-
-//    public Long getCountAll() {
-//        return questionnaireRepository.count();
-//    }
-
     public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size, boolean archived) {
         return questionnaireRepository.findAllByCompanyId(companyId, archived, PageRequest.of(page, size))
                 .stream()
