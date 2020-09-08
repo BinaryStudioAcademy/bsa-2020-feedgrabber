@@ -30,11 +30,21 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Value("\${rabbitmq.queue}")
     private val queue: String? = null
 
+    @Value("\${rabbitmq.queue.request.close}")
+    private lateinit var requestCloseQueue: String
+
+    @Value("\${rabbitmq.routing-key-request-close}")
+    private lateinit var closeRequestRoutingKey: String
+
     @Bean
     fun queue(): Queue? {
         return Queue(queue, true)
     }
 
+    @Bean
+    fun requestCloseQueue(): Queue? {
+        return Queue(requestCloseQueue, true)
+    }
 
     @Bean
     fun exchange(): TopicExchange? {
@@ -44,6 +54,11 @@ class RabbitConfiguration: RabbitListenerConfigurer {
     @Bean
     fun binding(queue: Queue?, exchange: TopicExchange?): Binding? {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey)
+    }
+
+    @Bean
+    fun bindCloseRequest(requestCloseQueue: Queue?, exchange: TopicExchange?): Binding? {
+        return BindingBuilder.bind(requestCloseQueue).to(exchange).with(closeRequestRoutingKey)
     }
     
     @Bean

@@ -2,6 +2,7 @@ export interface ITeamShort {
   id: string;
   name: string;
   membersAmount: number;
+  leadId: string | null;
   deleteLoading?: boolean;
 }
 

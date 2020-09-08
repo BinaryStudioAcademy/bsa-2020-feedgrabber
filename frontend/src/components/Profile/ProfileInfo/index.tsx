@@ -50,6 +50,12 @@ const ProfileInfo: FC<ProfileInfoProps> =
           reader.readAsDataURL(file);
         }
       };
+
+      const initialValues = {
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        phoneNumber: user.phoneNumber || ''
+      };
       return (
           !isLoading && !!user &&
           <>
@@ -65,7 +71,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                   {t("Update")}
                   <input name="image" type="file" onChange={onSelectFile} hidden/>
                 </Button>
-                <Button content='Delete'
+                <Button content={t('Delete')}
                         size='small'
                         basic
                         onClick={() => uploadImage()}
@@ -83,11 +89,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
 
             <Formik
                 enableReinitialize
-                initialValues={{
-                  firstName: user.firstName || '',
-                  lastName: user.lastName || '',
-                  phoneNumber: user.phoneNumber || ''
-                }}
+                initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={(values, helpers) => {
                   save({
@@ -107,7 +109,8 @@ const ProfileInfo: FC<ProfileInfoProps> =
                   isValid,
                   touched,
                   setFieldError,
-                  setFieldValue
+                  setFieldValue,
+                  dirty
                 }) => (
                   <Form name="userForm" onSubmit={handleSubmit}>
                     <UITextInput labelText={t('First Name')}
@@ -142,7 +145,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
                                  onClick={() => setFieldError('phoneNumber', null)}
                                  phoneNumber
                     />
-                    <UIButton disabled={!!(errors.firstName || errors.lastName || errors.phoneNumber)}
+                    <UIButton disabled={!dirty || !!(errors.firstName || errors.lastName || errors.phoneNumber)}
                               submit
                               title={t('Save')}/>
 

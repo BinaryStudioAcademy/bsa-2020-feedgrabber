@@ -20,10 +20,12 @@ public interface ResponseRepository extends JpaRepository<Response, UUID> {
 
     List<Response> findAllByUserIdAndRequestNotNull(UUID userId);
 
+    @Query("select count(r) from Response r where r.id = :requestId and r.payload is not null")
+    int countUnanswered(UUID requestId);
+
     List<Response> findAllByUserId(UUID userId);
 
     @Query("select r from Response r " +
             "where r.answeredAt is null and r.request.closeDate is null and r.request.expirationDate is not null")
     List<Response> findAllToAnswer();
-
 }

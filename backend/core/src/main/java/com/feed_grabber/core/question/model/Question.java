@@ -48,9 +48,6 @@ public class Question {
     @Column
     private String payload;
 
-    @ManyToMany(mappedBy = "questions")
-    private List<Questionnaire> questionnaires;
-
     @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;

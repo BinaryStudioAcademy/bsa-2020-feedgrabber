@@ -4,21 +4,21 @@ import {IAppState} from "../../models/IAppState";
 import {
   createTeamRoutine,
   loadCompanyUsersRoutine,
-  loadCurrentTeamRoutine, toggleLeadCurrentTeamRoutine,
+  loadCurrentTeamRoutine, loadTeamRequestsRoutine, toggleLeadCurrentTeamRoutine,
   toggleUserCurrentTeamRoutine,
   updateTeamRoutine
 } from "../../sagas/teams/routines";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
-import UIColumn from "../../components/UI/UIColumn";
-import UICard from "../../components/UI/UICard";
-import UICardBlock from "../../components/UI/UICardBlock";
 import TeamMetadataBlock from "./metadataBlock";
 import TeamUsersBlock from "./usersBlock";
 import { useTranslation } from 'react-i18next';
+import TeamRequestsBlock from "./requestsBlock";
+import {closeRequestRoutine} from "../../sagas/request/routines";
 
 const TeamDetailsPage: FC<Props & { match }> = (
     {
+        currentUser,
         match,
         currentTeamError,
         currentTeam,
@@ -34,11 +34,18 @@ const TeamDetailsPage: FC<Props & { match }> = (
         isLoadingUsers,
         isLoadingTeam,
         isLoadingRequest,
-        isLoadingToggleLead
+        isLoadingToggleLead,
+        isLoadingTeamRequests,
+        loadTeamRequests,
+        teamRequests,
+        failedLoadingTeamRequests,
+        closeRequest
     }
 ) => {
     const [t] = useTranslation();
     const [isNew, setIsNew] = useState<boolean>(match.params.id === "new");
+
+    const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
 
     // load users
     useEffect(() => {
@@ -65,7 +72,8 @@ const TeamDetailsPage: FC<Props & { match }> = (
         <>
             <UIPageTitle title={isNew ? t("Add Team") : t("Edit Team")}/>
             <UIContent>
-                <TeamMetadataBlock
+                {isHrOrCo &&
+                  <TeamMetadataBlock
                     isNew={isNew}
                     currentTeamError={currentTeamError}
                     currentTeam={currentTeam}
@@ -73,10 +81,12 @@ const TeamDetailsPage: FC<Props & { match }> = (
                     isLoadingRequest={isLoadingRequest}
                     updateTeam={updateTeam}
                     createTeam={createTeam}
-                />
+                  />
+                }
                 {!isNew && (
                     <>
                         <TeamUsersBlock
+                            isHrOrCo={isHrOrCo}
                             currentTeam={currentTeam}
                             companyUsers={companyUsers}
                             isLoadingUsers={isLoadingUsers}
@@ -84,16 +94,14 @@ const TeamDetailsPage: FC<Props & { match }> = (
                             toggleUser={toggleUser}
                             toggleLead={toggleLead}
                         />
-                        <UIColumn>
-                            <UICard>
-                                <UICardBlock>
-                                    <h3>{t("Requests")}</h3>
-                                </UICardBlock>
-                                <UICardBlock>
-                                    <p>{t("Here could be requests or something else")}</p>
-                                </UICardBlock>
-                            </UICard>
-                        </UIColumn>
+                        <TeamRequestsBlock
+                          closeRequest={closeRequest}
+                          currentTeam={currentTeam}
+                          loadingFailed={failedLoadingTeamRequests}
+                          requestsList={teamRequests}
+                          isLoadingRequests={isLoadingTeamRequests}
+                          loadRequests={loadTeamRequests}
+                        />
                     </>
                 )}
             </UIContent>
@@ -102,6 +110,7 @@ const TeamDetailsPage: FC<Props & { match }> = (
 };
 
 const mapState = (state: IAppState) => ({
+    currentUser: state.user.info,
     companyUsers: state.teams.companyUsers,
     isLoadingUsers: state.teams.isLoadingUsers,
     isLoadingTeam: state.teams.current.isLoadingTeam,
@@ -110,12 +119,17 @@ const mapState = (state: IAppState) => ({
     isLoadingRequest: state.teams.current.isLoadingRequest,
     isLoadingToggleLead: state.teams.current.isLoadingToggleLead,
     failedTeam: state.teams.current.failed,
-    failedUsers: state.teams.failedUsers
+    failedUsers: state.teams.failedUsers,
+    isLoadingTeamRequests: state.teams.current.isLoadingTeamRequests,
+    teamRequests: state.teams.current.teamRequests,
+    failedLoadingTeamRequests: state.teams.current.failedLoadingTeamRequests
 });
 
 const mapDispatch = {
+    closeRequest: closeRequestRoutine,
     loadUsers: loadCompanyUsersRoutine,
     loadCurrentTeam: loadCurrentTeamRoutine,
+    loadTeamRequests: loadTeamRequestsRoutine,
     createTeam: createTeamRoutine,
     updateTeam: updateTeamRoutine,
     toggleUser: toggleUserCurrentTeamRoutine,
