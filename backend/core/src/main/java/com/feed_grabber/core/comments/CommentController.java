@@ -51,7 +51,7 @@ public class CommentController {
     @ApiOperation("Delete comment")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) throws CommentNotFoundException {
         commentService.delete(id);
     }
 }

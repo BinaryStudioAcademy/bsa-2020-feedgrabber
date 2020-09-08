@@ -38,6 +38,7 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         deleteComment,
         reactOnNews,
         applyReaction,
+        user,
         match
 }) => {
 
@@ -95,16 +96,18 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
                                         <Comment.Metadata>
                                         {moment(comment.createdAt).fromNow()}
                                         </Comment.Metadata>
+                                        {comment.user.id === user.id &&
                                         <Dropdown>
-                                        <Dropdown.Menu size="sm" title="">
-                                          <Dropdown.Item onClick={() => setUpdatingComment(comment)}>
-                                              {t("Edit")}
-                                          </Dropdown.Item>
-                                          <Dropdown.Item onClick={() => deleteComment(comment.id)}>
-                                              {t("Delete")}
-                                          </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                      </Dropdown>
+                                          <Dropdown.Menu size="sm" title="">
+                                            <Dropdown.Item onClick={() => setUpdatingComment(comment)}>
+                                                {t("Edit")}
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => deleteComment(comment.id)}>
+                                                {t("Delete")}
+                                            </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                        </Dropdown>
+                                        }
                                     </Comment.Author>
                                     <Comment.Text>{comment.body}</Comment.Text>
                                 </Comment.Content>
@@ -134,7 +137,8 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
 
 const mapStateToProps = (state: IAppState) => ({
     newsItem: state.companyFeed.current,
-    isLoading: state.companyFeed.isLoading
+    isLoading: state.companyFeed.isLoading,
+    user: state.user.info
 });
 
 const mapDispatchToProps = {

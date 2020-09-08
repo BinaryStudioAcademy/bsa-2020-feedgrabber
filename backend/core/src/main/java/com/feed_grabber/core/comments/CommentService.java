@@ -1,5 +1,6 @@
 package com.feed_grabber.core.comments;
 
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.comments.dto.CommentCreationDto;
 import com.feed_grabber.core.comments.dto.CommentDto;
 import com.feed_grabber.core.comments.dto.CommentUpdateDto;
@@ -62,12 +63,22 @@ public class CommentService {
         var comment = commentRepository.findById(commentUpdateDto.getId())
                 .orElseThrow(CommentNotFoundException::new);
         comment.setBody(commentUpdateDto.getBody());
+
+        if (TokenService.getUserId() != comment.getUser().getId()) {
+            throw new CommentNotFoundException();
+        }
+
         var updated = commentRepository.save(comment);
 
         return CommentMapper.MAPPER.commentToCommentDto(updated);
     }
 
-    public void delete(UUID id) {
+    public void delete(UUID id) throws CommentNotFoundException {
+        var comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+        if (TokenService.getUserId() != comment.getUser().getId()) {
+            throw new CommentNotFoundException();
+        }
+
         commentRepository.deleteById(id);
     }
 }
