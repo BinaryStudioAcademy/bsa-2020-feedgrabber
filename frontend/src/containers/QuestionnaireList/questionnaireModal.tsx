@@ -24,6 +24,10 @@ const validationSchema = yup.object().shape({
   title: yup
     .string()
     .required()
+    .min(3, "Too Short!")
+    .max(40, "Too Long!")
+    .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+        "Title must be valid")
 });
 
 const QuestionnaireModal: FC<IQuestionnaireModalProps> = (
