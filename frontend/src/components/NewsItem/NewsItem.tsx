@@ -9,7 +9,7 @@ import ReactionTile from "./ReactionTile";
 import {useStomp} from "../../helpers/websocket.helper";
 import {IUserShort} from "../../models/user/types";
 import moment from "moment";
-        
+
 export interface IReactionCreationDto {
     reaction: string;
     newsId: string;
@@ -48,7 +48,8 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
             <UICardBlock key={item.id}
                          className={styles.newsItemContainer}>
                 <>
-                    <img src={item.image ? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
+                    <img className={`${item.image ? styles.clickable : ''}`}
+                         src={item.image ? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
                     <div className={styles.detailesContainer}>
                         <div className={styles.mainContainer}>
                             <div className={styles.type}>{item.type}</div>
