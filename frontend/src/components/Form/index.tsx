@@ -16,6 +16,8 @@ interface IFormProps {
     updateOrder(action: {}): void;
 
     updateSections(action: {}): void;
+
+    deleteSection(id: string): void;
 }
 
 const Form: FC<IFormProps & ResponseQuestionProps> = (
@@ -26,7 +28,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         setCurrentQuestion,
         setMenuPos,
         currentQuestion,
-        updateSection
+        updateSection,
+        deleteSection
     }) => {
 
     function onDragEnd(res) {
@@ -90,6 +93,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                         currentQuestion={currentQuestion}
                         section={section}
                         renameSection={updateSection}
+                        deleteSection={deleteSection}
+                        main={sections.length === 1}
                     />)
                 }
             </div>

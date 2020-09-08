@@ -143,4 +143,9 @@ public class SectionService {
                 .findFirst()
                 .orElseThrow(QuestionNotFoundException::new);
     }
+
+    public void delete(UUID id) throws SectionNotFoundException {
+        sectionRepository.findById(id).orElseThrow(SectionNotFoundException::new);
+        sectionRepository.deleteById(id);
+    }
 }

@@ -26,7 +26,7 @@ import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import {
     loadSectionsByQuestionnaireRoutine, setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
-    updateSectionRoutine, updateSections
+    updateSectionRoutine, updateSections, deleteSectionRoutine
 } from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
@@ -61,7 +61,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        setCurrentQuestion,
        isLoadingTeams,
        updateSectionsR,
-       sections
+       sections,
+       deleteSection
      }) => {
 
       const [t] = useTranslation();
@@ -99,6 +100,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             updateSections={updateSectionsR}
                             currentQuestion={{} as IQuestion}
                             sections={sections}
+                            deleteSection={deleteSection}
                         />
                     </UICardBlock>
                   </UICard>
@@ -360,11 +362,12 @@ const mapDispatchToProps = {
   loadUsers: loadCompanyUsersRoutine,
   updateOrder: updateQuestionsOrderRoutine,
   updateSection: updateSectionRoutine,
-setMenuPos: setFloatingMenuPos,
-setCurrentQuestion: setCurrentQuestionInSection,
+  setMenuPos: setFloatingMenuPos,
+  setCurrentQuestion: setCurrentQuestionInSection,
   sendRequest: sendQuestionnaireRequestRoutine,
   loadSections: loadSectionsByQuestionnaireRoutine,
-  updateSectionsR: updateSections
+  updateSectionsR: updateSections,
+  deleteSection: deleteSectionRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
