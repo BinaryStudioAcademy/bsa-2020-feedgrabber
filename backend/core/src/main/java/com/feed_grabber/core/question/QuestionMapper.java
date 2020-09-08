@@ -1,9 +1,6 @@
 package com.feed_grabber.core.question;
 
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
-import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.dto.QuestionUpdateDto;
-import com.feed_grabber.core.question.dto.QuestionUpsertDto;
+import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
@@ -21,10 +18,14 @@ public abstract class QuestionMapper {
     @Mapping(target = "index", ignore = true)
     public abstract QuestionDto questionToQuestionDto(Question question);
 
+    @Mapping(source = "question.category.title", target = "categoryTitle")
+    @Mapping(source = "question.text", target = "name")
+    @Mapping(source = "question.payload", target = "details")
+    public abstract QuestionDto questionToQuestionDtoIndexed(Question question, Integer index);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "category", target = "category")
     @Mapping(source = "createDto.name", target = "text")
-    @Mapping(target = "questionnaires", ignore = true)
     @Mapping(target = "company", source = "questionnaire.company")
     @Mapping(target = "payload", source = "createDto.details")
     public abstract Question questionCreateDtoToModel(

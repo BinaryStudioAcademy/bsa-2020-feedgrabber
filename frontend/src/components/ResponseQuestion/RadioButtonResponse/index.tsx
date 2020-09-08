@@ -11,10 +11,10 @@ export interface IRadioResponse {
 }
 
 const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse> = ({
-                                                                                         question,
-                                                                                         answerHandler,
-                                                                                         response
-                                                                                     }) => {
+    question,
+    answerHandler,
+    response
+}) => {
     const [other, setOther] = useState<string>(() => {
         if (!response) {
             return null;

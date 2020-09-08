@@ -13,16 +13,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "sections_questions")
 public class SectionQuestion {
-
     @EmbeddedId
     SectionQuestionId id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("questionId")
     @JoinColumn(name = "question_id")
     Question question;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("sectionId")
     @JoinColumn(name = "section_id")
     Section section;

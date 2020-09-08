@@ -1,15 +1,13 @@
 package com.feed_grabber.core.sections.model;
 
-import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
-import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,5 +40,5 @@ public class Section {
     private Questionnaire questionnaire;
 
     @OneToMany(mappedBy = "section")
-    private List<SectionQuestion> questions;
+    private List<SectionQuestion> questions = new LinkedList<>();
 }

@@ -8,7 +8,8 @@ import {Icon, Popup} from "semantic-ui-react";
 import ReactionTile from "./ReactionTile";
 import {useStomp} from "../../helpers/websocket.helper";
 import {IUserShort} from "../../models/user/types";
-
+import moment from "moment";
+        
 export interface IReactionCreationDto {
     reaction: string;
     newsId: string;
@@ -61,7 +62,7 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
                             }
                             <div className={styles.detailesAuthorContainer}>
                                 <div className={styles.userName}>{item.user.username}</div>
-                                <div className={styles.date}>{item.createdAt}</div>
+                                <div className={styles.date}>{moment(item.createdAt).format("MMM Do, YYYY")}</div>
                             </div>
                         </div>
                     </div>

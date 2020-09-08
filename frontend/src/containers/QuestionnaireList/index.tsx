@@ -10,9 +10,8 @@ import {
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import QuestionnaireModal from "./questionnaireModal";
-import GenericPagination from "../../components/GenericPagination";
+import GenericPagination from "../../components/helpers/GenericPagination";
 import {history} from '../../helpers/history.helper';
-import {clearOneQuestionnaireRoutine} from "../../sagas/expandedQuestionnaire/routines";
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
@@ -39,7 +38,6 @@ const QuestionnaireList: FC<Props> = (
         showModal,
         hideModal,
         setPagination,
-        clearOneQuestionnaire,
         result
     }
 ) => {
@@ -49,7 +47,7 @@ const QuestionnaireList: FC<Props> = (
             .questionnaires
             .map(q => q.id)
             .includes(item.id);
-        return <UICard>
+        return <UICard key={item.id}>
             <UICardBlock className={`${styles.cardBlockWrapper} ${match && styles.searched}`}>
                 <h3>{item.title}</h3>
                 <span
@@ -92,7 +90,6 @@ const QuestionnaireList: FC<Props> = (
                       <Icon
                         name="settings"
                         onClick={() => {
-                          clearOneQuestionnaire();
                           history.push(`/questionnaires/${item.id}`);
                         }}
                         className={styles.cardIcon}
@@ -176,8 +173,7 @@ const mapDispatchToProps = {
     updateQuestionnaire: updateQuestionnaireRoutine,
     showModal: showModalQuestionnaireRoutine,
     hideModal: hideModalQuestionnaireRoutine,
-    setPagination: setQuestionnairePaginationRoutine,
-    clearOneQuestionnaire: clearOneQuestionnaireRoutine
+    setPagination: setQuestionnairePaginationRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
