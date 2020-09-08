@@ -143,7 +143,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                             key={user.id}
                                             firstName={user.firstName}
                                             lastName={user.lastName}
-                                            userInfo={'username: ' + user.username}
+                                            userInfo={t('username')+': ' + user.username}
                                             avatar={user.avatar}
                                             onClick={() => {
                                               formik.setFieldValue('targetUserId',
