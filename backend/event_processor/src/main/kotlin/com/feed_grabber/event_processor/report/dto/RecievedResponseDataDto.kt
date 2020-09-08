@@ -32,8 +32,22 @@ data class QuestionResponseDto(
 data class QuestionnaireDto(
         val companyName: String,
         val id: UUID,
+        val sections: List<SectionDto>,
+        val title: String
+)
+
+data class QuestionnaireDB(
+        val companyName: String,
+        val id: UUID,
         val questions: List<QuestionDto>,
         val title: String
+)
+
+data class SectionDto(
+        val id: UUID,
+        val title: String,
+        val description: String?,
+        val questions: List<QuestionDto>
 )
 
 data class QuestionDto(

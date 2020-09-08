@@ -1,12 +1,38 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
 
 import styles from './styles.module.sass';
-import {Permissions} from "../AccessManager/rbac-rules";
-import AccessManager from "../AccessManager";
+import {Permissions} from "../helpers/AccessManager/rbac-rules";
+import AccessManager from "../helpers/AccessManager";
 import {useTranslation} from "react-i18next";
-import {RiDashboardLine, RiHome2Line, RiListSettingsLine, RiTeamLine} from "react-icons/ri";
+import {
+    RiDashboardLine,
+    RiHome2Line,
+    RiListSettingsLine,
+    RiTeamLine,
+    RiGlobalLine,
+    RiArrowUpSLine,
+    RiArrowDownSLine,
+    RiRadioButtonLine,
+    RiFocusLine
+} from "react-icons/ri";
 import {AiOutlineQuestion} from "react-icons/ai";
+import {IAppState} from "../../models/IAppState";
+import {getUserSettingsRoutine, updateUserSettingsRoutine} from "../../sagas/user/routines";
+import {connect, ConnectedProps} from "react-redux";
+
+const languages: {key: string; text: string; value: string}[] = [
+  {
+    key: 'English',
+    text: 'English',
+    value: 'english'
+  },
+  {
+    key: 'Ukrainian',
+    text: 'Українська',
+    value: 'ukrainian'
+  }
+];
 
 interface ISideMenuProps {
     expanded: boolean;
@@ -14,8 +40,33 @@ interface ISideMenuProps {
     toggleMenu(): void;
 }
 
-const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded}) => {
-    const [t] = useTranslation();
+const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps> =
+    ({expanded,
+      settings,
+      getSettings,
+      updateSettings
+    }) => {
+
+    const [t, i18n] = useTranslation();
+    const [languageActive, setLanguageActive] = useState(false);
+    useEffect(() => {
+      !settings && getSettings();
+    }, [getSettings, settings]);
+
+    const handleLanguageChange = (value: string) => {
+      updateSettings({...settings, language: value});
+      i18n.changeLanguage(value);
+    };
+    const languageItem = lang => (
+        <li className={styles.menuItem} key={lang.key} onClick={() => handleLanguageChange(lang.value)}>
+          {settings?.language === lang.value
+              ? <RiRadioButtonLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+              : <RiFocusLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+          }
+          <span className={styles.menuItemTitle}>{lang.text}</span>
+        </li>
+    );
+
     return (
         <div className={`${styles.menuWrapper} ${expanded ? styles.menuWrapperOpen : styles.menuWrapperClosed}`}>
             <div className={styles.menuContent}>
@@ -43,9 +94,36 @@ const SideMenu: React.FunctionComponent<ISideMenuProps> = ({expanded}) => {
                         <span className={styles.menuItemTitle}>{t("Questions")}</span>
                     </NavLink>
                 </AccessManager>
+
+                <div className={styles.menuLanguagesWrapper} onClick={()=>setLanguageActive(!languageActive)}>
+                    <div className={styles.menuItem}>
+                        <RiGlobalLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+                        <span className={styles.menuItemTitle}>{t("Language")}</span>
+                        {languageActive
+                          ? <RiArrowDownSLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+                          : <RiArrowUpSLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+                        }
+                    </div>
+                  <ul className={languageActive && expanded ? styles.listActive : styles.listInactive}>
+                    {languages.map(lang => languageItem(lang))}
+                  </ul>
+                </div>
+
             </div>
         </div>
     );
 };
+const mapState = (state: IAppState) => ({
+  settings: state.user.settings
+});
 
-export default SideMenu;
+const mapDispatchToProps = {
+  getSettings: getUserSettingsRoutine,
+  updateSettings: updateUserSettingsRoutine
+};
+
+const connector = connect(mapState, mapDispatchToProps);
+
+type ISideMenuConnectedProps = ConnectedProps<typeof connector>;
+
+export default connector(SideMenu);

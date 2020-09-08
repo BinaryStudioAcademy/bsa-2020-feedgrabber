@@ -19,7 +19,7 @@ const CheckboxQuestion: IGenericQuestionComponent<ICheckboxAnswerDetails> = ({
         answerOptions: [`${t("Option")} 1`],
         includeOther: false
       },
-      isCompleted: false
+      isCompleted: true
     },
     propValue,
     onValueChange

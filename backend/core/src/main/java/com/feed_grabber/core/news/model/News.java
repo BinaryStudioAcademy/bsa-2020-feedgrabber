@@ -3,6 +3,7 @@ package com.feed_grabber.core.news.model;
 import com.feed_grabber.core.comments.model.Comment;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.image.model.Image;
+import com.feed_grabber.core.newsReaction.model.NewsReaction;
 import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,4 +60,7 @@ public class News {
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
     private Date createdAt;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<NewsReaction> reactions;
 }
