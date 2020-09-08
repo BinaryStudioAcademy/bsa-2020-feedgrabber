@@ -9,6 +9,10 @@ function* searchOverAll(action) {
     try {
         yield put(updateSearchQuery.success(action.payload));
 
+      if (!action.payload) {
+        yield put(searchOverAllEntities.failure());
+        return;
+      }
         const res: IGeneric<ISearchResult> = yield call(apiClient.get, `/api/search?query=${action.payload}`);
 
         yield put(searchOverAllEntities.success(res.data.data));
