@@ -42,7 +42,7 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
     const [t] = useTranslation();
     const history = useHistory();
 
-    const handleClick = () => {
+    const expandNews = () => {
         history.push(`/company/news/${item.id}`);
     };
 
@@ -54,8 +54,11 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
 
     return (
         <>
-            <UICardBlock key={item.id}
-                         className={styles.newsItemContainer}>
+            <UICardBlock
+                key={item.id}
+                className={styles.newsItemContainer}
+                onClick={expandNews}
+            >
                 <>
                     <img src={item.image ? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
                     <div className={styles.detailesContainer}>
@@ -83,7 +86,7 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
                 </>
             </UICardBlock>
             <div className={styles.reactionsContainer}>
-                {item.reactions.map(r =>
+                {item.reactions?.map(r =>
                     (
                         <ReactionTile newsId={item.id} react={react} item={r}/>
                     ))}
