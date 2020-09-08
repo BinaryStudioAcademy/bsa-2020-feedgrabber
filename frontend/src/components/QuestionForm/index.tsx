@@ -62,7 +62,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const onSubmit = useCallback(() => {
         if (isDetailsValid && formik.isValid) {
             const {question, ...rest} = formik.values;
-            const sum = {...question, ...rest};
+            const sum = {...question, ...rest, index: currentQuestion.index};
             if (!isEqual(sum, currentQuestion)) {
                 listEdit ?
                     addQuestion(sum) :
@@ -90,7 +90,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
             ...currentQuestion,
             name: `${currentQuestion.name} (copy)`,
             sectionId: s?.id,
-            index: s?.questions.length
+            index: s?.questions?.length
         };
         addQuestion(res);
     };

@@ -58,7 +58,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
                 pagination: {
                     ...state.pagination,
                     items,
-                    total: items.length
+                    total: state.pagination.total + 1
                 }
             };
         case deleteQuestionRoutine.SUCCESS:
