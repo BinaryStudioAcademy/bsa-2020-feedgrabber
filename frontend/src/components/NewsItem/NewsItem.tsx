@@ -2,6 +2,7 @@ import React, {FC} from "react";
 import styles from './styles.module.scss';
 import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UICardBlock from "../UI/UICardBlock";
+import moment from "moment";
 
 export interface INewsItemProps {
     item: ICompanyFeedItem;
@@ -28,7 +29,7 @@ const NewsItem: FC<INewsItemProps> = ({item}) => {
                     }
                     <div className={styles.detailesAuthorContainer}>
                         <div className={styles.userName}>{item.user.username}</div>
-                        <div className={styles.date}>{item.createdAt}</div>
+                        <div className={styles.date}>{moment(item.createdAt).format("MMM Do, YYYY")}</div>
                     </div>
                 </div>
             </div>
