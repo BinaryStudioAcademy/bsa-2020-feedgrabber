@@ -2,7 +2,6 @@
   "translations": {
     "PENDING FEEDBACKS": "ОЧІКУЮЩІ ВІДГУКИ",
     "Form Creator": "Створення форми",
-    "Send Request": "Створити запит",
     "ASSIGN FEEDBACKS": "НАЗНАЧИТИ ВІДГУК",
     "Profile": "Профіль",
     "Settings": "Налаштування",
@@ -121,7 +120,7 @@
     "Discard changes": "Скасувати зміни",
     "Change": "Змінити",
     "Do you really want to fire": "Ви дійсно хочете звільнити співробітника",
-    "Stwitch": "Змінити посаду",
+    "Switch role": "Змінити посаду",
     "Fire": "Звільнити",
     "company_owner": "власник компанії",
     "hr": "рекрутер",
@@ -136,7 +135,7 @@
     "using there corporate email": ", використовуючи корпоративний емейл",
     "Do you really want to delete current email domain?": "Ви дійсно хочете видалити поточний домен? ",
     "Employees won`t able to register with there corporate emails anymore":
-        "Працівники більше не зможуть реєструватися через корпоративний емейл.",
+        "Працівники більше не зможуть реєструватися через корпоративну пошту.",
     "Send": "Відправити",
     "Sent Invitations": "Відправлені запрошення",
     "Resend": "Відправити повторно",
@@ -154,7 +153,6 @@
     "This question was answered already": "На це питання вже є відповідь",
     "Are you sure you want to change it?": "Ви дійсно хочете змінити його?",
     "Yes, I am sure": "Так, я впевнений",
-    "Cancel": "Відміна",
 
     "average size": "середній розмір",
     "Overall": "Загалом",
@@ -249,7 +247,7 @@
     "Too Short!": "Занадто коротке!",
     "Too Long!": "Занадто довге!",
 
-    "Username": "Username",
+    "Username": "Логін",
     "Email": "Email",
     "Company": "Компанія",
     "Password": "Пароль",
@@ -261,7 +259,7 @@
     "Search...": "Пошук...",
     "Type your first name...": "Введіть своє ім’я...",
     "Type your last name...": "Введіть своє прізвище...",
-    "Type your username...": "Введіть свій username...",
+    "Type your username...": "Введіть свій логін...",
     "Preferred language": "Мова",
     "Choose type": "Виберіть тип",
     "Other option...": "Інший варіант...",
@@ -270,10 +268,10 @@
     "It may affect answers that have been given before!!!": "Це може вплинути на відповіді, які були дані раніше!!!",
     "I know what I do!": "Я знаю, що роблю!",
     "Team Name": "Назва команди",
-    "Invitation email": "Email для запрошення",
+    "Invitation email": "Пошта для запрошення",
     "Title": "Заголовок",
-    "Update Username": "Змінити username",
-    "Change your username": "Змінити username",
+    "Update Username": "Змінити логін",
+    "Change your username": "Змінити логін",
     "Change your password": "Змінити пароль",
 
     "Type your question": "Введіть запитання",
@@ -301,19 +299,18 @@
 
     "New request": "Новий запит",
     "Show requests and reports": "Показати запити та звіти",
-    "Manage questions": "Редагування питаннями",
+    "Manage questions": "Редагування питань",
     "Change title": "Змінити заголовок",
-    "Delete questionnaire": "Видалити опитник",
+    "Delete questionnaire": "Видалити опитувальник",
 
-    "Edit questionnaire": "Редагувати опитник",
-    "Add questionnaire": "Створити опитник",
+    "Edit questionnaire": "Редагувати опитувальник",
+    "Add questionnaire": "Створити опитувальник",
     "title is a required field": "Заголовок є обов'язковим полем",
 
     "Create a new feed item": "Створити новину",
     "What's up": "Що сталося?",
     "Attach image": "Прикріпити фото",
     "Submit": "Підтвердити",
-    "Add": "Додати",
     "Add news": "Додати новину"
   }
 }
