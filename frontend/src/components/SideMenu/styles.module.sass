@@ -7,7 +7,7 @@ $lang-color: #596086
 
 .menuWrapper
   background-color: $attention-color
-  height: 100%
+  height: calc(100% - 5em)
   border-top: #565c86 solid 2px
   z-index: 1
   transition: width $toggle-menu-duration $toggle-menu-timing
@@ -24,6 +24,7 @@ $lang-color: #596086
     height: 100%
 
 .menuLanguagesWrapper
+  margin-top: auto
   ul
     background-color: $active-back
 .listActive
@@ -31,7 +32,6 @@ $lang-color: #596086
 
 .listInactive
   height: 0
-  visibility: hidden
 
 .menuItem
   font-family: Raleway
@@ -50,7 +50,7 @@ $lang-color: #596086
 
 .menuItemIcon
   transition: all .2s ease-in-out
-  margin-left: .5em
+  margin-left: .75em
 
 .menuItemTitle
   margin-left: 1.4em
