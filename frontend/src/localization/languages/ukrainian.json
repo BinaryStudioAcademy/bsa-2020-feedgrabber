@@ -177,6 +177,7 @@
     "Can users change answers?": "Чи можуть користувачі змінювати відповіді?",
     "Select Teams": "Виберіть команди",
     "Select Users": "Виберіть користувачів",
+    "username": "логін",
 
     "Request is in progress": "Запит в процесі",
     "Closed": "Закрито",
