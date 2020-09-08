@@ -17,11 +17,10 @@ import {useTranslation} from "react-i18next";
 import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
+import {saveQuestionRoutine, updateQuestionRoutine} from "../../sagas/questions/routines";
 
 export interface IQuestionListEditProps {
-    addQuestion: (question) => void;
     cancel: () => void;
-    deleteQuestion?: (id: string) => void;
 }
 
 const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProps }> = (
@@ -43,6 +42,8 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const ref = useRef(null);
     const [t] = useTranslation();
 
+    useOutsideAlerter(ref, () => onSubmit());
+
     const formik = useFormik({
         initialValues: {
             question: currentQuestion,
@@ -58,29 +59,24 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         setLocalCategories(categories);
     }, [categories]);
 
-    useOutsideAlerter(ref, () => onSubmit());
-
     const onSubmit = useCallback(() => {
         if (isDetailsValid && formik.isValid) {
             const {question, ...rest} = formik.values;
             const sum = {...question, ...rest};
             if (!isEqual(sum, currentQuestion)) {
-                listEdit ?
-                    listEdit.addQuestion(sum) :
-                    !sum.id ? addQuestion({ ...sum, questionnaireId, sectionId: section.id })
-                    : updateQuestion({ ...sum, sectionId: section.id });
+                // listEdit ?
+                //     // listEdit.addQuestion(sum) :
+                //     !sum.id ? addQuestion({ ...sum, questionnaireId, sectionId: section.id })
+                //     : updateQuestion({ ...sum, sectionId: section.id });
             }
         }
     }, [currentQuestion, addQuestion, updateQuestion,
         formik.values, isDetailsValid, section, questionnaireId, formik.isValid, listEdit]);
 
     useEffect(() => {
-        if (!listEdit) {
-            const timer = setTimeout(() => onSubmit(), 3000);
-            return () => clearTimeout(timer);
-        }
-            return undefined;
-    }, [onSubmit, listEdit]);
+        const timer = setTimeout(() => onSubmit(), 3000);
+        return () => clearTimeout(timer);
+    }, [onSubmit]);
 
     const handleQuestionDetailsUpdate = state => {
         const {isCompleted, value} = state;
@@ -96,12 +92,11 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
             sectionId: s?.id,
             index: s?.questions.length
         };
-        listEdit ? listEdit.addQuestion(res) : addQuestion(res);
+        addQuestion(res);
     };
 
-    const onDelete = () => listEdit?.deleteQuestion
-        ? listEdit?.deleteQuestion(currentQuestion.id)
-        : deleteQuestion({
+    const onDelete = () =>
+        deleteQuestion({
             questionId: currentQuestion.id,
             sectionId: section.id
         });
@@ -176,26 +171,14 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                         <Divider/>
                         <div className={styles.actions}>
                             {listEdit &&
-                            <>
-                                <Popup content={"Save"}
-                                       trigger={(
-                                           <span
-                                               className={styles.icon}
-                                               onClick={onSubmit}>
-                                            <Icon name="save outline" size="large"/>
-                                        </span>
-                                       )}
-                                />
-                                <Popup content={"Cancel"}
-                                       trigger={(
-                                           <span className={styles.icon} onClick={() => listEdit.cancel()}>
+                            <Popup content={"Cancel"}
+                                   trigger={(
+                                       <span className={styles.icon} onClick={() => listEdit.cancel()}>
                                             <Icon name="close" size="large"/>
                                         </span>
-                                       )}
-                                />
-                            </>
-                            }
-                            {(!listEdit || listEdit.deleteQuestion) &&
+                                   )}
+                            />}
+                            {!listEdit &&
                             <Popup content={"Delete"}
                                    trigger={(
                                        <span className={styles.icon} onClick={onDelete}>
@@ -231,21 +214,27 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     );
 };
 
-const mapState = (state: IAppState) => ({
+const mapState = (state: IAppState, ownProps) => ({
     isLoading: state.formEditor.isLoading,
     categories: state.categories.list,
-    currentQuestion: state.formEditor.currentQuestion,
+    currentQuestion: ownProps.isList
+        ? state.questions.currentQuestion
+        : state.formEditor.currentQuestion,
     questionnaireId: state.formEditor.questionnaire.id,
     section: state.formEditor.sections.current,
     sections: state.formEditor.sections.list
 });
 
-const mapDispatch = {
-    addQuestion: addQuestionToSectionRoutine,
+const mapDispatch = (dispatch, ownProps) => ({
+    addQuestion: ownProps.isList
+        ? ownProps.isListNew
+            ? saveQuestionRoutine
+            : updateQuestionRoutine
+        : addQuestionToSectionRoutine,
     updateQuestion: updateQuestionInSectionRoutine,
     loadCategories: loadCategoriesRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine
-};
+});
 
 const connector = connect(mapState, mapDispatch);
 
