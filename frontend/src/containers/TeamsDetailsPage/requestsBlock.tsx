@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import UIColumn from "../../components/UI/UIColumn";
-import LoaderWrapper from "../../components/LoaderWrapper";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {ITeam} from "../../models/teams/ITeam";
@@ -9,6 +8,7 @@ import {IRequestShort} from "../../models/report/IReport";
 import {RequestItem} from "../RequestsPage/RequestItem";
 import {Tab} from "semantic-ui-react";
 import {closeRequestRoutine} from "../../sagas/request/routines";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 
 interface ITeamRequestsBlockProps {
   currentTeam?: ITeam;
