@@ -18,12 +18,3 @@ export interface INewsListState {
     pagination?: IPaginationInfo<INewsItem>;
     isLoading: boolean;
 }
-
-export interface INewsFeedState {
-    list?: INewsListState;
-    current?: {
-        get: INewsItem;
-        comments?: IComment[];
-        isLoading: boolean;
-    };
-}

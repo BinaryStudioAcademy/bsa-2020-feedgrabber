@@ -1,5 +1,4 @@
-import {IUserInfo, IUserShort} from "../user/types";
-import {IPaginationInfo} from "../IPaginationInfo";
+import {IUserShort} from "../user/types";
 
 export interface IComment {
     id: string;
@@ -7,9 +6,4 @@ export interface IComment {
     newsId: string;
     user: IUserShort;
     createdAt?: Date;
-}
-
-export interface ICommentsList {
-    pagination?: IPaginationInfo<IComment>;
-    isLoading?: boolean;
 }
