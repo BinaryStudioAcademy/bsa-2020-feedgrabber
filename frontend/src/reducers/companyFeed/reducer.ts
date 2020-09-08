@@ -71,7 +71,8 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         ...state,
         current: {
           ...state.current,
-          comments: [...state.current.comments, payload]
+          comments: [...state.current.comments, payload],
+          commentsCount: state.current.commentsCount + 1
         },
         isLoading: false
       };
@@ -89,7 +90,8 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         ...state,
         current: {
           ...state.current,
-          comments: state.current.comments.filter(comment => comment.id !== payload)
+          comments: state.current.comments.filter(comment => comment.id !== payload),
+          commentsCount: state.current.commentsCount - 1
         }
       };
     default:
