@@ -254,7 +254,7 @@ public class UserService implements UserDetailsService {
                         new org.springframework.security.core.userdetails.User(
                                 u.getUsername(),
                                 u.getPassword(),
-                                true,
+                                u.getIsEnabled(),
                                 true,
                                 true,
                                 true,
