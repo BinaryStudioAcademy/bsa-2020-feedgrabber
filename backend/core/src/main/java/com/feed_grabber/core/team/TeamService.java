@@ -11,6 +11,7 @@ import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,8 +27,12 @@ public class TeamService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<TeamShortDto> getAllByCompany_Id(UUID companyId) {
-        return teamRepository.findAllByCompanyId(companyId);
+    public List<TeamShortDto> getAllByCompany_Id(UUID companyId, Integer page, Integer size) {
+        return teamRepository.findAllByCompanyId(companyId, PageRequest.of(page, size));
+    }
+
+    public Long countAllByCompanyId(UUID companyID){
+        return teamRepository.countAllByCompanyId(companyID);
     }
 
     public TeamDetailsDto getOne(UUID companyId, UUID id) throws TeamNotFoundException {

@@ -1,5 +1,6 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.apiContract.AppResponse;
@@ -31,10 +32,15 @@ public class TeamController {
     @ApiOperation("Get all teams")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<TeamShortDto>> getAll() {
+    public AppResponse<DataList<TeamShortDto>> getAll(@RequestParam Integer page,
+                                                      @RequestParam Integer size) {
         var companyId = TokenService.getCompanyId();
-        var teams = service.getAllByCompany_Id(companyId);
-        return new AppResponse<>(teams);
+        return new AppResponse<>(new DataList<>(
+                service.getAllByCompany_Id(companyId, page, size),
+                service.countAllByCompanyId(companyId),
+                page,
+                size
+        ));
     }
 
     @ApiOperation("Get the team by id")
