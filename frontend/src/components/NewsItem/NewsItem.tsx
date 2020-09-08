@@ -69,7 +69,7 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
                 </>
             </UICardBlock>
             <div className={styles.reactionsContainer}>
-                {item.reactions.map(r =>
+                {item.reactions?.map(r =>
                     (
                         <ReactionTile newsId={item.id} react={react} item={r}/>
                     ))}
