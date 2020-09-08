@@ -22,7 +22,6 @@ const initialState: IAppState['questions'] = {
 const questionsReducer = (state: IQuestionsState = initialState, {type, payload}) => {
     switch (type) {
         case loadQuestionsRoutine.TRIGGER:
-        case updateQuestionRoutine.TRIGGER:
         case deleteQuestion.TRIGGER:
         case saveQuestionRoutine.TRIGGER:
             return {
@@ -44,8 +43,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
             return {
                 ...state,
                 list: state.list.map(q => q.id === payload.id ? payload : q),
-                current: payload,
-                isLoading: false
+                currentQuestion: payload
             };
         case deleteQuestion.SUCCESS:
             return {
@@ -63,7 +61,6 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
         case loadQuestionsRoutine.FAILURE:
         case saveQuestionRoutine.FAILURE:
         case deleteQuestion.FAILURE:
-        case updateQuestionRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false

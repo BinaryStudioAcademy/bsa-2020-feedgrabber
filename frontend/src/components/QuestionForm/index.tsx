@@ -64,16 +64,18 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
             const {question, ...rest} = formik.values;
             const sum = {...question, ...rest};
             if (!isEqual(sum, currentQuestion)) {
-                // listEdit ?
-                //     // listEdit.addQuestion(sum) :
-                //     !sum.id ? addQuestion({ ...sum, questionnaireId, sectionId: section.id })
-                //     : updateQuestion({ ...sum, sectionId: section.id });
+                console.log('inside');
+                listEdit ?
+                    addQuestion(sum) :
+                    !sum.id ? addQuestion({...sum, questionnaireId, sectionId: section.id})
+                        : updateQuestion({...sum, sectionId: section.id});
             }
         }
     }, [currentQuestion, addQuestion, updateQuestion,
         formik.values, isDetailsValid, section, questionnaireId, formik.isValid, listEdit]);
 
     useEffect(() => {
+        console.log('timeout');
         const timer = setTimeout(() => onSubmit(), 3000);
         return () => clearTimeout(timer);
     }, [onSubmit]);
@@ -226,14 +228,14 @@ const mapState = (state: IAppState, ownProps) => ({
 });
 
 const mapDispatch = (dispatch, ownProps) => ({
-    addQuestion: ownProps.isList
+    addQuestion: (a: any) => dispatch(ownProps.isList
         ? ownProps.isListNew
-            ? saveQuestionRoutine
-            : updateQuestionRoutine
-        : addQuestionToSectionRoutine,
-    updateQuestion: updateQuestionInSectionRoutine,
-    loadCategories: loadCategoriesRoutine,
-    deleteQuestion: deleteQuestionFromSectionRoutine
+            ? saveQuestionRoutine(a)
+            : updateQuestionRoutine(a)
+        : addQuestionToSectionRoutine(a)),
+    updateQuestion: (a: any) => dispatch(updateQuestionInSectionRoutine(a)),
+    loadCategories: () => dispatch(loadCategoriesRoutine()),
+    deleteQuestion: (a: any) => dispatch(deleteQuestionFromSectionRoutine(a))
 });
 
 const connector = connect(mapState, mapDispatch);
