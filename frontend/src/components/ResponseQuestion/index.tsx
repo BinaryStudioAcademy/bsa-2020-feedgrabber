@@ -1,6 +1,6 @@
 import TypeToResponseMap from "models/forms/Questions/TypeToResponseMap";
 import {IQuestionResponse} from "models/IQuestionResponse";
-import React, {FC, useLayoutEffect, useRef} from "react";
+import React, {FC} from "react";
 import {Header, Label, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import QuestionForm from "../QuestionForm";
@@ -10,13 +10,10 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
     {
         question,
         answerHandler,
-        setMenuPos,
         setCurrentQuestion,
-        currentQuestion
+        isCurrent
     }) => {
     const {name, categoryTitle, type} = question;
-    const ref = useRef(null);
-    const isCurrent = currentQuestion.id === question.id;
 
     const handleSegmentClick = () => {
         if (!answerHandler && !isCurrent) {
@@ -24,18 +21,12 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
         }
     };
 
-    useLayoutEffect(() => {
-        isCurrent && setMenuPos(ref?.current?.getBoundingClientRect().y);
-    }, [isCurrent, setMenuPos, currentQuestion]);
-
     return (
-        <div ref={ref} onClick={handleSegmentClick}>
+        <div onClick={handleSegmentClick}>
             <Segment className={`${styles.container} ${isCurrent && styles.highlight}`}>
                 {isCurrent
                     ?
-                    <div className={styles.scaleTop}>
-                        <QuestionForm/>
-                    </div>
+                    <QuestionForm/>
                     :
                     <div>
                         {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}

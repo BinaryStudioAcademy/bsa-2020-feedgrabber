@@ -15,7 +15,7 @@ const UISection: FC<IUISectionProps> = ({section, onChanged}) => {
 
     return (
         <div className={styles.headerContainer}>
-                <div className={["ui very padded segment", styles.sectionCard].join(' ')}>
+                <div className={[styles.sectionCard].join(' ')}>
                     <input type="text" className={styles.title}
                     value={title || ''}
                     placeholder={t("Title")}

@@ -74,6 +74,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                     list: payload,
                     current: payload[0]
                 },
+                currentQuestion: {},
                 isLoading: false
             };
         case loadQuestionsBySectionRoutine.SUCCESS:
@@ -114,14 +115,12 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             const qs = state.sections.list.flatMap(s => s.questions);
             const index = qs.findIndex(q => q.id === payload.questionId);
             const q = qs[index-1] || qs[index+1];
+            const qsct = {...state.sections.current, questions: payload.questions};
             return {
                 ...state,
                 sections: {
-                    current: {...state.sections.current, questions: payload.questions},
-                    list: state.sections.list.map(s => s.id === payload.sectionId ? {
-                        ...s,
-                        questions: payload.questions
-                    } : s)
+                    current: qsct,
+                    list: state.sections.list.map(s => s.id === payload.sectionId ? qsct : s)
                 },
                 currentQuestion: q ?? {},
                 isLoading: false
@@ -129,8 +128,12 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case updateQuestionInSectionRoutine.SUCCESS:
         case addQuestionToSectionRoutine.SUCCESS:
             const {sectionId, questions, questionId} = payload;
-            const curQ = questions.find(q => q.id === questionId);
+            let cq = questions.find(q => q.id === questionId);
             const list = state.sections.list.map(s => s.id === sectionId ? {...s, questions} : s);
+
+            if (type === updateQuestionInSectionRoutine.SUCCESS) {
+                cq = cq.id === state.currentQuestion.id ? cq : state.currentQuestion;
+            }
 
             return {
                 ...state,
@@ -138,7 +141,7 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                     current: {...state.sections.current, questions},
                     list
                 },
-                currentQuestion: curQ,
+                currentQuestion: cq,
                 isLoading: false
             };
         case loadOneQuestionnaireRoutine.TRIGGER:

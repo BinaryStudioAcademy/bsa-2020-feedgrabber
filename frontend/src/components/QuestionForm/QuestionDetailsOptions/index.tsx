@@ -18,11 +18,6 @@ const QuestionDetailsOptions = ({ question, setQuestionType }) => {
             text: <span className={styles.option}><Icon name="check square" />{t("CheckBoxes")}</span>,
             value: QuestionType.checkbox
         },
-        // {
-        //     key: "Multichoice",
-        //     text: <span className={styles.option}><Icon name="check square outline" />Multichoice</span>,
-        //     value: QuestionType.multichoice
-        // },
         {
             key: "TextArea",
             text: <span className={styles.option}><Icon name="align left" />{t("TextArea")}</span>, // bars, content
@@ -40,19 +35,16 @@ const QuestionDetailsOptions = ({ question, setQuestionType }) => {
         },
         {
             key: "fileUpload",
-            text: <span className={styles.option}><Icon name="cloud upload"/>{t("File upload")}</span>,
+            text: <span className={styles.option}><Icon name="cloud upload" color="grey"/>{t("File upload")}</span>,
             value: QuestionType.fileUpload
         }
     ];
 
     return (
         <Form.Dropdown
-            className={styles.question_details_dropdown}
-            inline
             selection
             options={questionTypeOptions}
             value={question.type}
-            placeholder={t("Choose type")}
             onChange={(event, data) => setQuestionType(data)}
         />
     );

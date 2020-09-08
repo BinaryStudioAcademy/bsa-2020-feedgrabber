@@ -81,7 +81,7 @@ public class QuestionnaireService {
         }
 
         if (!createDto.getTitle()
-                .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
+                .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-\\/=?^_`]+)")) {
             throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
                     "have more than one space in sequence." +
                     "Title can contain latin letters, numbers and special symbols.");

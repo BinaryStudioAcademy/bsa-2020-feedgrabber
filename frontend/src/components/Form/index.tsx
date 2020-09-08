@@ -24,7 +24,6 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         updateSections,
         updateOrder,
         setCurrentQuestion,
-        setMenuPos,
         currentQuestion,
         updateSection
     }) => {
@@ -86,7 +85,6 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                     <Section
                         key={section.id}
                         setCurrentQuestion={setCurrentQuestion}
-                        setMenuPos={setMenuPos}
                         currentQuestion={currentQuestion}
                         section={section}
                         renameSection={updateSection}

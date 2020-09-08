@@ -44,6 +44,10 @@ const FormEditor: FC<FormEditorProps & { match }> = (
     useEffect(() => {
         loadQuestionnaire(match.params.id);
         toggleMenu(false);
+        const e = document.getElementById("root");
+        const prevBack = e.style.backgroundColor;
+        e.style.backgroundColor = '#f0ebf8';
+        return () => e.style.backgroundColor = prevBack;
     }, [match.params.id, loadQuestionnaire, toggleMenu]);
 
     const addNewQuestion = () => {
@@ -86,7 +90,6 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                 <div className={styles.form}>
                                     <Form
                                         updateSections={updateSectionsR}
-                                        setMenuPos={setMenuPos}
                                         setCurrentQuestion={setCurrentQuestion}
                                         updateSection={updateSection}
                                         updateOrder={updateOrder}

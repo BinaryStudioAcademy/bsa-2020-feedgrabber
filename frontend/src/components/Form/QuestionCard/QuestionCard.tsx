@@ -7,9 +7,8 @@ import {Draggable} from "react-beautiful-dnd";
 const QuestionCard: FC<CardProps> = (
     {
         question,
-        currentQuestion,
+        isCurrent,
         index,
-        setMenuPos,
         setCurrentQuestion
     }) => (
     <Draggable draggableId={question.id} index={index}>
@@ -22,9 +21,8 @@ const QuestionCard: FC<CardProps> = (
             >
                 <ResponseQuestion
                     setCurrentQuestion={setCurrentQuestion}
-                    setMenuPos={setMenuPos}
                     question={question}
-                    currentQuestion={currentQuestion}
+                    isCurrent={isCurrent}
                 />
             </div>
         )}
@@ -39,8 +37,7 @@ export type CardProps = {
 } & ResponseQuestionProps;
 
 export type ResponseQuestionProps = {
-    setMenuPos: (x: any) => void;
     setCurrentQuestion: (x: any) => void;
-    currentQuestion?: IQuestion;
+    isCurrent?: boolean;
 }
 

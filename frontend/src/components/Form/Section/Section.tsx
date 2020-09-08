@@ -18,7 +18,6 @@ interface ISectionProps {
 const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
     {
         section,
-        setMenuPos,
         setCurrentQuestion,
         renameSection,
         currentQuestion
@@ -38,12 +37,11 @@ const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
                     >
                         {questions?.length ? questions.map((q, i) => (
                                 <QuestionCard
-                                    setMenuPos={setMenuPos}
-                                    setCurrentQuestion={setCurrentQuestion}
                                     key={q.id}
-                                    question={q}
                                     index={i}
-                                    currentQuestion={currentQuestion}
+                                    setCurrentQuestion={setCurrentQuestion}
+                                    question={q}
+                                    isCurrent={currentQuestion.id === q.id}
                                 />
                             )) :
                             <Header as='h3' content={t("Add questions")}/>
