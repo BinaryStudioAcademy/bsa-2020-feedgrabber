@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Permissions } from "../AccessManager/rbac-rules";
 import AccessManager from "../AccessManager";
-import UICardBlock from 'components/UI/UICardBlock';
 import { ICompanyFeedItem } from 'models/companyFeed/ICompanyFeedItem';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';

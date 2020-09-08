@@ -7,7 +7,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadQuestionByIdRoutine} from "sagas/questions/routines";
 import {Button, Header, Label, Modal, Segment} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
     ({question, answerHandler, loadCurrent, nowModifying, isModifyingEnabled}) => {
@@ -28,13 +28,16 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                 const {top, right} = detailsPage.current.getBoundingClientRect();
                 loadCurrent({id: question.id, top, right});
             }
-            setModal(true);
-        };
-
-        const handleSubmit = () => {
             if (!isModifyingEnabled && !answerHandler && !editor) {
                 setModal(true);
             }
+        };
+
+        const handleSubmit = () => {
+            setModal(false);
+            setEditor(!editor);
+            const {top, right} = detailsPage.current.getBoundingClientRect();
+            loadCurrent({id: question.id, top, right});
         };
 
         function handleCancel() {
@@ -43,21 +46,6 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
 
         return (
             <div ref={detailsPage}>
-                {/* <Popup*/}
-                {/*    // trigger={!answerHandler && <Icon name='code' link/>}*/}
-                {/*    isOpen={popup}*/}
-                {/*    on='click'>*/}
-                {/*    <Popup*/}
-                {/*        trigger={<Button color='blue'*/}
-                {/*                         content={t('I know what I do!')}*/}
-                {/*                         fluid*/}
-                {/*                         onClick={handleSegmentClick}/>}*/}
-                {/*        content={t('It may affect answers that have been given before!!!')}*/}
-                {/*        position='top center'*/}
-                {/*        size='tiny'*/}
-                {/*        inverted*/}
-                {/*    />*/}
-                {/* </Popup>*/}
                 <Modal
                     open={modal}
                     size="small"
@@ -70,13 +58,13 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> =
                         </Modal.Description>
                         <Modal.Actions>
                             <Button
-                                content="Yes, I am sure"
+                                content={t("Yes, I am sure")}
                                 labelPosition='right'
                                 icon='checkmark'
                                 positive
                                 onClick={handleSubmit}/>
                             <Button
-                                content="Cancel"
+                                content={t("Cancel")}
                                 onClick={handleCancel}/>
                         </Modal.Actions>
                     </Modal.Content>
