@@ -1,7 +1,7 @@
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import {
     addSelectedQuestionsRoutine,
-    deleteQuestion,
+    deleteQuestionRoutine,
     loadQuestionnaireQuestionsRoutine,
     loadQuestionsBySectionRoutine,
     loadQuestionsRoutine,
@@ -22,11 +22,13 @@ export const parseQuestion = rawQuestion => ({
 
 function* getAll() {
     try {
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions`);
+        const store = yield select();
+        const {page, size} = store.questions.pagination;
+        const res = (yield call(apiClient.get, `/api/questions?page=${page}&size=${size}`)).data.data;
 
-        const questions = res.data.data.map(q => parseQuestion(q));
+        res.items = res.items.map(q => parseQuestion(q));
 
-        yield put(loadQuestionsRoutine.success(questions));
+        yield put(loadQuestionsRoutine.success(res));
     } catch (e) {
         yield put(loadQuestionsRoutine.failure());
         toastr.error("Unable to load questions");
@@ -62,9 +64,9 @@ function* deleteQuestionById(action) {
     try {
         yield call(apiClient.delete, `/api/questions/${action.payload}`);
 
-        yield put(deleteQuestion.success(action.payload));
+        yield put(deleteQuestionRoutine.success(action.payload));
     } catch (e) {
-        yield put(deleteQuestion.failure());
+        yield put(deleteQuestionRoutine.failure());
         toastr.error("Question wasn't updated");
     }
 }
@@ -101,6 +103,6 @@ export default function* questionSagas() {
         yield takeEvery(updateQuestionRoutine.TRIGGER, updateQuestion),
         yield takeEvery(saveQuestionRoutine.TRIGGER, saveQuestion),
         yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId),
-        yield takeEvery(deleteQuestion.TRIGGER, deleteQuestionById)
+        yield takeEvery(deleteQuestionRoutine.TRIGGER, deleteQuestionById)
     ]);
 }

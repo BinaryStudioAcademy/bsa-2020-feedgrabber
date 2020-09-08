@@ -1,28 +1,34 @@
 import {IAppState} from "models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {
-    deleteQuestion,
+    deleteQuestionRoutine,
     loadQuestionsRoutine,
-    saveQuestionRoutine, setCurrentQuestionRoutine,
+    saveQuestionRoutine, setCurrentQuestionRoutine, setQuestionPaginationRoutine,
     updateQuestionRoutine
 } from "../../sagas/questions/routines";
+import {IPaginationInfo} from "../../models/IPaginationInfo";
 
 export interface IQuestionsState {
-    list?: IQuestion[];
     currentQuestion: IQuestion;
     isLoading?: boolean;
+    pagination?: IPaginationInfo<IQuestion>;
 }
 
 const initialState: IAppState['questions'] = {
-    list: [] as IQuestion[],
     currentQuestion: {} as IQuestion,
+    pagination: {
+        total: 0,
+        items: [],
+        page: 0,
+        size: 10
+    },
     isLoading: false
 };
 
 const questionsReducer = (state: IQuestionsState = initialState, {type, payload}) => {
     switch (type) {
         case loadQuestionsRoutine.TRIGGER:
-        case deleteQuestion.TRIGGER:
+        case deleteQuestionRoutine.TRIGGER:
         case saveQuestionRoutine.TRIGGER:
             return {
                 ...state,
@@ -33,34 +39,54 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
                 ...state,
                 currentQuestion: payload
             };
+        case setQuestionPaginationRoutine.TRIGGER:
+            return {
+                ...state,
+                pagination: payload
+            };
         case loadQuestionsRoutine.SUCCESS:
             return {
                 ...state,
-                list: payload,
+                pagination: payload,
                 isLoading: false
             };
         case updateQuestionRoutine.SUCCESS:
+            const items = state.pagination.items.map(q => q.id === payload.id ? payload : q);
             return {
                 ...state,
-                list: state.list.map(q => q.id === payload.id ? payload : q),
-                currentQuestion: payload
+                currentQuestion: payload,
+                pagination: {
+                    ...state.pagination,
+                    items,
+                    total: items.length
+                }
             };
-        case deleteQuestion.SUCCESS:
+        case deleteQuestionRoutine.SUCCESS:
+            const itemsDelete = state.pagination.items.filter(q => q.id !== payload);
             return {
                 ...state,
-                list: state.list.filter(q => q.id !== payload),
+                pagination: {
+                    ...state.pagination,
+                    itemsDelete,
+                    total: itemsDelete.length
+                },
                 isLoading: false
             };
         case saveQuestionRoutine.SUCCESS:
+            const newItems = [payload, ...state.pagination.items];
             return {
                 ...state,
-                list: [payload, ...state.list],
-                current: {},
+                pagination: {
+                    ...state.pagination,
+                    newItems,
+                    total: newItems.length
+                },
+                currentQuestion: {},
                 isLoading: false
             };
         case loadQuestionsRoutine.FAILURE:
         case saveQuestionRoutine.FAILURE:
-        case deleteQuestion.FAILURE:
+        case deleteQuestionRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false

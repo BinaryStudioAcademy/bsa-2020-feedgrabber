@@ -1,6 +1,7 @@
 package com.feed_grabber.core.question;
 
 import com.feed_grabber.core.question.model.Question;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,9 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
             "inner join Section s on sq.section.id = s.id " +
             "where s.id = :sectionId order by sq.orderIndex asc ")
     List<Question> findAllBySectionId(UUID sectionId);
+
+    List<Question> findAllByCompanyId(UUID companyId, Pageable pageable);
+
+    Long countAllByCompanyId(UUID companyId);
+
 }

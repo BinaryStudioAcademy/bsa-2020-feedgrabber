@@ -64,7 +64,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
             const {question, ...rest} = formik.values;
             const sum = {...question, ...rest};
             if (!isEqual(sum, currentQuestion)) {
-                console.log('inside');
                 listEdit ?
                     addQuestion(sum) :
                     !sum.id ? addQuestion({...sum, questionnaireId, sectionId: section.id})
@@ -75,7 +74,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         formik.values, isDetailsValid, section, questionnaireId, formik.isValid, listEdit]);
 
     useEffect(() => {
-        console.log('timeout');
         const timer = setTimeout(() => onSubmit(), 3000);
         return () => clearTimeout(timer);
     }, [onSubmit]);

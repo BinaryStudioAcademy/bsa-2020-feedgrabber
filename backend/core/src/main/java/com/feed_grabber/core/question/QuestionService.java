@@ -1,6 +1,5 @@
 package com.feed_grabber.core.question;
 
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
@@ -12,9 +11,9 @@ import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.SectionRepository;
-import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import lombok.SneakyThrows;
 import org.hibernate.HibernateException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
 
 @Service
 public class QuestionService {
@@ -44,11 +45,15 @@ public class QuestionService {
         this.sectionRepository = sectionRepository;
     }
 
-    public List<QuestionDto> getAll() {
-        return quesRep.findAll()
+    public List<QuestionDto> getAll(UUID companyId, Integer page, Integer size) {
+        return quesRep.findAllByCompanyId(companyId, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
+    }
+
+    public Long countByCompanyId(UUID companyId) {
+        return quesRep.countAllByCompanyId(companyId);
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
@@ -75,7 +80,7 @@ public class QuestionService {
         var question = Question.builder();
 
         var company = companyRep
-                .findById(TokenService.getCompanyId())
+                .findById(getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
 
         var category = findOrCreateCategory(dto.getCategoryTitle());
@@ -146,7 +151,7 @@ public class QuestionService {
     }
 
     private QuestionCategory findOrCreateCategory(String name) throws CompanyNotFoundException {
-        var company = companyRep.findById(TokenService.getCompanyId())
+        var company = companyRep.findById(getCompanyId())
                 .orElseThrow(CompanyNotFoundException::new);
 
         return quesCategRep.findByTitle(name)

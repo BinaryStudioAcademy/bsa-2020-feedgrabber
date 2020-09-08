@@ -3,6 +3,7 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
 import static com.feed_grabber.core.role.RoleConstants.*;
 
 @RestController
@@ -41,8 +43,15 @@ public class QuestionController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<List<QuestionDto>> getAll() {
-        return new AppResponse<>(questionService.getAll());
+    public AppResponse<DataList<QuestionDto>> getAll(@RequestParam(required = false) Integer page,
+                                                     @RequestParam(required = false) Integer size) {
+        var companyId = getCompanyId();
+        return new AppResponse<>(new DataList<>(
+                questionService.getAll(companyId, page, size),
+                questionService.countByCompanyId(companyId),
+                page,
+                size
+        ));
     }
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")

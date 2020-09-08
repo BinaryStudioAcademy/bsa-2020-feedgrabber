@@ -6,5 +6,6 @@ export const updateQuestionRoutine = createRoutine('QUESTION:UPDATE_QUESTION');
 export const addSelectedQuestionsRoutine = createRoutine('QUESTION:ADD_SELECTED');
 export const loadQuestionnaireQuestionsRoutine = createRoutine('QUESTION:LOAD_QUESTIONNAIRE');
 export const loadQuestionsBySectionRoutine = createRoutine('QUESTION:LOAD_SECTION');
-export const deleteQuestion = createRoutine('QUESTION:DELETE');
+export const deleteQuestionRoutine = createRoutine('QUESTION:DELETE');
 export const setCurrentQuestionRoutine = createRoutine('QUESTION:SET_CURRENT');
+export const setQuestionPaginationRoutine = createRoutine('QUESTION:SET_PAGING');

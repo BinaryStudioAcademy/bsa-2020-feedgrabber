@@ -4,9 +4,9 @@ import {Card} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
 import {
-    deleteQuestion,
+    deleteQuestionRoutine,
     loadQuestionsRoutine,
-    saveQuestionRoutine, setCurrentQuestionRoutine,
+    saveQuestionRoutine, setCurrentQuestionRoutine, setQuestionPaginationRoutine,
     updateQuestionRoutine
 } from '../../sagas/questions/routines';
 import {IAppState} from "../../models/IAppState";
@@ -19,17 +19,16 @@ import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import QuestionDetailsForm from "../../components/QuestionForm";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
+import GenericPagination from "../../components/helpers/GenericPagination";
 
 const QuestionsList: FC<QuestionsListProps> = ({
-                                                   questions,
                                                    isLoading,
                                                    loadQuestions,
                                                    result,
                                                    setCurrentQ,
-                                                   current,
-                                                   saveNewQuestion,
-                                                   deleteQuestion,
-                                                   updateQuestion
+                                                   currentQ: current,
+                                                   setPagination,
+                                                   pagination
                                                }) => {
     const [t] = useTranslation();
 
@@ -39,7 +38,7 @@ const QuestionsList: FC<QuestionsListProps> = ({
         loadQuestions();
     }, [loadQuestions]);
 
-    useEffect(()=> {
+    useEffect(() => {
         setNewPressed(!isEmpty(current) && newPressed);
     }, [current]);
 
@@ -77,35 +76,41 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                 <p>Modify existing</p>
                                 <hr/>
                                 <br/>
-                                {(questions.map((question, index) => {
-                                    const match = result
-                                        .questions
-                                        .map(q => q.id)
-                                        .includes(question.id);
-                                    return (
-                                        current?.id === question.id ?
-                                            <div key={index} className={styles.questionContainer}>
-                                                <QuestionDetailsForm isList listEdit={
-                                                    {
-                                                        cancel: () => {
-                                                            setCurrentQ({});
-                                                            newPressed && setNewPressed(false);
+                                <GenericPagination
+                                    isLoading={isLoading}
+                                    pagination={pagination}
+                                    setPagination={setPagination}
+                                    loadItems={loadQuestions}
+                                    mapItemToJSX={(question: IQuestion) => {
+                                        const match = result
+                                            .questions
+                                            .map(q => q.id)
+                                            .includes(question.id);
+                                        return (
+                                            current?.id === question.id ?
+                                                <div className={styles.questionContainer}>
+                                                    <QuestionDetailsForm isList listEdit={
+                                                        {
+                                                            cancel: () => {
+                                                                setCurrentQ({});
+                                                                newPressed && setNewPressed(false);
+                                                            }
                                                         }
-                                                    }
-                                                }/></div>
-                                            :
-                                            <Card className={`${styles.question} ${match && styles.searched}`}
-                                                  link centered fluid
-                                                  description={question.name?.length > 70 ?
-                                                      question.name.slice(0, 70).concat("...") :
-                                                      question.name}
-                                                  extra={match && 'Matches searched query!'}
-                                                  meta={question.categoryTitle?.length > 70 ?
-                                                      question.categoryTitle.slice(0, 70).concat("...") :
-                                                      question.categoryTitle}
-                                                  onClick={() => handleClick(question)}/>
-                                    );
-                                }))}
+                                                    }/></div>
+                                                :
+                                                <Card className={`${styles.question} ${match && styles.searched}`}
+                                                      link centered fluid
+                                                      description={question.name?.length > 70 ?
+                                                          question.name.slice(0, 70).concat("...") :
+                                                          question.name}
+                                                      extra={match && 'Matches searched query!'}
+                                                      meta={question.categoryTitle?.length > 70 ?
+                                                          question.categoryTitle.slice(0, 70).concat("...") :
+                                                          question.categoryTitle}
+                                                      onClick={() => handleClick(question)}/>
+                                        );
+                                    }}
+                                />
                             </UIColumn>
                         </UIContent>
                     </UIColumn>
@@ -116,9 +121,9 @@ const QuestionsList: FC<QuestionsListProps> = ({
 };
 
 const mapState = (state: IAppState) => ({
-    questions: state.questions.list,
     isLoading: state.questions.isLoading,
-    current: state.questions.currentQuestion,
+    currentQ: state.questions.currentQuestion,
+    pagination: state.questions.pagination,
     result: state.search.result
 });
 
@@ -126,8 +131,9 @@ const mapDispatch = {
     loadQuestions: loadQuestionsRoutine,
     setCurrentQ: setCurrentQuestionRoutine,
     saveNewQuestion: saveQuestionRoutine,
-    deleteQuestion: deleteQuestion,
-    updateQuestion: updateQuestionRoutine
+    deleteQuestion: deleteQuestionRoutine,
+    updateQuestion: updateQuestionRoutine,
+    setPagination: setQuestionPaginationRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

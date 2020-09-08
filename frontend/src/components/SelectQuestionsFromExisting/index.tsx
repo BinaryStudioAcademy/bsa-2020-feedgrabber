@@ -90,7 +90,7 @@ const mapState = (state: IAppState) => ({
     currentQuestions: state.formEditor.sections.list.flatMap(s => s.questions),
     isLoading: state.questions.isLoading,
     qnId: state.formEditor.questionnaire.id,
-    questions: state.questions.list,
+    questions: state.questions.pagination.items,
     currentSection: state.formEditor.sections.current
 });
 
