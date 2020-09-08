@@ -9,7 +9,7 @@ import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UIContent from "../UI/UIContent";
 import UIColumn from "../UI/UIColumn";
 import UIPageTitle from "../UI/UIPageTitle";
-import {saveCommentRoutine, updateCommentRoutine} from "../../sagas/comments/routines";
+import {deleteCommentRoutine, saveCommentRoutine, updateCommentRoutine} from "../../sagas/comments/routines";
 import styles from "./styles.module.sass";
 import {IComment} from "../../models/comments";
 import {useTranslation} from "react-i18next";
@@ -34,6 +34,7 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         loadNews,
         saveComment,
         updateComment,
+        deleteComment,
         match
 }) => {
 
@@ -92,7 +93,9 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
                                           <Dropdown.Item onClick={() => setUpdatingComment(comment)}>
                                               {t("Edit")}
                                           </Dropdown.Item>
-                                          <Dropdown.Item>{t("Delete")}</Dropdown.Item>
+                                          <Dropdown.Item onClick={() => deleteComment(comment.id)}>
+                                              {t("Delete")}
+                                          </Dropdown.Item>
                                         </Dropdown.Menu>
                                       </Dropdown>
                                     </Comment.Author>
@@ -130,7 +133,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     loadNews: loadCompanyFeedItemRoutine,
     saveComment: saveCommentRoutine,
-    updateComment: updateCommentRoutine
+    updateComment: updateCommentRoutine,
+    deleteComment: deleteCommentRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

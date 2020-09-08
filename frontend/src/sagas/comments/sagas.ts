@@ -1,6 +1,6 @@
 import apiClient from "../../helpers/apiClient";
 import { put, call, all, takeEvery } from "redux-saga/effects";
-import {saveCommentRoutine, updateCommentRoutine} from "./routines";
+import {deleteCommentRoutine, saveCommentRoutine, updateCommentRoutine} from "./routines";
 
 function* saveComment(action) {
     try {
@@ -22,9 +22,20 @@ function* updateComment(action) {
     }
 }
 
+function* deleteComment(action) {
+    try {
+        const id = action.payload;
+        yield call(apiClient.delete, `/api/comments/${id}`);
+        yield put(deleteCommentRoutine.success(id));
+    } catch (error) {
+        yield put(deleteCommentRoutine.failure(error));
+    }
+}
+
 export default function* commentsSagas() {
     yield all([
         yield takeEvery(saveCommentRoutine.TRIGGER, saveComment),
-        yield takeEvery(updateCommentRoutine.TRIGGER, updateComment)
+        yield takeEvery(updateCommentRoutine.TRIGGER, updateComment),
+        yield takeEvery(deleteCommentRoutine.TRIGGER, deleteComment)
     ]);
 }
