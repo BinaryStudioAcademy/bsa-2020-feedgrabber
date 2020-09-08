@@ -356,11 +356,7 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
-        var namepart = Long.toString(abs(random.nextLong()) % RANDOM_MAX, 36);
-
-
-        return name + "-" + namepart;
+        return companyName.toLowerCase().replaceAll("([ ])", "-");
     }
 
     public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
