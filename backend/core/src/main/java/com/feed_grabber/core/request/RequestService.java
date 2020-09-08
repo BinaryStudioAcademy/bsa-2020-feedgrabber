@@ -2,10 +2,6 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.security.TokenService;
-import com.feed_grabber.core.config.NotificationService;
-import com.feed_grabber.core.notification.MessageTypes;
-import com.feed_grabber.core.notification.UserNotificationRepository;
-import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.model.S3File;
@@ -18,6 +14,7 @@ import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
 import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
 import com.feed_grabber.core.request.dto.RequestShortDto;
+import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
@@ -48,9 +45,6 @@ public class RequestService {
                           ResponseRepository responseRepository,
                           FileRepository fileRepository,
                           UserNotificationService userNotificationService,
-                          UserNotificationRepository userNotificationRepository,
-                          NotificationService notificationService,
-                          FileRepository fileRepository,
                           Sender sender) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
@@ -144,7 +138,7 @@ public class RequestService {
     }
 
     public void addFileReports(FileReportsDto dto) throws NotFoundException {
-        if(dto.getExcelReport() != null && dto.getPptReport() != null) {
+        if (dto.getExcelReport() != null && dto.getPptReport() != null) {
             var excelReport = fileRepository.save(
                     S3File.builder()
                             .link(dto.getExcelReport().getLink())
@@ -198,26 +192,13 @@ public class RequestService {
         if (request.getSendToTarget() && !maker.equals(target)) {
             users.add(target);
         }
-        Map<UUID, UUID> userIdNotificationId = new HashMap<>();
-        for (User user : users)
-            userIdNotificationId.put(user.getId(),
-                    userNotificationRepository.save(UserNotification
-                            .builder()
-                            .request(request)
-                            .text("Request " + request.getQuestionnaire().getTitle() + " was closed")
-                            .isClosed(true)
-                            .isRead(false)
-                            .type(MessageTypes.plain_text)
-                            .user(user)
-                            .build()).getId());
-        for (UUID userId : userIdNotificationId.keySet()) {
-            notificationService.sendMessageToConcreteUser(
-                    userId.toString(),
-                    "notify",
-                    userNotificationRepository
-                            .findNotificationById(userIdNotificationId.get(userId))
-                            .orElseThrow(NotFoundException::new)
-            );
+        for (User user : users) {
+            userNotificationService
+                    .saveAndSendResponseNotification(
+                            request,
+                            user,
+                            "Request " + request.getQuestionnaire().getTitle() + " was closed"
+                    );
         }
     }
 

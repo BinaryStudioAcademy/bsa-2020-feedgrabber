@@ -21,8 +21,7 @@ public class ScheduledTasks {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private final long REQUEST_DEADLINE_NOTIFICATION_RATE = 43_200_000; // 12 hours;
-    private final long MIN_TIME_TO_NOTIFY = 86_399_000; // 24 hours(few ms less, so that notification will be sent once)
+    private final long MIN_TIME_TO_NOTIFY = 86_400_000;
 
 
     @Value("${client.host}")
@@ -37,7 +36,7 @@ public class ScheduledTasks {
     @Autowired
     private Sender sender;
 
-    @Scheduled(fixedRate = REQUEST_DEADLINE_NOTIFICATION_RATE)
+    @Scheduled(cron="0 0 0,12 * * *")
     public void scheduleRequestDeadlineCheck() throws NotFoundException {
         logger.info("Start checking deadlines. Time: {}", dateTimeFormatter.format(LocalDateTime.now()));
 
