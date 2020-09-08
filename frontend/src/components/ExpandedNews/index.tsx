@@ -9,10 +9,11 @@ import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UIContent from "../UI/UIContent";
 import UIColumn from "../UI/UIColumn";
 import UIPageTitle from "../UI/UIPageTitle";
-import {saveCommentRoutine} from "../../sagas/comments/routines";
-import moment from "moment";
+import {saveCommentRoutine, updateCommentRoutine} from "../../sagas/comments/routines";
 import styles from "./styles.module.sass";
-import LoaderWrapper from "../LoaderWrapper";
+import {IComment} from "../../models/comments";
+import {useTranslation} from "react-i18next";
+import moment from 'moment-with-locales-es6';
 
 const defaultItem: ICompanyFeedItem = {
     id: "",
@@ -32,6 +33,7 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         isLoading,
         loadNews,
         saveComment,
+        updateComment,
         match
 }) => {
 
@@ -39,10 +41,22 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         loadNews({ id: match.params.id });
     }, [loadNews, match.params.id]);
 
+    const [t] = useTranslation();
     const [body, setBody] = useState('');
+    const [updatingComment, setUpdatingComment] = useState<IComment>(null);
 
-    const handleCommentChange = (body: string) => {
-       setBody(body);
+    const handleUpdatingCommentChange = (body: string) => {
+        setUpdatingComment({
+            ...updatingComment,
+            body
+        });
+    };
+
+    const handleUpdateCommentSubmit = () => {
+        if (updatingComment.body) {
+            updateComment(updatingComment);
+        }
+        setUpdatingComment(null);
     };
 
     const handleSubmit = () => {
@@ -61,34 +75,46 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
             <UIColumn wide >
                 <NewsItem item={newsItem ? newsItem : defaultItem} />
                 <Divider />
-                <LoaderWrapper loading={isLoading}>
                 <CommentGroup className={styles.comments}>
-                    {newsItem?.comments?.map(comment => (
-                        <Comment>
-                            <Comment.Avatar src={comment.user.avatar} />
-                            <Comment.Content>
-                                <Comment.Author>
-                                    {comment.user.username}
-                                    <Comment.Metadata>
-                                    {moment(comment.createdAt).fromNow()}
-                                    </Comment.Metadata>
-                                    <Dropdown>
-                                    <Dropdown.Menu size="sm" title="">
-                                      <Dropdown.Item>Edit</Dropdown.Item>
-                                      <Dropdown.Item>Delete</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                  </Dropdown>
-                                </Comment.Author>
-                                <Comment.Text>{comment.body}</Comment.Text>
-                            </Comment.Content>
-                        </Comment>
-                    ))}
+                    {newsItem?.comments?.map(comment => {
+                        return !updatingComment || updatingComment.id !== comment.id
+                        ? (
+                            <Comment>
+                                <Comment.Avatar src={comment.user.avatar} />
+                                <Comment.Content>
+                                    <Comment.Author>
+                                        {comment.user.username}
+                                        <Comment.Metadata>
+                                        {moment(comment.createdAt).fromNow()}
+                                        </Comment.Metadata>
+                                        <Dropdown>
+                                        <Dropdown.Menu size="sm" title="">
+                                          <Dropdown.Item onClick={() => setUpdatingComment(comment)}>
+                                              {t("Edit")}
+                                          </Dropdown.Item>
+                                          <Dropdown.Item>{t("Delete")}</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                      </Dropdown>
+                                    </Comment.Author>
+                                    <Comment.Text>{comment.body}</Comment.Text>
+                                </Comment.Content>
+                            </Comment>
+                        ) : (
+                          <CommentInput
+                              value={updatingComment.body}
+                              onChange={handleUpdatingCommentChange}
+                              onCancel={() => setUpdatingComment(null)}
+                              onSubmit={handleUpdateCommentSubmit}
+                              loading={isLoading}
+                          />
+                        );
+                    })}
                 </CommentGroup>
-                </LoaderWrapper>
                 <CommentInput
                     className={styles.commentInput}
                     value={body}
-                    onChange={handleCommentChange}
+                    onChange={setBody}
+                    onCancel={() => setBody("")}
                     onSubmit={handleSubmit}
                 />
             </UIColumn>
@@ -103,7 +129,8 @@ const mapStateToProps = (state: IAppState) => ({
 
 const mapDispatchToProps = {
     loadNews: loadCompanyFeedItemRoutine,
-    saveComment: saveCommentRoutine
+    saveComment: saveCommentRoutine,
+    updateComment: updateCommentRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

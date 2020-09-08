@@ -10,6 +10,7 @@ import AccessManager from "../AccessManager";
 import {useTranslation} from "react-i18next";
 import {getUserSettingsRoutine} from "../../sagas/user/routines";
 import {IAppState} from "../../models/IAppState";
+import moment from "moment-with-locales-es6";
 
 const PrivateRoute = ({component: Component, showMenu, toggleMenu,
                           getSettings, user, roles = null, ...rest}) => {
@@ -25,6 +26,7 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu,
     const { i18n } = useTranslation();
     if (i18n.language !== user.settings?.language) {
         i18n.changeLanguage(user.settings.language);
+        moment.locale(user.settings.language);
     }
 
     return (

@@ -8,6 +8,7 @@ import com.feed_grabber.core.news.dto.NewsCreateDto;
 import com.feed_grabber.core.news.dto.NewsDetailsDto;
 import com.feed_grabber.core.news.dto.NewsDto;
 import com.feed_grabber.core.news.dto.NewsUpdateDto;
+import com.feed_grabber.core.news.exceptions.NewsNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public AppResponse<NewsDetailsDto> getOne(@PathVariable UUID id) {
+    public AppResponse<NewsDetailsDto> getOne(@PathVariable UUID id) throws NewsNotFoundException {
         return new AppResponse<>(newsService.getNewsById(id));
     }
 

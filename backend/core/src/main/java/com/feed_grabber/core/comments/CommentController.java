@@ -30,13 +30,6 @@ public class CommentController {
     public AppResponse<List<CommentDto>> getAllByNews(@RequestParam(defaultValue = "0") Integer page,
                                                           @RequestParam(defaultValue = "0") Integer size,
                                                           @RequestParam UUID newsId) {
-        /*var dataList = new DataList<>(
-                commentService.getAllByNewsId(newsId),
-                commentService.getCountByNewsId(newsId),
-                page,
-                size
-        );
-        return new AppResponse<>(dataList);*/
         return new AppResponse<>(commentService.getAllByNewsId(newsId));
     }
 

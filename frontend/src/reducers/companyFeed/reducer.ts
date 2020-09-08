@@ -8,7 +8,7 @@ import {
   setCompanyFeedPaginationRoutine
 } from "../../sagas/companyFeed/routines";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
-import {saveCommentRoutine} from "../../sagas/comments/routines";
+import {saveCommentRoutine, updateCommentRoutine} from "../../sagas/comments/routines";
 
 export interface ICompanyFeedState {
   list: IPaginationInfo<ICompanyFeedItem>;
@@ -36,6 +36,7 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
     case createCompanyFeedItemRoutine.TRIGGER:
     case saveCompanyFeedItemRoutine.TRIGGER:
     case saveCommentRoutine.TRIGGER:
+    case updateCommentRoutine.TRIGGER:
       return {
         ...state,
         isLoading: true
@@ -45,6 +46,7 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
     case createCompanyFeedItemRoutine.FAILURE:
     case saveCompanyFeedItemRoutine.FAILURE:
     case saveCommentRoutine.FAILURE:
+    case updateCommentRoutine.FAILURE:
       return {
         ...state,
         isLoading: false
@@ -68,6 +70,15 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         current: {
           ...state.current,
           comments: [...state.current.comments, payload]
+        },
+        isLoading: false
+      };
+    case updateCommentRoutine.SUCCESS:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          comments: state.current.comments.map(comment => comment.id === payload.id ? payload : comment)
         },
         isLoading: false
       };

@@ -1,5 +1,6 @@
 package com.feed_grabber.core.news;
 
+import com.feed_grabber.core.comments.CommentRepository;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
@@ -12,6 +13,7 @@ import com.feed_grabber.core.news.exceptions.NewsNotFoundException;
 import com.feed_grabber.core.news.model.News;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +28,20 @@ public class NewsService {
     private CompanyRepository companyRepository;
     private ImageRepository imageRepository;
     private UserRepository userRepository;
+    private CommentRepository commentRepository;
 
+    @Autowired
     public NewsService(NewsRepository newsRepository,
                        CompanyRepository companyRepository,
                        ImageRepository imageRepository,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       CommentRepository commentRepository
+                       ) {
         this.newsRepository = newsRepository;
         this.companyRepository = companyRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     public List<NewsDto> getAllByCompanyId(Integer page, Integer size, UUID companyId) {
@@ -49,9 +56,11 @@ public class NewsService {
         return newsRepository.countAllByCompanyId(companyId);
     }
 
-    public NewsDetailsDto getNewsById(UUID id) {
-        var news = newsRepository.findById(id);
-        return news.map(NewsMapper.MAPPER::newsToNewsDetailsDto).orElse(null);
+    public NewsDetailsDto getNewsById(UUID id) throws NewsNotFoundException {
+        var news = newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
+        var comments = commentRepository.findAllByNewsIdOrderByCreatedAt(news.getId());
+        news.setComments(comments);
+        return NewsMapper.MAPPER.newsToNewsDetailsDto(news);
     }
 
     public NewsDto create(NewsCreateDto newsCreateDto) throws NotFoundException {

@@ -31,7 +31,7 @@ public class CommentService {
     }
 
     public List<CommentDto> getAllByNewsId(UUID newsId) {
-        return commentRepository.findAllByNewsId(newsId)
+        return commentRepository.findAllByNewsIdOrderByCreatedAt(newsId)
                 .stream()
                 .map(CommentMapper.MAPPER::commentToCommentDto)
                 .collect(Collectors.toList());
@@ -62,8 +62,9 @@ public class CommentService {
         var comment = commentRepository.findById(commentUpdateDto.getId())
                 .orElseThrow(CommentNotFoundException::new);
         comment.setBody(commentUpdateDto.getBody());
+        var updated = commentRepository.save(comment);
 
-        return CommentMapper.MAPPER.commentToCommentDto(comment);
+        return CommentMapper.MAPPER.commentToCommentDto(updated);
     }
 
     public void delete(UUID id) {
