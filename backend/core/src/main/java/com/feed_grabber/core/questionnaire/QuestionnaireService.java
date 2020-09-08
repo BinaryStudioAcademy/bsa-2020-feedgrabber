@@ -81,11 +81,11 @@ public class QuestionnaireService {
         }
 
         if (!createDto.getTitle()
-                .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
-            throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
-                    "have more than one space in sequence." +
-                    "Title can contain latin letters, numbers and special symbols.");
+                .matches("[a-zA-Z0-9а-яА-Я][a-zA-Z0-9а-яА-Я!#$%&'*+\\-/=?^_ ]*")) {
+            throw new WrongQuestionnaireTitleException("Title should be valid. It should not start with symbols, " +
+                    "Title can contain Latin and Cyrillic letters, numbers and special symbols - (!#$%&'*+-/=?^_)");
         }
+
 
         var company = companyRepository.findById(companyId)
                 .orElseThrow(CompanyNotFoundException::new);
@@ -97,7 +97,7 @@ public class QuestionnaireService {
 
         var savedQuestionnaire = questionnaireRepository.save(questionnaire);
 
-        var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId(), 0));
+        var section = sectionService.create(new SectionCreateDto(createDto.getTitle().trim(), questionnaire.getId(), 0));
 
         questionService.create(new QuestionCreateDto(
                 "Default Question",
@@ -133,5 +133,9 @@ public class QuestionnaireService {
 
     public void delete(UUID id) {
         questionnaireRepository.softDeleteById(id);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("sdf dsdf/ ываф".matches("[a-zA-Z0-9а-яА-Я][a-zA-Z0-9а-яА-Я!#$%&'*+-/=?^_ ]*"));
     }
 }
