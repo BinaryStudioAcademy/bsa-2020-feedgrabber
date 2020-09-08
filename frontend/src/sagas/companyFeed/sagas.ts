@@ -18,17 +18,6 @@ const defaultItem = {
   user: { id: '', username: '' }
 } as ICompanyFeedItem;
 
-const feedItemMock = {
-  id: '1',
-  title: 'Demo is coming...',
-  body: 'Hello everybody. Today I would like to talk about our deadline. ' +
-        'So, we know that the demo will be on 02.09.2020.',
-  image: { id: '1', link: 'fd876825-ba11-4113-bdf7-02cb2c572be9' },
-  createdAt: new Date().toLocaleString(),
-  type: '',
-  user: { id: '11', username: 'mark' }
-};
-
 function* loadCompanyFeed() {
   try {
 	const res = yield call(apiClient.get, '/api/news');
