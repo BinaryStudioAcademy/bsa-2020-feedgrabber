@@ -47,7 +47,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
                        trigger={<Button icon="plus circle" {...styleBorder} onClick={addQuestion}/>}
                 />
                 <Popup content={t("Add from existing questions")} {...popupProps}
-                       trigger={<Button icon="external" {...styleBorder} onClick={() => setOpenModal(!isOpenModal)}/>}
+                       trigger={<Button icon="external" {...styleBorder} />}
                 />
                 <Popup content={t("Copy")} {...popupProps}
                        trigger={<Button icon="copy" {...styleBorder} onClick={copyQuestion}/>}
