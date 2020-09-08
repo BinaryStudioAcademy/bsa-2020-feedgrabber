@@ -65,10 +65,30 @@ public class ReportService {
         if (role.equals(ROLE_COMPANY_OWNER) || role.equals(ROLE_HR)) {
             return;
         }
-        Optional<Request> request = requestRepository.findByIdAndTargetUser(requestId, userId);
-        if (request.isEmpty() || !request.get().getSendToTarget()) {
-            throw new AccessDeniedException("You have not enough permissions to view this report");
+
+        var request = requestRepository.findById(requestId).orElseThrow();
+
+        if (request.getTargetUser() == null) {
+            throwNoPermissions();
         }
+
+        // employee could see if he is target, and received it
+        if (request.getTargetUser().getId().equals(userId)) {
+            if (request.getSendToTarget()) {
+                return;
+            } else {
+                throwNoPermissions();
+            }
+        }
+
+        // or he is a team lead of target user
+        if (!requestRepository.isTeamLeadOfTargetUser(request.getTargetUser().getId(), userId)) {
+            throwNoPermissions();
+        }
+    }
+
+    private void throwNoPermissions() {
+        throw new AccessDeniedException("You have not enough permissions to view this report");
     }
 
     public List<ReportShortDto> getAllAvailableReports(final UUID userId, final String role, final UUID comanyId) {

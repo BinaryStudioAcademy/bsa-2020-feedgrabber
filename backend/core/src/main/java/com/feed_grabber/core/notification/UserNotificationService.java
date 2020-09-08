@@ -1,13 +1,14 @@
 package com.feed_grabber.core.notification;
 
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.notification.dto.NotificationResponseDto;
 import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.report.dto.ReportLinksDto;
 import com.feed_grabber.core.request.RequestRepository;
+import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +65,29 @@ public class UserNotificationService {
                 .user(request.getRequestMaker())
                 .build()).getId();
         var notificationToSend = userNotificationRepository.findNotificationById(notificationId);
-        notificationService.sendMessageToConcreteUser(request.getRequestMaker().getId().toString(),"notify",notificationToSend);
+
+        notificationService.sendMessageToConcreteUser(
+                request.getRequestMaker().getId().toString(),
+                "notify",
+                notificationToSend);
+    }
+
+    public void saveAndSendResponseNotification(Request request, User user, String text) throws NotFoundException {
+        var userNotificationId = userNotificationRepository.save(
+                UserNotification
+                        .builder()
+                        .request(request)
+                        .text(text)
+                        .isClosed(false)
+                        .isRead(false)
+                        .type(MessageTypes.plain_text)
+                        .user(user)
+                        .build()).getId();
+        var notificationToSend = userNotificationRepository.findNotificationById(userNotificationId);
+
+        notificationService.sendMessageToConcreteUser(
+                user.getId().toString(),
+                "notify",
+                notificationToSend);
     }
 }
