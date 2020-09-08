@@ -85,6 +85,16 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       const [respondentPattern, setRespondentPattern] = useState('');
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
+      
+      const isUserFind = user => {
+          const pattern = targetUserPattern.toLowerCase();
+          const name = user.firstName?.toLowerCase();
+          const surname = user.lastName?.toLowerCase();
+
+          return user.username?.toLowerCase().includes(pattern)
+          || `${name} ${surname}`.includes(pattern);
+      };
+      
       return (
           <>
             <UIPageTitle title={t("Send Request")}/>
@@ -151,16 +161,13 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <div className={styles.targetUserContainer}>
                                   {
                                     users
-                                      .filter(user => targetUserPattern
-                                        ? user.username.includes(targetUserPattern)
-                                          || `${user.firstName} ${user.lastName}`.includes(targetUserPattern)
-                                        : true)
+                                      .filter(user => targetUserPattern ? isUserFind(user) : true)
                                       .map(user => (
                                         <UIUserItemCard
                                             key={user.id}
                                             firstName={user.firstName}
                                             lastName={user.lastName}
-                                            userInfo={'username: ' + user.username}
+                                            userInfo={t('username')+': ' + user.username}
                                             avatar={user.avatar}
                                             onClick={() => {
                                               formik.setFieldValue('targetUserId',
@@ -295,7 +302,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         team={team}
                                         selected={formik.values.chosenTeams.includes(team)}
                                         onClick={() => {
-                                          let newTeams = [];
+                                          let newTeams: any[];
                                           if (formik.values.chosenTeams.includes(team)) {
                                             newTeams = formik.values.chosenTeams.filter(t => t !== team);
                                           } else {
@@ -321,7 +328,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         userInfo={'Username: ' + user.username}
                                         selected={formik.values.chosenUsers.includes(user)}
                                         onClick={() => {
-                                          let newUsers = [];
+                                          let newUsers: any[];
                                           if (formik.values.chosenUsers.includes(user)) {
                                             newUsers = formik.values.chosenUsers.filter(u => u !== user);
                                           } else {

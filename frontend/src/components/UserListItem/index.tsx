@@ -13,9 +13,7 @@ interface IUserListItemProps {
     result?: ISearchResult;
 
     fire(id: string): void;
-
     loadCompanyRoles(): void;
-
     setSelectedUser(user: IUserInfo): void;
 }
 

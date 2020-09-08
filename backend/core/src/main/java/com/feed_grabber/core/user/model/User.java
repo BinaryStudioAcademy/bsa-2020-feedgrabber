@@ -6,11 +6,13 @@ import com.feed_grabber.core.team.model.Team;
 import lombok.*;
 import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
 import org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Parameter;
+import org.hibernate.search.filter.ShardSensitiveOnlyFilter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.UUID;
         tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
         filters = {
                 @TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
-                        @Parameter(name = "pattern",value = "([^a-zA-Z0-9\\.])"),
+                        @Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
                         @Parameter(name = "replacement", value = " "),
                         @Parameter(name = "replace", value = "all") }),
                 @TokenFilterDef(factory = LowerCaseFilterFactory.class),
@@ -40,6 +42,8 @@ import java.util.UUID;
 })
 public class User {
     @Id
+    @Field(name = "idCopy")
+    @Analyzer(impl = WhitespaceAnalyzer.class)
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
@@ -63,6 +67,10 @@ public class User {
 
     @Column(name = "is_enabled")
     private Boolean isEnabled;
+
+	@Builder.Default
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
 
     @ManyToMany(
             cascade = {
@@ -88,6 +96,7 @@ public class User {
     @EqualsAndHashCode.Exclude
     private UserSettings userSettings;
 
+    @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id")
     private Company company;

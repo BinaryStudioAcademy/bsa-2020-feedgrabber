@@ -1,5 +1,6 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
@@ -32,9 +33,15 @@ public class TeamService {
         return teamRepository.findAllByCompanyId(companyId);
     }
 
-    public TeamDetailsDto getOne(UUID companyId, UUID id) throws TeamNotFoundException {
+    public TeamDetailsDto getOne(UUID companyId, UUID id, UUID userId, String role) throws TeamNotFoundException {
         var team = teamRepository.findOneByCompanyIdAndId(companyId, id)
                 .orElseThrow(TeamNotFoundException::new);
+
+        if (role.equals("employee")) {
+            if(team.getLead() == null || !team.getLead().getId().equals(userId)) {
+                throw new JwtTokenException("No permissions to see page");
+            }
+        }
 
         var ids = team.getUsers()
                 .stream()

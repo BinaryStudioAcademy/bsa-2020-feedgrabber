@@ -8,3 +8,14 @@
     border-radius: 5px;
     margin-right: 25px;
 }
+
+.expandedImage{
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.expandedImageContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

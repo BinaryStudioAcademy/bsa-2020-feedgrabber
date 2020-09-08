@@ -3,12 +3,9 @@ package com.feed_grabber.core.response;
 import com.feed_grabber.core.response.dto.UserResponseShortDto;
 import com.feed_grabber.core.response.model.Response;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ResponseRepository extends JpaRepository<Response, UUID> {
@@ -23,6 +20,12 @@ public interface ResponseRepository extends JpaRepository<Response, UUID> {
 
     List<Response> findAllByUserIdAndRequestNotNull(UUID userId);
 
+    @Query("select count(r) from Response r where r.id = :requestId and r.payload is not null")
+    int countUnanswered(UUID requestId);
+
     List<Response> findAllByUserId(UUID userId);
-    
+
+    @Query("select r from Response r " +
+            "where r.answeredAt is null and r.request.closeDate is null and r.request.expirationDate is not null")
+    List<Response> findAllToAnswer();
 }

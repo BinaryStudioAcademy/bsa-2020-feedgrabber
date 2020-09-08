@@ -24,6 +24,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     });
     const [otherIsInvalid, setOtherIsInvalid] = useState(true);
     const [answer, setAnswer] = useState(response as { selected?: string; other?: string } || null);
+    const notResponsePage = window.location.pathname.split("/")[1] !== "response";
 
     useEffect(() => answerHandler?.(answer?.selected || answer?.other ? {
         selected: !answer?.other ? answer?.selected : null,
@@ -54,7 +55,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
             {question.details.answerOptions.map((option, index) => (
                 <div className={styles.option_container} key={index}>
                     <Radio
-                        disabled={!!response && !answerHandler}
+                        disabled={(!!response && !answerHandler) || notResponsePage}
                         checked={answer?.selected === option}
                         name={question.id}
                         value={option}
@@ -66,7 +67,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
             {question.details.includeOther && (
                 <div className={styles.option_container}>
                     <Radio
-                        disabled={!!response && !answerHandler}
+                        disabled={(!!response && !answerHandler) || notResponsePage}
                         checked={answer?.other === other}
                         name='radioGroup'
                         value={other}

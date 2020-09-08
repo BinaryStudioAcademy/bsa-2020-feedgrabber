@@ -16,6 +16,7 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
+import com.feed_grabber.core.invitation.model.Invitation;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.model.Role;
@@ -220,7 +221,17 @@ public class UserService implements UserDetailsService {
 
     public void removeCompany(UUID id) {
         var userToUpdate = userRepository.getOne(id);
-        userToUpdate.setCompany(null);
+        userToUpdate.setIsDeleted(true);
+        userRepository.save(userToUpdate);
+
+        Optional<Invitation> invitation = invitationRepository
+                .findByCompanyAndEmail(userToUpdate.getCompany(), userToUpdate.getEmail());
+        invitation.ifPresent(invitationRepository::delete);
+    }
+
+    public void unfireUser(UUID id) {
+        var userToUpdate = userRepository.getOne(id);
+        userToUpdate.setIsDeleted(false);
         userRepository.save(userToUpdate);
     }
 
@@ -274,8 +285,8 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
-        return userRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+    public List<UserDetailsResponseDTO> getAllByCompanyId(UUID companyId, Integer page, Integer size, Boolean isFired) {
+        return userRepository.findAllByCompanyId(companyId, isFired, PageRequest.of(page, size))
                 .stream()
                 .map(UserMapper.MAPPER::detailedFromUser)
                 .collect(Collectors.toList());
@@ -285,57 +296,9 @@ public class UserService implements UserDetailsService {
         return searchRepository.getUsersList(query, Optional.of(page), Optional.of(size));
     }
 
-//    public List<UserDetailsResponseDTO> searchByQuery(
-//            UUID companyId,
-//            String query,
-//            Integer page,
-//            Integer size) {
-//        var parts = query.split(" ");
-//        var pageable = PageRequest.of(page, size);
-//        var users = parts.length == 1
-//                ? userRepository.findByLastNameBeginAndCompanyId(
-//                        companyId,
-//                        query.toLowerCase() + "%",
-//                        pageable)
-//                : userRepository.findByNameAndLastNameAndCompanyId(
-//                        companyId,
-//                        parts[1].toLowerCase() + "%",
-//                        parts[0].toLowerCase(),
-//                        pageable);
-//        return users.stream()
-//                .map(UserMapper.MAPPER::detailedFromUser)
-//                .collect(Collectors.toList());
-//    }
-
-    public Long getCountByCompanyId(UUID companyId) {
-        return userRepository.countAllByCompanyId(companyId);
+    public Long getCountByCompanyId(UUID companyId, Boolean isFired) {
+        return userRepository.countAllByCompanyIdAndIsDeleted(companyId, isFired);
     }
-
-//    public Long getCountByQuery(UUID companyId, String query) {
-//        var parts = query.split(" ");
-//        return parts.length == 1
-//                ? userRepository.countByNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
-//                : userRepository.countByLastNameAndNameAndCompanyId(
-//                        companyId, parts[1].toLowerCase() + "%", parts[0].toLowerCase());
-//    }
-
-//    @Transactional
-//    public void editUserProfile(UserProfileEditDto dto) throws NotFoundException {
-//        var user = userRepository.findById(dto.getUserId())
-//                .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
-//        if (user.getUserProfile() == null) {
-//            var savedProfile = profileRepository.save(new UserProfile(user));
-//            user.setUserProfile(savedProfile);
-//        }
-//        var profile = user.getUserProfile();
-//        var avatar = imageRepository.findByLink(dto.getAvatar()).orElseThrow(NotFoundException::new);
-//        profile.setAvatar(avatar);
-//        profile.setFirstName(dto.getFirstName());
-//        profile.setLastName(dto.getLastName());
-//        profile.setPhoneNumber(dto.getPhoneNumber());
-//        user.setUsername(dto.getUserName());
-//        userRepository.save(user);
-//    }
 
     public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {
         return UserMapper.MAPPER.shortFromUser(
