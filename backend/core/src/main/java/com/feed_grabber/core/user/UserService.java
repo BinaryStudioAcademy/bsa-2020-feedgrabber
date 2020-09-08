@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
 //            throw new UserAlreadyExistsException();
 //        }
 
-        if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
+        if (companyRepository.existsByNameIgnoreCase(userRegisterDTO.getCompanyName())) {
             throw new CompanyAlreadyExistsException();
         }
         if (userRegisterDTO.getCompanyName().length() > 56) {
