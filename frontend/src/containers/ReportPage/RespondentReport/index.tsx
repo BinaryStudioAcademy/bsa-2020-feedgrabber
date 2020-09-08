@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from 'react';
 import {connect, ConnectedProps} from "react-redux";
-import LoaderWrapper from "../../../components/LoaderWrapper";
+import LoaderWrapper from "../../../components/helpers/LoaderWrapper";
 import styles from "../styles.module.sass";
 import {Header, Segment} from "semantic-ui-react";
 import {IQuestion} from "../../../models/forms/Questions/IQuesion";

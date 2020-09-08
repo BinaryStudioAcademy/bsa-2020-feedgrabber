@@ -2,6 +2,7 @@ package com.feed_grabber.core.news.model;
 
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.image.model.Image;
+import com.feed_grabber.core.newsReaction.model.NewsReaction;
 import com.feed_grabber.core.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -54,4 +56,7 @@ public class News {
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
     private Date createdAt;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<NewsReaction> reactions;
 }

@@ -85,6 +85,7 @@ public class User {
     private UserProfile userProfile;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @EqualsAndHashCode.Exclude
     private UserSettings userSettings;
 
     @ManyToOne(cascade = CascadeType.REFRESH)

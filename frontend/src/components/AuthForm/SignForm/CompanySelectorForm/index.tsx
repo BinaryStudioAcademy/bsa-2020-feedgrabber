@@ -37,7 +37,7 @@ const CompanySelectorForm: React.FC<CompanySelectorFormProps & { className: stri
         const [ t ] = useTranslation();
 
         const companies = !companiesList ? null
-            : companiesList.length === 0 ? <Message color='blue'>{t("No companies found. Create your own :)")}</Message>
+            : companiesList.length === 0 ? <Message color='blue'>{t("No companies found. Create your own")}</Message>
                 : companiesList.map(
                     (company, index) => (
                         <Segment key={index}>

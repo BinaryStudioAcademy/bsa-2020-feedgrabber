@@ -3,7 +3,7 @@ import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {IInvitation} from "../../models/invitation/IInvitation";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import styles from './styles.module.sass';
 import UIButton from "../../components/UI/UIButton";
 import {Icon} from "semantic-ui-react";

@@ -19,7 +19,6 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
   answerHandler,
   response
 }) => {
-    console.log(response);
     const [links, setLinks] = useState([]); // links to uploaded files
     const [url, setUrl] = useState(''); // url to photo or video
     const [files, setFiles] = useState((response as string[])?.map(link => ({ id: link, name: link, link})) || []);

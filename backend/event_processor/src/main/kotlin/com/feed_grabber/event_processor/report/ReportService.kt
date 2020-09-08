@@ -26,19 +26,21 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
                 map.getOrPut(it.questionId) { mutableListOf() }.add(Pair(this.parseQuestion(it), r.user.id))
             }
         }
-        val questions = dto.questionnaire.questions.map {
+        val questions = dto.questionnaire.sections.map { it.questions }.flatten();
+
+        val parsed = questions.map {
             val answers = this.parseAnswers(map[it.id])
             if (answers == null) null
             else QuestionDB(it.id, it.name, it.categoryTitle, it.type, answers)
         }
         dto.apply {
-            return Report(requestId, questions.filterNotNull(), questionnaire,
+            return Report(requestId, parsed.filterNotNull(), QuestionnaireDB(questionnaire.companyName, questionnaire.id, questions, questionnaire.title),
                     requestCreationDate, requestExpirationDate,
                     requestMaker, targetUser, null, null)
         }
     }
 
-    fun projectionToDto(report: FrontendProjection): FrontendReportData = FrontendReportData(
+    fun projectionToDto(report: FrontendProjection) = FrontendReportData(
             report.questionnaire,
             report.questions.map {
                 QuestionInfo(it.id, it.title, it.type,

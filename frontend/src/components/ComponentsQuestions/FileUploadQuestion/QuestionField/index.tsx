@@ -13,7 +13,7 @@ interface IQuestionFieldProps {
 }
 
 const QuestionField: React.FC<IQuestionFieldProps> = data => {
-    const [field] = useField(data.name);
+    const [field] = useField(data?.name);
     return (
         <div className={styles.questionField}>
             <span className={styles.description}>{data.text}</span>

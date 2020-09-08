@@ -8,5 +8,12 @@ export interface ICompanyFeedItem {
   createdAt: string;
   image?: { id: string; link: string };
   user: IUserShort;
+  reactions: IReaction[];
+}
+
+export interface IReaction {
+  emoji: string;
+  reactedByCurrentUser: boolean;
+  reactedUsers: any[];
 }
 
