@@ -1,18 +1,18 @@
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { Permissions } from "../AccessManager/rbac-rules";
-import AccessManager from "../AccessManager";
 import { ICompanyFeedItem } from 'models/companyFeed/ICompanyFeedItem';
 import { connect } from 'react-redux';
 import { IAppState } from 'models/IAppState';
+import GenericPagination from 'components/helpers/GenericPagination';
 import { loadCompanyFeedRoutine, setCompanyFeedPaginationRoutine } from 'sagas/companyFeed/routines';
-import GenericPagination from 'components/GenericPagination';
 import { IPaginationInfo } from 'models/IPaginationInfo';
 import { Button } from 'semantic-ui-react';
+import { Permissions } from "../helpers/AccessManager/rbac-rules";
 import { Link } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 import NewsItem from "../NewsItem/NewsItem";
+import AccessManager from "../helpers/AccessManager";
 
 interface INewsFeedProps {
   pagination?: IPaginationInfo<ICompanyFeedItem>;

@@ -4,7 +4,7 @@ import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
 import {loadInvitationSingUpRoutine, registerInvitationSingUpRoutine} from "../../sagas/invitationSignUp/routines";
 import {IInvitationSignUpData, IRegisterInvitationSignUpData} from "../../reducers/invitationSignUp/reducer";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {Formik} from "formik";
 import { Menu, Message } from "semantic-ui-react";
 import {Link} from "react-router-dom";

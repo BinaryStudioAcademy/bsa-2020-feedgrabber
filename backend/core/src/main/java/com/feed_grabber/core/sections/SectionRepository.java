@@ -29,12 +29,18 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
                     "VALUES (:sectionId, :questionId, :index)")
     Integer addQuestion(UUID sectionId, UUID questionId, Integer index);
 
-    @Modifying
     @Transactional
     @Query(nativeQuery = true,
-            value = "DELETE FROM sections_questions s " +
-                    "WHERE s.section_id = :sectionId AND s.question_id = :questionId")
+            value = "DELETE FROM sections_questions " +
+                    "WHERE section_id = :sectionId AND question_id = :questionId " +
+                    "RETURNING order_index")
     Integer deleteQuestion(UUID sectionId, UUID questionId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE SectionQuestion s set s.orderIndex = s.orderIndex - 1 where s.section.id = :sectionId and " +
+            "s.orderIndex > :index")
+    void shiftIndexesLeft(UUID sectionId, Integer index);
 
     @Modifying
     @Transactional

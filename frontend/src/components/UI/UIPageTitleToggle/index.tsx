@@ -1,8 +1,8 @@
 import React, {FC, useState} from "react";
 import styles from "./styles.module.sass";
-import {Permissions} from "../../AccessManager/rbac-rules";
+import {Permissions} from "../../helpers/AccessManager/rbac-rules";
 import {history} from "../../../helpers/history.helper";
-import AccessManager from "../../AccessManager";
+import AccessManager from "../../helpers/AccessManager";
 
 export interface IUIPageTitleProps {
     firstOption: string;

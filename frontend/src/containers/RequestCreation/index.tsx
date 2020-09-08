@@ -19,13 +19,18 @@ import {history} from '../../helpers/history.helper';
 import {IUserShort} from "../../models/user/types";
 import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {RouteComponentProps} from "react-router-dom";
-import QuestionnairePreview from "../../components/QuestionnairePreview";
-import {indexQuestionsRoutine} from "../../sagas/questions/routines";
+import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import { loadSectionsByQuestionnaireRoutine } from "sagas/sections/routines";
+import {
+    loadSectionsByQuestionnaireRoutine, setCurrentQuestionInSection,
+    updateQuestionsOrderRoutine,
+    updateSectionRoutine, updateSections
+} from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -48,9 +53,14 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        loadTeams,
        loadUsers,
        loadSections,
+       updateSection,
+       updateOrder,
        sendRequest,
        isLoadingUsers,
+       setMenuPos,
+       setCurrentQuestion,
        isLoadingTeams,
+       updateSectionsR,
        sections
      }) => {
 
@@ -81,8 +91,13 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
               <UIColumn>
                   <UICard>
                     <UICardBlock>
-                        <QuestionnairePreview
-                            indexQuestions={indexQuestionsRoutine}
+                        <Form
+                            updateSection={updateSection}
+                            setMenuPos={setMenuPos}
+                            setCurrentQuestion={setCurrentQuestion}
+                            updateOrder={updateOrder}
+                            updateSections={updateSectionsR}
+                            currentQuestion={{} as IQuestion}
                             sections={sections}
                         />
                     </UICardBlock>
@@ -326,15 +341,10 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   </UICard>
                 </LoaderWrapper>
               </UIColumn>
-
             </UIContent>
           </>
       );
     };
-
-interface IRouterProps {
-  id: string;
-}
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   domProps: ownProps,
@@ -342,15 +352,19 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,
-  questions: state.questionnaires.current.questions,
-  sections: state.sections.list
+  sections: state.formEditor.sections.list
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
+  updateOrder: updateQuestionsOrderRoutine,
+  updateSection: updateSectionRoutine,
+setMenuPos: setFloatingMenuPos,
+setCurrentQuestion: setCurrentQuestionInSection,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadSections: loadSectionsByQuestionnaireRoutine
+  loadSections: loadSectionsByQuestionnaireRoutine,
+  updateSectionsR: updateSections
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
