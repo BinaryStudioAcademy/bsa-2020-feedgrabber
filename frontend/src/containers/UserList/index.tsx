@@ -147,6 +147,7 @@ const CompanyUsersList: React.FC<ICompanyUsersListProps> = (
                     mapItemToJSX={mapUsersToJSX}
                 />
             </UIColumn>
+            <br />
             <UIColumn wide>
                 <Header as="h2">{t("Fired Users")}</Header>
                 <GenericPagination
