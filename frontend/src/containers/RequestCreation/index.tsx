@@ -43,7 +43,7 @@ const initialValues = {
 const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
     ({
        match,
-       teams,
+       teamsPagination,
        users,
        loadTeams,
        loadUsers,
@@ -89,7 +89,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   </UICard>
               </UIColumn>
               <UIColumn>
-                <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
+                <LoaderWrapper loading={!users || isLoadingUsers || !teamsPagination.items || isLoadingTeams}>
                   <UICard>
                     <Formik
                         initialValues={initialValues}
@@ -268,7 +268,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                        style={{width: '100%'}}
                                        placeholder={t("Search...")}
                                        onChange={e => setRespondentPattern(e.target.value)}/>
-                                {selectTeams && teams
+                                {selectTeams && teamsPagination.items
                                   .filter(team => respondentPattern
                                     ? team.name.includes(respondentPattern)
                                     : true)
@@ -338,7 +338,7 @@ interface IRouterProps {
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   domProps: ownProps,
-  teams: state.teams.teams,
+  teamsPagination: state.teams.pagination,
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,

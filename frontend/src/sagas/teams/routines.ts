@@ -11,3 +11,4 @@ export const loadCurrentTeamRoutine = createRoutine('TEAMS:LOAD_CURRENT');
 export const createTeamRoutine = createRoutine('TEAMS:CREATE');
 export const updateTeamRoutine = createRoutine('TEAMS:UPDATE_METADATA');
 export const deleteTeamRoutine = createRoutine('TEAMS:DELETE');
+export const setTeamPaginationRoutine = createRoutine('TEAMS:SET_PAGING');
