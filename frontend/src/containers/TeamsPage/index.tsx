@@ -63,46 +63,45 @@ const TeamsPage: FC<ITeamsPageProps> = (
                     </UIColumn>
 
                     {(pagination.items.length > 0
-                            ? <GenericPagination
-                                isLoading={isLoading}
-                                pagination={pagination}
-                                setPagination={setPagination}
-                                loadItems={loadTeams}
-                                mapItemToJSX={(team: ITeamShort) => {
-                                    const match = result
-                                        .teams
-                                        .map(t => t.id)
-                                        .includes(team.id);
-                                    return <UIColumn key={team.id}>
-                                        <UICard searched={match}>
-                                            <UICardBlock>
-                                                <h3 className={styles.teamHeader}>{team.name}</h3>
-                                                <span style={
-                                                    {
-                                                        fontSize: '0.8rem',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center'
-                                                    }
-                                                }>{match && t('Matches searched query')}</span>
-                                            </UICardBlock>
-                                            <UICardBlock>
-                                                <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
-                                            </UICardBlock>
-                                            <AccessManager staticPermission={Permissions.manageTeams}>
-                                                <UICardBlock>
-                                                    <UIButton title={t("Manage")}
-                                                              onClick={() => handleRedirect(team.id)}/>
-                                                    <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
-                                                              disabled={team.deleteLoading}
-                                                              onClick={() => deleteTeam(team.id)}/>
-                                                </UICardBlock>
-                                            </AccessManager>
-                                        </UICard>
-                                    </UIColumn>;
-                                }}
-                            />
-                            : <div className={styles.noItemsLabel}>{t("No items")}</div>
-                    )}
+                        ? <GenericPagination
+                            isLoading={isLoading}
+                            pagination={pagination}
+                            setPagination={setPagination}
+                            itemsStyle={styles.twoColumnList}
+                            loadItems={loadTeams}
+                            mapItemToJSX={(team: ITeamShort) => {
+                                const match = result
+                                    .teams
+                                    .map(t => t.id)
+                                    .includes(team.id);
+                                return <UICard searched={match} customStyle={styles.customCard}>
+                                    <UICardBlock>
+                                        <h3 className={styles.teamHeader}>{team.name}</h3>
+                                        <span style={
+                                            {
+                                                fontSize: '0.8rem',
+                                                display: 'inline-flex',
+                                                alignItems: 'center'
+                                            }
+                                        }>{match && t('Matches searched query')}</span>
+                                    </UICardBlock>
+                                    <UICardBlock>
+                                        <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
+                                    </UICardBlock>
+                                    <AccessManager staticPermission={Permissions.manageTeams}>
+                                        <UICardBlock>
+                                            <UIButton title={t("Manage")}
+                                                      onClick={() => handleRedirect(team.id)}/>
+                                            <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
+                                                      disabled={team.deleteLoading}
+                                                      onClick={() => deleteTeam(team.id)}/>
+                                        </UICardBlock>
+                                    </AccessManager>
+                                </UICard>;
+                            }}
+                        />
+                        : <div className={styles.noItemsLabel}>{t("No items")}</div>
+                        )}
                 </LoaderWrapper>
             </UIContent>
         </>
