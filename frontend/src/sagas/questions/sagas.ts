@@ -5,14 +5,13 @@ import {
     loadQuestionnaireQuestionsRoutine,
     loadQuestionsBySectionRoutine,
     loadQuestionsRoutine,
-    saveQuestionRoutine,
+    saveQuestionRoutine, setCurrentQuestionRoutine,
     updateQuestionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import {setCurrentQuestionInSection} from "../sections/routines";
 
 export const parseQuestion = rawQuestion => ({
     ...rawQuestion,
@@ -53,7 +52,7 @@ function* updateQuestion(action) {
         const res = yield call(apiClient.put, `/api/questions`, action.payload);
 
         yield put(updateQuestionRoutine.success(parseQuestion(res.data.data)));
-        yield put(setCurrentQuestionInSection.trigger({}));
+        yield put(setCurrentQuestionRoutine.trigger({}));
     } catch (e) {
         yield put(updateQuestionRoutine.failure());
         toastr.error("Question wasn't updated");
@@ -76,7 +75,7 @@ function* saveQuestion(action) {
         const res = yield call(apiClient.post, `/api/questions`, action.payload);
 
         yield put(saveQuestionRoutine.success(parseQuestion(res.data.data)));
-        yield put(setCurrentQuestionInSection.trigger({}));
+        yield put(setCurrentQuestionRoutine.trigger({}));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());
         toastr.error("Question wasn't saved");
