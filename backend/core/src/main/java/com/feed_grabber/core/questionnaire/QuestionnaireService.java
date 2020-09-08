@@ -135,7 +135,4 @@ public class QuestionnaireService {
         questionnaireRepository.softDeleteById(id);
     }
 
-    public static void main(String[] args) {
-        System.out.println("sdf dsdf/ ываф".matches("[a-zA-Z0-9а-яА-Я][a-zA-Z0-9а-яА-Я!#$%&'*+-/=?^_ ]*"));
-    }
 }
