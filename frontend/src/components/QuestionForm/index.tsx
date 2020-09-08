@@ -103,7 +103,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
 
     const setQuestionType = data => {
         const type: QuestionType = data.value;
-        formik.setFieldValue("question", {...formik.values.question, type, details: {}});
+        formik.setFieldValue("question", {...formik.values.question, type, details: {answerOptions: []}});
     };
 
     const parseCategories = categories => categories.length ?
