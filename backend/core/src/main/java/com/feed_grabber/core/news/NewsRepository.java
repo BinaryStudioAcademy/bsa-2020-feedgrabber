@@ -16,4 +16,5 @@ public interface NewsRepository extends JpaRepository<News, UUID> {
     List<News> findAllNews(@Param("companyId") UUID companyId, Pageable pageable);
 
     Long countAllByCompanyId(UUID companyId);
+
 }

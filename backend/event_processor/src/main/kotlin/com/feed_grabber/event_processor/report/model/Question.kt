@@ -34,3 +34,4 @@ data class QuestionDB(
         val type: QuestionTypes,
         val answers: QuestionAnswersDB
 )
+

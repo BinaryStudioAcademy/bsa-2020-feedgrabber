@@ -21,7 +21,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
         const [ t ] = useTranslation();
 
         const values = useInitValue(
-            {value: {filesType: "", filesNumber: 1, filesSize: 10}, isCompleted: false},
+            {value: {filesType: "", filesNumber: 1, filesSize: 10}, isCompleted: true},
             propValue,
             onValueChange
         );

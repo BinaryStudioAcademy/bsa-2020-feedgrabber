@@ -1,7 +1,7 @@
 import React, {useState, ChangeEvent} from 'react';
 import {IAppState} from "../../models/IAppState";
 import {connect} from "react-redux";
-import GenericPagination from "../../components/GenericPagination";
+import GenericPagination from "../../components/helpers/GenericPagination";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {IUserInfo} from "../../models/user/types";
 import UserListItem from "../../components/UserListItem";

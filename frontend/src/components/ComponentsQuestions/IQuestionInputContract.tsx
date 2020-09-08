@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import {isEmpty} from "lodash";
 
 export interface IComponentState<T> {
   value: T;
@@ -18,12 +19,12 @@ export function useInitValue<T>(
   onValueChange: (result: IComponentState<T>) => void
 ): T | undefined {
   useEffect(() => {
-    if (!propValue) {
+    if (isEmpty(propValue)) {
       onValueChange(initValue);
     }
   }, [initValue, onValueChange, propValue]);
 
-  return propValue ?? initValue.value;
+  return isEmpty(propValue) ? initValue.value : propValue;
 }
 
 export function invalidState<T>(value: T): IComponentState<T> {

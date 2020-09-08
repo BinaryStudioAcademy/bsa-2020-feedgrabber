@@ -12,8 +12,8 @@ import NotificationMenu from "../NotificationMenu";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import styled from "styled-components";
 import Search from "../Search";
-import AccessManager from "../AccessManager";
-import {Permissions} from "../AccessManager/rbac-rules";
+import AccessManager from "../helpers/AccessManager";
+import {Permissions} from "../helpers/AccessManager/rbac-rules";
 import {RiLogoutBoxRLine, RiMailSendLine, RiSettings5Line, RiUserReceived2Line} from "react-icons/ri";
 import {useTranslation} from "react-i18next";
 
@@ -48,13 +48,17 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                         <h1 className={styles.headerServiceName} onClick={() => history.push('/home')}>FeedGrabber</h1>
                     </div>
                     <div className={styles.navLinks}>
-                        <NavLink exact to="/editor"
-                                 className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
-                            {t("Form Creator")}
-                        </NavLink>
-                        <a href="/#" className={styles.headerMenuItem}>
-                            {t("Send Request")}
-                        </a>
+                        <AccessManager staticPermission={Permissions.managingQuestionnaires}>
+                            <NavLink exact to="/editor"
+                                    className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
+                                {t("Form Creator")}
+                            </NavLink>
+                        </AccessManager>
+                        <AccessManager staticPermission={Permissions.createQuestionnaireRequest}>
+                            <a href="/#" className={styles.headerMenuItem}>
+                                {t("Send Request")}
+                            </a>
+                        </AccessManager>
                     </div>
                 </div>
                 <div className={styles.headerPart}>
@@ -91,7 +95,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
 
 const mapStateToProps = (state: IAppState) => ({
     user: state.user.info,
-    isEditing: !!state.questionnaires.current.get.id,
+    isEditing: !!state.formEditor.questionnaire.isEditingEnabled,
     toggled: state.app.showMenu
 });
 const mapDispatchToProps = {
