@@ -1,5 +1,6 @@
 package com.feed_grabber.core.response;
 
+import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.response.dto.ResponseDto;
@@ -12,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.feed_grabber.core.auth.security.TokenService;
 
@@ -61,7 +61,9 @@ public class ResponseController {
     @ApiOperation(value = "Update the response")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws ResponseNotFoundException, DeadlineExpiredException {
+    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws ResponseNotFoundException,
+           DeadlineExpiredException,
+           NotFoundException {
         return new AppResponse<>(service.update(dto).orElseThrow(ResponseNotFoundException::new));
     }
 

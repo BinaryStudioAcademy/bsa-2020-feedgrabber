@@ -8,7 +8,7 @@ import {Menu} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import { IAppState } from "models/IAppState";
 import { connect, ConnectedProps } from "react-redux";
-import LoaderWrapper from "components/LoaderWrapper";
+import LoaderWrapper from "../helpers/LoaderWrapper";
 
 const Root = styled.div`
   background-image: url(${img});

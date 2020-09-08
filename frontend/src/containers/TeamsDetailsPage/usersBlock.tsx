@@ -1,6 +1,6 @@
 import React from "react";
 import UIColumn from "../../components/UI/UIColumn";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import UIButton from "../../components/UI/UIButton";

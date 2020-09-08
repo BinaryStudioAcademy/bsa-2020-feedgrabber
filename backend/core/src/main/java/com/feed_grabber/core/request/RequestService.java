@@ -5,15 +5,14 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.config.NotificationService;
 
 import com.feed_grabber.core.notification.MessageTypes;
-import com.feed_grabber.core.notification.UserNotificationMapper;
 import com.feed_grabber.core.notification.UserNotificationRepository;
 import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
-import com.feed_grabber.core.file.dto.S3FileCreationDto;
 import com.feed_grabber.core.file.model.S3File;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
+import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.FileReportsDto;
 import com.feed_grabber.core.request.dto.CreateRequestDto;
 import com.feed_grabber.core.request.dto.PendingRequestDto;
@@ -42,6 +41,7 @@ public class RequestService {
     private final UserNotificationRepository userNotificationRepository;
     private final NotificationService notificationService;
     private final FileRepository fileRepository;
+    private final Sender sender;
 
     public RequestService(RequestRepository requestRepository,
                           QuestionnaireRepository questionnaireRepository,
@@ -50,7 +50,8 @@ public class RequestService {
                           ResponseRepository responseRepository,
                           UserNotificationRepository userNotificationRepository,
                           NotificationService notificationService,
-                          FileRepository fileRepository) {
+                          FileRepository fileRepository,
+                          Sender sender) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
@@ -59,6 +60,7 @@ public class RequestService {
         this.userNotificationRepository = userNotificationRepository;
         this.notificationService = notificationService;
         this.fileRepository = fileRepository;
+        this.sender = sender;
     }
 
     public UUID createNew(CreateRequestDto dto) throws NotFoundException {
@@ -130,6 +132,10 @@ public class RequestService {
             }
         }
 
+        if (request.getExpirationDate() != null) {
+            sender.sendReportCloseRequest(request.getId(), request.getExpirationDate());
+        }
+
         return request.getId();
     }
 
@@ -180,6 +186,10 @@ public class RequestService {
                 .findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Request not found"));
 
+        if (request.getCloseDate() != null) {
+            return request.getCloseDate();
+        }
+
         request.setCloseDate(new Date());
         var closeDate = requestRepository.save(request).getCloseDate();
         var questionnaireWithOpenRequests = questionnaireRepository
@@ -193,6 +203,47 @@ public class RequestService {
             questionnaireRepository.save(questionnaire);
         }
         return closeDate;
+    }
+
+    public void notifyAboutClosing(Request request) throws NotFoundException {
+        User maker = request.getRequestMaker();
+        User target = request.getTargetUser();
+        ArrayList<User> users = new ArrayList<>();
+        users.add(maker);
+
+        if (request.getSendToTarget() && !maker.equals(target)) {
+            users.add(target);
+        }
+        Map<UUID, UUID> userIdNotificationId = new HashMap<>();
+        for (User user : users)
+            userIdNotificationId.put(user.getId(),
+                    userNotificationRepository.save(UserNotification
+                            .builder()
+                            .request(request)
+                            .text("Request " + request.getQuestionnaire().getTitle() + " was closed")
+                            .isClosed(true)
+                            .isRead(false)
+                            .type(MessageTypes.plain_text)
+                            .user(user)
+                            .build()).getId());
+        for (UUID userId : userIdNotificationId.keySet()) {
+            notificationService.sendMessageToConcreteUser(
+                    userId.toString(),
+                    "notify",
+                    userNotificationRepository
+                            .findNotificationById(userIdNotificationId.get(userId))
+                            .orElseThrow(NotFoundException::new)
+            );
+        }
+    }
+
+    public void close(UUID requestId) throws NotFoundException {
+        var request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("Request not found"));
+        if (request.getCloseDate() != null) {
+            return;
+        }
+        notifyAboutClosing(request);
     }
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {

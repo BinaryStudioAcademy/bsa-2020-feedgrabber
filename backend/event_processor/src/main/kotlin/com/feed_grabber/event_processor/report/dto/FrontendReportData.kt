@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import java.util.*
 
 data class FrontendReportData(
-        val questionnaire: QuestionnaireDto,
+        val questionnaire: QuestionnaireDB?,
         val questions: List<QuestionInfo>?,
         val excelLink: ReportFileCreationDto?,
         val powerPointLink: ReportFileCreationDto?
@@ -28,6 +28,6 @@ data class QuestionWithOptions(val options: List<OptionInfo>) : QuestionReportDa
 data class QuestionWithValues(val values: List<String>) : QuestionReportData()
 
 data class FrontendProjection(val questions: List<QuestionDB>,
-                              val questionnaire: QuestionnaireDto,
+                              val questionnaire: QuestionnaireDB?,
                               val excelLink: ReportFileCreationDto?,
                               val powerPointLink: ReportFileCreationDto?)

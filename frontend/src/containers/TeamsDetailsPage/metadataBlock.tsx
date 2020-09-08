@@ -1,7 +1,7 @@
 import React from "react";
 import * as yup from 'yup';
 import UIColumn from "../../components/UI/UIColumn";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Formik} from "formik";

@@ -1,25 +1,25 @@
 import React, {FC, useEffect} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import LoaderWrapper from 'components/LoaderWrapper';
+import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import Landing from "../../components/Landing";
-import PrivateRoute from "../../components/PrivateRoute";
+import PrivateRoute from "../../components/helpers/PrivateRoute";
 import MainPage from "../../components/MainPage";
 import SignForm from "../../components/AuthForm/SignForm";
 import QuestionsList from "../QuestionsList";
 import QuestionnaireList from "../QuestionnaireList";
-import ExpandedQuestionnaire from "../ExpandedQuestionnaire";
+import ExpandedQuestionnaire from "../FormEditor";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import {getUserRoutine} from "../../sagas/auth/routines";
 import {useAuth} from '../../security/authProvider';
-import GuestRoute from "../../components/GuestRoute";
+import GuestRoute from "../../components/helpers/GuestRoute";
 import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
 import QuestionnaireResponse from 'containers/QuestionnareResponse';
 import RequestCreation from "../RequestCreation";
-import QuestionnairePreview from "../../components/QuestionnairePreview";
+import Form from "../../components/Form";
 import TeamDetailsPage from "../TeamsDetailsPage";
 import ReportPage from "../ReportPage";
 import RequestsPage from "../RequestsPage";
@@ -68,7 +68,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
                     <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire}/>
-                    <PrivateRoute exact path="/questionnaires/:id/preview" component={QuestionnairePreview}/>
+                    <PrivateRoute exact path="/questionnaires/:id/preview" component={Form}/>
                     <PrivateRoute exact path="/questionnaires/:id/new-request" component={RequestCreation}/>
                     <PrivateRoute exact path="/questionnaires/:id/requests" component={RequestsPage}/>
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>

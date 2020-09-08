@@ -17,9 +17,9 @@ const PeopleManagementPage: FC<{ match }> = ({match}) => {
                 firstIsSelected={match.params.tab==='teams'}
             />
             <UIContent>
-                {match.params.tab==='teams' &&
+                {match.params.tab === 'teams' &&
                 <TeamsPage/>}
-                {match.params.tab==='employees' &&
+                {match.params.tab === 'employees' &&
                 <CompanyUsersList/>}
             </UIContent>
         </>
