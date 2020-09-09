@@ -3,6 +3,7 @@ import {toastr} from 'react-redux-toastr';
 import {
     addQuestionnaireRoutine,
     deleteQuestionnaireRoutine,
+    loadArchivedQuestionnairesRoutine,
     hideModalQuestionnaireRoutine,
     loadOneQuestionnaireRoutine,
     loadQuestionnairesRoutine,
@@ -25,6 +26,20 @@ function* loadQuestionnairesList() {
         yield put(loadQuestionnairesRoutine.success(items));
     } catch (error) {
         yield put(loadQuestionnairesRoutine.failure(error));
+        toastr.error("Unable to fetch data");
+    }
+}
+
+function* loadArchivedQuestionnaires() {
+    try {
+        const store = yield select();
+        const {page, size} = store.questionnaires.archived.pagination;
+        const res = yield call(apiClient.get, `/api/questionnaires?page=${page}&size=${size}&archived=true`);
+        const items = res.data.data;
+
+        yield put(loadArchivedQuestionnairesRoutine.success(items));
+    } catch (error) {
+        yield put(loadArchivedQuestionnairesRoutine.failure(error));
         toastr.error("Unable to fetch data");
     }
 }
@@ -60,6 +75,7 @@ function* updateQuestionnaire(action) {
 
         yield put(hideModalQuestionnaireRoutine.trigger());
         yield put(loadQuestionnairesRoutine.trigger());
+        yield put(loadArchivedQuestionnairesRoutine.trigger());
         toastr.success("Updated questionnaire");
     } catch (errorResponse) {
         yield put(updateQuestionnaireRoutine.failure(errorResponse?.data?.error || 'No response'));
@@ -74,6 +90,7 @@ function* deleteQuestionnaire(action) {
         yield put(deleteQuestionnaireRoutine.success());
         toastr.success("Deleted questionnaire");
         yield put(loadQuestionnairesRoutine.trigger());
+        yield put(loadArchivedQuestionnairesRoutine.trigger());
         yield put(loadNotificationsRoutine.trigger());
     } catch (errorResponse) {
         yield put(deleteQuestionnaireRoutine.failure());
@@ -112,6 +129,7 @@ export default function* questionnairesSagas() {
         yield takeEvery(deleteQuestionnaireRoutine.TRIGGER, deleteQuestionnaire),
         yield takeEvery(updateQuestionnaireRoutine.TRIGGER, updateQuestionnaire),
         yield takeEvery(loadOneQuestionnaireRoutine.TRIGGER, loadOneQuestionnaire),
+        yield takeEvery(loadArchivedQuestionnairesRoutine.TRIGGER, loadArchivedQuestionnaires),
         yield takeEvery(saveAndGetQuestionnaireRoutine.TRIGGER, saveAndPutNewQuestionnaire)
     ]);
 }

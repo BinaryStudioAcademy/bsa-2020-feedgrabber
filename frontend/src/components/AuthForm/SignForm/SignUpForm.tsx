@@ -43,7 +43,7 @@ const schema = yup.object().shape({
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error, success} = props;
+    const {signUp, className, error, success, isLoading} = props;
     const [ t ] = useTranslation();
 
     return (
@@ -103,7 +103,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                                                 positive
                                                 content={"Account created!\n Check your email"}/>
                         }
-                        <Button disabled={!!errorText && errorText !== error}
+                        <Button disabled={(!!errorText && errorText !== error) || isLoading}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">

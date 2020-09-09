@@ -9,7 +9,7 @@ import ReactionTile from "./ReactionTile";
 import {useStomp} from "../../helpers/websocket.helper";
 import {IUserShort} from "../../models/user/types";
 import moment from "moment";
-        
+
 export interface IReactionCreationDto {
     reaction: string;
     newsId: string;
@@ -26,13 +26,13 @@ export interface INewsItemProps {
     item: ICompanyFeedItem;
 
     react(reaction: IReactionCreationDto): void;
-
+    expandImage(imageUrl: string): void;
     applyReaction(reaction: ICreatedReactionDto): void;
 }
 
 const defaultNewsImage = "https://img.icons8.com/cotton/2x/news.png";
 
-const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
+const NewsItem: FC<INewsItemProps> = ({ expandImage,item, react, applyReaction}) => {
     const onEmojiSelect = emoji => {
         react({reaction: emoji.native, newsId: item.id});
     };
@@ -48,7 +48,12 @@ const NewsItem: FC<INewsItemProps> = ({item, react, applyReaction}) => {
             <UICardBlock key={item.id}
                          className={styles.newsItemContainer}>
                 <>
-                    <img src={item.image ? item.image?.link : defaultNewsImage} alt='' height="200" width="180"/>
+                    <img className={`${item.image ? styles.clickable : ''}`}
+                         src={item.image ? item.image?.link : defaultNewsImage}
+                         alt=''
+                         height="200"
+                         width="180"
+                    onClick={()=> expandImage(item.image? item.image.link : null)}/>
                     <div className={styles.detailesContainer}>
                         <div className={styles.mainContainer}>
                             <div className={styles.type}>{item.type}</div>

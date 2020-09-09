@@ -20,7 +20,7 @@ const ErrorPage: React.FC<IErrorPageProps> = props => {
           redirectToMain();
         }} header>
           <img
-              className='logo'
+              style={{marginRight: 10, borderRadius: 10, padding: 5}}
               src={require('../../assets/images/icon_bg.jpg')}
               alt='Logo'
           />

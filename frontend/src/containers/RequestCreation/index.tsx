@@ -110,7 +110,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                     <UICardBlock>
                         <Form
                             updateSection={updateSection}
-                            setMenuPos={setMenuPos}
                             setCurrentQuestion={setCurrentQuestion}
                             updateOrder={updateOrder}
                             updateSections={updateSectionsR}
