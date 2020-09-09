@@ -14,6 +14,7 @@ import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
 import { IAppState } from "../../models/IAppState";
 
 import styles from './styles.module.sass';
+import UIButton from "../UI/UIButton";
 
 const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   match,
@@ -37,9 +38,13 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
     loadFeedItem(id);
   }, [loadFeedItem, match.params.id]);
 
+  const isValid = () => {
+    return item && item.title && item.body;
+  };
+
   const handleSubmit = () => {
     // here we send new item to backend
-    if (!item) {
+    if (!isValid()) {
       return;
     }
     if (item.id) {
@@ -109,9 +114,12 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
         <input name="image" type="file" multiple
                onChange={e => handleUploadPhoto(e.target.files)} hidden />
       </Button>
-      <Button type="submit" onClick={handleSubmit} className={styles.submit_button}>
-        {t('Submit')}
-      </Button>
+      <UIButton
+        submit
+        center
+        onClick={handleSubmit}
+        disabled={!isValid()} title={t('Submit')}
+      />
     </div>
     </div>
   );
