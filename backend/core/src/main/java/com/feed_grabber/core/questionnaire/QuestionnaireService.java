@@ -43,26 +43,15 @@ public class QuestionnaireService {
         this.sectionService = sectionService;
     }
 
-//    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
-//        return questionnaireRepository.findAll(PageRequest.of(page, size))
-//                .stream()
-//                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
-//                .collect(Collectors.toList());
-//    }
-
-//    public Long getCountAll() {
-//        return questionnaireRepository.count();
-//    }
-
-    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
-        return questionnaireRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size, boolean archived) {
+        return questionnaireRepository.findAllByCompanyId(companyId, archived, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
-    public Long getCountByCompanyId(UUID companyId) {
-        return questionnaireRepository.countAllByCompanyId(companyId);
+    public Long getCountByCompanyId(UUID companyId, boolean archived) {
+        return questionnaireRepository.countAllByCompanyId(companyId, archived);
     }
 
     public Optional<QuestionnaireDto> getOne(UUID id) {
@@ -127,6 +116,7 @@ public class QuestionnaireService {
 
         questionnaire.setCompany(company);
         questionnaire.setTitle(updateDto.getTitle());
+        questionnaire.setArchived(updateDto.isArchived());
         questionnaire = questionnaireRepository.save(questionnaire);
         return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
