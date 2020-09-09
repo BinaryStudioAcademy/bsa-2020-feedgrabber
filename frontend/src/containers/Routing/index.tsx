@@ -55,7 +55,6 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
                     <PrivateRoute exact path="/home" component={MainPage}/>
                     <PrivateRoute exact path="/profile" component={() => <Profile mode='profile'/>}/>
-                    <PrivateRoute exact path="/profile/settings" component={() => <Profile mode='settings'/>}/>
                     <PrivateRoute exact path="/profile/security" component={() => <Profile mode='security'/>}/>
                     <PrivateRoute exact path="/requests" component={() => <span>Requests</span>}/>
                     <PrivateRoute exact path="/help" component={() => <span>Help Center</span>}/>

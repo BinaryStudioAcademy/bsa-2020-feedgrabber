@@ -12,6 +12,7 @@ import org.hibernate.search.annotations.Index;
 import javax.persistence.*;
 import java.util.UUID;
 
+@Indexed
 @Entity
 @Data
 @NoArgsConstructor

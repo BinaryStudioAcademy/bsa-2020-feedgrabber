@@ -1,8 +1,9 @@
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
-import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 import {useTranslation} from "react-i18next";
+import styles from "./styles.module.css";
+import {AiOutlineAppstoreAdd} from "react-icons/ai";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
@@ -14,12 +15,9 @@ interface IQuestionMenuProps {
     onDelete(): void;
 
     addSection(): void;
-
-    currentQuestion: IQuestion;
 }
 
 const styleBorder = {style: {border: 'none', backgroundColor: 'white', padding: 12}};
-const styleBorderX = {style: {border: 'none', backgroundColor: 'white'}};
 const popupProps = {
     basic: true, inverted: true, size: 'mini', position: 'right center'
 } as PopupProps;
@@ -33,34 +31,36 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
         position
     }) => {
     const [isOpenModal, setOpenModal] = useState(false);
-    const scrollTop = useRef<number>(0);
+    const [top, setTop] = useState(0);
     const [t] = useTranslation();
 
-    (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = () => {
-        scrollTop.current = (document.getElementById('root')?.firstChild?.firstChild as HTMLElement)?.scrollTop || 0;
-    };
+    useEffect(() => {
+        const x = document.getElementById("app-content").scrollTop + position;
+        setTop(x ? x - 127 : 0);
+    }, [position]);
 
     return (
         <div style={{
             position: 'absolute',
-            top: (scrollTop.current + position) || '10%',
+            top,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
-            <Button.Group basic {...styleBorderX} vertical size="big">
+            <Button.Group basic className={styles.floatingMenu} style={{padding: '.1rem'}} vertical size="big">
                 <Popup content={t("New question")} {...popupProps}
-                       trigger={<Button icon="plus circle" {...styleBorder} onClick={addQuestion}/>}
-                />
-                <Popup content={t("Add from existing questions")} {...popupProps}
-                       trigger={<Button icon="external" {...styleBorder} onClick={() => setOpenModal(!isOpenModal)}/>}
+                       trigger={<Button icon="add" {...styleBorder} color="grey" onClick={addQuestion}/>}
                 />
                 <Popup content={t("Copy")} {...popupProps}
-                       trigger={<Button icon="copy" {...styleBorder} onClick={copyQuestion}/>}
+                       trigger={<Button icon="clone outline" {...styleBorder} onClick={copyQuestion}/>}
                 />
-                <Popup content={t("Delete")} {...popupProps}
-                       trigger={<Button icon="remove" {...styleBorder} onClick={onDelete}/>}
+                <Popup content={t("Add from existing questions")} {...popupProps}
+                       trigger={<Button icon={AiOutlineAppstoreAdd({size: '1.6rem'})}
+                                        style={{border: 'none', backgroundColor: 'white', padding: 8}}/>}
                 />
                 <Popup content={t("Add section")} {...popupProps}
-                       trigger={<Button icon="window maximize outline" {...styleBorder} onClick={addSection}/>}
+                       trigger={<Button icon="arrows alternate vertical" {...styleBorder} onClick={addSection}/>}
+                />
+                <Popup content={t("Delete")} {...popupProps}
+                       trigger={<Button icon="trash alternate outline" {...styleBorder} onClick={onDelete}/>}
                 />
             </Button.Group>
             <SelectQuestionsFromExisting isOpen={isOpenModal} handleOpenModal={setOpenModal}/>
@@ -69,9 +69,4 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
 };
 
 export default QuestionMenu;
-// const handleScroll = () => scrollTop.current = window.pageYOffset;
-// useEffect(() => {
-//     window.addEventListener('scroll', handleScroll);
-//     return () => window.removeEventListener('scroll', handleScroll);
-// }, []);
 

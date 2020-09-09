@@ -12,4 +12,5 @@ public class QuestionnaireUpdateDto {
     UUID id;
     @NotBlank
     String title;
+    boolean archived;
 }

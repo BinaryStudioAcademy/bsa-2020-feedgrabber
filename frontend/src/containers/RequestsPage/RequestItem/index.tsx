@@ -10,19 +10,29 @@ import { useTranslation } from "react-i18next";
 
 type Props = {
     request: IRequestShort;
+    showQuestionnaireTitle?: boolean;
     closeRequest?: typeof closeRequestRoutine;
     isClosed: boolean;
     questionnaireId?: string;
+    teamId?: string;
 };
 
-export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questionnaireId}) => {
+export const RequestItem: FC<Props> = (
+  {request,
+    closeRequest,
+    isClosed,
+    questionnaireId,
+    teamId,
+    showQuestionnaireTitle
+  }
+) => {
     const [open, setOpen] = useState(false);
     const [t] = useTranslation();
 
     function handleClick() {
         if (isClosed) {
             history.push(`/report/${request.requestId}`);
-        } else {
+        } else if (closeRequest !== undefined) {
             toastr.info(t("Request is in progress"));
             setOpen(true);
         }
@@ -30,7 +40,9 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
 
     function handleRequestClose() {
         !isClosed &&
-        closeRequest({requestId: request.requestId, questionnaireId: questionnaireId});
+        closeRequest({
+          requestId: request.requestId, questionnaireId: questionnaireId, teamId: teamId
+        });
         setOpen(false);
     }
 
@@ -50,8 +62,19 @@ export const RequestItem: FC<Props> = ({request, closeRequest, isClosed, questio
         <>
             <Card fluid raised={true} onClick={handleClick} color="blue">
                 <Card.Content textAlign="center">
-                    <Card.Header>{t("Created by")} {request.requestMaker.username}</Card.Header>
+                    <Card.Header>
+                      {showQuestionnaireTitle && (
+                        <>
+                          {request.questionnaireTitle}
+                          <br />
+                         </>
+                      )}
+                      {t("Created by")} {request.requestMaker.username}
+                    </Card.Header>
                     <Card.Meta>{moment(request.creationDate).calendar()}</Card.Meta>
+                    {request.targetUser && (
+                      <Card.Description>{t("target user")}: {request.targetUser.username}</Card.Description>
+                    )}
                 </Card.Content>
                 <Card.Content extra>
                     {getProgressBar()}

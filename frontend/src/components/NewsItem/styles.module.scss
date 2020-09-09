@@ -1,11 +1,16 @@
 .newsItemContainer {
   display: flex;
   flex-direction: row;
+  cursor: default;
 }
 
 .newsItemContainer > img {
   border-radius: 5px;
   margin-right: 25px;
+}
+
+.clickable{
+  cursor: pointer;
 }
 
 .type {

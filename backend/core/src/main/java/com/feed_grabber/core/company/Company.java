@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+@Embeddable
 @Entity
 @Data
 @Builder
@@ -25,6 +27,8 @@ public class Company {
     }
 
     @Id
+    @Field(name = "idCopy")
+    @Analyzer(impl = WhitespaceAnalyzer.class)
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)

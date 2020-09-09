@@ -254,7 +254,7 @@ public class UserService implements UserDetailsService {
                         new org.springframework.security.core.userdetails.User(
                                 u.getUsername(),
                                 u.getPassword(),
-                                true,
+                                u.getIsEnabled(),
                                 true,
                                 true,
                                 true,
@@ -296,57 +296,9 @@ public class UserService implements UserDetailsService {
         return searchRepository.getUsersList(query, Optional.of(page), Optional.of(size));
     }
 
-//    public List<UserDetailsResponseDTO> searchByQuery(
-//            UUID companyId,
-//            String query,
-//            Integer page,
-//            Integer size) {
-//        var parts = query.split(" ");
-//        var pageable = PageRequest.of(page, size);
-//        var users = parts.length == 1
-//                ? userRepository.findByLastNameBeginAndCompanyId(
-//                        companyId,
-//                        query.toLowerCase() + "%",
-//                        pageable)
-//                : userRepository.findByNameAndLastNameAndCompanyId(
-//                        companyId,
-//                        parts[1].toLowerCase() + "%",
-//                        parts[0].toLowerCase(),
-//                        pageable);
-//        return users.stream()
-//                .map(UserMapper.MAPPER::detailedFromUser)
-//                .collect(Collectors.toList());
-//    }
-
     public Long getCountByCompanyId(UUID companyId, Boolean isFired) {
         return userRepository.countAllByCompanyIdAndIsDeleted(companyId, isFired);
     }
-
-//    public Long getCountByQuery(UUID companyId, String query) {
-//        var parts = query.split(" ");
-//        return parts.length == 1
-//                ? userRepository.countByNameBeginAndCompanyId(companyId, parts[0].toLowerCase() + "%")
-//                : userRepository.countByLastNameAndNameAndCompanyId(
-//                        companyId, parts[1].toLowerCase() + "%", parts[0].toLowerCase());
-//    }
-
-//    @Transactional
-//    public void editUserProfile(UserProfileEditDto dto) throws NotFoundException {
-//        var user = userRepository.findById(dto.getUserId())
-//                .orElseThrow(() -> new UsernameNotFoundException("user does not exists. id=" + dto.getUserId()));
-//        if (user.getUserProfile() == null) {
-//            var savedProfile = profileRepository.save(new UserProfile(user));
-//            user.setUserProfile(savedProfile);
-//        }
-//        var profile = user.getUserProfile();
-//        var avatar = imageRepository.findByLink(dto.getAvatar()).orElseThrow(NotFoundException::new);
-//        profile.setAvatar(avatar);
-//        profile.setFirstName(dto.getFirstName());
-//        profile.setLastName(dto.getLastName());
-//        profile.setPhoneNumber(dto.getPhoneNumber());
-//        user.setUsername(dto.getUserName());
-//        userRepository.save(user);
-//    }
 
     public UserShortDto getUserShortByEmailAndCompany(String email, UUID companyId) throws UserNotFoundException {
         return UserMapper.MAPPER.shortFromUser(

@@ -9,6 +9,7 @@
     "Logout": "Вийти",
 
     "No items": "Список порожній",
+    "target user": "Цільовий користувач",
 
     "Home": "Домашня",
     "Company Dashboard": "Дошка компанії",
@@ -166,7 +167,6 @@
     "Respondents": "Респонденти",
     "View Report Info": "Переглянути звіт",
 
-    "Send Request": "Відправити запит",
     "Select deadline date!": "Оберіть кінцевий термін!",
     "Select at least one user or team": "Виберіть принаймні одного користувача чи команду",
     "Assign target user": "Призначити користувача",
@@ -309,6 +309,13 @@
     "Manage questions": "Редагування питань",
     "Change title": "Змінити заголовок",
     "Delete questionnaire": "Видалити опитувальник",
+
+    "Edit questionnaire": "Редагувати опитник",
+    "Add questionnaire": "Створити опитник",
+
+    "Archive": "Архівувати",
+    "Unarchive": "Розархівувати",
+    "Archived": "Архів",
 
     "Edit questionnaire": "Редагувати опитувальник",
     "Add questionnaire": "Створити опитувальник",
