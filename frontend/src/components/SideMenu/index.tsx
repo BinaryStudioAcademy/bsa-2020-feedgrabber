@@ -12,14 +12,16 @@ import {
     RiTeamLine,
     RiGlobalLine,
     RiArrowUpSLine,
-    RiArrowDownSLine,
-    RiRadioButtonLine,
-    RiFocusLine
+    RiArrowDownSLine
 } from "react-icons/ri";
 import {AiOutlineQuestion} from "react-icons/ai";
 import {IAppState} from "../../models/IAppState";
 import {getUserSettingsRoutine, updateUserSettingsRoutine} from "../../sagas/user/routines";
 import {connect, ConnectedProps} from "react-redux";
+import {
+  BiRadioCircle,
+  BiRadioCircleMarked
+} from "react-icons/all";
 
 const languages: {key: string; text: string; value: string}[] = [
   {
@@ -60,8 +62,8 @@ const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps
     const languageItem = lang => (
         <li className={styles.menuItem} key={lang.key} onClick={() => handleLanguageChange(lang.value)}>
           {settings?.language === lang.value
-              ? <RiRadioButtonLine size="1.3em" color="white" className={styles.menuItemIcon}/>
-              : <RiFocusLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+              ? <BiRadioCircleMarked size="1.3em" color="white" className={styles.menuItemIcon}/>
+              : <BiRadioCircle size="1.3em" color="white" className={styles.menuItemIcon}/>
           }
           <span className={styles.menuItemTitle}>{lang.text}</span>
         </li>
