@@ -1,5 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
-import {isEmpty} from 'lodash';
+import React, {FC, useEffect} from 'react';
 import {Card} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
@@ -28,23 +27,22 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                    setCurrentQ,
                                                    currentQ: current,
                                                    setPagination,
+                                                   saveNewQuestion,
                                                    pagination
                                                }) => {
     const [t] = useTranslation();
 
-    const [newPressed, setNewPressed] = useState(false);
-
     useEffect(() => {
         loadQuestions();
-    }, [loadQuestions]);
-
-    useEffect(() => {
-        setNewPressed(!isEmpty(current) && newPressed);
-    }, [current, newPressed]);
+        setCurrentQ({});
+    }, [loadQuestions, setCurrentQ]);
 
     const handleClick = (question: IQuestion) => {
-        setNewPressed(!question);
-        setCurrentQ(question || defaultQuestion);
+        setCurrentQ(question);
+    };
+
+    const handleAddNew = () => {
+      saveNewQuestion(defaultQuestion);
     };
 
     return (
@@ -53,29 +51,10 @@ const QuestionsList: FC<QuestionsListProps> = ({
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
-                        <UIButton center primary title={t("Add new")} onClick={() => handleClick(null)}/>
+                        <UIButton center primary title={t("Add new")} onClick={handleAddNew}/>
                         <br/>
                         <UIContent>
                             <UIColumn>
-                                {newPressed && <><p>Add new</p>
-                                    <hr/>
-                                    <br/>
-                                    <div className={styles.questionContainer}>
-                                        <QuestionDetailsForm
-                                            isList
-                                            isListNew
-                                            listEdit={
-                                                {
-                                                    cancel: () => {
-                                                        setCurrentQ({});
-                                                        newPressed && setNewPressed(false);
-                                                    }
-                                                }
-                                            }/></div>
-                                </>}
-                                <p>Modify existing</p>
-                                <hr/>
-                                <br/>
                                 <GenericPagination
                                     isLoading={isLoading}
                                     pagination={pagination}
@@ -93,7 +72,6 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                         {
                                                             cancel: () => {
                                                                 setCurrentQ({});
-                                                                newPressed && setNewPressed(false);
                                                             }
                                                         }
                                                     }/></div>

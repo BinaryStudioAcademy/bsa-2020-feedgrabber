@@ -1,5 +1,5 @@
 import {QuestionType} from "../../../models/forms/Questions/IQuesion";
-import {Dropdown, Form, Icon} from "semantic-ui-react";
+import {Dropdown, Icon} from "semantic-ui-react";
 import React from "react";
 import styles from "../styles.module.sass";
 import {useTranslation} from "react-i18next";
