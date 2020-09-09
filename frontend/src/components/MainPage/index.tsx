@@ -160,7 +160,7 @@ const MainPage: FC<IMainPageProps> =
                               reportsList.map(item => (
                                 <UICardBlock key={item.id}>
                                     {item.title && <h4>{item.title}</h4>}
-                                    {item.closeDate && <p>{item.closeDate}</p>}
+                                    {item.closeDate && <p>{new Date(item.closeDate).toLocaleString()}</p>}
                                     {item.author && <p><b>{item.author}</b></p>}
                                     <Link to={`/report/${item.id}`}><UIButton title={t("Details")}/></Link>
                                 </UICardBlock>
