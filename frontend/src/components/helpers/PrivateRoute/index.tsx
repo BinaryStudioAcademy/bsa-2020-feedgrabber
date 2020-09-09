@@ -11,45 +11,46 @@ import {useTranslation} from "react-i18next";
 import {getUserSettingsRoutine} from "../../../sagas/user/routines";
 import {IAppState} from "../../../models/IAppState";
 
-const PrivateRoute = ({component: Component, showMenu, toggleMenu,
-                          getSettings, user, roles = null, ...rest}) => {
+const PrivateRoute = ({
+                          component: Component, showMenu, toggleMenu,
+                          getSettings, user, roles = null, ...rest
+                      }) => {
     const isLogged = useAuth();
-    const { i18n } = useTranslation();
+    const {i18n} = useTranslation();
 
     const path = rest.path;
 
     useEffect(() => {
-        if (isLogged) {
+        if (isLogged && !user.settings) {
             getSettings();
         }
-    }, [isLogged, getSettings]);
+    }, [isLogged, getSettings, user.settings]);
 
     useEffect(() => {
         if (i18n.language !== user.settings?.language) {
             i18n.changeLanguage(user.settings.language);
         }
-    },[i18n, user.settings]);
+    }, [i18n, user.settings]);
 
     return (
         <Route
             {...rest}
-            render={props => {
-                if (!isLogged) {
-                    return <Redirect to={{pathname: '/auth', state: {from: props.location}}}/>;
-                }
-
-                return (
+            render={props => (
+                !isLogged ?
+                    <Redirect to={{pathname: '/auth', state: {from: props.location}}}/>
+                    :
                     <AccessManager endpoint={path}>
                         <Header/>
-                        <div className={styles.sideBarWrapper}>
-                            <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
+                        <div className={styles.mainPage}>
+                            <div className={styles.mainSideBar}>
+                                <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
+                            </div>
+                            <div className={styles.appContent} id="app-content">
+                                <Component {...props} />
+                            </div>
                         </div>
-                        <div className={`${styles.appContent} ${showMenu && styles.appContentExpanded}`}>
-                            <Component {...props} />
-                        </div>
-                    </AccessManager>
-                );
-            }}
+                    </AccessManager>)
+            }
         />
     );
 };

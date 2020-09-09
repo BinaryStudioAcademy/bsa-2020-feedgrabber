@@ -95,10 +95,10 @@
     "My settings": "My settings",
     "Privacy and Security": "Privacy and Security",
 
-    "Radio": "Radio",
-    "CheckBoxes": "CheckBoxes",
-    "TextArea": "TextArea",
-    "Scaled": "Scaled",
+    "Radio": "Single Choice",
+    "CheckBoxes": "Check-boxes",
+    "TextArea": "Paragraph",
+    "Scaled": "Linear scale",
     "Date": "Date",
     "File upload": "File upload",
 

@@ -58,7 +58,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                         disabled={(!!response && !answerHandler) || notResponsePage}
                         checked={answer?.selected === option}
                         name={question.id}
-                        value={option}
+                        value={option || ''}
                         onChange={handleChange}
                     />
                     <Input disabled transparent fluid className={styles.answer_input} value={option}/>
@@ -70,7 +70,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                         disabled={(!!response && !answerHandler) || notResponsePage}
                         checked={answer?.other === other}
                         name='radioGroup'
-                        value={other}
+                        value={other || ''}
                         onChange={() => handleOther(other)}
                     />
                     <Input
@@ -78,7 +78,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                         className={styles.answer_input}
                         fluid
                         transparent
-                        defaultValue={other}
+                        defaultValue={other || ''}
                         placeholder={t("Or enter your variant here...")}
                         error={answer === other && !!otherIsInvalid && !response}
                         onChange={event => handleOther(event.target.value)}

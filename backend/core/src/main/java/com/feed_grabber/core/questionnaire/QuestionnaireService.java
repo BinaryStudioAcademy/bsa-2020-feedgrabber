@@ -70,9 +70,10 @@ public class QuestionnaireService {
         }
 
         if (!createDto.getTitle()
-                .matches("[a-zA-Z0-9а-яА-Я][a-zA-Z0-9а-яА-Я!#$%&'*+\\-/=?^_ ]*")) {
-            throw new WrongQuestionnaireTitleException("Title should be valid. It should not start with symbols, " +
-                    "Title can contain Latin and Cyrillic letters, numbers and special symbols - (!#$%&'*+-/=?^_)");
+                .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
+            throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
+                    "have more than one space in sequence." +
+                    "Title can contain latin letters, numbers and special symbols.");
         }
 
 
