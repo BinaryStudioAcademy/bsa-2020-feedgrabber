@@ -1,14 +1,10 @@
 import { IPaginationInfo } from "../../IPaginationInfo";
-import { IQuestion } from "../Questions/IQuesion";
 import {IReportShortDto} from "../../report/IReport";
+
 
 export interface IQuestionnairesState {
   list?: IQuestionnairesListState;
-  current?: {
-    get?: IQuestionnaire;
-    questions?: IQuestion[];
-    isLoading?: boolean;
-  };
+  archived?: IQuestionnairesListState;
   pending?: IRequestState;
 }
 
@@ -28,7 +24,6 @@ export interface IQuestionnaire {
     title: string;
     description?: string;
     companyName?: string;
-    questions?: IQuestion[];
     isEditingEnabled: boolean;
 }
 

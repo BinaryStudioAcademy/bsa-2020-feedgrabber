@@ -1,11 +1,16 @@
 .newsItemContainer {
   display: flex;
   flex-direction: row;
+  cursor: default;
 }
 
 .newsItemContainer > img {
   border-radius: 5px;
   margin-right: 25px;
+}
+
+.clickable{
+  cursor: pointer;
 }
 
 .type {
@@ -55,16 +60,31 @@
   margin-top: 5px;
 }
 
-.reactionsContainer{
-  background: #33bb33;
+.reactionsContainer {
   display: flex;
   flex-wrap: wrap;
+  margin: 0px 10px 10px 22px !important;
 }
 
-.addReaction{
-  font-size: 1rem !important;
+.addReaction {
+  display: flex;
+  height: 26px !important;
+  background: #e8e8e8;
+  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  font-weight: bold;
+  margin-left: 3px;
+  color: #666666 !important;
+  cursor: pointer;
 }
 
-.emojiPicker{
+.emojiPicker {
   padding: -5px;
+}
+
+.icon {
+  color: #666666 !important;
+  margin: 0 !important;
 }

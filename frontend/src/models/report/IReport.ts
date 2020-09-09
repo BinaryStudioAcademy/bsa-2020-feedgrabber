@@ -36,6 +36,7 @@ type UserShortDto = {
 
 export interface IRequestShort {
     requestId: string;
+    questionnaireTitle: string;
     targetUser: UserShortDto;
     requestMaker: UserShortDto;
     creationDate: string;

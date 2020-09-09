@@ -1,6 +1,8 @@
 package com.feed_grabber.core.exceptions;
 
 import com.feed_grabber.core.auth.exceptions.*;
+import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
+import com.feed_grabber.core.questionnaire.exceptions.WrongQuestionnaireTitleException;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.responseDeadline.exceptions.DeadlineExpiredException;
@@ -77,6 +79,20 @@ public class Handler extends ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(value = CorporateEmailException.class)
     public ResponseEntity<AppResponse<Object>> handleWrongCorporateEmailException(CorporateEmailException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(exception));
+    }
+
+    @ExceptionHandler(value = QuestionnaireExistsException.class)
+    public ResponseEntity<AppResponse<Object>> handleQuestionnaireAlreadyExistsException(QuestionnaireExistsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(exception));
+    }
+
+    @ExceptionHandler(value = WrongQuestionnaireTitleException.class)
+    public ResponseEntity<AppResponse<Object>> handleWrongQuestionnaireTitleException(WrongQuestionnaireTitleException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new AppResponse<>(exception));

@@ -1,5 +1,6 @@
 package com.feed_grabber.core.invitation;
 
+import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.invitation.model.Invitation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,6 +22,8 @@ public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
     List<Invitation> findByCompanyIdOrderByAcceptedAscCreatedAtDesc(UUID companyId);
 
     Optional<Invitation> findByCompanyIdAndEmail(UUID companyId, String email);
+
+    Optional<Invitation> findByCompanyAndEmail(Company company, String email);
 
     @Transactional
     @Modifying

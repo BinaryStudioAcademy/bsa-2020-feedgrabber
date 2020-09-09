@@ -3,11 +3,12 @@ $toggle-menu-timing: ease-in-out
 $back-color: #aeb0b2
 $active-back: #565c86
 $attention-color: #606790
+$lang-color: #596086
 
 .menuWrapper
   position: fixed
   background-color: $attention-color
-  height: 100%
+  height: calc(100% - 5.1em)
   margin-top: 5.1em
   border-top: #565c86 solid 2px
   z-index: 1
@@ -22,6 +23,17 @@ $attention-color: #606790
   .menuContent
     display: flex
     flex-direction: column
+    height: 100%
+
+.menuLanguagesWrapper
+  margin-top: auto
+  ul
+    background-color: $active-back
+.listActive
+  height: 100%
+
+.listInactive
+  height: 0
 
 .menuItem
   font-family: Raleway
@@ -32,7 +44,6 @@ $attention-color: #606790
   font-size: 1em
   padding: 1em
   cursor: pointer
-
   &:hover
     background-color: $active-back
 
@@ -41,7 +52,6 @@ $attention-color: #606790
 
 .menuItemIcon
   transition: all .2s ease-in-out
-  margin-left: .5em
 
 .menuItemTitle
   margin-left: 1.4em
@@ -55,7 +65,7 @@ $attention-color: #606790
     border-left: 2px solid #eaba63
 
 .menuWrapperClosed
-  width: 5em
+  width: 3.5em
 
   .menuItemActive
     background-color: $active-back

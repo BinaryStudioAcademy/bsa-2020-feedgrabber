@@ -13,15 +13,17 @@ import UIButton from "../../components/UI/UIButton";
 import UICard from "../../components/UI/UICard";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {Icon} from "semantic-ui-react";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {history} from "../../helpers/history.helper";
-import {Permissions} from "../../components/AccessManager/rbac-rules";
-import AccessManager from "../../components/AccessManager";
+import {Permissions} from "../../components/helpers/AccessManager/rbac-rules";
+import AccessManager from "../../components/helpers/AccessManager";
 import { useTranslation } from 'react-i18next';
 import styles from './styles.module.sass';
+import {ITeamShort} from "../../models/teams/ITeam";
 
 const TeamsPage: FC<ITeamsPageProps> = (
   {
+    currentUser,
     teams,
     loadTeams,
     loadUsers,
@@ -44,9 +46,11 @@ const TeamsPage: FC<ITeamsPageProps> = (
 
   const [t] = useTranslation();
 
+  const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
+  const isTeamLead = (team: ITeamShort) => currentUser?.id === team.leadId;
+
     return (
         <>
-            <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
                         <AccessManager staticPermission={Permissions.createTeams}>
@@ -79,26 +83,28 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                     }>{match && t('Matches searched query')}</span>
                                 </UICardBlock>
                                 <UICardBlock>
-                                    <Icon color={"grey"} name="users"/>{team.membersAmount} Member(s)
+                                    <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
                                 </UICardBlock>
-                                <AccessManager staticPermission={Permissions.manageTeams}>
                                     <UICardBlock>
-                                        <UIButton title={t("Manage")} onClick={() => handleRedirect(team.id)}/>
+                                      {(isHrOrCo || isTeamLead(team)) &&
+                                          <UIButton title={t("Manage")} onClick={() => handleRedirect(team.id)}/>
+                                      }
+                                      <AccessManager staticPermission={Permissions.manageTeams}>
                                         <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
                                                   disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
+                                      </AccessManager>
                                     </UICardBlock>
-                                </AccessManager>
                             </UICard>
                         </UIColumn>;})
                       : <div className={styles.noItemsLabel}>{t("No items")}</div>
                   )}
                 </LoaderWrapper>
-            </UIContent>
         </>
     );
 };
 
 const mapState = (state: IAppState) => ({
+  currentUser: state.user.info,
   teams: state.teams.teams,
   companyUsers: state.teams.companyUsers,
   isLoading: state.teams.isLoading,

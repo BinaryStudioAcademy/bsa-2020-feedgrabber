@@ -9,7 +9,7 @@ import {
     receiveNotificationRoutine,
     markNotificationAsReadRoutine
 } from "../../sagas/notifications/routines";
-import LoaderWrapper from "../LoaderWrapper";
+import LoaderWrapper from "../helpers/LoaderWrapper";
 import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
@@ -45,7 +45,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         deleteAll,
         loadNotifications,
         receiveNotification,
-        countNotifications,
         getResponse,
         readNotification
     }) => {
@@ -54,6 +53,8 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
 
     const ref = useRef(null);
     useOutsideAlerter(ref, () => shown && setShown(false));
+
+    const countUnreadNotifications = notifications.filter(n => !n.isRead).length;
 
     const getNotification = (notification: INotification) => {
         switch (notification.messageType) {
@@ -90,9 +91,9 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         <div ref={ref}>
             <div onClick={() => setShown(!shown)}>
                 <Icon className={styles.headerBellIcon} name="bell outline" size="large"/>
-                {countNotifications > 0 &&
+                {countUnreadNotifications > 0 &&
                 (<div className={styles.headerBellMessages}>
-                    {countNotifications > 9 ? '9+' : countNotifications}
+                    {countUnreadNotifications > 9 ? '9+' : countUnreadNotifications}
                 </div>)}
             </div>
             {shown &&
@@ -123,9 +124,7 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
 
 const mapStateToProps = (state: IAppState) => ({
     notifications: state.notifications.notifications,
-    isLoading: state.notifications.isLoading,
-    countNotifications: state.notifications.notifications.length
-
+    isLoading: state.notifications.isLoading
 });
 
 const mapDispatchToProps = {

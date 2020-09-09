@@ -65,6 +65,7 @@ public class DashboardService {
 
     private QuestionnaireDashboardDto mapToDto(Questionnaire questionnaire) {
         var reports = questionnaire.getRequests().stream()
+                .filter(q -> q.getCloseDate() != null)
                 .map(RequestMapper.MAPPER::requestToDashboardDto)
                 .collect(Collectors.toList());
         var result = QuestionnaireMapper.MAPPER.questionnaireToDashboardDto(questionnaire);

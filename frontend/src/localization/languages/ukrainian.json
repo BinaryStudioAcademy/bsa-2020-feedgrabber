@@ -2,7 +2,6 @@
   "translations": {
     "PENDING FEEDBACKS": "ОЧІКУЮЩІ ВІДГУКИ",
     "Form Creator": "Створення форми",
-    "Send Request": "Створити запит",
     "ASSIGN FEEDBACKS": "НАЗНАЧИТИ ВІДГУК",
     "Profile": "Профіль",
     "Settings": "Налаштування",
@@ -10,6 +9,7 @@
     "Logout": "Вийти",
 
     "No items": "Список порожній",
+    "target user": "Цільовий користувач",
 
     "Home": "Домашня",
     "Company Dashboard": "Дошка компанії",
@@ -17,6 +17,7 @@
     "Teams": "Команди",
     "Questions": "Запитання",
     "Employees": "Співробітники",
+    "People": "Люди",
     "Invitations": "Запрошення",
 
     "Account verification": "Перевірка акаунта",
@@ -57,6 +58,7 @@
     "Inspire employees": "Надихніть співробітників стати краще",
     "Reviews = opportunity": "Відгуки = можливості. Почніть надавати професійні відгуки прямо зараз.",
     "Make some fire!": "Розпаліть вогонь!",
+    "Company employees": "Співробітники",
 
     "Pending requests": "Очікуючі запити",
     "Deadline at": "Кінцевий термін о",
@@ -104,6 +106,7 @@
     "Copy": "Копіювати",
     "Delete": "Видалити",
     "Add section": "Додати розділ",
+    "Description": "Опис",
 
     "Add questions": "Додати запитання",
 
@@ -117,8 +120,27 @@
     "Select new role": "Обрати нову роль",
     "Discard changes": "Скасувати зміни",
     "Change": "Змінити",
+    "All Employees": "Всі працівники",
+    "Fired Employees": "Звільнені працівники",
+    "Unfire": "Відновити",
+    "Do you really want to fire": "Ви дійсно хочете звільнити співробітника",
+    "Switch role": "Змінити посаду",
+    "Fire": "Звільнити",
+    "Switch role": "Змітини роль",
+    "company_owner": "власник компанії",
+    "hr": "рекрутер",
+    "employee": "працівник",
 
     "Send New Invitation": "Відправити нове запрошення",
+    "Domain name for corporate email": "Доменне ім'я для корпоративної пошти",
+    "Write company email domain name (e.g. binary-academy.com)":
+	  "Напишіть доменне ім'я компанії (напр. binary-academy.com)",
+	"Write domain...": "Напишіть домен...",
+    "Now you can tell employees that they can sign up on": "Тепер можете сказати працівникам, що вони можуть реєструватися на",
+    "using there corporate email": ", використовуючи корпоративний емейл",
+    "Do you really want to delete current email domain?": "Ви дійсно хочете видалити поточний домен? ",
+    "Employees won`t able to register with there corporate emails anymore":
+        "Працівники більше не зможуть реєструватися через корпоративну пошту.",
     "Send": "Відправити",
     "Sent Invitations": "Відправлені запрошення",
     "Resend": "Відправити повторно",
@@ -133,6 +155,9 @@
     "Please, fill the question": "Будь ласка, дайте відповідь на питання",
     "Next": "Наступне",
     "Add new": "Додати нове",
+    "This question was answered already": "На це питання вже є відповідь",
+    "Are you sure you want to change it?": "Ви дійсно хочете змінити його?",
+    "Yes, I am sure": "Так, я впевнений",
 
     "average size": "середній розмір",
     "Overall": "Загалом",
@@ -140,11 +165,14 @@
     "Respondents": "Респонденти",
     "View Report Info": "Переглянути звіт",
 
-    "Send Request": "Відправити запит",
     "Select deadline date!": "Оберіть кінцевий термін!",
     "Select at least one user or team": "Виберіть принаймні одного користувача чи команду",
     "Assign target user": "Призначити користувача",
     "This user will receive report": "Цей користувач отримає звіт",
+    "Include target user to request?": "Додати призначеного користувача до запиту?",
+    "Send report to target user?": "Надіслати звіт призначеному користувачеві?",
+    "Notify Users?": "Сповістити користувачів?",
+    "If yes, this user will also receive report": "Якщо так, цей користувач також отримає звіт",
     "If yes, this user will also receive request": "Якщо так, цей користувач також отримає запит",
     "Set Deadline for this request?": "Встановити кінцевий термін для цього запиту?",
     "Users will be notified before the deadline": "Користувачі будуть сповіщені до кінцевого терміну",
@@ -153,6 +181,7 @@
     "Can users change answers?": "Чи можуть користувачі змінювати відповіді?",
     "Select Teams": "Виберіть команди",
     "Select Users": "Виберіть користувачів",
+    "username": "логін",
 
     "Request is in progress": "Запит в процесі",
     "Closed": "Закрито",
@@ -170,6 +199,7 @@
     "Track pending/closed requests": "Відстежувати очікуючі/закриті запити",
 
     "Add Team": "Додати команду",
+    "Member(s)": "Учасник(ів)",
     "Edit Team": "Редагувати команду",
     "Here could be requests or something else": "Тут можуть бути запити чи щось інше",
 
@@ -192,7 +222,7 @@
     "Email must be valid": "Електронна адреса повинна бути дійсною",
     "Email is required": "Введіть електронну адресу",
 
-    "No companies found. Create your own :)": "Компаній не знайдено Створіть свою власну :)",
+    "No companies found. Create your own": "Компаній не знайдено Створіть свою власну",
     "Company name required": "Введіть назву компанії",
     "Company name too short!": "Назва компанії занадто коротка!",
     "Company name too long!": "Назва компанії занадто довга!",
@@ -222,7 +252,7 @@
     "Too Short!": "Занадто коротке!",
     "Too Long!": "Занадто довге!",
 
-    "Username": "Username",
+    "Username": "Логін",
     "Email": "Email",
     "Company": "Компанія",
     "Password": "Пароль",
@@ -234,7 +264,7 @@
     "Search...": "Пошук...",
     "Type your first name...": "Введіть своє ім’я...",
     "Type your last name...": "Введіть своє прізвище...",
-    "Type your username...": "Введіть свій username...",
+    "Type your username...": "Введіть свій логін...",
     "Preferred language": "Мова",
     "Choose type": "Виберіть тип",
     "Other option...": "Інший варіант...",
@@ -243,10 +273,10 @@
     "It may affect answers that have been given before!!!": "Це може вплинути на відповіді, які були дані раніше!!!",
     "I know what I do!": "Я знаю, що роблю!",
     "Team Name": "Назва команди",
-    "Invitation email": "Email для запрошення",
+    "Invitation email": "Пошта для запрошення",
     "Title": "Заголовок",
-    "Update Username": "Змінити username",
-    "Change your username": "Змінити username",
+    "Update Username": "Змінити логін",
+    "Change your username": "Змінити логін",
     "Change your password": "Змінити пароль",
 
     "Type your question": "Введіть запитання",
@@ -270,15 +300,24 @@
     "or": "або",
     "Matches searched query": "Знайдені пошукові запити",
     "items per page": "елементів на сторінці",
+    "Total": "Усього",
 
     "New request": "Новий запит",
     "Show requests and reports": "Показати запити та звіти",
-    "Manage questions": "Редагування питаннями",
+    "Manage questions": "Редагування питань",
     "Change title": "Змінити заголовок",
-    "Delete questionnaire": "Видалити опитник",
+    "Delete questionnaire": "Видалити опитувальник",
 
     "Edit questionnaire": "Редагувати опитник",
     "Add questionnaire": "Створити опитник",
+
+    "Archive": "Архівувати",
+    "Unarchive": "Розархівувати",
+    "Archived": "Архів",
+
+    "Edit questionnaire": "Редагувати опитувальник",
+    "Add questionnaire": "Створити опитувальник",
+    "title is a required field": "Заголовок є обов'язковим полем",
 
     "Create a new feed item": "Створити новину",
     "What's up": "Що сталося?",
@@ -290,7 +329,6 @@
     "No reports yet": "Звітів ще немає",
     "Company owners": "Власники компанії",
     "HR managers": "Менеджери з персоналу",
-    "People": "Люди",
     "Team Leaders": "Керівники команд",
     "Active questionnaires": "Опитувальники",
     "Archived questionnaires": "Архівні Опитувальники"

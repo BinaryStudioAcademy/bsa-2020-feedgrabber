@@ -16,4 +16,5 @@ public class TeamShortDto {
     private UUID id;
     private String name;
     private Integer membersAmount;
+    private UUID leadId;
 }

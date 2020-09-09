@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import styles from './styles.module.sass';
 import { IAppState } from 'models/IAppState';
 import UIContent from "../../components/UI/UIContent";
-import LoaderWrapper from "../../components/LoaderWrapper";
+import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import {Accordion, AccordionTitleProps, Icon, Segment} from 'semantic-ui-react';
 import { IUserShortInfo} from "../../models/user/types";
