@@ -20,7 +20,7 @@ public class DashboardController {
     DashboardService service;
 
     @GetMapping
-    public AppResponse<DashboardDto> test(){
+    public AppResponse<DashboardDto> getData(){
         return new AppResponse<>(service.getData());
     }
 }

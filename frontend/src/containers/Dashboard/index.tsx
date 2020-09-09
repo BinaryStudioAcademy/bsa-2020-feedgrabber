@@ -251,6 +251,7 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = (
                     && q.title.toLowerCase().includes(searchPatterns.questionnaireActive.toLowerCase()))
                     .map(q =>
                       <Accordion
+                        key={q.id}
                         panels={[
                           { key: q.id,
                             title: {content: q.title , icon: "file alternate"},
