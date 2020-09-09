@@ -24,14 +24,14 @@ import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import {
-    loadSectionsByQuestionnaireRoutine, setCurrentQuestionInSection, setNoSectionsRoutine,
+    setCurrentQuestionInSection, setNoSectionsRoutine,
     updateQuestionsOrderRoutine,
     updateSectionRoutine, updateSections
 } from "sagas/sections/routines";
 import {useTranslation} from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import {setFloatingMenuPos} from "../../sagas/app/routines";
 import QuestionnaireList from "../QuestionnaireList";
+import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 
 const initialValues = {
     chosenUsers: new Array<IUserShort>(),
@@ -53,7 +53,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
          users,
          loadTeams,
          loadUsers,
-         loadSections,
+         loadOneQuestionnaire,
          updateSection,
          updateOrder,
          sendRequest,
@@ -62,7 +62,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
          isLoadingTeams,
          updateSectionsR,
          sections,
-         setNoSections
+         setNoSections,
+         questionnaireId
      }) => {
 
         const [t] = useTranslation();
@@ -78,8 +79,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
         // load questionnaire
         useEffect(() => {
-            if(match.params?.id) loadSections(match.params?.id);
-        }, [loadSections, match.params]);
+            if(match.params?.id) loadOneQuestionnaire(match.params?.id);
+        }, [loadOneQuestionnaire, match.params]);
 
         const [targetUserPattern, setTargetUserPattern] = useState('');
         const [respondentPattern, setRespondentPattern] = useState('');
@@ -147,7 +148,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                 ? values.expirationDate.toISOString() : null,
                                             generateReport: values.generateReport,
                                             notifyUsers: values.notifyUsers,
-                                            questionnaireId: match.params.id,
+                                            questionnaireId: questionnaireId,
                                             targetUserId: values.targetUserId,
                                             includeTargetUser: !!values.targetUserId && values.includeTargetUser,
                                             sendToTargetUser: !!values.sendToTargetUser && values.sendToTargetUser,
@@ -391,7 +392,8 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
     isLoadingTeams: state.teams.isLoading,
     users: state.teams.companyUsers,
     isLoadingUsers: state.teams.isLoadingUsers,
-    sections: state.formEditor.sections.list
+    sections: state.formEditor.sections.list,
+    questionnaireId: state.formEditor.questionnaire.id
 });
 
 const mapDispatchToProps = {
@@ -401,7 +403,7 @@ const mapDispatchToProps = {
     updateSection: updateSectionRoutine,
     setCurrentQuestion: setCurrentQuestionInSection,
     sendRequest: sendQuestionnaireRequestRoutine,
-    loadSections: loadSectionsByQuestionnaireRoutine,
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
     updateSectionsR: updateSections,
     setNoSections: setNoSectionsRoutine
 };

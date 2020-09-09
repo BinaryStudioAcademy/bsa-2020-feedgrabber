@@ -8,7 +8,7 @@ import {
     setQuestionnaireArchivePaginationRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
-    updateQuestionnaireRoutine
+    updateQuestionnaireRoutine, loadOneQuestionnaireRoutine
 } from "../../sagas/qustionnaires/routines";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
@@ -25,12 +25,11 @@ import UIButton from "../../components/UI/UIButton";
 import {Header, Icon, Modal, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import {useTranslation} from "react-i18next";
-import {loadSectionsByQuestionnaireRoutine} from "../../sagas/sections/routines";
 
 const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
     {
         muteActions,
-        loadSections,
+        loadOneQuestionnaire,
         pagination,
         archivePagination,
         modalQuestionnaire,
@@ -61,7 +60,7 @@ const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
         return <UICard key={item.id}>
             <UICardBlock
                 className={`${styles.cardBlockWrapper} ${match && styles.searched}`}
-                onClick={() => muteActions && loadSections(item.id)}>
+                onClick={() => muteActions && loadOneQuestionnaire(item.id)}>
                 <h3>{item.title}</h3>
                 <span
                     style={
@@ -79,7 +78,7 @@ const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
                         trigger={
                           <Icon
                             name="share alternate"
-                            onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
+                            onClick={() => history.push(`/questionnaire/${item.id}/new-request`)}
                             className={styles.cardIcon}
                           />
                         }
@@ -252,7 +251,7 @@ const mapDispatchToProps = {
     hideModal: hideModalQuestionnaireRoutine,
     setArchivePagination: setQuestionnaireArchivePaginationRoutine,
     setPagination: setQuestionnairePaginationRoutine,
-    loadSections: loadSectionsByQuestionnaireRoutine
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
