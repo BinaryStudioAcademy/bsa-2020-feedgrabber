@@ -90,6 +90,7 @@ function* deleteQuestionnaire(action) {
         yield put(deleteQuestionnaireRoutine.success());
         toastr.success("Deleted questionnaire");
         yield put(loadQuestionnairesRoutine.trigger());
+        yield put(loadArchivedQuestionnairesRoutine.trigger());
         yield put(loadNotificationsRoutine.trigger());
     } catch (errorResponse) {
         yield put(deleteQuestionnaireRoutine.failure());
