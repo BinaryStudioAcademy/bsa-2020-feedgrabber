@@ -7,7 +7,7 @@ import UIButton from "../../components/UI/UIButton";
 import UICardBlock from "../../components/UI/UICardBlock";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
-import {loadCompanyUsersRoutine, loadTeamsRoutine} from "../../sagas/teams/routines";
+import {loadCompanyUsersRoutine, loadTeamsRoutine, setTeamPaginationRoutine} from "../../sagas/teams/routines";
 import UIUserItemCard from "../../components/UI/UIUserItemCard";
 import {Formik} from "formik";
 import DatePicker from "react-datepicker";
@@ -31,6 +31,7 @@ import {
 import { useTranslation } from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {setFloatingMenuPos} from "../../sagas/app/routines";
+import GenericPagination from "../../components/helpers/GenericPagination";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -49,6 +50,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
     ({
        match,
        teamsPagination,
+         setTeamPagination,
        users,
        loadTeams,
        loadUsers,
@@ -72,7 +74,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
       // load teams
       useEffect(() => {
-        loadTeams();
+        loadTeams({notBlank: 'notBlank'});
       }, [loadTeams]);
 
         // load questionnaire
@@ -84,7 +86,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       const [respondentPattern, setRespondentPattern] = useState('');
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
-      
+
       const isUserFind = user => {
           const pattern = targetUserPattern.toLowerCase();
           const name = user.firstName?.toLowerCase();
@@ -93,7 +95,12 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
           return user.username?.toLowerCase().includes(pattern)
           || `${name} ${surname}`.includes(pattern);
       };
-      
+
+      const handleSearchChange = value => {
+          setRespondentPattern(value);
+          loadTeams({query: value, notBlank: 'notBlank'});
+      };
+
       return (
           <>
             <UIPageTitle title={t("Send Request")}/>
@@ -114,7 +121,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                   </UICard>
               </UIColumn>
               <UIColumn>
-                <LoaderWrapper loading={!users || isLoadingUsers || !teamsPagination.items || isLoadingTeams}>
+                <LoaderWrapper loading={!users || isLoadingUsers || !teamsPagination.items}>
                   <UICard>
                     <Formik
                         initialValues={initialValues}
@@ -289,28 +296,31 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                 <input type="text"
                                        style={{width: '100%'}}
                                        placeholder={t("Search...")}
-                                       onChange={e => setRespondentPattern(e.target.value)}/>
-                                {selectTeams && teamsPagination.items
-                                  .filter(team => respondentPattern
-                                    ? team.name.includes(respondentPattern)
-                                    : true)
-                                  .map(team => team.membersAmount > 0 && (
-                                    <UITeamItemCard
-                                        key={team.id}
-                                        team={team}
-                                        selected={formik.values.chosenTeams.includes(team)}
-                                        onClick={() => {
-                                          let newTeams: any[];
-                                          if (formik.values.chosenTeams.includes(team)) {
-                                            newTeams = formik.values.chosenTeams.filter(t => t !== team);
-                                          } else {
-                                            newTeams = [...formik.values.chosenTeams, team];
-                                          }
-                                          formik.setFieldValue('chosenTeams', newTeams);
-                                        }}
-
-                                    />
-                                ))}
+                                       onChange={e => handleSearchChange(e.target.value)}
+                                       value={respondentPattern}
+                                />
+                                  {selectTeams && <GenericPagination
+                                      isLoading={isLoadingTeams}
+                                      pagination={teamsPagination}
+                                      setPagination={setTeamPagination}
+                                      loadItems={()=>
+                                          loadTeams({query: respondentPattern, notBlank: true})}
+                                      mapItemToJSX={(team: ITeamShort) =>
+                                          <UITeamItemCard
+                                              key={team.id}
+                                              team={team}
+                                              selected={formik.values.chosenTeams.includes(team)}
+                                              onClick={() => {
+                                                  let newTeams: any[];
+                                                  if (formik.values.chosenTeams.includes(team)) {
+                                                      newTeams = formik.values.chosenTeams.filter(t => t !== team);
+                                                  } else {
+                                                      newTeams = [...formik.values.chosenTeams, team];
+                                                  }
+                                                  formik.setFieldValue('chosenTeams', newTeams);
+                                              }}
+                                          />}
+                                  />}
                                 {!selectTeams && users
                                   .filter(user => respondentPattern
                                     ? user.username.includes(respondentPattern)
@@ -371,7 +381,8 @@ setMenuPos: setFloatingMenuPos,
 setCurrentQuestion: setCurrentQuestionInSection,
   sendRequest: sendQuestionnaireRequestRoutine,
   loadSections: loadSectionsByQuestionnaireRoutine,
-  updateSectionsR: updateSections
+  updateSectionsR: updateSections,
+    setTeamPagination: setTeamPaginationRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

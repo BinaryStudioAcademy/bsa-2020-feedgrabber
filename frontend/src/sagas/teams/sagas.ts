@@ -11,16 +11,20 @@ import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
 import {IGeneric} from "../../models/IGeneric";
 import {IUserInfo} from "../../models/user/types";
-import {ITeam, ITeamLeadToggle, ITeamShort, ITeamUserToggle} from "../../models/teams/ITeam";
+import {ITeam, ITeamLeadToggle, ITeamUserToggle} from "../../models/teams/ITeam";
 import {history} from "../../helpers/history.helper";
 import {IAppState} from "../../models/IAppState";
 import {IRequestShort} from "../../models/report/IReport";
 
-function* loadTeams() {
+function* loadTeams(action: any) {
     try {
+        const {query, notBlank} = action.payload || {};
         const store: IAppState = yield select();
         const {page, size} = store.teams.pagination;
-        const res = yield call(apiClient.get, `/api/teams?page=${page}&size=${size}`);
+        const api = query
+            ? `/api/teams/search?page=${page}&size=${size}&query=${query}&${notBlank && 'notBlank=true'}`
+            : `/api/teams?page=${page}&size=${size}&${notBlank && 'notBlank=true'}`;
+        const res = yield call(apiClient.get, api);
         yield put(loadTeamsRoutine.success(res.data.data));
     } catch (error) {
         yield put(loadTeamsRoutine.failure());

@@ -43,7 +43,7 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
-    @IndexedEmbedded(depth = 2)
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 

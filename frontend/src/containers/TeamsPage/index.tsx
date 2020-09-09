@@ -28,7 +28,6 @@ const TeamsPage: FC<ITeamsPageProps> = (
         pagination,
         setPagination,
         loadTeams,
-        loadUsers,
         deleteTeam,
         clearCurrentTeam,
         isLoading,
@@ -36,10 +35,8 @@ const TeamsPage: FC<ITeamsPageProps> = (
     }
 ) => {
     useEffect(() => {
-        if (!pagination.items.length && !isLoading) {
             loadTeams();
-        }
-    }, [pagination.items, isLoading, loadTeams, loadUsers]);
+    }, [loadTeams]);
 
     const handleRedirect = (id: string): void => {
         clearCurrentTeam();

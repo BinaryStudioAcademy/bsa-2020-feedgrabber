@@ -38,16 +38,21 @@ public class TeamService {
         this.searchRepository = searchRepository;
     }
 
-    public List<TeamShortDto> getAllByCompany_Id(UUID companyId, Integer page, Integer size) {
-        return teamRepository.findAllByCompanyId(companyId, PageRequest.of(page, size));
+    public List<TeamShortDto> getAllByCompany_Id(UUID companyId, Integer page, Integer size, Optional<Boolean> notBlank) {
+        return notBlank.isEmpty()
+                ? teamRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+                : teamRepository.findAllByCompanyIdAndUsersNotNull(companyId, PageRequest.of(page, size))
+                .stream().map(TeamMapper.MAPPER::teamToTeamShort).collect(Collectors.toList());
     }
 
-    public Long countAllByCompanyId(UUID companyID){
-        return teamRepository.countAllByCompanyId(companyID);
+    public Long countAllByCompanyId(UUID companyID, Optional<Boolean> notBlank) {
+        return notBlank.isEmpty()
+                ? teamRepository.countAllByCompanyId(companyID)
+                : teamRepository.countAllByCompanyIdAndUsersNotNull(companyID);
     }
 
-    public PagedResponseDto<TeamShortDto> searchByQuery(String query, Integer page, Integer size){
-        return searchRepository.getTeamList(query, Optional.of(page), Optional.of(size));
+    public PagedResponseDto<TeamShortDto> searchByQuery(String query, Integer page, Integer size, Optional<Boolean> notBlank) {
+        return searchRepository.getTeamList(query, Optional.of(page), Optional.of(size), notBlank);
     }
 
     public TeamDetailsDto getOne(UUID companyId, UUID id, UUID userId, String role) throws TeamNotFoundException {
@@ -55,7 +60,7 @@ public class TeamService {
                 .orElseThrow(TeamNotFoundException::new);
 
         if (role.equals("employee")) {
-            if(team.getLead() == null || !team.getLead().getId().equals(userId)) {
+            if (team.getLead() == null || !team.getLead().getId().equals(userId)) {
                 throw new JwtTokenException("No permissions to see page");
             }
         }

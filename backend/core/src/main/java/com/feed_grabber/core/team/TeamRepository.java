@@ -59,5 +59,8 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
             "WHERE t.company.id = :companyId")
     List<TeamShortDto> findAllByCompanyId(UUID companyId, Pageable pageable);
 
+    List<Team> findAllByCompanyIdAndUsersNotNull(UUID companyId, Pageable pageable);
     Long countAllByCompanyId(UUID companyId);
+    Long countAllByCompanyIdAndUsersNotNull(UUID companyId);
+
 }

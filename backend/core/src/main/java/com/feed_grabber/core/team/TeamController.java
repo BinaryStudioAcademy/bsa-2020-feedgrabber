@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.feed_grabber.core.role.RoleConstants.*;
@@ -34,11 +35,13 @@ public class TeamController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public AppResponse<DataList<TeamShortDto>> getAll(@RequestParam Integer page,
-                                                      @RequestParam Integer size) {
+                                                      @RequestParam Integer size,
+                                                      @RequestParam(required = false) Boolean notBlank
+    ) {
         var companyId = TokenService.getCompanyId();
         return new AppResponse<>(new DataList<>(
-                service.getAllByCompany_Id(companyId, page, size),
-                service.countAllByCompanyId(companyId),
+                service.getAllByCompany_Id(companyId, page, size, Optional.ofNullable(notBlank)),
+                service.countAllByCompanyId(companyId, Optional.ofNullable(notBlank)),
                 page,
                 size
         ));
@@ -48,9 +51,10 @@ public class TeamController {
     public AppResponse<DataList<TeamShortDto>> getUsersBySurname (
             @RequestParam String query,
             @RequestParam Integer page,
-            @RequestParam Integer size
+            @RequestParam Integer size,
+            @RequestParam(required = false) Boolean notBlank
     ) {
-        var pagedResponse = service.searchByQuery(query, page, size);
+        var pagedResponse = service.searchByQuery(query, page, size, Optional.ofNullable(notBlank));
         return new AppResponse<>(
                 new DataList<>(
                         pagedResponse.getObjects(),

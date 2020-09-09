@@ -46,7 +46,7 @@ const initState: ITeamsState = {
     current: {},
     pagination: {
         items: [],
-        size: 10,
+        size: 3,
         total: 0,
         page: 0
     }

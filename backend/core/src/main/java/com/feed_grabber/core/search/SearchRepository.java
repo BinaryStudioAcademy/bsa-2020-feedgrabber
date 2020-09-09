@@ -23,6 +23,7 @@ import org.hibernate.search.jpa.Search;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
 import static com.feed_grabber.core.auth.security.TokenService.getUserId;
+import static org.hibernate.search.annotations.IndexedEmbedded.DEFAULT_NULL_TOKEN;
 
 @Repository
 public class SearchRepository {
@@ -39,7 +41,7 @@ public class SearchRepository {
         this.entityManager = entityManager;
     }
 
-    private FullTextQuery getFullTextQuery(Class<?> initial, Map<String, String[]> map) {
+    private FullTextQuery getFullTextQuery(Class<?> initial, Map<String, String[]> map, Map<String, String[]> notSearch) {
         var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         var qb = fullTextEntityManager
                 .getSearchFactory()
@@ -54,6 +56,7 @@ public class SearchRepository {
                 .bool();
 
         map.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()));
+        notSearch.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()).not());
 
         var q = bj.createQuery();
 
@@ -66,7 +69,7 @@ public class SearchRepository {
                 .users(getUsersList(query, Optional.empty(), Optional.empty()).getObjects())
                 .questionnaires(getQuestionnaireList(query, Optional.empty(), Optional.empty()).getObjects())
                 .questions(getQuestionsList(query, Optional.empty(), Optional.empty()).getObjects())
-                .teams(getTeamList(query, Optional.empty(), Optional.empty()).getObjects())
+                .teams(getTeamList(query, Optional.empty(), Optional.empty(), Optional.empty()).getObjects())
                 .reports(getReportList(query, Optional.empty(), Optional.empty()).getObjects())
                 .build();
     }
@@ -85,7 +88,8 @@ public class SearchRepository {
                                 , "userProfile.lastName"
                                 , "userProfile.phoneNumber"}
                         , getCompanyId().toString()
-                        , new String[]{"company.idCopy"}));
+                        , new String[]{"company.id"})
+                , Map.of());
 
         if (page.isPresent() && size.isPresent()) {
             userQuery.setMaxResults(size.get());
@@ -109,7 +113,8 @@ public class SearchRepository {
                         , new String[]{"text"
                                 , "category.title"}
                         , getCompanyId().toString()
-                        , new String[]{"company.idCopy"}));
+                        , new String[]{"company.id"})
+                , Map.of());
         if (page.isPresent() && size.isPresent()) {
             questionQuery.setMaxResults(size.get());
             questionQuery.setFirstResult(page.get() * size.get());
@@ -131,7 +136,8 @@ public class SearchRepository {
                         , new String[]{"title"
                                 , "company.name"}
                         , getCompanyId().toString()
-                        , new String[]{"company.idCopy"}));
+                        , new String[]{"company.id"})
+                , Map.of());
         if (page.isPresent() && size.isPresent()) {
             questionnaireQuery.setMaxResults(size.get());
             questionnaireQuery.setFirstResult(page.get() * size.get());
@@ -152,7 +158,8 @@ public class SearchRepository {
                 , Map.of(query
                         , new String[]{"questionnaire.title"}
                         , getUserId().toString()
-                        , new String[]{"targetUser.idCopy"}));
+                        , new String[]{"targetUser.id"})
+                , Map.of());
         if (page.isPresent() && size.isPresent()) {
             reportQuery.setMaxResults(size.get());
             reportQuery.setFirstResult(page.get() * size.get());
@@ -167,22 +174,36 @@ public class SearchRepository {
     @SuppressWarnings("unchecked")
     public PagedResponseDto<TeamShortDto> getTeamList(String query
             , Optional<Integer> page
-            , Optional<Integer> size) {
+            , Optional<Integer> size
+            , Optional<Boolean> notBlankTeam) {
+
+        var shouldntSearch = notBlankTeam.isPresent()
+                ? Map.of(DEFAULT_NULL_TOKEN, new String[]{"users"})
+                : new HashMap();
+
         var teamQuery = getFullTextQuery(
                 Team.class
                 , Map.of(query
                         , new String[]{"name"
                                 , "company.name"}
                         , getCompanyId().toString()
-                        , new String[]{"company.idCopy"}));
+                        , new String[]{"company.id"})
+                , shouldntSearch);
+
         if (page.isPresent() && size.isPresent()) {
             teamQuery.setMaxResults(size.get());
             teamQuery.setFirstResult(page.get() * size.get());
         }
-        return new PagedResponseDto<>(((List<Team>) teamQuery.getResultList())
+
+        var temp = ((List<Team>) teamQuery.getResultList())
                 .stream()
-                .map(TeamMapper.MAPPER::teamToTeamShort)
-                .collect(Collectors.toList())
-                , (long) teamQuery.getResultSize());
+                .map(TeamMapper.MAPPER::teamToTeamShort);
+        if (notBlankTeam.isPresent()){
+            temp = temp.filter(t -> t.getMembersAmount() != 0);
+        }// a bit shitty, indexNullAs not working :(
+
+        var result = temp.collect(Collectors.toList());
+        return new PagedResponseDto<>(result
+                , (long) result.size());
     }
 }

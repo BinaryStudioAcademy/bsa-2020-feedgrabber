@@ -42,8 +42,6 @@ import java.util.UUID;
 })
 public class User {
     @Id
-    @Field(name = "idCopy")
-    @Analyzer(impl = WhitespaceAnalyzer.class)
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
@@ -96,7 +94,7 @@ public class User {
     @EqualsAndHashCode.Exclude
     private UserSettings userSettings;
 
-    @IndexedEmbedded(depth = 2)
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "company_id")
     private Company company;
