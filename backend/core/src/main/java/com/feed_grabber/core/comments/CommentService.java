@@ -64,18 +64,17 @@ public class CommentService {
                 .orElseThrow(CommentNotFoundException::new);
         comment.setBody(commentUpdateDto.getBody());
 
-        if (TokenService.getUserId() != comment.getUser().getId()) {
+        if (!TokenService.getUserId().equals(comment.getUser().getId())) {
             throw new CommentNotFoundException();
         }
 
         var updated = commentRepository.save(comment);
-
         return CommentMapper.MAPPER.commentToCommentDto(updated);
     }
 
     public void delete(UUID id) throws CommentNotFoundException {
         var comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
-        if (TokenService.getUserId() != comment.getUser().getId()) {
+        if (!TokenService.getUserId().equals(comment.getUser().getId())) {
             throw new CommentNotFoundException();
         }
 
