@@ -13,7 +13,7 @@ import {
 import apiClient from '../../helpers/apiClient';
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
-import {loadSectionsByQuestionnaireRoutine} from "../sections/routines";
+import {loadFormRoutine} from "../sections/routines";
 import {loadNotificationsRoutine} from "../notifications/routines";
 
 function* loadQuestionnairesList() {
@@ -102,7 +102,7 @@ function* loadOneQuestionnaire(action) {
     try {
         const res = yield call(apiClient.get, `/api/questionnaires/${action.payload}`);
         yield put(loadOneQuestionnaireRoutine.success(res.data.data));
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload));
+        yield put(loadFormRoutine.trigger(action.payload));
     } catch (error) {
         yield put(loadOneQuestionnaireRoutine.failure(error));
         toastr.error("Unable to fetch data");

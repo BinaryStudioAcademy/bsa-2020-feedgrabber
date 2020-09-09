@@ -4,6 +4,7 @@ import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
 import {useTranslation} from "react-i18next";
 import styles from "./styles.module.css";
 import {AiOutlineAppstoreAdd} from "react-icons/ai";
+import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
@@ -15,6 +16,7 @@ interface IQuestionMenuProps {
     onDelete(): void;
 
     addSection(): void;
+    currentQuestion: IQuestion;
 }
 
 const styleBorder = {style: {border: 'none', backgroundColor: 'white', padding: 12}};
@@ -28,6 +30,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
         copyQuestion,
         onDelete,
         addSection,
+        currentQuestion,
         position
     }) => {
     const [isOpenModal, setOpenModal] = useState(false);
@@ -37,7 +40,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
     useEffect(() => {
         const x = document.getElementById("app-content").scrollTop + position;
         setTop(x ? x - 127 : 0);
-    }, [position]);
+    }, [position, currentQuestion]);
 
     return (
         <div style={{

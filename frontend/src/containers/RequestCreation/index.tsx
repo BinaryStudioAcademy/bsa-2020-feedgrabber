@@ -24,9 +24,9 @@ import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import {
-    loadSectionsByQuestionnaireRoutine, setCurrentQuestionInSection,
-    updateQuestionsOrderRoutine,
-    updateSectionRoutine, updateSections
+    loadFormRoutine, setCurrentQuestionInSection,
+    updateOrderInForm,
+    updateSectionRoutine, setSections
 } from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
@@ -364,13 +364,13 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
-  updateOrder: updateQuestionsOrderRoutine,
+  updateOrder: updateOrderInForm,
   updateSection: updateSectionRoutine,
 setMenuPos: setFloatingMenuPos,
 setCurrentQuestion: setCurrentQuestionInSection,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadSections: loadSectionsByQuestionnaireRoutine,
-  updateSectionsR: updateSections
+  loadSections: loadFormRoutine,
+  updateSectionsR: setSections
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

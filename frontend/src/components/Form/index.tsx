@@ -52,8 +52,9 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
             };
 
             updateSections({
-               sections: sections.map(s => s.id === newSection.id ? newSection : s),
-               currentSection: newSection
+                sections: sections.map(s => s.id === newSection.id ? newSection : s),
+                currentSection: newSection,
+                currentQuestion: newSection.questions.find(q => currentQuestion.id === q.id)
             });
         } else {
             //  card was dropped to origin section
@@ -73,7 +74,9 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                         : s.id === newEndSection.id ? newEndSection
                         : s
                 )),
-                currentSection: newEndSection
+                currentSection: newEndSection,
+                currentQuestion: newStartSection.questions.find(q => currentQuestion.id === q.id) ||
+                    newEndSection.questions.find(q => currentQuestion.id === q.id)
             });
         }
         updateOrder({

@@ -13,8 +13,8 @@ import {INotificationsState} from "../reducers/notifications";
 import {IQuestionnaireResponseState} from "./forms/Response/types";
 import {IRoleState} from "../reducers/role/reducer";
 import {ISearchResultState} from "./search/Search";
-import {IFormEditorState} from "./forms/IFormEditorState";
 import {ICategoriesState} from "../reducers/categories/reducer";
+import {IFormEditorState} from "../reducers/formEditor/reducer";
 
 export interface IAppState {
     toastr: any;

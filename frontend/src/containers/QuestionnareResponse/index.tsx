@@ -15,7 +15,7 @@ import ResponseQuestion from 'components/ResponseQuestion';
 import {getResponseRoutine, saveResponseRoutine} from 'sagas/response/routines';
 import {
     loadSavedSectionsByQuestionnaireRoutine,
-    loadSectionsByQuestionnaireRoutine,
+    loadFormRoutine,
     setCurrentQuestionInSection
 } from 'sagas/sections/routines';
 import LoaderWrapper from 'components/helpers/LoaderWrapper';
@@ -244,7 +244,7 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = {
     saveResponseAnswers: saveResponseRoutine,
     getResponse: getResponseRoutine,
-    loadSections: loadSectionsByQuestionnaireRoutine,
+    loadSections: loadFormRoutine,
     loadSavedQuestionnaire: loadSavedSectionsByQuestionnaireRoutine
 };
 

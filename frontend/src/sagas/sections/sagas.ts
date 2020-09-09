@@ -3,13 +3,13 @@ import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
     addExistingQuestionToSectionRoutine,
-    addQuestionToSectionRoutine,
-    createSectionRoutine,
+    addQToFormRoutine,
+    addSectionRoutine,
     deleteQuestionFromSectionRoutine,
     loadSavedSectionsByQuestionnaireRoutine,
-    loadSectionsByQuestionnaireRoutine,
-    updateQuestionInSectionRoutine,
-    updateQuestionsOrderRoutine,
+    loadFormRoutine,
+    updateQInFormRoutine,
+    updateOrderInForm,
     updateSectionRoutine
 } from "./routines";
 
@@ -29,10 +29,10 @@ const parseSectionWithQuestion = section => ({
 function* createSection(action) {
     try {
         const result = yield call(apiClient.post, `/api/section`, action.payload);
-        yield put(createSectionRoutine.success(result.data.data));
+        yield put(addSectionRoutine.success(result.data.data));
     } catch (error) {
         toastr.error("Can't create section");
-        yield put(createSectionRoutine.failure());
+        yield put(addSectionRoutine.failure());
     }
 }
 
@@ -40,9 +40,9 @@ function* loadSections(action) {
     try {
         const result = yield call(apiClient.get, `/api/section/questionnaire/${action.payload}`);
         const sections = result.data.data.map(section => parseSectionWithQuestion(section));
-        yield put(loadSectionsByQuestionnaireRoutine.success(sections));
+        yield put(loadFormRoutine.success(sections));
     } catch (error) {
-        yield put(loadSectionsByQuestionnaireRoutine.failure());
+        yield put(loadFormRoutine.failure());
         toastr.error("Couldn`t load sections");
     }
 }
@@ -53,13 +53,13 @@ function* addQuestionToSection(action) {
         const result = yield call(apiClient.put, `/api/section/question`, question);
         const {second: questionId, first: questions} = result.data.data;
 
-        yield put(addQuestionToSectionRoutine.success({
+        yield put(addQToFormRoutine.success({
             sectionId: question.sectionId,
             questionId,
             questions: parseQuestions(questions)
         }));
     } catch (error) {
-        yield put(addQuestionToSectionRoutine.failure());
+        yield put(addQToFormRoutine.failure());
     }
 }
 
@@ -87,14 +87,14 @@ function* updateQuestion(action) {
         const question: IQuestion = action.payload;
         const res = yield call(apiClient.post, `/api/section/${question.sectionId}/question`, question);
 
-        yield put(updateQuestionInSectionRoutine.success({
+        yield put(updateQInFormRoutine.success({
             sectionId: question.sectionId,
             questions: parseQuestions(res.data.data),
             questionId: question.id
         }));
     } catch (e) {
         console.log(e);
-        yield put(updateQuestionInSectionRoutine.failure());
+        yield put(updateQInFormRoutine.failure());
     }
 }
 
@@ -157,13 +157,13 @@ function* loadSaved(action) {
 
 export default function* sectionSagas() {
     yield all([
-        yield takeEvery(createSectionRoutine.TRIGGER, createSection),
-        yield takeEvery(loadSectionsByQuestionnaireRoutine.TRIGGER, loadSections),
-        yield takeEvery(addQuestionToSectionRoutine.TRIGGER, addQuestionToSection),
+        yield takeEvery(addSectionRoutine.TRIGGER, createSection),
+        yield takeEvery(loadFormRoutine.TRIGGER, loadSections),
+        yield takeEvery(addQToFormRoutine.TRIGGER, addQuestionToSection),
         yield takeEvery(deleteQuestionFromSectionRoutine.TRIGGER, deleteQuestionFromSection),
-        yield takeEvery(updateQuestionInSectionRoutine.TRIGGER, updateQuestion),
+        yield takeEvery(updateQInFormRoutine.TRIGGER, updateQuestion),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
-        yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder),
+        yield takeEvery(updateOrderInForm.TRIGGER, updateOrder),
         yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved),
         yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection)
     ]);

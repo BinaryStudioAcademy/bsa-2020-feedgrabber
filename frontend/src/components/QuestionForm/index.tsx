@@ -7,9 +7,9 @@ import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
 import {Checkbox, Divider, Dropdown, Form, Loader} from "semantic-ui-react";
 import {
-    addQuestionToSectionRoutine,
+    addQToFormRoutine,
     deleteQuestionFromSectionRoutine,
-    updateQuestionInSectionRoutine
+    updateQInFormRoutine
 } from "../../sagas/sections/routines";
 import {useFormik} from "formik";
 import {renderForm} from "./defaultValues";
@@ -57,6 +57,10 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         onSubmit: () => console.log()
     });
 
+    useEffect(() => {
+        setMenuPos(ref.current?.getBoundingClientRect().y);
+        console.log("hey");
+    }, [currentQuestion, setMenuPos]);
     useEffect(() => {
         setLocalCategories(categories);
     }, [categories]);
@@ -136,11 +140,11 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                                         <Dropdown
                                             loading={isCatLoading}
                                             id="categoryTitle"
-                                            closeOnBlurbutton
                                             icon="tag"
                                             labeled
                                             className="icon"
                                             button
+                                            selection={false}
                                             onClick={handleCategoriesLoad}
                                             allowAdditions
                                             onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
@@ -196,8 +200,8 @@ const mapDispatch = (dispatch, ownProps) => ({
         ? ownProps.isListNew
             ? saveQuestionRoutine(a)
             : updateQuestionRoutine(a)
-        : addQuestionToSectionRoutine(a)),
-    updateQuestion: (a: any) => dispatch(updateQuestionInSectionRoutine(a)),
+        : addQToFormRoutine(a)),
+    updateQuestion: (a: any) => dispatch(updateQInFormRoutine(a)),
     loadCategories: () => dispatch(loadCategoriesRoutine()),
     deleteQuestion: (a: any) => dispatch(deleteQuestionFromSectionRoutine(a)),
     setMenuPos: (a: any) => dispatch(setFloatingMenuPos(a))

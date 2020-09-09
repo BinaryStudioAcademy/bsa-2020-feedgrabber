@@ -5,13 +5,13 @@ import Form from 'components/Form';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/Form/QuestionMenu";
 import {
-    addQuestionToSectionRoutine,
-    createSectionRoutine,
+    addQToFormRoutine,
+    addSectionRoutine,
     deleteQuestionFromSectionRoutine,
     setCurrentQuestionInSection,
-    updateQuestionsOrderRoutine,
+    updateOrderInForm,
     updateSectionRoutine,
-    updateSections
+    setSections
 } from 'sagas/sections/routines';
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
@@ -100,6 +100,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                 </div>
                                 <div className={styles.menu}>
                                     <QuestionMenu
+                                        currentQuestion={currentQuestion}
                                         position={position}
                                         addQuestion={addNewQuestion}
                                         copyQuestion={copyQuestion}
@@ -130,11 +131,11 @@ const mapDispatchToProps = {
     setMenuPos: setFloatingMenuPos,
     setCurrentQuestion: setCurrentQuestionInSection,
     toggleMenu: toggleMenuRoutine,
-    addQuestion: addQuestionToSectionRoutine,
+    addQuestion: addQToFormRoutine,
     deleteQuestion: deleteQuestionFromSectionRoutine,
-    createSection: createSectionRoutine,
-    updateSectionsR: updateSections,
-    updateOrder: updateQuestionsOrderRoutine
+    createSection: addSectionRoutine,
+    updateSectionsR: setSections,
+    updateOrder: updateOrderInForm
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
