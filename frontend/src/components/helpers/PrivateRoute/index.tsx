@@ -44,7 +44,7 @@ const PrivateRoute = ({component: Component, showMenu, toggleMenu,
                         <div className={styles.sideBarWrapper}>
                             <SideMenu expanded={showMenu} toggleMenu={toggleMenu}/>
                         </div>
-                        <div className={styles.appContent}>
+                        <div className={`${styles.appContent} ${showMenu && styles.appContentExpanded}`}>
                             <Component {...props} />
                         </div>
                     </AccessManager>
