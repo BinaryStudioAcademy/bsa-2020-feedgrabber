@@ -4,6 +4,8 @@ import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.search.SearchRepository;
+import com.feed_grabber.core.search.dto.PagedResponseDto;
 import com.feed_grabber.core.team.dto.*;
 import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
@@ -11,6 +13,7 @@ import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
 import com.feed_grabber.core.team.exceptions.WrongTeamNameException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +28,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
-    @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final SearchRepository searchRepository;
+
+    public TeamService(TeamRepository teamRepository, UserRepository userRepository, SearchRepository searchRepository) {
+        this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
+        this.searchRepository = searchRepository;
+    }
 
     public List<TeamShortDto> getAllByCompany_Id(UUID companyId, Integer page, Integer size) {
         return teamRepository.findAllByCompanyId(companyId, PageRequest.of(page, size));
@@ -36,6 +44,10 @@ public class TeamService {
 
     public Long countAllByCompanyId(UUID companyID){
         return teamRepository.countAllByCompanyId(companyID);
+    }
+
+    public PagedResponseDto<TeamShortDto> searchByQuery(String query, Integer page, Integer size){
+        return searchRepository.getTeamList(query, Optional.of(page), Optional.of(size));
     }
 
     public TeamDetailsDto getOne(UUID companyId, UUID id, UUID userId, String role) throws TeamNotFoundException {

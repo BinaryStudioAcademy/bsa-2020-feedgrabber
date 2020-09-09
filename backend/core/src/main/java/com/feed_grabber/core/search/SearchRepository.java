@@ -13,6 +13,7 @@ import com.feed_grabber.core.search.dto.PagedResponseDto;
 import com.feed_grabber.core.search.dto.SearchDto;
 import com.feed_grabber.core.team.TeamMapper;
 import com.feed_grabber.core.team.dto.TeamDto;
+import com.feed_grabber.core.team.dto.TeamShortDto;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
@@ -115,7 +116,6 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Question>) questionQuery.getResultList())
                 .stream()
-                .filter(q -> q.getCompany().getId().equals(getCompanyId()))
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList())
                 , (long) questionQuery.getResultSize());
@@ -138,7 +138,6 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Questionnaire>) questionnaireQuery.getResultList())
                 .stream()
-                .filter(q -> q.getCompany().getId().equals(getCompanyId()))
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList())
                 , (long) questionnaireQuery.getResultSize());
@@ -160,14 +159,13 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Request>) reportQuery.getResultList())
                 .stream()
-                .filter(r -> r.getQuestionnaire().getCompany().getId().equals(getCompanyId()))
                 .map(ReportMapper.MAPPER::requestToReportDetails)
                 .collect(Collectors.toList())
                 , (long) reportQuery.getResultSize());
     }
 
     @SuppressWarnings("unchecked")
-    public PagedResponseDto<TeamDto> getTeamList(String query
+    public PagedResponseDto<TeamShortDto> getTeamList(String query
             , Optional<Integer> page
             , Optional<Integer> size) {
         var teamQuery = getFullTextQuery(
@@ -183,8 +181,7 @@ public class SearchRepository {
         }
         return new PagedResponseDto<>(((List<Team>) teamQuery.getResultList())
                 .stream()
-                .filter(t -> t.getCompany().getId().equals(getCompanyId()))
-                .map(TeamMapper.MAPPER::teamToTeamDto)
+                .map(TeamMapper.MAPPER::teamToTeamShort)
                 .collect(Collectors.toList())
                 , (long) teamQuery.getResultSize());
     }

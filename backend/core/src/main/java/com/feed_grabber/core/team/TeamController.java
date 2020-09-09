@@ -8,6 +8,7 @@ import com.feed_grabber.core.team.dto.*;
 
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,22 @@ public class TeamController {
                 page,
                 size
         ));
+    }
+
+    @GetMapping("/search")
+    public AppResponse<DataList<TeamShortDto>> getUsersBySurname (
+            @RequestParam String query,
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
+        var pagedResponse = service.searchByQuery(query, page, size);
+        return new AppResponse<>(
+                new DataList<>(
+                        pagedResponse.getObjects(),
+                        pagedResponse.getSize(),
+                        page,
+                        size
+                ));
     }
 
     @ApiOperation("Get the team by id")

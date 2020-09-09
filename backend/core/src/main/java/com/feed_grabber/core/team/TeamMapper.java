@@ -3,6 +3,7 @@ package com.feed_grabber.core.team;
 import com.feed_grabber.core.company.CompanyMapper;
 import com.feed_grabber.core.team.dto.TeamDto;
 import com.feed_grabber.core.team.dto.RequestTeamDto;
+import com.feed_grabber.core.team.dto.TeamShortDto;
 import com.feed_grabber.core.team.model.Team;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,4 +21,8 @@ public interface TeamMapper {
 
     @Mapping(source = "users", target = "members")
     TeamDto teamToTeamDto(Team team);
+
+    @Mapping(target = "membersAmount", expression = "java(team.getUsers().size())")
+    @Mapping(target = "leadId", source = "lead.id")
+    TeamShortDto teamToTeamShort(Team team);
 }
