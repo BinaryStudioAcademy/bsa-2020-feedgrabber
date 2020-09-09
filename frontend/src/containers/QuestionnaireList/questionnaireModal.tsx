@@ -6,6 +6,7 @@ import styles from './styles.module.sass';
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {useTranslation} from "react-i18next";
 import UIButton from "../../components/UI/UIButton";
+import { symbol } from 'prop-types';
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;
@@ -24,8 +25,8 @@ const validationSchema = yup.object().shape({
   title: yup
     .string()
     .required()
-    .min(3, "Too Short!")
-    .max(40, "Too Long!")
+    .min(3, "Too Short! Min 3 symbols")
+    .max(40, "Too Long! Max 40 symbols")
     .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
         "Title must be valid")
 });

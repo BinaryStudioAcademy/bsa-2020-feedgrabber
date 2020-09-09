@@ -74,9 +74,6 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                                 <RiUserReceived2Line size="1.3em" color="white"/>&nbsp;&nbsp;
                                 <strong>{user.userName}</strong>
                             </StyledItem>
-                            <StyledItem onClick={() => history.push('/profile/settings')}>
-                                <RiSettings5Line size="1.3em" color="white"/>&nbsp;&nbsp; {t("Settings")}
-                            </StyledItem>
                             <AccessManager staticPermission={Permissions.generateInviteLinks}>
                                 <StyledItem onClick={() => history.push('/invitations')}>
                                     <RiMailSendLine size="1.3em" color="white"/>&nbsp;&nbsp; {t("Invitations")}

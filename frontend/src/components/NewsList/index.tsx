@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import NewsItem, {ICreatedReactionDto, IReactionCreationDto} from "../NewsItem/NewsItem";
 import AccessManager from "../helpers/AccessManager";
+import UIButton from "../UI/UIButton";
 
 interface INewsFeedProps {
   pagination?: IPaginationInfo<ICompanyFeedItem>;
@@ -48,7 +49,7 @@ const NewsList: React.FC<INewsFeedProps> = ({
     <div className={styles.newsItemContainer}>
       <AccessManager staticPermission={Permissions.createPostsAndPolls}>
         <Link to="/company/new">
-          <Button>{t('Add news')}</Button>
+          <UIButton primary title={t('Add news')}/>
         </Link>
       </AccessManager>
       <div className={styles.newsListMain}>

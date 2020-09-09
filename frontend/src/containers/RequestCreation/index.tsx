@@ -58,7 +58,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
          updateOrder,
          sendRequest,
          isLoadingUsers,
-         setMenuPos,
          setCurrentQuestion,
          isLoadingTeams,
          updateSectionsR,
@@ -114,7 +113,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                     </Header>
                                     <Form
                                         updateSection={updateSection}
-                                        setMenuPos={setMenuPos}
                                         setCurrentQuestion={setCurrentQuestion}
                                         updateOrder={updateOrder}
                                         updateSections={updateSectionsR}
@@ -401,7 +399,6 @@ const mapDispatchToProps = {
     loadUsers: loadCompanyUsersRoutine,
     updateOrder: updateQuestionsOrderRoutine,
     updateSection: updateSectionRoutine,
-    setMenuPos: setFloatingMenuPos,
     setCurrentQuestion: setCurrentQuestionInSection,
     sendRequest: sendQuestionnaireRequestRoutine,
     loadSections: loadSectionsByQuestionnaireRoutine,

@@ -8,8 +8,8 @@ import FileUploadQuestion from "../ComponentsQuestions/FileUploadQuestion";
 import ScaleQuestion from "../ComponentsQuestions/ScaleQuestion";
 
 export const defaultQuestionValues = {
-  name: "Question without name",
-  categoryTitle: "Question without title"
+  name: "Untitled Question",
+  categoryTitle: "any"
 };
 export function renderForm(question, handleQuestionDetailsUpdate) {
     switch (question.type) {
