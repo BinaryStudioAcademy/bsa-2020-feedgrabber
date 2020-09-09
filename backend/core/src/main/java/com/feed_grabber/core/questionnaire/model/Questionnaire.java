@@ -37,7 +37,7 @@ public class Questionnaire {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 40)
     private String title;
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)

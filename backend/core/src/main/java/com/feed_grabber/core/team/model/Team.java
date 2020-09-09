@@ -35,7 +35,7 @@ public class Team {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 40)
     private String name;
 
     @IndexedEmbedded(depth = 2)
