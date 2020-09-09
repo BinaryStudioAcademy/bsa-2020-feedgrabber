@@ -51,7 +51,6 @@ const TeamsPage: FC<ITeamsPageProps> = (
 
     return (
         <>
-            <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
                         <AccessManager staticPermission={Permissions.createTeams}>
@@ -100,7 +99,6 @@ const TeamsPage: FC<ITeamsPageProps> = (
                       : <div className={styles.noItemsLabel}>{t("No items")}</div>
                   )}
                 </LoaderWrapper>
-            </UIContent>
         </>
     );
 };

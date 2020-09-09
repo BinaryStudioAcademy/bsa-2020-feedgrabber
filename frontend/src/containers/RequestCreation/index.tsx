@@ -85,7 +85,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
       const [respondentPattern, setRespondentPattern] = useState('');
       const [selectTeams, setSelectTeams] = useState(true);
       const [error, setError] = useState(null);
-      
+
       const isUserFind = user => {
           const pattern = targetUserPattern.toLowerCase();
           const name = user.firstName?.toLowerCase();
@@ -94,7 +94,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
           return user.username?.toLowerCase().includes(pattern)
           || `${name} ${surname}`.includes(pattern);
       };
-      
+
       return (
           <>
             <UIPageTitle title={t("Send Request")}/>
@@ -104,7 +104,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                     <UICardBlock>
                         <Form
                             updateSection={updateSection}
-                            setMenuPos={setMenuPos}
                             setCurrentQuestion={setCurrentQuestion}
                             updateOrder={updateOrder}
                             updateSections={updateSectionsR}

@@ -26,7 +26,6 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         updateSections,
         updateOrder,
         setCurrentQuestion,
-        setMenuPos,
         currentQuestion,
         updateSection,
         deleteSection
@@ -68,11 +67,14 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                 questions: insertAtIndex([...endSection.questions], destination.index, draggedItem)
             };
 
-            updateSections(sections.map(s => (
-                s.id === newStartSection.id ? newStartSection
-                    : s.id === newEndSection.id ? newEndSection
-                    : s
-            )));
+            updateSections({
+                sections: sections.map(s => (
+                    s.id === newStartSection.id ? newStartSection
+                        : s.id === newEndSection.id ? newEndSection
+                        : s
+                )),
+                currentSection: newEndSection
+            });
         }
         updateOrder({
             oldIndex: source.index,
@@ -89,7 +91,6 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                     <Section
                         key={section.id}
                         setCurrentQuestion={setCurrentQuestion}
-                        setMenuPos={setMenuPos}
                         currentQuestion={currentQuestion}
                         section={section}
                         renameSection={updateSection}

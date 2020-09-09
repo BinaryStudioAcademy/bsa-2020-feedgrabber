@@ -52,7 +52,9 @@ interface IQuestionnaireResponseProps {
 
     // loadQuestionnaire(id: string): void;
     loadSections(id: string): void;
+
     setMenuPos(x: any): void;
+
     setCurrentQuestion(x: any): void;
 
     // loadOneSaved(payload: { questionnaireId: string; responseId: string }): void;
@@ -173,7 +175,7 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
     };
 
     render() {
-        const {sections, isLoading, response, setCurrentQuestion, setMenuPos} = this.props;
+        const {sections, isLoading, response, setCurrentQuestion} = this.props;
         const changeable = response?.changeable;
         const isModifying = !!response?.answeredAt;
         const {showErrors, currentSectionIndex} = this.state;
@@ -196,15 +198,15 @@ class QuestionnaireResponse extends React.Component<IQuestionnaireResponseProps,
                                                             category={question.categoryTitle}>
                                                     <ResponseQuestion
                                                         setCurrentQuestion={setCurrentQuestion}
-                                                        setMenuPos={setMenuPos}
                                                         isCurrent={false} question={question}
-                                                                      answerHandler={(data: IAnswerBody) => {
-                                                                          question["answer"] = data;
-                                                                          this.handleComponentChange({
-                                                                              question,
-                                                                              isAnswered: !!data
-                                                                          });
-                                                                      }}/>
+                                                        answerHandler={(data: IAnswerBody) => {
+                                                            question["answer"] = data;
+                                                            this.handleComponentChange({
+                                                                question,
+                                                                isAnswered: !!data
+                                                            });
+                                                        }}
+                                                    />
                                                     {showErrors && !question.answer ?
                                                         <div className={styles.error_message}>
                                                             {t("Please, fill the question")}</div> : null}

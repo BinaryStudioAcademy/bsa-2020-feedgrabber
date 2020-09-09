@@ -43,26 +43,15 @@ public class QuestionnaireService {
         this.sectionService = sectionService;
     }
 
-//    public List<QuestionnaireDto> getAll(Integer page, Integer size) {
-//        return questionnaireRepository.findAll(PageRequest.of(page, size))
-//                .stream()
-//                .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
-//                .collect(Collectors.toList());
-//    }
-
-//    public Long getCountAll() {
-//        return questionnaireRepository.count();
-//    }
-
-    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size) {
-        return questionnaireRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+    public List<QuestionnaireDto> getAllByCompanyId(UUID companyId, Integer page, Integer size, boolean archived) {
+        return questionnaireRepository.findAllByCompanyId(companyId, archived, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionnaireMapper.MAPPER::questionnaireToQuestionnaireDto)
                 .collect(Collectors.toList());
     }
 
-    public Long getCountByCompanyId(UUID companyId) {
-        return questionnaireRepository.countAllByCompanyId(companyId);
+    public Long getCountByCompanyId(UUID companyId, boolean archived) {
+        return questionnaireRepository.countAllByCompanyId(companyId, archived);
     }
 
     public Optional<QuestionnaireDto> getOne(UUID id) {
@@ -81,11 +70,12 @@ public class QuestionnaireService {
         }
 
         if (!createDto.getTitle()
-                .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
+                .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
             throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
                     "have more than one space in sequence." +
                     "Title can contain latin letters, numbers and special symbols.");
         }
+
 
         var company = companyRepository.findById(companyId)
                 .orElseThrow(CompanyNotFoundException::new);
@@ -97,7 +87,7 @@ public class QuestionnaireService {
 
         var savedQuestionnaire = questionnaireRepository.save(questionnaire);
 
-        var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId(), 0));
+        var section = sectionService.create(new SectionCreateDto(createDto.getTitle().trim(), questionnaire.getId(), 0));
 
         questionService.create(new QuestionCreateDto(
                 "Default Question",
@@ -127,6 +117,7 @@ public class QuestionnaireService {
 
         questionnaire.setCompany(company);
         questionnaire.setTitle(updateDto.getTitle());
+        questionnaire.setArchived(updateDto.isArchived());
         questionnaire = questionnaireRepository.save(questionnaire);
         return QuestionnaireMapper.MAPPER.questionnaireToQuestionnaireDto(questionnaire);
     }
@@ -134,4 +125,5 @@ public class QuestionnaireService {
     public void delete(UUID id) {
         questionnaireRepository.softDeleteById(id);
     }
+
 }

@@ -49,20 +49,20 @@ const UISection: FC<IUISectionProps> = ({
 
     return (
         <div className={styles.headerContainer}>
-                <div className={["ui very padded segment", styles.sectionCard].join(' ')}>
+                <div className={styles.sectionCard}>
                     {!main ? <div className={styles.buttonContainer}>
                         <button onClick={() => setShowConfirmationModal(true)}>
                             <Icon name='delete'/>
                         </button>
                     </div> : null}
                     <input type="text" className={styles.title}
-                    value={title}
+                    value={title || ''}
                     placeholder={t("Title")}
                     onChange={e => setTitle(e.target.value)}
                     onBlur={e => {
                         onChanged(section.id, title, description);}}/>
                     <input type="text" className={styles.description}
-                    value={description ? description : ''}
+                    value={description || ''}
                     placeholder={t("Description")}
                     onChange={e => setDescription(e.target.value)}
                     onBlur={e => {

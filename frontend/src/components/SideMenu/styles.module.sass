@@ -6,10 +6,8 @@ $attention-color: #606790
 $lang-color: #596086
 
 .menuWrapper
-  position: fixed
   background-color: $attention-color
-  height: calc(100% - 5.1em)
-  margin-top: 5.1em
+  height: calc(100% - 5em)
   border-top: #565c86 solid 2px
   z-index: 1
   transition: width $toggle-menu-duration $toggle-menu-timing
@@ -52,6 +50,7 @@ $lang-color: #596086
 
 .menuItemIcon
   transition: all .2s ease-in-out
+  margin-left: .75em
 
 .menuItemTitle
   margin-left: 1.4em
@@ -65,7 +64,7 @@ $lang-color: #596086
     border-left: 2px solid #eaba63
 
 .menuWrapperClosed
-  width: 3.5em
+  width: 5em
 
   .menuItemActive
     background-color: $active-back

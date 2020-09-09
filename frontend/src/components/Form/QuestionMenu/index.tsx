@@ -1,8 +1,8 @@
 import React, {FC, useEffect, useRef, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
-import {IQuestion} from "../../../models/forms/Questions/IQuesion";
 import {useTranslation} from "react-i18next";
+import styles from "./styles.module.css";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
@@ -14,12 +14,9 @@ interface IQuestionMenuProps {
     onDelete(): void;
 
     addSection(): void;
-
-    currentQuestion: IQuestion;
 }
 
 const styleBorder = {style: {border: 'none', backgroundColor: 'white', padding: 12}};
-const styleBorderX = {style: {border: 'none', backgroundColor: 'white'}};
 const popupProps = {
     basic: true, inverted: true, size: 'mini', position: 'right center'
 } as PopupProps;
@@ -33,31 +30,32 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
         position
     }) => {
     const [isOpenModal, setOpenModal] = useState(false);
-    const scrollTop = useRef<number>(0);
+    const [top, setTop] = useState(0);
     const [t] = useTranslation();
 
-    (document.getElementById('root')?.firstChild?.firstChild as HTMLElement).onscroll = () => {
-        scrollTop.current = (document.getElementById('root')?.firstChild?.firstChild as HTMLElement)?.scrollTop || 0;
-    };
+    useEffect(() => {
+       const x = document.getElementById("app-content").scrollTop + position;
+       setTop(x ? x - 115 : 0);
+    }, [position]);
 
     return (
         <div style={{
             position: 'absolute',
-            top: (scrollTop.current + position) || '10%',
+            top,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
-            <Button.Group basic {...styleBorderX} vertical size="big">
+            <Button.Group basic className={styles.floatingMenu} vertical size="big">
                 <Popup content={t("New question")} {...popupProps}
                        trigger={<Button icon="plus circle" {...styleBorder} onClick={addQuestion}/>}
                 />
                 <Popup content={t("Add from existing questions")} {...popupProps}
-                       trigger={<Button icon="external" {...styleBorder} onClick={() => setOpenModal(!isOpenModal)}/>}
+                       trigger={<Button icon="external" {...styleBorder} />}
                 />
                 <Popup content={t("Copy")} {...popupProps}
                        trigger={<Button icon="copy" {...styleBorder} onClick={copyQuestion}/>}
                 />
                 <Popup content={t("Delete")} {...popupProps}
-                       trigger={<Button icon="remove" {...styleBorder} onClick={onDelete}/>}
+                       trigger={<Button icon="trash" {...styleBorder} onClick={onDelete}/>}
                 />
                 <Popup content={t("Add section")} {...popupProps}
                        trigger={<Button icon="window maximize outline" {...styleBorder} onClick={addSection}/>}
@@ -69,9 +67,4 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
 };
 
 export default QuestionMenu;
-// const handleScroll = () => scrollTop.current = window.pageYOffset;
-// useEffect(() => {
-//     window.addEventListener('scroll', handleScroll);
-//     return () => window.removeEventListener('scroll', handleScroll);
-// }, []);
 

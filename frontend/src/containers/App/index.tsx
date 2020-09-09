@@ -1,5 +1,4 @@
 import React from 'react';
-import {Scrollbars} from 'react-custom-scrollbars';
 import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
@@ -11,7 +10,6 @@ import {I18nextProvider} from "react-i18next";
 import i18n from "../../localization/i18n";
 
 const App: React.FC = () => (
-        <Scrollbars autoHide>
             <Provider store={store}>
                     <ReduxToastr
                         timeOut={4000}
@@ -30,7 +28,6 @@ const App: React.FC = () => (
                     </SubdomainRouter>
                 </I18nextProvider>
             </Provider>
-        </Scrollbars>
 );
 
 export default App;
