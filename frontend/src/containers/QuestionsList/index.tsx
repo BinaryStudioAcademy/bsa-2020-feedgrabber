@@ -28,6 +28,7 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                    setCurrentQ,
                                                    currentQ: current,
                                                    setPagination,
+                                                   saveNewQuestion,
                                                    pagination
                                                }) => {
     const [t] = useTranslation();
@@ -36,15 +37,19 @@ const QuestionsList: FC<QuestionsListProps> = ({
 
     useEffect(() => {
         loadQuestions();
+        setCurrentQ({});
     }, [loadQuestions]);
 
-    useEffect(() => {
-        setNewPressed(!isEmpty(current) && newPressed);
-    }, [current, newPressed]);
+    // useEffect(() => {
+    //     setNewPressed(!isEmpty(current) && newPressed);
+    // }, [current, newPressed]);
 
     const handleClick = (question: IQuestion) => {
-        setNewPressed(!question);
-        setCurrentQ(question || defaultQuestion);
+        setCurrentQ(question);
+    };
+
+    const handleAddNew = () => {
+      saveNewQuestion(defaultQuestion);
     };
 
     return (
@@ -53,29 +58,10 @@ const QuestionsList: FC<QuestionsListProps> = ({
             <UIContent>
                 <LoaderWrapper loading={isLoading}>
                     <UIColumn wide>
-                        <UIButton center primary title={t("Add new")} onClick={() => handleClick(null)}/>
+                        <UIButton center primary title={t("Add new")} onClick={handleAddNew}/>
                         <br/>
                         <UIContent>
                             <UIColumn>
-                                {newPressed && <><p>Add new</p>
-                                    <hr/>
-                                    <br/>
-                                    <div className={styles.questionContainer}>
-                                        <QuestionDetailsForm
-                                            isList
-                                            isListNew
-                                            listEdit={
-                                                {
-                                                    cancel: () => {
-                                                        setCurrentQ({});
-                                                        newPressed && setNewPressed(false);
-                                                    }
-                                                }
-                                            }/></div>
-                                </>}
-                                <p>Modify existing</p>
-                                <hr/>
-                                <br/>
                                 <GenericPagination
                                     isLoading={isLoading}
                                     pagination={pagination}
@@ -93,7 +79,6 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                         {
                                                             cancel: () => {
                                                                 setCurrentQ({});
-                                                                newPressed && setNewPressed(false);
                                                             }
                                                         }
                                                     }/></div>

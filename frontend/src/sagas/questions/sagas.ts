@@ -52,7 +52,7 @@ function* updateQuestion(action) {
         const res = yield call(apiClient.put, `/api/questions`, action.payload);
 
         yield put(updateQuestionRoutine.success(parseQuestion(res.data.data)));
-        yield put(setCurrentQuestionRoutine.trigger({}));
+        // yield put(setCurrentQuestionRoutine.trigger({}));
     } catch (e) {
         yield put(updateQuestionRoutine.failure());
         toastr.error("Question wasn't updated");
@@ -74,8 +74,9 @@ function* saveQuestion(action) {
     try {
         const res = yield call(apiClient.post, `/api/questions`, action.payload);
 
-        yield put(saveQuestionRoutine.success(parseQuestion(res.data.data)));
-        yield put(setCurrentQuestionRoutine.trigger({}));
+        const question = parseQuestion(res.data.data);
+        yield put(saveQuestionRoutine.success(question));
+        yield put(setCurrentQuestionRoutine.trigger(question));
     } catch (e) {
         yield put(saveQuestionRoutine.failure());
         toastr.error("Question wasn't saved");

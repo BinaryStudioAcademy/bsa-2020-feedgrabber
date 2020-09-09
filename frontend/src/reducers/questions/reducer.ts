@@ -54,11 +54,9 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
             const items = state.pagination.items.map(q => q.id === payload.id ? payload : q);
             return {
                 ...state,
-                currentQuestion: payload,
                 pagination: {
                     ...state.pagination,
-                    items,
-                    total: state.pagination.total + 1
+                    items
                 }
             };
         case deleteQuestionRoutine.SUCCESS:
@@ -74,14 +72,16 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
             };
         case saveQuestionRoutine.SUCCESS:
             const newItems = [payload, ...state.pagination.items];
+            if (newItems.length > state.pagination.size) {
+              newItems.pop();
+            }
             return {
                 ...state,
                 pagination: {
                     ...state.pagination,
-                    newItems,
-                    total: newItems.length
+                    items: newItems,
+                    total: state.pagination.total + 1
                 },
-                currentQuestion: {},
                 isLoading: false
             };
         case loadQuestionsRoutine.FAILURE:
