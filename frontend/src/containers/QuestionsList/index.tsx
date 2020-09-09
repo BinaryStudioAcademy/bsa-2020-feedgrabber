@@ -1,5 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
-import {isEmpty} from 'lodash';
+import React, {FC, useEffect} from 'react';
 import {Card} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import {connect, ConnectedProps} from "react-redux";
@@ -33,16 +32,10 @@ const QuestionsList: FC<QuestionsListProps> = ({
                                                }) => {
     const [t] = useTranslation();
 
-    const [newPressed, setNewPressed] = useState(false);
-
     useEffect(() => {
         loadQuestions();
         setCurrentQ({});
-    }, [loadQuestions]);
-
-    // useEffect(() => {
-    //     setNewPressed(!isEmpty(current) && newPressed);
-    // }, [current, newPressed]);
+    }, [loadQuestions, setCurrentQ]);
 
     const handleClick = (question: IQuestion) => {
         setCurrentQ(question);
