@@ -7,7 +7,6 @@ import {
     loadCompanyUsersRoutine,
     loadTeamsRoutine, setTeamPaginationRoutine
 } from "../../sagas/teams/routines";
-import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
 import UICard from "../../components/UI/UICard";
