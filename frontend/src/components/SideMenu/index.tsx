@@ -22,7 +22,7 @@ import {
   BiRadioCircle,
   BiRadioCircleMarked
 } from "react-icons/all";
-import {setExpandLanguageRoutine} from "../../sagas/app/routines";
+import {setExpandLanguageRoutine, toggleMenuRoutine} from "../../sagas/app/routines";
 
 const languages: {key: string; text: string; value: string}[] = [
   {
@@ -41,7 +41,7 @@ interface ISideMenuProps {
     expanded: boolean;
     expandLanguage: boolean;
 
-    toggleMenu(): void;
+    toggleMenu(show: boolean): void;
     setExpandLanguage(isExpand: boolean): void;
 }
 
@@ -50,6 +50,7 @@ const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps
       expandLanguage,
       settings,
       getSettings,
+      toggleMenu,
       updateSettings,
       setExpandLanguage
     }) => {
@@ -101,7 +102,10 @@ const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps
                     </NavLink>
                 </AccessManager>
 
-                <div className={styles.menuLanguagesWrapper} onClick={()=>setExpandLanguage(!expandLanguage)}>
+                <div className={styles.menuLanguagesWrapper} onClick={()=>{
+                    toggleMenu(true);
+                    setExpandLanguage(!expandLanguage);
+                }}>
                     <div className={styles.menuItem}>
                         <RiGlobalLine size="1.3em" color="white" className={styles.menuItemIcon}/>
                         <span className={styles.menuItemTitle}>{t("Language")}</span>
