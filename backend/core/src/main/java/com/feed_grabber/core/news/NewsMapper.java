@@ -16,6 +16,7 @@ public interface NewsMapper {
     NewsMapper MAPPER = Mappers.getMapper(NewsMapper.class);
 
     @Mapping(target = "reactions", ignore = true)
+    @Mapping(target = "commentsCount", expression = "java(news.getComments().size())")
     NewsDto newsToNewsDto(News news);
 
     @Mapping(target = "commentsCount", expression = "java(news.getComments().size())")
