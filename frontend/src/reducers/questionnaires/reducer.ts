@@ -6,7 +6,8 @@ import {
     saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
-    updateQuestionnaireRoutine
+    updateQuestionnaireRoutine,
+    setCurrentIdRoutine, loadArchivedQuestionnairesRoutine, setQuestionnaireArchivePaginationRoutine
 } from '../../sagas/qustionnaires/routines';
 import {IAppState} from "../../models/IAppState";
 import {combineReducers} from "redux";
@@ -104,9 +105,38 @@ const pendingQuestionnairesReducer = (state: IAppState['questionnaires']['pendin
     }
 };
 
+const archivedQuestionnairesReducer = (state: IAppState['questionnaires']['archived'] = {}, action) => {
+    switch (action.type) {
+        case loadArchivedQuestionnairesRoutine.TRIGGER:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case loadArchivedQuestionnairesRoutine.SUCCESS:
+            return {
+                ...state,
+                pagination: action.payload,
+                isLoading: false
+            };
+        case loadArchivedQuestionnairesRoutine.FAILURE:
+            return {
+                ...state,
+                isLoading: false
+            };
+        case setQuestionnaireArchivePaginationRoutine.TRIGGER:
+            return {
+                ...state,
+                pagination: action.payload
+            };
+        default:
+            return state;
+    }
+};
+
 const questionnairesReducer = combineReducers({
     list: questionnairesListReducer,
-    pending: pendingQuestionnairesReducer
+    pending: pendingQuestionnairesReducer,
+    archived: archivedQuestionnairesReducer
 });
 
 export default questionnairesReducer;

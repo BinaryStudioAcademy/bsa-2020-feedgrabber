@@ -167,7 +167,6 @@
     "Respondents": "Respondents",
     "View Report Info": "View Report Info",
 
-    "Send Request": "Send Request",
     "Select deadline date!": "Select deadline date!",
     "Select at least one user or team": "Select at least one user or team",
     "Assign target user": "Assign target user",
@@ -312,6 +311,10 @@
 
     "Edit questionnaire": "Edit questionnaire",
     "Add questionnaire": "Add questionnaire",
+
+    "Archive": "Archive",
+    "Unarchive": "Unarchive",
+    "Archived": "Archived",
     "title is a required field": "title is a required field",
 
     "Create a new feed item": "Create a new feed item",
