@@ -16,6 +16,8 @@ import { IAppState } from "../../models/IAppState";
 import styles from './styles.module.sass';
 import UIButton from "../UI/UIButton";
 
+const MAX_TITLE = 255;
+
 const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   match,
   feedItem,
@@ -99,7 +101,11 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
       <input placeholder={t('Title')} type="text"
              value={item?.title || ''}
              className={styles.feed_item_input}
-             onChange={e => setItem({ ...item, title: e.target.value })} />
+             onChange={e => setItem(e.target.value.length <= MAX_TITLE
+               ? { ...item, title: e.target.value }
+               : { ...item})
+             }
+      />
       <textarea placeholder={t('What\'s up')}
                 value={item?.body || ''}
                 className={styles.feed_item_textarea}
