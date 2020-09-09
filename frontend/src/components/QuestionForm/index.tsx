@@ -5,7 +5,7 @@ import {IAppState} from "models/IAppState";
 import {isEqual} from "lodash";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {Checkbox, Divider, Dropdown, Form, Icon, Loader, Popup} from "semantic-ui-react";
+import {Checkbox, Divider, Dropdown, Form, Loader} from "semantic-ui-react";
 import {
     addQuestionToSectionRoutine,
     deleteQuestionFromSectionRoutine,
@@ -35,10 +35,8 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         questionnaireId,
         section,
         isCatLoading,
-        deleteQuestion,
         setMenuPos,
         categories,
-        sections,
         addQuestion
     }) => {
     const [isDetailsValid, setValid] = useState(true);
@@ -88,23 +86,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         setValid(isCompleted);
     };
 
-    const onCopy = () => {
-        const s = section ?? sections[sections.length - 1];
-        const res = {
-            ...currentQuestion,
-            name: `${currentQuestion.name} (copy)`,
-            sectionId: s?.id,
-            index: s?.questions?.length
-        };
-        addQuestion(res);
-    };
-
-    const onDelete = () =>
-        deleteQuestion({
-            questionId: currentQuestion.id,
-            sectionId: section.id
-        });
-
     const setQuestionType = data => {
         const type: QuestionType = data.value;
         formik.setFieldValue("question", {...formik.values.question, type, details: {}});
@@ -124,7 +105,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         <div className={`${styles.question_container}`} ref={ref}>
             {isLoading ? <Loader active inline='centered'/>
                 :
-            <ReactResizeDetector handleHeight onResize={() => setMenuPos(ref.current.getBoundingClientRect().y)}>
+                <ReactResizeDetector handleHeight onResize={() => setMenuPos(ref.current.getBoundingClientRect().y)}>
                     {() =>
                         <div className={styles.question_container}>
                             <Form className={styles.question_form}>
@@ -150,36 +131,42 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                                         setQuestionType={setQuestionType}
                                     />
                                 </div>
-                                <Dropdown
-                                    loading={isCatLoading}
-                                    id="categoryTitle"
-                                    placeholder={t('Choose category or type custom')}
-                                    closeOnBlur
-                                    additionPosition="top"
-                                    onClick={handleCategoriesLoad}
-                                    allowAdditions
-                                    onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
-                                    value={formik.values.categoryTitle}
-                                    onAddItem={(e, {value}) => {
-                                        setLocalCategories([value as string, ...localCategories]);
-                                    }}
-                                    search
-                                    selection
-                                    options={parseCategories(localCategories)}
-                                    onBlur={formik.handleBlur}
-                                />
-                                <Popup
-                                    content={t("Required")}
-                                    trigger={
+                                <div className={styles.secondRow}>
+                                    <div className={styles.categoryItem}>
+                                        <Dropdown
+                                            loading={isCatLoading}
+                                            id="categoryTitle"
+                                            closeOnBlurbutton
+                                            icon="tag"
+                                            labeled
+                                            className="icon"
+                                            button
+                                            onClick={handleCategoriesLoad}
+                                            allowAdditions
+                                            onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
+                                            value={formik.values.categoryTitle}
+                                            onAddItem={(e, {value}) => {
+                                                setLocalCategories([value as string, ...localCategories]);
+                                            }}
+                                            search
+                                            options={parseCategories(localCategories)}
+                                            onBlur={formik.handleBlur}
+                                        />
+                                    </div>
+                                    <div className={styles.requiredItem}>
+                                        <span>Required</span>
                                         <Checkbox
                                             toggle
+
+                                            fitted
                                             id="isRequired"
                                             name="isRequired"
                                             checked={formik.values.isRequired}
                                             onChange={formik.handleChange}
-                                        />}
-                                />
-                                <Divider/>
+                                        />
+                                    </div>
+                                </div>
+                                <Divider style={{marginTop: 8}}/>
                                 <div className={styles.question_form_answers}>
                                     {renderForm(formik.values.question, handleQuestionDetailsUpdate)}
                                 </div>
@@ -221,14 +208,3 @@ const connector = connect(mapState, mapDispatch);
 type QuestionDetailsProps = ConnectedProps<typeof connector>;
 
 export default connector(QuestionForm);
-// <Popup
-//     content={t("Required")}
-//     trigger={
-//         <Checkbox
-//             toggle
-//             id="isRequired"
-//             name="isRequired"
-//             checked={formik.values.isRequired}
-//             onChange={formik.handleChange}
-//         />}
-// />

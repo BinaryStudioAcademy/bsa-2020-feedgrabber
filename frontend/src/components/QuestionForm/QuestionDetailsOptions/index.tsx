@@ -1,8 +1,9 @@
 import {QuestionType} from "../../../models/forms/Questions/IQuesion";
-import {Form, Icon} from "semantic-ui-react";
+import {Dropdown, Form, Icon} from "semantic-ui-react";
 import React from "react";
 import styles from "../styles.module.sass";
 import {useTranslation} from "react-i18next";
+import styled from "styled-components";
 
 const QuestionDetailsOptions = ({ question, setQuestionType }) => {
     const [t] = useTranslation();
@@ -40,10 +41,26 @@ const QuestionDetailsOptions = ({ question, setQuestionType }) => {
         }
     ];
 
+    const StyledDropdown = styled(Dropdown)`
+        .menu {
+            top: -100px !important;
+        }
+        line-height: 1.21428571em;
+        padding: .67857143em 1em;
+        font-size: 1em;
+        background: #fff;
+        border: 1px solid rgba(34,36,38,.15);
+        color: rgba(0,0,0,.87);
+        border-radius: .28571429rem;
+        box-shadow: 0 0 0 0 transparent inset;
+        transition: color .1s ease,border-color .1s ease;
+        &:focus{
+    `;
+
     return (
-        <Form.Dropdown
-            selection
+        <StyledDropdown
             options={questionTypeOptions}
+            style={{height: 'fit-content', menu: {top: 200}}}
             value={question.type}
             onChange={(event, data) => setQuestionType(data)}
         />

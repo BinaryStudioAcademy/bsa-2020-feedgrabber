@@ -36,7 +36,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
 
     useEffect(() => {
         const x = document.getElementById("app-content").scrollTop + position;
-        setTop(x ? x - 115 : 0);
+        setTop(x ? x - 127 : 0);
     }, [position]);
 
     return (
