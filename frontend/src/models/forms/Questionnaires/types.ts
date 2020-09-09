@@ -2,6 +2,7 @@ import { IPaginationInfo } from "../../IPaginationInfo";
 
 export interface IQuestionnairesState {
   list?: IQuestionnairesListState;
+  archived?: IQuestionnairesListState;
   pending?: IRequestState;
 }
 

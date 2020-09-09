@@ -4,7 +4,12 @@ import CommentInput from "./CommentInput";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
 import NewsItem from "../NewsItem/NewsItem";
-import {applyReactionRoutine, loadCompanyFeedItemRoutine, reactOnNewsRoutine} from "../../sagas/companyFeed/routines";
+import {
+    applyReactionRoutine,
+    loadCompanyFeedItemRoutine,
+    reactOnNewsRoutine,
+    setExpandedImageRoutine
+} from "../../sagas/companyFeed/routines";
 import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UIContent from "../UI/UIContent";
 import UIColumn from "../UI/UIColumn";
@@ -38,6 +43,7 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         deleteComment,
         reactOnNews,
         applyReaction,
+        expandImage,
         user,
         match
 }) => {
@@ -82,6 +88,7 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
                     item={newsItem ? newsItem : defaultItem}
                     applyReaction={applyReaction}
                     react={reactOnNews}
+                    expandImage={expandImage}
                 />
                 <Divider />
                 <CommentGroup className={styles.comments}>
@@ -146,7 +153,8 @@ const mapDispatchToProps = {
     updateComment: updateCommentRoutine,
     deleteComment: deleteCommentRoutine,
     reactOnNews: reactOnNewsRoutine,
-    applyReaction: applyReactionRoutine
+    applyReaction: applyReactionRoutine,
+    expandImage: setExpandedImageRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

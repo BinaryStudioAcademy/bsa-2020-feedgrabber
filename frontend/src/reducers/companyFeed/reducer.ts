@@ -5,7 +5,7 @@ import {
     loadCompanyFeedItemRoutine,
     saveCompanyFeedItemRoutine,
     createCompanyFeedItemRoutine,
-    setCompanyFeedPaginationRoutine, applyReactionRoutine
+    setCompanyFeedPaginationRoutine, applyReactionRoutine, setExpandedImageRoutine
 } from "../../sagas/companyFeed/routines";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
 import {deleteCommentRoutine, saveCommentRoutine, updateCommentRoutine} from "../../sagas/comments/routines";
@@ -13,6 +13,7 @@ import {deleteCommentRoutine, saveCommentRoutine, updateCommentRoutine} from "..
 export interface ICompanyFeedState {
     list: IPaginationInfo<ICompanyFeedItem>;
     current: ICompanyFeedItem;
+    expandedImageUrl: string;
     isLoading: boolean;
     error?: string;
 }
@@ -21,6 +22,7 @@ const initialState: ICompanyFeedState = {
     list: null,
     current: null,
     isLoading: false,
+    expandedImageUrl: null,
     error: null
 };
 
@@ -93,6 +95,11 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
                     comments: state.current.comments.filter(comment => comment.id !== payload),
                     commentsCount: state.current.commentsCount - 1
                 }
+            };
+        case setExpandedImageRoutine.TRIGGER:
+            return {
+                ...state,
+                expandedImageUrl: payload
             };
         case applyReactionRoutine.TRIGGER:
             const list = {...state.list};

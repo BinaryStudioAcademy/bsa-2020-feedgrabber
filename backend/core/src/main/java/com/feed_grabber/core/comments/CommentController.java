@@ -1,7 +1,6 @@
 package com.feed_grabber.core.comments;
 
 import com.feed_grabber.core.apiContract.AppResponse;
-import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.comments.dto.CommentCreationDto;
 import com.feed_grabber.core.comments.dto.CommentDto;

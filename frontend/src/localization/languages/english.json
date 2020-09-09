@@ -10,6 +10,7 @@
     "Logout": "Logout",
 
     "No items": "No items",
+    "target user": "target user",
 
     "Home": "Home",
     "Company Dashboard": "Company Dashboard",
@@ -94,16 +95,16 @@
     "My settings": "My settings",
     "Privacy and Security": "Privacy and Security",
 
-    "Radio": "Radio",
-    "CheckBoxes": "CheckBoxes",
-    "TextArea": "TextArea",
-    "Scaled": "Scaled",
+    "Radio": "Single Choice",
+    "CheckBoxes": "Check-boxes",
+    "TextArea": "Paragraph",
+    "Scaled": "Linear scale",
     "Date": "Date",
     "File upload": "File upload",
 
-    "New question": "New question",
-    "Add from existing questions": "Add from existing questions",
-    "Copy": "Copy",
+    "New question": "Add question",
+    "Add from existing questions": "Import questions",
+    "Copy": "Duplicate",
     "Delete": "Delete",
     "Add section": "Add section",
     "Description": "Description",
@@ -166,7 +167,6 @@
     "Respondents": "Respondents",
     "View Report Info": "View Report Info",
 
-    "Send Request": "Send Request",
     "Select deadline date!": "Select deadline date!",
     "Select at least one user or team": "Select at least one user or team",
     "Assign target user": "Assign target user",
@@ -311,6 +311,10 @@
 
     "Edit questionnaire": "Edit questionnaire",
     "Add questionnaire": "Add questionnaire",
+
+    "Archive": "Archive",
+    "Unarchive": "Unarchive",
+    "Archived": "Archived",
     "title is a required field": "title is a required field",
 
     "Create a new feed item": "Create a new feed item",

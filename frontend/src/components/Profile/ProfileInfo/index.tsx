@@ -48,6 +48,7 @@ const ProfileInfo: FC<ProfileInfoProps> =
           const file = e.target.files[0];
           setFileName(file.name);
           reader.readAsDataURL(file);
+          e.target.value = null;
         }
       };
 

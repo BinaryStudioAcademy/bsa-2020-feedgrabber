@@ -7,6 +7,7 @@ import {
     closeRequestRoutine
 } from "./routines";
 import {loadQuestionnaireRequestsRoutine} from "../report/routines";
+import {loadTeamRequestsRoutine} from "../teams/routines";
 
 function* saveRequest(action) {
   try {
@@ -21,7 +22,12 @@ function* closeRequest(action) {
     try {
         yield call(apiClient.post,`/api/request/close?requestId=${action.payload.requestId}`);
         toastr.info('Request Closed');
-        yield put(loadQuestionnaireRequestsRoutine.trigger(action.payload.questionnaireId));
+        if (action.payload.questionnaireId) {
+          yield put(loadQuestionnaireRequestsRoutine.trigger(action.payload.questionnaireId));
+        }
+        if (action.payload.teamId) {
+          yield put(loadTeamRequestsRoutine.trigger(action.payload.teamId));
+        }
     } catch(e) {
         toastr.error('Closing failed');
     }

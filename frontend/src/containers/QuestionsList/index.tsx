@@ -40,7 +40,7 @@ const QuestionsList: FC<QuestionsListProps> = ({
 
     useEffect(() => {
         setNewPressed(!isEmpty(current) && newPressed);
-    }, [current]);
+    }, [current, newPressed]);
 
     const handleClick = (question: IQuestion) => {
         setNewPressed(!question);

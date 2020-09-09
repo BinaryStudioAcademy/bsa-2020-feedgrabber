@@ -22,7 +22,7 @@ public class NewsDto {
     private String body;
     private ImageDto image;
     private UserShortDto user;
-    private int commentsCount;
     private Date createdAt;
+    private int commentsCount;
     private List<ReactionDto> reactions;
 }

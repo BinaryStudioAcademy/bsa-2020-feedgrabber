@@ -37,7 +37,7 @@ public class ResponseService {
                 .of(ResponseMapper.MAPPER.responseToDto(byRequestIdAndUserId));
     }
 
-    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws DeadlineExpiredException, 
+    public Optional<ResponseDto> update(ResponseUpdateDto dto) throws DeadlineExpiredException,
            ResponseNotFoundException,
            NotFoundException {
         var response = responseRepository.findById(dto.getId()).orElseThrow(ResponseNotFoundException::new);
@@ -55,12 +55,12 @@ public class ResponseService {
 
         var result = Optional.of(ResponseMapper.MAPPER.responseToDto(responseRepository.save(response)));
 
-        int unanswered = responseRepository.countUnanswered(request.getId());
-        if (unanswered == 0) {
-            // close the request
-            requestService.closeNow(request.getId());
-            requestService.notifyAboutClosing(request);
-        }
+//        int unanswered = responseRepository.countUnanswered(request.getId());
+//        if (unanswered == 0) {
+//            // close the request
+//            requestService.closeNow(request.getId());
+//            requestService.notifyAboutClosing(request);
+//        }
         return result;
     }
 
