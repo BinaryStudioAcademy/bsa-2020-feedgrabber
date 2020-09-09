@@ -18,6 +18,7 @@
     "Employees": "Співробітники",
     "People": "Люди",
     "Invitations": "Запрошення",
+    "Language": "Мова",
 
     "Account verification": "Перевірка акаунта",
     "Loading...": "Завантаження...",
@@ -127,6 +128,7 @@
     "Fire": "Звільнити",
     "Switch role": "Змітини роль",
     "company_owner": "власник компанії",
+    "company owner": "власник компанії",
     "hr": "рекрутер",
     "employee": "працівник",
 
