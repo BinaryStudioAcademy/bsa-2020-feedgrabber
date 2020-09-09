@@ -62,11 +62,11 @@ class EmailSender(
         send(mail)
     }
 
-    fun sendNotificationMail(notification: String, toEmailAddress: String) {
+    fun sendNotificationMail(notificationLink: String, toEmailAddress: String) {
         val from = Email(fromEmail)
         val subject = "FeedGrabber Notification"
         val to = Email(toEmailAddress)
-        val content = mailContentBuilder.buildInvitationLinkMail(notification)
+        val content = mailContentBuilder.buildNotificationEmail(notificationLink)
         val mail = Mail(from, subject, to, content)
         send(mail)
     }

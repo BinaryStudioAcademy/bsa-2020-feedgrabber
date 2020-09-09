@@ -1,14 +1,11 @@
 package com.feed_grabber.core.request;
 
+import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.auth.security.TokenService;
-import com.feed_grabber.core.config.NotificationService;
-
-import com.feed_grabber.core.notification.MessageTypes;
-import com.feed_grabber.core.notification.UserNotificationRepository;
-import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.model.S3File;
+import com.feed_grabber.core.notification.UserNotificationService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.rabbit.Sender;
@@ -21,6 +18,7 @@ import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.ResponseRepository;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.team.TeamRepository;
+import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
@@ -36,9 +34,8 @@ public class RequestService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final ResponseRepository responseRepository;
-    private final UserNotificationRepository userNotificationRepository;
-    private final NotificationService notificationService;
     private final FileRepository fileRepository;
+    private final UserNotificationService userNotificationService;
     private final Sender sender;
 
     public RequestService(RequestRepository requestRepository,
@@ -46,18 +43,16 @@ public class RequestService {
                           UserRepository userRepository,
                           TeamRepository teamRepository,
                           ResponseRepository responseRepository,
-                          UserNotificationRepository userNotificationRepository,
-                          NotificationService notificationService,
                           FileRepository fileRepository,
+                          UserNotificationService userNotificationService,
                           Sender sender) {
         this.requestRepository = requestRepository;
         this.questionnaireRepository = questionnaireRepository;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.responseRepository = responseRepository;
-        this.userNotificationRepository = userNotificationRepository;
-        this.notificationService = notificationService;
         this.fileRepository = fileRepository;
+        this.userNotificationService = userNotificationService;
         this.sender = sender;
     }
 
@@ -100,33 +95,18 @@ public class RequestService {
             else users.remove(targetUser);
         }
 
-        var notifyUsers = dto.getNotifyUsers();
         var responses = users.stream()
                 .map(u -> Response.builder().user(u).request(request).build())
                 .collect(Collectors.toList());
 
         responseRepository.saveAll(responses);
 
-        if (dto.getNotifyUsers()) {
-            Map<UUID, UUID> userIdNotificationId = new HashMap();
-            for (User user : users)
-                userIdNotificationId.put(user.getId(),
-                        userNotificationRepository.save(UserNotification
-                                .builder()
-                                .request(request)
-                                .text("You have new questionnaire request")
-                                .isClosed(!notifyUsers)
-                                .isRead(false)
-                                .type(MessageTypes.plain_text)
-                                .user(user)
-                                .build()).getId());
-            for (UUID userId : userIdNotificationId.keySet()) {
-                notificationService.sendMessageToConcreteUser(
-                        userId.toString(),
-                        "notify",
-                        userNotificationRepository
-                                .findNotificationById(userIdNotificationId.get(userId)).orElseThrow(NotFoundException::new)
-                );
+        var notifyUsers = dto.getNotifyUsers();
+        if (notifyUsers) {
+            for (User user : users) {
+                userNotificationService.saveAndSendResponseNotification(request,
+                        user,
+                        "You have new questionnaire request");
             }
         }
 
@@ -158,7 +138,7 @@ public class RequestService {
     }
 
     public void addFileReports(FileReportsDto dto) throws NotFoundException {
-        if(dto.getExcelReport() != null && dto.getPptReport() != null) {
+        if (dto.getExcelReport() != null && dto.getPptReport() != null) {
             var excelReport = fileRepository.save(
                     S3File.builder()
                             .link(dto.getExcelReport().getLink())
@@ -212,26 +192,13 @@ public class RequestService {
         if (request.getSendToTarget() && !maker.equals(target)) {
             users.add(target);
         }
-        Map<UUID, UUID> userIdNotificationId = new HashMap<>();
-        for (User user : users)
-            userIdNotificationId.put(user.getId(),
-                    userNotificationRepository.save(UserNotification
-                            .builder()
-                            .request(request)
-                            .text("Request " + request.getQuestionnaire().getTitle() + " was closed")
-                            .isClosed(true)
-                            .isRead(false)
-                            .type(MessageTypes.plain_text)
-                            .user(user)
-                            .build()).getId());
-        for (UUID userId : userIdNotificationId.keySet()) {
-            notificationService.sendMessageToConcreteUser(
-                    userId.toString(),
-                    "notify",
-                    userNotificationRepository
-                            .findNotificationById(userIdNotificationId.get(userId))
-                            .orElseThrow(NotFoundException::new)
-            );
+        for (User user : users) {
+            userNotificationService
+                    .saveAndSendResponseNotification(
+                            request,
+                            user,
+                            "Request " + request.getQuestionnaire().getTitle() + " was closed"
+                    );
         }
     }
 
@@ -246,6 +213,19 @@ public class RequestService {
 
     public List<RequestShortDto> getAllByQuestionnaire(UUID id) {
         return requestRepository.findAllByQuestionnaireId(id)
+                .stream()
+                .map(RequestMapper.MAPPER::requestToShortDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<RequestShortDto> getAllByTeamId(UUID id, UUID userId, String roleName) throws TeamNotFoundException {
+        if (roleName.equals("employee")) {
+            var team = teamRepository.findById(id).orElseThrow(TeamNotFoundException::new);
+            if (!team.getLead().getId().equals(userId)) {
+                throw new JwtTokenException("No rights to see requests");
+            }
+        }
+        return requestRepository.findAllByTeamId(id)
                 .stream()
                 .map(RequestMapper.MAPPER::requestToShortDto)
                 .collect(Collectors.toList());

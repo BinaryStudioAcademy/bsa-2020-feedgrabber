@@ -19,9 +19,11 @@ import {Permissions} from "../../components/helpers/AccessManager/rbac-rules";
 import AccessManager from "../../components/helpers/AccessManager";
 import { useTranslation } from 'react-i18next';
 import styles from './styles.module.sass';
+import {ITeamShort} from "../../models/teams/ITeam";
 
 const TeamsPage: FC<ITeamsPageProps> = (
   {
+    currentUser,
     teams,
     loadTeams,
     loadUsers,
@@ -43,6 +45,9 @@ const TeamsPage: FC<ITeamsPageProps> = (
   };
 
   const [t] = useTranslation();
+
+  const isHrOrCo = currentUser.role === "company_owner" || currentUser.role === "hr";
+  const isTeamLead = (team: ITeamShort) => currentUser?.id === team.leadId;
 
     return (
         <>
@@ -81,13 +86,15 @@ const TeamsPage: FC<ITeamsPageProps> = (
                                 <UICardBlock>
                                     <Icon color={"grey"} name="users"/>{team.membersAmount} {t("Member(s)")}
                                 </UICardBlock>
-                                <AccessManager staticPermission={Permissions.manageTeams}>
                                     <UICardBlock>
-                                        <UIButton title={t("Manage")} onClick={() => handleRedirect(team.id)}/>
+                                      {(isHrOrCo || isTeamLead(team)) &&
+                                          <UIButton title={t("Manage")} onClick={() => handleRedirect(team.id)}/>
+                                      }
+                                      <AccessManager staticPermission={Permissions.manageTeams}>
                                         <UIButton title={t("Delete")} secondary loading={team.deleteLoading}
                                                   disabled={team.deleteLoading} onClick={() => deleteTeam(team.id)}/>
+                                      </AccessManager>
                                     </UICardBlock>
-                                </AccessManager>
                             </UICard>
                         </UIColumn>;})
                       : <div className={styles.noItemsLabel}>{t("No items")}</div>
@@ -99,6 +106,7 @@ const TeamsPage: FC<ITeamsPageProps> = (
 };
 
 const mapState = (state: IAppState) => ({
+  currentUser: state.user.info,
   teams: state.teams.teams,
   companyUsers: state.teams.companyUsers,
   isLoading: state.teams.isLoading,

@@ -81,11 +81,12 @@ public class QuestionnaireService {
         }
 
         if (!createDto.getTitle()
-                .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-\\/=?^_`]+)")) {
+                .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
             throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
                     "have more than one space in sequence." +
                     "Title can contain latin letters, numbers and special symbols.");
         }
+
 
         var company = companyRepository.findById(companyId)
                 .orElseThrow(CompanyNotFoundException::new);
@@ -97,7 +98,7 @@ public class QuestionnaireService {
 
         var savedQuestionnaire = questionnaireRepository.save(questionnaire);
 
-        var section = sectionService.create(new SectionCreateDto(createDto.getTitle(), questionnaire.getId(), 0));
+        var section = sectionService.create(new SectionCreateDto(createDto.getTitle().trim(), questionnaire.getId(), 0));
 
         questionService.create(new QuestionCreateDto(
                 "Default Question",
@@ -134,4 +135,5 @@ public class QuestionnaireService {
     public void delete(UUID id) {
         questionnaireRepository.softDeleteById(id);
     }
+
 }

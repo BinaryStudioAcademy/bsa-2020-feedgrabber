@@ -107,20 +107,24 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
             return {
                 ...state,
                 sections: {
-                    list: payload,
-                    current: payload.find(s => s.id === state.sections.current.id)
+                    list: payload.sections,
+                    current: payload.currentSection
                 }
             };
         case deleteQuestionFromSectionRoutine.SUCCESS:
-            const qs = state.sections.list.flatMap(s => s.questions);
+            const qs = state.sections.list.flatMap(s => s.questions.map(q => {
+                q.sectionId = s.id;
+                return q;
+            }));
             const index = qs.findIndex(q => q.id === payload.questionId);
             const q = qs[index-1] || qs[index+1];
             const qsct = {...state.sections.current, questions: payload.questions};
+            const l = state.sections.list.map(s => s.id === payload.sectionId ? qsct : s);
             return {
                 ...state,
                 sections: {
-                    current: qsct,
-                    list: state.sections.list.map(s => s.id === payload.sectionId ? qsct : s)
+                    current: l.find(s => s.id === q?.sectionId) ?? {...state.sections.current, questions: []},
+                    list: l
                 },
                 currentQuestion: q ?? {},
                 isLoading: false
