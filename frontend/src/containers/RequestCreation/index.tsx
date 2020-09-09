@@ -79,7 +79,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
         // load questionnaire
         useEffect(() => {
             if(match.params?.id) loadSections(match.params?.id);
-        }, [loadSections, match.params?.id]);
+        }, [loadSections, match.params]);
 
         const [targetUserPattern, setTargetUserPattern] = useState('');
         const [respondentPattern, setRespondentPattern] = useState('');
