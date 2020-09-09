@@ -1,8 +1,9 @@
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
 import {useTranslation} from "react-i18next";
 import styles from "./styles.module.css";
+import {AiOutlineAppstoreAdd} from "react-icons/ai";
 
 interface IQuestionMenuProps {
     addQuestion(): void;
@@ -34,8 +35,8 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
     const [t] = useTranslation();
 
     useEffect(() => {
-       const x = document.getElementById("app-content").scrollTop + position;
-       setTop(x ? x - 115 : 0);
+        const x = document.getElementById("app-content").scrollTop + position;
+        setTop(x ? x - 115 : 0);
     }, [position]);
 
     return (
@@ -44,21 +45,22 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
             top,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }}>
-            <Button.Group basic className={styles.floatingMenu} vertical size="big">
+            <Button.Group basic className={styles.floatingMenu} style={{padding: '.1rem'}} vertical size="big">
                 <Popup content={t("New question")} {...popupProps}
-                       trigger={<Button icon="plus circle" {...styleBorder} onClick={addQuestion}/>}
-                />
-                <Popup content={t("Add from existing questions")} {...popupProps}
-                       trigger={<Button icon="external" {...styleBorder} />}
+                       trigger={<Button icon="add" {...styleBorder} color="grey" onClick={addQuestion}/>}
                 />
                 <Popup content={t("Copy")} {...popupProps}
-                       trigger={<Button icon="copy" {...styleBorder} onClick={copyQuestion}/>}
+                       trigger={<Button icon="clone outline" {...styleBorder} onClick={copyQuestion}/>}
                 />
-                <Popup content={t("Delete")} {...popupProps}
-                       trigger={<Button icon="trash" {...styleBorder} onClick={onDelete}/>}
+                <Popup content={t("Add from existing questions")} {...popupProps}
+                       trigger={<Button icon={AiOutlineAppstoreAdd({size: '1.6rem'})}
+                                        style={{border: 'none', backgroundColor: 'white', padding: 8}}/>}
                 />
                 <Popup content={t("Add section")} {...popupProps}
-                       trigger={<Button icon="window maximize outline" {...styleBorder} onClick={addSection}/>}
+                       trigger={<Button icon="arrows alternate vertical" {...styleBorder} onClick={addSection}/>}
+                />
+                <Popup content={t("Delete")} {...popupProps}
+                       trigger={<Button icon="trash alternate outline" {...styleBorder} onClick={onDelete}/>}
                 />
             </Button.Group>
             <SelectQuestionsFromExisting isOpen={isOpenModal} handleOpenModal={setOpenModal}/>

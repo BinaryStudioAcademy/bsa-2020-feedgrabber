@@ -168,48 +168,20 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                                     options={parseCategories(localCategories)}
                                     onBlur={formik.handleBlur}
                                 />
+                                <Popup
+                                    content={t("Required")}
+                                    trigger={
+                                        <Checkbox
+                                            toggle
+                                            id="isRequired"
+                                            name="isRequired"
+                                            checked={formik.values.isRequired}
+                                            onChange={formik.handleChange}
+                                        />}
+                                />
                                 <Divider/>
                                 <div className={styles.question_form_answers}>
                                     {renderForm(formik.values.question, handleQuestionDetailsUpdate)}
-                                </div>
-                                <Divider/>
-                                <div className={styles.actions}>
-                                    {listEdit &&
-                                    <Popup content={"Cancel"}
-                                           trigger={(
-                                               <span className={styles.icon} onClick={() => listEdit.cancel()}>
-                                            <Icon name="close" size="large"/>
-                                        </span>
-                                           )}
-                                    />}
-                                    {!listEdit &&
-                                    <Popup content={"Delete"}
-                                           trigger={(
-                                               <span className={styles.icon} onClick={onDelete}>
-                                            <Icon name="trash alternate outline" size="large"/>
-                                        </span>
-                                           )}
-                                    />}
-                                    {currentQuestion?.id && onCopy &&
-                                    <Popup content={"Copy"}
-                                           trigger={(
-                                               <span className={styles.icon} onClick={onCopy}>
-                                           <Icon name="clone outline" size="large"/>
-                                       </span>
-                                           )}
-                                    />
-                                    }
-                                    <Popup
-                                        content={t("Required")}
-                                        trigger={
-                                            <Checkbox
-                                                toggle
-                                                id="isRequired"
-                                                name="isRequired"
-                                                checked={formik.values.isRequired}
-                                                onChange={formik.handleChange}
-                                            />}
-                                    />
                                 </div>
                             </Form>
                         </div>
@@ -249,3 +221,14 @@ const connector = connect(mapState, mapDispatch);
 type QuestionDetailsProps = ConnectedProps<typeof connector>;
 
 export default connector(QuestionForm);
+// <Popup
+//     content={t("Required")}
+//     trigger={
+//         <Checkbox
+//             toggle
+//             id="isRequired"
+//             name="isRequired"
+//             checked={formik.values.isRequired}
+//             onChange={formik.handleChange}
+//         />}
+// />

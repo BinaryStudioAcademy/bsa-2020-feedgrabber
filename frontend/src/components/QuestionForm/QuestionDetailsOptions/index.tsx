@@ -10,27 +10,27 @@ const QuestionDetailsOptions = ({ question, setQuestionType }) => {
     const questionTypeOptions = [
         {
             key: "Radio",
-            text: <span className={styles.option}><Icon name="dot circle outline"/>{t("Radio")}</span>,
+            text: <span className={styles.option}><Icon color="grey" name="dot circle outline"/>{t("Radio")}</span>,
             value: QuestionType.radio
         },
         {
             key: "CheckBoxes",
-            text: <span className={styles.option}><Icon name="check square" />{t("CheckBoxes")}</span>,
+            text: <span className={styles.option}><Icon color="grey" name="check square" />{t("CheckBoxes")}</span>,
             value: QuestionType.checkbox
         },
         {
             key: "TextArea",
-            text: <span className={styles.option}><Icon name="align left" />{t("TextArea")}</span>, // bars, content
+            text: <span className={styles.option}><Icon color="grey" name="align left" />{t("TextArea")}</span>,
             value: QuestionType.freeText
         },
         {
             key: "Scaled",
-            text: <span className={styles.option}><Icon name="ellipsis horizontal" />{t("Scaled")}</span>,
+            text: <span className={styles.option}><Icon color="grey" name="ellipsis horizontal" />{t("Scaled")}</span>,
             value: QuestionType.scale
         },
         {
             key: "Date",
-            text: <span className={styles.option}><Icon name="calendar alternate outline"/>{t("Date")}</span>,
+        text: <span className={styles.option}><Icon color="grey" name="calendar alternate outline"/>{t("Date")}</span>,
             value: QuestionType.date
         },
         {
