@@ -1,7 +1,6 @@
 import { IPaginationInfo } from "../../IPaginationInfo";
 import {IReportShortDto} from "../../report/IReport";
 
-
 export interface IQuestionnairesState {
   list?: IQuestionnairesListState;
   archived?: IQuestionnairesListState;

@@ -17,7 +17,6 @@ import {IDashboardState} from "../reducers/dashboard/reducer";
 import {IFormEditorState} from "./forms/IFormEditorState";
 import {ICategoriesState} from "../reducers/categories/reducer";
 
-
 export interface IAppState {
     toastr: any;
     user: IUserState;
