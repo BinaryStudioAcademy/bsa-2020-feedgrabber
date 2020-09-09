@@ -13,7 +13,7 @@ import {Formik} from "formik";
 import DatePicker from "react-datepicker";
 import styles from './styles.module.sass';
 import "react-datepicker/dist/react-datepicker.css";
-import {Message, Dimmer, Segment, Header} from "semantic-ui-react";
+import {Message, Dimmer, Header} from "semantic-ui-react";
 import {sendQuestionnaireRequestRoutine} from "../../sagas/request/routines";
 import {history} from '../../helpers/history.helper';
 import {IUserShort} from "../../models/user/types";
@@ -124,8 +124,12 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                             </UICardBlock>
                         </UICard>
                     </UIColumn>
-                    {!!sections.length && <UIColumn>
+                    {<UIColumn>
                         <LoaderWrapper loading={!users || isLoadingUsers || !teams || isLoadingTeams}>
+                            <Dimmer.Dimmable
+                                blurring
+                                dimmed={!sections.length}
+                                className={!sections.length && styles.dimmer}>
                             <UICard>
                                 <Formik
                                     initialValues={initialValues}
@@ -375,6 +379,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         )}
                                 </Formik>
                             </UICard>
+                            </Dimmer.Dimmable>
                         </LoaderWrapper>
                     </UIColumn>}
                 </UIContent>
