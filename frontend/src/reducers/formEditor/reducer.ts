@@ -8,7 +8,7 @@ import {
     loadSavedSectionsByQuestionnaireRoutine,
     loadSectionsByQuestionnaireRoutine,
     setCurrentQuestionInSection,
-    setCurrentSectionRoutine,
+    setCurrentSectionRoutine, setNoSectionsRoutine,
     updateQuestionInSectionRoutine,
     updateSectionRoutine,
     updateSections
@@ -38,6 +38,14 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 sections: {
                     ...state.sections,
                     current: payload
+                }
+            };
+            case setNoSectionsRoutine.TRIGGER:
+            return {
+                ...state,
+                sections: {
+                    list: [],
+                    current: {}
                 }
             };
         case createSectionRoutine.SUCCESS:
