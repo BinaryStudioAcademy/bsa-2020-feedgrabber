@@ -33,7 +33,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     } : null), [answer]);
 
     const handleChange = (event, value?) => {
-        setAnswer({...answer, selected: value?.value});
+        setAnswer({ selected: value?.value, other: undefined });
     };
 
     const handleOther = (value: string) => {
@@ -69,7 +69,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
                     <Radio
                         disabled={(!!response && !answerHandler) || notResponsePage}
                         checked={answer?.other === other}
-                        name='radioGroup'
+                        name={question.id}
                         value={other || ''}
                         onChange={() => handleOther(other)}
                     />
