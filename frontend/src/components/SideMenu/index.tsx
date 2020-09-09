@@ -100,8 +100,10 @@ const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps
                         <RiGlobalLine size="1.3em" color="white" className={styles.menuItemIcon}/>
                         <span className={styles.menuItemTitle}>{t("Language")}</span>
                         {languageActive
-                          ? <RiArrowDownSLine size="1.3em" color="white" className={styles.menuItemIcon}/>
-                          : <RiArrowUpSLine size="1.3em" color="white" className={styles.menuItemIcon}/>
+                          ? <RiArrowDownSLine size="1.3em" color="white"
+                                              className={`${styles.menuItemIcon} ${styles.menuIconRight}`}/>
+                          : <RiArrowUpSLine size="1.3em" color="white"
+                                            className={`${styles.menuItemIcon} ${styles.menuIconRight}`}/>
                         }
                     </div>
                   <ul className={languageActive && expanded ? styles.listActive : styles.listInactive}>
