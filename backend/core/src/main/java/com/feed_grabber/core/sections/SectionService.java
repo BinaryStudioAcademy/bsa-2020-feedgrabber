@@ -1,6 +1,7 @@
 package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
@@ -10,7 +11,6 @@ import com.feed_grabber.core.sections.dto.*;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import com.feed_grabber.core.sections.model.Section;
 import com.feed_grabber.core.sections.model.SectionQuestion;
-import com.feed_grabber.core.sections.model.SectionQuestionId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class SectionService {
     }
 
     public SectionDto create(SectionCreateDto createDto) throws QuestionnaireNotFoundException {
-        if (createDto.getTitle() == null) createDto.setTitle("New section");
+        if (createDto.getTitle() == null) createDto.setTitle(Translator.toLocale("new_section"));
 
         var questionnaire = questionnaireRepository.findById(createDto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);

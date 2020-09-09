@@ -2,9 +2,8 @@ package com.feed_grabber.core.report;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
-import com.feed_grabber.core.rabbit.Receiver;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.rabbit.Sender;
 import com.feed_grabber.core.report.dto.ReportDetailsDto;
 import com.feed_grabber.core.report.dto.ReportShortDto;
@@ -18,12 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import static com.feed_grabber.core.role.RoleConstants.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.feed_grabber.core.role.RoleConstants.*;
 
 @Service
 public class ReportService {
@@ -88,7 +87,7 @@ public class ReportService {
     }
 
     private void throwNoPermissions() {
-        throw new AccessDeniedException("You have not enough permissions to view this report");
+        throw new AccessDeniedException(Translator.toLocale("report_permission_denied"));
     }
 
     public List<ReportShortDto> getAllAvailableReports(final UUID userId, final String role, final UUID comanyId) {

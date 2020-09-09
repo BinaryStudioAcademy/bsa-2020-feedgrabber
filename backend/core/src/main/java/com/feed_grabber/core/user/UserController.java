@@ -3,6 +3,7 @@ package com.feed_grabber.core.user;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.registration.exceptions.VerificationTokenExpiredException;
