@@ -50,9 +50,7 @@ function* addFromExisting(action) {
 function* updateQuestion(action) {
     try {
         const res = yield call(apiClient.put, `/api/questions`, action.payload);
-
         yield put(updateQuestionRoutine.success(parseQuestion(res.data.data)));
-        // yield put(setCurrentQuestionRoutine.trigger({}));
     } catch (e) {
         yield put(updateQuestionRoutine.failure());
         toastr.error("Question wasn't updated");
