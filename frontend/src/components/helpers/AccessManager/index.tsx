@@ -53,10 +53,11 @@ const AccessManager: FC<IAccessManagerProps> = (
         const endpoints = permissions.endpoints;
         if (Array.isArray(endpoint)) {
             for (const endp of endpoint) {
-                if (endpoints.includes(endp)) {
-                    return true;
+                if (!endpoints.includes(endp)) {
+                    return false;
                 }
             }
+            return true;
         }
 
         if (endpoint && endpoints && endpoints.includes(endpoint as string)) {
