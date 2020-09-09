@@ -1,5 +1,6 @@
 import {IAppState} from "../../models/IAppState";
 import {setFloatingMenuPos, toggleMenuRoutine} from "../../sagas/app/routines";
+import {loadSectionsByQuestionnaireRoutine} from "../../sagas/sections/routines";
 
 const initialState = {
     showMenu: true,
@@ -21,8 +22,13 @@ const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => 
     if (type === setFloatingMenuPos.TRIGGER) {
         return {
             ...state,
-            floatingMenuPos: state.floatingMenuPos === 0 ? payload - 20 :
-                payload > state.floatingMenuPos ? payload - 180 : payload - 20
+            floatingMenuPos: payload
+        };
+    }
+    if (type === loadSectionsByQuestionnaireRoutine.TRIGGER) {
+        return {
+            ...state,
+            floatingMenuPos: 0
         };
     }
     return state;

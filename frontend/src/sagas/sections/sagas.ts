@@ -16,8 +16,8 @@ import {
 import {parseQuestion} from "sagas/questions/sagas";
 import {IGeneric} from "../../models/IGeneric";
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
-import {ISection} from "../../reducers/formEditor/reducer";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
+import {ISection} from "../../reducers/formEditor/reducer";
 
 const parseQuestions = questions => questions.map(q => parseQuestion(q));
 
@@ -93,6 +93,7 @@ function* updateQuestion(action) {
             questionId: question.id
         }));
     } catch (e) {
+        console.log(e);
         yield put(updateQuestionInSectionRoutine.failure());
     }
 }
@@ -101,7 +102,11 @@ function* deleteQuestionFromSection(action) {
     try {
         const {sectionId, questionId} = action.payload;
         const result = yield call(apiClient.delete, `/api/section/${sectionId}/${questionId}`);
-        yield put(deleteQuestionFromSectionRoutine.success({sectionId, questions: parseQuestions(result.data.data)}));
+        yield put(deleteQuestionFromSectionRoutine.success({
+            sectionId,
+            questions: parseQuestions(result.data.data),
+            questionId
+        }));
     } catch (error) {
         yield put(deleteQuestionFromSectionRoutine.failure());
     }

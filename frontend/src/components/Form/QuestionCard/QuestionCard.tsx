@@ -9,7 +9,6 @@ const QuestionCard: FC<CardProps> = (
         question,
         isCurrent,
         index,
-        setMenuPos,
         setCurrentQuestion
     }) => (
     <Draggable draggableId={question.id} index={index}>
@@ -22,7 +21,6 @@ const QuestionCard: FC<CardProps> = (
             >
                 <ResponseQuestion
                     setCurrentQuestion={setCurrentQuestion}
-                    setMenuPos={setMenuPos}
                     question={question}
                     isCurrent={isCurrent}
                 />
@@ -35,12 +33,10 @@ export default QuestionCard;
 
 export type CardProps = {
     question: IQuestion;
-    isCurrent: boolean;
     index: number;
 } & ResponseQuestionProps;
 
 export type ResponseQuestionProps = {
-    setMenuPos: (x: any) => void;
     setCurrentQuestion: (x: any) => void;
     isCurrent?: boolean;
 }

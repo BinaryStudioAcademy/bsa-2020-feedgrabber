@@ -1,7 +1,7 @@
 package com.feed_grabber.core.user;
 
 import com.feed_grabber.core.auth.security.TokenService;
-import com.feed_grabber.core.dashboard.dto.UserInfo;
+import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
@@ -171,7 +171,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/updateUsername")
     public AppResponse<UserDetailsResponseDTO> updateUsername(@RequestBody UserUpdateUsernameDto dto)
-            throws NotFoundException {
+            throws NotFoundException, AlreadyExistsException {
         var id = TokenService.getUserId();
         return new AppResponse<>(userProfileService.updateUsername(id, dto.getUsername()));
     }

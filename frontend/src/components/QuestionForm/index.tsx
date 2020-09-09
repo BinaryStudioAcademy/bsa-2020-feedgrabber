@@ -1,10 +1,11 @@
 import React, {FC, useCallback, useEffect, useRef, useState} from "react";
+import ReactResizeDetector from 'react-resize-detector';
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
 import {isEqual} from "lodash";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
-import {Checkbox, Divider, Form, Icon, Loader, Popup} from "semantic-ui-react";
+import {Checkbox, Divider, Dropdown, Form, Loader} from "semantic-ui-react";
 import {
     addQuestionToSectionRoutine,
     deleteQuestionFromSectionRoutine,
@@ -18,6 +19,7 @@ import QuestionDetailsOptions from "./QuestionDetailsOptions";
 import {mainSchema} from "./schemas";
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {saveQuestionRoutine, updateQuestionRoutine} from "../../sagas/questions/routines";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
 
 export interface IQuestionListEditProps {
     cancel: () => void;
@@ -32,9 +34,9 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         loadCategories,
         questionnaireId,
         section,
-        deleteQuestion,
+        isCatLoading,
+        setMenuPos,
         categories,
-        sections,
         addQuestion
     }) => {
     const [isDetailsValid, setValid] = useState(true);
@@ -84,23 +86,6 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
         setValid(isCompleted);
     };
 
-    const onCopy = () => {
-        const s = section ?? sections[sections.length - 1];
-        const res = {
-            ...currentQuestion,
-            name: `${currentQuestion.name} (copy)`,
-            sectionId: s?.id,
-            index: s?.questions?.length
-        };
-        addQuestion(res);
-    };
-
-    const onDelete = () =>
-        deleteQuestion({
-            questionId: currentQuestion.id,
-            sectionId: section.id
-        });
-
     const setQuestionType = data => {
         const type: QuestionType = data.value;
         formik.setFieldValue("question", {...formik.values.question, type, details: {}});
@@ -118,97 +103,77 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
 
     return (
         <div className={`${styles.question_container}`} ref={ref}>
-            {isLoading ?
-                <Loader active inline='centered'/>
+            {isLoading ? <Loader active inline='centered'/>
                 :
-                <div className={styles.question_container}>
-                    <Form className={styles.question_form}>
-                        <div className={styles.question_input_type}>
-                            <Form.Input
-                                className={styles.question_input}
-                                fluid
-                                id="name"
-                                placeholder={t("Type your question")}
-                                type="text"
-                                value={formik.values.name}
-                                name="name"
-                                error={
-                                    formik.touched.name && formik.errors.name
-                                        ? t(formik.errors.name)
-                                        : undefined
-                                }
-                                onChange={formik.handleChange}
-                            />
-                            <QuestionDetailsOptions
-                                question={formik.values.question}
-                                setQuestionType={setQuestionType}
-                            />
-                        </div>
-                        <Form.Dropdown
-                            id="categoryTitle"
-                            placeholder={t('Choose category or type custom')}
-                            closeOnBlur
-                            onClick={handleCategoriesLoad}
-                            allowAdditions
-                            additionLabel={t('Add new category: ')}
-                            onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
-                            value={formik.values.categoryTitle}
-                            onAddItem={(e, {value}) => {
-                                setLocalCategories([value as string, ...localCategories]);
-                            }}
-                            search
-                            selection
-                            error={formik.touched.categoryTitle && formik.errors.categoryTitle
-                                ? t(formik.errors.categoryTitle)
-                                : undefined}
-                            options={parseCategories(localCategories)}
-                            onBlur={formik.handleBlur}
-                        />{' '}
-                        <Divider/>
-                        <div className={styles.question_form_answers}>
-                            {renderForm(formik.values.question, handleQuestionDetailsUpdate)}
-                        </div>
-                        <Divider/>
-                        <div className={styles.actions}>
-                            {listEdit &&
-                            <Popup content={"Cancel"}
-                                   trigger={(
-                                       <span className={styles.icon} onClick={() => listEdit.cancel()}>
-                                            <Icon name="close" size="large"/>
-                                        </span>
-                                   )}
-                            />}
-                            {!listEdit &&
-                            <Popup content={"Delete"}
-                                   trigger={(
-                                       <span className={styles.icon} onClick={onDelete}>
-                                            <Icon name="trash alternate outline" size="large"/>
-                                        </span>
-                                   )}
-                            />}
-                            {currentQuestion?.id && onCopy &&
-                            <Popup content={"Copy"}
-                                   trigger={(
-                                       <span className={styles.icon} onClick={onCopy}>
-                                           <Icon name="clone outline" size="large"/>
-                                       </span>
-                                   )}
-                            />
-                            }
-                            <Popup
-                                content={t("Required")}
-                                trigger={
-                                    <Checkbox
-                                        toggle
-                                        id="isRequired"
-                                        name="isRequired"
-                                        checked={formik.values.isRequired}
+                <ReactResizeDetector handleHeight onResize={() => setMenuPos(ref.current.getBoundingClientRect().y)}>
+                    {() =>
+                        <div className={styles.question_container}>
+                            <Form className={styles.question_form}>
+                                <div className={styles.question_input_type}>
+                                    <Form.Input
+                                        inverted
+                                        className={styles.question_input}
+                                        fluid
+                                        id="name"
+                                        placeholder={t("Type your question")}
+                                        type="text"
+                                        value={formik.values.name}
+                                        name="name"
+                                        error={
+                                            formik.touched.name && formik.errors.name
+                                                ? t(formik.errors.name)
+                                                : undefined
+                                        }
                                         onChange={formik.handleChange}
-                                    />}
-                            />
+                                    />
+                                    <QuestionDetailsOptions
+                                        question={formik.values.question}
+                                        setQuestionType={setQuestionType}
+                                    />
+                                </div>
+                                <div className={styles.secondRow}>
+                                    <div className={styles.categoryItem}>
+                                        <Dropdown
+                                            loading={isCatLoading}
+                                            id="categoryTitle"
+                                            closeOnBlurbutton
+                                            icon="tag"
+                                            labeled
+                                            className="icon"
+                                            button
+                                            onClick={handleCategoriesLoad}
+                                            allowAdditions
+                                            onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
+                                            value={formik.values.categoryTitle}
+                                            onAddItem={(e, {value}) => {
+                                                setLocalCategories([value as string, ...localCategories]);
+                                            }}
+                                            search
+                                            options={parseCategories(localCategories)}
+                                            onBlur={formik.handleBlur}
+                                        />
+                                    </div>
+                                    <div className={styles.requiredItem}>
+                                        <span>Required</span>
+                                        <Checkbox
+                                            toggle
+
+                                            fitted
+                                            id="isRequired"
+                                            name="isRequired"
+                                            checked={formik.values.isRequired}
+                                            onChange={formik.handleChange}
+                                        />
+                                    </div>
+                                </div>
+                                <Divider style={{marginTop: 8}}/>
+                                <div className={styles.question_form_answers}>
+                                    {renderForm(formik.values.question, handleQuestionDetailsUpdate)}
+                                </div>
+                            </Form>
                         </div>
-                    </Form>
-                </div>
+                    }
+                </ReactResizeDetector>
             }
         </div>
     );
@@ -217,6 +182,7 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
 const mapState = (state: IAppState, ownProps) => ({
     isLoading: state.formEditor.isLoading,
     categories: state.categories.list,
+    isCatLoading: state.categories.isLoading,
     currentQuestion: ownProps.isList
         ? state.questions.currentQuestion
         : state.formEditor.currentQuestion,
@@ -233,7 +199,8 @@ const mapDispatch = (dispatch, ownProps) => ({
         : addQuestionToSectionRoutine(a)),
     updateQuestion: (a: any) => dispatch(updateQuestionInSectionRoutine(a)),
     loadCategories: () => dispatch(loadCategoriesRoutine()),
-    deleteQuestion: (a: any) => dispatch(deleteQuestionFromSectionRoutine(a))
+    deleteQuestion: (a: any) => dispatch(deleteQuestionFromSectionRoutine(a)),
+    setMenuPos: (a: any) => dispatch(setFloatingMenuPos(a))
 });
 
 const connector = connect(mapState, mapDispatch);
