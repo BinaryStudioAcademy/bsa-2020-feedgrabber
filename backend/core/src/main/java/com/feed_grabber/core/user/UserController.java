@@ -122,7 +122,6 @@ public class UserController {
                         page,
                         size
                 ));
-
     }
 
     @ApiOperation(value = "Remove user from company")

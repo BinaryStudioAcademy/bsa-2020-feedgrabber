@@ -15,6 +15,7 @@ interface ITeamRequestsBlockProps {
   isLoadingRequests?: boolean;
   requestsList?: IRequestShort[];
   loadingFailed?: boolean;
+  isHrOrCo: boolean;
 
   loadRequests(teamId: string): void;
   closeRequest: typeof closeRequestRoutine;
@@ -27,7 +28,8 @@ const TeamRequestsBlock: React.FunctionComponent<ITeamRequestsBlockProps> = (
     requestsList,
     loadRequests,
     loadingFailed,
-    closeRequest
+    closeRequest,
+    isHrOrCo
   }
 ) => {
   const [t] = useTranslation();
@@ -50,7 +52,7 @@ const TeamRequestsBlock: React.FunctionComponent<ITeamRequestsBlockProps> = (
       menuItem: {key: 'opened', icon: 'eye', content: t('Opened requests')},
       render: () => <Tab.Pane>
         {open.map(r => (
-          <RequestItem isClosed={false} closeRequest={undefined} showQuestionnaireTitle
+          <RequestItem isClosed={false} closeRequest={isHrOrCo ? closeRequest : undefined} showQuestionnaireTitle
                        key={r.requestId} request={r} teamId={currentTeam?.id}
           />))}
       </Tab.Pane>

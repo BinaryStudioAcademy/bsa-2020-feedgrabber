@@ -52,7 +52,7 @@ public class Question {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private QuestionCategory category;
 
-    @IndexedEmbedded(depth = 2)
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
