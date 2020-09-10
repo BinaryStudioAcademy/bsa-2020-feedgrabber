@@ -336,6 +336,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                     />
                                                     {selectTeams && <GenericPagination
                                                         isLoading={isLoadingTeams}
+                                                        unmutedLoading={false}
                                                         pagination={teamsPagination}
                                                         setPagination={setTeamPagination}
                                                         loadItems={() =>

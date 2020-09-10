@@ -21,9 +21,10 @@ interface IGenericPaginationProps {
 const sizeOptions = [3 ,5, 10, 25, 50];
 const defaultSize = 10;
 
-const GenericPagination: FC<IGenericPaginationProps> = (
+const GenericPagination: FC<IGenericPaginationProps & {unmutedLoading?: boolean}> = (
   {
     pagination,
+      unmutedLoading,
     isLoading,
     setPagination,
     mapItemToJSX,
@@ -77,7 +78,7 @@ const GenericPagination: FC<IGenericPaginationProps> = (
           </div>
         </div>
       )}
-      <LoaderWrapper loading={isLoading}>
+      <LoaderWrapper loading={unmutedLoading ?? isLoading}>
         <div>
           <div className={itemsStyle || styles.listWrapper}>
             {pagination?.items?.length > 0
