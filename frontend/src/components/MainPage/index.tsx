@@ -11,19 +11,12 @@ import {loadRequestedQuestionnairesRoutine} from 'sagas/request/routines';
 import {loadReportsRoutine} from 'sagas/report/routines';
 import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
-import {IQuestionnaireResponse} from 'models/forms/Response/types';
 import {IReportShort} from 'models/report/IReport';
 import {Tab} from "semantic-ui-react";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import NewsList from 'components/NewsList';
-
-interface IItem {
-    id: string;
-    header?: string;
-    content?: string;
-    author?: string;
-}
+import {IQuestionnaireResponse} from "../../reducers/questionnaireResponse/reducer";
 
 interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
@@ -47,12 +40,8 @@ const MainPage: FC<IMainPageProps> =
         const [t] = useTranslation();
         const [panes, setPanes] = useState([] as { menuItem?: any; render?: () => React.ReactNode }[]);
 
-        const handleAnswerClick = requestId => {
-            history.push(`/response/${requestId}`);
-        };
-
-        const handleModifyAnswerClick = (requestId, responseId) => {
-            history.push(`/response/${requestId}/modify/${responseId}/`);
+        const handleAnswerClick = responseId => {
+            history.push(`/response/${responseId}`);
         };
 
         useEffect(() => {
@@ -77,6 +66,7 @@ const MainPage: FC<IMainPageProps> =
                                     {
                                         requestId,
                                         questionnaire,
+                                        id,
                                         expirationDate
                                     }) => (
                                     <UICardBlock key={requestId}>
@@ -90,8 +80,7 @@ const MainPage: FC<IMainPageProps> =
                                             > new Date().valueOf() || !expirationDate)
                                             ? <UIButton title={t("Answer")}
                                                         primary
-                                                        onClick={() =>
-                                                            handleAnswerClick(requestId)}/>
+                                                        onClick={() => handleAnswerClick(id)}/>
                                             : <p>{t("Expired")} {new Date(new Date().valueOf()
                                                 - expirationDate?.valueOf()).getHours()} {t("hours ago")}</p>}
                                     </UICardBlock>
@@ -109,7 +98,7 @@ const MainPage: FC<IMainPageProps> =
                                 (
                                     {
                                         requestId,
-                                        responseId,
+                                        id,
                                         questionnaire,
                                         expirationDate,
                                         closeDate,
@@ -128,9 +117,7 @@ const MainPage: FC<IMainPageProps> =
                                                 primary
                                                 title={changeable ? t("Change my answer") : t("Show answers")}
                                                 onClick={() =>
-                                                    handleModifyAnswerClick(
-                                                        requestId,
-                                                        responseId)}/>
+                                                    handleAnswerClick(id)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
                                                 ? <p>{t("Force closed on")} {new Date(closeDate).toUTCString()}</p>
                                                 : <p>{t("Expired")} {new Date(new Date().valueOf()

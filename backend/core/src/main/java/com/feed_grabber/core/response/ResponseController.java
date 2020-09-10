@@ -42,10 +42,10 @@ public class ResponseController {
     }
 
     @ApiOperation(value = "Get the response by id")
-    @GetMapping
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> getById(@RequestParam UUID responseId) throws ResponseNotFoundException {
-        return new AppResponse<>(service.getById(responseId));
+    public AppResponse<ResponseDto> getById(@PathVariable UUID id) throws ResponseNotFoundException {
+        return new AppResponse<>(service.getById(id));
     }
 
     @ApiOperation(value = "Get the respondents short info for the response by request id")
@@ -61,9 +61,7 @@ public class ResponseController {
     @ApiOperation(value = "Update the response")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws ResponseNotFoundException,
-           DeadlineExpiredException,
-           NotFoundException {
+    public AppResponse<ResponseDto> update(@RequestBody ResponseUpdateDto dto) throws DeadlineExpiredException, NotFoundException {
         return new AppResponse<>(service.update(dto).orElseThrow(ResponseNotFoundException::new));
     }
 

@@ -29,19 +29,3 @@ type ScaleAnswer = number;
 
 export type IAnswerBody = FreeTextAnswer | CheckBoxAnswer | FileAnswer | DateAnswer | ScaleAnswer | RadioAnswer;
 
-export interface IQuestionnaireResponse {
-    id?: string;
-    requestId: string;
-    questionnaire: IQuestionnaire;
-    expirationDate: Date;
-    answeredAt: string;
-    closeDate: string;
-    responseId: string;
-    changeable: boolean;
-}
-
-export interface IQuestionnaireResponseState {
-    list?: IQuestionnaireResponse[];
-    current?: IQuestionnaireResponse;
-    isLoading: boolean;
-}

@@ -18,6 +18,6 @@ public class PendingRequestDto {
     private Date expirationDate;
     private Date answeredAt;
     private Date closeDate;
-    private UUID responseId;
+    private UUID id;
     private boolean changeable;
 }

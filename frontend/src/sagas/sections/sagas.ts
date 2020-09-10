@@ -7,21 +7,17 @@ import {
     addSectionRoutine,
     deleteQInFormRoutine,
     loadFormRoutine,
-    loadSavedSectionsByQuestionnaireRoutine,
     updateOrderInFormRoutine,
     updateQInFormRoutine,
     updateSectionRoutine
 } from "./routines";
 
 import {parseQuestion} from "sagas/questions/sagas";
-import {IGeneric} from "../../models/IGeneric";
 import {fromPairs} from "lodash";
-import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
-import {ISection} from "../../reducers/formEditor/reducer";
 
 const parseQuestions = questions => questions.map(q => parseQuestion(q));
 
-const parseSectionWithQuestion = section => ({
+export const parseSectionWithQuestion = section => ({
     ...section,
     questions: parseQuestions(section.questions)
 });
@@ -160,32 +156,6 @@ function* updateOrder(action) {
     }
 }
 
-function* loadSaved(action) {
-    try {
-        const {responseId, questionnaireId} = action.payload;
-        const resSec: IGeneric<ISection[]> = yield call(apiClient.get, `/api/section/questionnaire/${questionnaireId}`);
-        const sections = resSec.data.data.map(section => parseSectionWithQuestion(section));
-        const res: IGeneric<any> = yield call(apiClient.get, `/api/response?responseId=${responseId}`);
-        const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
-
-        sections.forEach(s => s.questions.filter(q => {
-            const answer = answers.find(a => a.questionId === q.id);
-            if (answer) {
-                q.answer = answer.body;
-                return q;
-            } else {
-                return false;
-            }
-        }));
-
-        yield put(loadSavedSectionsByQuestionnaireRoutine.success(sections));
-
-    } catch (e) {
-        yield put(loadSavedSectionsByQuestionnaireRoutine.failure(e.data.error));
-        toastr.error("Unable to load questionnaire");
-    }
-}
-
 export default function* sectionSagas() {
     yield all([
         yield takeEvery(addSectionRoutine.TRIGGER, createSection),
@@ -195,7 +165,6 @@ export default function* sectionSagas() {
         yield takeEvery(updateQInFormRoutine.TRIGGER, updateQuestion),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateOrderInFormRoutine.TRIGGER, updateOrder),
-        yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved),
         yield takeEvery(addExistingQToFormRoutine.TRIGGER, addExistingQuestionToSection)
     ]);
 }

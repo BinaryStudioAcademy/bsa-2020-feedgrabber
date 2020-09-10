@@ -14,11 +14,11 @@ import {useStomp} from "../../helpers/websocket.helper";
 import {toastr} from 'react-redux-toastr';
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {Icon} from "semantic-ui-react";
-import {getResponseRoutine} from "../../sagas/response/routines";
 import {INotification} from "../../reducers/notifications";
 import {useTranslation} from "react-i18next";
 import RequestNotification from "./notificationTypes/RequestNotification";
 import ReportsNotification from "./notificationTypes/ReportsNotification";
+import {loadResponseFormRoutine} from "../../sagas/response/routines";
 
 export enum MessageTypes {
     plainText = 'plain_text',
@@ -132,7 +132,7 @@ const mapDispatchToProps = {
     deleteAll: deleteAllNotificationsRoutine,
     loadNotifications: loadNotificationsRoutine,
     receiveNotification: receiveNotificationRoutine,
-    getResponse: getResponseRoutine,
+    getResponse: loadResponseFormRoutine,
     readNotification: markNotificationAsReadRoutine
 };
 

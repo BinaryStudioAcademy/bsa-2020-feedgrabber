@@ -6,10 +6,8 @@ import {
     addSectionRoutine,
     deleteQInFormRoutine,
     loadFormRoutine,
-    loadSavedSectionsByQuestionnaireRoutine,
     setCurrentQInForm,
     setCurrentSection, updateOrderInForm,
-    updateOrderInFormRoutine,
     updateQInFormRoutine,
     updateSectionRoutine
 } from "sagas/sections/routines";
@@ -227,14 +225,12 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
         case loadOneQuestionnaireRoutine.TRIGGER:
         case saveAndGetQuestionnaireRoutine.TRIGGER:
         case loadFormRoutine.TRIGGER:
-        case loadSavedSectionsByQuestionnaireRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
             };
         case saveAndGetQuestionnaireRoutine.FAILURE:
         case loadFormRoutine.FAILURE:
-        case loadSavedSectionsByQuestionnaireRoutine.FAILURE:
         case loadOneQuestionnaireRoutine.FAILURE:
             return {
                 ...state,

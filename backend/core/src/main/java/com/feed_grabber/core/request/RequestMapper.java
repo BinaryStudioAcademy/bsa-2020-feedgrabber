@@ -37,7 +37,6 @@ public interface RequestMapper {
                                              Date expirationDate);
 
     @Mapping(target = "requestId", source = "request.id")
-    @Mapping(target = "responseId", source = "id")
     @Mapping(target = "questionnaire", source = "request.questionnaire")
     @Mapping(target = "expirationDate", source = "request.expirationDate")
     @Mapping(target = "closeDate", source = "request.closeDate")
