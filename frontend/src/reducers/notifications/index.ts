@@ -12,6 +12,7 @@ export interface INotification {
   text: string;
   date: Date;
   requestId: string;
+  responseId: string;
   questionnaireId: string;
   messageType: MessageTypes;
   payload?: string;

@@ -17,7 +17,7 @@ const RequestNotification: React.FC<INotificationProps> = ({
              className={styles.notification}>
                 <span className={styles.text} onClick={() => {
                     getResponse(notification.requestId);
-                    history.push(`/response/${notification.questionnaireId}`);
+                    history.push(`/response/${notification.responseId}`);
                     readNotification(notification.id);
                     setShown(false);
                 }}>{notification.text?.substr(0, 54)}</span>
