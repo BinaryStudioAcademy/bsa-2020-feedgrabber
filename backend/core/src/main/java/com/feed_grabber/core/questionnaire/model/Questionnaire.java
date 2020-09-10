@@ -4,10 +4,7 @@ import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.sections.model.Section;
 import com.feed_grabber.core.request.model.Request;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.search.annotations.*;
@@ -40,13 +37,19 @@ public class Questionnaire {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @IndexedEmbedded(depth = 2)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Section> sections;
 

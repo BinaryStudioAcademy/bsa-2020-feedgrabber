@@ -23,6 +23,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
@@ -43,15 +44,33 @@ public class QuestionController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<DataList<QuestionDto>> getAll(@RequestParam(required = false) Integer page,
-                                                     @RequestParam(required = false) Integer size) {
+    public AppResponse<DataList<QuestionDto>> getAll(
+            @RequestParam(required = false) Optional<String> query,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) UUID questionnaire) {
         var companyId = getCompanyId();
-        return new AppResponse<>(new DataList<>(
-                questionService.getAll(companyId, page, size),
-                questionService.countByCompanyId(companyId),
-                page,
-                size
-        ));
+
+        DataList<QuestionDto> dataList = null;
+        if(query.isEmpty()){
+            dataList = new DataList<>(
+                    questionService.getAll(companyId, page, size, Optional.ofNullable(questionnaire)),
+                    questionService.countByCompanyId(companyId, Optional.ofNullable(questionnaire)),
+                    page,
+                    size
+            );
+        }else{
+            var data = questionService.searchAll(query, page, size, Optional.ofNullable(questionnaire));
+            dataList = new DataList<>(
+                    data.getObjects(),
+                    data.getSize(),
+                    page,
+                    size
+            );
+        }
+
+        return new AppResponse<>(dataList);
+
     }
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")

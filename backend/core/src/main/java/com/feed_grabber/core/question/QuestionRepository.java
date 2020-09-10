@@ -24,6 +24,16 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     List<Question> findAllByCompanyId(UUID companyId, Pageable pageable);
 
+    @Query("select sq.question from SectionQuestion sq " +
+            "where sq.section.questionnaire in (select q from Questionnaire q where q.id<> :questionnaireId " +
+            "and q.company.id= :companyId) ")
+    List<Question> findAllByCompanyIdAndQuestionnaireIdNot(UUID companyId, UUID questionnaireId, Pageable pageable);
+
     Long countAllByCompanyId(UUID companyId);
+
+    @Query("select count(sq.question) from SectionQuestion sq " +
+            "where sq.section.questionnaire in (select q from Questionnaire q where q.id<> :questionnaireId " +
+            "and q.company.id= :companyId) ")
+    Long countAllByCompanyIdAndQuestionnaireIdNot(UUID companyId, UUID questionnaireId);
 
 }

@@ -10,6 +10,8 @@ import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.search.SearchRepository;
+import com.feed_grabber.core.search.dto.PagedResponseDto;
 import com.feed_grabber.core.sections.SectionRepository;
 import lombok.SneakyThrows;
 import org.hibernate.HibernateException;
@@ -32,28 +34,36 @@ public class QuestionService {
     private final QuestionCategoryRepository quesCategRep;
     private final CompanyRepository companyRep;
     private final SectionRepository sectionRepository;
+    private final SearchRepository searchRepository;
 
     public QuestionService(QuestionRepository quesRep,
                            QuestionnaireRepository anketRep,
                            QuestionCategoryRepository quesCategRep,
                            CompanyRepository companyRep,
-                           SectionRepository sectionRepository) {
+                           SectionRepository sectionRepository, SearchRepository searchRepository) {
         this.quesRep = quesRep;
         this.anketRep = anketRep;
         this.quesCategRep = quesCategRep;
         this.companyRep = companyRep;
         this.sectionRepository = sectionRepository;
+        this.searchRepository = searchRepository;
     }
 
-    public List<QuestionDto> getAll(UUID companyId, Integer page, Integer size) {
-        return quesRep.findAllByCompanyId(companyId, PageRequest.of(page, size))
+    public List<QuestionDto> getAll(UUID companyId, Integer page, Integer size, Optional<UUID> questionnaire) {
+        var questions = questionnaire.isPresent()
+                ? quesRep.findAllByCompanyIdAndQuestionnaireIdNot(companyId, questionnaire.get(), PageRequest.of(page, size))
+                : quesRep.findAllByCompanyId(companyId, PageRequest.of(page, size));
+
+        return questions
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
     }
 
-    public Long countByCompanyId(UUID companyId) {
-        return quesRep.countAllByCompanyId(companyId);
+    public Long countByCompanyId(UUID companyId, Optional<UUID> questionnaire) {
+        return questionnaire.isPresent()
+                ? quesRep.countAllByCompanyIdAndQuestionnaireIdNot(companyId, questionnaire.get())
+                : quesRep.countAllByCompanyId(companyId);
     }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
@@ -188,5 +198,9 @@ public class QuestionService {
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
+    }
+
+    public PagedResponseDto<QuestionDto> searchAll(Optional<String> query, Integer page, Integer size, Optional<UUID> questionnaire) {
+        return searchRepository.getQuestionsList(query.orElse(""), Optional.ofNullable(page), Optional.ofNullable(size));
     }
 }

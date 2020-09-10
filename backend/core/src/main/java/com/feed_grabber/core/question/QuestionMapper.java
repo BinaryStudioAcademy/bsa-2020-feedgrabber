@@ -28,6 +28,7 @@ public abstract class QuestionMapper {
     @Mapping(source = "createDto.name", target = "text")
     @Mapping(target = "company", source = "questionnaire.company")
     @Mapping(target = "payload", source = "createDto.details")
+    @Mapping(target = "sections", ignore = true)
     public abstract Question questionCreateDtoToModel(
             QuestionCreateDto createDto,
             Questionnaire questionnaire,
