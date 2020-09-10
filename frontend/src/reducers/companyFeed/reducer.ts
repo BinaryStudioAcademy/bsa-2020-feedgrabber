@@ -72,8 +72,10 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
                 const newsReactions = list.items.filter(r => r.id === payload.newsId)[0].reactions
                     .filter(r => r.emoji === payload.reaction)[0];
                 if (newsReactions !== undefined) {
-                    newsReactions.reactedUsers.push(payload.user);
-                    newsReactions.reactedByCurrentUser = true;
+                    if (!newsReactions.reactedUsers.filter(u => u.id === payload.user.id)) {
+                        newsReactions.reactedUsers.push(payload.user);
+                        newsReactions.reactedByCurrentUser = true;
+                    }
                 } else {
                     list.items.filter(r => r.id === payload.newsId)[0]
                         .reactions.push({
