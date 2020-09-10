@@ -19,6 +19,7 @@ import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.model.Role;
@@ -331,11 +332,10 @@ public class UserService implements UserDetailsService {
                 .findCompanyByName(registerDto.getCompanyName())
                 .orElseThrow(CompanyNotFoundException::new);
         if (StringUtils.isEmpty(company.getEmailDomain())) {
-            throw new CorporateEmailException("You can`t sign up in your company using corporate email yet." +
-                    " Wait for the invitation.");
+            throw new CorporateEmailException(Translator.toLocale("corporate_email_not_exists"));
         }
         if (!getSubdomain(registerDto.getEmail()).equals(company.getEmailDomain())) {
-            throw new CorporateEmailException("Write right corporate email");
+            throw new CorporateEmailException(Translator.toLocale("wrong_corporate_email"));
         }
         var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
                 registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
