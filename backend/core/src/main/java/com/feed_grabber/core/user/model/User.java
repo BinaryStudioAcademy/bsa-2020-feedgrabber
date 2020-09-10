@@ -54,15 +54,15 @@ public class User {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, length = 50)
     private String email;
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "username")
+    @Column(name = "username", nullable = false, length = 20)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "is_enabled")
