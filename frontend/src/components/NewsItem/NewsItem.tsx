@@ -2,6 +2,8 @@ import React, {FC, useState} from "react";
 import styles from './styles.module.scss';
 import {ICompanyFeedItem} from "../../models/companyFeed/ICompanyFeedItem";
 import UICardBlock from "../UI/UICardBlock";
+import {useTranslation} from "react-i18next";
+import { useHistory } from "react-router-dom";
 import "emoji-mart/css/emoji-mart.css";
 import {Picker} from "emoji-mart";
 import {Icon, Popup} from "semantic-ui-react";
@@ -37,6 +39,13 @@ const NewsItem: FC<INewsItemProps> = ({ expandImage,item, react, applyReaction})
         react({reaction: emoji.native, newsId: item.id});
     };
 
+    const [t] = useTranslation();
+    const history = useHistory();
+
+    const expandNews = () => {
+        history.push(`/company/news/${item.id}`);
+    };
+
     useStomp("react", m => {
         const reaction: ICreatedReactionDto = JSON.parse(m.body);
         if (reaction.newsId === item.id)
@@ -45,8 +54,11 @@ const NewsItem: FC<INewsItemProps> = ({ expandImage,item, react, applyReaction})
 
     return (
         <>
-            <UICardBlock key={item.id}
-                         className={styles.newsItemContainer}>
+            <UICardBlock
+                key={item.id}
+                className={styles.newsItemContainer}
+                onClick={expandNews}
+            >
                 <>
                     <img className={`${item.image ? styles.clickable : ''}`}
                          src={item.image ? item.image?.link : defaultNewsImage}
@@ -69,6 +81,11 @@ const NewsItem: FC<INewsItemProps> = ({ expandImage,item, react, applyReaction})
                                 <div className={styles.userName}>{item.user.username}</div>
                                 <div className={styles.date}>{moment(item.createdAt).format("MMM Do, YYYY")}</div>
                             </div>
+                        </div>
+                            <div>
+                            <Icon name="comment" />
+                            {item.commentsCount} {" "}
+                            {item.commentsCount === 1 ? t("comment") : t("comments")}
                         </div>
                     </div>
                 </>

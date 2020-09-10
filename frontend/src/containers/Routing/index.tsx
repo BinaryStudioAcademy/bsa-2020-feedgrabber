@@ -35,6 +35,7 @@ import SignUpByEmailPage from 'components/SignUpByEmailPage';
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
 import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
+import ExpandedNewsItem from "../../components/ExpandedNews";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
@@ -66,6 +67,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/company" component={NewsList}/>
                     <PrivateRoute exact path="/company/:id" component={CompanyFeedItemCreation}/>
+                    <PrivateRoute exact path="/company/news/:id" component={ExpandedNewsItem} />
                     <PrivateRoute exact path="/people/:tab" component={PeopleManagementPage}/>
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>

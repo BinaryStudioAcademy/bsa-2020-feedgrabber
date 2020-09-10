@@ -8,6 +8,7 @@ import {
     setCompanyFeedPaginationRoutine, applyReactionRoutine, setExpandedImageRoutine
 } from "../../sagas/companyFeed/routines";
 import {IPaginationInfo} from "../../models/IPaginationInfo";
+import {deleteCommentRoutine, saveCommentRoutine, updateCommentRoutine} from "../../sagas/comments/routines";
 
 export interface ICompanyFeedState {
     list: IPaginationInfo<ICompanyFeedItem>;
@@ -36,6 +37,9 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         case loadCompanyFeedItemRoutine.TRIGGER:
         case createCompanyFeedItemRoutine.TRIGGER:
         case saveCompanyFeedItemRoutine.TRIGGER:
+        case saveCommentRoutine.TRIGGER:
+        case updateCommentRoutine.TRIGGER:
+        case deleteCommentRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
@@ -44,6 +48,9 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
         case loadCompanyFeedItemRoutine.FAILURE:
         case createCompanyFeedItemRoutine.FAILURE:
         case saveCompanyFeedItemRoutine.FAILURE:
+        case saveCommentRoutine.FAILURE:
+        case updateCommentRoutine.FAILURE:
+        case deleteCommentRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false
@@ -60,6 +67,34 @@ const companyFeedReducer = (state: IAppState['companyFeed'] = initialState, {typ
                 ...state,
                 isLoading: false,
                 current: payload
+            };
+        case saveCommentRoutine.SUCCESS:
+            return {
+                ...state,
+                current: {
+                    ...state.current,
+                    comments: [...state.current.comments, payload],
+                    commentsCount: state.current.commentsCount + 1
+                },
+                isLoading: false
+            };
+        case updateCommentRoutine.SUCCESS:
+            return {
+                ...state,
+                current: {
+                    ...state.current,
+                    comments: state.current.comments.map(comment => comment.id === payload.id ? payload : comment)
+                },
+                isLoading: false
+            };
+        case deleteCommentRoutine.SUCCESS:
+            return {
+                ...state,
+                current: {
+                    ...state.current,
+                    comments: state.current.comments.filter(comment => comment.id !== payload),
+                    commentsCount: state.current.commentsCount - 1
+                }
             };
         case setExpandedImageRoutine.TRIGGER:
             return {
