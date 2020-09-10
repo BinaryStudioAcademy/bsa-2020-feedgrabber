@@ -29,7 +29,6 @@ const employee: IRole = {
         "/profile/security",
         "/requests",
         "/help",
-        "/editor",
         "/assign",
         "/pending",
         "/company",
@@ -38,7 +37,9 @@ const employee: IRole = {
         "/report/:id",
         "/report/:id/:respondent/:username",
         "/response/:id",
-        "/company/news/:id"
+        "/company/news/:id",
+        "/response/:id/",
+        "/response/:id/modify/:responseId/"
     ],
     static: [],
     dynamic: []

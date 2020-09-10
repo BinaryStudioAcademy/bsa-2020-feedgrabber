@@ -144,7 +144,7 @@ const InvitationSignUp: React.FunctionComponent<IInvitationSignUpProps> = (
             <StyledMenu fixed='top'>
                 <Menu.Item as={Link} to='/' header style={{padding: '10px 27px 10px 27px'}}>
                     <img
-                        style={{borderRadius: 10, paddingRight: 10}}
+                        style={{marginRight: 10, borderRadius: 10, padding: 5}}
                         src={require('../../assets/images/icon_bg.jpg')}
                         alt='Logo'
                     />

@@ -36,7 +36,7 @@ public class Company {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column
+    @Column(nullable = false, length = 40)
     private String name;
 
     @Column

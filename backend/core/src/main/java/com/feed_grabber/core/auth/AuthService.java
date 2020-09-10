@@ -6,6 +6,7 @@ import com.feed_grabber.core.auth.dto.TokenRefreshResponseDTO;
 import com.feed_grabber.core.auth.dto.UserLoginDTO;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,9 +42,9 @@ public class AuthService {
             authenticationManager.authenticate(upa);
 
         } catch (BadCredentialsException e) {
-            throw new WrongCredentialsException("Incorrect password");
+            throw new WrongCredentialsException(Translator.toLocale("incorrect_password"));
         } catch (DisabledException e) {
-            throw new WrongCredentialsException("Activate your account");
+            throw new WrongCredentialsException(Translator.toLocale("activate_account"));
         }
 
         var user = userRepository
@@ -51,7 +52,7 @@ public class AuthService {
                 .map(UserMapper.MAPPER::responseFromUser).get();
 
         if(dto.getCompanyId() != null && !dto.getCompanyId().equals(user.getCompany().getId()) ) {
-            throw new WrongCredentialsException("Incorrect username or password");
+            throw new WrongCredentialsException(Translator.toLocale("incorrect_username_or_password"));
         }
 
         var tokenDto = new TokenValuesDto(user.getId(), user.getCompany().getId(), user.getRole());

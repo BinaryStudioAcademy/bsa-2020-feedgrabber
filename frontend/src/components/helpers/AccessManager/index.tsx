@@ -8,7 +8,7 @@ interface IAccessManagerProps {
     role: string;
     staticPermission?: string;
     dynamicPermission?: string;
-    endpoint?: string;
+    endpoint?: string | string[];
     data?: any;
     children: any;
     onDenied?(): any | null;
@@ -51,7 +51,16 @@ const AccessManager: FC<IAccessManagerProps> = (
 
     const checkEndpoint = () => {
         const endpoints = permissions.endpoints;
-        if (endpoint && endpoints && endpoints.includes(endpoint)) {
+        if (Array.isArray(endpoint)) {
+            for (const endp of endpoint) {
+                if (!endpoints.includes(endp)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        if (endpoint && endpoints && endpoints.includes(endpoint as string)) {
             return true;
         }
 

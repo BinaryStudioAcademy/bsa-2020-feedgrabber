@@ -1,5 +1,5 @@
 import apiClient from "../../helpers/apiClient";
-import {all, call, put, takeEvery} from 'redux-saga/effects';
+import {all, call, put, takeEvery, select} from 'redux-saga/effects';
 import {toastr} from 'react-redux-toastr';
 import {
     addExistingQuestionToSectionRoutine,
@@ -10,7 +10,8 @@ import {
     loadSectionsByQuestionnaireRoutine,
     updateQuestionInSectionRoutine,
     updateQuestionsOrderRoutine,
-    updateSectionRoutine
+    updateSectionRoutine,
+    deleteSectionRoutine
 } from "./routines";
 
 import {parseQuestion} from "sagas/questions/sagas";
@@ -155,6 +156,19 @@ function* loadSaved(action) {
     }
 }
 
+function* deleteSection(action) {
+    try {
+        const {sectionId, questionnaireId} = action.payload;
+        yield call(apiClient.delete, `/api/section/${sectionId}`);
+
+        yield put(deleteSectionRoutine.success());
+        yield put(loadSectionsByQuestionnaireRoutine.trigger(questionnaireId));
+    } catch (error) {
+        yield put(deleteSectionRoutine.failure());
+        toastr.error("Couldn`t delete section");
+    }
+}
+
 export default function* sectionSagas() {
     yield all([
         yield takeEvery(createSectionRoutine.TRIGGER, createSection),
@@ -165,6 +179,7 @@ export default function* sectionSagas() {
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateQuestionsOrderRoutine.TRIGGER, updateOrder),
         yield takeEvery(loadSavedSectionsByQuestionnaireRoutine.TRIGGER, loadSaved),
-        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection)
+        yield takeEvery(addExistingQuestionToSectionRoutine.TRIGGER, addExistingQuestionToSection),
+        yield takeEvery(deleteSectionRoutine.TRIGGER, deleteSection)
     ]);
 }

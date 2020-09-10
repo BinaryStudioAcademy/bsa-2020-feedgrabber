@@ -2,6 +2,7 @@
   "translations": {
     "PENDING FEEDBACKS": "ОЧІКУЮЩІ ВІДГУКИ",
     "Form Creator": "Створення форми",
+    "Send Request": "Надсилання запиту",
     "ASSIGN FEEDBACKS": "НАЗНАЧИТИ ВІДГУК",
     "Profile": "Профіль",
     "Settings": "Налаштування",
@@ -19,6 +20,7 @@
     "Employees": "Співробітники",
     "People": "Люди",
     "Invitations": "Запрошення",
+    "Language": "Мова",
 
     "Account verification": "Перевірка акаунта",
     "Loading...": "Завантаження...",
@@ -113,6 +115,7 @@
     "Looks like you don't have currently edited form": "Схоже, що у ви не обрали форму",
     "Let's create new right now!": "Давайте створимо нову прямо зараз!",
     "Create": "Створити",
+    "Add Title": "Додати заголовок",
 
     "Drop Question here": "Перетяніть запитання сюди",
 
@@ -128,6 +131,7 @@
     "Fire": "Звільнити",
     "Switch role": "Змітини роль",
     "company_owner": "власник компанії",
+    "company owner": "власник компанії",
     "hr": "рекрутер",
     "employee": "працівник",
 
@@ -308,9 +312,6 @@
     "Change title": "Змінити заголовок",
     "Delete questionnaire": "Видалити опитувальник",
 
-    "Edit questionnaire": "Редагувати опитник",
-    "Add questionnaire": "Створити опитник",
-
     "Archive": "Архівувати",
     "Unarchive": "Розархівувати",
     "Archived": "Архів",
@@ -328,6 +329,16 @@
     "comment": "коментар",
     "comments": "коментарів",
     "Edit": "Редагувати",
-    "Leave comment": "Залишити коментар"
+    "Leave comment": "Залишити коментар",
+    "You can't revert this action. ": "Ця дія незворотня. ",
+    "Are you sure you want to delete this section?": "Ви впевнені, що хочете видалити цей розділ?",
+
+    "No reviews yet": "Відруків ще немає",
+    "No reports yet": "Звітів ще немає",
+    "Company owners": "Власники компанії",
+    "HR managers": "Менеджери з персоналу",
+    "Team Leaders": "Керівники команд",
+    "Active questionnaires": "Опитувальники",
+    "Archived questionnaires": "Архівні Опитувальники"
   }
 }

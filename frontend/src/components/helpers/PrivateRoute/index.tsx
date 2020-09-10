@@ -41,7 +41,7 @@ const PrivateRoute = ({
                 !isLogged ?
                     <Redirect to={{pathname: '/auth', state: {from: props.location}}}/>
                     :
-                    <AccessManager endpoint={path}>
+                    <AccessManager endpoint={path} onDenied={() => <Redirect to="/error" />}>
                         <Header/>
                         <div className={styles.mainPage}>
                             <div className={styles.mainSideBar}>

@@ -11,8 +11,10 @@ import {useTranslation} from "react-i18next";
 interface ISectionProps {
     currentQuestion: IQuestion;
     section: ISection;
+    main?: boolean;
 
     renameSection(x: any): void;
+    deleteSection(id: string): void;
 }
 
 const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
@@ -20,14 +22,21 @@ const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
         section,
         setCurrentQuestion,
         renameSection,
-        currentQuestion
+        currentQuestion,
+        deleteSection,
+        main
     }) => {
     const handleChapterChange = (id, title, description) => renameSection({id, title, description});
     const [t] = useTranslation();
     const {id, questions} = section;
+    const questionnaireId = window.location.pathname.split("/").pop();
     return (
         <>
-            <UISection section={section} onChanged={handleChapterChange}/>
+            <UISection section={section} 
+                onChanged={handleChapterChange} 
+                onDelete={deleteSection} 
+                questionnaireId={questionnaireId}
+                main={main}/>
             <Droppable droppableId={id}>
                 {provided => (
                     <div

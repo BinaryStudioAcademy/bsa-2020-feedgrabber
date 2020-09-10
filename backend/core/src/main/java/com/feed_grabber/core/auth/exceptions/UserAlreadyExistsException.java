@@ -1,7 +1,9 @@
 package com.feed_grabber.core.auth.exceptions;
 
+import com.feed_grabber.core.localization.Translator;
+
 public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException() {
-        super("User with such username or email already exists");
+        super(Translator.toLocale("user_exists"));
     }
 }

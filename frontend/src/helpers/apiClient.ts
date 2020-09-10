@@ -1,6 +1,7 @@
 import axios from 'axios';
 import tokenProvider from '../security/tokenProvider';
 import {history} from './history.helper';
+import localeProvider from "./localeProvider";
 
 //  axios instance for making network request with Auth header
 
@@ -34,6 +35,7 @@ const responseErrorHandler = e => {
 apiClient.interceptors.request.use(request => {
     const token = tokenProvider.getToken();
     token && (request.headers.Authorization = `Bearer ${token}`);
+    request.headers.Language = localeProvider.getLocale();
     return request;
 });
 

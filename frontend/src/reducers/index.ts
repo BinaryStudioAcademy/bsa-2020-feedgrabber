@@ -15,26 +15,29 @@ import companyFeedReducer from "./companyFeed/reducer";
 import notificationReducer from "./notifications";
 import responseReducer from "./questionnaireResponse/reducer";
 import searchReducer from "./search/reducer";
+import dashboardReducer from "./dashboard/reducer";
 import categoriesReducer from "./categories/reducer";
 import formEditorReducer from "./formEditor/reducer";
 
 export default combineReducers({
-    toastr,
-    users: usersReducer,
-    user: authAndProfileReducer,
-    invitation: invitationReducer,
-    categories: categoriesReducer,
-    invitationSignUp: invitationSignUpReducer,
-    questionnaires: questionnairesReducer,
-    questionnaireReports: questionnaireReportReducer,
-    questions: questionsReducer,
-    questionnaireResponse: responseReducer,
-    formEditor: formEditorReducer,
-    teams: teamsReducer,
-    app: appReducer,
-    company: companyReducer,
-    companyFeed: companyFeedReducer,
-    notifications: notificationReducer,
-    role: roleReducer,
-    search: searchReducer
+  toastr,
+  users: usersReducer,
+  user: authAndProfileReducer,
+  invitation: invitationReducer,
+  categories: categoriesReducer,
+  invitationSignUp: invitationSignUpReducer,
+  questionnaires: questionnairesReducer,
+  questionnaireReports: questionnaireReportReducer,
+  questions: questionsReducer,
+  questionnaireResponse: responseReducer,
+  formEditor: formEditorReducer,
+  teams: teamsReducer,
+  app: appReducer,
+  company: companyReducer,
+  companyFeed: companyFeedReducer,
+  notifications: notificationReducer,
+  role: roleReducer,
+  search: searchReducer,
+  dashboard: dashboardReducer
 });
+
