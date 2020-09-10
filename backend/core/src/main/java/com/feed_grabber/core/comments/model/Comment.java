@@ -26,7 +26,7 @@ public class Comment {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String body;
 
     @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
