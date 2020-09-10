@@ -49,7 +49,7 @@ const NewsList: React.FC<INewsFeedProps> = ({
     <div className={styles.newsItemContainer}>
       <AccessManager staticPermission={Permissions.createPostsAndPolls}>
         <Link to="/company/new">
-          <UIButton primary title={t('Add news')}/>
+          <div style={{ marginLeft: "1em" }}><UIButton primary title={t('Add news')}/></div>
         </Link>
       </AccessManager>
       <div className={styles.newsListMain}>
