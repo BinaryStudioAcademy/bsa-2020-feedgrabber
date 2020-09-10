@@ -34,6 +34,9 @@ const defaultItem: ICompanyFeedItem = {
     reactions: []
 };
 
+const defaultAvatar =
+    "https://40y2ct3ukiiqtpomj3dvyhc1-wpengine.netdna-ssl.com/wp-content/uploads/icon-avatar-default.png";
+
 const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
         newsItem,
         isLoading,
@@ -96,7 +99,7 @@ const ExpandedNewsItem: React.FC<ExpandedNewsProps & { match }> = ({
                         return !updatingComment || updatingComment.id !== comment.id
                         ? (
                             <Comment>
-                                <Comment.Avatar src={comment.user.avatar} />
+                                <Comment.Avatar src={comment.user.avatar ? comment.user.avatar : defaultAvatar} />
                                 <Comment.Content>
                                     <Comment.Author>
                                         {comment.user.username}
