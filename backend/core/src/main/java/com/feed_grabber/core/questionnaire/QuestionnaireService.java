@@ -2,8 +2,8 @@ package com.feed_grabber.core.questionnaire;
 
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.question.QuestionService;
 import com.feed_grabber.core.question.QuestionType;
 import com.feed_grabber.core.question.dto.QuestionCreateDto;
@@ -15,7 +15,6 @@ import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundExcep
 import com.feed_grabber.core.questionnaire.exceptions.WrongQuestionnaireTitleException;
 import com.feed_grabber.core.sections.SectionService;
 import com.feed_grabber.core.sections.dto.SectionCreateDto;
-import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -66,14 +65,13 @@ public class QuestionnaireService {
         }
 
         if (createDto.getTitle().length() > 40 || createDto.getTitle().length() < 3) {
-            throw new WrongQuestionnaireTitleException("Wrong title length: too long (>40) or too short (<3)");
+            throw new WrongQuestionnaireTitleException(Translator.toLocale("wrong_title_length"));
         }
 
         if (!createDto.getTitle()
                 .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
-            throw new WrongQuestionnaireTitleException("Title should be valid. It should not start/end with space, " +
-                    "have more than one space in sequence." +
-                    "Title can contain latin letters, numbers and special symbols.");
+            throw new WrongQuestionnaireTitleException(Translator.toLocale("title_invalid"));
+
         }
 
 
@@ -90,12 +88,12 @@ public class QuestionnaireService {
         var section = sectionService.create(new SectionCreateDto(createDto.getTitle().trim(), questionnaire.getId(), 0));
 
         questionService.create(new QuestionCreateDto(
-                "Default Question",
-                "any",
+                Translator.toLocale("question_name"),
+                Translator.toLocale("question_category"),
                 QuestionType.radio,
                 Optional.of(savedQuestionnaire.getId()),
                 Optional.of(section.getId()),
-                "{\"answerOptions\":[\"Option 1\"],\"includeOther\":false}",
+                "{\"answerOptions\":[\""+Translator.toLocale("answer_option")+" 1\"],\"includeOther\":false}",
                 0,
                 false
         ));

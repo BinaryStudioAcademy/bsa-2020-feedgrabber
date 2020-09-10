@@ -7,16 +7,19 @@ import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.auth.exceptions.CorporateEmailException;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
+import com.feed_grabber.core.dashboard.dto.UserInfo;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
 import com.feed_grabber.core.invitation.exceptions.InvitationNotFoundException;
 import com.feed_grabber.core.invitation.model.Invitation;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.registration.TokenType;
 import com.feed_grabber.core.registration.VerificationTokenService;
 import com.feed_grabber.core.role.model.Role;
@@ -82,14 +85,14 @@ public class UserService implements UserDetailsService {
 //            throw new UserAlreadyExistsException();
 //        }
 
-        if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
+        if (companyRepository.existsByNameIgnoreCase(userRegisterDTO.getCompanyName())) {
             throw new CompanyAlreadyExistsException();
         }
         if (userRegisterDTO.getCompanyName().length() > 56) {
             throw new WrongCompanyNameException("Too long company name(more than 63)");
         }
         if (!userRegisterDTO.getCompanyName()
-                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*([a-zA-Z0-9])")) {
+                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*")) {
             throw new WrongCompanyNameException("Company name should not start/end with space," +
                     " have more than one space in sequence. Company name should contain latin letters and numbers ");
         }
@@ -308,11 +311,7 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
-        var namepart = Long.toString(abs(random.nextLong()) % RANDOM_MAX, 36);
-
-
-        return name + "-" + namepart;
+        return companyName.toLowerCase().replaceAll("([ ])", "-");
     }
 
     public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
@@ -333,11 +332,10 @@ public class UserService implements UserDetailsService {
                 .findCompanyByName(registerDto.getCompanyName())
                 .orElseThrow(CompanyNotFoundException::new);
         if (StringUtils.isEmpty(company.getEmailDomain())) {
-            throw new CorporateEmailException("You can`t sign up in your company using corporate email yet." +
-                    " Wait for the invitation.");
+            throw new CorporateEmailException(Translator.toLocale("corporate_email_not_exists"));
         }
         if (!getSubdomain(registerDto.getEmail()).equals(company.getEmailDomain())) {
-            throw new CorporateEmailException("Write right corporate email");
+            throw new CorporateEmailException(Translator.toLocale("wrong_corporate_email"));
         }
         var existing = userRepository.findByUsernameAndCompanyIdOrEmailAndCompanyId(
                 registerDto.getUsername(), company.getId(), registerDto.getEmail(), company.getId()
@@ -359,5 +357,6 @@ public class UserService implements UserDetailsService {
         verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return company.getId();
     }
+
 }
 

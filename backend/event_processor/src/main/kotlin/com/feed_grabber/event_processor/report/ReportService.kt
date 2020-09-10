@@ -67,7 +67,9 @@ class ReportService(val repository: ReportRepository, val JSON: ObjectMapper = j
                         .toList().map { OptionInfo(it.first, it.second) }
                 QuestionWithOptions(list)
             }
-            fileUpload -> QuestionWithValues((dbAnswers as QAWithValues).values.values.flatten())
+            fileUpload -> {
+                val variable = (dbAnswers as QAWithValues).values.values.flatten()
+                QuestionWithValues(variable)}
             checkbox -> {
                 val (options, other) = (dbAnswers as QAWithOptions)
                 val list = options.values.flatten().groupingBy { it }.eachCount()

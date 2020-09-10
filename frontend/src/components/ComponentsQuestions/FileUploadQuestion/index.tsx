@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import QuestionField from "./QuestionField";
 import {Dropdown} from "semantic-ui-react";
 import styles from "./styles.module.sass";
-import {ErrorMessage} from "formik";
 import {IGenericQuestionComponent, invalidState, useInitValue, validState} from "../IQuestionInputContract";
 import {IFileUploadAnswerDetails} from "../../../models/forms/Questions/IQuesion";
 import {fileTypesArray} from "./types";
@@ -55,7 +54,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                     }}
                 />
                 <div className={styles.errorMessage}>
-                    <ErrorMessage name={"filesType"} />
+                    error
                 </div>
             </div>
             <QuestionField

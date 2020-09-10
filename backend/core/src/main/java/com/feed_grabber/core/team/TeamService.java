@@ -1,11 +1,10 @@
 package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
-import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.search.SearchRepository;
 import com.feed_grabber.core.search.dto.PagedResponseDto;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.team.dto.*;
 import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
@@ -146,7 +145,7 @@ public class TeamService {
 
     public TeamDetailsDto create(RequestTeamDto teamDto) throws AlreadyExistsException {
         if (teamRepository.existsByNameAndCompanyId(teamDto.getName(), teamDto.getCompanyId())) {
-            throw new AlreadyExistsException("Such team already exists in this company");
+            throw new AlreadyExistsException(Translator.toLocale("team_exists"));
         }
 
         if (teamDto.getName().length() > 40) {
@@ -154,9 +153,7 @@ public class TeamService {
         }
         if (!teamDto.getName()
                 .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
-            throw new WrongTeamNameException("Team name should not start/end with space," +
-                    " have more than one space in sequence. " +
-                    "Team name can contain latin letters, numbers and special symbols.");
+            throw new WrongTeamNameException(Translator.toLocale("wrong_team_name"));
         }
 
         Team team = TeamMapper.MAPPER.teamDtoToModel(teamDto);

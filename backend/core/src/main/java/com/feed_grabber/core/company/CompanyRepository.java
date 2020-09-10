@@ -15,7 +15,7 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
             nativeQuery = true)
     List<Company> findAllByUserEmail(String email);
 
-    boolean existsByName(String uuid);
+    boolean existsByNameIgnoreCase(String uuid);
 
     Optional<Company> findCompanyBySubdomainName(String subdomain);
 
