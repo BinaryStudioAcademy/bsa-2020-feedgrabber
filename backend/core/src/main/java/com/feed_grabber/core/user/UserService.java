@@ -82,14 +82,14 @@ public class UserService implements UserDetailsService {
 //            throw new UserAlreadyExistsException();
 //        }
 
-        if (companyRepository.existsByName(userRegisterDTO.getCompanyName())) {
+        if (companyRepository.existsByNameIgnoreCase(userRegisterDTO.getCompanyName())) {
             throw new CompanyAlreadyExistsException();
         }
         if (userRegisterDTO.getCompanyName().length() > 56) {
             throw new WrongCompanyNameException("Too long company name(more than 63)");
         }
         if (!userRegisterDTO.getCompanyName()
-                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*([a-zA-Z0-9])")) {
+                .matches("([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*")) {
             throw new WrongCompanyNameException("Company name should not start/end with space," +
                     " have more than one space in sequence. Company name should contain latin letters and numbers ");
         }
@@ -308,11 +308,7 @@ public class UserService implements UserDetailsService {
     }
 
     private String generateRandomDomainFromCompanyName(String companyName) {
-        var name = companyName.toLowerCase().replaceAll("([ ])", "-");
-        var namepart = Long.toString(abs(random.nextLong()) % RANDOM_MAX, 36);
-
-
-        return name + "-" + namepart;
+        return companyName.toLowerCase().replaceAll("([ ])", "-");
     }
 
     public void changeRole(UUID userId, UUID roleId) throws NotFoundException {
