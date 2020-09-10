@@ -1,7 +1,7 @@
 import {IQuestionnaire} from "../forms/Questionnaires/types";
 import {IQuestionnaireReport} from "../report/IReport";
 import {IQuestion} from "../forms/Questions/IQuesion";
-import {ITeam} from "../teams/ITeam";
+import {ITeam, ITeamShort} from "../teams/ITeam";
 import {IUserInfo} from "../user/types";
 
 export interface ISearchResultState {
@@ -15,5 +15,5 @@ export interface ISearchResult {
     reports: IQuestionnaireReport[];
     users: IUserInfo[];
     questions: IQuestion[];
-    teams: ITeam[];
+    teams: ITeamShort[];
 }

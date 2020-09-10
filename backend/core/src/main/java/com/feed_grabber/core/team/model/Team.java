@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.hibernate.search.annotations.IndexedEmbedded.DEFAULT_NULL_TOKEN;
+
 @Indexed
 @Data
 @Entity
@@ -38,7 +40,7 @@ public class Team {
     @Column(name = "name", nullable = false, length = 40)
     private String name;
 
-    @IndexedEmbedded(depth = 2)
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
@@ -47,6 +49,7 @@ public class Team {
     @JoinColumn(name = "lead_id")
     private User lead;
 
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true, indexNullAs = DEFAULT_NULL_TOKEN)
     @ManyToMany(
             cascade = {
                     CascadeType.PERSIST,

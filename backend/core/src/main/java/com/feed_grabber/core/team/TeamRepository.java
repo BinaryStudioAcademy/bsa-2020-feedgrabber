@@ -4,6 +4,7 @@ import com.feed_grabber.core.team.dto.TeamDetailsDto;
 import com.feed_grabber.core.team.dto.TeamDto;
 import com.feed_grabber.core.team.dto.TeamShortDto;
 import com.feed_grabber.core.team.model.Team;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -56,5 +57,10 @@ public interface TeamRepository extends JpaRepository<Team, UUID> {
             ") " +
             "FROM Team t " +
             "WHERE t.company.id = :companyId")
-    List<TeamShortDto> findAllByCompanyId(UUID companyId);
+    List<TeamShortDto> findAllByCompanyId(UUID companyId, Pageable pageable);
+
+    List<Team> findAllByCompanyIdAndUsersNotNull(UUID companyId, Pageable pageable);
+    Long countAllByCompanyId(UUID companyId);
+    Long countAllByCompanyIdAndUsersNotNull(UUID companyId);
+
 }

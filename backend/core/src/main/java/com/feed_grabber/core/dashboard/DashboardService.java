@@ -16,6 +16,8 @@ import com.feed_grabber.core.team.TeamRepository;
 import com.feed_grabber.core.user.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,7 +82,7 @@ public class DashboardService {
                 companyRepository.findById(companyId).orElseThrow(CompanyNotFoundException::new).getName(),
                 getUsers(companyId),
                 getQuestionnaires(companyId),
-                teamRepository.findAllByCompanyId(companyId)
+                teamRepository.findAllByCompanyId(companyId, Pageable.unpaged())
         );
     }
 }
