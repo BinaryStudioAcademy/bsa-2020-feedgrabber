@@ -64,10 +64,9 @@ public class SectionService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public List<QuestionDto> deleteQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
+    public void deleteQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
         var index = sectionRepository.deleteQuestion(sectionId, questionId);
         sectionRepository.shiftIndexesLeft(sectionId, index);
-        return parseQuestions(sectionRepository.findById(sectionId));
     }
 
     public SectionDto update(UUID id, SectionUpdateDto dto) throws SectionNotFoundException {

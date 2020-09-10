@@ -23,14 +23,13 @@ import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import {
-    loadFormRoutine, setCurrentQuestionInSection,
-    updateOrderInForm,
-    updateSectionRoutine, setSections
-} from "sagas/sections/routines";
 import { useTranslation } from "react-i18next";
-import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import {setFloatingMenuPos} from "../../sagas/app/routines";
+import {
+    loadFormRoutine,
+    setCurrentQInForm, updateOrderInForm,
+    updateOrderInFormRoutine,
+    updateSectionRoutine
+} from "../../sagas/sections/routines";
 
 const initialValues = {
   chosenUsers: new Array<IUserShort>(),
@@ -52,15 +51,15 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
        users,
        loadTeams,
        loadUsers,
-       loadSections,
+       loadForm,
        updateSection,
        updateOrder,
+       updateOrderApi,
        sendRequest,
        isLoadingUsers,
-       setMenuPos,
        setCurrentQuestion,
        isLoadingTeams,
-       updateSectionsR,
+       questions,
        sections
      }) => {
 
@@ -77,8 +76,8 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
 
         // load questionnaire
         useEffect(() => {
-            loadSections(match.params.id);
-        }, [loadSections, match.params.id]);
+            loadForm(match.params.id);
+        }, [loadForm, match.params.id]);
 
       const [targetUserPattern, setTargetUserPattern] = useState('');
       const [respondentPattern, setRespondentPattern] = useState('');
@@ -104,10 +103,10 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                         <Form
                             updateSection={updateSection}
                             setCurrentQuestion={setCurrentQuestion}
+                            updateOrderApi={updateOrderApi}
                             updateOrder={updateOrder}
-                            updateSections={updateSectionsR}
-                            currentQuestion={{} as IQuestion}
                             sections={sections}
+                            questions={questions}
                         />
                     </UICardBlock>
                   </UICard>
@@ -358,19 +357,19 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
   isLoadingTeams: state.teams.isLoading,
   users: state.teams.companyUsers,
   isLoadingUsers: state.teams.isLoadingUsers,
-  sections: state.formEditor.sections.list
+  sections: state.formEditor.sections,
+  questions: state.formEditor.questions
 });
 
 const mapDispatchToProps = {
   loadTeams: loadTeamsRoutine,
   loadUsers: loadCompanyUsersRoutine,
   updateOrder: updateOrderInForm,
+  updateOrderApi: updateOrderInFormRoutine,
   updateSection: updateSectionRoutine,
-setMenuPos: setFloatingMenuPos,
-setCurrentQuestion: setCurrentQuestionInSection,
+  setCurrentQuestion: setCurrentQInForm,
   sendRequest: sendQuestionnaireRequestRoutine,
-  loadSections: loadFormRoutine,
-  updateSectionsR: setSections
+  loadForm: loadFormRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -1,17 +1,17 @@
-import React, { FC, useState } from "react";
+import React, {FC, useState} from "react";
 import styles from "./styles.module.sass";
-import {ISection} from "../../../reducers/formEditor/reducer";
-import { useTranslation } from "react-i18next";
+import {SectionEntity} from "../../../reducers/formEditor/reducer";
+import {useTranslation} from "react-i18next";
 
 export interface IUISectionProps {
-    section: ISection;
+    section: SectionEntity;
     onChanged(id: string, title: string, description: string): void;
 }
 
 const UISection: FC<IUISectionProps> = ({section, onChanged}) => {
     const [t] = useTranslation();
-    const [title, setTitle] = useState(section.title);
-    const [description, setDescription] = useState(section.description);
+    const [title, setTitle] = useState(section.section.title);
+    const [description, setDescription] = useState(section.section.description);
 
     return (
         <div className={styles.headerContainer}>

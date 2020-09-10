@@ -1,35 +1,34 @@
 import React, {FC} from "react";
 import styles from "./Section/styles.module.sass";
-import {IQuestion} from "models/forms/Questions/IQuesion";
 import {DragDropContext} from "react-beautiful-dnd";
 import Section from "./Section/Section";
-import {ISection} from "../../reducers/formEditor/reducer";
-import {deleteAtIndex, insertAtIndex} from "../../helpers/array.helper";
+import {IFormEditorState, QuestionEntity, SectionEntity} from "../../reducers/formEditor/reducer";
+import {arrayMove, deleteAtIndex, insertAtIndex} from "../../helpers/array.helper";
 import {ResponseQuestionProps} from "./QuestionCard/QuestionCard";
+import {getById} from "../../helpers/formEditor.helper";
 
 interface IFormProps {
-    sections: ISection[];
-    currentQuestion: IQuestion;
+    sections: IFormEditorState['sections'];
+    questions: IFormEditorState['questions'];
 
-    updateSection(action: {}): void;
+    updateSection(payload: any): void;
 
-    updateOrder(action: {}): void;
-
-    updateSections(action: {}): void;
+    updateOrder: any;
+    updateOrderApi: any;
 }
 
 const Form: FC<IFormProps & ResponseQuestionProps> = (
     {
         sections,
-        updateSections,
+        questions,
         updateOrder,
+        updateOrderApi,
         setCurrentQuestion,
-        currentQuestion,
         updateSection
     }) => {
 
     function onDragEnd(res) {
-        const {destination, source} = res;
+        const {destination, source, draggableId} = res;
 
         // return if nothing changed
         if (!destination || (
@@ -38,48 +37,26 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         ) return;
 
         //  get start and end sections
-        const startSection = sections.find(s => s.id === source.droppableId);
-        const endSection = sections.find(s => s.id === destination.droppableId);
-        const draggedItem = startSection.questions[source.index];
+        const startSection = getById<SectionEntity>(source.droppableId, sections);
+        const endSection = getById<SectionEntity>(destination.droppableId, sections);
 
         //  change state depending on where new card was placed
         if (startSection === endSection) {
-            const newQuestions = deleteAtIndex([...startSection.questions], source.index);
-
-            const newSection = {
-                ...startSection,
-                questions: insertAtIndex(newQuestions, destination.index, draggedItem)
-            };
-
-            updateSections({
-                sections: sections.map(s => s.id === newSection.id ? newSection : s),
-                currentSection: newSection,
-                currentQuestion: newSection.questions.find(q => currentQuestion.id === q.id)
+            updateOrder({
+                sectionId: startSection.id,
+                questions: arrayMove(startSection.questions, source.index, destination.index)
             });
         } else {
-            //  card was dropped to origin section
-            const newStartSection = {
-                ...startSection,
-                questions: deleteAtIndex([...startSection.questions], source.index)
-            };
-
-            const newEndSection = {
-                ...endSection,
-                questions: insertAtIndex([...endSection.questions], destination.index, draggedItem)
-            };
-
-            updateSections({
-                sections: sections.map(s => (
-                    s.id === newStartSection.id ? newStartSection
-                        : s.id === newEndSection.id ? newEndSection
-                        : s
-                )),
-                currentSection: newEndSection,
-                currentQuestion: newStartSection.questions.find(q => currentQuestion.id === q.id) ||
-                    newEndSection.questions.find(q => currentQuestion.id === q.id)
+            updateOrder({
+                sectionId: startSection.id,
+                questions: deleteAtIndex(startSection.questions, source.index)
+            });
+            updateOrder({
+                sectionId: endSection.id,
+                questions: insertAtIndex(endSection.questions, destination.index, draggableId)
             });
         }
-        updateOrder({
+        updateOrderApi({
             oldIndex: source.index,
             newIndex: destination.index,
             oldSection: source.droppableId,
@@ -87,15 +64,23 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         });
     }
 
+    const parsedSections = sections.ids
+        .map(id => getById<SectionEntity>(id, sections))
+        .map(s => ({
+            section: s,
+            questions: s.questions.map(id => getById<QuestionEntity>(id, questions).question)
+        }));
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div className={styles.wrapper}>
-                {sections?.map(section =>
+                {parsedSections.map(p =>
                     <Section
-                        key={section.id}
+                        key={p.section.id}
                         setCurrentQuestion={setCurrentQuestion}
-                        currentQuestion={currentQuestion}
-                        section={section}
+                        currentQuestionId={questions.currentId}
+                        section={p.section}
+                        questions={p.questions}
                         renameSection={updateSection}
                     />)
                 }

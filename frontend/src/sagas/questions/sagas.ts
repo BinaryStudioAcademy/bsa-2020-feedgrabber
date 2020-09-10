@@ -13,9 +13,8 @@ import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
-export const parseQuestion = rawQuestion => ({
+export const parseQuestion = ({index, ...rawQuestion}) => ({
     ...rawQuestion,
-    type: rawQuestion.type,
     details: JSON.parse(rawQuestion.details) ?? {}
 });
 
@@ -84,7 +83,7 @@ function* saveQuestion(action) {
 
 function* getBySectionId(action) {
     try {
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
+        const res = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
 
         const questions = res.data.data.map(q => parseQuestion(q));
 

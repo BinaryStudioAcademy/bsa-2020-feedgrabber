@@ -4,14 +4,14 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
-import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireCreateDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireDto;
+import com.feed_grabber.core.questionnaire.dto.QuestionnaireFullDto;
 import com.feed_grabber.core.questionnaire.dto.QuestionnaireUpdateDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireExistsException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.sections.exception.SectionNotFoundException;
+import com.feed_grabber.core.sections.SectionService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,12 +26,13 @@ import static com.feed_grabber.core.role.RoleConstants.ROLE_HR;
 @RestController
 @RequestMapping("/api/questionnaires")
 public class QuestionnaireController {
-
     private final QuestionnaireService questionnaireService;
+    private final SectionService sectionService;
 
     @Autowired
-    public QuestionnaireController(QuestionnaireService questionnaireService) {
+    public QuestionnaireController(QuestionnaireService questionnaireService, SectionService sectionService) {
         this.questionnaireService = questionnaireService;
+        this.sectionService = sectionService;
     }
 
     @ApiOperation("Get all questionnaires")
@@ -61,6 +62,19 @@ public class QuestionnaireController {
                 questionnaireService.getOne(id)
                         .orElseThrow(QuestionnaireNotFoundException::new)
         );
+    }
+
+    @GetMapping("/{id}/sections")
+    @ResponseStatus(HttpStatus.OK)
+    public AppResponse<QuestionnaireFullDto> getFullOne(@PathVariable UUID id) throws QuestionnaireNotFoundException {
+        var q = questionnaireService.getOne(id).orElseThrow(QuestionnaireNotFoundException::new);
+        return new AppResponse<>(new QuestionnaireFullDto(
+                q.getId(),
+                q.getTitle(),
+                q.getCompanyName(),
+                q.isEditingEnabled(),
+                sectionService.getByQuestionnaire(id)
+        ));
     }
 
     @ApiOperation(value = "Get requests for one questionnaire")

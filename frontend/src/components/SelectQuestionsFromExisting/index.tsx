@@ -16,10 +16,10 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         questions,
         loadQuestions,
         addQuestions,
-        currentQuestions,
+        // currentQuestions,
         qnId,
         isLoading,
-        currentSection,
+        // currentSection,
         isOpen,
         handleOpenModal
     }) => {
@@ -36,24 +36,24 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         }
     };
 
-    const handleSubmit = () => {
-        const startIndex = currentQuestions.length;
-        const questions = selected.map((q, i) => { return { questionId: q.id, index: startIndex + i }; });
-        if (selected) {
-            selected.forEach(q => q.isReused = true);
-            addQuestions({questionnaireId: qnId, questions, sectionId: currentSection.id});
-        }
-        setSelected([]);
-        handleOpenModal(false);
-    };
-
-    const display = questions.filter(q => {
-        for (const i of currentQuestions) {
-            if (i.id === q.id)
-                return false;
-        }
-        return true;
-    });
+    // const handleSubmit = () => {
+    //     const startIndex = currentQuestions.length;
+    //     const questions = selected.map((q, i) => { return { questionId: q.id, index: startIndex + i }; });
+    //     if (selected) {
+    //         selected.forEach(q => q.isReused = true);
+    //         addQuestions({questionnaireId: qnId, questions, sectionId: currentSection.id});
+    //     }
+    //     setSelected([]);
+    //     handleOpenModal(false);
+    // };
+    //
+    // const display = questions.filter(q => {
+    //     for (const i of currentQuestions) {
+    //         if (i.id === q.id)
+    //             return false;
+    //     }
+    //     return true;
+    // });
 
     return (
         <Modal
@@ -63,37 +63,37 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
             onOpen={() => handleOpenModal(true)}
             onClose={() => handleOpenModal(false)}
         >
-            <Modal.Content scrolling className={styles.questionsExisting}>
-                <Modal.Description>
-                    {display.map(q => <ModalQuestionItem
-                        key={q.id}
-                        handleClick={handleClick}
-                        question={q}
-                        isSelected={selected.includes(q)}/>
-                    )}
-                </Modal.Description>
-            </Modal.Content>
-            <Modal.Actions
-            className={styles.modalActions}>
-                <Button onClick={() => handleOpenModal(false)} content={t("Cancel")}/>
-                <Button
-                    loading={isLoading}
-                    content={t("Add")}
-                    labelPosition='right'
-                    icon='checkmark'
-                    onClick={handleSubmit}
-                    positive
-                />
-            </Modal.Actions>
+            {/* <Modal.Content scrolling className={styles.questionsExisting}>*/}
+            {/*    <Modal.Description>*/}
+            {/*        {display.map(q => <ModalQuestionItem*/}
+            {/*            key={q.id}*/}
+            {/*            handleClick={handleClick}*/}
+            {/*            question={q}*/}
+            {/*            isSelected={selected.includes(q)}/>*/}
+            {/*        )}*/}
+            {/*    </Modal.Description>*/}
+            {/* </Modal.Content>*/}
+            {/* <Modal.Actions*/}
+            {/* className={styles.modalActions}>*/}
+            {/*    <Button onClick={() => handleOpenModal(false)} content={t("Cancel")}/>*/}
+            {/*    <Button*/}
+            {/*        loading={isLoading}*/}
+            {/*        content={t("Add")}*/}
+            {/*        labelPosition='right'*/}
+            {/*        icon='checkmark'*/}
+            {/*        onClick={handleSubmit}*/}
+            {/*        positive*/}
+            {/*    />*/}
+            {/* </Modal.Actions>*/}
         </Modal>);
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestions: state.formEditor.sections.list.flatMap(s => s.questions),
+    // currentQuestions: state.formEditor.sections.list.flatMap(s => s.questions),
     isLoading: state.questions.isLoading,
     qnId: state.formEditor.questionnaire.id,
-    questions: state.questions.pagination.items,
-    currentSection: state.formEditor.sections.current
+    questions: state.questions.pagination.items
+    // currentSection: state.formEditor.sections.current
 });
 
 const mapDispatch = {
