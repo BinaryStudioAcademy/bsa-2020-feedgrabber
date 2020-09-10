@@ -3,6 +3,7 @@ package com.feed_grabber.core.user;
 import com.feed_grabber.core.auth.AuthService;
 import com.feed_grabber.core.auth.exceptions.WrongCredentialsException;
 import com.feed_grabber.core.auth.security.TokenService;
+import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.ImageRepository;
 import com.feed_grabber.core.image.exceptions.ImageNotFoundException;
@@ -62,12 +63,16 @@ public class UserProfileService {
         return UserMapper.MAPPER.detailedFromUser(userRepository.save(user));
     }
 
-    public UserDetailsResponseDTO updateUsername(UUID userId, String userName) throws NotFoundException {
+    public UserDetailsResponseDTO updateUsername(UUID userId, String userName) throws NotFoundException, AlreadyExistsException {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("user does not exists. id=" + userId));
-
         user.setUsername(userName);
-        return UserMapper.MAPPER.detailedFromUser(userRepository.save(user));
+
+        try {
+            return UserMapper.MAPPER.detailedFromUser(userRepository.save(user));
+        } catch (RuntimeException e) {
+            throw new AlreadyExistsException("User with this name already exists");
+        }
     }
 
     public UserDetailsResponseDTO updatePassword(UUID userId, String oldPassword, String newPassword)

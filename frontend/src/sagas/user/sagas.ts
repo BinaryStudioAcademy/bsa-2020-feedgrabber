@@ -99,7 +99,7 @@ function* updateUsername(action) {
     yield put(updateUserUsernameRoutine.success(res.data.data));
     toastr.success('Username updated successfully');
   } catch (error) {
-    toastr.error('Unable to update username');
+    toastr.error(error.response.data.error);
   }
 }
 

@@ -14,6 +14,9 @@ import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
 import { IAppState } from "../../models/IAppState";
 
 import styles from './styles.module.sass';
+import UIButton from "../UI/UIButton";
+
+const MAX_TITLE = 255;
 
 const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
   match,
@@ -37,9 +40,13 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
     loadFeedItem(id);
   }, [loadFeedItem, match.params.id]);
 
+  const isValid = () => {
+    return item && item.title && item.body;
+  };
+
   const handleSubmit = () => {
     // here we send new item to backend
-    if (!item) {
+    if (!isValid()) {
       return;
     }
     if (item.id) {
@@ -94,7 +101,11 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
       <input placeholder={t('Title')} type="text"
              value={item?.title || ''}
              className={styles.feed_item_input}
-             onChange={e => setItem({ ...item, title: e.target.value })} />
+             onChange={e => setItem(e.target.value.length <= MAX_TITLE
+               ? { ...item, title: e.target.value }
+               : { ...item})
+             }
+      />
       <textarea placeholder={t('What\'s up')}
                 value={item?.body || ''}
                 className={styles.feed_item_textarea}
@@ -109,9 +120,12 @@ const CompanyFeedItemCreation: FC<ConnectedFeedCreationProps & { match }> = ({
         <input name="image" type="file" multiple
                onChange={e => handleUploadPhoto(e.target.files)} hidden />
       </Button>
-      <Button type="submit" onClick={handleSubmit} className={styles.submit_button}>
-        {t('Submit')}
-      </Button>
+      <UIButton
+        submit
+        center
+        onClick={handleSubmit}
+        disabled={!isValid()} title={t('Submit')}
+      />
     </div>
     </div>
   );
