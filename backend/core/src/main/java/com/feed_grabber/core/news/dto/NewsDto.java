@@ -23,5 +23,6 @@ public class NewsDto {
     private ImageDto image;
     private UserShortDto user;
     private Date createdAt;
+    private int commentsCount;
     private List<ReactionDto> reactions;
 }

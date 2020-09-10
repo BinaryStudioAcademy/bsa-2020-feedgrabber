@@ -1,20 +1,19 @@
 import React, {FC} from "react";
 import styles from "./Section/styles.module.sass";
 import {DragDropContext} from "react-beautiful-dnd";
-import Section from "./Section/Section";
 import {IFormEditorState, QuestionEntity, SectionEntity} from "../../reducers/formEditor/reducer";
 import {arrayMove, deleteAtIndex, insertAtIndex} from "../../helpers/array.helper";
 import {ResponseQuestionProps} from "./QuestionCard/QuestionCard";
 import {getById} from "../../helpers/formEditor.helper";
+import Section from "./Section/Section";
 
 interface IFormProps {
     sections: IFormEditorState['sections'];
     questions: IFormEditorState['questions'];
-
     updateSection(payload: any): void;
-
     updateOrder: any;
     updateOrderApi: any;
+    deleteSection(id: string): void;
 }
 
 const Form: FC<IFormProps & ResponseQuestionProps> = (
@@ -24,7 +23,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         updateOrder,
         updateOrderApi,
         setCurrentQuestion,
-        updateSection
+        updateSection,
+        deleteSection
     }) => {
 
     function onDragEnd(res) {
@@ -74,7 +74,7 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div className={styles.wrapper}>
-                {parsedSections.map(p =>
+                {parsedSections.map((p, i) =>
                     <Section
                         key={p.section.id}
                         setCurrentQuestion={setCurrentQuestion}
@@ -82,6 +82,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                         section={p.section}
                         questions={p.questions}
                         renameSection={updateSection}
+                        deleteSection={deleteSection}
+                        main={i === 0}
                     />)
                 }
             </div>

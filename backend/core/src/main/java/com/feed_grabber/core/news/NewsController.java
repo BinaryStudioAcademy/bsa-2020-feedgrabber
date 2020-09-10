@@ -5,13 +5,16 @@ import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.news.dto.NewsCreateDto;
+import com.feed_grabber.core.news.dto.NewsDetailsDto;
 import com.feed_grabber.core.news.dto.NewsDto;
 import com.feed_grabber.core.news.dto.NewsUpdateDto;
+import com.feed_grabber.core.news.exceptions.NewsNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,11 +43,16 @@ public class NewsController {
         return new AppResponse<>(dataList);
     }
 
+    @GetMapping("/{id}")
+    public AppResponse<NewsDetailsDto> getOne(@PathVariable UUID id) throws NewsNotFoundException {
+        return new AppResponse<>(newsService.getNewsById(id));
+    }
+
     @ApiOperation(value = "Create new news",
                 notes = "Provide object with body and imageId to create news")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public AppResponse<NewsDto> create(@RequestBody NewsCreateDto newsCreateDto) throws NotFoundException {
+    public AppResponse<NewsDto> create(@Valid @RequestBody NewsCreateDto newsCreateDto) throws NotFoundException {
         newsCreateDto.setUserId(getUserId());
         newsCreateDto.setCompanyId(getCompanyId());
         return new AppResponse<>(newsService.create(newsCreateDto));
@@ -54,7 +62,7 @@ public class NewsController {
                 notes = "Provide object with id, body and imageId to update the news")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
-    public AppResponse<NewsDto> update(@RequestBody NewsUpdateDto newsUpdateDto) throws NotFoundException {
+    public AppResponse<NewsDto> update(@Valid @RequestBody NewsUpdateDto newsUpdateDto) throws NotFoundException {
         return new AppResponse<>(newsService.update(newsUpdateDto));
     }
 

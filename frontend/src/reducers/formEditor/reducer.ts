@@ -1,18 +1,14 @@
 import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IAppState} from "../../models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import {
-    addQToFormRoutine,
-    addSectionRoutine,
-    deleteQInFormRoutine,
-    loadFormRoutine,
-    setCurrentQInForm,
-    setCurrentSection, updateOrderInForm,
-    updateQInFormRoutine,
-    updateSectionRoutine
-} from "sagas/sections/routines";
 import {loadOneQuestionnaireRoutine, saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import {getById} from "../../helpers/formEditor.helper";
+import {
+    addQToFormRoutine, addSectionRoutine, deleteQInFormRoutine,
+    loadFormRoutine,
+    setCurrentQInForm, setCurrentSection, updateOrderInForm,
+    updateQInFormRoutine, updateSectionRoutine
+} from "../../sagas/sections/routines";
 
 const init = {
     questionnaire: {} as IQuestionnaire,

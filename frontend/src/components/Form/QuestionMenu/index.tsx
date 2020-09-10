@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
 import {useTranslation} from "react-i18next";
@@ -31,20 +31,40 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
         position
     }) => {
     const [isOpenModal, setOpenModal] = useState(false);
+    const [finalTop, setFinalTop] = useState(0);
     const [top, setTop] = useState(0);
     const [t] = useTranslation();
+    const contentRef = document.getElementById("app-content");
+    const menuRef = useRef(null);
+
+    const calcFinalTop = useCallback(() => {
+      if (top < contentRef?.scrollTop) {
+        setFinalTop(contentRef?.scrollTop);
+      } else {
+        setFinalTop(Math.min(
+          contentRef?.scrollTop + contentRef?.offsetHeight - menuRef.current?.offsetHeight - 35,
+          top
+        ));
+      }
+    }, [contentRef, top]);
 
     useEffect(() => {
-        const x = document.getElementById("app-content").scrollTop + position;
+        const x = contentRef?.scrollTop + position;
         setTop(x ? x - 127 : 0);
-    }, [position]);
+        calcFinalTop();
+    }, [calcFinalTop, contentRef, position]);
+
+    useEffect(() => {
+      contentRef?.addEventListener("scroll", calcFinalTop);
+      return () => contentRef?.removeEventListener("scroll", calcFinalTop);
+    }, [calcFinalTop, contentRef]);
 
     return (
         <div style={{
             position: 'absolute',
-            top,
+            top: finalTop,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
-        }}>
+        }} ref={menuRef}>
             <Button.Group basic className={styles.floatingMenu} style={{padding: '.1rem'}} vertical size="big">
                 <Popup content={t("New question")} {...popupProps}
                        trigger={<Button icon="add" {...styleBorder} color="grey" onClick={addQuestion}/>}

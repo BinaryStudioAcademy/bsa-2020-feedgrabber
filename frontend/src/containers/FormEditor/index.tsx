@@ -4,22 +4,20 @@ import styles from './styles.module.sass';
 import Form from 'components/Form';
 import {IAppState} from 'models/IAppState';
 import QuestionMenu from "../../components/Form/QuestionMenu";
-import {
-    addQToFormRoutine,
-    addSectionRoutine,
-    deleteQInFormRoutine,
-    loadFormRoutine,
-    setCurrentQInForm, updateOrderInForm,
-    updateOrderInFormRoutine,
-    updateSectionRoutine
-} from 'sagas/sections/routines';
-import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {toastr} from "react-redux-toastr";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
 import {getCurrentEntity} from "../../helpers/formEditor.helper";
 import {QuestionEntity, SectionEntity} from "../../reducers/formEditor/reducer";
+import {
+    addQToFormRoutine,
+    addSectionRoutine, deleteQInFormRoutine,
+    deleteSectionRoutine, loadFormRoutine, setCurrentQInForm,
+    updateOrderInForm,
+    updateOrderInFormRoutine, updateSectionRoutine
+} from "../../sagas/sections/routines";
+import UIContent from "../../components/UI/UIContent";
 
 const FormEditor: FC<FormEditorProps & { match }> = (
     {
@@ -41,7 +39,8 @@ const FormEditor: FC<FormEditorProps & { match }> = (
         loadForm,
         deleteQuestion,
         createSection,
-        updateSection
+        updateSection,
+        deleteSection
     }
 ) => {
     useEffect(() => {
@@ -97,6 +96,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}
                                     updateOrderApi={updateOrderApi}
+                deleteSection={deleteSection}
                                     sections={sections}
                                     questions={questions}
                                 />
@@ -134,7 +134,8 @@ const mapDispatch = {
     deleteQuestion: deleteQInFormRoutine,
     createSection: addSectionRoutine,
     updateOrder: updateOrderInForm,
-    updateOrderApi: updateOrderInFormRoutine
+    updateOrderApi: updateOrderInFormRoutine,
+    deleteSection: deleteSectionRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

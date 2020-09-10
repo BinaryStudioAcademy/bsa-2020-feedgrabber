@@ -1,9 +1,10 @@
 package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
-import com.feed_grabber.core.company.CompanyRepository;
-import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.search.SearchRepository;
+import com.feed_grabber.core.search.dto.PagedResponseDto;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.team.dto.*;
 import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
@@ -11,9 +12,11 @@ import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
 import com.feed_grabber.core.team.exceptions.WrongTeamNameException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,13 +27,31 @@ import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
-    @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final SearchRepository searchRepository;
 
-    public List<TeamShortDto> getAllByCompany_Id(UUID companyId) {
-        return teamRepository.findAllByCompanyId(companyId);
+    public TeamService(TeamRepository teamRepository, UserRepository userRepository, SearchRepository searchRepository) {
+        this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
+        this.searchRepository = searchRepository;
+    }
+
+    public List<TeamShortDto> getAllByCompany_Id(UUID companyId, Integer page, Integer size, Optional<Boolean> notBlank) {
+        return notBlank.isEmpty()
+                ? teamRepository.findAllByCompanyId(companyId, PageRequest.of(page, size))
+                : teamRepository.findAllByCompanyIdAndUsersNotNull(companyId, PageRequest.of(page, size))
+                .stream().map(TeamMapper.MAPPER::teamToTeamShort).collect(Collectors.toList());
+    }
+
+    public Long countAllByCompanyId(UUID companyID, Optional<Boolean> notBlank) {
+        return notBlank.isEmpty()
+                ? teamRepository.countAllByCompanyId(companyID)
+                : teamRepository.countAllByCompanyIdAndUsersNotNull(companyID);
+    }
+
+    public PagedResponseDto<TeamShortDto> searchByQuery(String query, Integer page, Integer size, Optional<Boolean> notBlank) {
+        return searchRepository.getTeamList(query, Optional.of(page), Optional.of(size), notBlank);
     }
 
     public TeamDetailsDto getOne(UUID companyId, UUID id, UUID userId, String role) throws TeamNotFoundException {
@@ -38,7 +59,7 @@ public class TeamService {
                 .orElseThrow(TeamNotFoundException::new);
 
         if (role.equals("employee")) {
-            if(team.getLead() == null || !team.getLead().getId().equals(userId)) {
+            if (team.getLead() == null || !team.getLead().getId().equals(userId)) {
                 throw new JwtTokenException("No permissions to see page");
             }
         }
@@ -124,7 +145,7 @@ public class TeamService {
 
     public TeamDetailsDto create(RequestTeamDto teamDto) throws AlreadyExistsException {
         if (teamRepository.existsByNameAndCompanyId(teamDto.getName(), teamDto.getCompanyId())) {
-            throw new AlreadyExistsException("Such team already exists in this company");
+            throw new AlreadyExistsException(Translator.toLocale("team_exists"));
         }
 
         if (teamDto.getName().length() > 40) {
@@ -132,9 +153,7 @@ public class TeamService {
         }
         if (!teamDto.getName()
                 .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
-            throw new WrongTeamNameException("Team name should not start/end with space," +
-                    " have more than one space in sequence. " +
-                    "Team name can contain latin letters, numbers and special symbols.");
+            throw new WrongTeamNameException(Translator.toLocale("wrong_team_name"));
         }
 
         Team team = TeamMapper.MAPPER.teamDtoToModel(teamDto);

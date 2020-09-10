@@ -79,4 +79,10 @@ public class SectionController {
         sectionService.deleteQuestion(sectionId, questionId);
     }
 
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Delete section from questionnaire")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) throws SectionNotFoundException {
+        sectionService.delete(id);
+    }
 }

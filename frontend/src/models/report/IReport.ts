@@ -67,6 +67,12 @@ export interface IReportShort {
   closeDate: string;
 }
 
+export interface IReportShortDto {
+  id: string;
+  title?: string;
+  closeDate?: string;
+}
+
 export interface IQuestionReportMultichoiceData {
     options: { title: string; amount: number }[];
 }

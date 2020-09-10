@@ -23,7 +23,7 @@ function* loadUserList(action: any) {
     yield put(loadCompanyUsersRoutine.success(items));
   } catch (error) {
     yield put(loadCompanyUsersRoutine.failure(error));
-    toastr.error("Cant fetch employe. Try again");
+    toastr.error("Cant fetch employee. Try again");
   }
 }
 
@@ -57,7 +57,7 @@ function* changeUserRole(action) {
   }
 }
 
-function* loadFiredUserList(action: any) {
+function* loadFiredUserList() {
   try {
     const store = yield select();
     const {page, size} = store.users.paginationFired;
@@ -67,7 +67,7 @@ function* loadFiredUserList(action: any) {
     yield put(loadFiredUsersRoutine.success(items));
   } catch (error) {
     yield put(loadFiredUsersRoutine.failure(error));
-    toastr.error("Cant fetch fired employe. Try again");
+    toastr.error("Cant fetch fired employee. Try again");
   }
 }
 

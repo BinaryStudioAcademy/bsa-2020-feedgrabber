@@ -5,6 +5,7 @@ import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.file.FileRepository;
 import com.feed_grabber.core.file.model.S3File;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.notification.UserNotificationService;
 import com.feed_grabber.core.questionCategory.exceptions.QuestionCategoryNotFoundException;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
@@ -73,7 +74,7 @@ public class RequestService {
         var targetUser = dto.getTargetUserId() == null ? null :
                 userRepository
                         .findById(dto.getTargetUserId())
-                        .orElseThrow(() -> new UserNotFoundException("Target User not Found"));
+                        .orElseThrow(() -> new UserNotFoundException(Translator.toLocale("target_not_found")));
 
         var date = dto.getExpirationDate();
 
@@ -106,7 +107,7 @@ public class RequestService {
             for (User user : users) {
                 userNotificationService.saveAndSendResponseNotification(request,
                         user,
-                        "You have new questionnaire request");
+                        Translator.toLocale("new_request"));
             }
         }
 
@@ -162,7 +163,7 @@ public class RequestService {
     public Date closeNow(UUID requestId) throws NotFoundException {
         var request = requestRepository
                 .findById(requestId)
-                .orElseThrow(() -> new NotFoundException("Request not found"));
+                .orElseThrow(() -> new NotFoundException(Translator.toLocale("request_not_found")));
 
         if (request.getCloseDate() != null) {
             return request.getCloseDate();
@@ -204,7 +205,7 @@ public class RequestService {
 
     public void close(UUID requestId) throws NotFoundException {
         var request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new NotFoundException("Request not found"));
+                .orElseThrow(() -> new NotFoundException(Translator.toLocale("request_not_found")));
         if (request.getCloseDate() != null) {
             return;
         }
@@ -222,7 +223,7 @@ public class RequestService {
         if (roleName.equals("employee")) {
             var team = teamRepository.findById(id).orElseThrow(TeamNotFoundException::new);
             if (!team.getLead().getId().equals(userId)) {
-                throw new JwtTokenException("No rights to see requests");
+                throw new JwtTokenException(Translator.toLocale("request_permission_denied"));
             }
         }
         return requestRepository.findAllByTeamId(id)

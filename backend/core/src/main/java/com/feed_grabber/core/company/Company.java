@@ -27,8 +27,6 @@ public class Company {
     }
 
     @Id
-    @Field(name = "idCopy")
-    @Analyzer(impl = WhitespaceAnalyzer.class)
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)
@@ -36,7 +34,7 @@ public class Company {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column
+    @Column(nullable = false, length = 40)
     private String name;
 
     @Column

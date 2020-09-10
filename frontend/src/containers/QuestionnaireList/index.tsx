@@ -8,7 +8,7 @@ import {
     setQuestionnaireArchivePaginationRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
-    updateQuestionnaireRoutine
+    updateQuestionnaireRoutine, loadOneQuestionnaireRoutine
 } from "../../sagas/qustionnaires/routines";
 import {IAppState} from "../../models/IAppState";
 import {connect, ConnectedProps} from "react-redux";
@@ -22,12 +22,14 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
-import {Icon, Modal, Popup} from "semantic-ui-react";
+import {Header, Icon, Modal, ModalContent, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import {useTranslation} from "react-i18next";
 
-const QuestionnaireList: FC<Props> = (
+const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
     {
+        muteActions,
+        loadOneQuestionnaire,
         pagination,
         archivePagination,
         modalQuestionnaire,
@@ -56,7 +58,9 @@ const QuestionnaireList: FC<Props> = (
             .map(q => q.id)
             .includes(item.id);
         return <UICard key={item.id}>
-            <UICardBlock className={`${styles.cardBlockWrapper} ${match && styles.searched}`}>
+            <UICardBlock
+                className={`${styles.cardBlockWrapper} ${match && styles.searched}`}
+                onClick={() => muteActions && loadOneQuestionnaire(item.id)}>
                 <h3>{item.title}</h3>
                 <span
                     style={
@@ -67,14 +71,14 @@ const QuestionnaireList: FC<Props> = (
                         }
                     }>{match && 'Matches searched query!'}</span>
                 {!showArchived
-                    ? <div className={styles.cardIconWrapper}>
+                    ? !muteActions &&  <div className={styles.cardIconWrapper}>
                       <Popup
                         content={t("New request")}
                         position="top center"
                         trigger={
                           <Icon
                             name="share alternate"
-                            onClick={() => history.push(`/questionnaires/${item.id}/new-request`)}
+                            onClick={() => history.push(`/questionnaire/${item.id}/new-request`)}
                             className={styles.cardIcon}
                           />
                         }
@@ -184,20 +188,22 @@ const QuestionnaireList: FC<Props> = (
                 updateQuestionnaire={updateQuestionnaire}
                 modalError={modalError}
             />
-            <UIPageTitle title={t("Questionnaires")}/>
-            <UIContent>
-                <UIColumn wide>
-                    <span className={styles.rightFloated}>
+            {!muteActions ? <UIPageTitle title={t("Questionnaires")}>
+                <span className={styles.rightFloated}>
                         <UIButton title={t("Archived")}
                                   secondary
                                   onClick={() => setShowArchived(!showArchived)}/>
-                    </span>
-                    <UIButton
-                        title={t("Add Questionnaire")}
-                        onClick={() => showModal(undefined)}
-                        center
-                        primary
-                    />
+                </span>
+            </UIPageTitle>
+            : <Header>Choose questionnaire to send request</Header>}
+            <UIContent>
+                <UIColumn wide>
+                    {!muteActions && <UIButton
+                    title={t("Add Questionnaire")}
+                    onClick={() => showModal(undefined)}
+                    center
+                    primary
+                />}
                     {!showArchived
                         ? <GenericPagination isLoading={isLoading} pagination={pagination} setPagination={setPagination}
                                            loadItems={loadQuestionnaires} mapItemToJSX={mapItemToJSX} />
@@ -207,13 +213,15 @@ const QuestionnaireList: FC<Props> = (
                             onClose={() => setShowArchived(false)}
                         >
                             <Modal.Header>{t("Archived")}</Modal.Header>
-                            <GenericPagination
-                                isLoading={isArchiveLoading}
-                                pagination={archivePagination}
-                                setPagination={setArchivePagination}
-                                loadItems={loadArchivedQuestionnaires}
-                                mapItemToJSX={mapItemToJSX}
-                            />
+                            <ModalContent>
+                                <GenericPagination
+                                    isLoading={isArchiveLoading}
+                                    pagination={archivePagination}
+                                    setPagination={setArchivePagination}
+                                    loadItems={loadArchivedQuestionnaires}
+                                    mapItemToJSX={mapItemToJSX}
+                                />
+                            </ModalContent>
                         </Modal>
                     }
                 </UIColumn>
@@ -243,7 +251,8 @@ const mapDispatchToProps = {
     showModal: showModalQuestionnaireRoutine,
     hideModal: hideModalQuestionnaireRoutine,
     setArchivePagination: setQuestionnaireArchivePaginationRoutine,
-    setPagination: setQuestionnairePaginationRoutine
+    setPagination: setQuestionnairePaginationRoutine,
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

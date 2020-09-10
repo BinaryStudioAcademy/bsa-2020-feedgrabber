@@ -1,5 +1,6 @@
 package com.feed_grabber.core.team;
 
+import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.apiContract.AppResponse;
@@ -7,6 +8,7 @@ import com.feed_grabber.core.team.dto.*;
 
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
 import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
+import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.feed_grabber.core.role.RoleConstants.*;
@@ -31,10 +34,34 @@ public class TeamController {
     @ApiOperation("Get all teams")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<TeamShortDto>> getAll() {
+    public AppResponse<DataList<TeamShortDto>> getAll(@RequestParam Integer page,
+                                                      @RequestParam Integer size,
+                                                      @RequestParam(required = false) Boolean notBlank
+    ) {
         var companyId = TokenService.getCompanyId();
-        var teams = service.getAllByCompany_Id(companyId);
-        return new AppResponse<>(teams);
+        return new AppResponse<>(new DataList<>(
+                service.getAllByCompany_Id(companyId, page, size, Optional.ofNullable(notBlank)),
+                service.countAllByCompanyId(companyId, Optional.ofNullable(notBlank)),
+                page,
+                size
+        ));
+    }
+
+    @GetMapping("/search")
+    public AppResponse<DataList<TeamShortDto>> getUsersBySurname (
+            @RequestParam String query,
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) Boolean notBlank
+    ) {
+        var pagedResponse = service.searchByQuery(query, page, size, Optional.ofNullable(notBlank));
+        return new AppResponse<>(
+                new DataList<>(
+                        pagedResponse.getObjects(),
+                        pagedResponse.getSize(),
+                        page,
+                        size
+                ));
     }
 
     @ApiOperation("Get the team by id")

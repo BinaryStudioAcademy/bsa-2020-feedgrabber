@@ -1,4 +1,5 @@
 import { IPaginationInfo } from "../../IPaginationInfo";
+import {IReportShortDto} from "../../report/IReport";
 
 export interface IQuestionnairesState {
   list?: IQuestionnairesListState;
@@ -41,4 +42,11 @@ export interface IQuestionnairesListState {
   modalQuestionnaire?: IQuestionnaire;
   modalLoading?: boolean;
   modalError?: string;
+}
+
+export interface IQuestionnaireInfo {
+  id: string;
+  title: string;
+  reports: IReportShortDto[];
+  archived: boolean;
 }

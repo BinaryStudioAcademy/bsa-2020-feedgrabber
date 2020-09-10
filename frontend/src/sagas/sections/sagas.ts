@@ -6,6 +6,7 @@ import {
     addQToFormRoutine,
     addSectionRoutine,
     deleteQInFormRoutine,
+    deleteSectionRoutine,
     loadFormRoutine,
     updateOrderInFormRoutine,
     updateQInFormRoutine,
@@ -156,6 +157,15 @@ function* updateOrder(action) {
     }
 }
 
+function* deleteSection(action) {
+    try {
+        yield call(apiClient.delete, `/api/section/${action.payload}`);
+    } catch (error) {
+        yield put(deleteSectionRoutine.failure());
+        toastr.error("Section wasn't deleted");
+    }
+}
+
 export default function* sectionSagas() {
     yield all([
         yield takeEvery(addSectionRoutine.TRIGGER, createSection),
@@ -165,6 +175,7 @@ export default function* sectionSagas() {
         yield takeEvery(updateQInFormRoutine.TRIGGER, updateQuestion),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateOrderInFormRoutine.TRIGGER, updateOrder),
-        yield takeEvery(addExistingQToFormRoutine.TRIGGER, addExistingQuestionToSection)
+        yield takeEvery(addExistingQToFormRoutine.TRIGGER, addExistingQuestionToSection),
+        yield takeEvery(deleteSectionRoutine.TRIGGER, deleteSection)
     ]);
 }

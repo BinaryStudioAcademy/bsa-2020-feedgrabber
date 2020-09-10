@@ -75,7 +75,12 @@ function* updateQuestionnaire(action) {
 
         yield put(hideModalQuestionnaireRoutine.trigger());
         yield put(loadQuestionnairesRoutine.trigger());
-        yield put(loadArchivedQuestionnairesRoutine.trigger());
+
+        const store = yield select();
+        if (store.questionnaires?.archived?.pagination) {
+          yield put(loadArchivedQuestionnairesRoutine.trigger());
+        }
+
         toastr.success("Updated questionnaire");
     } catch (errorResponse) {
         yield put(updateQuestionnaireRoutine.failure(errorResponse?.data?.error || 'No response'));
@@ -90,6 +95,7 @@ function* deleteQuestionnaire(action) {
         yield put(deleteQuestionnaireRoutine.success());
         toastr.success("Deleted questionnaire");
         yield put(loadQuestionnairesRoutine.trigger());
+        yield put(loadArchivedQuestionnairesRoutine.trigger());
         yield put(loadNotificationsRoutine.trigger());
     } catch (errorResponse) {
         yield put(deleteQuestionnaireRoutine.failure());

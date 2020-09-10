@@ -5,10 +5,11 @@ export interface IUIPageTitleProps {
   title: string;
 }
 
-const UIPageTitle: FC<IUIPageTitleProps> = ({title}) => {
+const UIPageTitle: FC<IUIPageTitleProps> = ({title, children}) => {
   return (
     <div className={styles.pageTitleWrapper}>
       <h2 className={styles.pageTitle}>{title}</h2>
+        {children}
     </div>
   );
 };

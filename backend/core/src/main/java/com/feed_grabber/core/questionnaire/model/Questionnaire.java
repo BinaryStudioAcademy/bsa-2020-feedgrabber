@@ -37,17 +37,17 @@ public class Questionnaire {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 40)
     private String title;
 
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Request> requests;
 
-    @IndexedEmbedded(depth = 2)
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 
-    @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "questionnaire", cascade =  CascadeType.ALL)
     private List<Section> sections;
 
     @Column(name = "is_editing_enabled", nullable = false)

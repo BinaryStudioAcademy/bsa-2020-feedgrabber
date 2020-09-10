@@ -12,6 +12,7 @@ import {IQuestionnaireReportsState} from "../reducers/questionnaireReport/reduce
 import {INotificationsState} from "../reducers/notifications";
 import {IRoleState} from "../reducers/role/reducer";
 import {ISearchResultState} from "./search/Search";
+import {IDashboardState} from "../reducers/dashboard/reducer";
 import {ICategoriesState} from "../reducers/categories/reducer";
 import {IFormEditorState} from "../reducers/formEditor/reducer";
 import {IQuestionnaireResponseState} from "../reducers/questionnaireResponse/reducer";
@@ -36,4 +37,5 @@ export interface IAppState {
     isLoading: boolean;
     notifications: INotificationsState;
     search: ISearchResultState;
+    dashboard: IDashboardState;
 }

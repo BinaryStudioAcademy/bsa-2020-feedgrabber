@@ -31,12 +31,12 @@ public class UserProfile {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 30)
     private String firstName;
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 30)
     private String lastName;
 
     @Field

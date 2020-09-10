@@ -1,11 +1,13 @@
 package com.feed_grabber.core.news;
 
+import com.feed_grabber.core.comments.CommentRepository;
 import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.ImageRepository;
 import com.feed_grabber.core.news.dto.NewsCreateDto;
+import com.feed_grabber.core.news.dto.NewsDetailsDto;
 import com.feed_grabber.core.news.dto.NewsDto;
 import com.feed_grabber.core.news.dto.NewsUpdateDto;
 import com.feed_grabber.core.news.exceptions.NewsNotFoundException;
@@ -17,6 +19,7 @@ import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.UserRepository;
 import com.feed_grabber.core.user.dto.UserShortDto;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -33,11 +36,14 @@ public class NewsService {
     private CompanyRepository companyRepository;
     private ImageRepository imageRepository;
     private UserRepository userRepository;
+    private CommentRepository commentRepository;
     private NewsReactionRepository newsReactionRepository;
 
+    @Autowired
     public NewsService(NewsRepository newsRepository,
                        CompanyRepository companyRepository,
                        ImageRepository imageRepository,
+                       CommentRepository commentRepository,
                        NewsReactionRepository newsReactionRepository,
                        UserRepository userRepository) {
         this.newsRepository = newsRepository;
@@ -45,6 +51,7 @@ public class NewsService {
         this.imageRepository = imageRepository;
         this.newsReactionRepository = newsReactionRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     public List<NewsDto> getAllByCompanyId(Integer page, Integer size, UUID companyId) {
@@ -78,6 +85,13 @@ public class NewsService {
 
     public Long getCountByCompanyId(UUID companyId) {
         return newsRepository.countAllByCompanyId(companyId);
+    }
+
+    public NewsDetailsDto getNewsById(UUID id) throws NewsNotFoundException {
+        var news = newsRepository.findById(id).orElseThrow(NewsNotFoundException::new);
+        var comments = commentRepository.findAllByNewsIdOrderByCreatedAt(news.getId());
+        news.setComments(comments);
+        return NewsMapper.MAPPER.newsToNewsDetailsDto(news);
     }
 
     public NewsDto create(NewsCreateDto newsCreateDto) throws NotFoundException {

@@ -69,7 +69,9 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
                         <Header>{t("Select new role")}</Header>
                         <Select compact
                                 className={styles.dropdown}
-                                options={companyRoles.map(r => ({key: r.id, value: r.id, text: r.name}))}
+                                options={companyRoles.map(r => ({
+                                  key: r.id, value: r.id, text: t(r.name.toLowerCase())
+                                }))}
                                 value={selectedRoleId}
                                 onChange={(e, data) => {
                                     setSelectedRoleId(data.value as string);
@@ -84,7 +86,7 @@ const SwitchRoleModal: FC<ISwitchRoleModalProps> = (
                         disabled={selectedRoleId === selectedUser.roleId}
                         onClick={() => changeRole({userId: selectedUser.id, roleId: selectedRoleId})}
                         loading={isChanging}
-                        title={'Change'}
+                        title={t('Change')}
                     />
                 </Modal.Actions>
             </>
