@@ -30,6 +30,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         answerHandler?.(answer?.selected || answer?.other ? {
         selected: answer?.selected,
         other: answer?.other
+            // eslint-disable-next-line
     } : null);}, [answer]);
 
     const handleChange = (event, value?) => {
