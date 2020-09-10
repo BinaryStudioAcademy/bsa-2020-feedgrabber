@@ -22,6 +22,7 @@ import {
   BiRadioCircle,
   BiRadioCircleMarked
 } from "react-icons/all";
+import {setExpandLanguageRoutine, toggleMenuRoutine} from "../../sagas/app/routines";
 
 const languages: {key: string; text: string; value: string}[] = [
   {
@@ -38,19 +39,23 @@ const languages: {key: string; text: string; value: string}[] = [
 
 interface ISideMenuProps {
     expanded: boolean;
+    expandLanguage: boolean;
 
-    toggleMenu(): void;
+    toggleMenu(show: boolean): void;
+    setExpandLanguage(isExpand: boolean): void;
 }
 
 const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps> =
     ({expanded,
+      expandLanguage,
       settings,
       getSettings,
-      updateSettings
+      toggleMenu,
+      updateSettings,
+      setExpandLanguage
     }) => {
 
     const [t, i18n] = useTranslation();
-    const [languageActive, setLanguageActive] = useState(false);
     useEffect(() => {
       !settings && getSettings();
     }, [getSettings, settings]);
@@ -97,18 +102,21 @@ const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps
                     </NavLink>
                 </AccessManager>
 
-                <div className={styles.menuLanguagesWrapper} onClick={()=>setLanguageActive(!languageActive)}>
+                <div className={styles.menuLanguagesWrapper} onClick={()=>{
+                    toggleMenu(true);
+                    setExpandLanguage(!expandLanguage);
+                }}>
                     <div className={styles.menuItem}>
                         <RiGlobalLine size="1.3em" color="white" className={styles.menuItemIcon}/>
                         <span className={styles.menuItemTitle}>{t("Language")}</span>
-                        {languageActive
+                        {expandLanguage
                           ? <RiArrowDownSLine size="1.3em" color="white"
                                               className={`${styles.menuItemIcon} ${styles.menuIconRight}`}/>
                           : <RiArrowUpSLine size="1.3em" color="white"
                                             className={`${styles.menuItemIcon} ${styles.menuIconRight}`}/>
                         }
                     </div>
-                  <ul className={languageActive && expanded ? styles.listActive : styles.listInactive}>
+                  <ul className={expandLanguage && expanded ? styles.listActive : styles.listInactive}>
                     {languages.map(lang => languageItem(lang))}
                   </ul>
                 </div>
@@ -118,12 +126,14 @@ const SideMenu: React.FunctionComponent<ISideMenuProps & ISideMenuConnectedProps
     );
 };
 const mapState = (state: IAppState) => ({
-  settings: state.user.settings
+  settings: state.user.settings,
+  expandLanguage: state.app.expandLanguage
 });
 
 const mapDispatchToProps = {
   getSettings: getUserSettingsRoutine,
-  updateSettings: updateUserSettingsRoutine
+  updateSettings: updateUserSettingsRoutine,
+  setExpandLanguage: setExpandLanguageRoutine
 };
 
 const connector = connect(mapState, mapDispatchToProps);
