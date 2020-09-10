@@ -4,19 +4,24 @@ import React, {FC, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";
-import {addSelectedQuestionsRoutine, loadQuestionsRoutine} from "../../sagas/questions/routines";
+import {
+    addSelectedQuestionsRoutine,
+    loadQuestionsRoutine,
+    setQuestionPaginationRoutine
+} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+import GenericPagination from "../helpers/GenericPagination";
 
 const SelectQuestionsFromExisting: FC<ContainerProps & {
     isOpen: boolean;
     handleOpenModal: Function;
 }> = (
     {
-        questions,
+        pagination,
+        setPagination,
         loadQuestions,
         addQuestions,
-        currentQuestions,
         qnId,
         isLoading,
         currentSection,
@@ -31,14 +36,16 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
             setSelected(selected.filter(q => q.id !== id));
         } else {
             setSelected([
-                ...selected, questions.find(q => q.id === id)
+                ...selected, pagination.items.find(q => q.id === id)
             ]);
         }
     };
 
     const handleSubmit = () => {
-        const startIndex = currentQuestions.length;
-        const questions = selected.map((q, i) => { return { questionId: q.id, index: startIndex + i }; });
+        const startIndex = currentSection.questions.length;
+        const questions = selected.map((q, i) => {
+            return {questionId: q.id, index: startIndex + i};
+        });
         if (selected) {
             selected.forEach(q => q.isReused = true);
             addQuestions({questionnaireId: qnId, questions, sectionId: currentSection.id});
@@ -47,34 +54,33 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         handleOpenModal(false);
     };
 
-    const display = questions.filter(q => {
-        for (const i of currentQuestions) {
-            if (i.id === q.id)
-                return false;
-        }
-        return true;
-    });
-
     return (
         <Modal
             open={isOpen}
-            onMount={() => loadQuestions()}
+            onMount={() => loadQuestions(qnId)}
             className={styles.questionModal}
             onOpen={() => handleOpenModal(true)}
             onClose={() => handleOpenModal(false)}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>
-                    {display.map(q => <ModalQuestionItem
-                        key={q.id}
-                        handleClick={handleClick}
-                        question={q}
-                        isSelected={selected.includes(q)}/>
-                    )}
+                    <GenericPagination
+                        isLoading={isLoading}
+                        pagination={pagination}
+                        setPagination={setPagination}
+                        loadItems={() => loadQuestions(qnId)}
+                        mapItemToJSX={(q: IQuestion) =>
+                            <ModalQuestionItem
+                                key={q.id}
+                                handleClick={handleClick}
+                                question={q}
+                                isSelected={selected.includes(q)}/>
+                        }
+                    />
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions
-            className={styles.modalActions}>
+                className={styles.modalActions}>
                 <Button onClick={() => handleOpenModal(false)} content={t("Cancel")}/>
                 <Button
                     loading={isLoading}
@@ -89,16 +95,16 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
 };
 
 const mapState = (state: IAppState) => ({
-    currentQuestions: state.formEditor.sections.list.flatMap(s => s.questions),
     isLoading: state.questions.isLoading,
     qnId: state.formEditor.questionnaire.id,
-    questions: state.questions.pagination.items,
+    pagination: state.questions.pagination,
     currentSection: state.formEditor.sections.current
 });
 
 const mapDispatch = {
     loadQuestions: loadQuestionsRoutine,
-    addQuestions: addSelectedQuestionsRoutine
+    addQuestions: addSelectedQuestionsRoutine,
+    setPagination: setQuestionPaginationRoutine
 };
 
 const connector = connect(mapState, mapDispatch);
