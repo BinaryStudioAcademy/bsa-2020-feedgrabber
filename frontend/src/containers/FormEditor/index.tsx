@@ -11,7 +11,8 @@ import {
     setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
     updateSectionRoutine,
-    updateSections
+    updateSections,
+    deleteSectionRoutine
 } from 'sagas/sections/routines';
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
@@ -37,7 +38,8 @@ const FormEditor: FC<FormEditorProps & { match }> = (
         currentSection,
         updateSection,
         updateSectionsR,
-        updateOrder
+        updateOrder,
+        deleteSection
     }
 ) => {
     useEffect(() => {
@@ -96,6 +98,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                         updateOrder={updateOrder}
                                         currentQuestion={currentQuestion}
                                         sections={sections}
+                                        deleteSection={deleteSection}
                                     />
                                 </div>
                                 <div className={styles.menu}>
@@ -134,7 +137,8 @@ const mapDispatchToProps = {
     deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
     updateSectionsR: updateSections,
-    updateOrder: updateQuestionsOrderRoutine
+    updateOrder: updateQuestionsOrderRoutine,
+    deleteSection: deleteSectionRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

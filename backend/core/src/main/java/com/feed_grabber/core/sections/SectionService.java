@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -142,5 +143,22 @@ public class SectionService {
                 .filter(q -> q.getOrderIndex().equals(index))
                 .findFirst()
                 .orElseThrow(QuestionNotFoundException::new);
+    }
+
+    private void updateSectionIndexes(UUID questionnaireId) {
+        AtomicInteger index = new AtomicInteger();
+        var sections = sectionRepository
+            .findByQuestionnaireIdOrderByOrder(questionnaireId)
+            .stream()
+            .peek(section -> section.setOrder(index.getAndIncrement()))
+            .collect(Collectors.toList());
+        sectionRepository.saveAll(sections);
+    }
+
+    public void delete(UUID id) throws SectionNotFoundException {
+        var section = sectionRepository.findById(id)
+                .orElseThrow(SectionNotFoundException::new);
+        sectionRepository.deleteById(id);
+        updateSectionIndexes(section.getQuestionnaire().getId());
     }
 }
