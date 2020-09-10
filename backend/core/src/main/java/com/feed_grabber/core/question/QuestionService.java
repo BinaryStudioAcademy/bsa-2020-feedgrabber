@@ -201,6 +201,6 @@ public class QuestionService {
     }
 
     public PagedResponseDto<QuestionDto> searchAll(Optional<String> query, Integer page, Integer size, Optional<UUID> questionnaire) {
-        return searchRepository.getQuestionsList(query.orElse(""), Optional.ofNullable(page), Optional.ofNullable(size));
+        return searchRepository.getQuestionsList(query.orElse(""), Optional.ofNullable(page), Optional.ofNullable(size), questionnaire);
     }
 }

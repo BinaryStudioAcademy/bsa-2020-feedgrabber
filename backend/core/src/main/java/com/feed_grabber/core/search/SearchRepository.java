@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
@@ -64,7 +65,7 @@ public class SearchRepository {
                 .builder()
                 .users(getUsersList(query, Optional.empty(), Optional.empty()).getObjects())
                 .questionnaires(getQuestionnaireList(query, Optional.empty(), Optional.empty()).getObjects())
-                .questions(getQuestionsList(query, Optional.empty(), Optional.empty()).getObjects())
+                .questions(getQuestionsList(query, Optional.empty(), Optional.empty(), Optional.empty()).getObjects())
                 .teams(getTeamList(query, Optional.empty(), Optional.empty()).getObjects())
                 .reports(getReportList(query, Optional.empty(), Optional.empty()).getObjects())
                 .build();
@@ -101,7 +102,8 @@ public class SearchRepository {
     @SuppressWarnings("unchecked")
     public PagedResponseDto<QuestionDto> getQuestionsList(String query
             , Optional<Integer> page
-            , Optional<Integer> size) {
+            , Optional<Integer> size
+            , Optional<UUID> questionnaireId) {
         var questionQuery = getFullTextQuery(
                 Question.class
                 , Map.of(query
@@ -109,16 +111,30 @@ public class SearchRepository {
                                 , "category.title"}
                         , getCompanyId().toString()
                         , new String[]{"company.idCopy"}));
-        if (page.isPresent() && size.isPresent()) {
-            questionQuery.setMaxResults(size.get());
-            questionQuery.setFirstResult(page.get() * size.get());
+
+        if (questionnaireId.isEmpty()) {
+            questionQuery.setMaxResults(size.orElse(1000));
+            questionQuery.setFirstResult(page.orElse(0) * size.orElse(5));
+
+            return new PagedResponseDto<>(((List<Question>) questionQuery.getResultList())
+                    .stream()
+                    .filter(q -> q.getCompany().getId().equals(getCompanyId()))
+                    .map(QuestionMapper.MAPPER::questionToQuestionDto)
+                    .collect(Collectors.toList())
+                    , (long) questionQuery.getResultSize());
+        } else {
+            var questionsRaw = (List<Question>) questionQuery.getResultList();
+            questionsRaw = questionsRaw.stream()
+                    .filter(q -> q.getSections().stream().noneMatch(s -> s.getSection().getQuestionnaire().getId().equals(questionnaireId.get())))
+                    .collect(Collectors.toList());
+            var questions = questionsRaw.stream().skip(page.orElse(0) * size.orElse(5)).limit(size.orElse(1000)).collect(Collectors.toList());
+            return new PagedResponseDto<>(questions
+                    .stream()
+                    .filter(q -> q.getCompany().getId().equals(getCompanyId()))
+                    .map(QuestionMapper.MAPPER::questionToQuestionDto)
+                    .collect(Collectors.toList())
+                    , (long) questionsRaw.size());
         }
-        return new PagedResponseDto<>(((List<Question>) questionQuery.getResultList())
-                .stream()
-                .filter(q -> q.getCompany().getId().equals(getCompanyId()))
-                .map(QuestionMapper.MAPPER::questionToQuestionDto)
-                .collect(Collectors.toList())
-                , (long) questionQuery.getResultSize());
     }
 
     @SuppressWarnings("unchecked")
