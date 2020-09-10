@@ -7,11 +7,13 @@ import com.feed_grabber.core.auth.exceptions.InsertionException;
 import com.feed_grabber.core.auth.exceptions.InvitationExpiredException;
 import com.feed_grabber.core.auth.exceptions.UserAlreadyExistsException;
 import com.feed_grabber.core.auth.exceptions.CorporateEmailException;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.Company;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyAlreadyExistsException;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.company.exceptions.WrongCompanyNameException;
+import com.feed_grabber.core.dashboard.dto.UserInfo;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.invitation.InvitationRepository;
 import com.feed_grabber.core.invitation.InvitationService;
@@ -355,5 +357,6 @@ public class UserService implements UserDetailsService {
         verificationTokenService.generateVerificationToken(user, TokenType.REGISTER);
         return company.getId();
     }
+
 }
 

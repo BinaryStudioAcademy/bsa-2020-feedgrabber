@@ -323,6 +323,14 @@
     "What's up": "Що сталося?",
     "Attach image": "Прикріпити фото",
     "Submit": "Підтвердити",
-    "Add news": "Додати новину"
+    "Add news": "Додати новину",
+
+    "No reviews yet": "Відруків ще немає",
+    "No reports yet": "Звітів ще немає",
+    "Company owners": "Власники компанії",
+    "HR managers": "Менеджери з персоналу",
+    "Team Leaders": "Керівники команд",
+    "Active questionnaires": "Опитувальники",
+    "Archived questionnaires": "Архівні Опитувальники"
   }
 }
