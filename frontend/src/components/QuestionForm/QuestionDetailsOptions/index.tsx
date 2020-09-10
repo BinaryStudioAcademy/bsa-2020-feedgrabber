@@ -43,7 +43,7 @@ const QuestionDetailsOptions = ({ question, setQuestionType }) => {
 
     const StyledDropdown = styled(Dropdown)`
         .menu {
-            top: -100px !important;
+            // top: -100px !important;
         }
         line-height: 1.21428571em;
         padding: .67857143em 1em;
