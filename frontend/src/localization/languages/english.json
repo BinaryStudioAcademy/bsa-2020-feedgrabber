@@ -50,7 +50,8 @@
     "Other": "Other...",
     "Type of files": "Type of files",
     "Maximum number of files": "Maximum number of files",
-    "Maximum files size": "Maximum files size, MB",
+    "Maximum files size": "Maximum files size",
+    "MB": "MB",
     "Upload Files": "Upload Files",
     "Add new answer": "Add new answer",
 

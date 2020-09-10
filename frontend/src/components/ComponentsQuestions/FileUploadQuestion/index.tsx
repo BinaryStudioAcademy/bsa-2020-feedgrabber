@@ -20,7 +20,7 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
         const [ t ] = useTranslation();
 
         const values = useInitValue(
-            {value: {filesType: "", filesNumber: 1, filesSize: 10}, isCompleted: true},
+            {value: {filesType: "", filesNumber: 1, filesSize: 1}, isCompleted: true},
             propValue,
             onValueChange
         );
@@ -40,44 +40,68 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
 
         return (
             <div className={styles.fileUploadQuestion}>
-            <div className={styles.questionField}>
-                <span className={styles.description}>{t("Type of files")}</span>
-                <Dropdown
-                    error={!values.filesType}
-                    className={styles.inputField} name="filesType" selection placeholder={t("Choose file type")}
-                    options={options} value={values.filesType}
+                <div className={styles.questionField}>
+                    <span className={styles.description}>{t("Type of files")}</span>
+                    <Dropdown
+                        error={!values.filesType}
+                        className={styles.inputField} name="filesType" selection placeholder={t("Choose file type")}
+                        options={options} value={values.filesType}
+                        onChange={(e, data) => {
+                            onValueChange(validState({
+                                ...values,
+                                filesType: data.value as string
+                            }));
+                        }}
+                    />
+                </div>
+                <QuestionField
+                    text={t("Maximum number of files")} name={"filesNumber"} type={"number"}
+                    inputProps={{min: 1, max: 10}} value={values.filesNumber}
                     onChange={(e, data) => {
-                        onValueChange(validState({
-                            ...values,
-                            filesType: data.value as string
-                        }));
+                        check({
+                                ...values,
+                                filesNumber: Number(data.value)
+                            });
                     }}
                 />
-                <div className={styles.errorMessage}>
-                    error
-                </div>
-            </div>
-            <QuestionField
-                text={t("Maximum number of files")} name={"filesNumber"} type={"number"}
-                inputProps={{min: 1, max: 10}} value={values.filesNumber}
-                onChange={(e, data) => {
-                    check({
+                {/* <QuestionField
+                    text={t("Maximum files size")} name={"filesSize"} type={"number"}
+                    inputProps={{min: 1}}
+                    value={values.filesSize}
+                    onChange={(e, data) => {
+                        check({
                             ...values,
-                            filesNumber: Number(data.value)
+                            filesSize: Number(data.value)
                         });
-                }}
-            />
-            <QuestionField
-                text={t("Maximum files size")} name={"filesSize"} type={"number"}
-                inputProps={{min: 1}}
-                value={values.filesSize}
-                onChange={(e, data) => {
-                    check({
-                        ...values,
-                        filesSize: Number(data.value)
-                    });
-                }}
-            />
+                    }}
+                />*/}
+                <div className={styles.questionField}>
+                    <span className={styles.description}>{t("Maximum files size")}</span>
+                    <Dropdown
+                        name="filesType"
+                        className={styles.inputField}
+                        selection
+                        value={values.filesSize}
+                        onChange={(e, data) => {
+                            check({
+                                ...values,
+                                filesSize: Number(data.value)
+                            });
+                        }}
+                        options={[
+                            {
+                                key: '1',
+                                text: `1 ${t("MB")}`,
+                                value: 1
+                            },
+                            {
+                                key: '10',
+                                text: `10 ${t("MB")}`,
+                                value: 10
+                            }
+                        ]}
+                    />
+                </div>
             </div>
         );
     };
