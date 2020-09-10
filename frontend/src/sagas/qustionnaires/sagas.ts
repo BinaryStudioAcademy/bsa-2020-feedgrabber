@@ -75,7 +75,12 @@ function* updateQuestionnaire(action) {
 
         yield put(hideModalQuestionnaireRoutine.trigger());
         yield put(loadQuestionnairesRoutine.trigger());
-        yield put(loadArchivedQuestionnairesRoutine.trigger());
+
+        const store = yield select();
+        if (store.questionnaires?.archived?.pagination) {
+          yield put(loadArchivedQuestionnairesRoutine.trigger());
+        }
+
         toastr.success("Updated questionnaire");
     } catch (errorResponse) {
         yield put(updateQuestionnaireRoutine.failure(errorResponse?.data?.error || 'No response'));
