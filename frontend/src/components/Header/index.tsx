@@ -50,14 +50,14 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                     <div className={styles.navLinks}>
                         <AccessManager staticPermission={Permissions.managingQuestionnaires}>
                             <NavLink exact to="/editor"
-                                    className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
+                                     className={`${styles.headerMenuItem} ${isEditing && styles.headerMenuItemActive}`}>
                                 {t("Form Creator")}
                             </NavLink>
                         </AccessManager>
                         <AccessManager staticPermission={Permissions.createQuestionnaireRequest}>
-                            <a href="/#" className={styles.headerMenuItem}>
+                            <NavLink exact to="/questionnaire/new-request" className={styles.headerMenuItem}>
                                 {t("Send Request")}
-                            </a>
+                            </NavLink>
                         </AccessManager>
                     </div>
                 </div>
@@ -72,7 +72,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                         <StyledMenu vertical>
                             <StyledItem onClick={() => history.push('/profile')}>
                                 <RiUserReceived2Line size="1.3em" color="white"/>&nbsp;&nbsp;
-                              <strong>{user.userName}</strong>
+                                <strong>{user.userName}</strong>
                             </StyledItem>
                             <AccessManager staticPermission={Permissions.generateInviteLinks}>
                                 <StyledItem onClick={() => history.push('/invitations')}>
@@ -87,7 +87,7 @@ const Header: FC<Props> = ({user, logout, toggleMenu, isEditing, toggled}) => {
                 </div>
             </div>
         </div>
-  );
+    );
 };
 
 const mapStateToProps = (state: IAppState) => ({
@@ -96,8 +96,8 @@ const mapStateToProps = (state: IAppState) => ({
     toggled: state.app.showMenu
 });
 const mapDispatchToProps = {
-  logout: logoutRoutine,
-  toggleMenu: toggleMenuRoutine
+    logout: logoutRoutine,
+    toggleMenu: toggleMenuRoutine
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type Props = ConnectedProps<typeof connector>;
