@@ -138,7 +138,7 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
                         <UIColumn>
                                 <>
                                     <LoaderWrapper loading={isLoading}>
-                                    {!changeable && answered && <Message warning content="Editing is not allowed"/>}
+                                    {!changeable && answered && <Message warning content="Modifying is forbidden"/>}
                                         <UISection ti={title} d={description} />
                                         <Formik initialValues={this.state} onSubmit={this.handleNextClick}>
                                             {formik => (

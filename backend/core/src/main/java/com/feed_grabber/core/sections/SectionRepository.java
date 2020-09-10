@@ -48,4 +48,10 @@ public interface SectionRepository extends JpaRepository<Section, UUID> {
             value = "UPDATE SectionQuestion s SET s.orderIndex = :index " +
                     "WHERE s.section.id = :sectionId AND s.question.id = :questionId")
     Integer setIndex(UUID sectionId, UUID questionId, Integer index);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Section s set s.order = s.order - 1 where s.id = :sectionId and " +
+            "s.order > :index")
+    void shiftSectionIndexAfterDelete(UUID sectionId, Integer index);
 }

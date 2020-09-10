@@ -53,7 +53,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
             });
             updateOrder({
                 sectionId: endSection.id,
-                questions: insertAtIndex(endSection.questions, destination.index, draggableId)
+                questions: insertAtIndex(endSection.questions, destination.index, draggableId),
+                questionId: draggableId
             });
         }
         updateOrderApi({

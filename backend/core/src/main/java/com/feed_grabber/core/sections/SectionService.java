@@ -157,7 +157,7 @@ public class SectionService {
     public void delete(UUID id) throws SectionNotFoundException {
         var section = sectionRepository.findById(id)
                 .orElseThrow(SectionNotFoundException::new);
+        sectionRepository.shiftSectionIndexAfterDelete(section.getId(), section.getOrder());
         sectionRepository.deleteById(id);
-        updateSectionIndexes(section.getQuestionnaire().getId());
     }
 }

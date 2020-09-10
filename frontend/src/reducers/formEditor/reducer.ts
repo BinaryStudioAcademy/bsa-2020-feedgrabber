@@ -4,10 +4,17 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {loadOneQuestionnaireRoutine, saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import {getById} from "../../helpers/formEditor.helper";
 import {
-    addQToFormRoutine, addSectionRoutine, deleteQInFormRoutine,
+    addQToFormRoutine,
+    addSectionRoutine,
+    clearFormEditor,
+    deleteQInFormRoutine,
+    deleteSectionRoutine,
     loadFormRoutine,
-    setCurrentQInForm, setCurrentSection, updateOrderInForm,
-    updateQInFormRoutine, updateSectionRoutine
+    setCurrentQInForm,
+    setCurrentSection,
+    updateOrderInForm,
+    updateQInFormRoutine,
+    updateSectionRoutine
 } from "../../sagas/sections/routines";
 
 const init = {
@@ -75,6 +82,52 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                     currentId: payload
                 }
             };
+        case clearFormEditor.TRIGGER:
+            return {
+                ...init,
+                questionnaire: state.questionnaire
+            };
+        case deleteSectionRoutine.TRIGGER:
+            const deleteSection = () => {
+                const sectionId = payload;
+                const s = getById<SectionEntity>(sectionId, state.sections);
+
+                const stateQ = state.questions.entities;
+                const newQs = Object.keys(stateQ).reduce((object, key) => {
+                    if (!s.questions.find(q => q === key)) object[key] = stateQ[key];
+                    return object;
+                }, {});
+
+                const stateS = state.sections.entities;
+                const newSq = Object.keys(stateS).reduce((object, key) => {
+                    if (key !== s.id) object[key] = stateS[key];
+                    return object;
+                }, {});
+
+                const idsS = state.sections.ids;
+                const indexS = idsS.findIndex(i => i === sectionId);
+                const sCurId = idsS[indexS - 1] || idsS[indexS + 1] || '';
+
+                const newQIds = state.questions.ids.filter(q => !s.questions.find(q2 => q2 === q));
+                const qCurId = getById(sCurId, state.sections)?.questions[0] || '';
+
+                return {
+                    ...state,
+                    sections: {
+                        ...state.sections,
+                        entities: newSq,
+                        ids: state.sections.ids.filter(id => id !== s.id),
+                        currentId: sCurId
+                    },
+                    questions: {
+                        ...state.questions,
+                        entities: newQs,
+                        ids: newQIds,
+                        currentId: qCurId
+                    }
+                };
+            };
+            return deleteSection();
         case updateOrderInForm.TRIGGER:
             return {
                 ...state,
@@ -85,6 +138,16 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                         [payload.sectionId]: {
                             ...state.sections.entities[payload.sectionId],
                             questions: payload.questions
+                        }
+                    }
+                },
+                questions: {
+                    ...state.questions,
+                    entities: {
+                        ...state.questions.entities,
+                        [payload.questionId]: {
+                            ...state.questions.entities[payload.questionId],
+                            section: payload.sectionId
                         }
                     }
                 }
@@ -151,7 +214,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 const ids = s.questions;
                 const index = ids.findIndex(i => i === questionId);
                 const currentId = ids[index - 1] || ids[index + 1] || '';
-                console.log(currentId, sectionId, ids);
 
                 return {
                     ...state,
