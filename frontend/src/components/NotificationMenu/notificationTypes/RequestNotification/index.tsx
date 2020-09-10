@@ -8,7 +8,6 @@ import {Icon} from "semantic-ui-react";
 const RequestNotification: React.FC<INotificationProps> = ({
                                                                notification,
                                                                deleteNotification,
-                                                               getResponse,
                                                                readNotification, setShown
                                                            }) => {
     const history = useHistory();
@@ -16,8 +15,7 @@ const RequestNotification: React.FC<INotificationProps> = ({
         <div key={notification.id}
              className={styles.notification}>
                 <span className={styles.text} onClick={() => {
-                    getResponse(notification.requestId);
-                    history.push(`/response/${notification.questionnaireId}`);
+                    history.push(`/response/${notification.responseId}`);
                     readNotification(notification.id);
                     setShown(false);
                 }}>{notification.text?.substr(0, 54)}</span>

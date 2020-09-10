@@ -10,12 +10,12 @@ import {ICompanyState} from '../reducers/companies/reducer';
 import {ICompanyFeedState} from '../reducers/companyFeed/reducer';
 import {IQuestionnaireReportsState} from "../reducers/questionnaireReport/reducer";
 import {INotificationsState} from "../reducers/notifications";
-import {IQuestionnaireResponseState} from "./forms/Response/types";
 import {IRoleState} from "../reducers/role/reducer";
 import {ISearchResultState} from "./search/Search";
 import {IDashboardState} from "../reducers/dashboard/reducer";
-import {IFormEditorState} from "./forms/IFormEditorState";
 import {ICategoriesState} from "../reducers/categories/reducer";
+import {IFormEditorState} from "../reducers/formEditor/reducer";
+import {IQuestionnaireResponseState} from "../reducers/questionnaireResponse/reducer";
 
 export interface IAppState {
     toastr: any;

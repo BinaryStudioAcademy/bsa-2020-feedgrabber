@@ -65,10 +65,9 @@ public class SectionService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public List<QuestionDto> deleteQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
+    public void deleteQuestion(UUID sectionId, UUID questionId) throws NotFoundException {
         var index = sectionRepository.deleteQuestion(sectionId, questionId);
         sectionRepository.shiftIndexesLeft(sectionId, index);
-        return parseQuestions(sectionRepository.findById(sectionId));
     }
 
     public SectionDto update(UUID id, SectionUpdateDto dto) throws SectionNotFoundException {
@@ -158,7 +157,7 @@ public class SectionService {
     public void delete(UUID id) throws SectionNotFoundException {
         var section = sectionRepository.findById(id)
                 .orElseThrow(SectionNotFoundException::new);
+        sectionRepository.shiftSectionIndexAfterDelete(section.getId(), section.getOrder());
         sectionRepository.deleteById(id);
-        updateSectionIndexes(section.getQuestionnaire().getId());
     }
 }

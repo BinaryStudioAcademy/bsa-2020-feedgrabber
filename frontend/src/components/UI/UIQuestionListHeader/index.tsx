@@ -1,5 +1,7 @@
 import React, {FC} from "react";
 import styles from "./styles.module.scss";
+import UISection from "../UISectionCard";
+import UIBackgroundWrapper from "../UIBackgroundWrapper";
 
 export interface IUIListHeaderProps {
     title: string;
@@ -9,9 +11,10 @@ export interface IUIListHeaderProps {
 const UIListHeader: FC<IUIListHeaderProps> = ({title, description}) => {
     return (
         <div className={styles.headerContainer}>
-                <div className="ui very padded segment">
-                    <h1 className={styles.title}>{title}</h1>
-                    {description? <h2 className={styles.description}>{description}</h2> : null}</div>
+
+                <UISection ti={title} d={description}>
+
+                </UISection>
         </div>
         );
 };

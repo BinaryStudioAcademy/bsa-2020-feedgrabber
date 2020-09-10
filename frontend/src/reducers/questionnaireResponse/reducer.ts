@@ -1,15 +1,54 @@
 import { IAppState } from "models/IAppState";
 import { loadRequestedQuestionnairesRoutine } from "sagas/request/routines";
-import { getResponseRoutine,
-        addRequestIdToCurrentResponseRoutine,
-        saveResponseRoutine } from "sagas/response/routines";
+import {
+    loadResponseFormRoutine,
+    saveResponseRoutine
+} from "../../sagas/response/routines";
+import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
+import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
-const responseReducer = (state: IAppState['questionnaireResponse'] = {isLoading: false}, {type, payload}) => {
+export interface IQuestionnaireResponse {
+    id?: string;
+    requestId: string;
+    questionnaire: IQuestionnaire;
+    expirationDate: Date;
+    answeredAt: string;
+    closeDate: string;
+    changeable: boolean;
+}
+
+export interface IQuestionnaireResponseState {
+    list: IQuestionnaireResponse[];
+    current: {
+        info: IQuestionnaireResponse;
+        sections: SectionWithQuestions[];
+    };
+    isLoading: boolean;
+}
+
+type SectionWithQuestions = {
+    id: string;
+    title: string;
+    description: string;
+    questions: IQuestion[];
+}
+
+const init = {
+    list: [] as IQuestionnaireResponse[],
+    current: {
+        info: {} as IQuestionnaireResponse,
+        sections: [] as SectionWithQuestions[]
+    },
+    isLoading: false
+};
+
+const responseReducer = (state: IAppState['questionnaireResponse'] = init, {type, payload}) => {
     switch(type) {
-        case loadRequestedQuestionnairesRoutine.TRIGGER:
+        case loadResponseFormRoutine.SUCCESS:
             return {
                 ...state,
-                isLoading: true
+                current: payload,
+                isLoading: false
             };
         case loadRequestedQuestionnairesRoutine.SUCCESS:
             return {
@@ -17,40 +56,20 @@ const responseReducer = (state: IAppState['questionnaireResponse'] = {isLoading:
                 list: payload,
                 isLoading: false
             };
-        case loadRequestedQuestionnairesRoutine.FAILURE:
-            return {
-                ...state,
-                isLoading: false
-            };
-        case addRequestIdToCurrentResponseRoutine.TRIGGER:
-            return {
-                ...state,
-                current: {
-                    ...state.current,
-                    requestId: payload
-                }
-            };
-        case getResponseRoutine.TRIGGER:
+        case saveResponseRoutine.TRIGGER:
+        case loadRequestedQuestionnairesRoutine.TRIGGER:
+        case loadResponseFormRoutine.TRIGGER:
             return {
                 ...state,
                 isLoading: true
             };
-        case getResponseRoutine.SUCCESS:
-            return {
-                ...state,
-                isLoading: false,
-                current: payload
-            };
-        case getResponseRoutine.FAILURE:
+        case saveResponseRoutine.FAILURE:
+        case saveResponseRoutine.SUCCESS:
+        case loadRequestedQuestionnairesRoutine.FAILURE:
+        case loadResponseFormRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false
-            };
-        case saveResponseRoutine.FAILURE:
-        case saveResponseRoutine.SUCCESS:
-            return {
-                ...state,
-                current: payload
             };
         default:
             return state;

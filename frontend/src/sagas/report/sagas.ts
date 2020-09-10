@@ -45,7 +45,7 @@ const questionSelector = (state: IAppState) => state.questionnaireReports.curren
 
 function* loadRespondentReports(action) {
     try {
-        const res: IGeneric<any> = yield call(apiClient.get, `/api/response?responseId=${action.payload}`);
+        const res: IGeneric<any> = yield call(apiClient.get, `/api/response/${action.payload}`);
         const questions: QuestionDto[] = yield select(questionSelector);
         const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
 
@@ -71,7 +71,7 @@ function* loadUsersReports(action) {
     }
 }
 
-function* loadAwailableReports(action) {
+function* loadAvailableReports(action) {
     try {
         const res = yield call(apiClient.get, '/api/report/all');
         yield put(loadReportsRoutine.success(res.data.data));
@@ -87,6 +87,6 @@ export default function* questionnaireReportSagas() {
         yield takeEvery(loadReportRoutine.TRIGGER, loadReport),
         yield takeEvery(loadRespondentReportRoutine.TRIGGER, loadRespondentReports),
         yield takeEvery(loadRespondentReportsRoutine.TRIGGER, loadUsersReports),
-        yield takeEvery(loadReportsRoutine.TRIGGER, loadAwailableReports)
+        yield takeEvery(loadReportsRoutine.TRIGGER, loadAvailableReports)
     ]);
 }

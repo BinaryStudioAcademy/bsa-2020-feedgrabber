@@ -17,7 +17,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
 
     const handleSegmentClick = () => {
         if (!answerHandler && !isCurrent) {
-            setCurrentQuestion(question);
+            setCurrentQuestion(question.id);
         }
     };
 

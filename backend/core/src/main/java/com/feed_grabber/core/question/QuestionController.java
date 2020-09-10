@@ -3,18 +3,13 @@ package com.feed_grabber.core.question;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.apiContract.DataList;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
-import com.feed_grabber.core.question.dto.AddExistingQuestionsDto;
-import com.feed_grabber.core.question.dto.QuestionCreateDto;
-import com.feed_grabber.core.question.dto.QuestionDto;
-import com.feed_grabber.core.question.dto.QuestionUpdateDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
-import com.feed_grabber.core.apiContract.AppResponse;
-import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
-import static com.feed_grabber.core.role.RoleConstants.*;
+import static com.feed_grabber.core.role.RoleConstants.ROLE_COMPANY_OWNER;
+import static com.feed_grabber.core.role.RoleConstants.ROLE_HR;
 
 @RestController
 @RequestMapping("/api/questions")
@@ -92,11 +88,7 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<QuestionDto> update(@RequestBody String json)
-            throws QuestionNotFoundException, JsonProcessingException, CompanyNotFoundException {
-
-        var dto = new ObjectMapper().readValue(json, QuestionUpdateDto.class);
-
+    public AppResponse<QuestionDto> update(@RequestBody QuestionUpdateDto dto) throws QuestionNotFoundException, CompanyNotFoundException {
         return new AppResponse<>(questionService.update(dto));
     }
 

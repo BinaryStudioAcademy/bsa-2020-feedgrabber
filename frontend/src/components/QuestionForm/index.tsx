@@ -6,11 +6,7 @@ import {isEqual} from "lodash";
 import {connect, ConnectedProps} from "react-redux";
 import {loadCategoriesRoutine} from "sagas/categories/routines";
 import {Checkbox, Divider, Dropdown, Form, Loader} from "semantic-ui-react";
-import {
-    addQuestionToSectionRoutine,
-    deleteQuestionFromSectionRoutine,
-    updateQuestionInSectionRoutine
-} from "../../sagas/sections/routines";
+import {addQToFormRoutine, deleteQInFormRoutine, updateQInFormRoutine} from "../../sagas/sections/routines";
 import {useFormik} from "formik";
 import {renderForm} from "./defaultValues";
 import styles from "./styles.module.sass";
@@ -20,20 +16,22 @@ import {mainSchema} from "./schemas";
 import useOutsideAlerter from "../../helpers/outsideClick.hook";
 import {saveQuestionRoutine, updateQuestionRoutine} from "../../sagas/questions/routines";
 import {setFloatingMenuPos} from "../../sagas/app/routines";
+import {getCurrentEntity} from "../../helpers/formEditor.helper";
 
 export interface IQuestionListEditProps {
     cancel: () => void;
 }
 
-const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProps }> = (
+const QuestionForm: FC<QuestionFormProps & { listEdit?: IQuestionListEditProps }> = (
     {
         listEdit,
         currentQuestion,
         isLoading,
         updateQuestion,
         loadCategories,
+        shouldUpdatePos,
         questionnaireId,
-        section,
+        currentSectionId,
         isCatLoading,
         setMenuPos,
         categories,
@@ -54,8 +52,12 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
             isRequired: currentQuestion.isRequired
         },
         validationSchema: mainSchema,
-        onSubmit: () => console.log()
+        onSubmit: () => undefined
     });
+
+    useEffect(() => {
+        setMenuPos(ref.current?.getBoundingClientRect().y);
+    }, [currentQuestion, setMenuPos, shouldUpdatePos]);
 
     useEffect(() => {
         setLocalCategories(categories);
@@ -64,16 +66,16 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
     const onSubmit = useCallback(() => {
         if (isDetailsValid && formik.isValid) {
             const {question, ...rest} = formik.values;
-            const sum = {...question, ...rest, index: currentQuestion.index};
+            const sum = {...question, ...rest};
             if (!isEqual(sum, currentQuestion)) {
                 listEdit ?
                     addQuestion(sum) :
-                    !sum.id ? addQuestion({...sum, questionnaireId, sectionId: section.id})
-                        : updateQuestion({...sum, sectionId: section.id});
+                    !sum.id ? addQuestion({...sum, questionnaireId, sectionId: currentSectionId})
+                        : updateQuestion(sum);
             }
         }
     }, [currentQuestion, addQuestion, updateQuestion,
-        formik.values, isDetailsValid, section, questionnaireId, formik.isValid, listEdit]);
+        formik.values, isDetailsValid, currentSectionId, questionnaireId, formik.isValid, listEdit]);
 
     useEffect(() => {
         const timer = setTimeout(() => onSubmit(), 3000);
@@ -136,11 +138,11 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
                                         <Dropdown
                                             loading={isCatLoading}
                                             id="categoryTitle"
-                                            closeOnBlurbutton
                                             icon="tag"
                                             labeled
                                             className="icon"
                                             button
+                                            selection={false}
                                             onClick={handleCategoriesLoad}
                                             allowAdditions
                                             onChange={(e, {value}) => formik.setFieldValue("categoryTitle", value)}
@@ -182,13 +184,13 @@ const QuestionForm: FC<QuestionDetailsProps & { listEdit?: IQuestionListEditProp
 const mapState = (state: IAppState, ownProps) => ({
     isLoading: state.formEditor.isLoading,
     categories: state.categories.list,
+    shouldUpdatePos: state.formEditor.sections.entities,
     isCatLoading: state.categories.isLoading,
     currentQuestion: ownProps.isList
         ? state.questions.currentQuestion
-        : state.formEditor.currentQuestion,
+        : getCurrentEntity(state.formEditor.questions).question,
     questionnaireId: state.formEditor.questionnaire.id,
-    section: state.formEditor.sections.current,
-    sections: state.formEditor.sections.list
+    currentSectionId: state.formEditor.sections.currentId
 });
 
 const mapDispatch = (dispatch, ownProps) => ({
@@ -196,15 +198,15 @@ const mapDispatch = (dispatch, ownProps) => ({
         ? ownProps.isListNew
             ? saveQuestionRoutine(a)
             : updateQuestionRoutine(a)
-        : addQuestionToSectionRoutine(a)),
-    updateQuestion: (a: any) => dispatch(updateQuestionInSectionRoutine(a)),
+        : addQToFormRoutine(a)),
+    updateQuestion: (a: any) => dispatch(updateQInFormRoutine(a)),
     loadCategories: () => dispatch(loadCategoriesRoutine()),
-    deleteQuestion: (a: any) => dispatch(deleteQuestionFromSectionRoutine(a)),
+    deleteQuestion: (a: any) => dispatch(deleteQInFormRoutine(a)),
     setMenuPos: (a: any) => dispatch(setFloatingMenuPos(a))
 });
 
 const connector = connect(mapState, mapDispatch);
 
-type QuestionDetailsProps = ConnectedProps<typeof connector>;
+type QuestionFormProps = ConnectedProps<typeof connector>;
 
 export default connector(QuestionForm);
