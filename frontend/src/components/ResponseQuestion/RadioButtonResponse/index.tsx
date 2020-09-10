@@ -27,13 +27,13 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     const notResponsePage = window.location.pathname.split("/")[1] !== "response";
 
     useEffect(() => answerHandler?.(answer?.selected || answer?.other ? {
-        selected: !answer?.other ? answer?.selected : null,
+        selected: answer?.selected,
         other: answer?.other
         // eslint-disable-next-line
     } : null), [answer]);
 
     const handleChange = (event, value?) => {
-        setAnswer({ selected: value?.value, other: undefined });
+        setAnswer({ selected: value?.value });
     };
 
     const handleOther = (value: string) => {
@@ -45,7 +45,7 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
         }
         setOtherIsInvalid(false);
         setOther(value);
-        setAnswer({...answer, other: value});
+        setAnswer({ other: value });
     };
 
     const [t] = useTranslation();
