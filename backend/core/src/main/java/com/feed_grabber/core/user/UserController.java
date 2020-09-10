@@ -201,5 +201,4 @@ public class UserController {
         return new AppResponse<>(userProfileService.updateUserSettings(id, dto));
     }
 
-
 }

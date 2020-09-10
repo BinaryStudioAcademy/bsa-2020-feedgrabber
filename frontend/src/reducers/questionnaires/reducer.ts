@@ -7,7 +7,8 @@ import {
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine,
-    setCurrentIdRoutine, loadArchivedQuestionnairesRoutine, setQuestionnaireArchivePaginationRoutine
+    loadArchivedQuestionnairesRoutine,
+    setQuestionnaireArchivePaginationRoutine
 } from '../../sagas/qustionnaires/routines';
 import {IAppState} from "../../models/IAppState";
 import {combineReducers} from "redux";

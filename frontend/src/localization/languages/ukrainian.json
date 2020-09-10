@@ -327,5 +327,13 @@
 
     "You can't revert this action. ": "Ця дія незворотня. ",
     "Are you sure you want to delete this section?": "Ви впевнені, що хочете видалити цей розділ?"
+
+    "No reviews yet": "Відруків ще немає",
+    "No reports yet": "Звітів ще немає",
+    "Company owners": "Власники компанії",
+    "HR managers": "Менеджери з персоналу",
+    "Team Leaders": "Керівники команд",
+    "Active questionnaires": "Опитувальники",
+    "Archived questionnaires": "Архівні Опитувальники"
   }
 }

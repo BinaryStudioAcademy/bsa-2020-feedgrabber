@@ -22,7 +22,7 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
-import {Icon, Modal, Popup} from "semantic-ui-react";
+import {Icon, Modal, ModalContent, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import {useTranslation} from "react-i18next";
 
@@ -184,20 +184,21 @@ const QuestionnaireList: FC<Props> = (
                 updateQuestionnaire={updateQuestionnaire}
                 modalError={modalError}
             />
-            <UIPageTitle title={t("Questionnaires")}/>
-            <UIContent>
-                <UIColumn wide>
-                    <span className={styles.rightFloated}>
+            <UIPageTitle title={t("Questionnaires")}>
+                <span className={styles.rightFloated}>
                         <UIButton title={t("Archived")}
                                   secondary
                                   onClick={() => setShowArchived(!showArchived)}/>
-                    </span>
+                </span>
+            </UIPageTitle>
+            <UIContent>
+                <UIColumn wide>
                     <UIButton
-                        title={t("Add Questionnaire")}
-                        onClick={() => showModal(undefined)}
-                        center
-                        primary
-                    />
+                    title={t("Add Questionnaire")}
+                    onClick={() => showModal(undefined)}
+                    center
+                    primary
+                />
                     {!showArchived
                         ? <GenericPagination isLoading={isLoading} pagination={pagination} setPagination={setPagination}
                                            loadItems={loadQuestionnaires} mapItemToJSX={mapItemToJSX} />
@@ -207,13 +208,15 @@ const QuestionnaireList: FC<Props> = (
                             onClose={() => setShowArchived(false)}
                         >
                             <Modal.Header>{t("Archived")}</Modal.Header>
-                            <GenericPagination
-                                isLoading={isArchiveLoading}
-                                pagination={archivePagination}
-                                setPagination={setArchivePagination}
-                                loadItems={loadArchivedQuestionnaires}
-                                mapItemToJSX={mapItemToJSX}
-                            />
+                            <ModalContent>
+                                <GenericPagination
+                                    isLoading={isArchiveLoading}
+                                    pagination={archivePagination}
+                                    setPagination={setArchivePagination}
+                                    loadItems={loadArchivedQuestionnaires}
+                                    mapItemToJSX={mapItemToJSX}
+                                />
+                            </ModalContent>
                         </Modal>
                     }
                 </UIColumn>

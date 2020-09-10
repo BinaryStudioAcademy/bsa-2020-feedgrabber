@@ -25,7 +25,6 @@ const FormEditor: FC<FormEditorProps & { match }> = (
     {
         match,
         isLoading,
-        setMenuPos,
         setCurrentQuestion,
         questionnaire,
         position,
@@ -44,13 +43,15 @@ const FormEditor: FC<FormEditorProps & { match }> = (
     }
 ) => {
     useEffect(() => {
-        loadQuestionnaire(match.params.id);
+        if (questionnaire.id !== match.params.id) {
+            loadQuestionnaire(match.params.id);
+        }
         toggleMenu(false);
         const e = document.getElementById("root");
         const prevBack = e.style.backgroundColor;
         e.style.backgroundColor = '#f0ebf8';
         return () => e.style.backgroundColor = prevBack;
-    }, [match.params.id, loadQuestionnaire, toggleMenu]);
+    }, [match.params.id, loadQuestionnaire, toggleMenu, questionnaire]);
 
     const addNewQuestion = () => {
         const section = currentSection ?? sections[sections.length - 1];

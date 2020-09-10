@@ -102,9 +102,9 @@
     "Date": "Date",
     "File upload": "File upload",
 
-    "New question": "New question",
-    "Add from existing questions": "Add from existing questions",
-    "Copy": "Copy",
+    "New question": "Add question",
+    "Add from existing questions": "Import questions",
+    "Copy": "Duplicate",
     "Delete": "Delete",
     "Add section": "Add section",
     "Description": "Description",
@@ -159,7 +159,6 @@
     "This question was answered already": "This question was answered already",
     "Are you sure you want to change it?": "Are you sure you want to change it?",
     "Yes, I am sure": "Yes, I am sure",
-    "Cancel": "Cancel",
 
     "average size": "average size",
     "Overall": "Overall",
@@ -321,7 +320,15 @@
     "What's up": "What's up?",
     "Attach image": "Attach image",
     "Submit": "Submit",
-	"Add": "Add",
-    "Add news": "Add news"
+
+    "Add news": "Add news",
+
+    "No reviews yet": "No reviews yet",
+    "No reports yet": "No reports yet",
+    "Company owners": "Company owners",
+    "HR managers": "HR managers",
+    "Active questionnaires": "Active questionnaires",
+    "Archived questionnaires": "Archived questionnaires",
+    "Team Leaders": "Team Leaders"
   }
 }

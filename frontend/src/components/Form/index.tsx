@@ -54,7 +54,10 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                 questions: insertAtIndex(newQuestions, destination.index, draggedItem)
             };
 
-            updateSections(sections.map(s => s.id === newSection.id ? newSection : s));
+            updateSections({
+               sections: sections.map(s => s.id === newSection.id ? newSection : s),
+               currentSection: newSection
+            });
         } else {
             //  card was dropped to origin section
             const newStartSection = {
