@@ -1,6 +1,6 @@
 import {Button, Input, Modal} from 'semantic-ui-react';
 import styles from './styles.module.sass';
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";
@@ -56,8 +56,9 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
 
     const handleChange = (e, {value}) => {
       setQuery(value);
-        loadQuestions({quest: qnId, query: value});
     };
+
+    useEffect(()=>{loadQuestions({quest: qnId, query});},[loadQuestions, qnId, query]);
 
     return (
         <Modal
@@ -83,6 +84,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
                     />
                     <GenericPagination
                         isLoading={isLoading}
+                        unmutedLoading={false}
                         pagination={pagination}
                         setPagination={setPagination}
                         loadItems={() => loadQuestions({quest: qnId, query})}
