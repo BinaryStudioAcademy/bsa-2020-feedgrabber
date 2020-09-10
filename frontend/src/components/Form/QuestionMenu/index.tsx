@@ -34,35 +34,36 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
     const [finalTop, setFinalTop] = useState(0);
     const [top, setTop] = useState(0);
     const [t] = useTranslation();
-    const contentRef = document.getElementById("app-content");
+    const contentRef = useRef(document.getElementById("app-content"));
     const menuRef = useRef(null);
 
     const calcFinalTop = useCallback(() => {
-      if (top < contentRef?.scrollTop) {
-        setFinalTop(contentRef?.scrollTop);
+      if (top < contentRef.current?.scrollTop) {
+        setFinalTop(contentRef?.current.scrollTop);
       } else {
         setFinalTop(Math.min(
-          contentRef?.scrollTop + contentRef?.offsetHeight - menuRef.current?.offsetHeight - 35,
+          contentRef.current?.scrollTop + contentRef.current?.offsetHeight - menuRef.current?.offsetHeight - 35,
           top
         ));
       }
-    }, [contentRef, top]);
+    }, [top]);
 
     useEffect(() => {
-        const x = contentRef?.scrollTop + position;
+        const x = contentRef.current?.scrollTop + position;
         setTop(x ? x - 127 : 0);
         calcFinalTop();
     }, [calcFinalTop, contentRef, position]);
 
     useEffect(() => {
-      contentRef?.addEventListener("scroll", calcFinalTop);
-      return () => contentRef?.removeEventListener("scroll", calcFinalTop);
+      contentRef.current?.addEventListener("scroll", calcFinalTop);
+      const copy = contentRef?.current;
+      return () => copy?.removeEventListener("scroll", calcFinalTop);
     }, [calcFinalTop, contentRef]);
 
     return (
         <div style={{
             position: 'absolute',
-            top: finalTop,
+            top: finalTop || 0,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
         }} ref={menuRef}>
             <Button.Group basic className={styles.floatingMenu} style={{padding: '.1rem'}} vertical size="big">

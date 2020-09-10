@@ -26,11 +26,11 @@ const RadioButtonResponse: FC<IQuestionResponse<IRadioQuestion> & IRadioResponse
     const [answer, setAnswer] = useState(response as { selected?: string; other?: string } || null);
     const notResponsePage = window.location.pathname.split("/")[1] !== "response";
 
-    useEffect(() => answerHandler?.(answer?.selected || answer?.other ? {
+    useEffect(() => {
+        answerHandler?.(answer?.selected || answer?.other ? {
         selected: answer?.selected,
         other: answer?.other
-        // eslint-disable-next-line
-    } : null), [answer]);
+    } : null);}, [answer]);
 
     const handleChange = (event, value?) => {
         setAnswer({ selected: value?.value });

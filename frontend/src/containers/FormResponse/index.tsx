@@ -39,8 +39,10 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
 
     componentDidUpdate(prevProps: Readonly<ResponseProps & { match }>) {
         const {isCompleted, answers, currentSectionIndex} = this.state;
-        console.log(answers, "udpate");
-        const {sections} = this.props;
+        const {sections, match, loadForm} = this.props;
+        if (match.params.id !== prevProps.match.params.id) {
+            loadForm(match.params.id);
+        }
         if (prevProps.sections !== sections) {
             this.setState({
                 answers: sections[0].questions.map(q => this.parseQuestion(q))

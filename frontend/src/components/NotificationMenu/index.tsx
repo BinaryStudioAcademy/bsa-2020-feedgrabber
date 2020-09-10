@@ -18,7 +18,6 @@ import {INotification} from "../../reducers/notifications";
 import {useTranslation} from "react-i18next";
 import RequestNotification from "./notificationTypes/RequestNotification";
 import ReportsNotification from "./notificationTypes/ReportsNotification";
-import {loadResponseFormRoutine} from "../../sagas/response/routines";
 
 export enum MessageTypes {
     plainText = 'plain_text',
@@ -34,7 +33,6 @@ export interface INotificationProps {
 
     readNotification(id: string): void;
 
-    getResponse(id: string): void;
 }
 
 const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
@@ -45,7 +43,6 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
         deleteAll,
         loadNotifications,
         receiveNotification,
-        getResponse,
         readNotification
     }) => {
     const [t] = useTranslation();
@@ -64,14 +61,12 @@ const NotificationMenu: React.FC<INotificationMenuConnectedProps> = (
                     notification={notification}
                     deleteNotification={deleteNotification}
                     readNotification={readNotification}
-                    getResponse={getResponse}
                     setShown={setShown}/>);
             case MessageTypes.reports:
                 return (<ReportsNotification
                     key ={notification.id}
                     notification={notification}
                     deleteNotification={deleteNotification}
-                    getResponse={getResponse}
                     readNotification={readNotification}
                     setShown={setShown}/>);
         }
@@ -132,7 +127,6 @@ const mapDispatchToProps = {
     deleteAll: deleteAllNotificationsRoutine,
     loadNotifications: loadNotificationsRoutine,
     receiveNotification: receiveNotificationRoutine,
-    getResponse: loadResponseFormRoutine,
     readNotification: markNotificationAsReadRoutine
 };
 

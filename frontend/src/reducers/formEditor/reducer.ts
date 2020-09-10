@@ -139,7 +139,8 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                             ...state.sections.entities[payload.sectionId],
                             questions: payload.questions
                         }
-                    }
+                    },
+                    currentId: payload.sectionId
                 },
                 questions: {
                     ...state.questions,
