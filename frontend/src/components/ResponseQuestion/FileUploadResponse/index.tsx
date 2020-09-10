@@ -176,8 +176,10 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
                         render: () =>
                             <Tab.Pane>
                                 {filesType === allTypes.image
-                                    ? <ImageUrl url={url} onChange={onUrlInsert} disabled={response !== undefined}/>
-                                    : <VideoUrl url={url} onChange={onUrlInsert} disabled={response !== undefined}/>
+                                    ? <ImageUrl url={url} onChange={onUrlInsert}
+                                                disabled={(response as string[]).length !== 0}/>
+                                    : <VideoUrl url={url} onChange={onUrlInsert}
+                                                disabled={(response as string[]).length !== 0}/>
                                 }
                             </Tab.Pane>
                     }
