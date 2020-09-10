@@ -80,6 +80,9 @@ class ChartSlide {
     }
 
     private fun getPercent(sum: Int, part: Int): Double {
+        if (sum.equals(0)) {
+            return 0.0;
+        }
         val result: Double = part.toDouble()/sum * 100
         return result.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
     }
