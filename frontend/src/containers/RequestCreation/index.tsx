@@ -26,12 +26,13 @@ import UISwitch from "../../components/UI/UIInputs/UISwitch";
 import {
     setCurrentQuestionInSection, setNoSectionsRoutine,
     updateQuestionsOrderRoutine,
-    updateSectionRoutine, updateSections
+    updateSectionRoutine, updateSections, deleteSectionRoutine, loadSectionsByQuestionnaireRoutine
 } from "sagas/sections/routines";
 import {useTranslation} from "react-i18next";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import QuestionnaireList from "../QuestionnaireList";
 import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
+import {setFloatingMenuPos} from "../../sagas/app/routines";
+import QuestionnaireList from "../QuestionnaireList";
 
 const initialValues = {
     chosenUsers: new Array<IUserShort>(),
@@ -48,22 +49,23 @@ const initialValues = {
 
 const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
     ({
-         match,
-         teams,
-         users,
-         loadTeams,
-         loadUsers,
+       match,
+       teams,
+       users,
+       loadTeams,
+       loadUsers,
          loadOneQuestionnaire,
          updateSection,
-         updateOrder,
-         sendRequest,
-         isLoadingUsers,
-         setCurrentQuestion,
-         isLoadingTeams,
-         updateSectionsR,
-         sections,
-         setNoSections,
-         questionnaireId
+       updateOrder,
+       sendRequest,
+       isLoadingUsers,
+       setCurrentQuestion,
+       isLoadingTeams,
+       updateSectionsR,
+       sections,
+       deleteSection,
+        setNoSections,
+        questionnaireId
      }) => {
 
         const [t] = useTranslation();
@@ -118,6 +120,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         updateOrder={updateOrder}
                                         updateSections={updateSectionsR}
                                         currentQuestion={{} as IQuestion}
+                                        deleteSection={deleteSection}
                                         sections={sections}
                                     /></>}
                             </UICardBlock>
@@ -142,7 +145,6 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                             return;
                                         }
                                         setError(null);
-
                                         const data = {
                                             expirationDate: values.withDeadline
                                                 ? values.expirationDate.toISOString() : null,
@@ -397,15 +399,18 @@ const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
 });
 
 const mapDispatchToProps = {
-    loadTeams: loadTeamsRoutine,
-    loadUsers: loadCompanyUsersRoutine,
-    updateOrder: updateQuestionsOrderRoutine,
-    updateSection: updateSectionRoutine,
-    setCurrentQuestion: setCurrentQuestionInSection,
-    sendRequest: sendQuestionnaireRequestRoutine,
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine,
-    updateSectionsR: updateSections,
-    setNoSections: setNoSectionsRoutine
+  loadTeams: loadTeamsRoutine,
+  loadUsers: loadCompanyUsersRoutine,
+  updateOrder: updateQuestionsOrderRoutine,
+  updateSection: updateSectionRoutine,
+  setMenuPos: setFloatingMenuPos,
+  setCurrentQuestion: setCurrentQuestionInSection,
+  sendRequest: sendQuestionnaireRequestRoutine,
+  loadSections: loadSectionsByQuestionnaireRoutine,
+  updateSectionsR: updateSections,
+  deleteSection: deleteSectionRoutine,
+setNoSections: setNoSectionsRoutine,
+    loadOneQuestionnaire: loadOneQuestionnaireRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -16,6 +16,8 @@ interface IFormProps {
     updateOrder(action: {}): void;
 
     updateSections(action: {}): void;
+
+    deleteSection(id: string): void;
 }
 
 const Form: FC<IFormProps & ResponseQuestionProps> = (
@@ -25,7 +27,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
         updateOrder,
         setCurrentQuestion,
         currentQuestion,
-        updateSection
+        updateSection,
+        deleteSection
     }) => {
 
     function onDragEnd(res) {
@@ -51,7 +54,10 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                 questions: insertAtIndex(newQuestions, destination.index, draggedItem)
             };
 
-            updateSections(sections.map(s => s.id === newSection.id ? newSection : s));
+            updateSections({
+               sections: sections.map(s => s.id === newSection.id ? newSection : s),
+               currentSection: newSection
+            });
         } else {
             //  card was dropped to origin section
             const newStartSection = {
@@ -91,6 +97,8 @@ const Form: FC<IFormProps & ResponseQuestionProps> = (
                         currentQuestion={currentQuestion}
                         section={section}
                         renameSection={updateSection}
+                        deleteSection={deleteSection}
+                        main={sections.length === 1}
                     />)
                 }
             </div>

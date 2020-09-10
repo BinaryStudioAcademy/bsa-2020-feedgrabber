@@ -2,10 +2,7 @@ package com.feed_grabber.core.request;
 
 import com.feed_grabber.core.questionnaire.QuestionnaireMapper;
 import com.feed_grabber.core.questionnaire.model.Questionnaire;
-import com.feed_grabber.core.request.dto.CreateRequestDto;
-import com.feed_grabber.core.request.dto.PendingRequestDto;
-import com.feed_grabber.core.request.dto.RequestQuestionnaireDto;
-import com.feed_grabber.core.request.dto.RequestShortDto;
+import com.feed_grabber.core.request.dto.*;
 import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.response.model.Response;
 import com.feed_grabber.core.user.UserMapper;
@@ -14,9 +11,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.UUID;
 import java.util.Date;
 
 @Mapper(uses = {QuestionnaireMapper.class, UserMapper.class})
@@ -51,4 +45,9 @@ public interface RequestMapper {
     @Mapping(target = "questionnaireTitle", source = "questionnaire.title")
     @Mapping(target = "userCount", expression = "java(request.getResponses().size())")
     RequestShortDto requestToShortDto(Request request);
+
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "closeDate", source = "closeDate", dateFormat = "dd/MM/yyyy")
+    @Mapping(target = "title", source = "questionnaire.title")
+    RequestDashboardDto requestToDashboardDto(Request request);
 }

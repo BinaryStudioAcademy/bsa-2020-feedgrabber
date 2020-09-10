@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle
 import org.apache.poi.xssf.usermodel.XSSFConditionalFormattingRule
 import org.apache.poi.xssf.usermodel.XSSFFont
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.bouncycastle.asn1.x500.style.RFC4519Style.title
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.*
@@ -92,29 +93,27 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
                 textCell("-", rows[4], cellPosition, cellStyle)
             }
             QuestionTypes.scale -> {
-                val answers = service.mapAnswers(QuestionTypes.scale, question.answers) as QuestionWithValues
-                val countedAnswers = countAnswersInQuestionWithValues(answers);
-                val maxAmount = countedAnswers.map { it.value }.max()
-                val minAmount = countedAnswers.map { it.value }.min()
-                val mostCommon = countedAnswers.filter { a -> a.value == maxAmount }.map { "${it.key} - ${it.value} time(s)" }.joinToString(",\n") { it }
-                val leastCommon = countedAnswers.filter { a -> a.value == minAmount }.map { "${it.key} - ${it.value} time(s)" }.joinToString(",\n") { it }
+                val answers = service.mapAnswers(QuestionTypes.scale, question.answers) as QuestionWithOptions
+                val maxAmount = answers.options.map { it.amount }.max()
+                val minAmount = answers.options.map { it.amount }.min()
+                val mostCommon = answers.options.filter { a -> a.amount == maxAmount }.sortedBy { it.amount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
+                val leastCommon = answers.options.filter { a -> a.amount == minAmount }.sortedBy { it.amount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
                 textCell(mostCommon, rows[0], cellPosition, cellStyle)
                 textCell(leastCommon, rows[1], cellPosition, cellStyle)
-                numericCell(answers.values.stream().map { it.toInt() }.collect(Collectors.toList()).max()!!.toDouble(), rows[2], cellPosition, cellStyle)
-                numericCell(answers.values.stream().map { it.toInt() }.collect(Collectors.toList()).min()!!.toDouble(), rows[3], cellPosition, cellStyle)
-                numericCell((answers.values.stream().map { it.toInt() }.collect(Collectors.toList()).sum().toDouble() / answers.values.size), rows[4], cellPosition, cellStyle)
+                numericCell(answers.options.stream().map { it.title.toDouble() }.max(Double::compareTo).get(), rows[2], cellPosition, cellStyle)
+                numericCell(answers.options.stream().map { it.title.toDouble() }.min(Double::compareTo).get(), rows[3], cellPosition, cellStyle)
+                numericCell(answers.options.stream().mapToDouble { it.title.toDouble() }.sum()/answers.options.size, rows[4], cellPosition, cellStyle)
             }
             QuestionTypes.date -> {
-                val answers = service.mapAnswers(QuestionTypes.date, question.answers) as QuestionWithValues
-                val countedAnswers = countAnswersInQuestionWithValues(answers);
-                val maxAmount = countedAnswers.map { it.value }.max()
-                val minAmount = countedAnswers.map { it.value }.min()
-                val mostCommon = countedAnswers.filter { a -> a.value == maxAmount }.map { "${it.key} - ${it.value} time(s)" }.joinToString(",\n") { it }
-                val leastCommon = countedAnswers.filter { a -> a.value == minAmount }.map { "${it.key} - ${it.value} time(s)" }.joinToString(",\n") { it }
+                val answers = service.mapAnswers(QuestionTypes.date, question.answers) as QuestionWithOptions
+                val maxAmount = answers.options.map { it.amount }.max()
+                val minAmount = answers.options.map { it.amount }.min()
+                val mostCommon = answers.options.filter { a -> a.amount == maxAmount }.sortedBy { it.amount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
+                val leastCommon = answers.options.filter { a -> a.amount == minAmount }.sortedBy { it.amount }.map { "${it.title} - ${it.amount} time(s)" }.joinToString(",\n") { it }
                 textCell(mostCommon, rows[0], cellPosition, cellStyle)
                 textCell(leastCommon, rows[1], cellPosition, cellStyle)
-                textCell(answers.values.map { v -> LocalDate.parse(v) }.max().toString(), rows[2], cellPosition, cellStyle)
-                textCell(answers.values.map { v -> LocalDate.parse(v) }.min().toString(), rows[3], cellPosition, cellStyle)
+                textCell(answers.options.map { v -> LocalDate.parse(v.title) }.max().toString(), rows[2], cellPosition, cellStyle)
+                textCell(answers.options.map { v -> LocalDate.parse(v.title) }.min().toString(), rows[3], cellPosition, cellStyle)
                 textCell("-", rows[4], cellPosition, cellStyle)
             }
             QuestionTypes.fileUpload, QuestionTypes.freeText -> {
@@ -256,7 +255,7 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
         statsFormatingPattern.fillPattern = PatternFormatting.SOLID_FOREGROUND
 
         val cfRules = arrayOf<ConditionalFormattingRule>(statsRule, responsesRule)
-        val regions = arrayOf(CellRangeAddress(2, rowsNumber + 2, 1, columnsNumber), CellRangeAddress(statisticsStartRow + 2, statisticsStartRow + 6, 3, columnsNumber))
+        val regions = arrayOf(CellRangeAddress(2, rowsNumber + 2, 1, columnsNumber), CellRangeAddress(statisticsStartRow + 2, statisticsStartRow + 6, 3, (if (columnsNumber>3) columnsNumber else 3)))
         sheetCF.addConditionalFormatting(regions, cfRules)
 
         sheet.createFreezePane(0, 3)
@@ -289,12 +288,14 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
 
         for (question in parsedQuestions) {
             when (question.type) {
-                QuestionTypes.checkbox, QuestionTypes.radio -> {
-                    val answers: QuestionWithOptions;
+                QuestionTypes.checkbox, QuestionTypes.scale, QuestionTypes.radio -> {
+                    var answers: QuestionWithOptions;
                     if (question.type == QuestionTypes.checkbox)
                         answers = service.mapAnswers(QuestionTypes.checkbox, question.answers) as QuestionWithOptions
-                    else
+                    else if (question.type == QuestionTypes.radio)
                         answers = service.mapAnswers(QuestionTypes.radio, question.answers) as QuestionWithOptions
+                    else
+                        answers = service.mapAnswers(QuestionTypes.scale, question.answers) as QuestionWithOptions
                     sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.options.size, 1, 1))
                     sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.options.size, 2, 2))
 
@@ -307,27 +308,22 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
                         rowLine++
                     }
                 }
-                QuestionTypes.scale, QuestionTypes.date -> {
-                    val answers: QuestionWithValues;
-                    if (question.type == QuestionTypes.date)
-                        answers = service.mapAnswers(QuestionTypes.date, question.answers) as QuestionWithValues
-                    else
-                        answers = service.mapAnswers(QuestionTypes.scale, question.answers) as QuestionWithValues
-                    val countedAnswers = countAnswersInQuestionWithValues(answers);
-                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + countedAnswers.size, 1, 1))
-                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + countedAnswers.size, 2, 2))
-                    for (answer in countedAnswers.toList().sortedByDescending { (_, value) -> value }.toMap()) {
+                QuestionTypes.date -> {
+                    val answers = service.mapAnswers(QuestionTypes.date, question.answers) as QuestionWithOptions
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.options.size, 1, 1))
+                    sheet.addMergedRegion(CellRangeAddress(rowLine, rowLine + answers.options.size, 2, 2))
+                    for (answer in answers.options) {
                         val row: Row = sheet.createRow(rowLine)
                         textCell(question.title, row, 1, dataCellStyle)
                         textCell(question.type.name, row, 2, dataCellStyle)
-                        textCell(answer.key, row, 3, dataCellStyle)
-                        textCell("${answer.value} time(s)", row, 4, dataCellStyle)
+                        textCell(answer.title, row, 3, dataCellStyle)
+                        textCell("${answer.amount} time(s)", row, 4, dataCellStyle)
                         rowLine++
                     }
                 }
                 QuestionTypes.freeText, QuestionTypes.fileUpload -> {
                     val answers: QuestionWithValues;
-                    if (question.type == QuestionTypes.date)
+                    if (question.type == QuestionTypes.freeText)
                         answers = service.mapAnswers(QuestionTypes.freeText, question.answers) as QuestionWithValues
                     else
                         answers = service.mapAnswers(QuestionTypes.fileUpload, question.answers) as QuestionWithValues

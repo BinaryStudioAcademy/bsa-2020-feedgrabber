@@ -7,6 +7,7 @@ import com.feed_grabber.core.exceptions.AlreadyExistsException;
 import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.image.ImageRepository;
 import com.feed_grabber.core.image.exceptions.ImageNotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.dto.UserProfileEditDto;
 import com.feed_grabber.core.user.dto.UserSettingsDto;
@@ -71,7 +72,7 @@ public class UserProfileService {
         try {
             return UserMapper.MAPPER.detailedFromUser(userRepository.save(user));
         } catch (RuntimeException e) {
-            throw new AlreadyExistsException("User with this name already exists");
+            throw new AlreadyExistsException(Translator.toLocale("user_exists"));
         }
     }
 
@@ -86,7 +87,7 @@ public class UserProfileService {
         try {
             authenticationManager.authenticate(upa);
         } catch (Exception e) {
-            throw new WrongCredentialsException("Incorrect password");
+            throw new WrongCredentialsException(Translator.toLocale("incorrect_password"));
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));

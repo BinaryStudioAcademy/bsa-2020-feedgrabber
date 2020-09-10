@@ -6,7 +6,7 @@ import {
   loadCompanyFeedItemRoutine,
   saveCompanyFeedItemRoutine,
   createCompanyFeedItemRoutine,
-  reactOnNewsRoutine, applyReactionRoutine
+  reactOnNewsRoutine
 } from './routines';
 import { ICompanyFeedItem } from '../../models/companyFeed/ICompanyFeedItem';
 
@@ -66,10 +66,11 @@ function* reactOnNews(action) {
 
 function* createCompanyFeedItem(action) {
   try {
-    const res = yield call(apiClient.post, '/api/news', action.payload); 
+    const res = yield call(apiClient.post, '/api/news', action.payload);
     yield put(createCompanyFeedItemRoutine.success(res.data.data));
     yield put(loadCompanyFeedRoutine.trigger());
   } catch (err) {
+    yield put(createCompanyFeedItemRoutine.failure());
     toastr.error('Unable to create feed item');
   }
 }

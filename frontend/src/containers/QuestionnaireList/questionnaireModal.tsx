@@ -6,7 +6,6 @@ import styles from './styles.module.sass';
 import {ICreateQuestionnaire, IQuestionnaire, IUpdateQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {useTranslation} from "react-i18next";
 import UIButton from "../../components/UI/UIButton";
-import { symbol } from 'prop-types';
 
 interface IQuestionnaireModalProps {
   modalQuestionnaire?: IQuestionnaire;

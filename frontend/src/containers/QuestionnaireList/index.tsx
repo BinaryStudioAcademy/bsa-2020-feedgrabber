@@ -22,7 +22,7 @@ import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UIButton from "../../components/UI/UIButton";
-import {Header, Icon, Modal, Popup} from "semantic-ui-react";
+import {Header, Icon, Modal, ModalContent, Popup} from "semantic-ui-react";
 import styles from './styles.module.sass';
 import {useTranslation} from "react-i18next";
 
@@ -188,23 +188,22 @@ const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
                 updateQuestionnaire={updateQuestionnaire}
                 modalError={modalError}
             />
-            {!muteActions
-                ? <UIPageTitle title={t("Questionnaires")}/>
-                : <Header>Choose questionnaire to send request</Header>}
+            {!muteActions ? <UIPageTitle title={t("Questionnaires")}>
+                <span className={styles.rightFloated}>
+                        <UIButton title={t("Archived")}
+                                  secondary
+                                  onClick={() => setShowArchived(!showArchived)}/>
+                </span>
+            </UIPageTitle>
+            : <Header>Choose questionnaire to send request</Header>}
             <UIContent>
                 <UIColumn wide>
-                    {!muteActions && <> <span className={styles.rightFloated}>
-                    <UIButton title={t("Archived")}
-                                  secondary
-                                  onClick={() => setShowArchived(!showArchived)}
-                    />
-                    </span>
-                    <UIButton
-                        title={t("Add Questionnaire")}
-                        onClick={() => showModal(undefined)}
-                        center
-                        primary
-                    /> </>}
+                    {!muteActions && <UIButton
+                    title={t("Add Questionnaire")}
+                    onClick={() => showModal(undefined)}
+                    center
+                    primary
+                />}
                     {!showArchived
                         ? <GenericPagination isLoading={isLoading} pagination={pagination} setPagination={setPagination}
                                            loadItems={loadQuestionnaires} mapItemToJSX={mapItemToJSX} />
@@ -214,13 +213,15 @@ const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
                             onClose={() => setShowArchived(false)}
                         >
                             <Modal.Header>{t("Archived")}</Modal.Header>
-                            <GenericPagination
-                                isLoading={isArchiveLoading}
-                                pagination={archivePagination}
-                                setPagination={setArchivePagination}
-                                loadItems={loadArchivedQuestionnaires}
-                                mapItemToJSX={mapItemToJSX}
-                            />
+                            <ModalContent>
+                                <GenericPagination
+                                    isLoading={isArchiveLoading}
+                                    pagination={archivePagination}
+                                    setPagination={setArchivePagination}
+                                    loadItems={loadArchivedQuestionnaires}
+                                    mapItemToJSX={mapItemToJSX}
+                                />
+                            </ModalContent>
                         </Modal>
                     }
                 </UIColumn>

@@ -44,7 +44,7 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
             <Input
                 icon='hashtag'
                 iconPosition='left'
-                label={{ tag: true, content: 'Add Title' }}
+                label={{ tag: true, content: t('Add Title') }}
                 labelPosition='right'
                 value={title}
                 fluid

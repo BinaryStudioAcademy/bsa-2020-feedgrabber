@@ -1,6 +1,7 @@
 package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
@@ -10,12 +11,12 @@ import com.feed_grabber.core.sections.dto.*;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import com.feed_grabber.core.sections.model.Section;
 import com.feed_grabber.core.sections.model.SectionQuestion;
-import com.feed_grabber.core.sections.model.SectionQuestionId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +34,7 @@ public class SectionService {
     }
 
     public SectionDto create(SectionCreateDto createDto) throws QuestionnaireNotFoundException {
-        if (createDto.getTitle() == null) createDto.setTitle("New section");
+        if (createDto.getTitle() == null) createDto.setTitle(Translator.toLocale("new_section"));
 
         var questionnaire = questionnaireRepository.findById(createDto.getQuestionnaireId())
                 .orElseThrow(QuestionnaireNotFoundException::new);
@@ -142,5 +143,22 @@ public class SectionService {
                 .filter(q -> q.getOrderIndex().equals(index))
                 .findFirst()
                 .orElseThrow(QuestionNotFoundException::new);
+    }
+
+    private void updateSectionIndexes(UUID questionnaireId) {
+        AtomicInteger index = new AtomicInteger();
+        var sections = sectionRepository
+            .findByQuestionnaireIdOrderByOrder(questionnaireId)
+            .stream()
+            .peek(section -> section.setOrder(index.getAndIncrement()))
+            .collect(Collectors.toList());
+        sectionRepository.saveAll(sections);
+    }
+
+    public void delete(UUID id) throws SectionNotFoundException {
+        var section = sectionRepository.findById(id)
+                .orElseThrow(SectionNotFoundException::new);
+        sectionRepository.deleteById(id);
+        updateSectionIndexes(section.getQuestionnaire().getId());
     }
 }

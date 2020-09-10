@@ -31,7 +31,8 @@ const authAndProfileReducer = (state: IAppState['user'] = initialState, {type, p
         || type === registerByEmailRoutine.SUCCESS) {
         return {
             ...state,
-            isRegisteredSuccess: payload
+            isRegisteredSuccess: payload,
+            isLoading: false
         };
     }
     if (type === getUserRoutine.SUCCESS) {

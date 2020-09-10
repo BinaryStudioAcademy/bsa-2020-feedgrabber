@@ -2,6 +2,7 @@ package com.feed_grabber.core.notification;
 
 import com.feed_grabber.core.config.NotificationService;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.notification.dto.NotificationResponseDto;
 import com.feed_grabber.core.notification.model.UserNotification;
 import com.feed_grabber.core.report.dto.ReportLinksDto;
@@ -47,7 +48,7 @@ public class UserNotificationService {
 
     public void markAsRead(UUID notificationId) throws NotFoundException {
         var notification = userNotificationRepository.findById(notificationId)
-                .orElseThrow(() -> new NotFoundException("Notification Not Found"));
+                .orElseThrow(() -> new NotFoundException(Translator.toLocale("notification_not_found")));
         notification.setIsRead(true);
         userNotificationRepository.save(notification);
     }
@@ -57,7 +58,7 @@ public class UserNotificationService {
         var notificationId = userNotificationRepository.save(UserNotification
                 .builder()
                 .request(request)
-                .text("You have new generated reports")
+                .text(Translator.toLocale("generated_report"))
                 .isClosed(false)
                 .isRead(false)
                 .type(MessageTypes.reports)

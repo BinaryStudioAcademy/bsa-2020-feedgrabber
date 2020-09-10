@@ -16,8 +16,9 @@ const schema = yup.object().shape({
         .required("Company name required")
         .min(2, "Company name too short!")
         .max(40, "Company name too long!")
-        .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
-            "Company name must be valid"),
+        .matches(/^([a-zA-Z0-9])([ ]?[a-zA-Z0-9])*$/,
+            "Company name should not start/end with space, have more than one space in sequence. " +
+          "Company name should contain latin letters and numbers"),
     email: yup
         .string()
         .email("Email must be valid")
@@ -43,7 +44,7 @@ const schema = yup.object().shape({
 });
 
 const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
-    const {signUp, className, error, success} = props;
+    const {signUp, className, error, success, isLoading} = props;
     const [ t ] = useTranslation();
 
     return (
@@ -87,7 +88,7 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                         />
                         <Input name="companyName" placeholder="Company" value={values.companyName}
                         onChange={handleChange} onBlur={handleBlur}
-                        /> 
+                        />
                         <Input name="password" type="password" placeholder="Password" value={values.password}
                                onChange={handleChange} onBlur={handleBlur}
                         />
@@ -99,11 +100,11 @@ const SignUpForm: FC<SignUpFormProps & {className: string}> = props => {
                             errorText && <Message attached="top" error size="tiny" content={t(errorText)}/>
                         }
                         {
-                            success && <Message attached="top"
+                            !errorText && success && <Message attached="top"
                                                 positive
                                                 content={"Account created!\n Check your email"}/>
                         }
-                        <Button disabled={!!errorText && errorText !== error}
+                        <Button disabled={(!!errorText && errorText !== error) || isLoading}
                                 variant="secondary"
                                 type="submit"
                                 marginTop="1.17rem">
