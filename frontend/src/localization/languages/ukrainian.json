@@ -308,9 +308,6 @@
     "Change title": "Змінити заголовок",
     "Delete questionnaire": "Видалити опитувальник",
 
-    "Edit questionnaire": "Редагувати опитник",
-    "Add questionnaire": "Створити опитник",
-
     "Archive": "Архівувати",
     "Unarchive": "Розархівувати",
     "Archived": "Архів",
@@ -326,7 +323,7 @@
     "Add news": "Додати новину",
 
     "You can't revert this action. ": "Ця дія незворотня. ",
-    "Are you sure you want to delete this section?": "Ви впевнені, що хочете видалити цей розділ?"
+    "Are you sure you want to delete this section?": "Ви впевнені, що хочете видалити цей розділ?",
 
     "No reviews yet": "Відруків ще немає",
     "No reports yet": "Звітів ще немає",
