@@ -21,10 +21,15 @@ export const parseQuestion = rawQuestion => ({
 
 function* getAll(action) {
     try {
+        const {quest, query} = action.payload || {};
         const store = yield select();
         const {page, size} = store.questions.pagination;
         const res = (yield call(apiClient.get
-            , `/api/questions?page=${page}&size=${size}&questionnaire=${action.payload || ''}`))
+            , `/api/questions?page=${page}&size=${size}&${quest
+                ? ('&questionnaire=' + quest)
+                : ''}&${query
+                ? ('&query=' + query)
+                : ''}`))
             .data.data;
 
         res.items = res.items.map(q => parseQuestion(q));

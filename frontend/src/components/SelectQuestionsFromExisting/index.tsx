@@ -1,4 +1,4 @@
-import {Button, Modal} from 'semantic-ui-react';
+import {Button, Input, Modal} from 'semantic-ui-react';
 import styles from './styles.module.sass';
 import React, {FC, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
@@ -30,7 +30,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
     }) => {
     const [t] = useTranslation();
     const [selected, setSelected] = useState([] as IQuestion[]);
-
+    const [query, setQuery] = useState('');
     const handleClick = (id, isSelected) => {
         if (isSelected) {
             setSelected(selected.filter(q => q.id !== id));
@@ -54,21 +54,38 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         handleOpenModal(false);
     };
 
+    const handleChange = (e, {value}) => {
+      setQuery(value);
+        loadQuestions({quest: qnId, query: value});
+    };
+
     return (
         <Modal
             open={isOpen}
-            onMount={() => loadQuestions(qnId)}
+            onMount={() => loadQuestions({quest: qnId})}
             className={styles.questionModal}
             onOpen={() => handleOpenModal(true)}
             onClose={() => handleOpenModal(false)}
         >
             <Modal.Content scrolling className={styles.questionsExisting}>
                 <Modal.Description>
+                    <Input style={{width: '450px', marginRight: '1em'}}
+                           icon={{
+                               name: 'search',
+                               circular: true,
+                               link: true,
+                               onClick: handleChange,
+                               style: {boxShadow: "none"}
+                           }}
+                           placeholder={t('Search existing questions')}
+                           value={query}
+                           onChange={handleChange}
+                    />
                     <GenericPagination
                         isLoading={isLoading}
                         pagination={pagination}
                         setPagination={setPagination}
-                        loadItems={() => loadQuestions(qnId)}
+                        loadItems={() => loadQuestions({quest: qnId, query})}
                         mapItemToJSX={(q: IQuestion) =>
                             <ModalQuestionItem
                                 key={q.id}
