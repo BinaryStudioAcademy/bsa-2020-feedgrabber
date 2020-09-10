@@ -17,6 +17,7 @@ import responseSagas from './response/sagas';
 import roleSagas from './role/sagas';
 import searchSagas from "./search/sagas";
 import companyFeedSaga from './companyFeed/sagas';
+import commentsSagas from "./comments/sagas";
 import dashboardSagas from './dashboard/sagas';
 
 export default function* rootSaga() {
@@ -39,6 +40,7 @@ export default function* rootSaga() {
         roleSagas(),
         sectionSagas(),
         searchSagas(),
+        commentsSagas(),
         dashboardSagas()
     ]);
 }

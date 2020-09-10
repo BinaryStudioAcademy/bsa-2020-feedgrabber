@@ -323,8 +323,13 @@
     "What's up": "What's up?",
     "Attach image": "Attach image",
     "Submit": "Submit",
-
     "Add news": "Add news",
+
+    "Add": "Add",
+    "comment": "comment",
+    "comments": "comments",
+    "Edit": "Edit",
+    "Leave comment": "Leave comment",
 
     "No reviews yet": "No reviews yet",
     "No reports yet": "No reports yet",

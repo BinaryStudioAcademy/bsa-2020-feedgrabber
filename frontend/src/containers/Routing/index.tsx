@@ -35,6 +35,7 @@ import SignUpByEmailPage from 'components/SignUpByEmailPage';
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
 import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
+import ExpandedNewsItem from "../../components/ExpandedNews";
 
 const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
     const isLogged = useAuth();
@@ -52,7 +53,7 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <GuestRoute exact path="/auth/email" component={SignUpByEmailPage}/>
                     <GuestRoute exact path="/sign-up/:id" component={InvitationSignUp}/>
                     <GuestRoute exact path="/reset/:id" component={ResetPasswordForm}/>
-                    <Route exact path="/error" render={ props => <ErrorPage {...props}/>}/>
+                    <Route exact path="/error" render={props => <ErrorPage {...props}/>}/>
                     <Route exact path="/verify-registration/:id" component={AccountVerificationPage}/>
                     <PrivateRoute exact path="/home" component={MainPage}/>
                     <PrivateRoute exact path="/profile" component={() => <Profile mode='profile'/>}/>
@@ -66,17 +67,17 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/company/new" component={CompanyFeedItemCreation}/>
                     <PrivateRoute exact path="/company" component={NewsList}/>
                     <PrivateRoute exact path="/company/:id" component={CompanyFeedItemCreation}/>
+                    <PrivateRoute exact path="/company/news/:id" component={ExpandedNewsItem} />
                     <PrivateRoute exact path="/people/:tab" component={PeopleManagementPage}/>
                     <PrivateRoute exact path="/people/teams/:id" component={TeamDetailsPage}/>
                     <PrivateRoute exact path="/questionnaires" component={QuestionnaireList}/>
                     <PrivateRoute exact path="/questionnaires/:id" component={ExpandedQuestionnaire}/>
                     <PrivateRoute exact path="/questionnaires/:id/preview" component={Form}/>
-                    <PrivateRoute exact path="/questionnaires/:id/new-request" component={RequestCreation}/>
+                    <PrivateRoute exact path="/questionnaire/:id?/new-request" component={RequestCreation}/>
                     <PrivateRoute exact path="/questionnaires/:id/requests" component={RequestsPage}/>
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>
                     <PrivateRoute exact path="/report/:id/:respondent/:username" component={RespondentReport}/>
-                    <PrivateRoute exact path={["/response/:id/", "/response/:id/modify/:responseId/"]}
-                                  component={QuestionnaireResponse}/>
+                    <PrivateRoute path="/response/:id/modify?/:responseId?" component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
                     <PrivateRoute exact path="/employees" component={UserList}/>
                     <PrivateRoute exact path="/question/:id" component={QuestionDetailsContainer}/>

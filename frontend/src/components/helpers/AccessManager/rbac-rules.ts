@@ -37,6 +37,7 @@ const employee: IRole = {
         "/report/:id",
         "/report/:id/:respondent/:username",
         "/response/:id",
+        "/company/news/:id",
         "/response/:id/",
         "/response/:id/modify/:responseId/"
     ],

@@ -10,7 +10,7 @@ import {
     setCurrentQuestionInSection,
     setCurrentSectionRoutine,
     updateQuestionInSectionRoutine, updateQuestionsOrderRoutine,
-    updateSectionRoutine,
+    updateSectionRoutine, setNoSectionsRoutine,
     updateSections
 } from "sagas/sections/routines";
 import {
@@ -38,6 +38,14 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 sections: {
                     ...state.sections,
                     current: payload
+                }
+            };
+            case setNoSectionsRoutine.TRIGGER:
+            return {
+                ...state,
+                sections: {
+                    list: [],
+                    current: {}
                 }
             };
         case createSectionRoutine.SUCCESS:

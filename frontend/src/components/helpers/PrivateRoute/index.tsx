@@ -8,6 +8,7 @@ import {connect} from "react-redux";
 import {toggleMenuRoutine} from "../../../sagas/app/routines";
 import AccessManager from "../AccessManager";
 import {useTranslation} from "react-i18next";
+import moment from "moment-with-locales-es6";
 import {getUserSettingsRoutine} from "../../../sagas/user/routines";
 import {IAppState} from "../../../models/IAppState";
 
@@ -29,6 +30,7 @@ const PrivateRoute = ({
     useEffect(() => {
         if (i18n.language !== user.settings?.language) {
             i18n.changeLanguage(user.settings.language);
+            moment.locale(user.settings.language);
         }
     }, [i18n, user.settings]);
 
