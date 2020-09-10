@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, {FC, useEffect, useState} from "react";
 import { Tab, Button } from "semantic-ui-react";
 import styles from "./styles.module.sass";
 import InternalStorageUpload from "./InternalStorageUpload";
@@ -29,6 +29,19 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
     const maxFileSize = question.details.filesSize * (1024 * 1024);
     const filesType = question.details.filesType;
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() =>{updateLinks();},[files]);
+
+    useEffect(() =>{
+        if(url !== ''){
+            answerHandler?.([...links, url]);
+        }else{
+            answerHandler?.([...links]);
+        }
+        setIsUploading(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        },[links]);
+
     const onFilesAdded = async addedFiles => {
       setError('');
       setIsUploading(true);
@@ -41,7 +54,6 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
         return;
       }
       deleteNotAllowedFiles(newFiles);
-
       await uploadFiles(addedFiles);
       answerHandler?.(
         [...links, url]
@@ -52,12 +64,12 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
     const onUrlInsert = url => {
       setUrl(url);
       if (url) {
-        console.log('url + links');
-        console.log([...links, url]);
-        answerHandler?.([...links, url]);
+        if(url !== ''){
+            answerHandler?.([...links, url]);
+        }else{
+            answerHandler?.([...links]);
+        }
       } else {
-        console.log('links');
-        console.log([...links]);
         answerHandler?.([...links]);
       }
     };
@@ -74,13 +86,11 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
       }
       (await Promise.all(promises))
         .forEach(res => {
-          console.log(res);
           setFiles([...files, res]);
         });
-      updateLinks();
     };
 
-   const updateLinks = () => setLinks(files.map(file => file.id));
+   const updateLinks = () => setLinks(files.map(file => file.link));
 
     const uploadFile = file => {
       const formData = new FormData();
@@ -92,7 +102,6 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
             name: file.name
           }));
       } catch (err) {
-        console.log(err);
         return new Promise((resolve, reject) => reject('error'));
       }
     };
@@ -112,7 +121,6 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
 	const deleteFile = id => {
       apiClient.delete(`/api/files?id=${id}`).catch(err => {
         // handle deletion error
-        console.log(err);
       });
       const updatedFiles = files.filter(file => file.id !== id);
       setFiles(updatedFiles);
@@ -186,6 +194,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
         <Tab className={styles.tab} panes={getPanes()}/>
       </div>
     );
+
   };
 
 export default FileUploadResponse;
