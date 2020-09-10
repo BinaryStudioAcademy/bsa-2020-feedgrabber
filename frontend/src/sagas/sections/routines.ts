@@ -15,6 +15,7 @@ export const updateQuestionsOrderRoutine = createRoutine("SECTION:UPDATE_QUESTIO
 export const loadSavedSectionsByQuestionnaireRoutine = createRoutine("SECTION:LOAD_SAVED");
 export const moveQuestionInSectionRoutine = createRoutine("SECTION:MOVE_QUESTION");
 export const updateSections = createRoutine("SECTION:REPLACE_STATE");
+export const setNoSectionsRoutine = createRoutine("SECTION:SET_BLANK");
 
 type sectionQuestionAdd = {
     sectionId: string;

@@ -1,31 +1,35 @@
-import React, {FC, useEffect} from "react";
+import React, { FC, useEffect } from "react";
 import ReactPaginate from 'react-paginate';
 
 import styles from './styles.module.sass';
-import {IPaginationInfo} from "../../../models/IPaginationInfo";
+import { IPaginationInfo } from "../../../models/IPaginationInfo";
 import LoaderWrapper from "../LoaderWrapper";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface IGenericPaginationProps {
   isLoading: boolean;
   pagination?: IPaginationInfo<any>;
+  itemsStyle?: string;
 
   setPagination(pagination: IPaginationInfo<any>): void;
+
   mapItemToJSX(item: any): JSX.Element;
+
   loadItems(): void;
 }
 
-const sizeOptions = [10, 25, 50];
+const sizeOptions = [3 ,5, 10, 25, 50];
 const defaultSize = 10;
 
-const GenericPagination: FC<IGenericPaginationProps&{unmutedLoading?: boolean}> = (
+const GenericPagination: FC<IGenericPaginationProps & {unmutedLoading?: boolean}> = (
   {
     pagination,
-    isLoading,
       unmutedLoading,
+    isLoading,
     setPagination,
     mapItemToJSX,
-    loadItems
+    loadItems,
+    itemsStyle
   }
 ) => {
   const [t] = useTranslation();
@@ -37,13 +41,13 @@ const GenericPagination: FC<IGenericPaginationProps&{unmutedLoading?: boolean}> 
   };
 
   const handleChangePage = (page: number): void => {
-    setPagination({...pagination, page});
+    setPagination({ ...pagination, page });
     loadItems();
   };
 
   const handleChangeAmountPerPage = (option: string): void => {
     const amount = Number(option);
-    setPagination({...pagination, page: 0, size: amount});
+    setPagination({ ...pagination, page: 0, size: amount });
     loadItems();
   };
 
@@ -53,7 +57,7 @@ const GenericPagination: FC<IGenericPaginationProps&{unmutedLoading?: boolean}> 
         handleChangePage(pagination.page - 1);
       }
     } else {
-      setPagination({total: 0, page: 0, size: defaultSize, items: []});
+      setPagination({ total: 0, page: 0, size: defaultSize, items: [] });
       loadItems();
     }
   });
@@ -70,38 +74,38 @@ const GenericPagination: FC<IGenericPaginationProps&{unmutedLoading?: boolean}> 
             >
               {sizeOptions.map(o => <option key={o}>{o}</option>)}
             </select>
-            &nbsp;{t("items per page")}
+                        &nbsp;{t("items per page")}
           </div>
         </div>
       )}
       <LoaderWrapper loading={unmutedLoading ?? isLoading}>
         <div>
-          <div className={styles.listWrapper}>
+          <div className={itemsStyle || styles.listWrapper}>
             {pagination?.items?.length > 0
               ? pagination.items.map(i => mapItemToJSX(i))
               : <div className={styles.paginationNoItems}>{t("No items")}</div>}
           </div>
         </div>
-      {pagination?.total > 0 && (
-        <div className={styles.paginationPagesWrapper}>
-          <ReactPaginate
-            forcePage={pagination?.page}
-            onPageChange={o => handleChangePage(o.selected)}
-            pageCount={getPageCount()}
-            pageRangeDisplayed={2}
-            marginPagesDisplayed={1}
-            previousLabel="<"
-            nextLabel=">"
-            containerClassName={styles.paginationPagesContainer}
-            breakLinkClassName={styles.pageLink}
-            pageLinkClassName={styles.pageLink}
-            previousLinkClassName={styles.pageLink}
-            nextLinkClassName={styles.pageLink}
-            activeClassName={styles.pageActive}
-            disabledClassName={styles.pageDisabled}
-          />
-        </div>
-      )}
+        {pagination?.total > 0 && (
+          <div className={styles.paginationPagesWrapper}>
+            <ReactPaginate
+              forcePage={pagination?.page}
+              onPageChange={o => handleChangePage(o.selected)}
+              pageCount={getPageCount()}
+              pageRangeDisplayed={2}
+              marginPagesDisplayed={1}
+              previousLabel="<"
+              nextLabel=">"
+              containerClassName={styles.paginationPagesContainer}
+              breakLinkClassName={styles.pageLink}
+              pageLinkClassName={styles.pageLink}
+              previousLinkClassName={styles.pageLink}
+              nextLinkClassName={styles.pageLink}
+              activeClassName={styles.pageActive}
+              disabledClassName={styles.pageDisabled}
+            />
+          </div>
+        )}
       </LoaderWrapper>
     </>
   );

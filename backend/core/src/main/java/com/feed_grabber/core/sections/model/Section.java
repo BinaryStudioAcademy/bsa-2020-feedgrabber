@@ -40,7 +40,7 @@ public class Section {
     private Integer order;
 
     @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
-    @ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 

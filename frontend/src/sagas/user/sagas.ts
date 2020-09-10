@@ -16,6 +16,7 @@ import {
   updateUserUsernameRoutine,
   uploadUserAvatarRoutine
 } from "./routines";
+import localeProvider from "../../helpers/localeProvider";
 
 function* getUser() {
   try {
@@ -120,6 +121,7 @@ function* updatePassword(action) {
 function* getSettings() {
   try {
     const res: IGeneric<IUserSettings> = yield call(apiClient.get, '/api/user/settings');
+    localeProvider.setLocale(res.data.data.language);
     yield put(getUserSettingsRoutine.success(res.data.data));
   } catch (error) {
     toastr.error('Unable to load settings');

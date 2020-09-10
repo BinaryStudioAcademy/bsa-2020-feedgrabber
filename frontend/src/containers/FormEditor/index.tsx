@@ -11,7 +11,8 @@ import {
     setCurrentQuestionInSection,
     updateQuestionsOrderRoutine,
     updateSectionRoutine,
-    updateSections
+    updateSections,
+    deleteSectionRoutine
 } from 'sagas/sections/routines';
 import UIContent from "../../components/UI/UIContent";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
@@ -38,7 +39,8 @@ const FormEditor: FC<FormEditorProps & { match }> = (
         currentSection,
         updateSection,
         updateSectionsR,
-        updateOrder
+        updateOrder,
+        deleteSection
     }
 ) => {
 
@@ -93,31 +95,32 @@ const FormEditor: FC<FormEditorProps & { match }> = (
     return (
         <>
             {questionnaire && (
-                <LoaderWrapper loading={isLoading}>
-                    <UIContent>
+                    <LoaderWrapper loading={isLoading}>
+                        <UIContent>
                         <SelectQuestionsFromExisting isOpen={openExisting} handleOpenModal={setOpenExisting}/>
-                        <div className={styles.container}>
-                            <div className={styles.form}>
-                                <Form
-                                    updateSections={updateSectionsR}
-                                    setCurrentQuestion={setCurrentQuestion}
-                                    updateSection={updateSection}
-                                    updateOrder={updateOrder}
-                                    currentQuestion={currentQuestion}
-                                    sections={sections}
-                                />
+                            <div className={styles.container} >
+                                <div className={styles.form}>
+                                    <Form
+                                        updateSections={updateSectionsR}
+                                        setCurrentQuestion={setCurrentQuestion}
+                                        updateSection={updateSection}
+                                        updateOrder={updateOrder}
+                                        currentQuestion={currentQuestion}
+                                        sections={sections}
+                                        deleteSection={deleteSection}
+                                    />
+                                </div>
+                                <div className={styles.menu}>
+                                    <QuestionMenu
+                                        position={position}
+                                        addQuestion={addNewQuestion}
+                                        copyQuestion={copyQuestion}
+                                        onDelete={handleDeleteQuestion}
+                                        addSection={handleAddSection}
+                                        addFromExisting={handleAddFromExisting}
+                                    />
+                                </div>
                             </div>
-                            <div className={styles.menu}>
-                                <QuestionMenu
-                                    position={position}
-                                    addQuestion={addNewQuestion}
-                                    copyQuestion={copyQuestion}
-                                    onDelete={handleDeleteQuestion}
-                                    addSection={handleAddSection}
-                                    addFromExisting={handleAddFromExisting}
-                                />
-                            </div>
-                        </div>
                     </UIContent>
                 </LoaderWrapper>
             )}
@@ -144,7 +147,8 @@ const mapDispatchToProps = {
     deleteQuestion: deleteQuestionFromSectionRoutine,
     createSection: createSectionRoutine,
     updateSectionsR: updateSections,
-    updateOrder: updateQuestionsOrderRoutine
+    updateOrder: updateQuestionsOrderRoutine,
+    deleteSection: deleteSectionRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

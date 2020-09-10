@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import UIPageTitleToggle from "../../components/UI/UIPageTitleToggle";
 import TeamsPage from "../../containers/TeamsPage";
 import CompanyUsersList from "../../containers/UserList";
+import styles from './styles.module.sass';
 
 const PeopleManagementPage: FC<{ match }> = ({match}) => {
     const [t] = useTranslation();
@@ -16,7 +17,7 @@ const PeopleManagementPage: FC<{ match }> = ({match}) => {
                 secondOptionLink={"/people/employees"}
                 firstIsSelected={match.params.tab==='teams'}
             />
-            <UIContent>
+            <UIContent className={styles.noFlex}>
                 {match.params.tab === 'teams' &&
                 <TeamsPage/>}
                 {match.params.tab === 'employees' &&

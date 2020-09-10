@@ -1,5 +1,6 @@
 package com.feed_grabber.core.user;
 
+import com.feed_grabber.core.dashboard.dto.UserInfo;
 import com.feed_grabber.core.user.model.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -67,5 +68,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "OR (lower(p.last_name) like :name and lower(p.first_name) like :surname))) as subquery",
             nativeQuery = true)
     Long countByLastNameAndNameAndCompanyId(UUID companyId, String name, String surname);
+
+    @Query(value = "select new com.feed_grabber.core.dashboard.dto.UserInfo(" +
+            "   u.id, u.username, p.firstName, p.lastName, u.role.name, " +
+            "   (select case when count (t) > 0 THEN true ELSE false END from Team t where t.lead.id = u.id)) " +
+            "from User u inner join Company c on u.company.id = c.id " +
+            "left join UserProfile p on u.id = p.user.id " +
+            "where c.id = :companyId")
+    List<UserInfo> getUserInfo(UUID companyId);
 
 }

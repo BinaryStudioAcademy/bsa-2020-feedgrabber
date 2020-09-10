@@ -19,17 +19,6 @@ const defaultItem = {
   user: { id: '', username: '' }
 } as ICompanyFeedItem;
 
-const feedItemMock = {
-  id: '1',
-  title: 'Demo is coming...',
-  body: 'Hello everybody. Today I would like to talk about our deadline. ' +
-        'So, we know that the demo will be on 02.09.2020.',
-  image: { id: '1', link: 'fd876825-ba11-4113-bdf7-02cb2c572be9' },
-  createdAt: new Date().toLocaleString(),
-  type: '',
-  user: { id: '11', username: 'mark' }
-};
-
 function* loadCompanyFeed() {
   try {
 	const res = yield call(apiClient.get, '/api/news');
@@ -42,14 +31,15 @@ function* loadCompanyFeed() {
 
 function* loadCompanyFeedItem(action) {
   try {
-    const id = action.payload;
+    const { id } = action.payload;
     if (!id) {
       // return defaultItem
       yield put(loadCompanyFeedItemRoutine.success(defaultItem));
       return;
     }
-    // here will be api-call
-    yield put(loadCompanyFeedItemRoutine.success(feedItemMock));
+    const res = yield call(apiClient.get, `/api/news/${id}`);
+    const feedItem = res.data.data;
+    yield put(loadCompanyFeedItemRoutine.success(feedItem));
   } catch (error) {
     yield put(loadCompanyFeedItemRoutine.failure());
     toastr.error('Can not load feed');

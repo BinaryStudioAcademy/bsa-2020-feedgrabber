@@ -3,6 +3,7 @@ package com.feed_grabber.core.question;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.question.model.Question;
@@ -182,7 +183,7 @@ public class QuestionService {
         try {
             dto.getQuestions().forEach(q -> sectionRepository.setIndex(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
         } catch (HibernateException e) {
-            throw new NotFoundException("Section or question not found");
+            throw new NotFoundException(Translator.toLocale("section_or_question_not_found"));
         }
     }
 

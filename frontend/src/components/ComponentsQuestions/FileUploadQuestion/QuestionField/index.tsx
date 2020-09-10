@@ -1,7 +1,7 @@
-import React from "react";
-import {ErrorMessage, useField} from "formik";
+import React, {useState} from "react";
 import {Input} from "semantic-ui-react";
 import styles from "../styles.module.sass";
+import {useSSR} from "react-i18next";
 
 interface IQuestionFieldProps {
     text: string;
@@ -13,7 +13,7 @@ interface IQuestionFieldProps {
 }
 
 const QuestionField: React.FC<IQuestionFieldProps> = data => {
-    const [field] = useField(data?.name);
+    const [field] = useState(data?.name);
     return (
         <div className={styles.questionField}>
             <span className={styles.description}>{data.text}</span>
@@ -22,7 +22,7 @@ const QuestionField: React.FC<IQuestionFieldProps> = data => {
                    value={data.value} onChange={data.onChange}
             />
             <div className={styles.errorMessage}>
-                <ErrorMessage {...field} />
+              error
             </div>
         </div>
 

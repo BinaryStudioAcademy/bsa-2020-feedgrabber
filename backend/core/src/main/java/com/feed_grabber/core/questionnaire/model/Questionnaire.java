@@ -34,7 +34,7 @@ public class Questionnaire {
 
     @Field
     @Analyzer(definition = "autocompleteEdgeAnalyzer")
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 40)
     private String title;
 
     @ToString.Exclude
@@ -44,7 +44,7 @@ public class Questionnaire {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @IndexedEmbedded(depth = 2)
+    @IndexedEmbedded(depth = 2, includeEmbeddedObjectId = true)
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;
 
