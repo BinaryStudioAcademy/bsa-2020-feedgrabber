@@ -89,4 +89,11 @@ public class Handler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new AppResponse<>(exception));
     }
+
+    @ExceptionHandler(value = PasswordNotValidException.class)
+    public ResponseEntity<AppResponse<Object>> handlePasswordNotValidException(PasswordNotValidException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new AppResponse<>(exception));
+    }
 }
