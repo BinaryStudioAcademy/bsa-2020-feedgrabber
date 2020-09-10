@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from "react";
+import React, {FC, useCallback, useEffect, useRef, useState} from "react";
 import {Button, Popup, PopupProps} from "semantic-ui-react";
 import SelectQuestionsFromExisting from "../../SelectQuestionsFromExisting";
 import {useTranslation} from "react-i18next";
@@ -35,9 +35,17 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
     const [top, setTop] = useState(0);
     const [t] = useTranslation();
     const contentRef = document.getElementById("app-content");
+    const menuRef = useRef(null);
 
     const calcFinalTop = useCallback(() => {
-      setFinalTop(Math.max(top, contentRef?.scrollTop));
+      if (top < contentRef?.scrollTop) {
+        setFinalTop(contentRef?.scrollTop);
+      } else {
+        setFinalTop(Math.min(
+          contentRef?.scrollTop + contentRef?.offsetHeight - menuRef.current?.offsetHeight - 35,
+          top
+        ));
+      }
     }, [contentRef, top]);
 
     useEffect(() => {
@@ -56,7 +64,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
             position: 'absolute',
             top: finalTop,
             transition: 'all .3s cubic-bezier(0.4,0.0,0.2,1)'
-        }}>
+        }} ref={menuRef}>
             <Button.Group basic className={styles.floatingMenu} style={{padding: '.1rem'}} vertical size="big">
                 <Popup content={t("New question")} {...popupProps}
                        trigger={<Button icon="add" {...styleBorder} color="grey" onClick={addQuestion}/>}
