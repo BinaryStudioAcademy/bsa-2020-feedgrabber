@@ -8,8 +8,6 @@ import {IAppState} from 'models/IAppState';
 import {connect, ConnectedProps} from "react-redux";
 import UIPageTitle from 'components/UI/UIPageTitle';
 import UIButton from 'components/UI/UIButton';
-import UIListHeader from 'components/UI/UIQuestionListHeader';
-import UIListItem from 'components/UI/UIQuestionItemCard';
 import ResponseQuestion from 'components/ResponseQuestion';
 import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import {Translation} from 'react-i18next';
@@ -41,10 +39,11 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
 
     componentDidUpdate(prevProps: Readonly<ResponseProps & { match }>) {
         const {isCompleted, answers, currentSectionIndex} = this.state;
+        console.log(answers, "udpate");
         const {sections} = this.props;
         if (prevProps.sections !== sections) {
             this.setState({
-                answers: sections[0].questions.map(q => this.parseQuestion(q)).filter(a => !!a.body)
+                answers: sections[0].questions.map(q => this.parseQuestion(q))
             });
         }
         const currentSection = sections[currentSectionIndex];
@@ -62,12 +61,13 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
         const {answers} = this.state;
         const isAdd = !answers.find(a => a.questionId === qs.id);
         const parsed = this.parseQuestion(qs);
-        !isAdd ? this.setState({answers: this.state.answers.map(q => q.questionId !== qs.id ? q : parsed)})
+        !isAdd ?
+            this.setState({answers: this.state.answers.map(q => q.questionId !== qs.id ? q : parsed)})
             : this.setState({answers: [...answers, parsed]});
     }
 
     answerHandler = (data: IAnswerBody, question) => {
-        this.handleComponentChange({...question, answer: data, isAnswered: !!data});
+        this.state.answers.length && this.handleComponentChange({...question, answer: data, isAnswered: !!data});
     }
 
     parseQuestion = (question: IQuestion) => ({
@@ -78,9 +78,10 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
 
     handleSendClick = () => {
         if (this.isCompleted()) {
+            const filled = this.state.answers.filter(a => !!a.body);
             this.props.saveResponse({
                 id: this.props.requestInfo.id,
-                payload: this.state.allAnswers
+                payload: [...this.state.allAnswers, ...filled]
             });
             history.goBack();
         } else {
@@ -92,13 +93,13 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
 
     handleNextClick = () => {
         if (this.isCompleted()) {
+            const filled = this.state.answers.filter(a => !!a.body);
             this.setState({
                 isCompleted: false,
                 showErrors: false,
                 answers: this.props.sections[this.state.currentSectionIndex + 1].questions
-                    .map(q => this.parseQuestion(q))
-                    .filter(a => !!a.body),
-                allAnswers: [...this.state.allAnswers, ...this.state.answers],
+                    .map(q => this.parseQuestion(q)),
+                allAnswers: [...this.state.allAnswers, ...filled],
                 currentSectionIndex: this.state.currentSectionIndex + 1
             });
         } else {
@@ -109,11 +110,11 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
     };
 
     renderQuestion = (question: IQuestion, showErrors: boolean, t) => (
-        <div style={{marginBottom: 10}}>
+        <div style={{marginBottom: 10}} key={question.id}>
             <ResponseQuestion
                 isCurrent={false}
                 question={question}
-                answerHandler={data => this.answerHandler(data, question)}
+                answerHandler={data => data && this.answerHandler(data, question)}
             />
             {showErrors && !question.answer &&
             <div className={styles.error_message}>
@@ -133,13 +134,13 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
             <Translation>
                 {t =>
                     <>
-                    <UIPageTitle title={t("Response")}/>
-                    <UIContent>
-                        <UIColumn>
+                        <UIPageTitle title={t("Response")}/>
+                        <UIContent>
+                            <UIColumn>
                                 <>
                                     <LoaderWrapper loading={isLoading}>
-                                    {!changeable && answered && <Message warning content="Modifying is forbidden"/>}
-                                        <UISection ti={title} d={description} />
+                                        {!changeable && answered && <Message warning content="Modifying is forbidden"/>}
+                                        <UISection ti={title} d={description}/>
                                         <Formik initialValues={this.state} onSubmit={this.handleNextClick}>
                                             {formik => (
                                                 <Form onSubmit={formik.handleSubmit}
@@ -148,7 +149,7 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
                                                         {questions.map(q => this.renderQuestion(q, showErrors, t))}
                                                     </ul>
                                                     <div className={styles.submit}>
-                                                        {isSend && changeable && answered?
+                                                        {isSend && (changeable || !answered) ?
                                                             <UIButton title={t("Send")} submit
                                                                       onClick={this.handleSendClick}/>
                                                             :
@@ -161,8 +162,8 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
                                         </Formik>
                                     </LoaderWrapper>
                                 </>
-                        </UIColumn>
-                    </UIContent>
+                            </UIColumn>
+                        </UIContent>
                     </>
                 }
             </Translation>

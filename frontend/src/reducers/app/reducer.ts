@@ -16,7 +16,6 @@ export interface IAdditionalState {
 
 const appReducer = (state: IAppState['app'] = initialState, {type, payload}) => {
     if (type === toggleMenuRoutine.TRIGGER) {
-        console.log(1);
         return {
             ...state,
             showMenu: payload,

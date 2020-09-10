@@ -25,7 +25,10 @@ function* loadResponse(action) {
         const resSections = yield call(apiClient.get, `/api/section/questionnaire/${res.data.data.questionnaire.id}`);
 
         const sections = resSections.data.data.map(section => parseSectionWithQuestion(section));
+        console.log(res);
         const answers: IAnswer<IAnswerBody>[] = JSON.parse(res.data.data.payload);
+
+        console.log(answers, sections);
 
         answers && sections.forEach(s => s.questions.filter(q => {
             const answer = answers.find(a => a.questionId === q.id);
