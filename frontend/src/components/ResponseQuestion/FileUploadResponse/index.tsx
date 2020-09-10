@@ -132,9 +132,9 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
           <div className={styles.fileItem} key={file.id}>
            <div>{file.name}</div>
            {response === undefined
-             ? <Button icon='close' onClick={() => deleteFile(file.id)} size="tiny" />
+             ? <Button icon='close'  type="button" onClick={() => deleteFile(file.id)} size="tiny" />
              : <a href={file.link} target="_blank" rel={'noopener noreferrer'} >
-                <Button icon="angle double right" size="tiny"/>
+                <Button type="button" icon="angle double right" size="tiny"/>
                </a>
            }
           </div>
