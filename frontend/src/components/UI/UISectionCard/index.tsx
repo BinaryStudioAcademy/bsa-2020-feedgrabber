@@ -12,7 +12,7 @@ export interface IUISectionProps {
 
     ti?: string;
 
-    onDelete(action: any): void;
+    onDelete?(action: any): void;
 
     main?: boolean;
     d?: string;
@@ -46,15 +46,15 @@ const UISection: FC<IUISectionProps> = ({section, onChanged, ti, d, onDelete, ma
         </Modal>);
     };
 
-
     return (
         <div className={styles.headerContainer}>
             <div className={styles.sectionCard}>
-                {!main ? <div className={styles.buttonContainer}>
-                    <button onClick={() => setShowConfirmationModal(true)}>
-                        <Icon name='delete'/>
-                    </button>
-                </div> : null}
+                {!main && is &&
+                <div className={styles.buttonContainer}>
+                  <button onClick={() => setShowConfirmationModal(true)}>
+                    <Icon name='delete'/>
+                  </button>
+                </div>}
                 <input type="text" className={styles.title}
                        value={ti || title || ''}
                        placeholder={t("Title")}

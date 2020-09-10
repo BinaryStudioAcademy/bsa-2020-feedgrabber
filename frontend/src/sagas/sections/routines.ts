@@ -2,6 +2,7 @@ import {createRoutine} from "redux-saga-routines";
 
 export const setCurrentSection = createRoutine("SECTION:SET_CURRENT");
 export const setCurrentQInForm = createRoutine('FORM:SET_CURRENT_QUESTION');
+export const clearFormEditor = createRoutine("FORM:CLEAR");
 
 export const loadFormRoutine = createRoutine("FORM:LOAD");
 

@@ -113,7 +113,7 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                 <UIColumn>
                     <UICard>
                         <UICardBlock>
-                            {!sections.length
+                            {!sections.ids.length
                                 ? <QuestionnaireList muteActions/>
                                 : <>
                                     <Header

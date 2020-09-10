@@ -12,10 +12,14 @@ import {getCurrentEntity} from "../../helpers/formEditor.helper";
 import {QuestionEntity, SectionEntity} from "../../reducers/formEditor/reducer";
 import {
     addQToFormRoutine,
-    addSectionRoutine, deleteQInFormRoutine,
-    deleteSectionRoutine, loadFormRoutine, setCurrentQInForm,
+    addSectionRoutine,
+    deleteQInFormRoutine,
+    deleteSectionRoutine,
+    loadFormRoutine,
+    setCurrentQInForm,
     updateOrderInForm,
-    updateOrderInFormRoutine, updateSectionRoutine
+    updateOrderInFormRoutine,
+    updateSectionRoutine
 } from "../../sagas/sections/routines";
 import UIContent from "../../components/UI/UIContent";
 
@@ -96,7 +100,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                     updateSection={updateSection}
                                     updateOrder={updateOrder}
                                     updateOrderApi={updateOrderApi}
-                deleteSection={deleteSection}
+                                    deleteSection={deleteSection}
                                     sections={sections}
                                     questions={questions}
                                 />
