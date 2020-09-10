@@ -1,7 +1,10 @@
 .newsItemContainer {
-	margin-top: 6em;
     display: flex;
 	flex-direction: column;
+}
+
+.buttonWrapper {
+    margin-left: 1em;
 }
 
 .newsItemContainer > img {

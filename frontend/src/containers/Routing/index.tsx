@@ -29,7 +29,6 @@ import Profile from "../../components/Profile";
 import RedirectFormEditor from "../../components/RedirectFormEditor";
 import ErrorPage from "../ErrorPage";
 import CompanyDashboard from "../Dashboard";
-// just for demo
 import NewsList from "../../components/NewsList";
 import SignUpByEmailPage from 'components/SignUpByEmailPage';
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
