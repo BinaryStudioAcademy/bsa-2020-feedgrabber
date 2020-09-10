@@ -95,6 +95,7 @@ const TeamDetailsPage: FC<Props & { match }> = (
                             toggleLead={toggleLead}
                         />
                         <TeamRequestsBlock
+                          isHrOrCo={isHrOrCo}
                           closeRequest={closeRequest}
                           currentTeam={currentTeam}
                           loadingFailed={failedLoadingTeamRequests}
