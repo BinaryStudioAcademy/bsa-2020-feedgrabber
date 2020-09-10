@@ -47,6 +47,7 @@ export interface IQuestionBase<TDetails> {
     details: TDetails;
     answer: IAnswerBody;
     isReused: boolean;
+    isAnswered?: boolean;
     isRequired: boolean;
 }
 

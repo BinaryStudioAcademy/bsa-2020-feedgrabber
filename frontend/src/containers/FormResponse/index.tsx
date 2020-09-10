@@ -15,43 +15,42 @@ import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import {Translation} from 'react-i18next';
 import {IAnswer, IAnswerBody} from "../../models/forms/Response/types";
 import {loadResponseFormRoutine, saveResponseRoutine} from "../../sagas/response/routines";
-
-interface IComponentState {
-    question: IQuestion;
-    isAnswered: boolean;
-}
+import UIContent from "../../components/UI/UIContent";
+import UISection from "../../components/UI/UISectionCard";
+import UIColumn from "../../components/UI/UIColumn";
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
     showErrors: boolean;
     currentSectionIndex: number;
     answers: IAnswer<IAnswerBody>[];
-    oldResponseId: string;
+    allAnswers: IAnswer<IAnswerBody>[];
 }
 
 class FormResponse extends React.Component<ResponseProps & { match }, IQuestionnaireResponseState> {
-
     constructor(props) {
         super(props);
         this.state = {
-            isCompleted: false,
+            isCompleted: true,
             showErrors: false,
             currentSectionIndex: 0,
             answers: [],
-            oldResponseId: props.response?.id
+            allAnswers: []
         };
-        this.handleComponentChange = this.handleComponentChange.bind(this);
-        this.handleSendClick = this.handleSendClick.bind(this);
     }
 
-    handleComponentChange(state: IComponentState) {
-        let updatedQuestions = this.getCurrentSection().questions;
-        if (state.isAnswered) {
-            updatedQuestions = updatedQuestions.map(q => (
-                q.id === state.question?.id ? state.question : q
-            ));
+    componentDidUpdate(prevProps: Readonly<ResponseProps & { match }>) {
+        const {isCompleted, answers, currentSectionIndex} = this.state;
+        const {sections} = this.props;
+        if (prevProps.sections !== sections) {
+            this.setState({
+                answers: sections[0].questions.map(q => this.parseQuestion(q)).filter(a => !!a.body)
+            });
         }
-        this.setState({isCompleted: !updatedQuestions.map(q => q.answer).includes(undefined)});
+        const currentSection = sections[currentSectionIndex];
+        if (!isCompleted && answers.length === currentSection?.questions.length) {
+            this.setState({isCompleted: true});
+        }
     }
 
     componentDidMount() {
@@ -59,45 +58,47 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
         loadForm(match.params.id);
     }
 
-    getAnswers = () => this.getCurrentSection()?.questions?.map(question => ({
+    handleComponentChange = (qs: IQuestion) => {
+        const {answers} = this.state;
+        const isAdd = !answers.find(a => a.questionId === qs.id);
+        const parsed = this.parseQuestion(qs);
+        !isAdd ? this.setState({answers: this.state.answers.map(q => q.questionId !== qs.id ? q : parsed)})
+            : this.setState({answers: [...answers, parsed]});
+    }
+
+    answerHandler = (data: IAnswerBody, question) => {
+        this.handleComponentChange({...question, answer: data, isAnswered: !!data});
+    }
+
+    parseQuestion = (question: IQuestion) => ({
         questionId: question.id,
         type: question.type,
         body: question.answer
-    }))
+    })
 
     handleSendClick = () => {
-        // TODO if may cause problems
-        if (this.checkIfCompleted()) {
-            this.props.saveResponse(
-                {
-                    id: this.props.requestInfo.id,
-                    payload: this.state.answers.concat(this.getAnswers())
-                });
+        if (this.isCompleted()) {
+            this.props.saveResponse({
+                id: this.props.requestInfo.id,
+                payload: this.state.allAnswers
+            });
             history.goBack();
         } else {
             this.setState({showErrors: true});
         }
     }
 
-    handlePreviousClick = () => {
-        this.setState({
-            isCompleted: true,
-            showErrors: false,
-            currentSectionIndex: this.state.currentSectionIndex - 1
-        });
-    };
-
-    getCurrentSection = () => this.props.sections[this.state.currentSectionIndex]
-
-    checkIfCompleted = () => this.state.isCompleted || this.getCurrentSection().questions.filter(q => !q.answer).length
+    isCompleted = () => this.state.isCompleted
 
     handleNextClick = () => {
-        if (this.checkIfCompleted()) {
-            const answers: IAnswer<IAnswerBody>[] = this.getAnswers();
+        if (this.isCompleted()) {
             this.setState({
-                answers: this.state.answers.concat(answers),
                 isCompleted: false,
                 showErrors: false,
+                answers: this.props.sections[this.state.currentSectionIndex + 1].questions
+                    .map(q => this.parseQuestion(q))
+                    .filter(a => !!a.body),
+                allAnswers: [...this.state.allAnswers, ...this.state.answers],
                 currentSectionIndex: this.state.currentSectionIndex + 1
             });
         } else {
@@ -107,12 +108,8 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
         }
     };
 
-    answerHandler = (data: IAnswerBody, question) => {
-        this.handleComponentChange({...question, answer: data, isAnswered: !!data});
-    }
-
     renderQuestion = (question: IQuestion, showErrors: boolean, t) => (
-        <UIListItem key={question.id} name={question.name} category={question.categoryTitle}>
+        <div style={{marginBottom: 10}}>
             <ResponseQuestion
                 isCurrent={false}
                 question={question}
@@ -122,12 +119,13 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
             <div className={styles.error_message}>
                 {t("Please, fill the question")}
             </div>}
-        </UIListItem>
+        </div>
     );
 
     render() {
         const {sections, isLoading, requestInfo} = this.props;
         const changeable = requestInfo?.changeable;
+        const answered = requestInfo?.answeredAt;
         const {showErrors, currentSectionIndex} = this.state;
         const {title = '', description = '', questions = []} = sections[currentSectionIndex] || {};
         const isSend = sections.length === currentSectionIndex + 1;
@@ -135,35 +133,36 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
             <Translation>
                 {t =>
                     <>
-                        {!changeable ? <Message content="Editing is not allowed"/> :
-                            <>
-                                <UIPageTitle title={t("Response")}/>
-                                <br/>
-                                <br/>
-                                <LoaderWrapper loading={isLoading}>
-                                    <UIListHeader title={title} description={description}/>
-                                    <Formik initialValues={this.state} onSubmit={this.handleNextClick}>
-                                        {formik => (
-                                            <Form onSubmit={formik.handleSubmit}
-                                                  className={styles.questionsListContainer}>
-                                                <ul>
-                                                    {questions.map(q => this.renderQuestion(q, showErrors, t))}
-                                                </ul>
-                                                <div className={styles.submit}>
-                                                    {isSend ?
-                                                        <UIButton title={t("Send")} submit
-                                                                  onClick={this.handleSendClick}/>
-                                                        :
-                                                        <UIButton title={t("Next")} submit/>
-                                                    }
-                                                </div>
-                                            </Form>
-                                        )
-                                        }
-                                    </Formik>
-                                </LoaderWrapper>
-                            </>
-                        }
+                    <UIPageTitle title={t("Response")}/>
+                    <UIContent>
+                        <UIColumn>
+                                <>
+                                    <LoaderWrapper loading={isLoading}>
+                                    {!changeable && answered && <Message warning content="Editing is not allowed"/>}
+                                        <UISection ti={title} d={description} />
+                                        <Formik initialValues={this.state} onSubmit={this.handleNextClick}>
+                                            {formik => (
+                                                <Form onSubmit={formik.handleSubmit}
+                                                      className={styles.questionsListContainer}>
+                                                    <ul>
+                                                        {questions.map(q => this.renderQuestion(q, showErrors, t))}
+                                                    </ul>
+                                                    <div className={styles.submit}>
+                                                        {isSend && changeable && answered?
+                                                            <UIButton title={t("Send")} submit
+                                                                      onClick={this.handleSendClick}/>
+                                                            :
+                                                            <UIButton title={t("Next")} submit/>
+                                                        }
+                                                    </div>
+                                                </Form>
+                                            )
+                                            }
+                                        </Formik>
+                                    </LoaderWrapper>
+                                </>
+                        </UIColumn>
+                    </UIContent>
                     </>
                 }
             </Translation>

@@ -8,7 +8,6 @@ import {loadResponseFormRoutine, saveResponseRoutine} from "./routines";
 
 function* saveResponse(action) {
     try {
-        console.log(action);
         yield call(apiClient.put, `/api/response`, action.payload);
         yield put(saveResponseRoutine.success());
         yield put(loadRequestedQuestionnairesRoutine.trigger());
