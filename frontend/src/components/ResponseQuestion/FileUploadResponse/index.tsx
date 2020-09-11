@@ -162,7 +162,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
                             <Tab.Pane>
                                 <InternalStorageUpload
                                     onFilesAdded={onFilesAdded}
-                                    disabled={files.length >= filesNumber}
+                                    disabled={files.length >= filesNumber || !response}
                                     isUploading={isUploading}
                                     mapFiles={mapFiles}
                                     onClear={onClear}
@@ -193,7 +193,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
     return (
         <div>
             <div className={styles.restrictions}>Maximum number of the files: {question.details.filesNumber}</div>
-            <div className={styles.restrictions}>Maximum size of the file: {question.details.filesSize}</div>
+            <div className={styles.restrictions}>Maximum size of the files: {question.details.filesSize}</div>
             <Tab className={styles.tab} panes={getPanes()}/>
         </div>
     );
