@@ -87,10 +87,13 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
             // start sending files to the server
             promises.push(uploadFile(file));
         }
+        const result = [];
         (await Promise.all(promises))
             .forEach(res => {
-                setFiles([...files, res]);
+                result.push(res);
+                // setFiles([...files, res]);
             });
+        setFiles(result);
     };
 
     const uploadFile = file => {
