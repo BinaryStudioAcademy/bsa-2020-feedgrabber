@@ -1,4 +1,4 @@
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import styles from "./styles.module.sass";
 import {Permissions} from "../../helpers/AccessManager/rbac-rules";
 import {history} from "../../../helpers/history.helper";
@@ -20,8 +20,10 @@ const UIPageTitleToggle: FC<IUIPageTitleProps> = (
         firstIsSelected,
         secondOptionLink
     }) => {
-
+    
     const [selectedFirst, setFirstIsSelected] = useState(firstIsSelected);
+
+    useEffect(()=>{setFirstIsSelected(firstIsSelected);},[firstIsSelected]);
 
     return (
         <div className={styles.pageTitleWrapper}>
