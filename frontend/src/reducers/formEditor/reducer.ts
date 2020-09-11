@@ -4,6 +4,7 @@ import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {loadOneQuestionnaireRoutine, saveAndGetQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
 import {getById} from "../../helpers/formEditor.helper";
 import {
+    addExistingQToFormRoutine,
     addQToFormRoutine,
     addSectionRoutine,
     clearFormEditor,
@@ -128,6 +129,39 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 };
             };
             return deleteSection();
+        case addExistingQToFormRoutine.SUCCESS:
+            const addExisting = () => {
+                const {questions, sectionId} = payload as {questions: IQuestion[]; sectionId: string};
+                const section = getById<SectionEntity>(sectionId, state.sections);
+                const qEntities = state.questions.entities;
+                const oldIds = state.questions.ids;
+
+                questions.forEach((q,i) => {
+                    qEntities[q.id] = {section: sectionId, question: q, id: q.id};
+                    oldIds.push(q.id);
+                });
+
+                const entities = {...qEntities};
+                return {
+                    ...state,
+                    questions: {
+                        ...state.questions,
+                        entities,
+                        ids: [...oldIds]
+                    },
+                    sections: {
+                        ...state.sections,
+                        entities: {
+                            ...state.sections.entities,
+                            [sectionId]: {
+                                ...section,
+                                questions: section.questions.concat(questions.map(q => q.id))
+                            }
+                        }
+                    }
+                };
+            };
+            return addExisting();
         case updateOrderInForm.TRIGGER:
             return {
                 ...state,
@@ -193,12 +227,6 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 };
             };
             return updateSection();
-        // case saveAndGetQuestionnaireRoutine.SUCCESS:
-        //     return {
-        //         ...state,
-        //         questionnaire: payload,
-        //         isLoading: false
-        //     };
         case loadFormRoutine.SUCCESS:
             return payload;
         case deleteQInFormRoutine.TRIGGER:

@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useRef, useState} from "react";
+import React, {FC, useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 import ReactResizeDetector from 'react-resize-detector';
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {IAppState} from "models/IAppState";
@@ -26,6 +26,7 @@ const QuestionForm: FC<QuestionFormProps & { listEdit?: IQuestionListEditProps }
     {
         listEdit,
         currentQuestion,
+        currentQuestionSectionId,
         isLoading,
         updateQuestion,
         loadCategories,
@@ -55,9 +56,9 @@ const QuestionForm: FC<QuestionFormProps & { listEdit?: IQuestionListEditProps }
         onSubmit: () => undefined
     });
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setMenuPos(ref.current?.getBoundingClientRect().y);
-    }, [currentQuestion, setMenuPos, shouldUpdatePos]);
+    }, [currentQuestion, setMenuPos]);
 
     useEffect(() => {
         setLocalCategories(categories);
@@ -189,6 +190,7 @@ const mapState = (state: IAppState, ownProps) => ({
     currentQuestion: ownProps.isList
         ? state.questions.currentQuestion
         : getCurrentEntity(state.formEditor.questions).question,
+    currentQuestionSectionId: getCurrentEntity(state.formEditor.questions),
     questionnaireId: state.formEditor.questionnaire.id,
     currentSectionId: state.formEditor.sections.currentId
 });

@@ -9,9 +9,7 @@ import {
     updateQuestionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
-import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
-import {IQuestion} from "../../models/forms/Questions/IQuesion";
 
 export const parseQuestion = ({index, ...rawQuestion}) => ({
     ...rawQuestion,
