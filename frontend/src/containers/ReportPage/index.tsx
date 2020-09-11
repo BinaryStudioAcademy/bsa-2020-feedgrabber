@@ -4,7 +4,7 @@ import {IAppState} from 'models/IAppState';
 import {loadReportRoutine, loadRespondentReportsRoutine} from "../../sagas/report/routines";
 import UICardBlock from "../../components/UI/UICardBlock";
 import LoaderWrapper from "../../components/helpers/LoaderWrapper";
-import {Divider, Header, Icon, Label, Segment, Tab} from 'semantic-ui-react';
+import {Divider, Header, Label, Segment, Tab} from 'semantic-ui-react';
 import {QuestionType} from "../../models/forms/Questions/IQuesion";
 import {
     IQuestionReport,
@@ -28,6 +28,7 @@ import {useTranslation} from 'react-i18next';
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import {toggleMenuRoutine} from "../../sagas/app/routines";
+import moment from "moment";
 
 const ReportPage: FC<ConnectedReportPageProps & { match }> = (
     {
@@ -76,12 +77,12 @@ const ReportPage: FC<ConnectedReportPageProps & { match }> = (
                                       </Label>
                                     </div>
                                 }
-                                <Divider section />
+                                <Divider section/>
                                 {report.questions.map(q => (
                                     <UICardBlock key={q.id}>
-                                            <Header color="grey">
-                                                {q.title}
-                                            </Header>
+                                        <Header color="grey">
+                                            {q.title}
+                                        </Header>
                                         <Label>
                                             {q.answers}
                                             <Label.Detail>{t("answers")}</Label.Detail>
@@ -148,7 +149,7 @@ function renderUserReportPreview(userReport: IRespondentReportPreview, id: strin
             <Segment>
                 <Header as="h4">{userReport.firstName} {userReport.lastName}</Header>
                 <Header as="h4">{userReport.username}</Header>
-                <span>{userReport.answeredAt}</span>
+                <span>{moment(userReport.answeredAt).calendar()}</span>
             </Segment>
         </Link>
     );
