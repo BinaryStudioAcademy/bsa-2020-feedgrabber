@@ -18,11 +18,18 @@ export const parseQuestion = ({index, ...rawQuestion}) => ({
     details: JSON.parse(rawQuestion.details) ?? {}
 });
 
-function* getAll() {
+function* getAll(action) {
     try {
+        const {quest, query} = action.payload || {};
         const store = yield select();
         const {page, size} = store.questions.pagination;
-        const res = (yield call(apiClient.get, `/api/questions?page=${page}&size=${size}`)).data.data;
+        const res = (yield call(apiClient.get
+            , `/api/questions?page=${page}&size=${size}&${quest
+                ? ('&questionnaire=' + quest)
+                : ''}&${query
+                ? ('&query=' + query)
+                : ''}`))
+            .data.data;
 
         res.items = res.items.map(q => parseQuestion(q));
 

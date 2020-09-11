@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {connect, ConnectedProps} from "react-redux";
 import styles from './styles.module.sass';
 import Form from 'components/Form';
@@ -7,7 +7,9 @@ import QuestionMenu from "../../components/Form/QuestionMenu";
 import defaultQuestion from "../../models/forms/Questions/DefaultQuestion";
 import LoaderWrapper from "../../components/helpers/LoaderWrapper";
 import {toastr} from "react-redux-toastr";
-import {toggleMenuRoutine} from "../../sagas/app/routines";
+import {loadOneQuestionnaireRoutine} from "../../sagas/qustionnaires/routines";
+import {setFloatingMenuPos, toggleMenuRoutine} from "../../sagas/app/routines";
+import SelectQuestionsFromExisting from "../../components/SelectQuestionsFromExisting";
 import {getCurrentEntity} from "../../helpers/formEditor.helper";
 import {QuestionEntity, SectionEntity} from "../../reducers/formEditor/reducer";
 import {
@@ -47,6 +49,9 @@ const FormEditor: FC<FormEditorProps & { match }> = (
         deleteSection
     }
 ) => {
+
+    const [openExisting, setOpenExisting] = useState(false);
+
     useEffect(() => {
         if (questionnaire.id !== match.params.id) {
             loadForm(match.params.id);
@@ -88,11 +93,16 @@ const FormEditor: FC<FormEditorProps & { match }> = (
             sectionId: currentQuestion.section
         });
 
+    const handleAddFromExisting = () => {
+        setOpenExisting(!openExisting);
+    };
+
     return (
         <>
             {questionnaire && (
                 <LoaderWrapper loading={isLoading}>
                     <UIContent>
+                    <SelectQuestionsFromExisting isOpen={openExisting} handleOpenModal={setOpenExisting}/>
                         <div className={styles.container}>
                             <div className={styles.form}>
                                 <Form
@@ -112,6 +122,7 @@ const FormEditor: FC<FormEditorProps & { match }> = (
                                     copyQuestion={copyQuestion}
                                     onDelete={handleDeleteQuestion}
                                     addSection={handleAddSection}
+                                    addFromExisting={handleAddFromExisting}
                                 />
                             </div>
                         </div>
