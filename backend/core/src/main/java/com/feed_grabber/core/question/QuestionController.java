@@ -10,6 +10,7 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,31 +44,42 @@ public class QuestionController {
     public AppResponse<DataList<QuestionDto>> getAll(
             @RequestParam(required = false) Optional<String> query,
             @RequestParam Integer page,
-            @RequestParam Integer size,
-            @RequestParam(required = false) UUID questionnaire) {
+            @RequestParam Integer size
+    ) {
         var companyId = getCompanyId();
-
-        DataList<QuestionDto> dataList = null;
-        if(query.isEmpty()){
-            dataList = new DataList<>(
-                    questionService.getAll(companyId, page, size, Optional.ofNullable(questionnaire)),
-                    questionService.countByCompanyId(companyId, Optional.ofNullable(questionnaire)),
-                    page,
-                    size
-            );
-        }else{
-            var data = questionService.searchAll(query, page, size, Optional.ofNullable(questionnaire));
-            dataList = new DataList<>(
-                    data.getObjects(),
-                    data.getSize(),
-                    page,
-                    size
-            );
-        }
-
-        return new AppResponse<>(dataList);
-
+        return new AppResponse<>(new DataList<>(
+                questionService.getAll(companyId, page, size),
+                questionService.countByCompanyId(companyId),
+                page,
+                size
+        ));
     }
+
+    @ApiOperation(value = "Get all questions from repo not in questionnaire")
+    @GetMapping("/except/{questionnaireId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
+    public AppResponse<DataList<QuestionDto>> getAllExceptQuestionnaire(
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) String query,
+            @PathVariable UUID questionnaireId
+    ) {
+//        if (query == null) {
+//            return new AppResponse<>(
+//                    questionService.getAllExceptOneQuestionnaire(questionnaireId, page, size)
+//            ); }
+        var searched = questionService.searchAll(Optional.of(query), page, size, Optional.of(questionnaireId));
+        return new AppResponse<>(
+                new DataList<>(
+                        searched.getObjects(),
+                        searched.getSize(),
+                        page,
+                        size
+                )
+        );
+    }
+
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")
     @GetMapping("/questionnaires/{id}")
@@ -115,9 +127,7 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void addExisting(@RequestBody AddExistingQuestionsDto dto)
-            throws QuestionnaireNotFoundException {
-
+    public void addExisting(@RequestBody AddExistingQuestionsDto dto) throws SectionNotFoundException {
         questionService.addExistingQuestions(dto);
     }
 
@@ -146,7 +156,7 @@ public class QuestionController {
     public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(
             @PathVariable UUID questionId,
             @PathVariable UUID questionnaireId
-    ) throws QuestionnaireNotFoundException {
+    ) {
 
         questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
 

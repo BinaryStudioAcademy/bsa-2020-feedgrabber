@@ -15,6 +15,7 @@ import {IQuestionnaire} from "../../models/forms/Questionnaires/types";
 import {IGeneric} from "../../models/IGeneric";
 import {loadFormRoutine} from "../sections/routines";
 import {loadNotificationsRoutine} from "../notifications/routines";
+import {history} from "../../helpers/history.helper";
 
 function* loadQuestionnairesList() {
     try {
@@ -49,6 +50,7 @@ function* saveAndPutNewQuestionnaire(action) {
         const res: IGeneric<IQuestionnaire> = yield call(apiClient.post, `/api/questionnaires`, action.payload);
         const payload = res.data.data;
         yield put(saveAndGetQuestionnaireRoutine.success(payload));
+        yield call(history.push, `/questionnaires/${payload.id}`);
     } catch (error) {
         yield put(saveAndGetQuestionnaireRoutine.failure());
         toastr.error(error.response?.data?.error || 'No response');

@@ -4,14 +4,11 @@ import React, {FC, useEffect, useState} from "react";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalQuestionItem} from "./ModalQuestionItem";
 import {IAppState} from "../../models/IAppState";
-import {
-    addSelectedQuestionsRoutine,
-    loadQuestionsRoutine,
-    setQuestionPaginationRoutine
-} from "../../sagas/questions/routines";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {useTranslation} from "react-i18next";
 import GenericPagination from "../helpers/GenericPagination";
+import {addExistingQToFormRoutine} from "../../sagas/sections/routines";
+import {loadQuestionsExceptRoutine, setQuestionPaginationRoutine} from "../../sagas/questions/routines";
 
 const SelectQuestionsFromExisting: FC<ContainerProps & {
     isOpen: boolean;
@@ -26,7 +23,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         isLoading,
         isOpen,
         handleOpenModal,
-        currentSection
+        currentSectionId
     }) => {
     const [t] = useTranslation();
     const [selected, setSelected] = useState([] as IQuestion[]);
@@ -42,28 +39,22 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
     };
 
     const handleSubmit = () => {
-        const startIndex = currentSection.questions.length;
-        const questions = selected.map((q, i) => {
-            return {questionId: q.id, index: startIndex + i};
-        });
-        if (selected) {
-            selected.forEach(q => q.isReused = true);
-            addQuestions({questionnaireId: qnId, questions, sectionId: currentSection.id});
-        }
+        if (selected) addQuestions({questions: selected, sectionId: currentSectionId});
         setSelected([]);
         handleOpenModal(false);
     };
 
     const handleChange = (e, {value}) => {
-      setQuery(value);
+        setQuery(value);
     };
 
-    useEffect(()=>{loadQuestions({quest: qnId, query});},[loadQuestions, qnId, query]);
+    useEffect(() => {
+        isOpen && qnId && loadQuestions({questionnaireId: qnId, query});
+    }, [loadQuestions, qnId, isOpen, query]);
 
     return (
         <Modal
             open={isOpen}
-            onMount={() => loadQuestions({quest: qnId})}
             className={styles.questionModal}
             onOpen={() => handleOpenModal(true)}
             onClose={() => handleOpenModal(false)}
@@ -80,14 +71,14 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
                            }}
                            placeholder={t('Search existing questions')}
                            value={query}
-                           onChange={handleChange}
+                           onChange={e => setQuery(e.target.value)}
                     />
                     <GenericPagination
                         isLoading={isLoading}
                         unmutedLoading={false}
                         pagination={pagination}
                         setPagination={setPagination}
-                        loadItems={() => loadQuestions({quest: qnId, query})}
+                        loadItems={() => qnId && loadQuestions({questionnaireId: qnId, query})}
                         mapItemToJSX={(q: IQuestion) =>
                             <ModalQuestionItem
                                 key={q.id}
@@ -116,13 +107,13 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
 const mapState = (state: IAppState) => ({
     isLoading: state.questions.isLoading,
     qnId: state.formEditor.questionnaire.id,
-    pagination: state.questions.pagination,
-    currentSection: state.formEditor.sections.entities[state.formEditor.sections.currentId]
+    currentSectionId: state.formEditor.sections.currentId,
+    pagination: state.questions.pagination
 });
 
 const mapDispatch = {
-    loadQuestions: loadQuestionsRoutine,
-    addQuestions: addSelectedQuestionsRoutine,
+    loadQuestions: loadQuestionsExceptRoutine,
+    addQuestions: addExistingQToFormRoutine,
     setPagination: setQuestionPaginationRoutine
 };
 

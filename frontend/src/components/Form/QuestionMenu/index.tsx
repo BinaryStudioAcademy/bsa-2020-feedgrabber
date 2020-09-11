@@ -20,7 +20,7 @@ interface IQuestionMenuProps {
 }
 
 const styleBorder = {style: {border: 'none', backgroundColor: 'white', padding: 12}};
-const popupProps = {
+export const popupProps = {
     basic: true, inverted: true, size: 'mini', position: 'right center'
 } as PopupProps;
 

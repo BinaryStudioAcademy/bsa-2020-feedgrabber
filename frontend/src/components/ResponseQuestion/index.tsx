@@ -29,7 +29,7 @@ const ResponseQuestion: FC<IQuestionResponse<any> & ResponseQuestionProps> = (
                     <QuestionForm/>
                     :
                     <div>
-                        {!answerHandler && <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>}
+                        <Header as='h4'>{name}<Label>{categoryTitle}</Label></Header>
                         {TypeToResponseMap.get(type.toUpperCase())?.
                         ({question, answerHandler, response: question.answer})}
                     </div>

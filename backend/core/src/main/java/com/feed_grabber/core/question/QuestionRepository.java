@@ -1,6 +1,7 @@
 package com.feed_grabber.core.question;
 
 import com.feed_grabber.core.question.model.Question;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,7 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
             "WHERE q.id = :questionnaireId")
     List<Question> findAllByQuestionnaireId(@Param("questionnaireId") UUID questionnaireId);
 
-    @Query("from Question q " +
+    @Query("select q from Question q " +
             "inner join SectionQuestion sq on q.id = sq.question.id " +
             "inner join Section s on sq.section.id = s.id " +
             "where s.id = :sectionId order by sq.orderIndex asc ")
@@ -24,16 +25,12 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     List<Question> findAllByCompanyId(UUID companyId, Pageable pageable);
 
-    @Query("select sq.question from SectionQuestion sq " +
-            "where sq.section.questionnaire in (select q from Questionnaire q where q.id<> :questionnaireId " +
-            "and q.company.id= :companyId) ")
-    List<Question> findAllByCompanyIdAndQuestionnaireIdNot(UUID companyId, UUID questionnaireId, Pageable pageable);
-
     Long countAllByCompanyId(UUID companyId);
 
-    @Query("select count(sq.question) from SectionQuestion sq " +
-            "where sq.section.questionnaire in (select q from Questionnaire q where q.id<> :questionnaireId " +
-            "and q.company.id= :companyId) ")
-    Long countAllByCompanyIdAndQuestionnaireIdNot(UUID companyId, UUID questionnaireId);
-
+//    @Query("select q from Question q " +
+//            " left join SectionQuestion sq on sq.question.id = q.id " +
+//            " join Section s on s.id = sq.section.id " +
+//            "where q.company.id = :companyId and s.questionnaire.id <> :questionnaireId"
+//            )
+//    Page<Question> findAllExcept(UUID companyId, UUID questionnaireId, Pageable pageable);
 }

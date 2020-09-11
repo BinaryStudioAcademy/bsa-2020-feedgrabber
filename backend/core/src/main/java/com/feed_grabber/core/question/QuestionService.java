@@ -1,5 +1,7 @@
 package com.feed_grabber.core.question;
 
+import com.feed_grabber.core.apiContract.DataList;
+import com.feed_grabber.core.auth.security.TokenService;
 import com.feed_grabber.core.company.CompanyRepository;
 import com.feed_grabber.core.company.exceptions.CompanyNotFoundException;
 import com.feed_grabber.core.exceptions.NotFoundException;
@@ -10,10 +12,10 @@ import com.feed_grabber.core.question.model.Question;
 import com.feed_grabber.core.questionCategory.QuestionCategoryRepository;
 import com.feed_grabber.core.questionCategory.model.QuestionCategory;
 import com.feed_grabber.core.questionnaire.QuestionnaireRepository;
-import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.search.SearchRepository;
 import com.feed_grabber.core.search.dto.PagedResponseDto;
 import com.feed_grabber.core.sections.SectionRepository;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import lombok.SneakyThrows;
 import org.hibernate.HibernateException;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
@@ -50,22 +53,31 @@ public class QuestionService {
         this.searchRepository = searchRepository;
     }
 
-    public List<QuestionDto> getAll(UUID companyId, Integer page, Integer size, Optional<UUID> questionnaire) {
-        var questions = questionnaire.isPresent()
-                ? quesRep.findAllByCompanyIdAndQuestionnaireIdNot(companyId, questionnaire.get(), PageRequest.of(page, size))
-                : quesRep.findAllByCompanyId(companyId, PageRequest.of(page, size));
-
-        return questions
+    public List<QuestionDto> getAll(UUID companyId, Integer page, Integer size) {
+        return quesRep.findAllByCompanyId(companyId, PageRequest.of(page, size))
                 .stream()
                 .map(QuestionMapper.MAPPER::questionToQuestionDto)
                 .collect(Collectors.toList());
     }
 
-    public Long countByCompanyId(UUID companyId, Optional<UUID> questionnaire) {
-        return questionnaire.isPresent()
-                ? quesRep.countAllByCompanyIdAndQuestionnaireIdNot(companyId, questionnaire.get())
-                : quesRep.countAllByCompanyId(companyId);
+    public Long countByCompanyId(UUID companyId) {
+        return quesRep.countAllByCompanyId(companyId);
     }
+
+//    public DataList<QuestionDto> getAllExceptOneQuestionnaire(UUID questionnaireId, Integer page, Integer size) {
+//        var res = quesRep.findAllExcept(
+//                TokenService.getCompanyId(),
+//                questionnaireId,
+//                PageRequest.of(page, size)
+//        );
+//
+//        return new DataList<>(
+//                res.get().map(QuestionMapper.MAPPER::questionToQuestionDto).collect(Collectors.toList()),
+//                res.getTotalElements(),
+//                page,
+//                size
+//        );
+//    }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
         return quesRep.findAllByQuestionnaireId(questionnaireId)
@@ -112,26 +124,14 @@ public class QuestionService {
     }
 
     @Transactional
-    public void addExistingQuestions(AddExistingQuestionsDto dto) throws QuestionnaireNotFoundException {
-        var questionnaire = anketRep
-                .findById(dto.getQuestionnaireId())
-                .orElseThrow(QuestionnaireNotFoundException::new);
+    public void addExistingQuestions(AddExistingQuestionsDto dto) throws SectionNotFoundException {
+        var section = this.sectionRepository.findById(dto.getSectionId())
+                .orElseThrow(SectionNotFoundException::new);
+
+        var size = new AtomicInteger(section.getQuestions().size());
 
         dto.getQuestions()
-                .forEach(q -> this.sectionRepository.addQuestion(dto.getSectionId(), q.getQuestionId(), q.getIndex()));
-
-        anketRep.save(questionnaire);
-    }
-
-    public void addExistingQuestionBySection(AddExistingQuestionBySectionDto dto) throws NotFoundException {
-
-        var indexedQuestion = dto.getQuestionIndexed();
-
-        var question = quesRep
-                .findById(indexedQuestion.getQuestionId())
-                .orElseThrow(NotFoundException::new);
-
-        sectionRepository.addQuestion(dto.getSectionId(), question.getId(), indexedQuestion.getIndex());
+                .forEach(q -> this.sectionRepository.addQuestion(section.getId(), q, size.getAndIncrement()));
     }
 
     public QuestionDto update(QuestionUpdateDto dto)

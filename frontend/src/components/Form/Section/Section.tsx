@@ -30,7 +30,6 @@ const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
         currentQuestionId
     }) => {
     const handleChapterChange = (id, title, description) => renameSection({id, title, description});
-    const [t] = useTranslation();
 
     return (
         <>
@@ -42,16 +41,14 @@ const Section: React.FC<ISectionProps & ResponseQuestionProps> = (
                         ref={provided.innerRef}
                         className={styles.wrapper}
                     >
-                        {questions?.length ? questions.map((q, i) => (
+                        {questions?.map((q, i) => (
                                 <QuestionCard
                                     key={q.id}
                                     index={i}
                                     setCurrentQuestion={setCurrentQuestion}
                                     question={q}
                                     isCurrent={currentQuestionId === q.id}
-                                />
-                            )) :
-                            <Header as='h3' content={t("Add questions")}/>
+                                />))
                         }
                         {provided.placeholder}
                     </div>)

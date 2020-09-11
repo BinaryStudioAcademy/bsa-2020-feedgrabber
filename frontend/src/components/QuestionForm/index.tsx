@@ -107,7 +107,7 @@ const QuestionForm: FC<QuestionFormProps & { listEdit?: IQuestionListEditProps }
         <div className={`${styles.question_container}`} ref={ref}>
             {isLoading ? <Loader active inline='centered'/>
                 :
-                <ReactResizeDetector handleHeight onResize={() => setMenuPos(ref.current.getBoundingClientRect().y)}>
+                <ReactResizeDetector onResize={() => setMenuPos(ref.current.getBoundingClientRect().y)}>
                     {() =>
                         <div className={styles.question_container}>
                             <Form className={styles.question_form}>
