@@ -16,6 +16,7 @@ import {loadResponseFormRoutine, saveResponseRoutine} from "../../sagas/response
 import UIContent from "../../components/UI/UIContent";
 import UISection from "../../components/UI/UISectionCard";
 import UIColumn from "../../components/UI/UIColumn";
+import {toggleMenuRoutine} from "../../sagas/app/routines";
 
 interface IQuestionnaireResponseState {
     isCompleted: boolean;
@@ -55,8 +56,14 @@ class FormResponse extends React.Component<ResponseProps & { match }, IQuestionn
     }
 
     componentDidMount() {
-        const {match, loadForm} = this.props;
+        const {match, loadForm, toggleMenu} = this.props;
         loadForm(match.params.id);
+        toggleMenu(false);
+        document.getElementById("root").style.backgroundColor = '#f0ebf8';
+    }
+
+    componentWillUnmount() {
+        document.getElementById("root").style.backgroundColor = '#f6f7fa';
     }
 
     handleComponentChange = (qs: IQuestion) => {
@@ -182,7 +189,8 @@ const mapState = (state: IAppState) => ({
 
 const mapDispatch = {
     saveResponse: saveResponseRoutine,
-    loadForm: loadResponseFormRoutine
+    loadForm: loadResponseFormRoutine,
+    toggleMenu: toggleMenuRoutine
 };
 
 const connector = connect(mapState, mapDispatch);

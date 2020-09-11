@@ -34,25 +34,27 @@ const RedirectFormEditor: FC<Props> = ({current, saveAndGet}) => {
         open={open}
         size="small"
         onClose={handleCancel}
+        dimmer="blurring"
         style={{textAlign: "center"}}
     >
         <Modal.Content>
             <Modal.Description as="h3">
-                <p>{t("Looks like you don't have currently edited form")}</p>
+                <p>{t("No currently edited form")}</p>
                 {t("Let's create new right now!")}
             </Modal.Description>
             <Input
                 icon='hashtag'
                 iconPosition='left'
+                size="large"
                 label={{ tag: true, content: t('Add Title') }}
                 labelPosition='right'
+                style={{width: '80%'}}
                 value={title}
-                fluid
                 onChange={e => setTitle(e.target.value)}
             />
         </Modal.Content>
         <Modal.Actions>
-           <UIButton title={t("Create")} primary onClick={handleSubmit}/>
+           <UIButton center title={t("Create")} primary onClick={handleSubmit}/>
         </Modal.Actions>
     </Modal>
     );

@@ -193,14 +193,12 @@ const formEditorReducer = (state: IAppState["formEditor"] = init, {type, payload
                 };
             };
             return updateSection();
-        // case loadOneQuestionnaireRoutine.SUCCESS:
         // case saveAndGetQuestionnaireRoutine.SUCCESS:
         //     return {
         //         ...state,
         //         questionnaire: payload,
         //         isLoading: false
         //     };
-        // case loadSavedSectionsByQuestionnaireRoutine.SUCCESS:
         case loadFormRoutine.SUCCESS:
             return payload;
         case deleteQInFormRoutine.TRIGGER:
