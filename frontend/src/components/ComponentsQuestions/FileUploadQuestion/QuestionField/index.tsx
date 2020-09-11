@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Input} from "semantic-ui-react";
 import styles from "../styles.module.sass";
-import {useSSR} from "react-i18next";
 
 interface IQuestionFieldProps {
     text: string;
@@ -21,9 +20,6 @@ const QuestionField: React.FC<IQuestionFieldProps> = data => {
                    type={data.type} {...field} {...data.inputProps}
                    value={data.value} onChange={data.onChange}
             />
-            <div className={styles.errorMessage}>
-              error
-            </div>
         </div>
 
     );

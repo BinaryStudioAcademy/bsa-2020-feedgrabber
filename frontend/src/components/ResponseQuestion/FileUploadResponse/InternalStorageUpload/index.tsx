@@ -22,7 +22,8 @@ const InternalStorageUpload = ({ onFilesAdded, mapFiles, disabled, onClear, erro
                 <div className={styles.errorMessage}>{error}</div>
                 <Button
                     type="button"
-                    className={styles.clearButton} color="blue"
+                    className={styles.clearButton}
+                    color="red"
                     onClick={onClear}
                 >
                     Clear
