@@ -22,6 +22,7 @@ interface IMainPageProps {
     questionnaireList: IQuestionnaireResponse[];
     reportsList?: IReportShort[];
     isLoading: boolean;
+    language: string;
 
     loadQuestionnaires(): void;
     loadReports(): void;
@@ -34,6 +35,7 @@ const MainPage: FC<IMainPageProps> =
          questionnaireList,
          reportsList = [],
          isLoading,
+         language,
          loadQuestionnaires,
          loadReports
      }) => {
@@ -52,7 +54,7 @@ const MainPage: FC<IMainPageProps> =
             loadReports();
        }, [loadReports]);
 
-        useEffect(() => {
+       const updatePanes = () => {
             setPanes([
                 {
                     menuItem: {key: 'opened', icon: 'eye', content: t('Pending')},
@@ -128,8 +130,17 @@ const MainPage: FC<IMainPageProps> =
                     </Tab.Pane>
                 }
             ]);
+       };
+
+        useEffect(() => {
+             updatePanes();
             // eslint-disable-next-line
         }, [isLoading, questionnaireList]);
+
+        useEffect(() => {
+             updatePanes();
+            // eslint-disable-next-line
+        }, [language]);
 
         return (
             <>
@@ -179,7 +190,8 @@ const MapStateToProps = (state: IAppState) => ({
     questionnaireList: state.questionnaireResponse.list,
     isLoading: state.questionnaireResponse.isLoading,
     user: state.user.shortInfo,
-    reportsList: state.questionnaireReports.reports
+    reportsList: state.questionnaireReports.reports,
+    language: state.user?.settings?.language
 });
 
 const MapDispatchToProps = {
