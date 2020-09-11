@@ -191,9 +191,9 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
     };
 
     return (
-        <div className={styles.segment}>
-            <span>Maximum number of the files: {question.details.filesNumber}</span><br/>
-            <span>Maximum size of the file: {question.details.filesSize}</span>
+        <div>
+            <div className={styles.restrictions}>Maximum number of the files: {question.details.filesNumber}</div>
+            <div className={styles.restrictions}>Maximum size of the file: {question.details.filesSize}</div>
             <Tab className={styles.tab} panes={getPanes()}/>
         </div>
     );
