@@ -29,9 +29,8 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     @Query("select q from Question q " +
             "left join SectionQuestion sq on sq.id.questionId = q.id " +
-            "inner join Section s on s.id = sq.id.sectionId " +
-            "where q.company.id = :companyId and s.questionnaire.id <> : questionnaireId"
+            "left join Section s on s.id = sq.id.sectionId " +
+            "where q.company.id = :companyId and s.questionnaire.id <> :questionnaireId"
             )
     Page<Question> findAllByCompanyIdAndQuestionnaireIdNot(UUID companyId, UUID questionnaireId, Pageable pageable);
-
 }

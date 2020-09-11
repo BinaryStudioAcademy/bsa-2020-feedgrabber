@@ -1,7 +1,7 @@
 import {IAppState} from "models/IAppState";
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
 import {
-    deleteQuestionRoutine,
+    deleteQuestionRoutine, loadQuestionsExceptRoutine,
     loadQuestionsRoutine,
     saveQuestionRoutine, setCurrentQuestionRoutine, setQuestionPaginationRoutine,
     updateQuestionRoutine
@@ -29,6 +29,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
     switch (type) {
         case loadQuestionsRoutine.TRIGGER:
         case deleteQuestionRoutine.TRIGGER:
+        case loadQuestionsExceptRoutine.TRIGGER:
         case saveQuestionRoutine.TRIGGER:
             return {
                 ...state,
@@ -45,6 +46,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
                 pagination: payload
             };
         case loadQuestionsRoutine.SUCCESS:
+        case loadQuestionsExceptRoutine.SUCCESS:
             return {
                 ...state,
                 pagination: payload,
@@ -87,6 +89,7 @@ const questionsReducer = (state: IQuestionsState = initialState, {type, payload}
         case loadQuestionsRoutine.FAILURE:
         case saveQuestionRoutine.FAILURE:
         case deleteQuestionRoutine.FAILURE:
+        case loadQuestionsExceptRoutine.FAILURE:
             return {
                 ...state,
                 isLoading: false

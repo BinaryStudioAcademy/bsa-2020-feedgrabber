@@ -15,6 +15,8 @@ interface IQuestionMenuProps {
     onDelete(): void;
 
     addSection(): void;
+
+    addFromExisting(): void;
 }
 
 const styleBorder = {style: {border: 'none', backgroundColor: 'white', padding: 12}};
@@ -28,6 +30,7 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
         copyQuestion,
         onDelete,
         addSection,
+        addFromExisting,
         position
     }) => {
     const [isOpenModal, setOpenModal] = useState(false);
@@ -75,7 +78,8 @@ const QuestionMenu: FC<IQuestionMenuProps> = (
                 />
                 <Popup content={t("Add from existing questions")} {...popupProps}
                        trigger={<Button icon={AiOutlineAppstoreAdd({size: '1.6rem'})}
-                                        style={{border: 'none', backgroundColor: 'white', padding: 8}}/>}
+                                        style={{border: 'none', backgroundColor: 'white', padding: 8}}
+                       onClick={addFromExisting}/>}
                 />
                 <Popup content={t("Add section")} {...popupProps}
                        trigger={<Button icon="arrows alternate vertical" {...styleBorder} onClick={addSection}/>}

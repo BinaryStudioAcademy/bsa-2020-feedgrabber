@@ -46,6 +46,7 @@ public class Company {
     @Column
     private String corporateEmail;
 
+    @IndexedEmbedded(depth = 2)
     @OneToMany(mappedBy = "company")
     private List<Questionnaire> questionnaires;
 

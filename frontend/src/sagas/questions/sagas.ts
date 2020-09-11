@@ -1,15 +1,17 @@
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import {
-    addSelectedQuestionsRoutine,
     deleteQuestionRoutine,
     loadQuestionnaireQuestionsRoutine,
     loadQuestionsBySectionRoutine,
+    loadQuestionsExceptRoutine,
     loadQuestionsRoutine,
-    saveQuestionRoutine, setCurrentQuestionRoutine,
+    saveQuestionRoutine,
+    setCurrentQuestionRoutine,
     updateQuestionRoutine
 } from './routines';
 import apiClient from '../../helpers/apiClient';
 import {toastr} from 'react-redux-toastr';
+import {addExistingQToFormRoutine} from "../sections/routines";
 
 export const parseQuestion = ({index, ...rawQuestion}) => ({
     ...rawQuestion,
@@ -31,16 +33,35 @@ function* getAll() {
     }
 }
 
-function* addFromExisting(action) {
-    // payload: {questionnaireId; questions, sectionId}}
+function* getAllExcept(action) {
     try {
-        yield call(apiClient.patch, `/api/questions`, action.payload);
+        const {questionnaireId, query} = action.payload;
+        const store = yield select();
+        const {page, size} = store.questions.pagination;
 
-        yield put(addSelectedQuestionsRoutine.success());
-        yield put(loadQuestionsBySectionRoutine.trigger(action.payload.sectionId));
+        const res = (yield call(apiClient.get,
+            query ? `/api/questions/except/${questionnaireId}?page=${page}&size=${size}&query=${query}`
+                : `/api/questions/except/${questionnaireId}?page=${page}&size=${size}`)).data.data;
+
+        res.items = res.items.map(q => parseQuestion(q));
+
+        yield put(loadQuestionsExceptRoutine.success(res));
     } catch (e) {
-        yield put(addSelectedQuestionsRoutine.failure(e.data.error));
-        toastr.error("Something went wrong, try again");
+        yield put(loadQuestionsExceptRoutine.failure());
+        toastr.error("Unable to load questions");
+    }
+}
+
+function* addFromExisting(action) {
+    try {
+        const {questions, sectionId} = action.payload;
+
+        yield call(apiClient.patch, `/api/questions`, {sectionId, questions: questions.map(q => q.id)});
+
+        yield put(addExistingQToFormRoutine.success(action.payload));
+    } catch (e) {
+        yield put(addExistingQToFormRoutine.failure(e?.data.error));
+        toastr.error("Questions wasn't added");
     }
 }
 
@@ -94,7 +115,8 @@ function* getBySectionId(action) {
 export default function* questionSagas() {
     yield all([
         yield takeEvery(loadQuestionsRoutine.TRIGGER, getAll),
-        yield takeEvery(addSelectedQuestionsRoutine.TRIGGER, addFromExisting),
+        yield takeEvery(loadQuestionsExceptRoutine.TRIGGER, getAllExcept),
+        yield takeEvery(addExistingQToFormRoutine.TRIGGER, addFromExisting),
         yield takeEvery(updateQuestionRoutine.TRIGGER, updateQuestion),
         yield takeEvery(saveQuestionRoutine.TRIGGER, saveQuestion),
         yield takeEvery(loadQuestionsBySectionRoutine.TRIGGER, getBySectionId),

@@ -58,15 +58,6 @@ public class SectionController {
         return new AppResponse<>(questionService.create(dto));
     }
 
-    @ApiOperation(value = "Add new question to the section from existing", notes = "Provide both id: section and question")
-    @PutMapping("/add")
-    @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Pair<List<QuestionDto>, UUID>> addQuestionFromExisting(@RequestBody AddExistingQuestionBySectionDto dto) throws NotFoundException {
-        questionService.addExistingQuestionBySection(dto);
-        return new AppResponse<>(
-                Pair.of(sectionService.getSectionQuestions(dto.getSectionId()), dto.getQuestionIndexed().getQuestionId()));
-    }
-
     @PatchMapping("/question/reorder")
     public void questionReordering(@RequestBody SectionsQuestionOrderDto dto) throws NotFoundException {
         sectionService.reorderQuestions(dto);

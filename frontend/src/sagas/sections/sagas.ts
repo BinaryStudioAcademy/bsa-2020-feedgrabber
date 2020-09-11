@@ -96,25 +96,6 @@ function* addQuestionToSection(action) {
     }
 }
 
-function* addExistingQuestionToSection(action) {
-    try {
-        const {sectionId, questionId: qId, index} = action.payload;
-        const result = yield call(apiClient.put, `/api/section/add`,
-            {questionIndexed: {questionId: qId, index}, sectionId}
-        );
-
-        const {second: questionId, first: questions} = result.data.data;
-
-        yield put(addExistingQToFormRoutine.success({
-            sectionId,
-            questionId,
-            questions: parseQuestions(questions)
-        }));
-    } catch (error) {
-        yield put(addExistingQToFormRoutine.failure());
-    }
-}
-
 function* updateQuestion(action) {
     try {
         const question = action.payload;
@@ -175,7 +156,6 @@ export default function* sectionSagas() {
         yield takeEvery(updateQInFormRoutine.TRIGGER, updateQuestion),
         yield takeEvery(updateSectionRoutine.TRIGGER, updateSection),
         yield takeEvery(updateOrderInFormRoutine.TRIGGER, updateOrder),
-        yield takeEvery(addExistingQToFormRoutine.TRIGGER, addExistingQuestionToSection),
         yield takeEvery(deleteSectionRoutine.TRIGGER, deleteSection)
     ]);
 }

@@ -10,6 +10,7 @@ import com.feed_grabber.core.exceptions.NotFoundException;
 import com.feed_grabber.core.question.dto.*;
 import com.feed_grabber.core.question.exceptions.QuestionNotFoundException;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
+import com.feed_grabber.core.sections.exception.SectionNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.feed_grabber.core.auth.security.TokenService.getCompanyId;
@@ -39,8 +41,11 @@ public class QuestionController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public AppResponse<DataList<QuestionDto>> getAll(@RequestParam(required = false) Integer page,
-                                                     @RequestParam(required = false) Integer size) {
+    public AppResponse<DataList<QuestionDto>> getAll(
+            @RequestParam(required = false) Optional<String> query,
+            @RequestParam Integer page,
+            @RequestParam Integer size
+    ) {
         var companyId = getCompanyId();
         return new AppResponse<>(new DataList<>(
                 questionService.getAll(companyId, page, size),
@@ -49,6 +54,33 @@ public class QuestionController {
                 size
         ));
     }
+
+    @ApiOperation(value = "Get all questions from repo not in questionnaire")
+    @GetMapping("/except/{questionnaireId}")
+    @ResponseStatus(HttpStatus.OK)
+    @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
+    public AppResponse<DataList<QuestionDto>> getAllExceptQuestionnaire(
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) String query,
+            @PathVariable UUID questionnaireId
+    ) {
+        if (query == null) {
+            return new AppResponse<>(
+                    questionService.getAllExceptOneQuestionnaire(questionnaireId, page, size)
+            );
+        }
+        var searched = questionService.searchAll(Optional.of(query), page, size, Optional.of(questionnaireId));
+        return new AppResponse<>(
+                new DataList<>(
+                        searched.getObjects(),
+                        searched.getSize(),
+                        page,
+                        size
+                )
+        );
+    }
+
 
     @ApiOperation(value = "Get questions from the specific questionnaire by questionnaireID")
     @GetMapping("/questionnaires/{id}")
@@ -96,9 +128,7 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping
     @Secured(value = {ROLE_COMPANY_OWNER, ROLE_HR})
-    public void addExisting(@RequestBody AddExistingQuestionsDto dto)
-            throws QuestionnaireNotFoundException {
-
+    public void addExisting(@RequestBody AddExistingQuestionsDto dto) throws SectionNotFoundException {
         questionService.addExistingQuestions(dto);
     }
 

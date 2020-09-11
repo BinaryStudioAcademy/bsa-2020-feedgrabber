@@ -17,5 +17,5 @@ export const updateSectionRoutine = createRoutine("SECTION:UPDATE");
 export const updateOrderInFormRoutine = createRoutine("FORM:UPDATE_INDEXES_API");
 export const updateOrderInForm = createRoutine("FORM:UPDATE_INDEXES");
 
-export const addExistingQToFormRoutine = createRoutine("SECTION:ADD_EXISTING_QUESTION");
+export const addExistingQToFormRoutine = createRoutine("FORM:ADD_EXISTING_QUESTION");
 

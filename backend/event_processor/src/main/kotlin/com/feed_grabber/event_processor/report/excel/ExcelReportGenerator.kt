@@ -52,7 +52,7 @@ class ExcelReportGenerator(@Autowired private val service: ReportService,
                 if (answer.selected != null)
                     textCell(answer.selected, row, cellPosition, cellStyle)
                 else {
-                    textCell(answer.other!!, row, cellPosition, cellStyle)
+                    textCell(answer.other ?: "", row, cellPosition, cellStyle)
                 }
             }
             QuestionTypes.fileUpload -> {
