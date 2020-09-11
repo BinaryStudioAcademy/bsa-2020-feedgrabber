@@ -38,7 +38,7 @@ const Search: FC<SearchProps> = ({isLoading, result, searchAll, searchQuery}) =>
             temp.push({
                 count: result.users.length,
                 title: 'Users',
-                route: 'people/employees'
+                route: '/people/employees'
             });
         }
         if (result?.teams) {
