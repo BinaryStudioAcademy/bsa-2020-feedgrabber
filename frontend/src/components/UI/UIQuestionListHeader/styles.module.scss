@@ -1,11 +1,8 @@
 @import "src/assets/styles/variables";
 
 .headerContainer {
-    width: 100%;
-    border-radius: 10px;
-    height: max-content;
-    background-color: $background-color;
-    padding: 20px $base-margin 0px;
+    width: 45%;
+    margin: 0 auto;
 }
 
 .title {

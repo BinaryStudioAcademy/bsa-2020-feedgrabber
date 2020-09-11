@@ -17,7 +17,7 @@ import AccountVerificationPage from "../../components/AccountVerificationPage";
 import InvitationSignUp from "../InvitationSignUp";
 import UserList from "../UserList";
 import ResetPasswordForm from "../../components/AuthForm/ResetPasswordForm";
-import QuestionnaireResponse from 'containers/QuestionnareResponse';
+import QuestionnaireResponse from 'containers/FormResponse';
 import RequestCreation from "../RequestCreation";
 import Form from "../../components/Form";
 import TeamDetailsPage from "../TeamsDetailsPage";
@@ -32,7 +32,6 @@ import CompanyDashboard from "../Dashboard";
 import NewsList from "../../components/NewsList";
 import SignUpByEmailPage from 'components/SignUpByEmailPage';
 import CompanyFeedItemCreation from "../../components/CompanyFeedItemCreation";
-import QuestionDetailsContainer from "../QuestionDetailsContainer";
 import PeopleManagementPage from "../../components/PeopleManagementPage/PeopleManagementPage";
 import ExpandedNewsItem from "../../components/ExpandedNews";
 
@@ -76,11 +75,9 @@ const Routing: FC<RoutingProps> = ({isLoading, getUser}) => {
                     <PrivateRoute exact path="/questionnaires/:id/requests" component={RequestsPage}/>
                     <PrivateRoute exact path="/report/:id" component={ReportPage}/>
                     <PrivateRoute exact path="/report/:id/:respondent/:username" component={RespondentReport}/>
-                    <PrivateRoute exact path="/response/:id" component={QuestionnaireResponse}/>
-                    <PrivateRoute exact path="/response/:id/modify/:responseId" component={QuestionnaireResponse}/>
+                    <PrivateRoute exact path={"/response/:id"} component={QuestionnaireResponse}/>
                     <PrivateRoute exact path="/questions" component={QuestionsList}/>
                     <PrivateRoute exact path="/employees" component={UserList}/>
-                    <PrivateRoute exact path="/question/:id" component={QuestionDetailsContainer}/>
                     <PrivateRoute exact path="/invitations" component={InvitationLinkPage}/>
                     <Route path="/people">
                         <Redirect to="/people/teams"/>

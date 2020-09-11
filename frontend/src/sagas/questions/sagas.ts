@@ -12,11 +12,9 @@ import apiClient from '../../helpers/apiClient';
 import {IGeneric} from 'models/IGeneric';
 import {toastr} from 'react-redux-toastr';
 import {IQuestion} from "../../models/forms/Questions/IQuesion";
-import {loadSectionsByQuestionnaireRoutine} from "../sections/routines";
 
-export const parseQuestion = rawQuestion => ({
+export const parseQuestion = ({index, ...rawQuestion}) => ({
     ...rawQuestion,
-    type: rawQuestion.type,
     details: JSON.parse(rawQuestion.details) ?? {}
 });
 
@@ -48,7 +46,7 @@ function* addFromExisting(action) {
         yield call(apiClient.patch, `/api/questions`, action.payload);
 
         yield put(addSelectedQuestionsRoutine.success());
-        yield put(loadSectionsByQuestionnaireRoutine.trigger(action.payload.questionnaireId));
+        yield put(loadQuestionsBySectionRoutine.trigger(action.payload.sectionId));
     } catch (e) {
         yield put(addSelectedQuestionsRoutine.failure(e.data.error));
         toastr.error("Something went wrong, try again");
@@ -91,7 +89,7 @@ function* saveQuestion(action) {
 
 function* getBySectionId(action) {
     try {
-        const res: IGeneric<IQuestion[]> = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
+        const res = yield call(apiClient.get, `/api/questions/sections/${action.payload}`);
 
         const questions = res.data.data.map(q => parseQuestion(q));
 

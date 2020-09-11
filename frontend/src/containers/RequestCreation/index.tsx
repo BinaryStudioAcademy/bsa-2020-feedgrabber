@@ -1,39 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import UIPageTitle from "../../components/UI/UIPageTitle";
 import UIContent from "../../components/UI/UIContent";
 import UIColumn from "../../components/UI/UIColumn";
 import UICard from "../../components/UI/UICard";
 import UIButton from "../../components/UI/UIButton";
 import UICardBlock from "../../components/UI/UICardBlock";
-import { IAppState } from "../../models/IAppState";
-import { connect, ConnectedProps } from "react-redux";
-import { loadCompanyUsersRoutine, loadTeamsRoutine, setTeamPaginationRoutine } from "../../sagas/teams/routines";
+import {IAppState} from "../../models/IAppState";
+import {connect, ConnectedProps} from "react-redux";
+import {loadCompanyUsersRoutine, loadTeamsRoutine, setTeamPaginationRoutine} from "../../sagas/teams/routines";
 import UIUserItemCard from "../../components/UI/UIUserItemCard";
-import { Formik } from "formik";
+import {Formik} from "formik";
 import DatePicker from "react-datepicker";
 import styles from './styles.module.sass';
 import "react-datepicker/dist/react-datepicker.css";
-import { Message, Dimmer, Header } from "semantic-ui-react";
-import { sendQuestionnaireRequestRoutine } from "../../sagas/request/routines";
-import { history } from '../../helpers/history.helper';
-import { IUserShort } from "../../models/user/types";
-import { ITeamShort } from "../../models/teams/ITeam";
+import {Dimmer, Header, Message} from "semantic-ui-react";
+import {sendQuestionnaireRequestRoutine} from "../../sagas/request/routines";
+import {history} from '../../helpers/history.helper';
+import {IUserShort} from "../../models/user/types";
+import {ITeamShort} from "../../models/teams/ITeam";
 import UITeamItemCard from "../../components/UI/UITeamItemCard";
 import LoaderWrapper from "../../components/helpers/LoaderWrapper";
-import { RouteComponentProps } from "react-router-dom";
+import {RouteComponentProps} from "react-router-dom";
 import Form from "../../components/Form";
 import UISwitch from "../../components/UI/UIInputs/UISwitch";
-import {
-    setCurrentQuestionInSection, setNoSectionsRoutine,
-    updateQuestionsOrderRoutine,
-    updateSectionRoutine, updateSections, deleteSectionRoutine, loadSectionsByQuestionnaireRoutine
-} from "sagas/sections/routines";
-import { useTranslation } from "react-i18next";
-import { IQuestion } from "../../models/forms/Questions/IQuesion";
-import { loadOneQuestionnaireRoutine } from "../../sagas/qustionnaires/routines";
-import { setFloatingMenuPos } from "../../sagas/app/routines";
-import GenericPagination from "../../components/helpers/GenericPagination";
+import {useTranslation} from "react-i18next";
 import QuestionnaireList from "../QuestionnaireList";
+import GenericPagination from "../../components/helpers/GenericPagination";
+import {
+    clearFormEditor,
+    deleteSectionRoutine,
+    loadFormRoutine,
+    setCurrentQInForm,
+    updateOrderInForm,
+    updateOrderInFormRoutine,
+    updateSectionRoutine
+} from "../../sagas/sections/routines";
 
 const initialValues = {
     chosenUsers: new Array<IUserShort>(),
@@ -50,95 +51,96 @@ const initialValues = {
 
 const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
     ({
-        match,
-        teamsPagination,
-        setTeamPagination,
-        users,
-        loadTeams,
-        loadUsers,
-        loadOneQuestionnaire,
-        updateSection,
-        updateOrder,
-        sendRequest,
-        isLoadingUsers,
-        setCurrentQuestion,
-        isLoadingTeams,
-        updateSectionsR,
-        sections,
-        deleteSection,
-        setNoSections,
-        questionnaireId
-    }) => {
-
+         match,
+         teamsPagination,
+         setTeamPagination,
+         users,
+         loadTeams,
+         loadUsers,
+         updateSection,
+        loadForm,
+        questions,
+        updateOrderApi,
+         updateOrder,
+         sendRequest,
+         isLoadingUsers,
+         setCurrentQuestion,
+         isLoadingTeams,
+         sections,
+         deleteSection,
+         setNoSections,
+         questionnaireId
+     }) => {
         const [t] = useTranslation();
         // load users
         useEffect(() => {
             loadUsers();
         }, [loadUsers]);
 
-        // load teams
-        useEffect(() => {
-            loadTeams({ notBlank: 'notBlank' });
-        }, [loadTeams]);
+    // load teams
+    useEffect(() => {
+        loadTeams({notBlank: 'notBlank'});
+    }, [loadTeams]);
 
-        // load questionnaire
-        useEffect(() => {
-            if (match.params?.id) loadOneQuestionnaire(match.params?.id);
-        }, [loadOneQuestionnaire, match.params]);
+    // load questionnaire
+    useEffect(() => {
+        match.params?.id && loadForm(match.params.id);
+    }, [loadForm, match.params]);
 
-        const [targetUserPattern, setTargetUserPattern] = useState('');
-        const [respondentPattern, setRespondentPattern] = useState('');
-        const [selectTeams, setSelectTeams] = useState(true);
-        const [error, setError] = useState(null);
+    const [targetUserPattern, setTargetUserPattern] = useState('');
+    const [respondentPattern, setRespondentPattern] = useState('');
+    const [selectTeams, setSelectTeams] = useState(true);
+    const [error, setError] = useState(null);
 
-        const isUserFind = user => {
-            const pattern = targetUserPattern.toLowerCase();
-            const name = user.firstName?.toLowerCase();
-            const surname = user.lastName?.toLowerCase();
+    const isUserFind = user => {
+        const pattern = targetUserPattern.toLowerCase();
+        const name = user.firstName?.toLowerCase();
+        const surname = user.lastName?.toLowerCase();
 
-            return user.username?.toLowerCase().includes(pattern)
-                || `${name} ${surname}`.includes(pattern);
-        };
+        return user.username?.toLowerCase().includes(pattern)
+            || `${name} ${surname}`.includes(pattern);
+    };
 
-        const handleSearchChange = value => {
-            setRespondentPattern(value);
-            loadTeams({ query: value, notBlank: 'notBlank' });
-        };
+    const handleSearchChange = value => {
+        setRespondentPattern(value);
+        loadTeams({query: value, notBlank: 'notBlank'});
+    };
 
-        return (
-            <>
-                <UIPageTitle title={t("Send Request")} />
-                <UIContent>
-                    <UIColumn>
-                        <UICard>
-                            <UICardBlock>
-                                {!sections.length
-                                    ? <QuestionnaireList muteActions/>
-                                    : <>
-                                        <Header
-                                            as='h5'
-                                            onClick={setNoSections}
-                                            className={styles.changeQuest}>
-                                            Use another questionnaire
-                                        </Header>
-                                        <Form
-                                            updateSection={updateSection}
-                                            setCurrentQuestion={setCurrentQuestion}
-                                            updateOrder={updateOrder}
-                                            updateSections={updateSectionsR}
-                                            currentQuestion={{} as IQuestion}
-                                            deleteSection={deleteSection}
-                                            sections={sections}
-                                        /></>}
-                            </UICardBlock>
-                        </UICard>
-                    </UIColumn>
-                    <UIColumn>
-                        <LoaderWrapper loading={!users || isLoadingUsers || !teamsPagination.items}>
+    return (
+        <>
+            <UIPageTitle title={t("Send Request")}/>
+            <UIContent>
+                <UIColumn>
+                    <UICard>
+                        <UICardBlock>
+                            {!sections.ids.length
+                                ? <QuestionnaireList muteActions/>
+                                : <>
+                                    <Header
+                                        as='h5'
+                                        onClick={setNoSections}
+                                        className={styles.changeQuest}>
+                                        Use another questionnaire
+                                    </Header>
+                                    <Form
+                                        updateSection={updateSection}
+                                        setCurrentQuestion={setCurrentQuestion}
+                                        updateOrderApi={updateOrderApi}
+                                        updateOrder={updateOrder}
+                                        deleteSection={deleteSection}
+                                        sections={sections}
+                                        questions={questions}
+                                    />
+                                </>}
+                        </UICardBlock>
+                    </UICard>
+                </UIColumn>
+                <UIColumn>
+                    <LoaderWrapper loading={!users || isLoadingUsers || !teamsPagination.items}>
                         <Dimmer.Dimmable
-                                blurring
-                                dimmed={!sections.length}
-                                className={!sections.length && styles.dimmer}>
+                            blurring
+                            dimmed={!sections.ids.length}
+                            className={!sections.ids.length && styles.dimmer}>
                             <UICard>
                                 <Formik
                                     initialValues={initialValues}
@@ -178,9 +180,9 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                     <h4>{t("Assign target user")}:</h4>
                                                     <p>{t("This user will receive report")}</p>
                                                     <input type="text"
-                                                        style={{ width: '100%' }}
-                                                        placeholder={t("Search...")}
-                                                        onChange={e => setTargetUserPattern(e.target.value)} />
+                                                           style={{width: '100%'}}
+                                                           placeholder={t("Search...")}
+                                                           onChange={e => setTargetUserPattern(e.target.value)}/>
                                                     <div className={styles.targetUserContainer}>
                                                         {
                                                             users
@@ -213,11 +215,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                     <h4 className={styles.yesNoHeader}>
                                                         {t("Include target user to request?")}
                                                         <span>
-                                                            <UISwitch
-                                                                name='includeTargetUser'
-                                                                checked={formik.values.includeTargetUser}
-                                                                onChange={formik.handleChange}
-                                                            /></span>
+                                                        <UISwitch
+                                                            name='includeTargetUser'
+                                                            checked={formik.values.includeTargetUser}
+                                                            onChange={formik.handleChange}
+                                                        /></span>
                                                     </h4>
                                                     <p>{t("If yes, this user will also receive request")}</p>
                                                 </UICardBlock>)}
@@ -225,11 +227,11 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                     <h4 className={styles.yesNoHeader}>
                                                         {t("Send report to target user?")}
                                                         <span>
-                                                            <UISwitch
-                                                                name='sendToTargetUser'
-                                                                checked={formik.values.sendToTargetUser}
-                                                                onChange={formik.handleChange}
-                                                            /></span>
+                                                        <UISwitch
+                                                            name='sendToTargetUser'
+                                                            checked={formik.values.sendToTargetUser}
+                                                            onChange={formik.handleChange}
+                                                        /></span>
                                                     </h4>
                                                     <p>{t("If yes, this user will also receive report")}</p>
                                                 </UICardBlock>)}
@@ -237,41 +239,41 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                     <h4 className={styles.yesNoHeader}>
                                                         {t("Set Deadline for this request?")}
                                                         <span>
-                                                            <UISwitch
-                                                                name='withDeadline'
-                                                                checked={formik.values.withDeadline}
-                                                                onChange={formik.handleChange}
-                                                            /></span>
+                                                        <UISwitch
+                                                            name='withDeadline'
+                                                            checked={formik.values.withDeadline}
+                                                            onChange={formik.handleChange}
+                                                        /></span>
                                                     </h4>
                                                     <p>{t("Users will be notified before the deadline")}</p>
 
                                                     {formik.values.withDeadline &&
-                                                        <>
-                                                            <p className={styles.deadlineDate}>
-                                                                {formik.values.expirationDate
-                                                                    ? formik.values.expirationDate.toLocaleString()
-                                                                    : ' '}
-                                                            </p>
-                                                            <DatePicker name='expirationDate'
-                                                                minDate={new Date()}
-                                                                selected={formik.values.expirationDate}
-                                                                onChange={date => formik
-                                                                    .setFieldValue('expirationDate', date)}
-                                                                showTimeSelect
-                                                                inline
-                                                            />
-                                                        </>
+                                                    <>
+                                                      <p className={styles.deadlineDate}>
+                                                          {formik.values.expirationDate
+                                                              ? formik.values.expirationDate.toLocaleString()
+                                                              : ' '}
+                                                      </p>
+                                                      <DatePicker name='expirationDate'
+                                                                  minDate={new Date()}
+                                                                  selected={formik.values.expirationDate}
+                                                                  onChange={date => formik
+                                                                      .setFieldValue('expirationDate', date)}
+                                                                  showTimeSelect
+                                                                  inline
+                                                      />
+                                                    </>
                                                     }
                                                 </UICardBlock>
 
                                                 <UICardBlock>
                                                     <h4 className={styles.yesNoHeader}>{t("Notify Users?")}
                                                         <span>
-                                                            <UISwitch
-                                                                name='notifyUsers'
-                                                                checked={formik.values.notifyUsers}
-                                                                onChange={formik.handleChange}
-                                                            /></span>
+                                                        <UISwitch
+                                                            name='notifyUsers'
+                                                            checked={formik.values.notifyUsers}
+                                                            onChange={formik.handleChange}
+                                                        /></span>
                                                     </h4>
                                                     <p>{t("Users will be notified after sending the request")}</p>
                                                 </UICardBlock>
@@ -280,40 +282,40 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                     <h4 className={styles.yesNoHeader}>
                                                         {t("Automatically Generate Report?")}
                                                         <span>
-                                                            <UISwitch
-                                                                name='generateReport'
-                                                                checked={formik.values.generateReport}
-                                                                onChange={formik.handleChange}
-                                                            /></span>
+                                                        <UISwitch
+                                                            name='generateReport'
+                                                            checked={formik.values.generateReport}
+                                                            onChange={formik.handleChange}
+                                                        /></span>
                                                     </h4>
                                                 </UICardBlock>
 
                                                 <UICardBlock>
                                                     <h4 className={styles.yesNoHeader}>{t("Can users change answers?")}
                                                         <span>
-                                                            <UISwitch
-                                                                name="changeable"
-                                                                checked={formik.values.changeable}
-                                                                onChange={formik.handleChange}
-                                                            />
-                                                        </span>
+                                                        <UISwitch
+                                                            name="changeable"
+                                                            checked={formik.values.changeable}
+                                                            onChange={formik.handleChange}
+                                                        />
+                                                    </span>
                                                     </h4>
                                                 </UICardBlock>
 
                                                 <UICardBlock>
                                                     <div className={styles.selectHeader}>
                                                         <h4>
-                                                            <span className={[styles.option
-                                                                , selectTeams && styles.selected].join(' ')}
-                                                                onClick={() => {
-                                                                    if (!selectTeams) {
-                                                                        setSelectTeams(true);
-                                                                        formik.setFieldValue('chosenUsers'
-                                                                            , []);
-                                                                    }
-                                                                }}>
-                                                                {t("Select Teams")}
-                                                            </span>
+                                                        <span className={[styles.option
+                                                            , selectTeams && styles.selected].join(' ')}
+                                                              onClick={() => {
+                                                                  if (!selectTeams) {
+                                                                      setSelectTeams(true);
+                                                                      formik.setFieldValue('chosenUsers'
+                                                                          , []);
+                                                                  }
+                                                              }}>
+                                                            {t("Select Teams")}
+                                                        </span>
                                                             <span className={styles.separator}>{t("or")}</span>
                                                             <span
                                                                 className={[styles.option
@@ -324,39 +326,39 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                                         formik.setFieldValue('chosenTeams', []);
                                                                     }
                                                                 }}>
-                                                                {t("Select Users")}
-                                                            </span>
+                                                            {t("Select Users")}
+                                                        </span>
                                                         </h4>
                                                     </div>
                                                     <input type="text"
-                                                        style={{ width: '100%' }}
-                                                        placeholder={t("Search...")}
-                                                        onChange={e => handleSearchChange(e.target.value)}
-                                                        value={respondentPattern}
+                                                           style={{width: '100%'}}
+                                                           placeholder={t("Search...")}
+                                                           onChange={e => handleSearchChange(e.target.value)}
+                                                           value={respondentPattern}
                                                     />
                                                     {selectTeams && <GenericPagination
-                                                        isLoading={isLoadingTeams}
-                                                        unmutedLoading={false}
-                                                        pagination={teamsPagination}
-                                                        setPagination={setTeamPagination}
-                                                        loadItems={() =>
-                                                            loadTeams({ query: respondentPattern, notBlank: true })}
-                                                        mapItemToJSX={(team: ITeamShort) =>
-                                                            <UITeamItemCard
-                                                                key={team.id}
-                                                                team={team}
-                                                                selected={formik.values.chosenTeams.includes(team)}
-                                                                onClick={() => {
-                                                                    let newTeams: any[];
-                                                                    if (formik.values.chosenTeams.includes(team)) {
-                                                                        newTeams = formik.values.chosenTeams
-                                                                            .filter(t => t !== team);
-                                                                    } else {
-                                                                        newTeams = [...formik.values.chosenTeams, team];
-                                                                    }
-                                                                    formik.setFieldValue('chosenTeams', newTeams);
-                                                                }}
-                                                            />}
+                                                      isLoading={isLoadingTeams}
+                                                      unmutedLoading={false}
+                                                      pagination={teamsPagination}
+                                                      setPagination={setTeamPagination}
+                                                      loadItems={() =>
+                                                          loadTeams({query: respondentPattern, notBlank: true})}
+                                                      mapItemToJSX={(team: ITeamShort) =>
+                                                          <UITeamItemCard
+                                                              key={team.id}
+                                                              team={team}
+                                                              selected={formik.values.chosenTeams.includes(team)}
+                                                              onClick={() => {
+                                                                  let newTeams: any[];
+                                                                  if (formik.values.chosenTeams.includes(team)) {
+                                                                      newTeams = formik.values.chosenTeams
+                                                                          .filter(t => t !== team);
+                                                                  } else {
+                                                                      newTeams = [...formik.values.chosenTeams, team];
+                                                                  }
+                                                                  formik.setFieldValue('chosenTeams', newTeams);
+                                                              }}
+                                                          />}
                                                     />}
                                                     {!selectTeams && users
                                                         .filter(user => respondentPattern
@@ -382,12 +384,12 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                                                         newUsers = [...formik.values.chosenUsers, user];
                                                                     }
                                                                     formik.setFieldValue('chosenUsers', newUsers);
-                                                                }} />
+                                                                }}/>
                                                         ))}
                                                 </UICardBlock>
 
                                                 <UICardBlock>
-                                                    <UIButton title={t('Send')} submit />
+                                                    <UIButton title={t('Send')} submit/>
                                                     {error && <Message color='red'>{error}</Message>}
 
                                                 </UICardBlock>
@@ -395,38 +397,37 @@ const RequestCreation: React.FC<ConnectedRequestCreationProps & { match }> =
                                         )}
                                 </Formik>
                             </UICard>
-                            </Dimmer.Dimmable>
-                        </LoaderWrapper>
-                    </UIColumn>
+                        </Dimmer.Dimmable>
+                    </LoaderWrapper>
+                </UIColumn>
             </UIContent>
-            </>
-        );
-    };
+        </>
+    );
+};
 
 const mapStateToProps = (state: IAppState, ownProps: RouteComponentProps) => ({
     domProps: ownProps,
-    teamsPagination: state.teams.pagination,
     isLoadingTeams: state.teams.isLoading,
     users: state.teams.companyUsers,
+    teamsPagination: state.teams.pagination,
     isLoadingUsers: state.teams.isLoadingUsers,
-    sections: state.formEditor.sections.list,
+    sections: state.formEditor.sections,
+    questions: state.formEditor.questions,
     questionnaireId: state.formEditor.questionnaire.id
 });
 
 const mapDispatchToProps = {
     loadTeams: loadTeamsRoutine,
     loadUsers: loadCompanyUsersRoutine,
-    updateOrder: updateQuestionsOrderRoutine,
+    updateOrder: updateOrderInForm,
+    updateOrderApi: updateOrderInFormRoutine,
     updateSection: updateSectionRoutine,
-    setMenuPos: setFloatingMenuPos,
-    setCurrentQuestion: setCurrentQuestionInSection,
-    sendRequest: sendQuestionnaireRequestRoutine,
-    loadSections: loadSectionsByQuestionnaireRoutine,
-    updateSectionsR: updateSections,
-    setTeamPagination: setTeamPaginationRoutine,
+    setCurrentQuestion: setCurrentQInForm,
     deleteSection: deleteSectionRoutine,
-    setNoSections: setNoSectionsRoutine,
-    loadOneQuestionnaire: loadOneQuestionnaireRoutine
+    setTeamPagination: setTeamPaginationRoutine,
+    setNoSections: clearFormEditor,
+    sendRequest: sendQuestionnaireRequestRoutine,
+    loadForm: loadFormRoutine
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

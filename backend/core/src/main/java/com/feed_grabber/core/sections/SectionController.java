@@ -2,9 +2,10 @@ package com.feed_grabber.core.sections;
 
 import com.feed_grabber.core.apiContract.AppResponse;
 import com.feed_grabber.core.exceptions.NotFoundException;
-import com.feed_grabber.core.question.QuestionMapper;
 import com.feed_grabber.core.question.QuestionService;
-import com.feed_grabber.core.question.dto.*;
+import com.feed_grabber.core.question.dto.AddExistingQuestionBySectionDto;
+import com.feed_grabber.core.question.dto.QuestionCreateDto;
+import com.feed_grabber.core.question.dto.QuestionDto;
 import com.feed_grabber.core.questionnaire.exceptions.QuestionnaireNotFoundException;
 import com.feed_grabber.core.sections.dto.*;
 import com.feed_grabber.core.sections.exception.SectionNotFoundException;
@@ -50,14 +51,11 @@ public class SectionController {
         return new AppResponse<>(sectionService.update(id, dto));
     }
 
-    @ApiOperation(value = "Add new question to the section", notes = "Provide both id: section and question")
+    @ApiOperation(value = "Add new question to the section")
     @PutMapping("/question")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<Pair<List<QuestionDto>, UUID>> addQuestion(@RequestBody QuestionCreateDto dto) throws NotFoundException {
-        var id = questionService.create(dto).getId();
-        return new AppResponse<>(
-                Pair.of(sectionService.getSectionQuestions(dto.getSectionId().orElseThrow(NotFoundException::new)), id)
-        );
+    public AppResponse<QuestionDto> addQuestion(@RequestBody QuestionCreateDto dto) throws NotFoundException {
+        return new AppResponse<>(questionService.create(dto));
     }
 
     @ApiOperation(value = "Add new question to the section from existing", notes = "Provide both id: section and question")
@@ -74,19 +72,11 @@ public class SectionController {
         sectionService.reorderQuestions(dto);
     }
 
-    @PostMapping("/{id}/question")
-    public AppResponse<List<QuestionDto>> updateQuestion(@PathVariable UUID id, @RequestBody QuestionUpdateDto dto) throws NotFoundException {
-        questionService.update(dto);
-        return new AppResponse<>(sectionService.getSectionQuestions(id));
-    }
-
     @DeleteMapping("/{sectionId}/{questionId}")
     @ApiOperation(value = "Delete question from section", notes = "Provide both id: section and question")
     @ResponseStatus(HttpStatus.OK)
-    public AppResponse<List<QuestionDto>> deleteQuestion(
-            @PathVariable UUID questionId,
-            @PathVariable UUID sectionId) throws NotFoundException {
-        return new AppResponse<>(sectionService.deleteQuestion(sectionId, questionId));
+    public void deleteQuestion(@PathVariable UUID questionId, @PathVariable UUID sectionId) throws NotFoundException {
+        sectionService.deleteQuestion(sectionId, questionId);
     }
 
     @DeleteMapping("/{id}")

@@ -24,9 +24,9 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
         addQuestions,
         qnId,
         isLoading,
-        currentSection,
         isOpen,
-        handleOpenModal
+        handleOpenModal,
+        currentSection
     }) => {
     const [t] = useTranslation();
     const [selected, setSelected] = useState([] as IQuestion[]);
@@ -117,7 +117,7 @@ const mapState = (state: IAppState) => ({
     isLoading: state.questions.isLoading,
     qnId: state.formEditor.questionnaire.id,
     pagination: state.questions.pagination,
-    currentSection: state.formEditor.sections.current
+    currentSection: state.formEditor.sections.entities[state.formEditor.sections.currentId]
 });
 
 const mapDispatch = {

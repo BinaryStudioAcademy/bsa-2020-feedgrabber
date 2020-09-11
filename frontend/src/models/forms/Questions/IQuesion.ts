@@ -42,13 +42,12 @@ export interface IFileUploadAnswerDetails {
 export interface IQuestionBase<TDetails> {
     id: string;
     name: string;
-    index?: number;
     categoryTitle: string;
     type: QuestionType;
     details: TDetails;
     answer: IAnswerBody;
     isReused: boolean;
-    sectionId?: string;
+    isAnswered?: boolean;
     isRequired: boolean;
 }
 

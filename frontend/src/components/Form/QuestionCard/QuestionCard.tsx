@@ -37,7 +37,7 @@ export type CardProps = {
 } & ResponseQuestionProps;
 
 export type ResponseQuestionProps = {
-    setCurrentQuestion: (x: any) => void;
+    setCurrentQuestion?: (x: any) => void;
     isCurrent?: boolean;
 }
 
