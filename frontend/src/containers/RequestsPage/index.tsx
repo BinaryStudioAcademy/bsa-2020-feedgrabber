@@ -57,9 +57,11 @@ const RequestsPage: FC<RequestPageProps & { match }> = (
             <br />
             <br />
             <UIContent>
-                <UIColumn wide>
-                    <Tab panes={panes}/>
-                </UIColumn>
+                <div style={{width: '70%', margin: '0 auto'}}>
+                    <UIColumn wide>
+                        <Tab panes={panes}/>
+                    </UIColumn>
+                </div>
             </UIContent>
         </>
     );
