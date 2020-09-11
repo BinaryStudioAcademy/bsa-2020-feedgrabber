@@ -64,17 +64,6 @@ const FileUploadQuestion: IGenericQuestionComponent<IFileUploadAnswerDetails> =
                             });
                     }}
                 />
-                {/* <QuestionField
-                    text={t("Maximum files size")} name={"filesSize"} type={"number"}
-                    inputProps={{min: 1}}
-                    value={values.filesSize}
-                    onChange={(e, data) => {
-                        check({
-                            ...values,
-                            filesSize: Number(data.value)
-                        });
-                    }}
-                />*/}
                 <div className={styles.questionField}>
                     <span className={styles.description}>{t("Maximum files size")}</span>
                     <Dropdown
