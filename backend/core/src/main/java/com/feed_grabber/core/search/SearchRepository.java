@@ -12,12 +12,12 @@ import com.feed_grabber.core.request.model.Request;
 import com.feed_grabber.core.search.dto.PagedResponseDto;
 import com.feed_grabber.core.search.dto.SearchDto;
 import com.feed_grabber.core.team.TeamMapper;
-import com.feed_grabber.core.team.dto.TeamDto;
 import com.feed_grabber.core.team.dto.TeamShortDto;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserMapper;
 import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.model.User;
+import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.springframework.stereotype.Repository;
@@ -42,26 +42,31 @@ public class SearchRepository {
         this.entityManager = entityManager;
     }
 
-    private FullTextQuery getFullTextQuery(Class<?> initial, Map<String, String[]> map, Map<String, String[]> notSearch) {
+    private FullTextQuery getFullTextQuery(Class<?> initial, Map<String, String[]> map, Map<String, String[]> notSearch, boolean blankQuery) {
         var fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+
         var qb = fullTextEntityManager
                 .getSearchFactory()
                 .buildQueryBuilder()
                 .forEntity(initial)
                 .get();
-        var bj = fullTextEntityManager
-                .getSearchFactory()
-                .buildQueryBuilder()
-                .forEntity(initial)
-                .get()
-                .bool();
+        Query query = null;
+        if(!blankQuery) {
+            var bj = fullTextEntityManager
+                    .getSearchFactory()
+                    .buildQueryBuilder()
+                    .forEntity(initial)
+                    .get()
+                    .bool();
 
-        map.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()));
-        notSearch.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()).not());
+            map.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()));
+            notSearch.forEach((k, v) -> bj.must(qb.keyword().onFields(v).matching(k).createQuery()).not());
 
-        var q = bj.createQuery();
-
-        return fullTextEntityManager.createFullTextQuery(q, initial);
+            query = bj.createQuery();
+        }else {
+            query = qb.all().createQuery();
+        }
+        return fullTextEntityManager.createFullTextQuery(query, initial);
     }
 
     public SearchDto findAllByQuery(String query) {
@@ -90,7 +95,7 @@ public class SearchRepository {
                                 , "userProfile.phoneNumber"}
                         , getCompanyId().toString()
                         , new String[]{"company.id"})
-                , Map.of());
+                , Map.of(), query.isBlank());
 
         if (page.isPresent() && size.isPresent()) {
             userQuery.setMaxResults(size.get());
@@ -116,7 +121,7 @@ public class SearchRepository {
                                 , "category.title"}
                         , getCompanyId().toString()
                         , new String[]{"company.id"})
-        ,Map.of());
+        ,Map.of(), query.isBlank());
 
         if (questionnaireId.isEmpty()) {
             questionQuery.setMaxResults(size.orElse(1000));
@@ -154,7 +159,7 @@ public class SearchRepository {
                                 , "company.name"}
                         , getCompanyId().toString()
                         , new String[]{"company.id"})
-                , Map.of());
+                , Map.of(), query.isBlank());
         if (page.isPresent() && size.isPresent()) {
             questionnaireQuery.setMaxResults(size.get());
             questionnaireQuery.setFirstResult(page.get() * size.get());
@@ -176,7 +181,7 @@ public class SearchRepository {
                         , new String[]{"questionnaire.title"}
                         , getUserId().toString()
                         , new String[]{"targetUser.id"})
-                , Map.of());
+                , Map.of(), query.isBlank());
         if (page.isPresent() && size.isPresent()) {
             reportQuery.setMaxResults(size.get());
             reportQuery.setFirstResult(page.get() * size.get());
@@ -205,7 +210,7 @@ public class SearchRepository {
                                 , "company.name"}
                         , getCompanyId().toString()
                         , new String[]{"company.id"})
-                , shouldntSearch);
+                , shouldntSearch, query.isBlank());
 
         if (page.isPresent() && size.isPresent()) {
             teamQuery.setMaxResults(size.get());

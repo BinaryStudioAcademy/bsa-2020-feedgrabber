@@ -40,7 +40,7 @@ function* getAllExcept(action) {
         const {page, size} = store.questions.pagination;
 
         const res = (yield call(apiClient.get,
-            `/api/questions/except/${questionnaireId}?page=${page}&size=${size}&query=${query}`
+            `/api/questions/except/${questionnaireId}?page=${page}&size=${size}&query=${query||''}`
                 )).data.data;
 
         res.items = res.items.map(q => parseQuestion(q));
