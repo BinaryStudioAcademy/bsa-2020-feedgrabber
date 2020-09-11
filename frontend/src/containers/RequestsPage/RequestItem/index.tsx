@@ -92,7 +92,7 @@ export const RequestItem: FC<Props> = (
                 <Header icon='archive' content='Close Request & View Report'/>
                 <Modal.Content>
                     <p>{t("Do you really want to")}
-                        <strong style={{color: "red"}}>{t("close the request?")}</strong>
+                        <strong> {t("close the request?")}</strong>
                     </p>
                     {t("Respondents")} <strong>{t("won't be able to answer")}</strong> {t("anymore")}.
                 </Modal.Content>
