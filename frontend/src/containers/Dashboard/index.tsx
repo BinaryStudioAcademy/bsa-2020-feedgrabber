@@ -10,6 +10,9 @@ import { IUserShortInfo} from "../../models/user/types";
 import { loadDashboardDataRoutine } from 'sagas/dashboard/rourines';
 import {IReportShortDto} from "../../models/report/IReport";
 import { useTranslation } from 'react-i18next';
+import UIColumn from "../../components/UI/UIColumn";
+import UICard from "../../components/UI/UICard";
+import UICardBlock from "../../components/UI/UICardBlock";
 
 interface ISearchFields {
   owners: string;
@@ -39,7 +42,7 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = (
   const [searchPatterns, setSearchPatterns] = useState<ISearchFields>(defaultSearchFields);
 
   const [t] = useTranslation();
-  
+
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -102,10 +105,14 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = (
       <div className={styles.formDetails}>
         <LoaderWrapper loading={isLoading}>
           <UIContent>
-            <div className={styles.userAccordion}>
-              <Accordion styled>
-                <h3>{t("People")}</h3>
-                {/* owners */}
+            <UIColumn wide>
+            <UICard>
+              <div className={styles.userAccordion}>
+              <Accordion styled fluid>
+                <UICardBlock>
+                <h2>{t("People")}</h2>
+                </UICardBlock>
+                  {/* owners */}
                 <Accordion.Title index={0} active={activePeopleIndex === 0} onClick={handlePeopleAccordionClick}>
                   <Icon name='user' />
                   {`${t("Company owners")} - ${users.filter(u => u.role === 'Company owner').length}`}
@@ -227,10 +234,14 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = (
 
               </Accordion>
             </div>
+            </UICard>
             {/* Questionnaires */}
+            <UICard>
             <div >
-              <Accordion styled>
-                <h3>{t("Questionnaires")}</h3>
+              <Accordion styled fluid>
+                <UICardBlock>
+                <h2>{t("Questionnaires")}</h2>
+                </UICardBlock>
                 {/* active */}
                 <Accordion.Title
                   index={0}
@@ -240,14 +251,14 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = (
                   {`${t("Active questionnaires")} - ${questionnaires.filter(q => !q.archived).length}`}
                 </Accordion.Title>
                 <Accordion.Content active={activeQuestionnaireIndex === 0} className={styles.accordionContent}>
-                  <input 
+                  <input
                     type="text"
                     name={'questionnaireActive'}
                     style={{ width: '100%' }}
                     placeholder={t("Search...")}
-                    onChange={handleSearchInputChange} 
+                    onChange={handleSearchInputChange}
                   />
-                  {questionnaires.filter(q => !q.archived 
+                  {questionnaires.filter(q => !q.archived
                     && q.title.toLowerCase().includes(searchPatterns.questionnaireActive.toLowerCase()))
                     .map(q =>
                       <Accordion
@@ -292,6 +303,8 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = (
                 </Accordion.Content>
               </Accordion>
             </div>
+            </UICard>
+            </UIColumn>
           </UIContent>
         </LoaderWrapper>
       </div>
