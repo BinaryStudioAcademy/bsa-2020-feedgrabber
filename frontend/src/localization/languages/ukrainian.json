@@ -51,9 +51,12 @@
     "Type of files": "Тип файлів",
     "Maximum number of files": "Максимальна кількість файлів",
     "Maximum files size": "Максимальний розмір файлів",
+    "Maximum size of files": "Максимальний розмір файлів",
     "MB": "МБ",
     "Upload Files": "Завантаження файлів",
     "Add new answer": "Додати нову відповідь",
+    "Add image": "Додати картинку",
+    "Add video": "Додати відео",
 
     "Cancel": "Скасувати",
     "Confirm": "Підтвердити",

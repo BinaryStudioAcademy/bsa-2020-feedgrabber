@@ -9,6 +9,7 @@ import ImageUrl from "./ImageUrl";
 import VideoUrl from "./UrlVideo";
 import apiClient from "../../../helpers/apiClient";
 import {IAnswerBody} from '../../../models/forms/Response/types';
+import {useTranslation} from "react-i18next";
 
 export interface IFileUploadResponse {
     response?: IAnswerBody;
@@ -27,6 +28,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
     const filesNumber = question.details.filesNumber;
     const maxFileSize = question.details.filesSize * (1024 * 1024);
     const filesType = question.details.filesType;
+    const [t] = useTranslation();
 
     const updateLinks = () => setLinks(files.map(file => file.link));
 
@@ -53,7 +55,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
             newFiles = addedFiles;
         } else {
             newFiles = addedFiles.slice(0, filesNumber - files.length);
-            setError(`Maximum number of files ${filesNumber}`);
+            setError(`${t("Maximum number of files")} ${filesNumber}`);
             return;
         }
         deleteNotAllowedFiles(newFiles);
@@ -81,7 +83,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
         const promises = [];
         for (const file of newFiles) {
             if (file.size > maxFileSize) {
-                setError(`Maximum file size is ${question.details.filesSize} MB`);
+                setError(`${t("Maximum file size")} ${question.details.filesSize} ${t("MB")}`);
                 continue;
             }
             // start sending files to the server
@@ -157,7 +159,7 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
             case allTypes.video: {
                 return [
                     {
-                        menuItem: `Add ${filesType}s`,
+                        menuItem: t(`Add ${filesType}`),
                         render: () =>
                             <Tab.Pane>
                                 <InternalStorageUpload
@@ -192,8 +194,12 @@ const FileUploadResponse: FC<IQuestionResponse<IFileUploadQuestion> & IFileUploa
 
     return (
         <div>
-            <div className={styles.restrictions}>Maximum number of the files: {question.details.filesNumber}</div>
-            <div className={styles.restrictions}>Maximum size of the files: {question.details.filesSize}</div>
+            <div className={styles.restrictions}>
+                {t("Maximum number of files")}: {question.details.filesNumber}
+            </div>
+            <div className={styles.restrictions}>
+                {t("Maximum size of files")}: {question.details.filesSize} {t("MB")}
+            </div>
             <Tab className={styles.tab} panes={getPanes()}/>
         </div>
     );
