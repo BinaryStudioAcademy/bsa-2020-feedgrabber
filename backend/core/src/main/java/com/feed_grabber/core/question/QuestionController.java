@@ -65,11 +65,10 @@ public class QuestionController {
             @RequestParam(required = false) String query,
             @PathVariable UUID questionnaireId
     ) {
-        if (query == null) {
-            return new AppResponse<>(
-                    questionService.getAllExceptOneQuestionnaire(questionnaireId, page, size)
-            );
-        }
+//        if (query == null) {
+//            return new AppResponse<>(
+//                    questionService.getAllExceptOneQuestionnaire(questionnaireId, page, size)
+//            ); }
         var searched = questionService.searchAll(Optional.of(query), page, size, Optional.of(questionnaireId));
         return new AppResponse<>(
                 new DataList<>(
@@ -157,7 +156,7 @@ public class QuestionController {
     public AppResponse<List<QuestionDto>> deleteOneByQuestionnaireAndID(
             @PathVariable UUID questionId,
             @PathVariable UUID questionnaireId
-    ) throws QuestionnaireNotFoundException {
+    ) {
 
         questionService.deleteOneByQuestionnaireIdAndQuestionId(questionId, questionnaireId);
 

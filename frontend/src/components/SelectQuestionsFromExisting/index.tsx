@@ -78,7 +78,7 @@ const SelectQuestionsFromExisting: FC<ContainerProps & {
                         unmutedLoading={false}
                         pagination={pagination}
                         setPagination={setPagination}
-                        loadItems={() => qnId && loadQuestions({questionnaireId: qnId})}
+                        loadItems={() => qnId && loadQuestions({questionnaireId: qnId, query})}
                         mapItemToJSX={(q: IQuestion) =>
                             <ModalQuestionItem
                                 key={q.id}

@@ -17,7 +17,7 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
             "WHERE q.id = :questionnaireId")
     List<Question> findAllByQuestionnaireId(@Param("questionnaireId") UUID questionnaireId);
 
-    @Query("from Question q " +
+    @Query("select q from Question q " +
             "inner join SectionQuestion sq on q.id = sq.question.id " +
             "inner join Section s on sq.section.id = s.id " +
             "where s.id = :sectionId order by sq.orderIndex asc ")
@@ -27,10 +27,10 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     Long countAllByCompanyId(UUID companyId);
 
-    @Query("select q from Question q " +
-            "left join SectionQuestion sq on sq.id.questionId = q.id " +
-            "left join Section s on s.id = sq.id.sectionId " +
-            "where q.company.id = :companyId and s.questionnaire.id <> :questionnaireId"
-            )
-    Page<Question> findAllByCompanyIdAndQuestionnaireIdNot(UUID companyId, UUID questionnaireId, Pageable pageable);
+//    @Query("select q from Question q " +
+//            " left join SectionQuestion sq on sq.question.id = q.id " +
+//            " join Section s on s.id = sq.section.id " +
+//            "where q.company.id = :companyId and s.questionnaire.id <> :questionnaireId"
+//            )
+//    Page<Question> findAllExcept(UUID companyId, UUID questionnaireId, Pageable pageable);
 }

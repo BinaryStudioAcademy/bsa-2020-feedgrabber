@@ -64,20 +64,20 @@ public class QuestionService {
         return quesRep.countAllByCompanyId(companyId);
     }
 
-    public DataList<QuestionDto> getAllExceptOneQuestionnaire(UUID questionnaireId, Integer page, Integer size) {
-        var res = quesRep.findAllByCompanyIdAndQuestionnaireIdNot(
-                TokenService.getCompanyId(),
-                questionnaireId,
-                PageRequest.of(page, size)
-        );
-
-        return new DataList<>(
-                res.get().map(QuestionMapper.MAPPER::questionToQuestionDto).collect(Collectors.toList()),
-                res.getTotalElements(),
-                page,
-                size
-        );
-    }
+//    public DataList<QuestionDto> getAllExceptOneQuestionnaire(UUID questionnaireId, Integer page, Integer size) {
+//        var res = quesRep.findAllExcept(
+//                TokenService.getCompanyId(),
+//                questionnaireId,
+//                PageRequest.of(page, size)
+//        );
+//
+//        return new DataList<>(
+//                res.get().map(QuestionMapper.MAPPER::questionToQuestionDto).collect(Collectors.toList()),
+//                res.getTotalElements(),
+//                page,
+//                size
+//        );
+//    }
 
     public List<QuestionDto> getAllByQuestionnaireId(UUID questionnaireId) {
         return quesRep.findAllByQuestionnaireId(questionnaireId)

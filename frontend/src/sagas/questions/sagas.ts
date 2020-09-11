@@ -40,8 +40,8 @@ function* getAllExcept(action) {
         const {page, size} = store.questions.pagination;
 
         const res = (yield call(apiClient.get,
-            query ? `/api/questions/except/${questionnaireId}?page=${page}&size=${size}&query=${query}`
-                : `/api/questions/except/${questionnaireId}?page=${page}&size=${size}`)).data.data;
+            `/api/questions/except/${questionnaireId}?page=${page}&size=${size}&query=${query}`
+                )).data.data;
 
         res.items = res.items.map(q => parseQuestion(q));
 
@@ -60,7 +60,7 @@ function* addFromExisting(action) {
 
         yield put(addExistingQToFormRoutine.success(action.payload));
     } catch (e) {
-        yield put(addExistingQToFormRoutine.failure(e?.data.error));
+        yield put(addExistingQToFormRoutine.failure(e.data?.error));
         toastr.error("Questions wasn't added");
     }
 }
