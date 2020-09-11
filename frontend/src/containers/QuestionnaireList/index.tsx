@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
@@ -52,6 +52,11 @@ const QuestionnaireList: FC<Props & { muteActions?: boolean }> = (
 ) => {
     const [t] = useTranslation();
     const [showArchived, setShowArchived] = useState(false);
+
+    useEffect(() => {
+        loadQuestionnaires();
+    },[loadQuestionnaires]);
+
     const mapItemToJSX = (item: IQuestionnaire) => {
         const match = result
             .questionnaires
