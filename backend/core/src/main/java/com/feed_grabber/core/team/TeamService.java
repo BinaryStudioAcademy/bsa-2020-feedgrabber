@@ -2,9 +2,9 @@ package com.feed_grabber.core.team;
 
 import com.feed_grabber.core.auth.exceptions.JwtTokenException;
 import com.feed_grabber.core.exceptions.AlreadyExistsException;
+import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.search.SearchRepository;
 import com.feed_grabber.core.search.dto.PagedResponseDto;
-import com.feed_grabber.core.localization.Translator;
 import com.feed_grabber.core.team.dto.*;
 import com.feed_grabber.core.team.exceptions.TeamExistsException;
 import com.feed_grabber.core.team.exceptions.TeamNotFoundException;
@@ -12,10 +12,8 @@ import com.feed_grabber.core.team.exceptions.TeamUserLeadNotFoundException;
 import com.feed_grabber.core.team.exceptions.WrongTeamNameException;
 import com.feed_grabber.core.team.model.Team;
 import com.feed_grabber.core.user.UserRepository;
-import com.feed_grabber.core.user.dto.UserDetailsResponseDTO;
 import com.feed_grabber.core.user.exceptions.UserNotFoundException;
 import com.feed_grabber.core.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -152,7 +150,7 @@ public class TeamService {
             throw new WrongTeamNameException("Too long team name(more than 40)");
         }
         if (!teamDto.getName()
-                .matches("([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&'*+\\-\\/=?^_`]+)")) {
+                .matches("([a-zA-ZА-Яа-яїЇґҐіІєЄ0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-ZА-Яа-яїЇґҐіІєЄ0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
             throw new WrongTeamNameException(Translator.toLocale("wrong_team_name"));
         }
 

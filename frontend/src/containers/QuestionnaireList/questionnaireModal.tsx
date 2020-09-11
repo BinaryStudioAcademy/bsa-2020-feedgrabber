@@ -26,7 +26,7 @@ const validationSchema = yup.object().shape({
     .required()
     .min(3, "Too Short! Min 3 symbols")
     .max(40, "Too Long! Max 40 symbols")
-    .matches(/^\w([A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-я\d!#$%&'*+\-/=?^_`])*$/,
+    .matches(/([A-Za-zА-Яа-яїЇґҐіІєЄ\d!#$%&'*+\-/=?^_`])([ ]?[A-Za-zА-Яа-яїЇґҐіІєЄ\d!#$%&'*+\-/=?^_`])*$/,
         "Title must be valid")
 });
 

@@ -69,7 +69,7 @@ public class QuestionnaireService {
         }
 
         if (!createDto.getTitle()
-                .matches("([a-zA-Z0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-Z0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
+                .matches("([a-zA-ZА-Яа-яїЇґҐіІєЄ0-9!#$:%&\\s'*+\\-/=?^_`]+)[ ]?([a-zA-ZА-Яа-яїЇґҐіІєЄ0-9!#$%&:'\\s*+\\-/=?^_`]+)")) {
             throw new WrongQuestionnaireTitleException(Translator.toLocale("title_invalid"));
 
         }
