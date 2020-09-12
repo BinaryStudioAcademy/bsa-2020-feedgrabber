@@ -13,8 +13,8 @@ import LoaderWrapper from 'components/helpers/LoaderWrapper';
 import {history} from '../../helpers/history.helper';
 import {IReportShort} from 'models/report/IReport';
 import {Tab} from "semantic-ui-react";
-import { useTranslation } from "react-i18next";
-import { Link } from 'react-router-dom';
+import {useTranslation} from "react-i18next";
+import {Link} from 'react-router-dom';
 import NewsList from 'components/NewsList';
 import {IQuestionnaireResponse} from "../../reducers/questionnaireResponse/reducer";
 
@@ -25,6 +25,7 @@ interface IMainPageProps {
     language: string;
 
     loadQuestionnaires(): void;
+
     loadReports(): void;
 
     getResponse(requestId: string): void;
@@ -50,11 +51,11 @@ const MainPage: FC<IMainPageProps> =
             loadQuestionnaires();
         }, [loadQuestionnaires]);
 
-       useEffect(() => {
+        useEffect(() => {
             loadReports();
-       }, [loadReports]);
+        }, [loadReports]);
 
-       const updatePanes = () => {
+        const updatePanes = () => {
             setPanes([
                 {
                     menuItem: {key: 'opened', icon: 'eye', content: t('Pending')},
@@ -118,8 +119,7 @@ const MainPage: FC<IMainPageProps> =
                                             ? <UIButton
                                                 primary
                                                 title={changeable ? t("Change my answer") : t("Show answers")}
-                                                onClick={() =>
-                                                    handleAnswerClick(id)}/>
+                                                onClick={() => handleAnswerClick(id)}/>
                                             : (closeDate && new Date(closeDate).valueOf() !== expirationDate?.valueOf())
                                                 ? <p>{t("Force closed on")} {new Date(closeDate).toUTCString()}</p>
                                                 : <p>{t("Expired")} {new Date(new Date().valueOf()
@@ -130,15 +130,15 @@ const MainPage: FC<IMainPageProps> =
                     </Tab.Pane>
                 }
             ]);
-       };
+        };
 
         useEffect(() => {
-             updatePanes();
+            updatePanes();
             // eslint-disable-next-line
         }, [isLoading, questionnaireList]);
 
         useEffect(() => {
-             updatePanes();
+            updatePanes();
             // eslint-disable-next-line
         }, [language]);
 
@@ -152,17 +152,17 @@ const MainPage: FC<IMainPageProps> =
                                 <h3>{t("My Reports")}</h3>
                             </UICardBlock>
                             {reportsList.length === 0 ?
-                              <UICardBlock>
-                                {t("No reports for now, we'll notify you")}
-                              </UICardBlock> :
-                              reportsList.map(item => (
-                                <UICardBlock key={item.id}>
-                                    {item.title && <h4>{item.title}</h4>}
-                                    {item.closeDate && <p>{new Date(item.closeDate).toLocaleString()}</p>}
-                                    {item.author && <p><b>{item.author}</b></p>}
-                                    <Link to={`/report/${item.id}`}><UIButton title={t("Details")}/></Link>
-                                </UICardBlock>
-                              ))}
+                                <UICardBlock>
+                                    {t("No reports for now, we'll notify you")}
+                                </UICardBlock> :
+                                reportsList.map(item => (
+                                    <UICardBlock key={item.id}>
+                                        {item.title && <h4>{item.title}</h4>}
+                                        {item.closeDate && <p>{new Date(item.closeDate).toLocaleString()}</p>}
+                                        {item.author && <p><b>{item.author}</b></p>}
+                                        <Link to={`/report/${item.id}`}><UIButton title={t("Details")}/></Link>
+                                    </UICardBlock>
+                                ))}
                         </UICard>
                     </UIColumn>
                     <UIColumn>

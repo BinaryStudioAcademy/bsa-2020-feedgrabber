@@ -151,7 +151,7 @@ const QuestionForm: FC<QuestionFormProps & { listEdit?: IQuestionListEditProps }
                                                 setLocalCategories([value as string, ...localCategories]);
                                             }}
                                             search
-                                            options={parseCategories(localCategories)}
+                                            options={parseCategories(localCategories ?? formik.values.categoryTitle)}
                                             onBlur={formik.handleBlur}
                                         />
                                     </div>

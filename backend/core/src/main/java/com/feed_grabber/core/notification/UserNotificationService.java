@@ -58,7 +58,7 @@ public class UserNotificationService {
         var notificationId = userNotificationRepository.save(UserNotification
                 .builder()
                 .request(request)
-                .text(Translator.toLocale("generated_report"))
+                .text(Translator.toLocale("You have new generated reports"))
                 .isClosed(false)
                 .isRead(false)
                 .type(MessageTypes.reports)

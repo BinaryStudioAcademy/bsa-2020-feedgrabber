@@ -3,7 +3,6 @@ import {
     deleteQuestionnaireRoutine,
     hideModalQuestionnaireRoutine,
     loadQuestionnairesRoutine,
-    saveAndGetQuestionnaireRoutine,
     setQuestionnairePaginationRoutine,
     showModalQuestionnaireRoutine,
     updateQuestionnaireRoutine,
@@ -40,15 +39,6 @@ const questionnairesListReducer = (state: IAppState['questionnaires']['list'] = 
                 ...state,
                 pagination: action.payload,
                 isLoading: false
-            };
-        case saveAndGetQuestionnaireRoutine.SUCCESS:
-            return {
-                ...state,
-                pagination: {
-                    ...state.pagination,
-                    total: state.pagination?.total + 1,
-                    items: [...state.pagination?.items ?? [], action.payload]
-                }
             };
         case addQuestionnaireRoutine.TRIGGER:
         case updateQuestionnaireRoutine.TRIGGER:
